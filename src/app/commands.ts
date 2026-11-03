@@ -1,18 +1,29 @@
 /**
  * Application commands shared by the menu bar, toolbar and keyboard shortcuts.
  */
-import type { Editor } from 'tldraw';
+import {
+  copySelection,
+  createMathRegion,
+  cutSelection,
+  deleteSelection,
+  duplicateSelection,
+  groupSelection,
+  handlePasteData,
+  insertImageFile,
+  insertionPoint,
+  resetZoom,
+  ungroupSelection,
+  zoomIn,
+  zoomOut,
+  zoomToFit,
+} from '../canvas/canvasActions';
 import { resyncAll } from '../canvas/engineBridge';
-import { createMathRegion, insertionPoint, isMathShape } from '../canvas/regionActions';
-import type { MathDisplayMode } from '../canvas/shapes/mathShapeTypes';
-import { MATH_SHAPE_TYPE } from '../canvas/shapes/mathShapeTypes';
+import { pasteShapes } from '../canvas/canvasActions';
+import { redo, selectAll, setTool, stopEditing, undo, updateShapes, useCanvasStore } from '../canvas/model/canvasStore';
+import type { MathDisplayMode, ToolId } from '../canvas/model/types';
 import { exportJson, importJson, newDocument, saveDocument } from '../documents/documentController';
 import { exportPdf } from '../export/PdfExporter';
 import { useAppStore } from '../store/appStore';
-
-function ed(): Editor | null {
-  return useAppStore.getState().editor;
-}
 
 function pickFile(accept: string): Promise<File | null> {
   return new Promise((resolve) => {
@@ -24,127 +35,85 @@ function pickFile(accept: string): Promise<File | null> {
   });
 }
 
-function runAction(id: string) {
-  const action = useAppStore.getState().actions?.[id];
-  action?.onSelect('menu');
-}
-
-export type ToolId = 'select' | 'math' | 'text' | 'line' | 'geo' | 'arrow' | 'draw' | 'hand' | 'eraser';
+export type { ToolId };
 
 export const commands = {
-  setTool(tool: ToolId) {
-    const editor = ed();
-    if (!editor) return;
-    editor.setEditingShape(null);
-    editor.setCurrentTool(tool);
-  },
+  setTool,
 
   insertMath(latex = '') {
-    const editor = ed();
-    if (!editor) return;
-    editor.setEditingShape(null);
-    editor.setCurrentTool('select');
-    createMathRegion(editor, insertionPoint(editor), latex);
+    stopEditing();
+    createMathRegion(insertionPoint(), latex);
   },
-
   insertCheck() {
     this.insertMath('\\le1');
   },
-
   async insertImage() {
-    const editor = ed();
-    if (!editor) return;
-    const file = await pickFile('image/png,image/jpeg,image/webp,image/svg+xml');
-    if (!file) return;
-    const c = editor.getViewportPageBounds().center;
-    await editor.putExternalContent({ type: 'files', files: [file], point: c, ignoreParent: false });
+    const file = await pickFile('image/png,image/jpeg,image/webp,image/svg+xml,image/gif');
+    if (file) await insertImageFile(file);
   },
 
-  undo: () => ed()?.undo(),
-  redo: () => ed()?.redo(),
-  copy: () => runAction('copy'),
-  cut: () => runAction('cut'),
-  paste: () => runAction('paste'),
-  duplicate() {
-    const editor = ed();
-    if (!editor) return;
-    const ids = editor.getSelectedShapeIds();
-    if (ids.length) editor.duplicateShapes(ids, { x: 16, y: 16 });
+  undo,
+  redo,
+  copy: () => void copySelection(),
+  cut: () => void cutSelection(),
+  async paste() {
+    try {
+      const items = await navigator.clipboard.read();
+      const dt = new DataTransfer();
+      for (const item of items) {
+        for (const type of item.types) {
+          const blob = await item.getType(type);
+          if (type.startsWith('image/')) dt.items.add(new File([blob], 'pasted', { type }));
+          else if (type === 'text/plain') dt.setData('text/plain', await blob.text());
+        }
+      }
+      if (handlePasteData(dt)) return;
+    } catch {
+      /* clipboard read not permitted: fall back to the internal clipboard */
+    }
+    pasteShapes();
   },
-  deleteSelection() {
-    const editor = ed();
-    if (!editor) return;
-    editor.deleteShapes(editor.getSelectedShapeIds());
-  },
-  selectAll: () => ed()?.selectAll(),
-  group() {
-    const editor = ed();
-    if (!editor) return;
-    const ids = editor.getSelectedShapeIds();
-    if (ids.length > 1) editor.groupShapes(ids);
-  },
-  ungroup() {
-    const editor = ed();
-    if (!editor) return;
-    editor.ungroupShapes(editor.getSelectedShapeIds());
-  },
+  duplicate: duplicateSelection,
+  deleteSelection,
+  selectAll,
+  group: groupSelection,
+  ungroup: ungroupSelection,
 
-  /** Apply a display mode to selected math regions. */
+  /** Apply a display mode to the selected math regions. */
   setDisplayMode(mode: MathDisplayMode) {
-    const editor = ed();
-    if (!editor) return;
-    const shapes = editor.getSelectedShapes().filter(isMathShape);
-    editor.updateShapes(shapes.map((s) => ({ id: s.id, type: MATH_SHAPE_TYPE, props: { displayMode: mode } })));
+    const { selection, shapes } = useCanvasStore.getState();
+    const ids = selection.filter((id) => shapes[id]?.type === 'math');
+    updateShapes(Object.fromEntries(ids.map((id) => [id, { props: { displayMode: mode } }])));
   },
 
   calculateAll() {
-    const editor = ed();
-    if (editor) resyncAll(editor);
+    resyncAll();
     useAppStore.getState().showToast('info', 'All regions recalculated.');
   },
 
-  toggleGrid() {
-    const editor = ed();
-    if (!editor) return;
-    editor.updateInstanceState({ isGridMode: !editor.getInstanceState().isGridMode });
-  },
-  toggleSnap() {
-    const editor = ed();
-    if (!editor) return;
-    editor.user.updateUserPreferences({ isSnapMode: !editor.user.getIsSnapMode() });
-  },
+  toggleGrid: () => useCanvasStore.setState((s) => ({ isGrid: !s.isGrid })),
+  toggleSnap: () => useCanvasStore.setState((s) => ({ isSnap: !s.isSnap })),
   setCanvasMode(mode: 'free' | 'page') {
     useAppStore.getState().updateSettings({ canvasMode: mode });
   },
 
-  zoomIn: () => ed()?.zoomIn(undefined, { animation: { duration: 120 } }),
-  zoomOut: () => ed()?.zoomOut(undefined, { animation: { duration: 120 } }),
-  resetZoom: () => ed()?.resetZoom(undefined, { animation: { duration: 120 } }),
-  zoomToFit: () => ed()?.zoomToFit({ animation: { duration: 160 } }),
+  zoomIn,
+  zoomOut,
+  resetZoom,
+  zoomToFit,
 
   async save() {
-    const editor = ed();
-    if (!editor) return;
-    await saveDocument(editor);
+    await saveDocument();
     useAppStore.getState().showToast('info', 'Worksheet saved.');
   },
   async newWorksheet(demo = false) {
-    const editor = ed();
-    if (editor) await newDocument(editor, { demo });
+    await newDocument({ demo });
   },
   open: () => useAppStore.getState().openDialog('open'),
-  exportJson() {
-    const editor = ed();
-    if (editor) exportJson(editor);
-  },
+  exportJson,
   async importJson() {
-    const editor = ed();
-    if (!editor) return;
     const file = await pickFile('application/json,.json');
-    if (file) await importJson(editor, file);
+    if (file) await importJson(file);
   },
-  async exportPdf() {
-    const editor = ed();
-    if (editor) await exportPdf(editor);
-  },
+  exportPdf: () => exportPdf(),
 };

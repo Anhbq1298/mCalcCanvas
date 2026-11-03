@@ -1,17 +1,17 @@
 import { AlertCircle, CheckCircle2, FileWarning } from 'lucide-react';
-import { useValue } from 'tldraw';
+import { useMemo } from 'react';
+import { select, useCanvasStore } from '../../canvas/model/canvasStore';
 import { shapesOutsidePrintArea } from '../../export/pageGeometry';
 import { useAppStore } from '../../store/appStore';
 import { useCalculationStore } from '../../store/calculationStore';
 
 export function StatusBar() {
-  const editor = useAppStore((s) => s.editor);
   const settings = useAppStore((s) => s.settings);
   const results = useCalculationStore((s) => s.results);
-  const outside = useValue(
-    'outside',
-    () => (editor ? shapesOutsidePrintArea(editor, settings.pageOrientation).map((s) => s.id) : []),
-    [editor, settings.pageOrientation],
+  const shapes = useCanvasStore((s) => s.shapes);
+  const outside = useMemo(
+    () => shapesOutsidePrintArea(Object.values(shapes), settings.pageOrientation).map((s) => s.id),
+    [shapes, settings.pageOrientation],
   );
 
   const all = Object.values(results).filter((r) => r && r.status !== 'empty');
@@ -31,7 +31,7 @@ export function StatusBar() {
         <button
           type="button"
           className="flex cursor-pointer items-center gap-1.5 text-destructive hover:underline"
-          onClick={() => editor?.select(...(outside as never[]))}
+          onClick={() => select(outside)}
           title="Select objects that will be cut off in the PDF"
         >
           <FileWarning size={13} aria-hidden />

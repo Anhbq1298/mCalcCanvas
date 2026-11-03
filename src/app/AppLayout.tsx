@@ -1,4 +1,4 @@
-import { CanvasEditor } from '../canvas/CanvasEditor';
+import { CanvasHost } from '../canvas/CanvasHost';
 import { StatusBar } from '../components/common/StatusBar';
 import { Dialogs, Toast } from '../components/dialogs/Dialogs';
 import { PropertiesPanel } from '../components/panels/PropertiesPanel';
@@ -13,8 +13,8 @@ export function AppLayout() {
       <MenuBar />
       <Toolbar />
       <div className="flex min-h-0 flex-1">
-        <main className="relative min-w-0 flex-1" aria-label="Calculation canvas">
-          <CanvasEditor />
+        <main className="relative min-w-0 flex-1 overflow-hidden">
+          <CanvasHost />
         </main>
         {panelOpen && <PropertiesPanel />}
       </div>

@@ -1,4 +1,3 @@
-import type { Editor, TLUiActionsContextType } from 'tldraw';
 import { create } from 'zustand';
 import {
   DEFAULT_SETTINGS,
@@ -9,9 +8,6 @@ import {
 export type SaveState = 'saved' | 'dirty' | 'saving' | 'error';
 
 interface AppState {
-  editor: Editor | null;
-  /** tldraw UI actions (copy/paste…) captured from inside the tldraw context. */
-  actions: TLUiActionsContextType | null;
   documentId: string | null;
   title: string;
   metadata: DocumentMetadata;
@@ -22,8 +18,6 @@ interface AppState {
   dialog: null | 'open' | 'shortcuts' | 'syntax' | 'about';
   toast: { kind: 'info' | 'error'; message: string } | null;
 
-  setEditor(editor: Editor | null): void;
-  setActions(actions: TLUiActionsContextType): void;
   setDocument(doc: {
     id: string;
     title: string;
@@ -41,8 +35,6 @@ interface AppState {
 }
 
 export const useAppStore = create<AppState>((set) => ({
-  editor: null,
-  actions: null,
   documentId: null,
   title: 'Untitled calculation',
   metadata: {},
@@ -53,8 +45,6 @@ export const useAppStore = create<AppState>((set) => ({
   dialog: null,
   toast: null,
 
-  setEditor: (editor) => set({ editor }),
-  setActions: (actions) => set({ actions }),
   setDocument: (doc) =>
     set({
       documentId: doc.id,

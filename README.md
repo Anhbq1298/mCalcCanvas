@@ -1,6 +1,6 @@
 # CalcCanvas
 
-A browser-based engineering calculation workspace inspired by Mathcad Prime: type equations anywhere on a free canvas, define variables with units, and every dependent result updates automatically. The same canvas lays out as A4 pages and exports a vector PDF calculation sheet.
+A browser-based engineering calculation workspace inspired by Mathcad Prime, built on its own canvas engine: type equations anywhere on a free canvas, define variables with units, and every dependent result updates automatically. The same canvas lays out as A4 pages and exports a vector PDF calculation sheet.
 
 ```
 L := 8.5 m           w := (1.35G + 1.5Q)·b = 28.5 kN/m
@@ -29,10 +29,10 @@ Playwright needs a Chromium: `npx playwright install chromium`, or point it at a
 
 ## Using it
 
-- **Create a region**: click the canvas and start typing, or press `M` / the Σ tool and click.
+- **Create a region**: click the canvas and start typing, double-click empty space, or use the Σ tool and click.
 - **Define**: `L:=8.5m` (`:=` turns into ≔). **Evaluate**: `M=`. **Check**: `eta_M<=1` → PASS/FAIL.
 - `/` makes a fraction, `^` and `_` for exponent/subscript, `Enter` or `Esc` to finish. Typing `=` always evaluates the whole region, even if the caret is still in a denominator.
-- Drag, resize, copy/paste, duplicate (`Ctrl+D`), group, undo/redo, arrow-key nudge, `Ctrl+wheel` zoom, `Space`+drag pan.
+- Drag, resize, marquee select, copy/paste (incl. screenshots), drag-and-drop images, duplicate (`Ctrl+D`), group (`Ctrl+G`), undo/redo, arrow-key nudge, `Ctrl+wheel` zoom, wheel or `Space`+drag pan, double-click empty canvas for a new region.
 - Select a region to change its display mode (formula / result / formula + result / full calculation), result unit (e.g. `kN·mm`), decimals, size and colour in the properties panel.
 - **Page layout** mode shows A4 sheets, margins and flags objects outside the print area. **Export PDF** prints each page as vector output with a title block and page numbers (choose *Save as PDF*).
 - File menu: new, open, save, JSON import/export.
@@ -48,7 +48,12 @@ src/
     DependencyGraph.ts    name-based graph (definers/referrers), affected-set expansion
     CalculationEngine.ts  incremental recalculation, cycles, duplicates, drafts
     LatexFormatter.ts     tree → LaTeX (result-only and substituted "full calculation" lines)
-  canvas/        tldraw integration: MathShapeUtil, Math tool, engine bridge, A4 overlay
+  canvas/        Own canvas engine (no third-party canvas SDK)
+    model/              shape types, geometry, document store with snapshot undo/redo
+    CanvasView.tsx      pan/zoom viewport, select/marquee/move/resize, drawing tools
+    shapes/             math, rich text, image, rectangle, line/arrow, freehand renderers
+    canvasActions.ts    clipboard, duplicate, group, images, zoom
+    engineBridge.ts     canvas store → calculation engine sync
   math/          MathLive editor, static renderer, display composition
   documents/     IndexedDB storage, JSON (de)serialisation with migrations, demo sheet
   export/        page geometry, print/PDF export
@@ -56,7 +61,7 @@ src/
   store/         Zustand stores (app UI state, per-region results)
 ```
 
-**Single source of truth.** Math regions store only JSON props (LaTeX, display options) in the tldraw store. The engine is derived: every store change — typing, undo, paste, load — flows one way through `engineBridge.ts`. Results are never persisted; they're recomputed on load.
+**Single source of truth.** Math regions store only JSON props (LaTeX, display options) in the canvas store. The engine is derived: every store change — typing, undo, paste, load — flows one way through `engineBridge.ts`. Results are never persisted; they're recomputed on load.
 
 **Position independence.** Evaluation order is topological over variable names, never canvas coordinates. Each variable has exactly one definition per worksheet; duplicates and cycles (`A → B → A`) are reported, not resolved by position.
 
@@ -89,8 +94,8 @@ python3 .claude/skills/ui-ux-pro-max/scripts/search.py "engineering calculation 
 
 ## Tests
 
-- **Unit (34)**: parser, units and dimension errors, display-unit conversion, symbol resolution, cycles, duplicates, drafts, beam sample values, serializer migrations.
-- **Browser (9)**: acceptance tests A–I — free positioning and dragging, definitions/evaluations, dependent recalculation, position independence, mm→kN·m, unit mismatch, undefined/circular errors, type-to-create, persistence across reload, and the full demo flow including PDF generation.
+- **Unit (35)**: parser, units and dimension errors, display-unit conversion, symbol resolution, cycles, duplicates, drafts, beam sample values, serializer migrations.
+- **Browser (15)**: acceptance tests A–I plus canvas tests (text, undo/redo, clipboard, marquee, resize, zoom) — — free positioning and dragging, definitions/evaluations, dependent recalculation, position independence, mm→kN·m, unit mismatch, undefined/circular errors, type-to-create, persistence across reload, and the full demo flow including PDF generation.
 
 ## Known limitations
 
@@ -98,10 +103,15 @@ python3 .claude/skills/ui-ux-pro-max/scripts/search.py "engineering calculation 
 - PDF export uses the browser print dialog (vector output); multi-page is supported by stacking pages vertically. Pages don't yet repeat a title block template beyond the header/footer.
 - Single-letter units typed bare (`8.5m`) render italic; multi-letter units render upright.
 - Variables are document-scoped; no local scopes, user-defined functions, matrices, ranges or iteration yet.
-- Text formatting uses tldraw's rich text (bold, italic, lists, links); underline and headings aren't available in its toolbar.
+- Text formatting uses the browser's contentEditable commands (bold, italic, underline, heading, lists); pasted HTML is reduced to a safe whitelist.
+- No rotation or z-order controls yet; multi-selection moves but doesn't resize.
 - Table regions are not implemented.
 - Evaluation runs on the main thread (bounded per the safety notes above).
 
+## Single-file build
+
+`npm run build:single` writes `dist-single/index.html` (~2.5 MB): the whole app with fonts inlined, no server or network needed. Open it directly in Chrome or Edge.
+
 ## Licensing
 
-tldraw is free for development; **production deployments need a tldraw license key** (`<Tldraw licenseKey=…>`). Without one, production builds show tldraw's license notice — this project doesn't suppress it. See https://tldraw.dev/pricing.
+All dependencies are MIT/Apache-licensed (React, MathLive, mathjs, Zustand, lucide). The canvas is CalcCanvas's own code, so there is no canvas SDK license or watermark.

@@ -1,6 +1,7 @@
+import type { Shape } from '../canvas/model/types';
 import type { UnitSystemName } from '../engine';
 
-export const DOCUMENT_VERSION = 1;
+export const DOCUMENT_VERSION = 2;
 
 export type CanvasMode = 'free' | 'page';
 export type PageOrientation = 'portrait' | 'landscape';
@@ -21,9 +22,9 @@ export interface DocumentSettings {
 }
 
 /**
- * Persisted worksheet. `shapes` is the tldraw document snapshot (shapes,
- * pages, assets – including embedded images). Calculation results are never
- * stored: they are recomputed from the LaTeX on load.
+ * Persisted worksheet. `shapes` is the ordered list of canvas shapes (images
+ * embedded as data URLs). Calculation results are never stored: they are
+ * recomputed from the LaTeX on load.
  */
 export interface CalculationDocument {
   id: string;
@@ -31,7 +32,7 @@ export interface CalculationDocument {
   title: string;
   metadata: DocumentMetadata;
   settings: DocumentSettings;
-  shapes: unknown;
+  shapes: Shape[];
   createdAt: string;
   updatedAt: string;
 }

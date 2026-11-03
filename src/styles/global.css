@@ -58,18 +58,37 @@ body {
 }
 
 /* ---------------------------------------------------------------------- */
-/* tldraw canvas theming                                                   */
+/* Canvas                                                                  */
 /* ---------------------------------------------------------------------- */
 
-.calc-canvas .tl-container {
-  --color-background: var(--color-card);
-  --color-selection-stroke: var(--color-accent);
-  --color-selection-fill: rgb(37 99 235 / 0.06);
+.cc-canvas {
+  user-select: none;
+  -webkit-user-select: none;
+}
+.cc-shape [data-editing],
+.cc-shape[data-editing] {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.text-region {
   font-family: var(--font-sans);
+  padding: 2px 4px;
+  border-radius: 2px;
 }
-.calc-canvas[data-mode='page'] .tl-container {
-  --color-background: var(--color-canvas);
+.text-region--editing {
+  outline: 1px solid var(--color-accent) !important;
+  background: var(--color-card);
+  cursor: text;
+  user-select: text;
+  -webkit-user-select: text;
 }
+.text-region h1 { font-size: 1.6em; font-weight: 700; margin: 0.1em 0; }
+.text-region h2 { font-size: 1.25em; font-weight: 700; margin: 0.1em 0; }
+.text-region h3 { font-size: 1.1em; font-weight: 600; margin: 0.1em 0; }
+.text-region ul { list-style: disc; padding-left: 1.4em; margin: 0.15em 0; }
+.text-region ol { list-style: decimal; padding-left: 1.4em; margin: 0.15em 0; }
+.text-region b, .text-region strong { font-weight: 700; }
 
 /* ---------------------------------------------------------------------- */
 /* Math regions                                                            */
@@ -158,12 +177,6 @@ body {
 .print-page:last-child {
   page-break-after: auto;
   break-after: auto;
-}
-.print-page > svg.print-content {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
 }
 .print-header,
 .print-footer {

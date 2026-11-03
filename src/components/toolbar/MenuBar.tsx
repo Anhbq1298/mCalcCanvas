@@ -1,6 +1,6 @@
 import { Calculator } from 'lucide-react';
 import { useState } from 'react';
-import { useValue } from 'tldraw';
+import { useCanvasStore } from '../../canvas/model/canvasStore';
 import { commands } from '../../app/commands';
 import { useAppStore } from '../../store/appStore';
 import { MenuButton, type MenuEntry } from '../common/MenuButton';
@@ -9,14 +9,13 @@ const MOD = typeof navigator !== 'undefined' && /Mac/.test(navigator.platform) ?
 
 export function MenuBar() {
   const [open, setOpen] = useState<string | null>(null);
-  const editor = useAppStore((s) => s.editor);
   const settings = useAppStore((s) => s.settings);
   const panelOpen = useAppStore((s) => s.panelOpen);
   const title = useAppStore((s) => s.title);
   const saveState = useAppStore((s) => s.saveState);
   const { updateSettings, togglePanel, openDialog } = useAppStore.getState();
-  const isGrid = useValue('grid', () => editor?.getInstanceState().isGridMode ?? false, [editor]);
-  const isSnap = useValue('snap', () => editor?.user.getIsSnapMode() ?? false, [editor]);
+  const isGrid = useCanvasStore((s) => s.isGrid);
+  const isSnap = useCanvasStore((s) => s.isSnap);
 
   const menus: Record<string, MenuEntry[]> = {
     File: [
@@ -26,7 +25,7 @@ export function MenuBar() {
       { label: 'Save', shortcut: `${MOD}S`, onSelect: () => void commands.save() },
       { type: 'separator' },
       { label: 'Import JSON…', onSelect: () => void commands.importJson() },
-      { label: 'Export JSON', onSelect: commands.exportJson },
+      { label: 'Export JSON', onSelect: () => commands.exportJson() },
       { label: 'Export PDF…', onSelect: () => void commands.exportPdf() },
     ],
     Edit: [
@@ -35,7 +34,7 @@ export function MenuBar() {
       { type: 'separator' },
       { label: 'Cut', shortcut: `${MOD}X`, onSelect: commands.cut },
       { label: 'Copy', shortcut: `${MOD}C`, onSelect: commands.copy },
-      { label: 'Paste', shortcut: `${MOD}V`, onSelect: commands.paste },
+      { label: 'Paste', shortcut: `${MOD}V`, onSelect: () => void commands.paste() },
       { label: 'Duplicate', shortcut: `${MOD}D`, onSelect: commands.duplicate },
       { label: 'Delete', shortcut: 'Del', onSelect: commands.deleteSelection },
       { type: 'separator' },
@@ -44,13 +43,13 @@ export function MenuBar() {
       { label: 'Ungroup', shortcut: `${MOD}⇧G`, onSelect: commands.ungroup },
     ],
     Insert: [
-      { label: 'Math region', shortcut: 'M', onSelect: () => commands.insertMath() },
+      { label: 'Math region', shortcut: 'type', onSelect: () => commands.insertMath() },
       { label: 'Check (≤ limit)', onSelect: () => commands.insertCheck() },
-      { label: 'Text', shortcut: 'T', onSelect: () => commands.setTool('text') },
+      { label: 'Text', onSelect: () => commands.setTool('text') },
       { label: 'Image…', onSelect: () => void commands.insertImage() },
       { type: 'separator' },
       { label: 'Line', onSelect: () => commands.setTool('line') },
-      { label: 'Rectangle', onSelect: () => commands.setTool('geo') },
+      { label: 'Rectangle', onSelect: () => commands.setTool('rect') },
       { label: 'Arrow', onSelect: () => commands.setTool('arrow') },
       { label: 'Freehand', onSelect: () => commands.setTool('draw') },
     ],
@@ -89,10 +88,10 @@ export function MenuBar() {
       { label: 'Grid', checked: isGrid, onSelect: commands.toggleGrid },
       { label: 'Snap', checked: isSnap, onSelect: commands.toggleSnap },
       { type: 'separator' },
-      { label: 'Zoom in', shortcut: `${MOD}+`, onSelect: commands.zoomIn },
-      { label: 'Zoom out', shortcut: `${MOD}−`, onSelect: commands.zoomOut },
-      { label: 'Zoom to 100%', shortcut: '⇧0', onSelect: commands.resetZoom },
-      { label: 'Zoom to fit', shortcut: '⇧1', onSelect: commands.zoomToFit },
+      { label: 'Zoom in', shortcut: `${MOD}wheel`, onSelect: commands.zoomIn },
+      { label: 'Zoom out', onSelect: commands.zoomOut },
+      { label: 'Zoom to 100%', onSelect: commands.resetZoom },
+      { label: 'Zoom to fit', onSelect: commands.zoomToFit },
     ],
     Help: [
       { label: 'Math syntax & units', onSelect: () => openDialog('syntax') },
@@ -125,7 +124,7 @@ export function MenuBar() {
           {title}
         </span>
         <span data-testid="save-state" aria-live="polite">
-          {saveState === 'saved' ? 'Saved' : saveState === 'saving' ? 'Saving…' : saveState === 'error' ? 'Save failed' : 'Unsaved changes'}
+          {saveState === 'saved' ? 'Saved' : saveState === 'saving' ? 'Saving…' : saveState === 'error' ? 'Not saved (no storage)' : 'Unsaved changes'}
         </span>
       </div>
     </header>

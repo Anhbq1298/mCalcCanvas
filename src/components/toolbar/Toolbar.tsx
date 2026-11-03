@@ -19,7 +19,7 @@ import {
   Undo2,
   type LucideIcon,
 } from 'lucide-react';
-import { useValue } from 'tldraw';
+import { canUndo, useCanvasStore } from '../../canvas/model/canvasStore';
 import { commands, type ToolId } from '../../app/commands';
 import { useAppStore } from '../../store/appStore';
 
@@ -60,26 +60,25 @@ function IconButton({
 const Divider = () => <div className="mx-1.5 h-5 w-px bg-border" aria-hidden />;
 
 const TOOLS: { id: ToolId; icon: LucideIcon; label: string }[] = [
-  { id: 'select', icon: MousePointer2, label: 'Select (V)' },
-  { id: 'hand', icon: Hand, label: 'Pan (H or Space+drag)' },
-  { id: 'math', icon: Sigma, label: 'Math region (M) – click to place' },
-  { id: 'text', icon: Type, label: 'Text (T)' },
+  { id: 'select', icon: MousePointer2, label: 'Select' },
+  { id: 'hand', icon: Hand, label: 'Pan (or Space+drag)' },
+  { id: 'math', icon: Sigma, label: 'Math region – click to place (or just type)' },
+  { id: 'text', icon: Type, label: 'Text' },
   { id: 'line', icon: Minus, label: 'Line' },
-  { id: 'geo', icon: Square, label: 'Rectangle' },
+  { id: 'rect', icon: Square, label: 'Rectangle' },
   { id: 'arrow', icon: ArrowUpRight, label: 'Arrow' },
   { id: 'draw', icon: Pencil, label: 'Freehand' },
 ];
 
 export function Toolbar() {
-  const editor = useAppStore((s) => s.editor);
   const canvasMode = useAppStore((s) => s.settings.canvasMode);
   const panelOpen = useAppStore((s) => s.panelOpen);
-  const tool = useValue('tool', () => editor?.getCurrentToolId() ?? 'select', [editor]);
-  const zoom = useValue('zoom', () => editor?.getZoomLevel() ?? 1, [editor]);
-  const canUndo = useValue('undo', () => editor?.canUndo() ?? false, [editor]);
-  const canRedo = useValue('redo', () => editor?.canRedo() ?? false, [editor]);
-  const isGrid = useValue('grid', () => editor?.getInstanceState().isGridMode ?? false, [editor]);
-  const isSnap = useValue('snap', () => editor?.user.getIsSnapMode() ?? false, [editor]);
+  const tool = useCanvasStore((s) => s.tool);
+  const zoom = useCanvasStore((s) => s.camera.z);
+  const undoable = useCanvasStore(canUndo);
+  const redoable = useCanvasStore((s) => s.redoStack.length > 0);
+  const isGrid = useCanvasStore((s) => s.isGrid);
+  const isSnap = useCanvasStore((s) => s.isSnap);
 
   return (
     <div
@@ -93,8 +92,8 @@ export function Toolbar() {
       <IconButton icon={CheckSquare} label="Insert check (≤ limit)" onClick={() => commands.insertCheck()} />
       <IconButton icon={ImagePlus} label="Insert image" onClick={() => void commands.insertImage()} />
       <Divider />
-      <IconButton icon={Undo2} label="Undo (Ctrl+Z)" onClick={commands.undo} disabled={!canUndo} />
-      <IconButton icon={Redo2} label="Redo (Ctrl+Y)" onClick={commands.redo} disabled={!canRedo} />
+      <IconButton icon={Undo2} label="Undo (Ctrl+Z)" onClick={commands.undo} disabled={!undoable} />
+      <IconButton icon={Redo2} label="Redo (Ctrl+Y)" onClick={commands.redo} disabled={!redoable} />
       <Divider />
       <IconButton icon={Minus} label="Zoom out" onClick={commands.zoomOut} />
       <button

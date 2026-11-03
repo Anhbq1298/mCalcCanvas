@@ -1,5 +1,5 @@
 import type { CalculationResult } from '../engine';
-import type { MathDisplayMode } from '../canvas/shapes/mathShapeTypes';
+import type { MathDisplayMode } from '../canvas/model/types';
 
 /** Remove a trailing "=" (and MathLive placeholder) the user typed to request a result. */
 export function stripTrailingEquals(latex: string): string {

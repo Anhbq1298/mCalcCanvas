@@ -7,7 +7,7 @@
  * (LaTeX strings, numbers) so UI layers can store them without holding
  * mathjs objects.
  *
- * The engine has no knowledge of React, tldraw or canvas coordinates.
+ * The engine has no knowledge of React, the canvas or canvas coordinates.
  */
 import { CalculationError, isCalculationError, type CalculationErrorCode } from './CalculationErrors';
 import { DependencyGraph } from './DependencyGraph';

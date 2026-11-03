@@ -1,3 +1,5 @@
+import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, type Shape } from '../canvas/model/types';
+import { escapeHtml, sanitizeHtml } from '../canvas/sanitize';
 import {
   DEFAULT_SETTINGS,
   DOCUMENT_VERSION,
@@ -5,32 +7,119 @@ import {
   type DocumentSettings,
 } from './DocumentTypes';
 
+type Raw = Record<string, unknown>;
+
+/** Plain text from a tldraw rich-text (ProseMirror) document. */
+function richTextToHtml(rt: unknown): string {
+  const lines: string[] = [];
+  const walk = (node: Raw, marks: string[] = []): string => {
+    if (node.type === 'text') {
+      let t = escapeHtml(String(node.text ?? ''));
+      const m = ((node.marks as Raw[] | undefined) ?? []).map((x) => x.type);
+      if (m.includes('bold') || marks.includes('bold')) t = `<b>${t}</b>`;
+      if (m.includes('italic')) t = `<i>${t}</i>`;
+      return t;
+    }
+    return ((node.content as Raw[] | undefined) ?? []).map((c) => walk(c, marks)).join('');
+  };
+  for (const block of ((rt as Raw)?.content as Raw[] | undefined) ?? []) lines.push(`<div>${walk(block) || '<br>'}</div>`);
+  return lines.join('');
+}
+
 /**
  * Document-level migrations: each entry upgrades from version N to N+1.
- * (tldraw migrates its own shape records inside `shapes` on load.)
  */
-const MIGRATIONS: Record<number, (doc: Record<string, unknown>) => Record<string, unknown>> = {
+const MIGRATIONS: Record<number, (doc: Raw) => Raw> = {
   // 0 → 1: early prototypes stored settings without page orientation.
-  0: (doc) => ({
-    ...doc,
-    version: 1,
-    settings: { ...DEFAULT_SETTINGS, ...((doc.settings as Partial<DocumentSettings>) ?? {}) },
-  }),
+  0: (doc) => ({ ...doc, version: 1, settings: { ...DEFAULT_SETTINGS, ...((doc.settings as Partial<DocumentSettings>) ?? {}) } }),
+  // 1 → 2: tldraw store snapshot → CalcCanvas shape list (math, text, images, rectangles).
+  1: (doc) => {
+    const store = ((doc.shapes as Raw | undefined)?.store ?? {}) as Record<string, Raw>;
+    const records = Object.values(store);
+    const assets = new Map(records.filter((r) => r.typeName === 'asset').map((r) => [r.id, (r.props as Raw)?.src]));
+    const shapes: Shape[] = [];
+    for (const r of records.filter((x) => x.typeName === 'shape').sort((a, b) => String(a.index).localeCompare(String(b.index)))) {
+      const p = (r.props ?? {}) as Raw;
+      const base = { id: String(r.id).replace(/^shape:/, 's_'), x: Number(r.x) || 0, y: Number(r.y) || 0 };
+      if (r.type === 'math') shapes.push({ ...base, type: 'math', props: { ...DEFAULT_MATH_PROPS, ...(p as object) } } as Shape);
+      else if (r.type === 'text') shapes.push({ ...base, type: 'text', props: { ...DEFAULT_TEXT_PROPS, w: Number(p.w) || 320, html: richTextToHtml(p.richText) } });
+      else if (r.type === 'image' && typeof assets.get(p.assetId) === 'string') shapes.push({ ...base, type: 'image', props: { w: Number(p.w) || 200, h: Number(p.h) || 150, src: String(assets.get(p.assetId)) } });
+      else if (r.type === 'geo') shapes.push({ ...base, type: 'rect', props: { w: Number(p.w) || 100, h: Number(p.h) || 60, stroke: '#1e3a5f', strokeWidth: 1.5 } });
+    }
+    return { ...doc, version: 2, shapes };
+  },
 };
 
 export class DocumentFormatError extends Error {}
 
+const num = (v: unknown, d = 0) => (typeof v === 'number' && Number.isFinite(v) ? v : d);
+const str = (v: unknown, d = '') => (typeof v === 'string' ? v : d);
+const color = (v: unknown, d: string) => (typeof v === 'string' && /^#[0-9a-fA-F]{3,8}$/.test(v) ? v : d);
+
+/** Validate one shape from untrusted JSON; returns null if unusable. */
+export function sanitizeShape(raw: unknown): Shape | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const r = raw as Raw;
+  const p = (r.props && typeof r.props === 'object' ? r.props : {}) as Raw;
+  const base = { id: str(r.id) || `s_${Math.random().toString(36).slice(2)}`, x: num(r.x), y: num(r.y), ...(typeof r.groupId === 'string' ? { groupId: r.groupId } : {}) };
+  switch (r.type) {
+    case 'math': {
+      const modes = ['auto', 'formula', 'result', 'formulaResult', 'full'];
+      return {
+        ...base,
+        type: 'math',
+        props: {
+          w: Math.max(1, num(p.w, 60)),
+          h: Math.max(1, num(p.h, 32)),
+          latex: str(p.latex).slice(0, 4000),
+          displayMode: (modes.includes(p.displayMode as string) ? p.displayMode : 'auto') as never,
+          displayUnit: str(p.displayUnit).slice(0, 60),
+          precision: Math.round(num(p.precision, -1)),
+          autoSize: p.autoSize !== false,
+          fontSize: Math.min(64, Math.max(8, num(p.fontSize, 18))),
+          color: color(p.color, '#0f172a'),
+        },
+      };
+    }
+    case 'text':
+      return {
+        ...base,
+        type: 'text',
+        props: {
+          w: Math.max(20, num(p.w, 320)),
+          h: Math.max(1, num(p.h, 24)),
+          html: sanitizeHtml(str(p.html)),
+          fontSize: Math.min(72, Math.max(8, num(p.fontSize, 15))),
+          color: color(p.color, '#0f172a'),
+          align: (['left', 'center', 'right'].includes(p.align as string) ? p.align : 'left') as never,
+        },
+      };
+    case 'image': {
+      const src = str(p.src);
+      if (!/^data:image\/(png|jpe?g|webp|gif|svg\+xml);base64,/.test(src)) return null;
+      return { ...base, type: 'image', props: { w: Math.max(1, num(p.w, 200)), h: Math.max(1, num(p.h, 150)), src } };
+    }
+    case 'rect':
+      return { ...base, type: 'rect', props: { w: Math.max(1, num(p.w, 100)), h: Math.max(1, num(p.h, 60)), stroke: color(p.stroke, '#1e3a5f'), strokeWidth: num(p.strokeWidth, 1.5) } };
+    case 'line':
+      return { ...base, type: 'line', props: { x2: num(p.x2), y2: num(p.y2), stroke: color(p.stroke, '#1e3a5f'), strokeWidth: num(p.strokeWidth, 1.5), arrow: p.arrow === true } };
+    case 'draw': {
+      const pts = Array.isArray(p.points) ? (p.points as unknown[]).filter((q): q is [number, number] => Array.isArray(q) && q.length === 2 && q.every((n) => typeof n === 'number' && Number.isFinite(n))) : [];
+      if (!pts.length) return null;
+      return { ...base, type: 'draw', props: { points: pts.slice(0, 20000), stroke: color(p.stroke, '#1e3a5f'), strokeWidth: num(p.strokeWidth, 2) } };
+    }
+    default:
+      return null;
+  }
+}
+
 /** Validate and migrate untrusted JSON (imported file or IndexedDB record). */
 export function parseDocument(input: unknown): CalculationDocument {
   if (!input || typeof input !== 'object') throw new DocumentFormatError('Not a CalcCanvas document.');
-  let doc = input as Record<string, unknown>;
-  if (doc.format !== undefined && doc.format !== 'calccanvas') {
-    throw new DocumentFormatError('Not a CalcCanvas document.');
-  }
+  let doc = input as Raw;
+  if (doc.format !== undefined && doc.format !== 'calccanvas') throw new DocumentFormatError('Not a CalcCanvas document.');
   let version = typeof doc.version === 'number' ? doc.version : 0;
-  if (version > DOCUMENT_VERSION) {
-    throw new DocumentFormatError(`This document was created by a newer version (v${version}).`);
-  }
+  if (version > DOCUMENT_VERSION) throw new DocumentFormatError(`This document was created by a newer version (v${version}).`);
   while (version < DOCUMENT_VERSION) {
     const migrate = MIGRATIONS[version];
     if (!migrate) throw new DocumentFormatError(`Cannot migrate document version ${version}.`);
@@ -38,18 +127,26 @@ export function parseDocument(input: unknown): CalculationDocument {
     version = doc.version as number;
   }
   if (typeof doc.id !== 'string' || !doc.id) throw new DocumentFormatError('Document is missing an id.');
-  if (!doc.shapes || typeof doc.shapes !== 'object') throw new DocumentFormatError('Document has no canvas data.');
+  if (!Array.isArray(doc.shapes)) throw new DocumentFormatError('Document has no canvas data.');
+  const seen = new Set<string>();
+  const shapes = (doc.shapes as unknown[]).map(sanitizeShape).filter((s): s is Shape => {
+    if (!s || seen.has(s.id)) return false;
+    seen.add(s.id);
+    return true;
+  });
   const now = new Date().toISOString();
   const settings = { ...DEFAULT_SETTINGS, ...((doc.settings as Partial<DocumentSettings>) ?? {}) };
   if (settings.unitSystem !== 'SI' && settings.unitSystem !== 'Imperial') settings.unitSystem = 'SI';
-  settings.precision = clampInt(settings.precision, 0, 8, DEFAULT_SETTINGS.precision);
+  if (settings.canvasMode !== 'free' && settings.canvasMode !== 'page') settings.canvasMode = 'page';
+  if (settings.pageOrientation !== 'portrait' && settings.pageOrientation !== 'landscape') settings.pageOrientation = 'portrait';
+  settings.precision = Math.min(8, Math.max(0, Math.round(num(settings.precision, DEFAULT_SETTINGS.precision))));
   return {
     id: doc.id,
     version: DOCUMENT_VERSION,
-    title: typeof doc.title === 'string' && doc.title ? doc.title : 'Untitled calculation',
+    title: typeof doc.title === 'string' && doc.title ? doc.title.slice(0, 200) : 'Untitled calculation',
     metadata: sanitizeMetadata(doc.metadata),
     settings,
-    shapes: doc.shapes,
+    shapes,
     createdAt: typeof doc.createdAt === 'string' ? doc.createdAt : now,
     updatedAt: typeof doc.updatedAt === 'string' ? doc.updatedAt : now,
   };
@@ -60,12 +157,8 @@ export function serializeDocument(doc: CalculationDocument): string {
   return JSON.stringify({ format: 'calccanvas', ...doc }, null, 2);
 }
 
-function clampInt(v: unknown, min: number, max: number, fallback: number): number {
-  return typeof v === 'number' && Number.isFinite(v) ? Math.min(max, Math.max(min, Math.round(v))) : fallback;
-}
-
 function sanitizeMetadata(m: unknown): CalculationDocument['metadata'] {
-  const src = (m && typeof m === 'object' ? m : {}) as Record<string, unknown>;
+  const src = (m && typeof m === 'object' ? m : {}) as Raw;
   const out: CalculationDocument['metadata'] = {};
   for (const k of ['project', 'calculationReference', 'preparedBy', 'checkedBy', 'revision'] as const) {
     if (typeof src[k] === 'string') out[k] = (src[k] as string).slice(0, 200);

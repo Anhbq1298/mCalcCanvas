@@ -1,15 +1,8 @@
-import { AlignCenter, AlignLeft, AlignRight, X } from 'lucide-react';
+import { AlignCenter, AlignLeft, AlignRight, Bold, Heading2, Italic, List, ListOrdered, Pilcrow, Underline, X, type LucideIcon } from 'lucide-react';
 import { useId, useState, type ReactNode } from 'react';
-import {
-  DefaultColorStyle,
-  DefaultSizeStyle,
-  DefaultTextAlignStyle,
-  useValue,
-  type Editor,
-  type TLShape,
-} from 'tldraw';
-import { isMathShape } from '../../canvas/regionActions';
-import { MATH_COLORS, MATH_SHAPE_TYPE, type MathDisplayMode, type MathShape } from '../../canvas/shapes/mathShapeTypes';
+import { updateShape, useCanvasStore } from '../../canvas/model/canvasStore';
+import { shapeBounds } from '../../canvas/model/geometry';
+import { MATH_COLORS, type DrawShape, type LineShape, type MathDisplayMode, type MathShape, type RectShape, type Shape, type TextShape } from '../../canvas/model/types';
 import { useAppStore } from '../../store/appStore';
 import { useRegionResult } from '../../store/calculationStore';
 
@@ -68,17 +61,16 @@ function NumberInputInner({ id, value, onCommit, step = 1, min }: NumberInputPro
   );
 }
 
-function GeometrySection({ editor, shape }: { editor: Editor; shape: TLShape }) {
-  const bounds = useValue('bounds', () => editor.getShapePageBounds(shape.id), [editor, shape.id]);
-  if (!bounds) return null;
-  const move = (patch: { x?: number; y?: number }) => editor.updateShape({ id: shape.id, type: shape.type, ...patch });
+function GeometrySection({ shape }: { shape: Shape }) {
+  const b = shapeBounds(shape);
+  const move = (patch: { x?: number; y?: number }) => updateShape(shape.id, patch);
   return (
     <Section title="Position & size">
       <div className="grid grid-cols-2 gap-2">
         <Field label="X">{(id) => <NumberInput id={id} value={shape.x} onCommit={(x) => move({ x })} />}</Field>
         <Field label="Y">{(id) => <NumberInput id={id} value={shape.y} onCommit={(y) => move({ y })} />}</Field>
-        <Field label="Width">{(id) => <input id={id} className={inputCls + ' tabular-nums'} value={Math.round(bounds.w)} readOnly />}</Field>
-        <Field label="Height">{(id) => <input id={id} className={inputCls + ' tabular-nums'} value={Math.round(bounds.h)} readOnly />}</Field>
+        <Field label="Width">{(id) => <input id={id} className={inputCls + ' tabular-nums'} value={Math.round(b.w)} readOnly />}</Field>
+        <Field label="Height">{(id) => <input id={id} className={inputCls + ' tabular-nums'} value={Math.round(b.h)} readOnly />}</Field>
       </div>
     </Section>
   );
@@ -108,9 +100,9 @@ const DISPLAY_MODES: { value: MathDisplayMode; label: string }[] = [
   { value: 'full', label: 'Full calculation' },
 ];
 
-function MathProperties({ editor, shape }: { editor: Editor; shape: MathShape }) {
+function MathProperties({ shape }: { shape: MathShape }) {
   const result = useRegionResult(shape.id);
-  const update = (props: Partial<MathShape['props']>) => editor.updateShape({ id: shape.id, type: MATH_SHAPE_TYPE, props });
+  const update = (props: Partial<MathShape['props']>) => updateShape(shape.id, { props });
   const unitError = result?.error?.code === 'display-unit' ? result.error.message : null;
 
   return (
@@ -218,66 +210,131 @@ function MathProperties({ editor, shape }: { editor: Editor; shape: MathShape })
   );
 }
 
-const TEXT_COLORS = ['black', 'grey', 'blue', 'green', 'red', 'orange', 'violet'] as const;
+const INK_COLORS = ['#0f172a', '#475569', '#1e3a5f', '#2563eb', '#047857', '#b45309', '#dc2626'] as const;
 
-function TextProperties({ editor, shape }: { editor: Editor; shape: TLShape }) {
-  const props = shape.props as { color?: string; size?: string; textAlign?: string };
-  const setStyle = <T extends string>(style: { id: string }, value: T) => {
-    editor.markHistoryStoppingPoint('style');
-    editor.setStyleForSelectedShapes(style as never, value as never);
-  };
+function ColorSwatches({ value, onChange, label }: { value: string; onChange(c: string): void; label: string }) {
+  return (
+    <div className="space-y-1">
+      <span className="block text-[12px] font-medium text-muted-foreground">{label}</span>
+      <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label={label}>
+        {INK_COLORS.map((c) => (
+          <button
+            key={c}
+            type="button"
+            role="radio"
+            aria-checked={value === c}
+            aria-label={`Color ${c}`}
+            onClick={() => onChange(c)}
+            className={'h-6 w-6 cursor-pointer rounded-full border-2 transition-transform duration-150 hover:scale-110 ' + (value === c ? 'border-accent' : 'border-transparent')}
+            style={{ background: c }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** execCommand-based formatting for the text region being edited. */
+function FormatButton({ label, icon: Icon, command, value, disabled }: { label: string; icon: LucideIcon; command: string; value?: string; disabled: boolean }) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      title={disabled ? `${label} (double-click the text to edit first)` : label}
+      disabled={disabled}
+      onMouseDown={(e) => {
+        // Keep focus (and the text selection) inside the text region.
+        e.preventDefault();
+        document.execCommand(command, false, value);
+        const el = document.activeElement as HTMLElement | null;
+        el?.dispatchEvent(new Event('input', { bubbles: true }));
+      }}
+      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded border border-border text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground disabled:cursor-default disabled:opacity-40"
+    >
+      <Icon size={15} aria-hidden />
+    </button>
+  );
+}
+
+function TextProperties({ shape }: { shape: TextShape }) {
+  const editing = useCanvasStore((s) => s.editingId === shape.id);
+  const update = (props: Partial<TextShape['props']>) => updateShape(shape.id, { props });
   return (
     <Section title="Text">
-      <Field label="Size">
+      <div className="space-y-1">
+        <span className="block text-[12px] font-medium text-muted-foreground">Formatting</span>
+        <div className="flex flex-wrap gap-1">
+          <FormatButton label="Bold (Ctrl+B)" icon={Bold} command="bold" disabled={!editing} />
+          <FormatButton label="Italic (Ctrl+I)" icon={Italic} command="italic" disabled={!editing} />
+          <FormatButton label="Underline (Ctrl+U)" icon={Underline} command="underline" disabled={!editing} />
+          <FormatButton label="Heading" icon={Heading2} command="formatBlock" value="H2" disabled={!editing} />
+          <FormatButton label="Normal paragraph" icon={Pilcrow} command="formatBlock" value="DIV" disabled={!editing} />
+          <FormatButton label="Bullet list" icon={List} command="insertUnorderedList" disabled={!editing} />
+          <FormatButton label="Numbered list" icon={ListOrdered} command="insertOrderedList" disabled={!editing} />
+        </div>
+      </div>
+      <Field label="Font size">
         {(id) => (
-          <select id={id} className={inputCls + ' cursor-pointer'} value={props.size} onChange={(e) => setStyle(DefaultSizeStyle, e.target.value)}>
-            <option value="s">Small</option>
-            <option value="m">Medium</option>
-            <option value="l">Large</option>
-            <option value="xl">Extra large</option>
+          <select id={id} className={inputCls + ' cursor-pointer'} value={shape.props.fontSize} onChange={(e) => update({ fontSize: Number(e.target.value) })}>
+            {[11, 12, 13, 14, 15, 16, 18, 20, 24, 28, 32].map((v) => (
+              <option key={v} value={v}>
+                {v} px
+              </option>
+            ))}
           </select>
         )}
       </Field>
-      {props.textAlign !== undefined && (
-        <div className="space-y-1">
-          <span className="block text-[12px] font-medium text-muted-foreground">Alignment</span>
-          <div className="flex gap-1" role="radiogroup" aria-label="Text alignment">
-            {(
-              [
-                ['start', AlignLeft],
-                ['middle', AlignCenter],
-                ['end', AlignRight],
-              ] as const
-            ).map(([v, Icon]) => (
-              <button
-                key={v}
-                type="button"
-                role="radio"
-                aria-checked={props.textAlign === v}
-                aria-label={`Align ${v}`}
-                onClick={() => setStyle(DefaultTextAlignStyle, v)}
-                className={'flex h-8 w-8 cursor-pointer items-center justify-center rounded border transition-colors duration-150 ' + (props.textAlign === v ? 'border-accent bg-accent-soft text-accent' : 'border-border text-muted-foreground hover:bg-muted')}
-              >
-                <Icon size={15} aria-hidden />
-              </button>
-            ))}
-          </div>
+      <div className="space-y-1">
+        <span className="block text-[12px] font-medium text-muted-foreground">Alignment</span>
+        <div className="flex gap-1" role="radiogroup" aria-label="Text alignment">
+          {(
+            [
+              ['left', AlignLeft],
+              ['center', AlignCenter],
+              ['right', AlignRight],
+            ] as const
+          ).map(([v, Icon]) => (
+            <button
+              key={v}
+              type="button"
+              role="radio"
+              aria-checked={shape.props.align === v}
+              aria-label={`Align ${v}`}
+              onClick={() => update({ align: v })}
+              className={'flex h-8 w-8 cursor-pointer items-center justify-center rounded border transition-colors duration-150 ' + (shape.props.align === v ? 'border-accent bg-accent-soft text-accent' : 'border-border text-muted-foreground hover:bg-muted')}
+            >
+              <Icon size={15} aria-hidden />
+            </button>
+          ))}
         </div>
+      </div>
+      <ColorSwatches label="Color" value={shape.props.color} onChange={(color) => update({ color })} />
+    </Section>
+  );
+}
+
+function StrokeProperties({ shape }: { shape: RectShape | LineShape | DrawShape }) {
+  const update = (props: Record<string, unknown>) => updateShape(shape.id, { props });
+  return (
+    <Section title="Line">
+      <ColorSwatches label="Color" value={shape.props.stroke} onChange={(stroke) => update({ stroke })} />
+      <Field label="Thickness">
+        {(id) => (
+          <select id={id} className={inputCls + ' cursor-pointer'} value={shape.props.strokeWidth} onChange={(e) => update({ strokeWidth: Number(e.target.value) })}>
+            {[0.75, 1, 1.5, 2, 2.5, 3, 4].map((v) => (
+              <option key={v} value={v}>
+                {v} px
+              </option>
+            ))}
+          </select>
+        )}
+      </Field>
+      {shape.type === 'line' && (
+        <label className="flex cursor-pointer items-center gap-2 text-[13px]">
+          <input type="checkbox" className="h-4 w-4 cursor-pointer accent-accent" checked={shape.props.arrow} onChange={(e) => update({ arrow: e.target.checked })} />
+          Arrowhead
+        </label>
       )}
-      {props.color !== undefined && (
-        <Field label="Color">
-          {(id) => (
-            <select id={id} className={inputCls + ' cursor-pointer capitalize'} value={props.color} onChange={(e) => setStyle(DefaultColorStyle, e.target.value)}>
-              {TEXT_COLORS.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          )}
-        </Field>
-      )}
-      <p className="text-[11px] leading-relaxed text-muted-foreground">Double-click the text to edit. Bold, italic, lists and links are in the text toolbar while editing (Ctrl+B, Ctrl+I).</p>
     </Section>
   );
 }
@@ -338,26 +395,34 @@ function DocumentProperties() {
 }
 
 export function PropertiesPanel() {
-  const editor = useAppStore((s) => s.editor);
   const togglePanel = useAppStore((s) => s.togglePanel);
-  const selected = useValue('selected', () => editor?.getOnlySelectedShape() ?? null, [editor]);
-  const count = useValue('count', () => editor?.getSelectedShapeIds().length ?? 0, [editor]);
+  const selection = useCanvasStore((s) => s.selection);
+  const selected = useCanvasStore((s) => (s.selection.length === 1 ? s.shapes[s.selection[0]] : null));
+  const count = selection.length;
 
   let body: ReactNode;
-  if (!editor || count === 0) body = <DocumentProperties />;
-  else if (!selected) body = <p className="px-4 py-4 text-[13px] text-muted-foreground">{count} objects selected.</p>;
+  if (count === 0) body = <DocumentProperties />;
+  else if (!selected) body = <p className="px-4 py-4 text-[13px] text-muted-foreground">{count} objects selected. Ctrl+G groups them.</p>;
   else
     body = (
       <>
-        {isMathShape(selected) ? <MathProperties editor={editor} shape={selected} /> : selected.type === 'text' || 'textAlign' in selected.props ? <TextProperties editor={editor} shape={selected} /> : null}
-        <GeometrySection editor={editor} shape={selected} />
+        {selected.type === 'math' && <MathProperties shape={selected} />}
+        {selected.type === 'text' && <TextProperties shape={selected} />}
+        {(selected.type === 'rect' || selected.type === 'line' || selected.type === 'draw') && <StrokeProperties shape={selected} />}
+        {selected.type === 'image' && (
+          <Section title="Image">
+            <p className="text-[12px] leading-relaxed text-muted-foreground">Drag a corner to resize; the aspect ratio is kept (hold Shift to stretch).</p>
+          </Section>
+        )}
+        <GeometrySection shape={selected} />
       </>
     );
 
+  const heading = count === 0 ? 'Worksheet' : selected?.type === 'math' ? 'Math region' : selected?.type === 'text' ? 'Text' : 'Properties';
   return (
     <aside aria-label="Properties" className="flex w-72 shrink-0 flex-col border-l border-border bg-card" data-testid="properties-panel">
       <div className="flex h-10 shrink-0 items-center justify-between border-b border-border px-4">
-        <h2 className="text-[13px] font-semibold">{count === 0 ? 'Worksheet' : selected && isMathShape(selected) ? 'Math region' : 'Properties'}</h2>
+        <h2 className="text-[13px] font-semibold">{heading}</h2>
         <button type="button" aria-label="Close properties panel" onClick={() => togglePanel(false)} className="flex h-7 w-7 cursor-pointer items-center justify-center rounded text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground">
           <X size={15} aria-hidden />
         </button>

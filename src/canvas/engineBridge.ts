@@ -1,78 +1,54 @@
 /**
- * One-way synchronisation: tldraw store (authoritative) → calculation engine.
- *
- * Math shape props are the only persisted calculation state; the engine is a
- * derived cache. Any store change (user edit, undo/redo, load, paste) flows
- * through here, so results can never drift from what is on the canvas.
+ * One-way synchronisation: canvas store (authoritative) → calculation engine.
+ * Every change — typing, undo/redo, paste, load — flows through here, so
+ * results can never drift from what is on the canvas.
  */
-import type { Editor, TLRecord, TLShapeId } from 'tldraw';
 import { engine } from '../store/calculationStore';
-import { isMathShape } from './regionActions';
-import type { MathShape } from './shapes/mathShapeTypes';
+import { useCanvasStore, type CanvasState } from './model/canvasStore';
+import type { MathShape, Shape } from './model/types';
 
-function inputFor(shape: MathShape, editingId: TLShapeId | null) {
+function inputFor(s: MathShape, editingId: string | null) {
   return {
-    latex: shape.props.latex,
-    displayUnit: shape.props.displayUnit.trim() || null,
-    precision: shape.props.precision >= 0 ? shape.props.precision : null,
-    draft: shape.id === editingId,
+    latex: s.props.latex,
+    displayUnit: s.props.displayUnit.trim() || null,
+    precision: s.props.precision >= 0 ? s.props.precision : null,
+    draft: s.id === editingId,
   };
 }
 
-export function resyncAll(editor: Editor): void {
-  const editingId = editor.getEditingShapeId();
-  const shapes = editor.store.allRecords().filter(isMathShape) as MathShape[];
+const isMath = (s: Shape | undefined): s is MathShape => s?.type === 'math';
+
+export function resyncAll(): void {
+  const { shapes, editingId } = useCanvasStore.getState();
   engine.batch(() => {
     engine.clear();
-    for (const s of shapes) engine.setRegion(s.id, inputFor(s, editingId));
+    for (const s of Object.values(shapes)) if (isMath(s)) engine.setRegion(s.id, inputFor(s, editingId));
   });
 }
 
-export function connectEngine(editor: Editor): () => void {
-  resyncAll(editor);
-  let editingId = editor.getEditingShapeId();
-
-  const unlisten = editor.store.listen(
-    ({ changes }) => {
-      const nowEditing = editor.getEditingShapeId();
-      const touched: MathShape[] = [];
-      const removed: string[] = [];
-      for (const rec of Object.values(changes.added) as TLRecord[]) if (isMathShape(rec)) touched.push(rec);
-      for (const [from, to] of Object.values(changes.updated) as [TLRecord, TLRecord][]) {
-        if (isMathShape(to) && (from as MathShape).props !== to.props) touched.push(to);
-      }
-      for (const rec of Object.values(changes.removed) as TLRecord[]) if (isMathShape(rec)) removed.push(rec.id);
-
-      let finishedEditing: TLShapeId | null = null;
-      if (nowEditing !== editingId) {
-        finishedEditing = editingId;
-        editingId = nowEditing;
-      }
-
-      if (touched.length || removed.length || finishedEditing) {
-        engine.batch(() => {
-          for (const s of touched) engine.setRegion(s.id, inputFor(s, editingId));
-          for (const id of removed) engine.removeRegion(id);
-          if (finishedEditing) {
-            const shape = editor.getShape(finishedEditing);
-            if (isMathShape(shape)) engine.setRegion(shape.id, inputFor(shape, editingId));
+export function connectEngine(): () => void {
+  resyncAll();
+  return useCanvasStore.subscribe((next: CanvasState, prev: CanvasState) => {
+    if (next.shapes === prev.shapes && next.editingId === prev.editingId) return;
+    engine.batch(() => {
+      if (next.shapes !== prev.shapes) {
+        for (const [id, s] of Object.entries(next.shapes)) {
+          const old = prev.shapes[id];
+          if (isMath(s) && (!old || (old as MathShape).props !== s.props)) {
+            const o = old as MathShape | undefined;
+            // Size-only changes (auto-size) don't affect the calculation.
+            if (o && o.props.latex === s.props.latex && o.props.displayUnit === s.props.displayUnit && o.props.precision === s.props.precision) continue;
+            engine.setRegion(id, inputFor(s, next.editingId));
           }
-        });
+        }
+        for (const id of Object.keys(prev.shapes)) if (!next.shapes[id] && isMath(prev.shapes[id])) engine.removeRegion(id);
       }
-
-      // Like Mathcad, an empty region disappears when you leave it.
-      if (finishedEditing) {
-        const id = finishedEditing;
-        queueMicrotask(() => {
-          const shape = editor.getShape(id);
-          if (isMathShape(shape) && shape.props.latex.trim() === '' && editor.getEditingShapeId() !== id) {
-            editor.run(() => editor.deleteShape(id), { history: 'ignore' });
-          }
-        });
+      if (next.editingId !== prev.editingId) {
+        for (const id of [prev.editingId, next.editingId]) {
+          const s = id ? next.shapes[id] : undefined;
+          if (isMath(s)) engine.setRegion(s.id, inputFor(s, next.editingId));
+        }
       }
-    },
-    { scope: 'all' },
-  );
-
-  return unlisten;
+    });
+  });
 }

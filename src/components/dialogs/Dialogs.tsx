@@ -32,7 +32,6 @@ function Modal({ title, onClose, children, wide }: { title: string; onClose(): v
 }
 
 function OpenDialog({ onClose }: { onClose(): void }) {
-  const editor = useAppStore((s) => s.editor);
   const currentId = useAppStore((s) => s.documentId);
   const [docs, setDocs] = useState<DocumentSummary[] | null>(null);
   const reload = () => void DocumentManager.list().then(setDocs);
@@ -52,7 +51,7 @@ function OpenDialog({ onClose }: { onClose(): void }) {
                 type="button"
                 className="min-w-0 flex-1 cursor-pointer text-left"
                 onClick={async () => {
-                  if (editor) await openDocument(editor, d.id);
+                  await openDocument(d.id);
                   onClose();
                 }}
               >
@@ -90,7 +89,7 @@ function OpenDialog({ onClose }: { onClose(): void }) {
 
 const SHORTCUTS: [string, string][] = [
   ['Type on empty canvas', 'Create a math region at the pointer'],
-  ['M, then click', 'Place a math region'],
+  ['Double-click empty canvas', 'New math region there'],
   ['Double-click / Enter', 'Edit selected region'],
   ['Enter or Esc', 'Confirm and leave the equation'],
   [':=', 'Definition (shows ≔)'],
@@ -98,6 +97,8 @@ const SHORTCUTS: [string, string][] = [
   ['/', 'Fraction'],
   ['^ / _', 'Exponent / subscript'],
   ['Ctrl+C / Ctrl+V / Ctrl+D', 'Copy / paste / duplicate'],
+  ['Ctrl+G / Ctrl+Shift+G', 'Group / ungroup'],
+  ['Shift+drag', 'Constrain move / angle; add to selection'],
   ['Delete', 'Delete selection'],
   ['Arrow keys', 'Nudge (Shift = 10 px)'],
   ['Ctrl+Z / Ctrl+Y', 'Undo / redo'],
@@ -167,7 +168,7 @@ function AboutDialog({ onClose }: { onClose(): void }) {
     <Modal title="About CalcCanvas" onClose={onClose}>
       <p>A free-positioned engineering calculation workspace: Mathcad-style math regions with units, automatic recalculation and A4 report export.</p>
       <p className="mt-2 text-muted-foreground">
-        Built with tldraw, MathLive and mathjs. Worksheets are stored locally in this browser (IndexedDB); use Export JSON for backups.
+        Built with its own canvas engine, MathLive and mathjs. Worksheets are stored locally in this browser (IndexedDB); use Export JSON for backups.
       </p>
     </Modal>
   );

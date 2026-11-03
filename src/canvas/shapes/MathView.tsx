@@ -1,0 +1,107 @@
+import { AlertCircle, AlertTriangle, CheckCircle2, CircleDashed, XCircle } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { buildDisplay } from '../../math/MathFormatter';
+import { MathEditor } from '../../math/MathEditor';
+import { MathRenderer } from '../../math/MathRenderer';
+import { useRegionResult } from '../../store/calculationStore';
+import { stopEditing, updateShape } from '../model/canvasStore';
+import type { MathShape } from '../model/types';
+
+const PAD_X = 6;
+const PAD_Y = 4;
+
+/** A math region: MathLive editor while editing, rendered equation + result otherwise. */
+export function MathView({ shape, editing, isStatic }: { shape: MathShape; editing: boolean; isStatic: boolean }) {
+  const result = useRegionResult(shape.id);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const { latex, displayMode, autoSize, fontSize, color, w, h } = shape.props;
+  const display = useMemo(() => buildDisplay(latex, result, displayMode), [latex, result, displayMode]);
+
+  // Auto-size: the box follows the rendered equation unless resized manually.
+  useEffect(() => {
+    if (isStatic || !autoSize) return;
+    const el = contentRef.current;
+    if (!el) return;
+    const fit = () => {
+      const nw = Math.max(24, Math.ceil(el.offsetWidth));
+      const nh = Math.max(20, Math.ceil(el.offsetHeight));
+      if (Math.abs(nw - shape.props.w) > 1 || Math.abs(nh - shape.props.h) > 1) {
+        updateShape(shape.id, { props: { w: nw, h: nh } }, { history: false });
+      }
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [shape.id, shape.props.w, shape.props.h, autoSize, isStatic]);
+
+  const onChange = useCallback((next: string) => updateShape(shape.id, { props: { latex: next } }, { history: false }), [shape.id]);
+  const onExit = useCallback(() => stopEditing(), []);
+
+  const error = result?.error;
+  const empty = latex.trim() === '';
+
+  return (
+    <div
+      ref={contentRef}
+      className="math-region"
+      data-testid="math-region"
+      data-shape-id={shape.id}
+      data-status={result?.status ?? 'empty'}
+      data-latex={latex}
+      data-result={result?.value?.text ?? ''}
+      data-error={error?.message ?? ''}
+      style={
+        {
+          '--math-size': `${fontSize}px`,
+          '--math-color': color,
+          width: autoSize ? 'max-content' : w,
+          minHeight: autoSize ? undefined : h,
+          padding: `${PAD_Y}px ${PAD_X}px`,
+        } as React.CSSProperties
+      }
+    >
+      {editing ? (
+        <MathEditor latex={latex} onChange={onChange} onExit={onExit} ariaLabel="Math region editor" />
+      ) : empty ? (
+        <span className="math-placeholder">Empty region</span>
+      ) : (
+        <div className="flex items-center gap-2">
+          <MathRenderer latex={display.latex} />
+          {display.check && (
+            <span
+              data-testid="check-badge"
+              className={
+                'inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 font-sans text-[11px] font-semibold tracking-wide text-white ' +
+                (display.check.pass ? 'bg-success' : 'bg-destructive')
+              }
+            >
+              {display.check.pass ? <CheckCircle2 size={12} aria-hidden /> : <XCircle size={12} aria-hidden />}
+              {display.check.pass ? 'PASS' : 'FAIL'}
+            </span>
+          )}
+        </div>
+      )}
+
+      {error && !empty && (
+        <div role="status" className="mt-0.5 flex max-w-[420px] items-start gap-1 font-sans text-[11px] leading-snug text-destructive">
+          <AlertCircle size={12} className="mt-px shrink-0" aria-hidden />
+          <span className="whitespace-pre-wrap">{error.message}</span>
+        </div>
+      )}
+      {!isStatic &&
+        result?.warnings.map((wmsg) => (
+          <div key={wmsg} className="mt-0.5 flex max-w-[420px] items-start gap-1 font-sans text-[11px] leading-snug text-warning">
+            <AlertTriangle size={12} className="mt-px shrink-0" aria-hidden />
+            <span>{wmsg}</span>
+          </div>
+        ))}
+      {editing && result?.draftError && (
+        <div className="mt-0.5 flex items-center gap-1 font-sans text-[11px] text-muted-foreground">
+          <CircleDashed size={12} aria-hidden />
+          <span>Incomplete – dependents use the last valid expression</span>
+        </div>
+      )}
+    </div>
+  );
+}

@@ -1,10 +1,11 @@
-import { Box, type Editor, type TLShape } from 'tldraw';
+import { boxContains, boxesIntersect, shapeBounds } from '../canvas/model/geometry';
+import type { Box, Shape } from '../canvas/model/types';
 import type { PageOrientation } from '../documents/DocumentTypes';
 
 /** A4 at 96 CSS px per inch. */
 export const A4 = { w: 794, h: 1123 };
 export const PAGE_GAP = 48;
-/** 20 mm margins. */
+/** 20 mm side margins. */
 export const PAGE_MARGIN = 76;
 
 export function pageSize(orientation: PageOrientation): { w: number; h: number } {
@@ -14,46 +15,36 @@ export function pageSize(orientation: PageOrientation): { w: number; h: number }
 /** Pages are stacked vertically from the page origin (0, 0). */
 export function pageBox(index: number, orientation: PageOrientation): Box {
   const { w, h } = pageSize(orientation);
-  return new Box(0, index * (h + PAGE_GAP), w, h);
+  return { x: 0, y: index * (h + PAGE_GAP), w, h };
 }
 
 export function printableBox(index: number, orientation: PageOrientation): Box {
   const p = pageBox(index, orientation);
-  return new Box(p.x + PAGE_MARGIN, p.y + PAGE_MARGIN * 0.6, p.w - 2 * PAGE_MARGIN, p.h - PAGE_MARGIN * 1.2);
+  return { x: p.x + PAGE_MARGIN, y: p.y + PAGE_MARGIN * 0.6, w: p.w - 2 * PAGE_MARGIN, h: p.h - PAGE_MARGIN * 1.2 };
 }
 
-function topLevelShapes(editor: Editor): TLShape[] {
-  return editor.getCurrentPageShapes().filter((s) => s.parentId === editor.getCurrentPageId());
-}
-
-/** Number of pages needed to hold all content (at least one). */
-export function pageCount(editor: Editor, orientation: PageOrientation): number {
+export function pageCount(shapes: Shape[], orientation: PageOrientation): number {
   const { h } = pageSize(orientation);
   let max = 1;
-  for (const s of topLevelShapes(editor)) {
-    const b = editor.getShapePageBounds(s);
-    if (!b || b.maxY < 0) continue;
-    max = Math.max(max, Math.floor(Math.max(0, b.minY) / (h + PAGE_GAP)) + 1);
+  for (const s of shapes) {
+    const b = shapeBounds(s);
+    if (b.y + b.h < 0) continue;
+    max = Math.max(max, Math.floor(Math.max(0, b.y) / (h + PAGE_GAP)) + 1);
   }
   return Math.min(max, 200);
 }
 
-/** Shapes not fully inside the printable area of a single page. */
-export function shapesOutsidePrintArea(editor: Editor, orientation: PageOrientation): TLShape[] {
+/** Shapes not fully inside the printable area of one page. */
+export function shapesOutsidePrintArea(shapes: Shape[], orientation: PageOrientation): Shape[] {
   const { h } = pageSize(orientation);
-  return topLevelShapes(editor).filter((s) => {
-    const b = editor.getShapePageBounds(s);
-    if (!b) return false;
-    const index = Math.max(0, Math.floor(b.minY / (h + PAGE_GAP)));
-    return !printableBox(index, orientation).contains(b);
+  return shapes.filter((s) => {
+    const b = shapeBounds(s);
+    const index = Math.max(0, Math.floor(b.y / (h + PAGE_GAP)));
+    return !boxContains(printableBox(index, orientation), b);
   });
 }
 
-/** Top-level shapes intersecting a page. */
-export function shapesOnPage(editor: Editor, index: number, orientation: PageOrientation): TLShape[] {
+export function shapesOnPage(shapes: Shape[], index: number, orientation: PageOrientation): Shape[] {
   const box = pageBox(index, orientation);
-  return topLevelShapes(editor).filter((s) => {
-    const b = editor.getShapePageBounds(s);
-    return !!b && box.collides(b);
-  });
+  return shapes.filter((s) => boxesIntersect(box, shapeBounds(s)));
 }

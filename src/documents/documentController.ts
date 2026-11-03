@@ -1,44 +1,37 @@
 /**
  * Document lifecycle: new / open / save / autosave / JSON import & export.
  */
-import { getSnapshot, loadSnapshot, type Editor } from 'tldraw';
+import { focusPage } from '../canvas/canvasActions';
 import { resyncAll } from '../canvas/engineBridge';
-import { pageBox } from '../export/pageGeometry';
+import { loadShapes, orderedShapes, useCanvasStore } from '../canvas/model/canvasStore';
+import { pageSize } from '../export/pageGeometry';
 import { useAppStore } from '../store/appStore';
 import { engine } from '../store/calculationStore';
-import { createDemoWorksheet } from './demoWorksheet';
+import { demoWorksheetShapes } from './demoWorksheet';
 import { DocumentManager } from './DocumentManager';
 import { parseDocument, serializeDocument } from './DocumentSerializer';
 import { DEFAULT_SETTINGS, DOCUMENT_VERSION, type CalculationDocument } from './DocumentTypes';
 
 let suppressAutosave = false;
+let storageWarningShown = false;
 let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
 function newId(): string {
-  return typeof crypto !== 'undefined' && 'randomUUID' in crypto
-    ? crypto.randomUUID()
-    : `doc-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  return typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `doc-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
-function applySettings(editor: Editor) {
+function applySettings() {
   const { settings } = useAppStore.getState();
   engine.setSettings({ unitSystem: settings.unitSystem, precision: settings.precision });
-  void editor;
 }
 
-/** Show the top of page 1 at 100 %, centred horizontally. */
-function focusFirstPage(editor: Editor) {
-  const apply = () => {
-    const box = pageBox(0, useAppStore.getState().settings.pageOrientation);
-    const vp = editor.getViewportScreenBounds();
-    editor.setCamera({ x: Math.max(24, (vp.w - box.w) / 2), y: 24, z: 1 }, { immediate: true });
-  };
-  apply();
-  // The container may not have its final size on the first frame.
-  requestAnimationFrame(apply);
+function focusFirstPage() {
+  const w = pageSize(useAppStore.getState().settings.pageOrientation).w;
+  focusPage(w);
+  requestAnimationFrame(() => focusPage(w));
 }
 
-export function currentDocument(editor: Editor): CalculationDocument {
+export function currentDocument(): CalculationDocument {
   const s = useAppStore.getState();
   return {
     id: s.documentId ?? newId(),
@@ -46,51 +39,53 @@ export function currentDocument(editor: Editor): CalculationDocument {
     title: s.title,
     metadata: s.metadata,
     settings: s.settings,
-    shapes: getSnapshot(editor.store).document,
+    shapes: orderedShapes(),
     createdAt: s.createdAt,
     updatedAt: new Date().toISOString(),
   };
 }
 
-export async function saveDocument(editor: Editor): Promise<void> {
-  const store = useAppStore.getState();
+export async function saveDocument(): Promise<void> {
   if (saveTimer) clearTimeout(saveTimer);
   saveTimer = null;
-  store.setSaveState('saving');
+  useAppStore.getState().setSaveState('saving');
   try {
-    const doc = currentDocument(editor);
+    const doc = currentDocument();
     await DocumentManager.put(doc);
     await DocumentManager.setLastOpenedId(doc.id);
-    if (!store.documentId) useAppStore.setState({ documentId: doc.id });
+    if (!useAppStore.getState().documentId) useAppStore.setState({ documentId: doc.id });
     useAppStore.getState().setSaveState('saved');
   } catch (e) {
-    console.error(e);
+    console.warn('Save failed', e);
     useAppStore.getState().setSaveState('error');
-    useAppStore.getState().showToast('error', 'Saving failed – your browser storage may be full or blocked.');
+    if (!storageWarningShown) {
+      storageWarningShown = true;
+      useAppStore.getState().showToast('info', 'This view can’t save to browser storage. Use File → Export JSON to keep your work.');
+    }
   }
 }
 
-function scheduleSave(editor: Editor) {
+function scheduleSave() {
   if (suppressAutosave) return;
   useAppStore.getState().setSaveState('dirty');
   if (saveTimer) clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => void saveDocument(editor), 800);
+  saveTimer = setTimeout(() => void saveDocument(), 800);
 }
 
-export function startAutosave(editor: Editor): () => void {
-  const stopStore = editor.store.listen(() => scheduleSave(editor), { scope: 'document', source: 'user' });
+export function startAutosave(): () => void {
+  const stopCanvas = useCanvasStore.subscribe((s, prev) => {
+    if (s.docVersion !== prev.docVersion) scheduleSave();
+  });
   const stopApp = useAppStore.subscribe((s, prev) => {
-    if (s.title !== prev.title || s.metadata !== prev.metadata || s.settings !== prev.settings) {
-      if (s.settings !== prev.settings) applySettings(editor);
-      scheduleSave(editor);
-    }
+    if (s.settings !== prev.settings) applySettings();
+    if (s.title !== prev.title || s.metadata !== prev.metadata || s.settings !== prev.settings) scheduleSave();
   });
   const flush = () => {
-    if (useAppStore.getState().saveState === 'dirty') void saveDocument(editor);
+    if (useAppStore.getState().saveState === 'dirty') void saveDocument();
   };
   window.addEventListener('beforeunload', flush);
   return () => {
-    stopStore();
+    stopCanvas();
     stopApp();
     window.removeEventListener('beforeunload', flush);
   };
@@ -105,77 +100,67 @@ function withoutAutosave(fn: () => void) {
   }
 }
 
-export function loadDocument(editor: Editor, doc: CalculationDocument): void {
+export function loadDocument(doc: CalculationDocument): void {
   withoutAutosave(() => {
-    editor.setEditingShape(null);
-    loadSnapshot(editor.store, { document: doc.shapes as never });
-    editor.clearHistory();
+    loadShapes(doc.shapes);
     useAppStore.getState().setDocument(doc);
-    applySettings(editor);
+    applySettings();
     // Results are never trusted from storage: recompute everything.
-    resyncAll(editor);
-    focusFirstPage(editor);
+    resyncAll();
+    focusFirstPage();
   });
-  void DocumentManager.setLastOpenedId(doc.id);
+  void DocumentManager.setLastOpenedId(doc.id).catch(() => {});
 }
 
-export async function newDocument(editor: Editor, opts: { demo?: boolean } = {}): Promise<void> {
+export async function newDocument(opts: { demo?: boolean } = {}): Promise<void> {
   withoutAutosave(() => {
-    editor.setEditingShape(null);
-    editor.setCurrentTool('select');
-    const ids = [...editor.getCurrentPageShapeIds()];
-    editor.run(() => editor.deleteShapes(ids), { history: 'ignore' });
     useAppStore.getState().setDocument({
       id: newId(),
       title: opts.demo ? 'Simply Supported Steel Beam Calculation' : 'Untitled calculation',
-      metadata: opts.demo
-        ? { project: 'Demonstration project', calculationReference: 'CALC-001', preparedBy: '', checkedBy: '', revision: 'A' }
-        : {},
+      metadata: opts.demo ? { project: 'Demonstration project', calculationReference: 'CALC-001', preparedBy: '', checkedBy: '', revision: 'A' } : {},
       settings: DEFAULT_SETTINGS,
       createdAt: new Date().toISOString(),
     });
-    applySettings(editor);
-    if (opts.demo) editor.run(() => createDemoWorksheet(editor), { history: 'ignore' });
-    editor.clearHistory();
-    resyncAll(editor);
-    focusFirstPage(editor);
+    applySettings();
+    loadShapes(opts.demo ? demoWorksheetShapes() : []);
+    resyncAll();
+    focusFirstPage();
   });
-  await saveDocument(editor);
+  await saveDocument();
 }
 
-export async function openDocument(editor: Editor, id: string): Promise<void> {
-  if (useAppStore.getState().saveState === 'dirty') await saveDocument(editor);
+export async function openDocument(id: string): Promise<void> {
+  if (useAppStore.getState().saveState === 'dirty') await saveDocument();
   const doc = await DocumentManager.get(id);
   if (!doc) {
     useAppStore.getState().showToast('error', 'That worksheet no longer exists.');
     return;
   }
-  loadDocument(editor, doc);
+  loadDocument(doc);
 }
 
-export async function initDocuments(editor: Editor): Promise<void> {
+export async function initDocuments(): Promise<void> {
   try {
     const lastId = await DocumentManager.getLastOpenedId();
     const doc = lastId ? await DocumentManager.get(lastId) : null;
-    if (doc) return loadDocument(editor, doc);
+    if (doc) return loadDocument(doc);
     const docs = await DocumentManager.list();
     if (docs.length) {
       const latest = await DocumentManager.get(docs[0].id);
-      if (latest) return loadDocument(editor, latest);
+      if (latest) return loadDocument(latest);
     }
   } catch (e) {
-    console.error('Could not open saved worksheets', e);
-    useAppStore.getState().showToast('error', 'Saved worksheets could not be read; starting a new one.');
+    console.warn('Saved worksheets are unavailable here', e);
   }
-  await newDocument(editor, { demo: true });
+  await newDocument({ demo: true });
 }
 
 function slug(s: string): string {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'calculation';
 }
 
-export function exportJson(editor: Editor): void {
-  const doc = currentDocument(editor);
+export function exportJson(): void {
+  const doc = currentDocument();
   const blob = new Blob([serializeDocument(doc)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -185,14 +170,18 @@ export function exportJson(editor: Editor): void {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export async function importJson(editor: Editor, file: File): Promise<void> {
+export async function importJson(file: File): Promise<void> {
   try {
     const parsed = parseDocument(JSON.parse(await file.text()));
-    // Never overwrite an existing worksheet on import.
-    const existing = await DocumentManager.get(parsed.id);
+    let existing = null;
+    try {
+      existing = await DocumentManager.get(parsed.id);
+    } catch {
+      /* storage unavailable */
+    }
     const doc = existing ? { ...parsed, id: newId() } : parsed;
-    loadDocument(editor, doc);
-    await saveDocument(editor);
+    loadDocument(doc);
+    await saveDocument();
     useAppStore.getState().showToast('info', `Imported “${doc.title}”.`);
   } catch (e) {
     useAppStore.getState().showToast('error', `Import failed: ${e instanceof Error ? e.message : 'invalid file'}`);

@@ -1,0 +1,424 @@
+/**
+ * CalcCanvas's own infinite canvas: pan/zoom viewport, shape rendering,
+ * selection, marquee, move, resize and drawing tools.
+ *
+ * Shapes are DOM elements inside one transformed layer
+ * (screen = (page − camera) · zoom), so math regions stay real, editable
+ * HTML at every zoom level.
+ */
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useAppStore } from '../store/appStore';
+import { createMathRegion, createTextRegion, insertImageFile, lastPointer, snapPoint, viewport, zoomAt } from './canvasActions';
+import { PageOverlay } from './PageOverlay';
+import { SelectionOverlay } from './SelectionOverlay';
+import {
+  addShapes,
+  deleteShapes,
+  expandGroups,
+  markHistory,
+  newShapeId,
+  select,
+  setCamera,
+  startEditing,
+  stopEditing,
+  updateShape,
+  updateShapes,
+  useCanvasStore,
+  type ShapePatch,
+} from './model/canvasStore';
+import { boxFromPoints, boxesIntersect, screenToPage, shapeBounds } from './model/geometry';
+import type { Box, Camera, Point, Shape } from './model/types';
+import { ShapeView } from './shapes/ShapeView';
+
+export type HandleId = 'nw' | 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'start' | 'end';
+
+type Drag =
+  | { kind: 'pan'; startScreen: Point; cam: Camera }
+  | { kind: 'move'; start: Point; orig: Record<string, Point>; moved: boolean; clickedId: string; wasSelected: boolean; shift: boolean }
+  | { kind: 'marquee'; start: Point; base: string[] }
+  | { kind: 'resize'; id: string; handle: HandleId; start: Point; orig: Shape }
+  | { kind: 'create-rect'; id: string; start: Point }
+  | { kind: 'create-line'; id: string; start: Point }
+  | { kind: 'draw'; id: string; origin: Point };
+
+const MIN_SIZE = 16;
+const STROKE = '#1e3a5f';
+
+function isTypingTarget(t: EventTarget | null): boolean {
+  if (!(t instanceof HTMLElement)) return false;
+  return !!t.closest('math-field') || t.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(t.tagName);
+}
+
+/** New geometry for a box or line shape dragged by one of its handles. */
+function resizePatch(orig: Shape, handle: HandleId, p: Point, keepAspect: boolean): ShapePatch | null {
+  if (orig.type === 'line') {
+    const endX = orig.x + orig.props.x2;
+    const endY = orig.y + orig.props.y2;
+    if (handle === 'end') return { props: { x2: p.x - orig.x, y2: p.y - orig.y } };
+    if (handle === 'start') return { x: p.x, y: p.y, props: { x2: endX - p.x, y2: endY - p.y } };
+    return null;
+  }
+  if (orig.type === 'draw') return null;
+  const b = shapeBounds(orig);
+  let left = b.x, top = b.y, right = b.x + b.w, bottom = b.y + b.h;
+  if (handle.includes('w')) left = Math.min(p.x, right - MIN_SIZE);
+  if (handle.includes('e')) right = Math.max(p.x, left + MIN_SIZE);
+  if (handle.includes('n')) top = Math.min(p.y, bottom - MIN_SIZE);
+  if (handle.includes('s')) bottom = Math.max(p.y, top + MIN_SIZE);
+  let w = right - left;
+  let h = bottom - top;
+  if (keepAspect && b.w > 0 && b.h > 0) {
+    const ratio = b.w / b.h;
+    if (handle === 'n' || handle === 's') w = h * ratio;
+    else if (handle === 'e' || handle === 'w') h = w / ratio;
+    else if (w / h > ratio) h = w / ratio;
+    else w = h * ratio;
+    if (handle.includes('w')) left = right - w;
+    if (handle.includes('n')) top = bottom - h;
+  }
+  if (orig.type === 'text') return { x: left, props: { w } };
+  if (orig.type === 'math') return { x: left, y: top, props: { w, h, autoSize: false } };
+  return { x: left, y: top, props: { w, h } };
+}
+
+export function CanvasView() {
+  const order = useCanvasStore((s) => s.order);
+  const shapes = useCanvasStore((s) => s.shapes);
+  const camera = useCanvasStore((s) => s.camera);
+  const editingId = useCanvasStore((s) => s.editingId);
+  const tool = useCanvasStore((s) => s.tool);
+  const isGrid = useCanvasStore((s) => s.isGrid);
+  const canvasMode = useAppStore((s) => s.settings.canvasMode);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const drag = useRef<Drag | null>(null);
+  const space = useRef(false);
+  const [marquee, setMarquee] = useState<Box | null>(null);
+  const [panning, setPanning] = useState(false);
+
+  // Track viewport size.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    viewport.el = el;
+    const ro = new ResizeObserver(() => {
+      viewport.w = el.clientWidth;
+      viewport.h = el.clientHeight;
+    });
+    ro.observe(el);
+    viewport.w = el.clientWidth;
+    viewport.h = el.clientHeight;
+    return () => ro.disconnect();
+  }, []);
+
+  // Space + drag pans.
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.code === 'Space' && !isTypingTarget(e.target)) {
+        space.current = true;
+        setPanning(true);
+        e.preventDefault();
+      }
+    };
+    const up = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        space.current = false;
+        setPanning(false);
+      }
+    };
+    window.addEventListener('keydown', down);
+    window.addEventListener('keyup', up);
+    return () => {
+      window.removeEventListener('keydown', down);
+      window.removeEventListener('keyup', up);
+    };
+  }, []);
+
+  // Wheel: Ctrl/⌘ zooms around the pointer, otherwise pans.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      if ((e.target as Element).closest?.('[data-editing] math-field')) return;
+      e.preventDefault();
+      const rect = el.getBoundingClientRect();
+      if (e.ctrlKey || e.metaKey) {
+        zoomAt({ x: e.clientX - rect.left, y: e.clientY - rect.top }, Math.exp(-e.deltaY * 0.0015));
+      } else {
+        const cam = useCanvasStore.getState().camera;
+        const dx = e.shiftKey && !e.deltaX ? e.deltaY : e.deltaX;
+        const dy = e.shiftKey && !e.deltaX ? 0 : e.deltaY;
+        setCamera({ ...cam, x: cam.x + dx / cam.z, y: cam.y + dy / cam.z });
+      }
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, []);
+
+  const toPage = useCallback((e: { clientX: number; clientY: number }): Point => {
+    const rect = containerRef.current!.getBoundingClientRect();
+    return screenToPage({ x: e.clientX - rect.left, y: e.clientY - rect.top }, useCanvasStore.getState().camera);
+  }, []);
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.button === 2) return;
+    const target = e.target as Element;
+    if (target.closest('[data-editing]')) return; // the editor owns these events
+    const st = useCanvasStore.getState();
+    if (st.editingId) stopEditing();
+    containerRef.current?.focus({ preventScroll: true });
+    const p = toPage(e);
+    (e.currentTarget as Element).setPointerCapture(e.pointerId);
+
+    if (e.button === 1 || space.current || st.tool === 'hand') {
+      drag.current = { kind: 'pan', startScreen: { x: e.clientX, y: e.clientY }, cam: st.camera };
+      return;
+    }
+
+    switch (st.tool) {
+      case 'select': {
+        const handleEl = target.closest('[data-handle]');
+        if (handleEl && st.selection.length === 1) {
+          markHistory();
+          const id = st.selection[0];
+          drag.current = { kind: 'resize', id, handle: handleEl.getAttribute('data-handle') as HandleId, start: p, orig: st.shapes[id] };
+          return;
+        }
+        const shapeEl = target.closest('[data-shape-id]');
+        const id = shapeEl?.getAttribute('data-shape-id');
+        if (id && st.shapes[id]) {
+          const wasSelected = st.selection.includes(id);
+          if (!wasSelected) select(e.shiftKey ? [...st.selection, id] : [id]);
+          markHistory();
+          const sel = useCanvasStore.getState().selection;
+          const orig: Record<string, Point> = {};
+          for (const sid of sel) orig[sid] = { x: st.shapes[sid].x, y: st.shapes[sid].y };
+          drag.current = { kind: 'move', start: p, orig, moved: false, clickedId: id, wasSelected, shift: e.shiftKey };
+        } else {
+          const base = e.shiftKey ? st.selection : [];
+          if (!e.shiftKey) select([]);
+          drag.current = { kind: 'marquee', start: p, base };
+        }
+        return;
+      }
+      case 'math':
+        createMathRegion({ x: p.x, y: p.y - 14 });
+        return;
+      case 'text':
+        createTextRegion({ x: p.x, y: p.y - 10 });
+        return;
+      case 'rect': {
+        const id = newShapeId();
+        const s = snapPoint(p);
+        addShapes([{ id, type: 'rect', x: s.x, y: s.y, props: { w: 1, h: 1, stroke: STROKE, strokeWidth: 1.5 } }], { select: true });
+        drag.current = { kind: 'create-rect', id, start: s };
+        return;
+      }
+      case 'line':
+      case 'arrow': {
+        const id = newShapeId();
+        const s = snapPoint(p);
+        addShapes([{ id, type: 'line', x: s.x, y: s.y, props: { x2: 0, y2: 0, stroke: STROKE, strokeWidth: 1.5, arrow: st.tool === 'arrow' } }], { select: true });
+        drag.current = { kind: 'create-line', id, start: s };
+        return;
+      }
+      case 'draw': {
+        const id = newShapeId();
+        addShapes([{ id, type: 'draw', x: p.x, y: p.y, props: { points: [[0, 0]], stroke: STROKE, strokeWidth: 2 } }]);
+        drag.current = { kind: 'draw', id, origin: p };
+        return;
+      }
+    }
+  };
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    const p = toPage(e);
+    lastPointer.x = p.x;
+    lastPointer.y = p.y;
+    lastPointer.inside = true;
+    const d = drag.current;
+    if (!d) return;
+    const st = useCanvasStore.getState();
+    switch (d.kind) {
+      case 'pan': {
+        const z = d.cam.z;
+        setCamera({ x: d.cam.x - (e.clientX - d.startScreen.x) / z, y: d.cam.y - (e.clientY - d.startScreen.y) / z, z });
+        return;
+      }
+      case 'move': {
+        let dx = p.x - d.start.x;
+        let dy = p.y - d.start.y;
+        if (!d.moved && Math.hypot(dx, dy) * st.camera.z < 3) return;
+        d.moved = true;
+        if (e.shiftKey) {
+          if (Math.abs(dx) > Math.abs(dy)) dy = 0;
+          else dx = 0;
+        }
+        const patches: Record<string, ShapePatch> = {};
+        const firstId = Object.keys(d.orig)[0];
+        // Snap the moved group by its first shape so relative layout is kept.
+        const target = snapPoint({ x: d.orig[firstId].x + dx, y: d.orig[firstId].y + dy });
+        dx = target.x - d.orig[firstId].x;
+        dy = target.y - d.orig[firstId].y;
+        for (const [id, o] of Object.entries(d.orig)) patches[id] = { x: o.x + dx, y: o.y + dy };
+        updateShapes(patches, { history: false });
+        return;
+      }
+      case 'marquee': {
+        const box = boxFromPoints(d.start, p);
+        setMarquee(box);
+        const hits = st.order.filter((id) => boxesIntersect(box, shapeBounds(st.shapes[id])));
+        select([...new Set([...d.base, ...hits])]);
+        return;
+      }
+      case 'resize': {
+        const keepAspect = d.orig.type === 'image' ? !e.shiftKey : e.shiftKey;
+        const patch = resizePatch(d.orig, d.handle, snapPoint(p), keepAspect);
+        if (patch) updateShape(d.id, patch, { history: false });
+        return;
+      }
+      case 'create-rect': {
+        const q = snapPoint(p);
+        const b = boxFromPoints(d.start, q);
+        updateShape(d.id, { x: b.x, y: b.y, props: { w: Math.max(1, b.w), h: Math.max(1, b.h) } }, { history: false });
+        return;
+      }
+      case 'create-line': {
+        const q = snapPoint(p);
+        let x2 = q.x - d.start.x;
+        let y2 = q.y - d.start.y;
+        if (e.shiftKey) {
+          // Constrain to 15° steps.
+          const ang = Math.round(Math.atan2(y2, x2) / (Math.PI / 12)) * (Math.PI / 12);
+          const len = Math.hypot(x2, y2);
+          x2 = Math.cos(ang) * len;
+          y2 = Math.sin(ang) * len;
+        }
+        updateShape(d.id, { props: { x2, y2 } }, { history: false });
+        return;
+      }
+      case 'draw': {
+        const sh = st.shapes[d.id];
+        if (sh?.type !== 'draw') return;
+        const pts = sh.props.points;
+        const nx = p.x - d.origin.x;
+        const ny = p.y - d.origin.y;
+        const last = pts[pts.length - 1];
+        if (Math.hypot(nx - last[0], ny - last[1]) * st.camera.z < 2) return;
+        updateShape(d.id, { props: { points: [...pts, [nx, ny]] } }, { history: false });
+        return;
+      }
+    }
+  };
+
+  const onPointerUp = () => {
+    const d = drag.current;
+    drag.current = null;
+    setMarquee(null);
+    if (!d) return;
+    const st = useCanvasStore.getState();
+    switch (d.kind) {
+      case 'move':
+        // A plain click on an already-selected shape narrows the selection to it.
+        if (!d.moved && d.wasSelected && !d.shift) select([d.clickedId]);
+        if (!d.moved && d.wasSelected && d.shift) select(st.selection.filter((id) => !expandGroups([d.clickedId]).includes(id)));
+        return;
+      case 'create-rect': {
+        const s = st.shapes[d.id];
+        if (s?.type === 'rect' && s.props.w < 4 && s.props.h < 4) updateShape(d.id, { props: { w: 160, h: 100 } }, { history: false });
+        useCanvasStore.setState({ tool: 'select' });
+        return;
+      }
+      case 'create-line': {
+        const s = st.shapes[d.id];
+        if (s?.type === 'line' && Math.hypot(s.props.x2, s.props.y2) < 4) updateShape(d.id, { props: { x2: 160, y2: 0 } }, { history: false });
+        useCanvasStore.setState({ tool: 'select' });
+        return;
+      }
+      case 'draw': {
+        const s = st.shapes[d.id];
+        if (s?.type === 'draw' && s.props.points.length < 2) deleteShapes([d.id], { history: false });
+        return;
+      }
+    }
+  };
+
+  const onDoubleClick = (e: React.MouseEvent) => {
+    // Pointer capture retargets click events to the container: hit-test by position.
+    const target = (document.elementFromPoint(e.clientX, e.clientY) ?? e.target) as Element;
+    if (target.closest('[data-editing]')) return;
+    const st = useCanvasStore.getState();
+    if (st.tool !== 'select') return;
+    const id = target.closest('[data-shape-id]')?.getAttribute('data-shape-id');
+    const sh = id ? st.shapes[id] : null;
+    if (sh && (sh.type === 'math' || sh.type === 'text')) {
+      startEditing(sh.id);
+    } else if (!sh) {
+      const p = toPage(e);
+      createMathRegion({ x: p.x, y: p.y - 14 });
+    }
+  };
+
+  const onDrop = (e: React.DragEvent) => {
+    const files = [...e.dataTransfer.files].filter((f) => f.type.startsWith('image/'));
+    if (!files.length) return;
+    e.preventDefault();
+    const p = toPage(e);
+    files.forEach((f, i) => void insertImageFile(f, { x: p.x + i * 24, y: p.y + i * 24 }));
+  };
+
+  const cursor = panning || tool === 'hand' ? 'grab' : tool === 'select' ? 'default' : tool === 'text' ? 'text' : 'crosshair';
+  const gridPx = 10 * camera.z;
+
+  return (
+    <div
+      ref={containerRef}
+      className="cc-canvas absolute inset-0 overflow-hidden outline-none"
+      data-testid="canvas"
+      data-mode={canvasMode}
+      tabIndex={0}
+      aria-label="Calculation canvas"
+      style={{
+        cursor,
+        touchAction: 'none',
+        background: canvasMode === 'page' ? 'var(--color-canvas)' : 'var(--color-card)',
+        backgroundImage: isGrid && gridPx >= 4 ? 'radial-gradient(circle, var(--color-border-strong) 1px, transparent 1.2px)' : undefined,
+        backgroundSize: isGrid ? `${gridPx}px ${gridPx}px` : undefined,
+        backgroundPosition: isGrid ? `${-camera.x * camera.z}px ${-camera.y * camera.z}px` : undefined,
+      }}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
+      onPointerLeave={() => (lastPointer.inside = false)}
+      onDoubleClick={onDoubleClick}
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={onDrop}
+    >
+      <div
+        className="cc-layer"
+        style={{ position: 'absolute', left: 0, top: 0, transformOrigin: '0 0', transform: `scale(${camera.z}) translate(${-camera.x}px, ${-camera.y}px)` }}
+      >
+        <PageOverlay />
+        {order.map((id) => (
+          <ShapeView key={id} shape={shapes[id]} editing={editingId === id} />
+        ))}
+        <SelectionOverlay />
+        {marquee && (
+          <div
+            data-testid="marquee"
+            style={{
+              position: 'absolute',
+              left: marquee.x,
+              top: marquee.y,
+              width: marquee.w,
+              height: marquee.h,
+              border: `${1 / camera.z}px solid var(--color-accent)`,
+              background: 'rgb(37 99 235 / 0.06)',
+              pointerEvents: 'none',
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
+}

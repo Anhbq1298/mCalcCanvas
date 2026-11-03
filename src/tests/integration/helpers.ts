@@ -97,8 +97,9 @@ export async function editRegion(page: Page, id: string, keys: string[]) {
 
 export async function shapePosition(page: Page, id: string) {
   return page.evaluate((shapeId) => {
-    const editor = (window as unknown as { __calccanvas: { editor: { getShape(id: string): { x: number; y: number } } } }).__calccanvas.editor;
-    const s = editor.getShape(shapeId);
+    type Store = { getState(): { shapes: Record<string, { x: number; y: number }> } };
+    const store = (window as unknown as { __calccanvas: { store: Store } }).__calccanvas.store;
+    const s = store.getState().shapes[shapeId];
     return { x: s.x, y: s.y };
   }, id);
 }
