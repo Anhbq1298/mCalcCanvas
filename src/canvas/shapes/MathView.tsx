@@ -73,47 +73,55 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         } as React.CSSProperties
       }
     >
-      {editing ? (
-        <MathEditor latex={latex} onChange={onChange} onExit={onExit} ariaLabel="Math region editor" />
-      ) : empty ? (
-        <span className="math-placeholder">Empty region</span>
-      ) : (
-        <div className="flex items-center gap-2">
-          <MathRenderer latex={display.latex} />
-          {display.check && (
-            <span
-              data-testid="check-badge"
-              className={
-                'inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 font-sans text-[11px] font-semibold tracking-wide text-white ' +
-                (display.check.pass ? 'bg-success' : 'bg-destructive')
-              }
-            >
-              {display.check.pass ? <CheckCircle2 size={12} aria-hidden /> : <XCircle size={12} aria-hidden />}
-              {display.check.pass ? 'PASS' : 'FAIL'}
-            </span>
-          )}
-        </div>
-      )}
-
-      {error && !empty && (
-        <div role="status" className="mt-0.5 flex max-w-[420px] items-start gap-1 font-sans text-[11px] leading-snug text-destructive">
-          <AlertCircle size={12} className="mt-px shrink-0" aria-hidden />
-          <span className="whitespace-pre-wrap">{error.message}</span>
-        </div>
-      )}
-      {!isStatic &&
-        result?.warnings.map((wmsg) => (
-          <div key={wmsg} className="mt-0.5 flex max-w-[420px] items-start gap-1 font-sans text-[11px] leading-snug text-warning">
-            <AlertTriangle size={12} className="mt-px shrink-0" aria-hidden />
-            <span>{wmsg}</span>
+      <div className="flex items-center gap-1.5">
+        {editing ? (
+          <MathEditor latex={latex} onChange={onChange} onExit={onExit} ariaLabel="Math region editor" />
+        ) : empty ? (
+          <span className="math-placeholder">Empty region</span>
+        ) : (
+          <div className="flex items-center gap-2">
+            <MathRenderer latex={display.latex} />
+            {display.check && (
+              <span
+                data-testid="check-badge"
+                className={
+                  'inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 font-sans text-[11px] font-semibold tracking-wide text-white ' +
+                  (display.check.pass ? 'bg-success' : 'bg-destructive')
+                }
+              >
+                {display.check.pass ? <CheckCircle2 size={12} aria-hidden /> : <XCircle size={12} aria-hidden />}
+                {display.check.pass ? 'PASS' : 'FAIL'}
+              </span>
+            )}
           </div>
-        ))}
-      {editing && result?.draftError && (
-        <div className="mt-0.5 flex items-center gap-1 font-sans text-[11px] text-muted-foreground">
-          <CircleDashed size={12} aria-hidden />
-          <span>Incomplete – dependents use the last valid expression</span>
-        </div>
-      )}
+        )}
+        {/* Status as compact symbols; the explanation appears on hover. */}
+        {error && !empty && !(editing && result?.draftError) && <StatusIcon kind="error" message={error.message} />}
+        {!isStatic && result?.warnings.map((w) => <StatusIcon key={w} kind="warning" message={w} />)}
+        {editing && result?.draftError && <StatusIcon kind="draft" message="Incomplete – dependent regions use the last valid expression." />}
+      </div>
     </div>
+  );
+}
+
+const ICONS = { error: AlertCircle, warning: AlertTriangle, draft: CircleDashed };
+const TONE = { error: 'text-destructive', warning: 'text-warning', draft: 'text-muted-foreground' };
+
+/** Small status symbol; hovering (or focusing) it shows the full message. */
+function StatusIcon({ kind, message }: { kind: 'error' | 'warning' | 'draft'; message: string }) {
+  const Icon = ICONS[kind];
+  return (
+    <span
+      className={'status-icon relative inline-flex shrink-0 cursor-help ' + TONE[kind]}
+      data-testid={`status-${kind}`}
+      role="img"
+      aria-label={message}
+      tabIndex={-1}
+    >
+      <Icon size={14} strokeWidth={2.2} aria-hidden />
+      <span role="tooltip" className="status-tip">
+        {message}
+      </span>
+    </span>
   );
 }

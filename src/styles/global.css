@@ -138,6 +138,34 @@ body {
   cursor: default;
 }
 
+/* Error / warning symbol next to a region; details on hover */
+.status-tip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  transform: translateX(-50%);
+  z-index: 30;
+  width: max-content;
+  max-width: 280px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  background: #3c4043;
+  color: #fff;
+  font: 400 12px/1.4 var(--font-sans);
+  font-style: normal;
+  white-space: normal;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 120ms;
+}
+.status-icon:hover .status-tip,
+.status-icon:focus .status-tip {
+  opacity: 1;
+  visibility: visible;
+}
+.print-page .status-tip { display: none; }
+
 .text-region {
   padding: 2px 4px;
   border-radius: 2px;

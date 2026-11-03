@@ -83,6 +83,13 @@ test.describe('acceptance criteria', () => {
   test('G – unit mismatch is reported', async ({ page }) => {
     await addRegion(page, 300, 200, ['A:=10m+5kN']);
     await errorOf(page, 'A').toBe('Unit mismatch: Length cannot be added to Force.');
+    // Only a symbol is shown; the message appears on hover.
+    const icon = page.getByTestId('status-error');
+    await expect(icon).toBeVisible();
+    await expect(page.getByText('Unit mismatch: Length cannot be added to Force.')).toBeHidden();
+    await icon.hover();
+    await expect(page.getByRole('tooltip')).toHaveText('Unit mismatch: Length cannot be added to Force.');
+    await expect(page.getByRole('tooltip')).toBeVisible();
     await expect(page.getByTestId('calc-status')).toContainText('1 with errors');
   });
 

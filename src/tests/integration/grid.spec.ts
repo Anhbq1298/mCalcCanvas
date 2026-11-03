@@ -6,7 +6,7 @@ const shapes = (page: Page): Promise<S[]> =>
   page.evaluate(() =>
     Object.values((window as unknown as { __calccanvas: { store: { getState(): { shapes: Record<string, S> } } } }).__calccanvas.store.getState().shapes),
   );
-const onGrid = (s: S) => ((s.x - 76) % 10 === 0 || (s.x - 76) % 10 === -0) && (s.y - 60) % 10 === 0;
+const onGrid = (s: S) => Math.abs((s.x - 76) % 10) === 0 && (s.y - 60) % 10 === 0;
 
 async function pageToScreen(page: Page, x: number, y: number) {
   return page.evaluate(([px, py]) => {
