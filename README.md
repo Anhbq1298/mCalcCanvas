@@ -66,7 +66,7 @@ src/
 
 **Single source of truth.** Math regions store only JSON props (LaTeX, display options) in the canvas store. The engine is derived: every store change — typing, undo, paste, load — flows one way through `engineBridge.ts`. Results are never persisted; they're recomputed on load.
 
-**Position independence.** Evaluation order is topological over variable names, never canvas coordinates. Each variable has exactly one definition per worksheet; duplicates and cycles (`A → B → A`) are reported, not resolved by position.
+**Position independence.** Evaluation order is topological over variable names, never canvas coordinates. A variable may be defined more than once: the definition that comes last in reading order (page, top-to-bottom, left-to-right) is used everywhere and is outlined in green. Cycles (`A → B → A`) are reported.
 
 **Incremental.** A change re-evaluates only the edited region and its transitive dependents; each region subscribes to its own result, so unrelated regions don't re-render.
 

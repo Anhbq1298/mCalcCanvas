@@ -146,7 +146,8 @@ function SyntaxDialog({ onClose }: { onClose(): void }) {
             <li><b>Definition</b> – <code>L := 8.5 m</code>. Add a trailing <code>=</code> to also show the value.</li>
             <li><b>Evaluation</b> – <code>M =</code> shows the current value.</li>
             <li><b>Check</b> – <code>η_M ≤ 1</code> shows the value with a PASS/FAIL badge.</li>
-            <li>Position on the canvas never matters: each variable has exactly one definition per worksheet.</li>
+            <li>Regions can reference variables defined anywhere on the worksheet (above, below or beside them).</li>
+            <li>If a variable is defined more than once, the definition that comes last in reading order (top to bottom, left to right) is used everywhere and gets a <span className="font-semibold text-[#188038]">green outline</span>; hover it for details.</li>
           </ul>
         </section>
         <section>

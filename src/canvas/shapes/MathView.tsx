@@ -63,6 +63,14 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
       data-latex={latex}
       data-result={result?.value?.text ?? ''}
       data-error={error?.message ?? ''}
+      data-redefines={result?.redefines ? result.redefines.name : undefined}
+      title={
+        result?.redefines
+          ? `Redefines ${result.redefines.name}: this later definition is used everywhere in the worksheet (${result.redefines.count} definitions).`
+          : result?.overridden
+            ? `${result.defines} is redefined later on the worksheet; that later value is used.`
+            : undefined
+      }
       style={
         {
           '--math-size': `${fontSize}px`,
@@ -70,6 +78,8 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
           width: autoSize ? 'max-content' : w,
           minHeight: autoSize ? undefined : h,
           padding: `${PAD_Y}px ${PAD_X}px`,
+          // Green outline: this region redefines a variable defined earlier.
+          ...(result?.redefines && !isStatic ? { outline: '1.5px solid var(--color-redefine)', outlineOffset: -1, borderRadius: 3 } : {}),
         } as React.CSSProperties
       }
     >

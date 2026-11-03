@@ -175,13 +175,28 @@ describe('errors', () => {
     expect(e.getResult('c')?.error?.code).toBe('dependency-error');
   });
 
-  it('reports duplicate definitions', () => {
+  it('uses the later definition when a name is defined twice, and flags it', () => {
     const e = setup({ a: 'L\\coloneq1m', b: 'L\\coloneq2m', c: 'L=' });
-    expect(e.getResult('a')?.error?.code).toBe('duplicate-definition');
-    expect(e.getResult('c')?.error?.message).toMatch(/Ambiguous/);
-    e.removeRegion('b');
+    expect(e.getResult('c')?.value?.text).toBe('2 m');
+    expect(e.getResult('b')?.redefines).toEqual({ name: 'L', count: 2 });
+    expect(e.getResult('a')?.overridden).toBe(true);
     expect(e.getResult('a')?.status).toBe('valid');
+    e.removeRegion('b');
+    expect(e.getResult('a')?.redefines).toBeUndefined();
     expect(e.getResult('c')?.value?.text).toBe('1 m');
+  });
+
+  it('decides "later" by reading order, and follows moves', () => {
+    const e = new CalculationEngine();
+    e.batch(() => {
+      e.setRegion('a', { latex: 'L\\coloneq1m', order: 5 });
+      e.setRegion('b', { latex: 'L\\coloneq2m', order: 1 });
+      e.setRegion('c', { latex: 'L=', order: 9 });
+    });
+    expect(e.getResult('c')?.value?.text).toBe('1 m'); // a is lower on the page
+    e.setRegion('b', { latex: 'L\\coloneq2m', order: 7 }); // b dragged below a
+    expect(e.getResult('c')?.value?.text).toBe('2 m');
+    expect(e.getResult('b')?.redefines?.name).toBe('L');
   });
 
   it('reports division by zero', () => {

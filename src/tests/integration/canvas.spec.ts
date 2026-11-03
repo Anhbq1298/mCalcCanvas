@@ -42,8 +42,11 @@ test.describe('own canvas engine', () => {
     await expect.poll(async () => (await regions(page)).length).toBe(2);
     await page.keyboard.press('ControlOrMeta+d');
     await expect.poll(async () => (await regions(page)).length).toBe(3);
-    // Same variable defined three times → engine flags duplicates
-    await expect.poll(async () => (await regions(page)).every((r) => r.error.startsWith('Duplicate'))).toBe(true);
+    // Same variable defined three times → no errors; the last one is marked as a redefinition (green)
+    await expect.poll(async () => (await regions(page)).every((r) => r.error === '')).toBe(true);
+    await expect(page.locator('.math-region[data-redefines="x"]')).toHaveCount(1);
+    const outline = await page.locator('.math-region[data-redefines="x"]').evaluate((el) => getComputedStyle(el).outlineColor);
+    expect(outline).toBe('rgb(24, 128, 56)');
   });
 
   test('marquee selects several regions; delete removes them', async ({ page }) => {

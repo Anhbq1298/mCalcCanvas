@@ -37,6 +37,13 @@ export interface RegionInput {
    * last valid statement so dependents do not flicker into errors.
    */
   draft?: boolean;
+  /**
+   * Reading-order rank on the worksheet (page, then top-to-bottom,
+   * left-to-right). When a variable is defined more than once, the
+   * definition that comes last in reading order is used everywhere.
+   * Defaults to creation order.
+   */
+  order?: number;
 }
 
 export interface EngineSettings {
@@ -59,6 +66,10 @@ export interface CalculationResult {
   status: ResultStatus;
   kind: Statement['kind'] | 'invalid';
   defines?: string;
+  /** This definition overrides earlier definition(s) of the same name. */
+  redefines?: { name: string; count: number };
+  /** A later definition of the same name overrides this one. */
+  overridden?: boolean;
   definesLatex?: string;
   references: string[];
   value?: FormattedQuantity;
@@ -100,6 +111,8 @@ export class CalculationEngine {
   private pendingIds = new Set<string>();
   private pendingNames = new Set<string>();
   private lastDefinedNames = new Set<string>();
+  private created = new Map<string, number>();
+  private createdCounter = 0;
 
   constructor(settings: Partial<EngineSettings> = {}) {
     this.settings = { unitSystem: 'SI', precision: 2, ...settings };
@@ -141,8 +154,21 @@ export class CalculationEngine {
     if (this.batchDepth === 0) this.flush();
   }
 
+  /** Effective reading-order rank of a region. */
+  private rank(id: string): number {
+    return this.regions.get(id)?.input.order ?? this.created.get(id) ?? 0;
+  }
+
+  /** The definition of `name` that is used: the last one in reading order. */
+  private activeDefiner(name: string): string | undefined {
+    const ds = this.graph.definers(name);
+    if (ds.length <= 1) return ds[0];
+    return ds.reduce((best, id) => (this.rank(id) > this.rank(best) ? id : best));
+  }
+
   setRegion(id: string, input: RegionInput): void {
     const prev = this.regions.get(id);
+    if (!this.created.has(id)) this.created.set(id, this.createdCounter++);
     if (
       prev &&
       prev.input.latex === input.latex &&
@@ -150,6 +176,16 @@ export class CalculationEngine {
       prev.input.precision === input.precision &&
       !!prev.input.draft === !!input.draft
     ) {
+      if (prev.input.order !== input.order) {
+        // Only the position changed: matters when this name is defined more than once.
+        const name = this.graph.definesOf(id);
+        const before = name ? this.activeDefiner(name) : undefined;
+        prev.input = input;
+        if (name && this.graph.definers(name).length > 1) {
+          if (this.activeDefiner(name) !== before) this.pendingNames.add(name);
+          if (this.batchDepth === 0) this.flush();
+        }
+      }
       return;
     }
 
@@ -195,6 +231,7 @@ export class CalculationEngine {
     this.graph.removeNode(id);
     this.results.delete(id);
     this.values.delete(id);
+    this.created.delete(id);
     if (name) this.pendingNames.add(name);
     this.pendingIds.add(id);
     if (this.batchDepth === 0) this.flush();
@@ -207,6 +244,7 @@ export class CalculationEngine {
     this.values.clear();
     this.results.clear();
     this.lastDefinedNames = new Set();
+    this.created = new Map();
     this.emit(ids);
   }
 
@@ -333,7 +371,8 @@ export class CalculationEngine {
     if (statement.kind === 'definition') {
       const definers = this.graph.definers(statement.name);
       if (definers.length > 1) {
-        return fail('duplicate-definition', `Duplicate definition: ${statement.name} is defined ${definers.length} times.`);
+        if (this.activeDefiner(statement.name) === id) base.redefines = { name: statement.name, count: definers.length };
+        else base.overridden = true;
       }
       if (statement.name in BUILTIN_CONSTANTS) {
         base.warnings.push(`"${statement.name}" redefines the built-in constant (${BUILTIN_CONSTANTS[statement.name].description}) in this worksheet.`);
@@ -347,10 +386,9 @@ export class CalculationEngine {
 
     // Resolve dependencies first (may throw CycleSignal).
     for (const name of this.graph.refsOf(id)) {
-      const definers = this.graph.definers(name);
-      if (definers.length > 1) return fail('duplicate-definition', `Ambiguous: ${name} is defined ${definers.length} times.`);
-      if (definers.length === 0) return fail('undefined-variable', `Undefined variable: ${name}`);
-      const dep = this.evaluateRegion(definers[0], stack, dirty, pass);
+      const definer = this.activeDefiner(name);
+      if (!definer) return fail('undefined-variable', `Undefined variable: ${name}`);
+      const dep = this.evaluateRegion(definer, stack, dirty, pass);
       if (dep.status !== 'valid') {
         return fail('dependency-error', `${name} cannot be evaluated (${dep.error?.message ?? 'no value'}).`);
       }
@@ -359,7 +397,7 @@ export class CalculationEngine {
     const ctx: EvalContext = {
       isDefined: (n) => this.graph.isDefined(n),
       getValue: (n) => {
-        const v = this.values.get(this.graph.definers(n)[0]);
+        const v = this.values.get(this.activeDefiner(n) ?? '');
         if (v === undefined) throw new CalculationError('undefined-variable', `Undefined variable: ${n}`);
         return v;
       },
@@ -412,7 +450,7 @@ export class CalculationEngine {
       const substitutionLatex = exprToLatex(statement.expr, {
         ctx,
         substitute: (name) => {
-          const v = this.values.get(this.graph.definers(name)[0]);
+          const v = this.values.get(this.activeDefiner(name) ?? '');
           if (v === undefined) return null;
           const f = fmt(v);
           return { latex: f.latex, hasUnit: !!f.unitText, negative: siValue(v) < 0 };
