@@ -41,7 +41,7 @@ Playwright needs a Chromium: `npx playwright install chromium`, or point it at a
 
 ```
 src/
-  engine/        Pure TypeScript calculation engine (no React, no tldraw)
+  engine/        Pure TypeScript calculation engine (no React, no canvas code)
     LatexParser.ts        LaTeX (MathLive subset) → JSON expression tree, recursive descent
     ExpressionEvaluator   symbol resolution + evaluation on mathjs numbers/Units
     UnitSystem.ts         explicit unit registry, dimension names, display units, formatting
