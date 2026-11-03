@@ -94,7 +94,7 @@ export function gridPoint(p: Point): Point {
 }
 
 /** Math and text regions always sit on a grid point, inside the margins. */
-function gridAlign(s: Shape): Shape {
+export function gridAlign(s: Shape): Shape {
   if (s.type !== 'math' && s.type !== 'text') return s;
   let { x, y } = gridPoint(s);
   if (constrained()) {

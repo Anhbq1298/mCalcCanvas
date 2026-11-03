@@ -167,6 +167,36 @@ body {
 }
 .print-page .status-tip { display: none; }
 
+/* Move affordances */
+.cc-canvas[data-tool='select'] .cc-shape:not([data-editing]) { cursor: move; }
+.cc-canvas[data-tool='select']:not([data-dragging]) .cc-shape[data-shape-type='math']:not([data-editing]):hover > .math-region,
+.cc-canvas[data-tool='select']:not([data-dragging]) .cc-shape[data-shape-type='text']:not([data-editing]):hover > .text-region {
+  outline: 1px dashed rgb(11 87 208 / 0.45);
+  outline-offset: 1px;
+}
+.cc-canvas[data-dragging] .cc-shape { cursor: grabbing; }
+.cc-grip {
+  position: absolute;
+  left: -16px;
+  top: 3px;
+  width: 14px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  color: #80868b;
+  cursor: grab;
+  opacity: 0;
+  pointer-events: auto;
+  transition: opacity 120ms, background-color 120ms;
+}
+.cc-canvas[data-tool='select'] .cc-shape:hover > .cc-grip,
+.cc-canvas[data-tool='select'] .cc-shape[data-editing] > .cc-grip,
+.cc-canvas[data-tool='select'] .cc-shape[data-selected] > .cc-grip { opacity: 1; }
+.cc-grip:hover { background: var(--color-docs-hover); color: var(--color-docs-blue); }
+.cc-canvas[data-dragging] .cc-grip { cursor: grabbing; }
+
 .text-region {
   padding: 2px 4px;
   border-radius: 2px;

@@ -4,7 +4,7 @@
  * replaces the changed shape objects, so a snapshot is just two references.
  */
 import { create } from 'zustand';
-import type { Camera, Point, Shape, ToolId } from './types';
+import type { Box, Camera, Point, Shape, ToolId } from './types';
 
 interface Snapshot {
   shapes: Record<string, Shape>;
@@ -22,6 +22,10 @@ export interface CanvasState {
   isSnap: boolean;
   /** Mathcad-style red insertion cross: where the next typed region goes. */
   crosshair: Point | null;
+  /** While dragging: where the dragged block will land (grid-snapped). */
+  dropPreview: Box | null;
+  /** True while shapes are being dragged. */
+  dragging: boolean;
   undoStack: Snapshot[];
   redoStack: Snapshot[];
   /** Increments on every document (shape) change caused by the user. */
@@ -38,6 +42,8 @@ export const useCanvasStore = create<CanvasState>(() => ({
   isGrid: true,
   isSnap: false,
   crosshair: null,
+  dropPreview: null,
+  dragging: false,
   undoStack: [],
   redoStack: [],
   docVersion: 0,
@@ -111,6 +117,8 @@ export function canUndo(s: CanvasState): boolean {
 interface ChangeOptions {
   /** false = do not create an undo point (layout measurements, live drags). */
   history?: boolean;
+  /** Skip grid normalisation (live drag preview; the drop snaps). */
+  raw?: boolean;
 }
 
 export function addShapes(list: Shape[], opts: ChangeOptions & { select?: boolean } = {}): void {
@@ -141,7 +149,7 @@ export function updateShapes(patches: Record<string, ShapePatch>, opts: ChangeOp
       const prev = shapes[id];
       const p = patches[id];
       let next = { ...prev, ...p, props: p.props ? { ...prev.props, ...p.props } : prev.props } as Shape;
-      if ('x' in p || 'y' in p) next = normalizePosition(next);
+      if (('x' in p || 'y' in p) && !opts.raw) next = normalizePosition(next);
       if ('groupId' in p && p.groupId === undefined) delete (next as { groupId?: string }).groupId;
       shapes[id] = next;
     }

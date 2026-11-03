@@ -14,7 +14,8 @@ export function SelectionOverlay() {
   const shapes = useCanvasStore((s) => s.shapes);
   const editingId = useCanvasStore((s) => s.editingId);
   const z = useCanvasStore((s) => s.camera.z);
-  if (!selection.length) return null;
+  const dragging = useCanvasStore((s) => s.dragging);
+  if (!selection.length || dragging) return null;
 
   const px = 1 / z;
   const hs = 9 / z;

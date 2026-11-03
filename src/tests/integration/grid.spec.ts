@@ -58,3 +58,44 @@ test.describe('math and text regions snap strictly to the grid', () => {
     expect((cross.y - 60) % 10).toBe(0);
   });
 });
+
+test.describe('moving regions', () => {
+  test.beforeEach(async ({ page }) => {
+    await openFresh(page);
+    await newBlankWorksheet(page, 'page');
+  });
+
+  test('drag follows the pointer, shows where it lands, then drops on the grid', async ({ page }) => {
+    const p = await pageToScreen(page, 76 + 40, 60 + 40);
+    await page.mouse.click(p.x, p.y);
+    await page.keyboard.type('b:2', { delay: 15 });
+    await page.keyboard.press('Enter');
+    const box = await page.locator('.math-region').first().boundingBox();
+    await page.mouse.move(box!.x + 8, box!.y + box!.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(box!.x + 8 + 63, box!.y + box!.height / 2 + 27, { steps: 6 });
+    await expect(page.getByTestId('drop-preview')).toBeVisible();
+    await page.mouse.up();
+    await expect(page.getByTestId('drop-preview')).toHaveCount(0);
+    const [s] = await shapes(page);
+    expect(onGrid(s)).toBe(true);
+    expect(s.x).toBeGreaterThan(76 + 40 + 40);
+  });
+
+  test('the ⠿ grip moves a region even while typing in it', async ({ page }) => {
+    const p = await pageToScreen(page, 76 + 100, 60 + 100);
+    await page.mouse.click(p.x, p.y);
+    await page.keyboard.type('c:3', { delay: 15 });
+    await expect(page.locator('math-field')).toHaveCount(1);
+    const before = (await shapes(page))[0];
+    const grip = await page.getByTestId('grip').first().boundingBox();
+    await page.mouse.move(grip!.x + grip!.width / 2, grip!.y + grip!.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(grip!.x + 120, grip!.y + 80, { steps: 6 });
+    await page.mouse.up();
+    const after = (await shapes(page))[0];
+    expect(after.x - before.x).toBeGreaterThanOrEqual(100);
+    expect(onGrid(after)).toBe(true);
+    await expect(page.locator('math-field')).toHaveCount(1); // still editing
+  });
+});

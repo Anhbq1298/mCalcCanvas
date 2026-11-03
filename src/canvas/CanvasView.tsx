@@ -27,7 +27,7 @@ import {
   type ShapePatch,
 } from './model/canvasStore';
 import { boxFromPoints, boxesIntersect, screenToPage, shapeBounds, unionBounds } from './model/geometry';
-import { clampDelta, clampPoint, gridPoint, printableAt } from './pageConstraint';
+import { clampDelta, clampPoint, gridAlign, gridPoint, printableAt } from './pageConstraint';
 import type { Box, Camera, Point, Shape } from './model/types';
 import { ShapeView } from './shapes/ShapeView';
 
@@ -82,6 +82,36 @@ function resizePatch(orig: Shape, handle: HandleId, p: Point, keepAspect: boolea
   return { x: left, y: top, props: { w, h } };
 }
 
+/**
+ * Grid-snapped landing spot for a dragged block: math/text snap strictly to
+ * the grid (anchor = first such shape), others follow the same offset.
+ */
+function landing(orig: Record<string, Point>, dx: number, dy: number): { patches: Record<string, ShapePatch>; preview: Box | null } {
+  const shapes = useCanvasStore.getState().shapes;
+  const ids = Object.keys(orig);
+  const anchorId = ids.find((id) => shapes[id]?.type === 'math' || shapes[id]?.type === 'text') ?? ids[0];
+  const a = shapes[anchorId];
+  let sdx = dx;
+  let sdy = dy;
+  if (a) {
+    const moved = { ...a, x: orig[anchorId].x + dx, y: orig[anchorId].y + dy } as Shape;
+    const aligned = a.type === 'math' || a.type === 'text' ? gridAlign(moved) : (() => {
+      const q = snapPoint(moved);
+      return { ...moved, x: q.x, y: q.y } as Shape;
+    })();
+    sdx = aligned.x - orig[anchorId].x;
+    sdy = aligned.y - orig[anchorId].y;
+  }
+  const patches: Record<string, ShapePatch> = {};
+  const boxes: Box[] = [];
+  for (const [id, o] of Object.entries(orig)) {
+    patches[id] = { x: o.x + sdx, y: o.y + sdy };
+    const s = shapes[id];
+    if (s) boxes.push(shapeBounds({ ...s, x: o.x + sdx, y: o.y + sdy } as Shape));
+  }
+  return { patches, preview: unionBounds(boxes) };
+}
+
 export function CanvasView() {
   const order = useCanvasStore((s) => s.order);
   const shapes = useCanvasStore((s) => s.shapes);
@@ -90,6 +120,10 @@ export function CanvasView() {
   const tool = useCanvasStore((s) => s.tool);
   const isGrid = useCanvasStore((s) => s.isGrid);
   const crosshair = useCanvasStore((s) => s.crosshair);
+  const dropPreview = useCanvasStore((s) => s.dropPreview);
+  const dragging = useCanvasStore((s) => s.dragging);
+  const selection = useCanvasStore((s) => s.selection);
+  const selectionSet = new Set(selection);
   const canvasMode = useAppStore((s) => s.settings.canvasMode);
   const containerRef = useRef<HTMLDivElement>(null);
   const drag = useRef<Drag | null>(null);
@@ -164,6 +198,24 @@ export function CanvasView() {
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.button === 2) return;
     const target = e.target as Element;
+    // The ⠿ grip moves a region — even while you are typing in it.
+    const grip = target.closest('[data-grip]');
+    if (grip && useCanvasStore.getState().tool === 'select') {
+      const gid = grip.getAttribute('data-grip')!;
+      const st0 = useCanvasStore.getState();
+      if (st0.shapes[gid]) {
+        e.preventDefault();
+        (e.currentTarget as Element).setPointerCapture(e.pointerId);
+        if (!st0.selection.includes(gid)) select([gid]);
+        markHistory();
+        const sel = useCanvasStore.getState().selection;
+        const orig: Record<string, Point> = {};
+        for (const sid of sel) orig[sid] = { x: st0.shapes[sid].x, y: st0.shapes[sid].y };
+        const bounds = unionBounds(sel.map((sid) => shapeBounds(st0.shapes[sid])))!;
+        drag.current = { kind: 'move', start: toPage(e), orig, bounds, moved: false, clickedId: gid, wasSelected: true, shift: false };
+        return;
+      }
+    }
     if (target.closest('[data-editing]')) return; // the editor owns these events
     const st = useCanvasStore.getState();
     if (st.editingId) stopEditing();
@@ -269,14 +321,14 @@ export function CanvasView() {
           if (Math.abs(dx) > Math.abs(dy)) dy = 0;
           else dx = 0;
         }
-        const patches: Record<string, ShapePatch> = {};
-        const firstId = Object.keys(d.orig)[0];
-        // Snap the moved group by its first shape so relative layout is kept.
-        const target = snapPoint({ x: d.orig[firstId].x + dx, y: d.orig[firstId].y + dy });
-        dx = target.x - d.orig[firstId].x;
-        dy = target.y - d.orig[firstId].y;
+        // Follow the pointer smoothly (only kept inside the margins)…
         ({ dx, dy } = clampDelta(d.bounds, dx, dy));
+        const patches: Record<string, ShapePatch> = {};
         for (const [id, o] of Object.entries(d.orig)) patches[id] = { x: o.x + dx, y: o.y + dy };
+        updateShapes(patches, { history: false, raw: true });
+        // …and show where the block will land on the grid.
+        const snapped = landing(d.orig, dx, dy);
+        useCanvasStore.setState({ dragging: true, dropPreview: snapped.preview });
         updateShapes(patches, { history: false });
         return;
       }
@@ -338,6 +390,16 @@ export function CanvasView() {
     const st = useCanvasStore.getState();
     switch (d.kind) {
       case 'move':
+        if (d.moved) {
+          // Drop: apply the grid-snapped positions (normal, normalised update).
+          const cur = useCanvasStore.getState().shapes;
+          const first = Object.keys(d.orig)[0];
+          const dx = cur[first].x - d.orig[first].x;
+          const dy = cur[first].y - d.orig[first].y;
+          const { patches } = landing(d.orig, dx, dy);
+          updateShapes(patches, { history: false });
+        }
+        useCanvasStore.setState({ dragging: false, dropPreview: null });
         // A plain click on an already-selected shape narrows the selection to it.
         if (!d.moved && d.wasSelected && !d.shift) select([d.clickedId]);
         if (!d.moved && d.wasSelected && d.shift) select(st.selection.filter((id) => !expandGroups([d.clickedId]).includes(id)));
@@ -393,7 +455,7 @@ export function CanvasView() {
     files.forEach((f, i) => void insertImageFile(f, { x: p.x + i * 24, y: p.y + i * 24 }));
   };
 
-  const cursor = panning || tool === 'hand' ? 'grab' : tool === 'select' ? 'default' : tool === 'text' ? 'text' : 'crosshair';
+  const cursor = dragging ? 'grabbing' : panning || tool === 'hand' ? 'grab' : tool === 'select' ? 'default' : tool === 'text' ? 'text' : 'crosshair';
   const gridPx = 10 * camera.z;
 
   return (
@@ -402,6 +464,8 @@ export function CanvasView() {
       className="cc-canvas absolute inset-0 overflow-hidden outline-none"
       data-testid="canvas"
       data-mode={canvasMode}
+      data-tool={tool}
+      data-dragging={dragging || undefined}
       tabIndex={0}
       aria-label="Calculation canvas"
       style={{
@@ -432,9 +496,25 @@ export function CanvasView() {
       >
         <PageOverlay />
         {order.map((id) => (
-          <ShapeView key={id} shape={shapes[id]} editing={editingId === id} />
+          <ShapeView key={id} shape={shapes[id]} editing={editingId === id} selected={selectionSet.has(id)} />
         ))}
         <SelectionOverlay />
+        {dropPreview && (
+          <div
+            data-testid="drop-preview"
+            style={{
+              position: 'absolute',
+              left: dropPreview.x,
+              top: dropPreview.y,
+              width: dropPreview.w,
+              height: dropPreview.h,
+              border: `${1.5 / camera.z}px dashed var(--color-docs-blue)`,
+              borderRadius: 3 / camera.z,
+              background: 'rgb(11 87 208 / 0.05)',
+              pointerEvents: 'none',
+            }}
+          />
+        )}
         {crosshair && !editingId && tool === 'select' && (
           <svg
             data-testid="crosshair"

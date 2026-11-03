@@ -8,7 +8,7 @@ import { TextView } from './TextView';
  * Positions one shape in page coordinates. `isStatic` is used for print
  * output (no measuring, no editing UI).
  */
-export const ShapeView = memo(function ShapeView({ shape, editing, isStatic = false }: { shape: Shape; editing: boolean; isStatic?: boolean }) {
+export const ShapeView = memo(function ShapeView({ shape, editing, selected = false, isStatic = false }: { shape: Shape; editing: boolean; selected?: boolean; isStatic?: boolean }) {
   // Box-like shapes take pointer events on their whole area; strokes only on the stroke.
   const boxLike = shape.type === 'math' || shape.type === 'text' || shape.type === 'image';
   let body: React.ReactNode;
@@ -38,6 +38,7 @@ export const ShapeView = memo(function ShapeView({ shape, editing, isStatic = fa
       data-shape-id={shape.id}
       data-shape-type={shape.type}
       data-editing={editing || undefined}
+      data-selected={selected || undefined}
       style={{
         position: 'absolute',
         left: shape.x,
@@ -47,6 +48,13 @@ export const ShapeView = memo(function ShapeView({ shape, editing, isStatic = fa
       }}
     >
       {body}
+      {!isStatic && (shape.type === 'math' || shape.type === 'text') && (
+        <div className="cc-grip" data-grip={shape.id} data-testid="grip" title="Drag to move" aria-hidden>
+          <svg width="8" height="14" viewBox="0 0 8 14">
+            {[0, 1, 2].map((r) => [0, 1].map((c) => <circle key={`${r}${c}`} cx={2 + c * 4} cy={3 + r * 4} r="1.2" fill="currentColor" />))}
+          </svg>
+        </div>
+      )}
     </div>
   );
 });
