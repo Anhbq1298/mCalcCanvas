@@ -1,0 +1,192 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens generated with UI/UX Pro Max
+ * (design-system/calccanvas/MASTER.md – "Minimalism & Swiss Style",
+ * navy professional palette). Components use these tokens, never raw hex.
+ */
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --color-primary: #1e3a5f;
+  --color-on-primary: #ffffff;
+  --color-accent: #2563eb;
+  --color-accent-soft: #dbeafe;
+  --color-background: #f8fafc;
+  --color-canvas: #e9edf2;
+  --color-foreground: #0f172a;
+  --color-card: #ffffff;
+  --color-muted: #f1f3f5;
+  --color-muted-foreground: #475569;
+  --color-border: #e4e7eb;
+  --color-border-strong: #cbd2da;
+  --color-destructive: #dc2626;
+  --color-destructive-soft: #fef2f2;
+  --color-warning: #92400e;
+  --color-warning-soft: #fffbeb;
+  --color-success: #047857;
+  --color-success-soft: #ecfdf5;
+  --color-ring: #2563eb;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-foreground);
+  background: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* tldraw canvas theming                                                   */
+/* ---------------------------------------------------------------------- */
+
+.calc-canvas .tl-container {
+  --color-background: var(--color-card);
+  --color-selection-stroke: var(--color-accent);
+  --color-selection-fill: rgb(37 99 235 / 0.06);
+  font-family: var(--font-sans);
+}
+.calc-canvas[data-mode='page'] .tl-container {
+  --color-background: var(--color-canvas);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Math regions                                                            */
+/* ---------------------------------------------------------------------- */
+
+.math-region {
+  font-size: var(--math-size, 18px);
+  color: var(--math-color, var(--color-foreground));
+  line-height: 1.3;
+}
+.math-region .ML__latex {
+  font-size: 1em;
+}
+.math-region math-field {
+  font-size: 1em;
+  min-width: 48px;
+  padding: 2px 4px;
+  border: 1px solid var(--color-accent);
+  border-radius: 2px;
+  background: var(--color-card);
+  outline: none;
+  --caret-color: var(--color-accent);
+  --selection-background-color: var(--color-accent-soft);
+  --contains-highlight-background-color: transparent;
+}
+.math-region math-field::part(virtual-keyboard-toggle),
+.math-region math-field::part(menu-toggle) {
+  display: none;
+}
+.math-region math-field:focus-within {
+  box-shadow: 0 0 0 3px rgb(37 99 235 / 0.15);
+}
+.math-region .math-placeholder {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--color-muted-foreground);
+  font-style: italic;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Print / PDF                                                             */
+/* ---------------------------------------------------------------------- */
+
+#print-root {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+  @page landscape {
+    size: A4 landscape;
+    margin: 0;
+  }
+  html,
+  body {
+    height: auto;
+    background: white;
+  }
+  #root {
+    display: none !important;
+  }
+  #print-root {
+    display: block;
+  }
+}
+
+.print-page {
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  overflow: hidden;
+  page-break-after: always;
+  break-after: page;
+  background: white;
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+.print-page.landscape {
+  page: landscape;
+  width: 297mm;
+  height: 210mm;
+}
+.print-page:last-child {
+  page-break-after: auto;
+  break-after: auto;
+}
+.print-page > svg.print-content {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.print-header,
+.print-footer {
+  position: absolute;
+  left: 20mm;
+  right: 20mm;
+  display: flex;
+  justify-content: space-between;
+  gap: 8mm;
+  font-size: 8pt;
+  color: var(--color-muted-foreground);
+}
+.print-header {
+  top: 8mm;
+  border-bottom: 0.4pt solid var(--color-border-strong);
+  padding-bottom: 2mm;
+}
+.print-header strong {
+  color: var(--color-foreground);
+  font-size: 10pt;
+}
+.print-footer {
+  bottom: 8mm;
+  border-top: 0.4pt solid var(--color-border-strong);
+  padding-top: 2mm;
+}
