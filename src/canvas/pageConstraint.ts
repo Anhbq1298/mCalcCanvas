@@ -3,7 +3,7 @@
  * the margins) area of an A4 page — like typing in a Google Docs page.
  * Free canvas mode has no limits.
  */
-import { orderedShapes, updateShapes, useCanvasStore, type ShapePatch } from './model/canvasStore';
+import { GRID_SIZE, orderedShapes, setPositionNormalizer, updateShapes, useCanvasStore, type ShapePatch } from './model/canvasStore';
 import { shapeBounds, unionBounds } from './model/geometry';
 import type { Box, Point, Shape } from './model/types';
 import { PAGE_GAP, pageCount, pageSize, printableBox } from '../export/pageGeometry';
@@ -75,3 +75,38 @@ export function nextWritingPoint(viewCenter: Point): Point {
   }
   return { x: box.x + 16, y: Math.min(bottom, box.y + box.h - 40) };
 }
+
+// ---------------------------------------------------------------------------
+// Strict grid for math and text regions
+// ---------------------------------------------------------------------------
+
+/** Grid origin for a point: the corner of the page's writable area (or 0,0 on the free canvas). */
+function gridOrigin(p: Point): Point {
+  if (!constrained()) return { x: 0, y: 0 };
+  const box = printableBox(pageIndexAt(p.y), orientation());
+  return { x: box.x, y: box.y };
+}
+
+/** Nearest grid point (the same grid that is drawn on the page). */
+export function gridPoint(p: Point): Point {
+  const o = gridOrigin(p);
+  return { x: o.x + Math.round((p.x - o.x) / GRID_SIZE) * GRID_SIZE, y: o.y + Math.round((p.y - o.y) / GRID_SIZE) * GRID_SIZE };
+}
+
+/** Math and text regions always sit on a grid point, inside the margins. */
+function gridAlign(s: Shape): Shape {
+  if (s.type !== 'math' && s.type !== 'text') return s;
+  let { x, y } = gridPoint(s);
+  if (constrained()) {
+    const box = printableBox(pageIndexAt(s.y), orientation());
+    const w = s.props.w;
+    const h = s.props.h;
+    while (x + w > box.x + box.w && x - GRID_SIZE >= box.x) x -= GRID_SIZE;
+    while (y + h > box.y + box.h && y - GRID_SIZE >= box.y) y -= GRID_SIZE;
+    x = Math.max(box.x, x);
+    y = Math.max(box.y, y);
+  }
+  return x === s.x && y === s.y ? s : ({ ...s, x, y } as Shape);
+}
+
+setPositionNormalizer(gridAlign);

@@ -27,7 +27,7 @@ import {
   type ShapePatch,
 } from './model/canvasStore';
 import { boxFromPoints, boxesIntersect, screenToPage, shapeBounds, unionBounds } from './model/geometry';
-import { clampDelta, clampPoint, printableAt } from './pageConstraint';
+import { clampDelta, clampPoint, gridPoint, printableAt } from './pageConstraint';
 import type { Box, Camera, Point, Shape } from './model/types';
 import { ShapeView } from './shapes/ShapeView';
 
@@ -208,7 +208,7 @@ export function CanvasView() {
           const base = e.shiftKey ? st.selection : [];
           if (!e.shiftKey) select([]);
           // The insertion cross only lands on the writable (white) part of a page.
-          useCanvasStore.setState({ crosshair: printableAt(p) ? snapPoint(p) : null });
+          useCanvasStore.setState({ crosshair: printableAt(p) ? gridPoint(p) : null });
           drag.current = { kind: 'marquee', start: p, base };
         }
         return;

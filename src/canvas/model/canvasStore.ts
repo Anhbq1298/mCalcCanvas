@@ -47,6 +47,15 @@ const get = () => useCanvasStore.getState();
 const set = useCanvasStore.setState;
 
 const HISTORY_LIMIT = 200;
+
+/**
+ * Position normaliser applied whenever a shape is added, loaded or moved.
+ * Installed by the page module: math and text regions snap to the grid.
+ */
+let normalizePosition: (s: Shape) => Shape = (s) => s;
+export function setPositionNormalizer(fn: (s: Shape) => Shape): void {
+  normalizePosition = fn;
+}
 export const GRID_SIZE = 10;
 
 export function newShapeId(): string {
@@ -109,6 +118,7 @@ export function addShapes(list: Shape[], opts: ChangeOptions & { select?: boolea
   if (opts.history !== false) markHistory();
   set((s) => {
     const shapes = { ...s.shapes };
+    list = list.map(normalizePosition);
     for (const sh of list) shapes[sh.id] = sh;
     return {
       shapes,
@@ -130,7 +140,8 @@ export function updateShapes(patches: Record<string, ShapePatch>, opts: ChangeOp
     for (const id of ids) {
       const prev = shapes[id];
       const p = patches[id];
-      const next = { ...prev, ...p, props: p.props ? { ...prev.props, ...p.props } : prev.props } as Shape;
+      let next = { ...prev, ...p, props: p.props ? { ...prev.props, ...p.props } : prev.props } as Shape;
+      if ('x' in p || 'y' in p) next = normalizePosition(next);
       if ('groupId' in p && p.groupId === undefined) delete (next as { groupId?: string }).groupId;
       shapes[id] = next;
     }
@@ -162,6 +173,7 @@ export function deleteShapes(ids: string[], opts: ChangeOptions = {}): void {
 
 /** Replace the whole document (load / new). Clears undo history. */
 export function loadShapes(list: Shape[]): void {
+  list = list.map(normalizePosition);
   const shapes: Record<string, Shape> = {};
   for (const s of list) shapes[s.id] = s;
   set({

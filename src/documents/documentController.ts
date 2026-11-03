@@ -3,7 +3,7 @@
  */
 import { focusPage } from '../canvas/canvasActions';
 import { resyncAll } from '../canvas/engineBridge';
-import { loadShapes, orderedShapes, useCanvasStore } from '../canvas/model/canvasStore';
+import { loadShapes, orderedShapes, updateShapes, useCanvasStore } from '../canvas/model/canvasStore';
 import { pageSize } from '../export/pageGeometry';
 import { useAppStore } from '../store/appStore';
 import { engine } from '../store/calculationStore';
@@ -78,6 +78,14 @@ export function startAutosave(): () => void {
   });
   const stopApp = useAppStore.subscribe((s, prev) => {
     if (s.settings !== prev.settings) applySettings();
+    if (s.settings.canvasMode !== prev.settings.canvasMode || s.settings.pageOrientation !== prev.settings.pageOrientation) {
+      // The grid origin moved: put math/text regions back on the grid.
+      const { shapes } = useCanvasStore.getState();
+      updateShapes(
+        Object.fromEntries(Object.values(shapes).filter((sh) => sh.type === 'math' || sh.type === 'text').map((sh) => [sh.id, { x: sh.x, y: sh.y }])),
+        { history: false },
+      );
+    }
     if (s.title !== prev.title || s.metadata !== prev.metadata || s.settings !== prev.settings) scheduleSave();
   });
   const flush = () => {
@@ -102,8 +110,9 @@ function withoutAutosave(fn: () => void) {
 
 export function loadDocument(doc: CalculationDocument): void {
   withoutAutosave(() => {
-    loadShapes(doc.shapes);
+    // Settings first: grid snapping depends on page layout and orientation.
     useAppStore.getState().setDocument(doc);
+    loadShapes(doc.shapes);
     applySettings();
     // Results are never trusted from storage: recompute everything.
     resyncAll();

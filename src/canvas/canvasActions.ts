@@ -162,7 +162,7 @@ function cloneShapes(list: Shape[], offset: number): Shape[] {
 export function pasteShapes(list: Shape[] = internalClipboard): void {
   if (!list.length) return;
   pasteCount++;
-  const clones = cloneShapes(list, 16 * pasteCount);
+  const clones = cloneShapes(list, GRID_SIZE * 2 * pasteCount);
   addShapes(clones, { select: true });
   clampShapesIntoPage(clones.map((s) => s.id));
 }
@@ -204,7 +204,7 @@ export function handlePasteData(data: DataTransfer | null): boolean {
 export function duplicateSelection(): void {
   const shapes = selectedShapes();
   if (!shapes.length) return;
-  const clones = cloneShapes(shapes, 16);
+  const clones = cloneShapes(shapes, GRID_SIZE * 2);
   addShapes(clones, { select: true });
   clampShapesIntoPage(clones.map((s) => s.id));
 }

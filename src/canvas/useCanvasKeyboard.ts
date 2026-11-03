@@ -109,7 +109,9 @@ export function useCanvasKeyboard(): void {
       const arrows: Record<string, [number, number]> = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
       if (arrows[e.key] && st.selection.length) {
         e.preventDefault();
-        const step = e.shiftKey ? 10 : 1;
+        // Math/text regions move one grid square at a time (they always sit on the grid).
+        const onGrid = st.selection.some((id) => st.shapes[id]?.type === 'math' || st.shapes[id]?.type === 'text');
+        const step = onGrid ? (e.shiftKey ? 50 : 10) : e.shiftKey ? 10 : 1;
         nudgeSelection(arrows[e.key][0] * step, arrows[e.key][1] * step);
         return;
       }
