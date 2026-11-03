@@ -32,7 +32,8 @@ export function PageOverlay() {
               width: b.w,
               height: b.h,
               background: 'var(--color-paper)',
-              boxShadow: '0 2px 10px rgb(0 0 0 / 0.35)',
+              // Google Docs page edge
+              boxShadow: '0 0 0 0.75pt #d1d1d1, 0 0 3pt 0.75pt #ccc',
             }}
           >
             <div
@@ -43,7 +44,7 @@ export function PageOverlay() {
                 right: PAGE_MARGIN,
                 top: PAGE_MARGIN_V,
                 bottom: PAGE_MARGIN_V,
-                border: '1px dashed var(--color-border)',
+                outline: isGrid ? '1px solid var(--grid-major)' : undefined,
                 // Engineering pad: 10 px minor / 50 px major squares inside the print area.
                 backgroundImage: isGrid
                   ? 'linear-gradient(var(--grid-major) 1px, transparent 1px), linear-gradient(90deg, var(--grid-major) 1px, transparent 1px), linear-gradient(var(--grid-minor) 1px, transparent 1px), linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px)'
@@ -51,6 +52,7 @@ export function PageOverlay() {
                 backgroundSize: isGrid ? '50px 50px, 50px 50px, 10px 10px, 10px 10px' : undefined,
               }}
             />
+            <MarginMarks />
             <PageChrome index={i} total={pages} />
             {!showChrome && (
               <div style={{ position: 'absolute', right: 8, bottom: 6, font: '500 10px var(--font-sans)', color: 'var(--color-muted-foreground)' }}>Page {i + 1}</div>
@@ -66,5 +68,20 @@ export function PageOverlay() {
         />
       ))}
     </div>
+  );
+}
+
+/** Docs-style "L" marks at the four corners of the writable area. */
+function MarginMarks() {
+  const len = 14;
+  const c = '#bdc1c6';
+  const corner = (style: React.CSSProperties) => <div style={{ position: 'absolute', width: len, height: len, ...style }} />;
+  return (
+    <>
+      {corner({ left: PAGE_MARGIN - len, top: PAGE_MARGIN_V - len, borderRight: `1px solid ${c}`, borderBottom: `1px solid ${c}` })}
+      {corner({ right: PAGE_MARGIN - len, top: PAGE_MARGIN_V - len, borderLeft: `1px solid ${c}`, borderBottom: `1px solid ${c}` })}
+      {corner({ left: PAGE_MARGIN - len, bottom: PAGE_MARGIN_V - len, borderRight: `1px solid ${c}`, borderTop: `1px solid ${c}` })}
+      {corner({ right: PAGE_MARGIN - len, bottom: PAGE_MARGIN_V - len, borderLeft: `1px solid ${c}`, borderTop: `1px solid ${c}` })}
+    </>
   );
 }

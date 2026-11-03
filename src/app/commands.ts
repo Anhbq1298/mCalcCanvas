@@ -45,7 +45,8 @@ export const commands = {
     createMathRegion(insertionPoint(), latex);
   },
   insertCheck() {
-    this.insertMath('\\le1');
+    // Empty slot for the checked value, then "≤ 1"; the caret starts in the slot.
+    this.insertMath('\\placeholder{}\\le1');
   },
   async insertImage() {
     const file = await pickFile('image/png,image/jpeg,image/webp,image/svg+xml,image/gif');

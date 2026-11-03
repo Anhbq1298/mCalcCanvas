@@ -46,6 +46,11 @@ export function useCanvasKeyboard(): void {
         commands.open();
         return;
       }
+      if (mod && !e.altKey && key === 'p') {
+        e.preventDefault();
+        void commands.exportPdf();
+        return;
+      }
       if (e.key === 'F9') {
         e.preventDefault();
         commands.calculateAll();

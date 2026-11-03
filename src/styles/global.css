@@ -27,11 +27,24 @@
   --color-success: #047857;
   --color-success-soft: #ecfdf5;
   --color-ring: #2563eb;
-  /* Mathcad Prime look: light-blue engineering pad on a dark desk */
-  --grid-minor: rgb(56 152 230 / 0.16);
-  --grid-major: rgb(56 152 230 / 0.30);
-  --color-paper: #f6f9f6;
-  --color-desk: #5a5c5f;
+  /* Google Docs look */
+  --color-docs-bg: #f9fbfd;
+  --color-docs-toolbar: #edf2fa;
+  --color-docs-hover: #dde3ea;
+  --color-docs-active: #d3e3fd;
+  --color-docs-ink: #1f1f1f;
+  --color-docs-muted: #5f6368;
+  --color-docs-border: #dadce0;
+  --color-docs-sep: #c7c7c7;
+  --color-docs-blue: #0b57d0;
+  --color-docs-share: #c2e7ff;
+  --color-docs-share-hover: #b3dcf5;
+
+  /* Engineering pad (grid on the page) */
+  --grid-minor: rgb(66 133 244 / 0.10);
+  --grid-major: rgb(66 133 244 / 0.20);
+  --color-paper: #ffffff;
+  --color-desk: #f9fbfd;
   --color-crosshair: #1f6fd1;
 
   /* Ribbon */
@@ -89,6 +102,36 @@ body {
   user-select: text;
   -webkit-user-select: text;
 }
+
+/* Google Docs toolbar controls */
+.docs-tb-btn {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 4px;
+  color: var(--color-docs-ink);
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+.docs-tb-btn:hover:not(:disabled) { background: var(--color-docs-hover); }
+.docs-tb-btn.is-active, .docs-tb-btn[aria-pressed='true'] { background: var(--color-docs-active); color: var(--color-docs-blue); }
+.docs-tb-btn:disabled { opacity: 0.38; cursor: default; }
+.docs-tb-select {
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  border: 0;
+  background: transparent;
+  padding: 0 4px;
+  font-size: 14px;
+  color: var(--color-docs-ink);
+  cursor: pointer;
+}
+.docs-tb-select:hover { background: var(--color-docs-hover); }
+.docs-tb-select:focus-visible { outline: 2px solid var(--color-docs-blue); }
 
 .cc-layer [data-page-chrome] {
   pointer-events: auto;

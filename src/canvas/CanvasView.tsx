@@ -26,7 +26,8 @@ import {
   useCanvasStore,
   type ShapePatch,
 } from './model/canvasStore';
-import { boxFromPoints, boxesIntersect, screenToPage, shapeBounds } from './model/geometry';
+import { boxFromPoints, boxesIntersect, screenToPage, shapeBounds, unionBounds } from './model/geometry';
+import { clampDelta, clampPoint, printableAt } from './pageConstraint';
 import type { Box, Camera, Point, Shape } from './model/types';
 import { ShapeView } from './shapes/ShapeView';
 
@@ -34,12 +35,12 @@ export type HandleId = 'nw' | 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'star
 
 type Drag =
   | { kind: 'pan'; startScreen: Point; cam: Camera }
-  | { kind: 'move'; start: Point; orig: Record<string, Point>; moved: boolean; clickedId: string; wasSelected: boolean; shift: boolean }
+  | { kind: 'move'; start: Point; orig: Record<string, Point>; bounds: Box; moved: boolean; clickedId: string; wasSelected: boolean; shift: boolean }
   | { kind: 'marquee'; start: Point; base: string[] }
   | { kind: 'resize'; id: string; handle: HandleId; start: Point; orig: Shape }
-  | { kind: 'create-rect'; id: string; start: Point }
-  | { kind: 'create-line'; id: string; start: Point }
-  | { kind: 'draw'; id: string; origin: Point };
+  | { kind: 'create-rect'; id: string; start: Point; box: Box }
+  | { kind: 'create-line'; id: string; start: Point; box: Box }
+  | { kind: 'draw'; id: string; origin: Point; box: Box };
 
 const MIN_SIZE = 16;
 const STROKE = '#1e3a5f';
@@ -175,6 +176,13 @@ export function CanvasView() {
       return;
     }
 
+    // Page Layout: tools only work on the white area inside the margins.
+    const area = printableAt(p);
+    if (st.tool !== 'select' && !area) {
+      useAppStore.getState().showToast('info', 'Place content inside the page margins.');
+      return;
+    }
+
     switch (st.tool) {
       case 'select': {
         const handleEl = target.closest('[data-handle]');
@@ -194,11 +202,13 @@ export function CanvasView() {
           const sel = useCanvasStore.getState().selection;
           const orig: Record<string, Point> = {};
           for (const sid of sel) orig[sid] = { x: st.shapes[sid].x, y: st.shapes[sid].y };
-          drag.current = { kind: 'move', start: p, orig, moved: false, clickedId: id, wasSelected, shift: e.shiftKey };
+          const bounds = unionBounds(sel.map((sid) => shapeBounds(st.shapes[sid])))!;
+          drag.current = { kind: 'move', start: p, orig, bounds, moved: false, clickedId: id, wasSelected, shift: e.shiftKey };
         } else {
           const base = e.shiftKey ? st.selection : [];
           if (!e.shiftKey) select([]);
-          useCanvasStore.setState({ crosshair: snapPoint(p) });
+          // The insertion cross only lands on the writable (white) part of a page.
+          useCanvasStore.setState({ crosshair: printableAt(p) ? snapPoint(p) : null });
           drag.current = { kind: 'marquee', start: p, base };
         }
         return;
@@ -214,23 +224,23 @@ export function CanvasView() {
         return;
       case 'rect': {
         const id = newShapeId();
-        const s = snapPoint(p);
+        const s = clampPoint(snapPoint(p), area);
         addShapes([{ id, type: 'rect', x: s.x, y: s.y, props: { w: 1, h: 1, stroke: STROKE, strokeWidth: 1.5 } }], { select: true });
-        drag.current = { kind: 'create-rect', id, start: s };
+        drag.current = { kind: 'create-rect', id, start: s, box: area! };
         return;
       }
       case 'line':
       case 'arrow': {
         const id = newShapeId();
-        const s = snapPoint(p);
+        const s = clampPoint(snapPoint(p), area);
         addShapes([{ id, type: 'line', x: s.x, y: s.y, props: { x2: 0, y2: 0, stroke: STROKE, strokeWidth: 1.5, arrow: st.tool === 'arrow' } }], { select: true });
-        drag.current = { kind: 'create-line', id, start: s };
+        drag.current = { kind: 'create-line', id, start: s, box: area! };
         return;
       }
       case 'draw': {
         const id = newShapeId();
         addShapes([{ id, type: 'draw', x: p.x, y: p.y, props: { points: [[0, 0]], stroke: STROKE, strokeWidth: 2 } }]);
-        drag.current = { kind: 'draw', id, origin: p };
+        drag.current = { kind: 'draw', id, origin: p, box: area! };
         return;
       }
     }
@@ -265,6 +275,7 @@ export function CanvasView() {
         const target = snapPoint({ x: d.orig[firstId].x + dx, y: d.orig[firstId].y + dy });
         dx = target.x - d.orig[firstId].x;
         dy = target.y - d.orig[firstId].y;
+        ({ dx, dy } = clampDelta(d.bounds, dx, dy));
         for (const [id, o] of Object.entries(d.orig)) patches[id] = { x: o.x + dx, y: o.y + dy };
         updateShapes(patches, { history: false });
         return;
@@ -279,18 +290,19 @@ export function CanvasView() {
       }
       case 'resize': {
         const keepAspect = d.orig.type === 'image' ? !e.shiftKey : e.shiftKey;
-        const patch = resizePatch(d.orig, d.handle, snapPoint(p), keepAspect);
+        const ob = shapeBounds(d.orig);
+        const patch = resizePatch(d.orig, d.handle, clampPoint(snapPoint(p), printableAt({ x: ob.x + 1, y: ob.y + 1 })), keepAspect);
         if (patch) updateShape(d.id, patch, { history: false });
         return;
       }
       case 'create-rect': {
-        const q = snapPoint(p);
+        const q = clampPoint(snapPoint(p), d.box);
         const b = boxFromPoints(d.start, q);
         updateShape(d.id, { x: b.x, y: b.y, props: { w: Math.max(1, b.w), h: Math.max(1, b.h) } }, { history: false });
         return;
       }
       case 'create-line': {
-        const q = snapPoint(p);
+        const q = clampPoint(snapPoint(p), d.box);
         let x2 = q.x - d.start.x;
         let y2 = q.y - d.start.y;
         if (e.shiftKey) {
@@ -307,8 +319,9 @@ export function CanvasView() {
         const sh = st.shapes[d.id];
         if (sh?.type !== 'draw') return;
         const pts = sh.props.points;
-        const nx = p.x - d.origin.x;
-        const ny = p.y - d.origin.y;
+        const cp = clampPoint(p, d.box);
+        const nx = cp.x - d.origin.x;
+        const ny = cp.y - d.origin.y;
         const last = pts[pts.length - 1];
         if (Math.hypot(nx - last[0], ny - last[1]) * st.camera.z < 2) return;
         updateShape(d.id, { props: { points: [...pts, [nx, ny]] } }, { history: false });
@@ -368,7 +381,7 @@ export function CanvasView() {
       startEditing(sh.id);
     } else if (!sh) {
       const p = toPage(e);
-      createMathRegion({ x: p.x, y: p.y - 14 });
+      if (printableAt(p)) createMathRegion({ x: p.x, y: p.y - 14 });
     }
   };
 
@@ -376,7 +389,7 @@ export function CanvasView() {
     const files = [...e.dataTransfer.files].filter((f) => f.type.startsWith('image/'));
     if (!files.length) return;
     e.preventDefault();
-    const p = toPage(e);
+    const p = clampPoint(toPage(e));
     files.forEach((f, i) => void insertImageFile(f, { x: p.x + i * 24, y: p.y + i * 24 }));
   };
 
@@ -397,7 +410,7 @@ export function CanvasView() {
         backgroundColor: canvasMode === 'page' ? 'var(--color-desk)' : 'var(--color-paper)',
         backgroundImage:
           canvasMode === 'page'
-            ? 'linear-gradient(180deg, #6a6c6f 0%, var(--color-desk) 55%, #4d4f52 100%)'
+            ? undefined
             : isGrid && gridPx >= 4
             ? 'linear-gradient(var(--grid-major) 1px, transparent 1px), linear-gradient(90deg, var(--grid-major) 1px, transparent 1px), linear-gradient(var(--grid-minor) 1px, transparent 1px), linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px)'
             : undefined,

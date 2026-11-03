@@ -308,6 +308,9 @@ class Parser {
 
   parseStatement(): Statement {
     if (this.restIsEmpty()) return { kind: 'empty' };
+    if (this.peekRelation()) {
+      throw new CalculationError('incomplete', 'Type the value to check before the comparison (e.g. η ≤ 1).');
+    }
     const left = this.parseExpr();
 
     if (this.isAssign()) {

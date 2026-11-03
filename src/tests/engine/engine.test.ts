@@ -279,3 +279,11 @@ describe('engineering display units', () => {
     expect(e.getResult('w')?.value?.text).toBe('0.00533 m³');
   });
 });
+
+describe('check without a value', () => {
+  it('explains instead of "unsupported command"', () => {
+    const e = setup({ c: '\\le1' });
+    expect(e.getResult('c')?.error?.code).toBe('incomplete');
+    expect(e.getResult('c')?.error?.message).toMatch(/value to check/);
+  });
+});

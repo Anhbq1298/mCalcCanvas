@@ -75,11 +75,17 @@ export function MathEditor({ latex, onChange, onExit, ariaLabel }: MathEditorPro
 
     // Focus right away so no keystroke is lost, and again after the
     // pointer event that created the region has finished.
+    const startCaret = () => {
+      if (mf.value.includes('\\placeholder')) {
+        mf.executeCommand('moveToMathfieldStart');
+        mf.executeCommand('moveToNextPlaceholder');
+      } else mf.executeCommand('moveToMathfieldEnd');
+    };
     mf.focus();
-    mf.executeCommand('moveToMathfieldEnd');
+    startCaret();
     const raf = requestAnimationFrame(() => {
       mf.focus();
-      mf.executeCommand('moveToMathfieldEnd');
+      startCaret();
       flushPendingKeys();
     });
 

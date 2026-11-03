@@ -19,6 +19,7 @@ import {
 import { screenToPage, shapeBounds, snap, unionBounds } from './model/geometry';
 import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, type Point, type Shape } from './model/types';
 import { plainTextToHtml } from './sanitize';
+import { clampDelta, clampShapesIntoPage, constrained, nextWritingPoint, printableAt } from './pageConstraint';
 import { useAppStore } from '../store/appStore';
 
 const get = () => useCanvasStore.getState();
@@ -41,7 +42,8 @@ export function viewportCenter(): Point {
 export function insertionPoint(): Point {
   const cross = get().crosshair;
   if (cross) return { x: cross.x, y: cross.y - 14 };
-  if (lastPointer.inside) return { x: lastPointer.x, y: lastPointer.y - 14 };
+  if (lastPointer.inside && printableAt(lastPointer)) return { x: lastPointer.x, y: lastPointer.y - 14 };
+  if (constrained()) return nextWritingPoint(viewportCenter());
   const c = viewportCenter();
   return { x: c.x - 40, y: c.y - 14 };
 }
@@ -50,6 +52,7 @@ export function createMathRegion(point: Point, latex = ''): string {
   const id = newShapeId();
   const p = snapPoint(point);
   addShapes([{ id, type: 'math', x: p.x, y: p.y, props: { ...DEFAULT_MATH_PROPS, latex } }], { select: true });
+  clampShapesIntoPage([id]);
   useCanvasStore.setState({ editingId: id, tool: 'select', crosshair: null });
   return id;
 }
@@ -58,7 +61,10 @@ export function createTextRegion(point: Point, html = ''): string {
   const id = newShapeId();
   const p = snapPoint(point);
   const fontFamily = useAppStore.getState().settings.textFont;
-  addShapes([{ id, type: 'text', x: p.x, y: p.y, props: { ...DEFAULT_TEXT_PROPS, fontFamily, html } }], { select: true });
+  const box = constrained() ? printableAt(p) ?? null : null;
+  const w = box ? Math.min(DEFAULT_TEXT_PROPS.w, box.x + box.w - p.x) : DEFAULT_TEXT_PROPS.w;
+  addShapes([{ id, type: 'text', x: p.x, y: p.y, props: { ...DEFAULT_TEXT_PROPS, w: Math.max(80, w), fontFamily, html } }], { select: true });
+  clampShapesIntoPage([id]);
   useCanvasStore.setState({ editingId: id, tool: 'select', crosshair: null });
   return id;
 }
@@ -104,7 +110,9 @@ export async function insertImageFile(file: Blob, at?: Point): Promise<void> {
   const h = Math.round(nat.h * scale);
   const c = at ?? viewportCenter();
   const p = snapPoint({ x: c.x - w / 2, y: c.y - h / 2 });
-  addShapes([{ id: newShapeId(), type: 'image', x: p.x, y: p.y, props: { w, h, src } }], { select: true });
+  const imgId = newShapeId();
+  addShapes([{ id: imgId, type: 'image', x: p.x, y: p.y, props: { w, h, src } }], { select: true });
+  clampShapesIntoPage([imgId]);
   useCanvasStore.setState({ tool: 'select' });
 }
 
@@ -154,7 +162,9 @@ function cloneShapes(list: Shape[], offset: number): Shape[] {
 export function pasteShapes(list: Shape[] = internalClipboard): void {
   if (!list.length) return;
   pasteCount++;
-  addShapes(cloneShapes(list, 16 * pasteCount), { select: true });
+  const clones = cloneShapes(list, 16 * pasteCount);
+  addShapes(clones, { select: true });
+  clampShapesIntoPage(clones.map((s) => s.id));
 }
 
 /** Handle a paste event: shapes from CalcCanvas, images, or plain text. */
@@ -193,7 +203,10 @@ export function handlePasteData(data: DataTransfer | null): boolean {
 
 export function duplicateSelection(): void {
   const shapes = selectedShapes();
-  if (shapes.length) addShapes(cloneShapes(shapes, 16), { select: true });
+  if (!shapes.length) return;
+  const clones = cloneShapes(shapes, 16);
+  addShapes(clones, { select: true });
+  clampShapesIntoPage(clones.map((s) => s.id));
 }
 
 export function deleteSelection(): void {
@@ -216,6 +229,8 @@ export function ungroupSelection(): void {
 export function nudgeSelection(dx: number, dy: number): void {
   const { selection, shapes } = get();
   if (!selection.length) return;
+  const b = unionBounds(selection.map((id) => shapeBounds(shapes[id])));
+  if (b) ({ dx, dy } = clampDelta(b, dx, dy));
   updateShapes(Object.fromEntries(selection.map((id) => [id, { x: shapes[id].x + dx, y: shapes[id].y + dy }])));
 }
 

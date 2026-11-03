@@ -35,7 +35,7 @@ export function errorOf(page: Page, latexPrefix: string) {
 
 export async function waitReady(page: Page) {
   await page.waitForFunction(() => !!(window as unknown as { __calccanvas?: unknown }).__calccanvas);
-  await expect(page.getByTestId('save-state')).toHaveText('Saved', { timeout: 10_000 });
+  await expect(page.getByTestId('save-state')).toHaveText('Saved to this browser', { timeout: 10_000 });
 }
 
 export async function openFresh(page: Page) {
@@ -47,11 +47,16 @@ export async function openFresh(page: Page) {
   await waitReady(page);
 }
 
-export async function newBlankWorksheet(page: Page) {
+export async function newBlankWorksheet(page: Page, mode: 'free' | 'page' = 'free') {
   await page.getByRole('menuitem', { name: 'File' }).click();
   await page.getByRole('menuitem', { name: 'New worksheet', exact: true }).click();
   await expect(page.locator('[data-testid=math-region]')).toHaveCount(0);
   await waitReady(page);
+  if (mode === 'free') {
+    // These tests use absolute screen positions, so they work without page margins.
+    await page.getByRole('menuitem', { name: 'View' }).click();
+    await page.getByRole('menuitemcheckbox', { name: 'Free canvas (no margins)' }).click();
+  }
 }
 
 /**
