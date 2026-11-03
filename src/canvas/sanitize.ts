@@ -1,8 +1,10 @@
 /**
  * Whitelist sanitiser for rich text typed or pasted into text regions.
- * Only structural formatting survives; attributes are dropped entirely.
+ * Only structural formatting survives; the single attribute kept is a
+ * validated colour on <font> (what execCommand('foreColor') produces).
  */
-const ALLOWED = new Set(['B', 'STRONG', 'I', 'EM', 'U', 'BR', 'P', 'DIV', 'UL', 'OL', 'LI', 'H1', 'H2', 'H3', 'SPAN', 'SUB', 'SUP']);
+const ALLOWED = new Set(['B', 'STRONG', 'I', 'EM', 'U', 'BR', 'P', 'DIV', 'UL', 'OL', 'LI', 'H1', 'H2', 'H3', 'SPAN', 'SUB', 'SUP', 'FONT']);
+const SAFE_COLOR = /^(#[0-9a-fA-F]{3,8}|rgb\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\))$/;
 
 export function sanitizeHtml(html: string): string {
   if (typeof DOMParser === 'undefined') return html.replace(/<[^>]*>/g, '');
@@ -16,7 +18,10 @@ export function sanitizeHtml(html: string): string {
         else child.replaceWith(...child.childNodes);
         continue;
       }
-      for (const attr of [...child.attributes]) child.removeAttribute(attr.name);
+      for (const attr of [...child.attributes]) {
+        const keep = child.tagName === 'FONT' && attr.name === 'color' && SAFE_COLOR.test(attr.value.trim());
+        if (!keep) child.removeAttribute(attr.name);
+      }
       clean(child);
     }
   };

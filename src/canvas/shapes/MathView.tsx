@@ -4,7 +4,7 @@ import { buildDisplay } from '../../math/MathFormatter';
 import { MathEditor } from '../../math/MathEditor';
 import { MathRenderer } from '../../math/MathRenderer';
 import { useRegionResult } from '../../store/calculationStore';
-import { stopEditing, updateShape } from '../model/canvasStore';
+import { select, stopEditing, updateShape, useCanvasStore } from '../model/canvasStore';
 import type { MathShape } from '../model/types';
 
 const PAD_X = 6;
@@ -36,7 +36,19 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   }, [shape.id, shape.props.w, shape.props.h, autoSize, isStatic]);
 
   const onChange = useCallback((next: string) => updateShape(shape.id, { props: { latex: next } }, { history: false }), [shape.id]);
-  const onExit = useCallback(() => stopEditing(), []);
+  const onExit = useCallback(
+    (reason: 'enter' | 'escape') => {
+      stopEditing();
+      if (reason === 'enter') {
+        // Mathcad: Enter leaves the region and puts the red cross below it.
+        const s = useCanvasStore.getState().shapes[shape.id];
+        const bottom = s ? s.y + (s.type === 'math' ? s.props.h : 0) : 0;
+        select([]);
+        if (s) useCanvasStore.setState({ crosshair: { x: s.x, y: bottom + 30 } });
+      }
+    },
+    [shape.id],
+  );
 
   const error = result?.error;
   const empty = latex.trim() === '';

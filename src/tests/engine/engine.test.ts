@@ -239,3 +239,43 @@ describe('steel beam demonstration worksheet', () => {
     expect(sub).toContain('\\frac');
   });
 });
+
+describe('Mathcad built-in constants', () => {
+  it('provides π, e, g, ∞ and %', () => {
+    const e = setup({
+      a: 'a\\coloneq2\\pi',
+      b: 'b\\coloneq\\ln\\left(e\\right)',
+      w: 'W\\coloneq10\\,\\mathrm{kg}\\cdot g',
+      p: 'p\\coloneq5\\%\\cdot200',
+      i: 'i\\coloneq\\frac{1}{\\infty}',
+    });
+    expect(num(e, 'a')).toBeCloseTo(2 * Math.PI, 12);
+    expect(num(e, 'b')).toBeCloseTo(1, 12);
+    expect(e.getResult('w')?.value?.number).toBeCloseTo(0.0980665, 9); // kN
+    expect(e.getResult('w')?.value?.unitText).toBe('kN');
+    expect(num(e, 'p')).toBeCloseTo(10, 12);
+    expect(num(e, 'i')).toBeCloseTo(0, 12);
+  });
+
+  it('lets a worksheet redefine a constant, with a warning', () => {
+    const e = setup({ g: 'g\\coloneq10\\,\\mathrm{m}/\\mathrm{s}^2', f: 'F\\coloneq2\\,\\mathrm{kg}\\cdot g' });
+    expect(e.getResult('f')?.value?.number).toBeCloseTo(0.02, 12);
+    expect(e.getResult('g')?.warnings[0]).toMatch(/built-in constant/);
+  });
+});
+
+describe('editor unit macro', () => {
+  it('reads \\unit{…} as an upright unit', () => {
+    const e = setup({ w: 'W\\coloneq10\\unit{kg}\\cdot g', f: 'f\\coloneq25\\frac{\\unit{kN}}{\\unit{m}}' });
+    expect(e.getResult('w')?.value?.text).toBe('0.0981 kN');
+    expect(e.getResult('f')?.value?.text).toBe('25 kN/m');
+  });
+});
+
+describe('engineering display units', () => {
+  it('shows small areas in mm² and section moduli in mm³', () => {
+    const e = setup({ a: 'A\\coloneq\\frac{\\pi\\cdot\\left(20\\unit{mm}\\right)^2}{4}', w: 'W\\coloneq\\frac{200\\unit{mm}\\cdot\\left(400\\unit{mm}\\right)^2}{6}' });
+    expect(e.getResult('a')?.value?.text).toBe('314.16 mm²');
+    expect(e.getResult('w')?.value?.text).toBe('0.00533 m³');
+  });
+});

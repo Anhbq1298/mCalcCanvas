@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { DocumentManager } from '../../documents/DocumentManager';
 import { openDocument } from '../../documents/documentController';
 import type { DocumentSummary } from '../../documents/DocumentTypes';
-import { UNIT_SYMBOLS } from '../../engine';
+import { BUILTIN_CONSTANTS, UNIT_SYMBOLS } from '../../engine';
 import { useAppStore } from '../../store/appStore';
 
 function Modal({ title, onClose, children, wide }: { title: string; onClose(): void; children: ReactNode; wide?: boolean }) {
@@ -88,24 +88,33 @@ function OpenDialog({ onClose }: { onClose(): void }) {
 }
 
 const SHORTCUTS: [string, string][] = [
-  ['Type on empty canvas', 'Create a math region at the pointer'],
-  ['Double-click empty canvas', 'New math region there'],
-  ['Double-click / Enter', 'Edit selected region'],
-  ['Enter or Esc', 'Confirm and leave the equation'],
-  [':=', 'Definition (shows ≔)'],
-  ['=', 'Evaluate (e.g. M= )'],
-  ['/', 'Fraction'],
-  ['^ / _', 'Exponent / subscript'],
-  ['Ctrl+C / Ctrl+V / Ctrl+D', 'Copy / paste / duplicate'],
-  ['Ctrl+G / Ctrl+Shift+G', 'Group / ungroup'],
-  ['Shift+drag', 'Constrain move / angle; add to selection'],
+  ['Click empty page', 'Place the blue + cursor'],
+  ['Type on empty page', 'Create a math region at the + cursor'],
+  ['"', 'Create a text region'],
+  ['Double-click', 'Edit a region (or new region on empty space)'],
+  ['Enter', 'Finish the region, + cursor moves below'],
+  ['Esc', 'Finish the region'],
+  [':', 'Definition ≔ (typing := also works)'],
+  ['=', 'Evaluate the whole region'],
+  ['/  ^', 'Fraction / exponent'],
+  ['.  after a name', 'Literal subscript (M.Ed → M_Ed)'],
+  ['\\', 'Square root'],
+  ['Ctrl+\\', 'Nth root'],
+  ['|', 'Absolute value'],
+  ["'", 'Parentheses around the selection'],
+  ['Ctrl+G', 'Greek ↔ Latin for the letter before the cursor (a → α)'],
+  ['Ctrl+Shift+P', 'π'],
+  ['Ctrl+9 / Ctrl+0 / Ctrl+3', '≤ / ≥ / ≠'],
+  ['Ctrl+=', 'Comparison equal ≡'],
+  ['Ctrl+C / Ctrl+X / Ctrl+V', 'Copy / cut / paste'],
+  ['Ctrl+D', 'Duplicate'],
+  ['Ctrl+G / Ctrl+Shift+G (regions)', 'Group / ungroup'],
   ['Delete', 'Delete selection'],
   ['Arrow keys', 'Nudge (Shift = 10 px)'],
   ['Ctrl+Z / Ctrl+Y', 'Undo / redo'],
-  ['Ctrl+S', 'Save'],
-  ['Ctrl+wheel', 'Zoom'],
-  ['Space+drag', 'Pan'],
+  ['Ctrl+S / Ctrl+O', 'Save / open'],
   ['F9', 'Calculate all'],
+  ['Ctrl+wheel / Space+drag', 'Zoom / pan'],
 ];
 
 function ShortcutsDialog({ onClose }: { onClose(): void }) {
@@ -153,6 +162,17 @@ function SyntaxDialog({ onClose }: { onClose(): void }) {
         <section>
           <h3 className="mb-1 font-semibold">Supported units</h3>
           <p className="text-muted-foreground">{UNIT_SYMBOLS.map((u) => u.replace('degC', '°C').replace(/^deg$/, '°')).join(' · ')}</p>
+        </section>
+        <section>
+          <h3 className="mb-1 font-semibold">Built-in constants (as in Mathcad)</h3>
+          <ul className="list-disc space-y-0.5 pl-5">
+            {Object.entries(BUILTIN_CONSTANTS).map(([k, c]) => (
+              <li key={k}>
+                <b className="font-math italic">{k}</b> – {c.description}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-1 text-muted-foreground">Defining a variable with the same name overrides the constant in that worksheet (you'll see a warning).</p>
         </section>
         <section>
           <h3 className="mb-1 font-semibold">Functions</h3>

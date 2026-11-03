@@ -7,6 +7,8 @@ export const A4 = { w: 794, h: 1123 };
 export const PAGE_GAP = 48;
 /** 20 mm side margins. */
 export const PAGE_MARGIN = 76;
+/** 16 mm top/bottom: room for the header/footer title block. */
+export const PAGE_MARGIN_V = 60;
 
 export function pageSize(orientation: PageOrientation): { w: number; h: number } {
   return orientation === 'portrait' ? A4 : { w: A4.h, h: A4.w };
@@ -20,7 +22,7 @@ export function pageBox(index: number, orientation: PageOrientation): Box {
 
 export function printableBox(index: number, orientation: PageOrientation): Box {
   const p = pageBox(index, orientation);
-  return { x: p.x + PAGE_MARGIN, y: p.y + PAGE_MARGIN * 0.6, w: p.w - 2 * PAGE_MARGIN, h: p.h - PAGE_MARGIN * 1.2 };
+  return { x: p.x + PAGE_MARGIN, y: p.y + PAGE_MARGIN_V, w: p.w - 2 * PAGE_MARGIN, h: p.h - 2 * PAGE_MARGIN_V };
 }
 
 export function pageCount(shapes: Shape[], orientation: PageOrientation): number {

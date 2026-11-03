@@ -57,7 +57,7 @@ const FUNCTION_WORDS: Record<string, FunctionName> = {
 
 const ROMAN_COMMANDS = new Set([
   'mathrm', 'text', 'textrm', 'operatorname', 'mathit', 'mathbf', 'mathsf',
-  'textit', 'textbf', 'mathup', 'textup', 'mathbfit', 'textnormal',
+  'textit', 'textbf', 'mathup', 'textup', 'mathbfit', 'textnormal', 'unit',
 ]);
 const FRAC_COMMANDS = new Set(['frac', 'dfrac', 'tfrac', 'cfrac']);
 const IGNORED_COMMANDS = new Set([
@@ -142,7 +142,9 @@ export function tokenize(latex: string): Token[] {
           tokens.push({ t: 'sym', v: ch === '{' ? '(' : ')' });
         } else if (ch === '|') {
           tokens.push({ t: 'sym', v: '|' });
-        } else if (ch === '%' || ch === '\\') {
+        } else if (ch === '%') {
+          tokens.push({ t: 'sym', v: '%' });
+        } else if (ch === '\\') {
           continue;
         } else {
           throw new CalculationError('syntax', `Unsupported LaTeX command \\${ch}`);
@@ -456,14 +458,14 @@ class Parser {
       case 'letter':
         return true;
       case 'sym':
-        if (tok.v === '(' || tok.v === '[' || tok.v === '{' || tok.v === '°') return true;
+        if (tok.v === '(' || tok.v === '[' || tok.v === '{' || tok.v === '°' || tok.v === '%') return true;
         if (tok.v === '|') return this.absDepth === 0;
         return false;
       case 'cmd':
         if (tok.v === 'vert' || tok.v === 'lvert') return this.absDepth === 0 || tok.v === 'lvert';
         return (
           tok.v in GREEK || tok.v === 'pi' || ROMAN_COMMANDS.has(tok.v) || FRAC_COMMANDS.has(tok.v) ||
-          tok.v === 'sqrt' || tok.v in FUNCTION_COMMANDS || tok.v === 'exponentialE' ||
+          tok.v === 'sqrt' || tok.v in FUNCTION_COMMANDS || tok.v === 'exponentialE' || tok.v === 'infty' ||
           tok.v === 'placeholder' || tok.v === 'degree' || tok.v === 'deg' || tok.v === 'lparen' || tok.v === 'lbrack'
         );
       default:
@@ -565,6 +567,10 @@ class Parser {
       this.next();
       return this.degreeIdent();
     }
+    if (v === '%') {
+      this.next();
+      return this.node({ type: 'ident', name: '%', splittable: false, roman: false });
+    }
     throw new CalculationError('syntax', `Unexpected "${v}".`);
   }
 
@@ -586,6 +592,7 @@ class Parser {
       return this.withOptionalSubscript(this.node({ type: 'ident', name: GREEK[v], splittable: false, roman: false }));
     }
     if (v === 'pi') return this.node({ type: 'ident', name: 'π', splittable: false, roman: false });
+    if (v === 'infty' || v === 'infin') return this.node({ type: 'ident', name: '∞', splittable: false, roman: false });
     if (v === 'exponentialE') return this.node({ type: 'num', value: Math.E, raw: 'e' });
     if (v === 'degree' || v === 'deg') return this.degreeIdent();
     if (v === 'lparen' || v === 'lbrack') {

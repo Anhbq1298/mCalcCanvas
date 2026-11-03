@@ -1,11 +1,13 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
+import { flushPendingKeys, setActiveMathEditor, setKeyReplayer } from './activeEditor';
+import { handleMathcadKey } from './mathcadKeys';
 import { configureMathfield, MathfieldElement } from './mathliveSetup';
 
 interface MathEditorProps {
   latex: string;
   onChange(latex: string): void;
   /** Enter / Escape: finish editing. */
-  onExit(): void;
+  onExit(reason: 'enter' | 'escape'): void;
   /** Report the rendered size so the region can grow while typing. */
   ariaLabel?: string;
 }
@@ -34,6 +36,15 @@ export function MathEditor({ latex, onChange, onExit, ariaLabel }: MathEditorPro
     host.appendChild(mf);
     configureMathfield(mf);
     mf.value = initialLatex.current;
+    const changed = () => callbacks.current.onChange(mf.value);
+    setActiveMathEditor({ mf, changed });
+    setKeyReplayer((key) => {
+      const ev = new KeyboardEvent('keydown', { key });
+      if (!handleMathcadKey(ev, mf, changed)) {
+        mf.executeCommand(['typedText', key]);
+        changed();
+      }
+    });
 
     const onInput = () => callbacks.current.onChange(mf.value);
     const onKeyDown = (e: KeyboardEvent) => {
@@ -41,27 +52,20 @@ export function MathEditor({ latex, onChange, onExit, ariaLabel }: MathEditorPro
         e.preventDefault();
         e.stopPropagation();
         callbacks.current.onChange(mf.value);
-        callbacks.current.onExit();
+        callbacks.current.onExit(e.key === 'Enter' ? 'enter' : 'escape');
         return;
       }
       e.stopPropagation();
     };
     const stop = (e: Event) => e.stopPropagation();
 
-    // Mathcad behaviour: "=" always evaluates the whole region. If the caret
-    // is still inside a fraction/exponent (e.g. after typing a denominator),
-    // jump to the end instead of writing "=" into the sub-expression.
-    // Runs in the capture phase, i.e. before MathLive handles the key.
+    // Mathcad keystrokes (":" → ≔, "\\" → √, Ctrl+G Greek, "=" evaluates the
+    // whole region…). Capture phase, i.e. before MathLive handles the key.
     const onKeyDownCapture = (e: KeyboardEvent) => {
-      if (e.key !== '=' || e.ctrlKey || e.metaKey || e.altKey) return;
-      if (mf.position === mf.lastOffset) return;
-      const before = mf.getValue(0, mf.position, 'latex');
-      if (before.endsWith(':')) return; // typing ":=" mid-expression
-      e.preventDefault();
-      e.stopPropagation();
-      mf.executeCommand('moveToMathfieldEnd');
-      mf.executeCommand(['insert', '=']);
-      callbacks.current.onChange(mf.value);
+      if (handleMathcadKey(e, mf, () => callbacks.current.onChange(mf.value))) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
     };
 
     mf.addEventListener('keydown', onKeyDownCapture, { capture: true });
@@ -69,9 +73,14 @@ export function MathEditor({ latex, onChange, onExit, ariaLabel }: MathEditorPro
     mf.addEventListener('keydown', onKeyDown);
     for (const type of ['keyup', 'keypress', 'copy', 'cut', 'paste', 'wheel']) mf.addEventListener(type, stop);
 
+    // Focus right away so no keystroke is lost, and again after the
+    // pointer event that created the region has finished.
+    mf.focus();
+    mf.executeCommand('moveToMathfieldEnd');
     const raf = requestAnimationFrame(() => {
       mf.focus();
       mf.executeCommand('moveToMathfieldEnd');
+      flushPendingKeys();
     });
 
     return () => {
@@ -80,6 +89,8 @@ export function MathEditor({ latex, onChange, onExit, ariaLabel }: MathEditorPro
       mf.removeEventListener('input', onInput);
       mf.removeEventListener('keydown', onKeyDown);
       for (const type of ['keyup', 'keypress', 'copy', 'cut', 'paste', 'wheel']) mf.removeEventListener(type, stop);
+      setActiveMathEditor(null);
+      setKeyReplayer(null);
       mf.remove();
     };
   }, [ariaLabel]);

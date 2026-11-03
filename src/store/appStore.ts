@@ -41,7 +41,7 @@ export const useAppStore = create<AppState>((set) => ({
   settings: DEFAULT_SETTINGS,
   createdAt: new Date().toISOString(),
   saveState: 'saved',
-  panelOpen: true,
+  panelOpen: false,
   dialog: null,
   toast: null,
 

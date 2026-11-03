@@ -29,6 +29,8 @@ export interface TextProps {
   h: number;
   /** Sanitised rich text (b, i, u, h1–h3, ul/ol/li, br, p, div). */
   html: string;
+  /** One of TEXT_FONTS. */
+  fontFamily: string;
   fontSize: number;
   color: string;
   align: TextAlign;
@@ -104,6 +106,22 @@ export interface Box {
   h: number;
 }
 
+/** Text fonts: Inter is bundled via Google Fonts, the rest are system fonts with fallbacks. */
+export const TEXT_FONTS: Record<string, string> = {
+  Inter: "'Inter', ui-sans-serif, system-ui, sans-serif",
+  Arial: "Arial, 'Helvetica Neue', Helvetica, sans-serif",
+  'Segoe UI': "'Segoe UI', system-ui, sans-serif",
+  Calibri: "Calibri, Carlito, 'Segoe UI', sans-serif",
+  'Times New Roman': "'Times New Roman', Times, 'Liberation Serif', serif",
+  Georgia: "Georgia, 'Times New Roman', serif",
+  Cambria: "Cambria, Caladea, Georgia, serif",
+  'Courier New': "'Courier New', Courier, 'Liberation Mono', monospace",
+};
+
+export function fontStack(name: string): string {
+  return TEXT_FONTS[name] ?? TEXT_FONTS.Inter;
+}
+
 export const MATH_COLORS = ['#0f172a', '#1e3a5f', '#2563eb', '#047857', '#b45309', '#dc2626'] as const;
 
 export const DEFAULT_MATH_PROPS: MathProps = {
@@ -122,6 +140,7 @@ export const DEFAULT_TEXT_PROPS: TextProps = {
   w: 320,
   h: 24,
   html: '',
+  fontFamily: 'Inter',
   fontSize: 15,
   color: '#0f172a',
   align: 'left',

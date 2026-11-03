@@ -25,7 +25,7 @@ import {
 export type Resolved =
   | { kind: 'var'; name: string }
   | { kind: 'unit'; symbol: string }
-  | { kind: 'const'; name: string; value: number };
+  | { kind: 'const'; name: string; value: Quantity };
 
 export type IdentExpr = Extract<Expr, { type: 'ident' }>;
 
@@ -33,7 +33,17 @@ export interface ResolveContext {
   isDefined(name: string): boolean;
 }
 
-const CONSTANTS: Record<string, number> = { 'π': Math.PI };
+/**
+ * Mathcad built-in constants. A worksheet definition with the same name
+ * takes precedence (with a warning), exactly as in Mathcad.
+ */
+export const BUILTIN_CONSTANTS: Record<string, { value: Quantity; description: string }> = {
+  'π': { value: Math.PI, description: 'pi = 3.14159…' },
+  e: { value: Math.E, description: 'Euler’s number = 2.71828…' },
+  g: { value: math.unit(9.80665, 'm/s^2'), description: 'standard gravity = 9.80665 m/s²' },
+  '∞': { value: 1e307, description: 'infinity (10³⁰⁷, as in Mathcad)' },
+  '%': { value: 0.01, description: 'percent = 0.01' },
+};
 
 /**
  * Symbol-resolution policy (deterministic, position independent):
@@ -50,7 +60,7 @@ export function resolveIdent(
 ): { ok: true; parts: Resolved[] } | { ok: false; undefinedNames: string[] } {
   const single = (name: string): Resolved | null => {
     if (ctx.isDefined(name)) return { kind: 'var', name };
-    if (name in CONSTANTS) return { kind: 'const', name, value: CONSTANTS[name] };
+    if (name in BUILTIN_CONSTANTS) return { kind: 'const', name, value: BUILTIN_CONSTANTS[name].value };
     if (isUnitSymbol(name)) return { kind: 'unit', symbol: name };
     return null;
   };

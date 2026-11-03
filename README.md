@@ -29,13 +29,16 @@ Playwright needs a Chromium: `npx playwright install chromium`, or point it at a
 
 ## Using it
 
-- **Create a region**: click the canvas and start typing, double-click empty space, or use the Σ tool and click.
-- **Define**: `L:=8.5m` (`:=` turns into ≔). **Evaluate**: `M=`. **Check**: `eta_M<=1` → PASS/FAIL.
-- `/` makes a fraction, `^` and `_` for exponent/subscript, `Enter` or `Esc` to finish. Typing `=` always evaluates the whole region, even if the caret is still in a denominator.
-- Drag, resize, marquee select, copy/paste (incl. screenshots), drag-and-drop images, duplicate (`Ctrl+D`), group (`Ctrl+G`), undo/redo, arrow-key nudge, `Ctrl+wheel` zoom, wheel or `Space`+drag pan, double-click empty canvas for a new region.
-- Select a region to change its display mode (formula / result / formula + result / full calculation), result unit (e.g. `kN·mm`), decimals, size and colour in the properties panel.
-- **Page layout** mode shows A4 sheets, margins and flags objects outside the print area. **Export PDF** prints each page as vector output with a title block and page numbers (choose *Save as PDF*).
-- File menu: new, open, save, JSON import/export.
+The interface follows Mathcad Prime: a ribbon (**Math · Formatting · Calculation · Document**), a dark desk with A4 sheets of blue engineering grid paper, and a title block (header/footer) on every page.
+
+- **Create a region**: click the page (a blue **+** marks the spot) and start typing. `"` starts a text region. Double-click empty space for a new math region.
+- **Mathcad keys** in an equation: `:` definition ≔ · `=` evaluate · `/` fraction · `^` power · `.` after a name = literal subscript (`M.Ed` → M_Ed) · `\` √ · `Ctrl+\` ⁿ√ · `|` absolute value · `'` parentheses · `Ctrl+G` Greek (a → α) · `Ctrl+Shift+P` π · `Ctrl+9 / 0 / 3` ≤ ≥ ≠ · `Enter` finishes and moves the + below, ready for the next line.
+- **Built-in constants** (as in Mathcad): π, e, g = 9.80665 m/s², ∞ = 10³⁰⁷, % = 0.01. A worksheet definition with the same name overrides them (with a warning).
+- **Palettes** on the Math tab insert operators, Greek symbols, constants and units at the cursor of the equation you're editing.
+- **Checks**: `eta_M <= 1` (or Ctrl+9) shows the value with a PASS/FAIL badge.
+- Text regions: font (Inter, Arial, Segoe UI, Calibri, Times New Roman, Georgia, Cambria, Courier New), size, alignment, bold/italic/underline/heading/lists, and any colour (swatches, picker or hex) for the whole text or just the selection.
+- Drag, resize, marquee select, copy/paste (incl. screenshots), drag-and-drop images, duplicate (`Ctrl+D`), group (`Ctrl+G` on regions), undo/redo, arrow-key nudge, `Ctrl+wheel` zoom, wheel or `Space`+drag pan.
+- **Document** tab: page/free canvas, grid, header & footer, orientation, zoom, export PDF/JSON. Double-click the header to edit the worksheet details.
 
 ## Architecture
 
@@ -94,8 +97,8 @@ python3 .claude/skills/ui-ux-pro-max/scripts/search.py "engineering calculation 
 
 ## Tests
 
-- **Unit (35)**: parser, units and dimension errors, display-unit conversion, symbol resolution, cycles, duplicates, drafts, beam sample values, serializer migrations.
-- **Browser (15)**: acceptance tests A–I plus canvas tests (text, undo/redo, clipboard, marquee, resize, zoom) — — free positioning and dragging, definitions/evaluations, dependent recalculation, position independence, mm→kN·m, unit mismatch, undefined/circular errors, type-to-create, persistence across reload, and the full demo flow including PDF generation.
+- **Unit (39)**: parser, units and dimension errors, display-unit conversion, symbol resolution, cycles, duplicates, drafts, beam sample values, serializer migrations.
+- **Browser (20)**: acceptance tests A–I plus canvas tests (text, undo/redo, clipboard, marquee, resize, zoom) — — free positioning and dragging, definitions/evaluations, dependent recalculation, position independence, mm→kN·m, unit mismatch, undefined/circular errors, type-to-create, persistence across reload, and the full demo flow including PDF generation.
 
 ## Known limitations
 

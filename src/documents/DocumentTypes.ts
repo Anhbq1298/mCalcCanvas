@@ -19,6 +19,10 @@ export interface DocumentSettings {
   precision: number;
   canvasMode: CanvasMode;
   pageOrientation: PageOrientation;
+  /** Show the title block (header/footer) on pages and in the PDF. */
+  showHeaderFooter: boolean;
+  /** Default font for new text regions (one of TEXT_FONTS). */
+  textFont: string;
 }
 
 /**
@@ -42,6 +46,8 @@ export const DEFAULT_SETTINGS: DocumentSettings = {
   precision: 2,
   canvasMode: 'page',
   pageOrientation: 'portrait',
+  showHeaderFooter: true,
+  textFont: 'Inter',
 };
 
 export interface DocumentSummary {

@@ -96,9 +96,9 @@ function key(mass: number, length: number, time: number, temp = 0, angle = 0): D
 
 const DIMENSIONS = new Map<DimKey, DimensionInfo>([
   [key(0, 1, 0), { name: 'Length', si: 'm', imperial: 'ft' }],
-  [key(0, 2, 0), { name: 'Area', si: 'm^2', imperial: 'ft^2' }],
-  [key(0, 3, 0), { name: 'Volume', si: 'm^3', imperial: 'ft^3' }],
-  [key(0, 4, 0), { name: 'Second moment of area', si: 'm^4', imperial: 'inch^4' }],
+  [key(0, 2, 0), { name: 'Area', si: (v) => (Math.abs(v) < 0.01 ? 'mm^2' : 'm^2'), imperial: (v) => (Math.abs(v) < 0.0929 ? 'inch^2' : 'ft^2') }],
+  [key(0, 3, 0), { name: 'Volume', si: (v) => (Math.abs(v) < 1e-3 ? 'mm^3' : 'm^3'), imperial: 'ft^3' }],
+  [key(0, 4, 0), { name: 'Second moment of area', si: (v) => (Math.abs(v) < 0.01 ? 'mm^4' : 'm^4'), imperial: 'inch^4' }],
   [key(1, 0, 0), { name: 'Mass', si: 'kg', imperial: 'lbm' }],
   [key(0, 0, 1), { name: 'Time', si: 's', imperial: 's' }],
   [key(0, 0, -1), { name: 'Frequency', si: 'Hz', imperial: 'Hz' }],

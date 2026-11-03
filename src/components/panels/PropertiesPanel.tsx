@@ -2,7 +2,8 @@ import { AlignCenter, AlignLeft, AlignRight, Bold, Heading2, Italic, List, ListO
 import { useId, useState, type ReactNode } from 'react';
 import { updateShape, useCanvasStore } from '../../canvas/model/canvasStore';
 import { shapeBounds } from '../../canvas/model/geometry';
-import { MATH_COLORS, type DrawShape, type LineShape, type MathDisplayMode, type MathShape, type RectShape, type Shape, type TextShape } from '../../canvas/model/types';
+import { formatEditingText, hasTextSelection } from '../../canvas/textFormatting';
+import { fontStack, TEXT_FONTS, type DrawShape, type LineShape, type MathDisplayMode, type MathShape, type RectShape, type Shape, type TextShape } from '../../canvas/model/types';
 import { useAppStore } from '../../store/appStore';
 import { useRegionResult } from '../../store/calculationStore';
 
@@ -184,23 +185,7 @@ function MathProperties({ shape }: { shape: MathShape }) {
             </select>
           )}
         </Field>
-        <div className="space-y-1">
-          <span className="block text-[12px] font-medium text-muted-foreground">Color</span>
-          <div className="flex gap-1.5" role="radiogroup" aria-label="Equation color">
-            {MATH_COLORS.map((c) => (
-              <button
-                key={c}
-                type="button"
-                role="radio"
-                aria-checked={shape.props.color === c}
-                aria-label={`Color ${c}`}
-                onClick={() => update({ color: c })}
-                className={'h-6 w-6 cursor-pointer rounded-full border-2 transition-transform duration-150 hover:scale-110 ' + (shape.props.color === c ? 'border-accent' : 'border-transparent')}
-                style={{ background: c }}
-              />
-            ))}
-          </div>
-        </div>
+        <ColorSwatches label="Color" value={shape.props.color} onChange={(color) => update({ color })} />
         <label className="flex cursor-pointer items-center gap-2 text-[13px]">
           <input type="checkbox" className="h-4 w-4 cursor-pointer accent-accent" checked={shape.props.autoSize} onChange={(e) => update({ autoSize: e.target.checked })} />
           Size to fit equation
@@ -213,8 +198,20 @@ function MathProperties({ shape }: { shape: MathShape }) {
 const INK_COLORS = ['#0f172a', '#475569', '#1e3a5f', '#2563eb', '#047857', '#b45309', '#dc2626'] as const;
 
 function ColorSwatches({ value, onChange, label }: { value: string; onChange(c: string): void; label: string }) {
+  const id = useId();
+  const [hex, setHex] = useState(value);
+  const [prev, setPrev] = useState(value);
+  if (prev !== value) {
+    setPrev(value);
+    setHex(value);
+  }
+  const commitHex = () => {
+    const v = hex.trim().startsWith('#') ? hex.trim() : `#${hex.trim()}`;
+    if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(v)) onChange(v.toLowerCase());
+    else setHex(value);
+  };
   return (
-    <div className="space-y-1">
+    <div className="space-y-1.5">
       <span className="block text-[12px] font-medium text-muted-foreground">{label}</span>
       <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label={label}>
         {INK_COLORS.map((c) => (
@@ -224,11 +221,38 @@ function ColorSwatches({ value, onChange, label }: { value: string; onChange(c: 
             role="radio"
             aria-checked={value === c}
             aria-label={`Color ${c}`}
-            onClick={() => onChange(c)}
+            // mousedown + preventDefault keeps a text selection alive while editing
+            onMouseDown={(e) => {
+              e.preventDefault();
+              onChange(c);
+            }}
             className={'h-6 w-6 cursor-pointer rounded-full border-2 transition-transform duration-150 hover:scale-110 ' + (value === c ? 'border-accent' : 'border-transparent')}
             style={{ background: c }}
           />
         ))}
+      </div>
+      <div className="flex items-center gap-2">
+        <input
+          type="color"
+          aria-label={`${label}: custom`}
+          data-testid="custom-color"
+          value={/^#[0-9a-fA-F]{6}$/.test(value) ? value : '#000000'}
+          onChange={(e) => onChange(e.target.value)}
+          className="h-8 w-10 cursor-pointer rounded border border-border bg-card p-0.5"
+        />
+        <label htmlFor={id} className="sr-only">
+          {label} hex code
+        </label>
+        <input
+          id={id}
+          className={inputCls + ' font-mono uppercase'}
+          value={hex}
+          maxLength={7}
+          spellCheck={false}
+          onChange={(e) => setHex(e.target.value)}
+          onBlur={commitHex}
+          onKeyDown={(e) => e.key === 'Enter' && commitHex()}
+        />
       </div>
     </div>
   );
@@ -245,9 +269,7 @@ function FormatButton({ label, icon: Icon, command, value, disabled }: { label: 
       onMouseDown={(e) => {
         // Keep focus (and the text selection) inside the text region.
         e.preventDefault();
-        document.execCommand(command, false, value);
-        const el = document.activeElement as HTMLElement | null;
-        el?.dispatchEvent(new Event('input', { bubbles: true }));
+        formatEditingText(command, value);
       }}
       className="flex h-8 w-8 cursor-pointer items-center justify-center rounded border border-border text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground disabled:cursor-default disabled:opacity-40"
     >
@@ -273,6 +295,24 @@ function TextProperties({ shape }: { shape: TextShape }) {
           <FormatButton label="Numbered list" icon={ListOrdered} command="insertOrderedList" disabled={!editing} />
         </div>
       </div>
+      <Field label="Font">
+        {(id) => (
+          <select
+            id={id}
+            data-testid="text-font"
+            className={inputCls + ' cursor-pointer'}
+            value={shape.props.fontFamily}
+            style={{ fontFamily: fontStack(shape.props.fontFamily) }}
+            onChange={(e) => update({ fontFamily: e.target.value })}
+          >
+            {Object.keys(TEXT_FONTS).map((f) => (
+              <option key={f} value={f} style={{ fontFamily: fontStack(f) }}>
+                {f}
+              </option>
+            ))}
+          </select>
+        )}
+      </Field>
       <Field label="Font size">
         {(id) => (
           <select id={id} className={inputCls + ' cursor-pointer'} value={shape.props.fontSize} onChange={(e) => update({ fontSize: Number(e.target.value) })}>
@@ -308,7 +348,15 @@ function TextProperties({ shape }: { shape: TextShape }) {
           ))}
         </div>
       </div>
-      <ColorSwatches label="Color" value={shape.props.color} onChange={(color) => update({ color })} />
+      <ColorSwatches
+        label={editing ? 'Text color (selection, or whole text)' : 'Text color'}
+        value={shape.props.color}
+        onChange={(color) => {
+          // While editing with text selected, colour only the selection.
+          if (editing && hasTextSelection()) formatEditingText('foreColor', color);
+          else update({ color });
+        }}
+      />
     </Section>
   );
 }
@@ -354,7 +402,7 @@ function DocumentProperties() {
   return (
     <>
       <Section title="Worksheet">
-        <Field label="Title">{(id) => <input id={id} className={inputCls} value={title} onChange={(e) => updateTitle(e.target.value)} />}</Field>
+        <Field label="Title">{() => <input id="ws-title" className={inputCls} value={title} onChange={(e) => updateTitle(e.target.value)} />}</Field>
         {meta.map(([k, label]) => (
           <Field key={k} label={label}>
             {(id) => <input id={id} className={inputCls} value={metadata[k] ?? ''} onChange={(e) => updateMetadata({ [k]: e.target.value })} />}
@@ -376,6 +424,27 @@ function DocumentProperties() {
               {[0, 1, 2, 3, 4, 5, 6].map((p) => (
                 <option key={p} value={p}>
                   {p}
+                </option>
+              ))}
+            </select>
+          )}
+        </Field>
+        <label className="flex cursor-pointer items-center gap-2 text-[13px]">
+          <input
+            type="checkbox"
+            data-testid="toggle-header-footer"
+            className="h-4 w-4 cursor-pointer accent-accent"
+            checked={settings.showHeaderFooter}
+            onChange={(e) => updateSettings({ showHeaderFooter: e.target.checked })}
+          />
+          Header &amp; footer on pages and PDF
+        </label>
+        <Field label="Default text font">
+          {(id) => (
+            <select id={id} className={inputCls + ' cursor-pointer'} value={settings.textFont} onChange={(e) => updateSettings({ textFont: e.target.value })}>
+              {Object.keys(TEXT_FONTS).map((f) => (
+                <option key={f} value={f}>
+                  {f}
                 </option>
               ))}
             </select>

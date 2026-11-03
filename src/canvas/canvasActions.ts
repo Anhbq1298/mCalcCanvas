@@ -19,6 +19,7 @@ import {
 import { screenToPage, shapeBounds, snap, unionBounds } from './model/geometry';
 import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, type Point, type Shape } from './model/types';
 import { plainTextToHtml } from './sanitize';
+import { useAppStore } from '../store/appStore';
 
 const get = () => useCanvasStore.getState();
 
@@ -38,6 +39,8 @@ export function viewportCenter(): Point {
 
 /** Where a new region goes: the pointer if it is over the canvas, else the view centre. */
 export function insertionPoint(): Point {
+  const cross = get().crosshair;
+  if (cross) return { x: cross.x, y: cross.y - 14 };
   if (lastPointer.inside) return { x: lastPointer.x, y: lastPointer.y - 14 };
   const c = viewportCenter();
   return { x: c.x - 40, y: c.y - 14 };
@@ -47,15 +50,16 @@ export function createMathRegion(point: Point, latex = ''): string {
   const id = newShapeId();
   const p = snapPoint(point);
   addShapes([{ id, type: 'math', x: p.x, y: p.y, props: { ...DEFAULT_MATH_PROPS, latex } }], { select: true });
-  useCanvasStore.setState({ editingId: id, tool: 'select' });
+  useCanvasStore.setState({ editingId: id, tool: 'select', crosshair: null });
   return id;
 }
 
 export function createTextRegion(point: Point, html = ''): string {
   const id = newShapeId();
   const p = snapPoint(point);
-  addShapes([{ id, type: 'text', x: p.x, y: p.y, props: { ...DEFAULT_TEXT_PROPS, html } }], { select: true });
-  useCanvasStore.setState({ editingId: id, tool: 'select' });
+  const fontFamily = useAppStore.getState().settings.textFont;
+  addShapes([{ id, type: 'text', x: p.x, y: p.y, props: { ...DEFAULT_TEXT_PROPS, fontFamily, html } }], { select: true });
+  useCanvasStore.setState({ editingId: id, tool: 'select', crosshair: null });
   return id;
 }
 

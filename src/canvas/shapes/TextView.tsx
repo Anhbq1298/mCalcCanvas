@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import { stopEditing, updateShape } from '../model/canvasStore';
-import type { TextShape } from '../model/types';
+import { fontStack, type TextShape } from '../model/types';
 import { sanitizeHtml } from '../sanitize';
 
 /**
@@ -9,7 +9,7 @@ import { sanitizeHtml } from '../sanitize';
  */
 export function TextView({ shape, editing, isStatic }: { shape: TextShape; editing: boolean; isStatic: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
-  const { html, w, fontSize, color, align } = shape.props;
+  const { html, w, fontSize, color, align, fontFamily } = shape.props;
 
   // Keep stored height equal to the rendered height (no undo entries).
   useEffect(() => {
@@ -31,7 +31,9 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
     const el = ref.current;
     if (!el || !editing) return;
     el.innerHTML = html;
-    // Focus after the pointer event's default focus handling has run.
+    // Focus now (so no keystroke is lost) and again after the pointer event's
+    // default focus handling has run.
+    el.focus();
     const raf = requestAnimationFrame(() => {
       el.focus();
       const range = document.createRange();
@@ -48,6 +50,7 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
 
   const style: React.CSSProperties = {
     width: w,
+    fontFamily: fontStack(fontFamily),
     fontSize,
     color,
     textAlign: align,

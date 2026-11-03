@@ -9,12 +9,13 @@ import { orderedShapes } from '../canvas/model/canvasStore';
 import { ShapeView } from '../canvas/shapes/ShapeView';
 import type { Shape } from '../canvas/model/types';
 import { useAppStore } from '../store/appStore';
+import { PageChrome } from './PageChrome';
 import { pageBox, pageCount, shapesOnPage, shapesOutsidePrintArea } from './pageGeometry';
 
 let root: Root | null = null;
 
 function PrintView({ pages }: { pages: { index: number; shapes: Shape[] }[] }) {
-  const { title, metadata, settings } = useAppStore.getState();
+  const { settings } = useAppStore.getState();
   const landscape = settings.pageOrientation === 'landscape';
   const total = pages.length;
   return (
@@ -28,22 +29,7 @@ function PrintView({ pages }: { pages: { index: number; shapes: Shape[] }[] }) {
                 <ShapeView key={s.id} shape={s} editing={false} isStatic />
               ))}
             </div>
-            <header className="print-header">
-              <div>
-                <strong>{title}</strong>
-              </div>
-              <div>{[metadata.project, metadata.calculationReference].filter(Boolean).join('  ·  ')}</div>
-            </header>
-            <footer className="print-footer">
-              <div>
-                {[metadata.preparedBy && `Prepared: ${metadata.preparedBy}`, metadata.checkedBy && `Checked: ${metadata.checkedBy}`, metadata.revision && `Rev ${metadata.revision}`]
-                  .filter(Boolean)
-                  .join('   ')}
-              </div>
-              <div>
-                Page {index + 1} of {total}
-              </div>
-            </footer>
+            <PageChrome index={index} total={total} />
           </section>
         );
       })}

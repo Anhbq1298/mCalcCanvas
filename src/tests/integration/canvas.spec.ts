@@ -34,6 +34,9 @@ test.describe('own canvas engine', () => {
 
   test('copy, paste and duplicate', async ({ page }) => {
     await addRegion(page, 400, 300, ['x:=1']);
+    const r = (await regions(page))[0];
+    const box = await page.locator(`.math-region[data-shape-id="${r.id}"]`).boundingBox();
+    await page.mouse.click(box!.x + 10, box!.y + box!.height / 2); // select it
     await page.keyboard.press('ControlOrMeta+c');
     await page.keyboard.press('ControlOrMeta+v');
     await expect.poll(async () => (await regions(page)).length).toBe(2);

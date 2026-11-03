@@ -1,4 +1,4 @@
-import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, type Shape } from '../canvas/model/types';
+import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, TEXT_FONTS, type Shape } from '../canvas/model/types';
 import { escapeHtml, sanitizeHtml } from '../canvas/sanitize';
 import {
   DEFAULT_SETTINGS,
@@ -89,6 +89,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           w: Math.max(20, num(p.w, 320)),
           h: Math.max(1, num(p.h, 24)),
           html: sanitizeHtml(str(p.html)),
+          fontFamily: TEXT_FONTS[str(p.fontFamily)] ? str(p.fontFamily) : 'Inter',
           fontSize: Math.min(72, Math.max(8, num(p.fontSize, 15))),
           color: color(p.color, '#0f172a'),
           align: (['left', 'center', 'right'].includes(p.align as string) ? p.align : 'left') as never,
@@ -139,6 +140,8 @@ export function parseDocument(input: unknown): CalculationDocument {
   if (settings.unitSystem !== 'SI' && settings.unitSystem !== 'Imperial') settings.unitSystem = 'SI';
   if (settings.canvasMode !== 'free' && settings.canvasMode !== 'page') settings.canvasMode = 'page';
   if (settings.pageOrientation !== 'portrait' && settings.pageOrientation !== 'landscape') settings.pageOrientation = 'portrait';
+  settings.showHeaderFooter = settings.showHeaderFooter !== false;
+  if (!TEXT_FONTS[settings.textFont]) settings.textFont = 'Inter';
   settings.precision = Math.min(8, Math.max(0, Math.round(num(settings.precision, DEFAULT_SETTINGS.precision))));
   return {
     id: doc.id,

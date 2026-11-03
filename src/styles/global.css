@@ -27,6 +27,25 @@
   --color-success: #047857;
   --color-success-soft: #ecfdf5;
   --color-ring: #2563eb;
+  /* Mathcad Prime look: light-blue engineering pad on a dark desk */
+  --grid-minor: rgb(56 152 230 / 0.16);
+  --grid-major: rgb(56 152 230 / 0.30);
+  --color-paper: #f6f9f6;
+  --color-desk: #5a5c5f;
+  --color-crosshair: #1f6fd1;
+
+  /* Ribbon */
+  --color-ribbon: #fbfcfd;
+  --color-ribbon-top: #e9eef4;
+  --color-ribbon-strip: #dbe4ee;
+  --color-ribbon-border: #c9d3de;
+  --color-ribbon-hover: #e3edf8;
+  --color-ribbon-active: #d3e4f7;
+  --color-ribbon-active-border: #7fa9da;
+  --color-ribbon-glyph: #1f4f8f;
+  --color-ribbon-file: #1f5aa6;
+  --color-ribbon-file-hover: #184a8a;
+  --font-math: 'KaTeX_Main', 'Times New Roman', Times, serif;
 }
 
 html,
@@ -71,8 +90,12 @@ body {
   -webkit-user-select: text;
 }
 
+.cc-layer [data-page-chrome] {
+  pointer-events: auto;
+  cursor: default;
+}
+
 .text-region {
-  font-family: var(--font-sans);
   padding: 2px 4px;
   border-radius: 2px;
 }

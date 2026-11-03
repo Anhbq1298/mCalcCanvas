@@ -88,6 +88,7 @@ export function CanvasView() {
   const editingId = useCanvasStore((s) => s.editingId);
   const tool = useCanvasStore((s) => s.tool);
   const isGrid = useCanvasStore((s) => s.isGrid);
+  const crosshair = useCanvasStore((s) => s.crosshair);
   const canvasMode = useAppStore((s) => s.settings.canvasMode);
   const containerRef = useRef<HTMLDivElement>(null);
   const drag = useRef<Drag | null>(null);
@@ -165,7 +166,7 @@ export function CanvasView() {
     if (target.closest('[data-editing]')) return; // the editor owns these events
     const st = useCanvasStore.getState();
     if (st.editingId) stopEditing();
-    containerRef.current?.focus({ preventScroll: true });
+    if (st.tool !== 'math' && st.tool !== 'text') containerRef.current?.focus({ preventScroll: true });
     const p = toPage(e);
     (e.currentTarget as Element).setPointerCapture(e.pointerId);
 
@@ -186,6 +187,7 @@ export function CanvasView() {
         const shapeEl = target.closest('[data-shape-id]');
         const id = shapeEl?.getAttribute('data-shape-id');
         if (id && st.shapes[id]) {
+          useCanvasStore.setState({ crosshair: null });
           const wasSelected = st.selection.includes(id);
           if (!wasSelected) select(e.shiftKey ? [...st.selection, id] : [id]);
           markHistory();
@@ -196,14 +198,18 @@ export function CanvasView() {
         } else {
           const base = e.shiftKey ? st.selection : [];
           if (!e.shiftKey) select([]);
+          useCanvasStore.setState({ crosshair: snapPoint(p) });
           drag.current = { kind: 'marquee', start: p, base };
         }
         return;
       }
       case 'math':
+        // Keep the browser from moving focus to the canvas after the new editor took it.
+        e.preventDefault();
         createMathRegion({ x: p.x, y: p.y - 14 });
         return;
       case 'text':
+        e.preventDefault();
         createTextRegion({ x: p.x, y: p.y - 10 });
         return;
       case 'rect': {
@@ -265,6 +271,7 @@ export function CanvasView() {
       }
       case 'marquee': {
         const box = boxFromPoints(d.start, p);
+        if (box.w * st.camera.z > 4 || box.h * st.camera.z > 4) useCanvasStore.setState({ crosshair: null });
         setMarquee(box);
         const hits = st.order.filter((id) => boxesIntersect(box, shapeBounds(st.shapes[id])));
         select([...new Set([...d.base, ...hits])]);
@@ -348,6 +355,13 @@ export function CanvasView() {
     if (target.closest('[data-editing]')) return;
     const st = useCanvasStore.getState();
     if (st.tool !== 'select') return;
+    if (target.closest('[data-page-chrome]') && !target.closest('[data-shape-id]')) {
+      // Header/footer text comes from the worksheet details.
+      select([]);
+      useAppStore.getState().togglePanel(true);
+      requestAnimationFrame(() => document.getElementById('ws-title')?.focus());
+      return;
+    }
     const id = target.closest('[data-shape-id]')?.getAttribute('data-shape-id');
     const sh = id ? st.shapes[id] : null;
     if (sh && (sh.type === 'math' || sh.type === 'text')) {
@@ -380,10 +394,15 @@ export function CanvasView() {
       style={{
         cursor,
         touchAction: 'none',
-        background: canvasMode === 'page' ? 'var(--color-canvas)' : 'var(--color-card)',
-        backgroundImage: isGrid && gridPx >= 4 ? 'radial-gradient(circle, var(--color-border-strong) 1px, transparent 1.2px)' : undefined,
-        backgroundSize: isGrid ? `${gridPx}px ${gridPx}px` : undefined,
-        backgroundPosition: isGrid ? `${-camera.x * camera.z}px ${-camera.y * camera.z}px` : undefined,
+        backgroundColor: canvasMode === 'page' ? 'var(--color-desk)' : 'var(--color-paper)',
+        backgroundImage:
+          canvasMode === 'page'
+            ? 'linear-gradient(180deg, #6a6c6f 0%, var(--color-desk) 55%, #4d4f52 100%)'
+            : isGrid && gridPx >= 4
+            ? 'linear-gradient(var(--grid-major) 1px, transparent 1px), linear-gradient(90deg, var(--grid-major) 1px, transparent 1px), linear-gradient(var(--grid-minor) 1px, transparent 1px), linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px)'
+            : undefined,
+        backgroundSize: canvasMode === 'page' ? undefined : isGrid ? `${gridPx * 5}px ${gridPx * 5}px, ${gridPx * 5}px ${gridPx * 5}px, ${gridPx}px ${gridPx}px, ${gridPx}px ${gridPx}px` : undefined,
+        backgroundPosition: canvasMode === 'page' ? undefined : isGrid ? `${-camera.x * camera.z}px ${-camera.y * camera.z}px` : undefined,
       }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
@@ -403,6 +422,16 @@ export function CanvasView() {
           <ShapeView key={id} shape={shapes[id]} editing={editingId === id} />
         ))}
         <SelectionOverlay />
+        {crosshair && !editingId && tool === 'select' && (
+          <svg
+            data-testid="crosshair"
+            width={1}
+            height={1}
+            style={{ position: 'absolute', left: crosshair.x, top: crosshair.y, overflow: 'visible', pointerEvents: 'none' }}
+          >
+            <path d={`M${-7 / camera.z},0 H${7 / camera.z} M0,${-7 / camera.z} V${7 / camera.z}`} stroke="var(--color-crosshair)" strokeWidth={1.5 / camera.z} />
+          </svg>
+        )}
         {marquee && (
           <div
             data-testid="marquee"

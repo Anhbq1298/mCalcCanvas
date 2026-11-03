@@ -150,6 +150,8 @@ test('demo worksheet: edit span, drag, change units, check, export PDF', async (
   const m = (await region(page, 'M_{Ed}'))!;
   const mc = await regionCenter(page, m.id);
   await page.mouse.click(mc.x, mc.y);
+  await page.getByRole('tab', { name: 'Formatting' }).click();
+  await page.getByTestId('toggle-properties').click();
   await page.getByTestId('display-unit-input').fill('kN·mm');
   await page.getByTestId('display-unit-input').press('Enter');
   await resultOf(page, 'M_{Ed}').toBe('356250 kN·mm');
@@ -161,6 +163,7 @@ test('demo worksheet: edit span, drag, change units, check, export PDF', async (
   await resultOf(page, 'M_{Ed}').toBe('356250 kN·mm');
 
   // 8 (Test I): export
+  await page.getByRole('tab', { name: 'Document' }).click();
   await page.getByTestId('export-pdf').click();
   const pages = page.locator('#print-root .print-page');
   await expect(pages).toHaveCount(1);

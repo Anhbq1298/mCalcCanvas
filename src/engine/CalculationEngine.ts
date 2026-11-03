@@ -11,7 +11,7 @@
  */
 import { CalculationError, isCalculationError, type CalculationErrorCode } from './CalculationErrors';
 import { DependencyGraph } from './DependencyGraph';
-import { collectReferences, compareQuantities, evaluateExpr, type EvalContext } from './ExpressionEvaluator';
+import { BUILTIN_CONSTANTS, collectReferences, compareQuantities, evaluateExpr, type EvalContext } from './ExpressionEvaluator';
 import { statementExprs, type Relation, type Statement } from './ExpressionTypes';
 import { exprToLatex, nameToLatex, RELATION_LATEX } from './LatexFormatter';
 import { parseLatex } from './LatexParser';
@@ -334,6 +334,9 @@ export class CalculationEngine {
       const definers = this.graph.definers(statement.name);
       if (definers.length > 1) {
         return fail('duplicate-definition', `Duplicate definition: ${statement.name} is defined ${definers.length} times.`);
+      }
+      if (statement.name in BUILTIN_CONSTANTS) {
+        base.warnings.push(`"${statement.name}" redefines the built-in constant (${BUILTIN_CONSTANTS[statement.name].description}) in this worksheet.`);
       }
       if (isUnitSymbol(statement.name)) {
         base.warnings.push(

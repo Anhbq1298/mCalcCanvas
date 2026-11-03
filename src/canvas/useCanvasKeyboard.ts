@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
 import { commands } from '../app/commands';
+import { queueKey } from '../math/activeEditor';
 import {
   beginEditSelected,
   copySelection,
   createMathRegion,
+  createTextRegion,
   cutSelection,
   deleteSelection,
   duplicateSelection,
@@ -50,6 +52,16 @@ export function useCanvasKeyboard(): void {
         return;
       }
       if (isTypingTarget(e.target)) return;
+      // A math region is being created but its editor hasn't taken focus yet:
+      // hand the keystroke to it instead of dropping it.
+      {
+        const st0 = useCanvasStore.getState();
+        if (st0.editingId && st0.shapes[st0.editingId]?.type === 'math' && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          e.preventDefault();
+          queueKey(e.key);
+          return;
+        }
+      }
       // Don't steal keys from open menus or dialogs.
       if ((e.target as HTMLElement)?.closest?.('[role=menu], dialog')) return;
 
@@ -94,6 +106,12 @@ export function useCanvasKeyboard(): void {
         e.preventDefault();
         const step = e.shiftKey ? 10 : 1;
         nudgeSelection(arrows[e.key][0] * step, arrows[e.key][1] * step);
+        return;
+      }
+      // Mathcad: a double quote on empty space starts a text region.
+      if (e.key === '"' && !st.editingId && st.selection.length === 0 && st.tool === 'select') {
+        e.preventDefault();
+        createTextRegion(insertionPoint());
         return;
       }
       // Mathcad behaviour: just start typing to create a math region.

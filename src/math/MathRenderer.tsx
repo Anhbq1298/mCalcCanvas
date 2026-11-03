@@ -8,7 +8,8 @@ import { memo, useMemo } from 'react';
 export const MathRenderer = memo(function MathRenderer({ latex, className }: { latex: string; className?: string }) {
   const html = useMemo(() => {
     try {
-      return convertLatexToMarkup(latex, { defaultMode: 'math' } as never);
+      // \unit{…} is the editor's atomic unit macro; it renders upright.
+      return convertLatexToMarkup(latex.replace(/\\unit\{/g, '\\mathrm{'), { defaultMode: 'math' } as never);
     } catch {
       return null;
     }

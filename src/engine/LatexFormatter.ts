@@ -14,8 +14,10 @@ const GREEK_BY_CHAR: Record<string, string> = Object.fromEntries(
   Object.entries(GREEK).map(([cmd, ch]) => [ch, `\\${cmd}`]),
 );
 
+const SPECIAL: Record<string, string> = { 'π': '\\pi', '∞': '\\infty', '%': '\\%' };
+
 function symbolLatex(s: string): string {
-  if (s.length === 1) return GREEK_BY_CHAR[s] ?? (s === 'π' ? '\\pi' : s);
+  if (s.length === 1) return GREEK_BY_CHAR[s] ?? SPECIAL[s] ?? s;
   if ([...s].every((c) => GREEK_BY_CHAR[c])) return [...s].map((c) => GREEK_BY_CHAR[c] + ' ').join('').trim();
   return `\\mathrm{${s}}`;
 }

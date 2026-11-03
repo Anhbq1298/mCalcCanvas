@@ -4,7 +4,7 @@
  * replaces the changed shape objects, so a snapshot is just two references.
  */
 import { create } from 'zustand';
-import type { Camera, Shape, ToolId } from './types';
+import type { Camera, Point, Shape, ToolId } from './types';
 
 interface Snapshot {
   shapes: Record<string, Shape>;
@@ -20,6 +20,8 @@ export interface CanvasState {
   camera: Camera;
   isGrid: boolean;
   isSnap: boolean;
+  /** Mathcad-style red insertion cross: where the next typed region goes. */
+  crosshair: Point | null;
   undoStack: Snapshot[];
   redoStack: Snapshot[];
   /** Increments on every document (shape) change caused by the user. */
@@ -33,8 +35,9 @@ export const useCanvasStore = create<CanvasState>(() => ({
   editingId: null,
   tool: 'select',
   camera: { x: -40, y: -24, z: 1 },
-  isGrid: false,
+  isGrid: true,
   isSnap: false,
+  crosshair: null,
   undoStack: [],
   redoStack: [],
   docVersion: 0,

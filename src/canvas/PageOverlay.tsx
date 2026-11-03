@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { PAGE_MARGIN, pageBox, pageCount, shapesOutsidePrintArea } from '../export/pageGeometry';
+import { PageChrome } from '../export/PageChrome';
+import { PAGE_MARGIN, PAGE_MARGIN_V, pageBox, pageCount, shapesOutsidePrintArea } from '../export/pageGeometry';
 import { useAppStore } from '../store/appStore';
 import { orderedShapes, useCanvasStore } from './model/canvasStore';
 import { shapeBounds } from './model/geometry';
@@ -9,6 +10,8 @@ export function PageOverlay() {
   const mode = useAppStore((s) => s.settings.canvasMode);
   const orientation = useAppStore((s) => s.settings.pageOrientation);
   const shapesMap = useCanvasStore((s) => s.shapes);
+  const isGrid = useCanvasStore((s) => s.isGrid);
+  const showChrome = useAppStore((s) => s.settings.showHeaderFooter);
   const order = useCanvasStore((s) => s.order);
   const shapes = useMemo(() => orderedShapes({ ...useCanvasStore.getState(), shapes: shapesMap, order }), [shapesMap, order]);
   const pages = useMemo(() => pageCount(shapes, orientation), [shapes, orientation]);
@@ -28,12 +31,30 @@ export function PageOverlay() {
               top: b.y,
               width: b.w,
               height: b.h,
-              background: 'var(--color-card)',
-              boxShadow: '0 1px 2px rgb(15 23 42 / 0.08), 0 4px 16px rgb(15 23 42 / 0.06)',
+              background: 'var(--color-paper)',
+              boxShadow: '0 2px 10px rgb(0 0 0 / 0.35)',
             }}
           >
-            <div style={{ position: 'absolute', left: PAGE_MARGIN, right: PAGE_MARGIN, top: PAGE_MARGIN * 0.6, bottom: PAGE_MARGIN * 0.6, border: '1px dashed var(--color-border)' }} />
-            <div style={{ position: 'absolute', right: 8, bottom: 6, font: '500 10px var(--font-sans)', color: 'var(--color-muted-foreground)' }}>Page {i + 1}</div>
+            <div
+              data-testid={isGrid ? 'page-grid' : undefined}
+              style={{
+                position: 'absolute',
+                left: PAGE_MARGIN,
+                right: PAGE_MARGIN,
+                top: PAGE_MARGIN_V,
+                bottom: PAGE_MARGIN_V,
+                border: '1px dashed var(--color-border)',
+                // Engineering pad: 10 px minor / 50 px major squares inside the print area.
+                backgroundImage: isGrid
+                  ? 'linear-gradient(var(--grid-major) 1px, transparent 1px), linear-gradient(90deg, var(--grid-major) 1px, transparent 1px), linear-gradient(var(--grid-minor) 1px, transparent 1px), linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px)'
+                  : undefined,
+                backgroundSize: isGrid ? '50px 50px, 50px 50px, 10px 10px, 10px 10px' : undefined,
+              }}
+            />
+            <PageChrome index={i} total={pages} />
+            {!showChrome && (
+              <div style={{ position: 'absolute', right: 8, bottom: 6, font: '500 10px var(--font-sans)', color: 'var(--color-muted-foreground)' }}>Page {i + 1}</div>
+            )}
           </div>
         );
       })}
