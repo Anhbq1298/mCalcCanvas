@@ -84,7 +84,7 @@ export const SYMBOLS: PaletteSection[] = [
 
 export const CONSTANTS: PaletteSection[] = [
   {
-    title: 'Built-in constants (as in Mathcad)',
+    title: 'Built-in constants',
     items: [
       { label: 'π', latex: '\\pi ', title: 'π = 3.14159…  ( Ctrl+Shift+P )', math: true },
       { label: 'e', latex: 'e', title: 'Euler’s number = 2.71828…', math: true },

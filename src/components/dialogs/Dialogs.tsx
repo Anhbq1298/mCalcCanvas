@@ -5,8 +5,9 @@ import { openDocument } from '../../documents/documentController';
 import type { DocumentSummary } from '../../documents/DocumentTypes';
 import { BUILTIN_CONSTANTS, UNIT_SYMBOLS } from '../../engine';
 import { useAppStore } from '../../store/appStore';
+import { FormatGuideDialog } from './FormatGuide';
 
-function Modal({ title, onClose, children, wide }: { title: string; onClose(): void; children: ReactNode; wide?: boolean }) {
+export function Modal({ title, onClose, children, wide }: { title: string; onClose(): void; children: ReactNode; wide?: boolean }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const d = ref.current;
@@ -146,7 +147,7 @@ function SyntaxDialog({ onClose }: { onClose(): void }) {
             <li><b>Definition</b> – <code>L := 8.5 m</code>. Add a trailing <code>=</code> to also show the value.</li>
             <li><b>Evaluation</b> – <code>M =</code> shows the current value.</li>
             <li><b>Check</b> – <code>η_M ≤ 1</code> shows the value with a PASS/FAIL badge.</li>
-            <li>Calculations run like Mathcad: <b>top to bottom, left to right</b>. A region can only use variables defined above it (or to its left on the same line); using one defined below shows an error.</li>
+            <li>Calculations run <b>top to bottom, left to right</b>. A region can only use variables defined above it (or to its left on the same line); using one defined below shows an error.</li>
             <li>A variable can be redefined: regions below the new definition use the new value, regions above keep the old one. The redefinition gets a <span className="font-semibold text-[#188038]">green outline</span>.</li>
           </ul>
         </section>
@@ -165,7 +166,7 @@ function SyntaxDialog({ onClose }: { onClose(): void }) {
           <p className="text-muted-foreground">{UNIT_SYMBOLS.map((u) => u.replace('degC', '°C').replace(/^deg$/, '°')).join(' · ')}</p>
         </section>
         <section>
-          <h3 className="mb-1 font-semibold">Built-in constants (as in Mathcad)</h3>
+          <h3 className="mb-1 font-semibold">Built-in constants</h3>
           <ul className="list-disc space-y-0.5 pl-5">
             {Object.entries(BUILTIN_CONSTANTS).map(([k, c]) => (
               <li key={k}>
@@ -187,7 +188,7 @@ function SyntaxDialog({ onClose }: { onClose(): void }) {
 function AboutDialog({ onClose }: { onClose(): void }) {
   return (
     <Modal title="About CalcCanvas" onClose={onClose}>
-      <p>A free-positioned engineering calculation workspace: Mathcad-style math regions with units, automatic recalculation and A4 report export.</p>
+      <p>An engineering calculation workspace: math regions with units, automatic recalculation and A4 report export.</p>
       <p className="mt-2 text-muted-foreground">
         Built with its own canvas engine, MathLive and mathjs. Worksheets are stored locally in this browser (IndexedDB); use Export JSON for backups.
       </p>
@@ -201,6 +202,7 @@ export function Dialogs() {
   if (dialog === 'open') return <OpenDialog onClose={close} />;
   if (dialog === 'shortcuts') return <ShortcutsDialog onClose={close} />;
   if (dialog === 'syntax') return <SyntaxDialog onClose={close} />;
+  if (dialog === 'guide') return <FormatGuideDialog onClose={close} />;
   if (dialog === 'about') return <AboutDialog onClose={close} />;
   return null;
 }

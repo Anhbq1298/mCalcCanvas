@@ -17,7 +17,7 @@ interface AppState {
   panelOpen: boolean;
   /** Left "Parameters" panel. */
   paramsOpen: boolean;
-  dialog: null | 'open' | 'shortcuts' | 'syntax' | 'about';
+  dialog: null | 'open' | 'shortcuts' | 'syntax' | 'guide' | 'about';
   toast: { kind: 'info' | 'error'; message: string } | null;
 
   setDocument(doc: {

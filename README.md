@@ -1,6 +1,6 @@
 # CalcCanvas
 
-A browser-based engineering calculation workspace inspired by Mathcad Prime, built on its own canvas engine: type equations anywhere on a free canvas, define variables with units, and every dependent result updates automatically. The same canvas lays out as A4 pages and exports a vector PDF calculation sheet.
+A browser-based engineering calculation workspace built on its own canvas engine: type equations anywhere on a free canvas, define variables with units, and every dependent result updates automatically. The same canvas lays out as A4 pages and exports a vector PDF calculation sheet.
 
 ```
 L := 8.5 m           w := (1.35G + 1.5Q)·b = 28.5 kN/m
@@ -29,11 +29,11 @@ Playwright needs a Chromium: `npx playwright install chromium`, or point it at a
 
 ## Using it
 
-The interface follows Mathcad Prime: a ribbon (**Math · Formatting · Calculation · Document**), a dark desk with A4 sheets of blue engineering grid paper, and a title block (header/footer) on every page.
+The interface follows Google Docs: menus and one toolbar, white A4 pages with an engineering grid inside the margins, a title block (header/footer) on every page, a **Parameters** panel on the left and a properties panel on the right. **Help → Display formats & units guide** shows a live example of every display format and unit feature.
 
 - **Create a region**: click the page (a blue **+** marks the spot) and start typing. `"` starts a text region. Double-click empty space for a new math region.
-- **Mathcad keys** in an equation: `:` definition ≔ · `=` evaluate · `/` fraction · `^` power · `.` after a name = literal subscript (`M.Ed` → M_Ed) · `\` √ · `Ctrl+\` ⁿ√ · `|` absolute value · `'` parentheses · `Ctrl+G` Greek (a → α) · `Ctrl+Shift+P` π · `Ctrl+9 / 0 / 3` ≤ ≥ ≠ · `Enter` finishes and moves the + below, ready for the next line.
-- **Built-in constants** (as in Mathcad): π, e, g = 9.80665 m/s², ∞ = 10³⁰⁷, % = 0.01. A worksheet definition with the same name overrides them (with a warning).
+- **Equation keys**: `:` definition ≔ · `=` evaluate · `/` fraction · `^` power · `.` after a name = literal subscript (`M.Ed` → M_Ed) · `\` √ · `Ctrl+\` ⁿ√ · `|` absolute value · `'` parentheses · `Ctrl+G` Greek (a → α) · `Ctrl+Shift+P` π · `Ctrl+9 / 0 / 3` ≤ ≥ ≠ · `Enter` finishes and moves the + below, ready for the next line.
+- **Built-in constants**: π, e, g = 9.80665 m/s², ∞ = 10³⁰⁷, % = 0.01. A worksheet definition with the same name overrides them (with a warning).
 - **Palettes** on the Math tab insert operators, Greek symbols, constants and units at the cursor of the equation you're editing.
 - **Checks**: `eta_M <= 1` (or Ctrl+9) shows the value with a PASS/FAIL badge.
 - Text regions: font (Inter, Arial, Segoe UI, Calibri, Times New Roman, Georgia, Cambria, Courier New), size, alignment, bold/italic/underline/heading/lists, and any colour (swatches, picker or hex) for the whole text or just the selection.
@@ -66,7 +66,7 @@ src/
 
 **Single source of truth.** Math regions store only JSON props (LaTeX, display options) in the canvas store. The engine is derived: every store change — typing, undo, paste, load — flows one way through `engineBridge.ts`. Results are never persisted; they're recomputed on load.
 
-**Evaluation order (Mathcad).** Regions are evaluated in reading order: page, top-to-bottom, left-to-right. A region can only use definitions above it (a name defined only below is reported as "defined below"), and uses the nearest definition above when a name is defined more than once; redefinitions are outlined in green. Within that order, recalculation is incremental over a name-based dependency graph.
+**Evaluation order.** Regions are evaluated in reading order: page, top-to-bottom, left-to-right. A region can only use definitions above it (a name defined only below is reported as "defined below"), and uses the nearest definition above when a name is defined more than once; redefinitions are outlined in green. Within that order, recalculation is incremental over a name-based dependency graph.
 
 **Incremental.** A change re-evaluates only the edited region and its transitive dependents; each region subscribes to its own result, so unrelated regions don't re-render.
 

@@ -41,7 +41,7 @@ export const BUILTIN_CONSTANTS: Record<string, { value: Quantity; description: s
   'π': { value: Math.PI, description: 'pi = 3.14159…' },
   e: { value: Math.E, description: 'Euler’s number = 2.71828…' },
   g: { value: math.unit(9.80665, 'm/s^2'), description: 'standard gravity = 9.80665 m/s²' },
-  '∞': { value: 1e307, description: 'infinity (10³⁰⁷, as in Mathcad)' },
+  '∞': { value: 1e307, description: 'infinity (10³⁰⁷)' },
   '%': { value: 0.01, description: 'percent = 0.01' },
 };
 

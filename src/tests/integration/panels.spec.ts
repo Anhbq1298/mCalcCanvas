@@ -60,4 +60,15 @@ test.describe('Parameters panel', () => {
     expect(yAfter).toEqual(yBefore);
     await expect.poll(() => pageCount(page)).toBeGreaterThanOrEqual(2);
   });
+
+  test('help guide shows a live snapshot for each display format and unit topic', async ({ page }) => {
+    await page.getByRole('menuitem', { name: 'Help' }).click();
+    await page.getByRole('menuitem', { name: 'Display formats & units guide' }).click();
+    const dlg = page.getByRole('dialog', { name: 'Display formats & units' });
+    await expect(dlg.getByTestId('guide-card')).toHaveCount(6);
+    await expect(dlg).toContainText('257.39');
+    await dlg.getByRole('tab', { name: 'Units' }).click();
+    await expect(dlg).toContainText('kip');
+    await expect(dlg.getByTestId('guide-card')).toHaveCount(6);
+  });
 });

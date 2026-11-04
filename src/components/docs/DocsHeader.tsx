@@ -359,6 +359,8 @@ export function DocsHeader() {
       { label: 'Full calculation', onSelect: () => commands.setDisplayMode('full') },
       { type: 'separator' },
       { label: 'Text, colour & units…', onSelect: () => togglePanel(true) },
+      { type: 'separator' },
+      { label: 'Help: formats & units', onSelect: () => openDialog('guide') },
     ],
     Tools: [
       { label: 'Calculate all', shortcut: 'F9', onSelect: commands.calculateAll },
@@ -370,6 +372,7 @@ export function DocsHeader() {
     ],
     Help: [
       { label: 'Keyboard shortcuts', onSelect: () => openDialog('shortcuts') },
+      { label: 'Display formats & units guide', onSelect: () => openDialog('guide') },
       { label: 'Math syntax, units & constants', onSelect: () => openDialog('syntax') },
       { label: 'About CalcCanvas', onSelect: () => openDialog('about') },
     ],
