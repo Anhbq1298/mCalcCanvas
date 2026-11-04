@@ -34,7 +34,19 @@ export interface TextProps {
   fontSize: number;
   color: string;
   align: TextAlign;
+  /** Paragraph style: 0 normal text, 1–3 heading levels (shown in the outline). */
+  heading?: HeadingLevel;
 }
+
+export type HeadingLevel = 0 | 1 | 2 | 3;
+
+/** Google Docs-like paragraph styles. Applying one sets size, weight and colour. */
+export const PARAGRAPH_STYLES: Record<HeadingLevel, { label: string; fontSize: number; weight: number; color: string }> = {
+  0: { label: 'Normal text', fontSize: 15, weight: 400, color: '#0f172a' },
+  1: { label: 'Heading 1', fontSize: 20, weight: 700, color: '#1e3a5f' },
+  2: { label: 'Heading 2', fontSize: 16, weight: 700, color: '#0f172a' },
+  3: { label: 'Heading 3', fontSize: 14, weight: 600, color: '#334155' },
+};
 
 export interface ImageProps {
   w: number;

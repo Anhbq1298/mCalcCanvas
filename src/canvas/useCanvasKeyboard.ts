@@ -1,3 +1,5 @@
+import { setParagraphStyle } from './headings';
+import type { HeadingLevel } from './model/types';
 import { useEffect } from 'react';
 import { commands } from '../app/commands';
 import { queueKey } from '../math/activeEditor';
@@ -60,6 +62,16 @@ export function useCanvasKeyboard(): void {
         e.preventDefault();
         void commands.exportPdf();
         return;
+      }
+      // Google Docs: Ctrl+Alt+1..3 heading, Ctrl+Alt+0 normal text (also while editing the text).
+      if (mod && e.altKey && /^Digit[0-3]$/.test(e.code)) {
+        const st = useCanvasStore.getState();
+        const ids = st.editingId ? [st.editingId] : st.selection;
+        if (ids.some((id) => st.shapes[id]?.type === 'text')) {
+          e.preventDefault();
+          setParagraphStyle(ids, Number(e.code.slice(5)) as HeadingLevel);
+          return;
+        }
       }
       if (mod && !e.altKey && e.key === 'Enter') {
         // Google Docs: Ctrl+Enter inserts a page break / blank page.

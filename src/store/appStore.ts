@@ -15,8 +15,9 @@ interface AppState {
   createdAt: string;
   saveState: SaveState;
   panelOpen: boolean;
-  /** Left "Parameters" panel. */
+  /** Left side panel (Outline / Parameters). */
   paramsOpen: boolean;
+  leftTab: 'outline' | 'params';
   dialog: null | 'open' | 'shortcuts' | 'syntax' | 'guide' | 'about';
   toast: { kind: 'info' | 'error'; message: string } | null;
 
@@ -33,6 +34,8 @@ interface AppState {
   setSaveState(s: SaveState): void;
   togglePanel(open?: boolean): void;
   toggleParams(open?: boolean): void;
+  /** Toolbar button for a tab: opens the panel on that tab, or closes it if already showing. */
+  showLeftTab(tab: 'outline' | 'params'): void;
   openDialog(d: AppState['dialog']): void;
   showToast(kind: 'info' | 'error', message: string): void;
 }
@@ -46,6 +49,7 @@ export const useAppStore = create<AppState>((set) => ({
   saveState: 'saved',
   panelOpen: false,
   paramsOpen: true,
+  leftTab: 'outline',
   dialog: null,
   toast: null,
 
@@ -64,6 +68,7 @@ export const useAppStore = create<AppState>((set) => ({
   setSaveState: (saveState) => set({ saveState }),
   togglePanel: (open) => set((s) => ({ panelOpen: open ?? !s.panelOpen })),
   toggleParams: (open) => set((s) => ({ paramsOpen: open ?? !s.paramsOpen })),
+  showLeftTab: (tab) => set((s) => (s.paramsOpen && s.leftTab === tab ? { paramsOpen: false } : { paramsOpen: true, leftTab: tab })),
   openDialog: (dialog) => set({ dialog }),
   showToast: (kind, message) => set({ toast: { kind, message } }),
 }));

@@ -16,6 +16,7 @@ import {
   FilePlus2,
   ImagePlus,
   ListTree,
+  Variable,
   Italic,
   Minus,
   MousePointer2,
@@ -31,11 +32,12 @@ import {
   Undo2,
   type LucideIcon,
 } from 'lucide-react';
+import { addHeading, setParagraphStyle } from '../../canvas/headings';
 import { useState, type ReactNode } from 'react';
 import { commands, type ToolId } from '../../app/commands';
 import { viewport, zoomAt } from '../../canvas/canvasActions';
 import { canUndo, updateShapes, useCanvasStore, type ShapePatch } from '../../canvas/model/canvasStore';
-import { fontStack, TEXT_FONTS, type MathDisplayMode, type Shape } from '../../canvas/model/types';
+import { fontStack, PARAGRAPH_STYLES, TEXT_FONTS, type HeadingLevel, type MathDisplayMode, type Shape } from '../../canvas/model/types';
 import { formatEditingText, hasTextSelection } from '../../canvas/textFormatting';
 import { useAppStore } from '../../store/appStore';
 import { MenuButton, type MenuEntry } from '../common/MenuButton';
@@ -60,6 +62,11 @@ function useSelectedShapes(): Shape[] {
   const selection = useCanvasStore((s) => s.selection);
   const shapes = useCanvasStore((s) => s.shapes);
   return selection.map((id) => shapes[id]).filter(Boolean);
+}
+
+function selectedTextIds(): string[] {
+  const { selection, shapes } = useCanvasStore.getState();
+  return selection.filter((id) => shapes[id]?.type === 'text');
 }
 
 function patchSelected(fn: (s: Shape) => ShapePatch | null) {
@@ -139,8 +146,19 @@ function FontControls() {
     patchSelected((s) => (s.type === 'text' || s.type === 'math' ? { props: { fontSize: v } } : null));
   };
 
+  const textIds = selected.filter((s) => s.type === 'text').map((s) => s.id);
+  const level = text?.type === 'text' ? (text.props.heading ?? 0) : 0;
   return (
     <>
+      <TBSelect
+        label="Paragraph style (headings appear in the outline)"
+        testId="paragraph-style"
+        value={textIds.length ? level : ''}
+        width={118}
+        onChange={(v) => setParagraphStyle(textIds, Number(v) as HeadingLevel)}
+        options={[...(textIds.length ? [] : [['', 'Style'] as [string, string]]), ...([0, 1, 2, 3] as const).map((l) => [l, PARAGRAPH_STYLES[l].label] as [number, string])]}
+      />
+      <Sep />
       <TBSelect
         label={text ? 'Font' : 'Font for new text'}
         testId="text-font"
@@ -286,7 +304,8 @@ export function DocsHeader() {
   const settings = useAppStore((s) => s.settings);
   const panelOpen = useAppStore((s) => s.panelOpen);
   const paramsOpen = useAppStore((s) => s.paramsOpen);
-  const { updateTitle, updateSettings, togglePanel, toggleParams, openDialog } = useAppStore.getState();
+  const leftTab = useAppStore((s) => s.leftTab);
+  const { updateTitle, updateSettings, togglePanel, showLeftTab, openDialog } = useAppStore.getState();
   const tool = useCanvasStore((s) => s.tool);
   const zoom = useCanvasStore((s) => s.camera.z);
   const isGrid = useCanvasStore((s) => s.isGrid);
@@ -330,7 +349,8 @@ export function DocsHeader() {
       { label: 'Grid', checked: isGrid, onSelect: commands.toggleGrid },
       { label: 'Snap to grid', checked: isSnap, onSelect: commands.toggleSnap },
       { label: 'Header & footer', checked: settings.showHeaderFooter, onSelect: () => updateSettings({ showHeaderFooter: !settings.showHeaderFooter }) },
-      { label: 'Parameters panel', checked: paramsOpen, onSelect: () => toggleParams() },
+      { label: 'Outline', checked: paramsOpen && leftTab === 'outline', onSelect: () => showLeftTab('outline') },
+      { label: 'Parameters', checked: paramsOpen && leftTab === 'params', onSelect: () => showLeftTab('params') },
       { label: 'Properties panel', checked: panelOpen, onSelect: () => togglePanel() },
       { type: 'separator' },
       { label: 'Zoom in', onSelect: commands.zoomIn },
@@ -342,6 +362,9 @@ export function DocsHeader() {
       { label: 'Check (≤ limit)', onSelect: () => commands.insertCheck() },
       { label: 'Text', shortcut: '"', onSelect: () => commands.setTool('text') },
       { label: 'Image…', onSelect: () => void commands.insertImage() },
+      { type: 'separator' },
+      { label: 'Section heading', onSelect: () => addHeading(1) },
+      { label: 'Sub-section heading', onSelect: () => addHeading(2) },
       { type: 'separator' },
       { label: 'Blank page', shortcut: `${MOD}↵`, onSelect: commands.insertBlankPage },
       { label: 'Delete empty page', onSelect: commands.deletePage },
@@ -358,6 +381,8 @@ export function DocsHeader() {
       { label: 'Result only', onSelect: () => commands.setDisplayMode('result') },
       { label: 'Formula = result', onSelect: () => commands.setDisplayMode('formulaResult') },
       { label: 'Full calculation', onSelect: () => commands.setDisplayMode('full') },
+      { type: 'heading', label: 'Paragraph style (text)' },
+      ...([0, 1, 2, 3] as const).map((l) => ({ label: PARAGRAPH_STYLES[l].label, shortcut: `${MOD}⌥${l}`, onSelect: () => setParagraphStyle(selectedTextIds(), l) })),
       { type: 'separator' },
       { label: 'Text, colour & units…', onSelect: () => togglePanel(true) },
       { type: 'separator' },
@@ -433,7 +458,7 @@ export function DocsHeader() {
       </div>
 
       {/* Toolbar */}
-      <div role="toolbar" aria-label="Formatting" className="mx-2 mb-1.5 mt-1.5 flex h-10 items-center gap-0.5 overflow-x-auto rounded-full bg-docs-toolbar px-3">
+      <div role="toolbar" aria-label="Formatting" className="mx-2 mb-1.5 mt-1.5 flex min-h-10 flex-wrap items-center gap-x-0.5 gap-y-0.5 rounded-[20px] bg-docs-toolbar px-3 py-1">
         <TB icon={Undo2} label={`Undo (${MOD}Z)`} disabled={!undoable} onClick={commands.undo} />
         <TB icon={Redo2} label={`Redo (${MOD}Y)`} disabled={!redoable} onClick={commands.redo} />
         <TBSelect
@@ -466,7 +491,8 @@ export function DocsHeader() {
         <Sep />
         <ToolButtons />
         <div className="ml-auto flex items-center gap-0.5 pl-2">
-          <TB icon={ListTree} label="Parameters panel" active={paramsOpen} onClick={() => toggleParams()} testId="toggle-params" />
+          <TB icon={ListTree} label="Outline" active={paramsOpen && leftTab === 'outline'} onClick={() => showLeftTab('outline')} testId="toggle-outline" />
+          <TB icon={Variable} label="Parameters" active={paramsOpen && leftTab === 'params'} onClick={() => showLeftTab('params')} testId="toggle-params" />
           <TB icon={Grid3x3} label="Grid" active={isGrid} onClick={commands.toggleGrid} testId="toggle-grid" />
           <TB icon={PanelTop} label="Header & footer" active={settings.showHeaderFooter} onClick={() => updateSettings({ showHeaderFooter: !settings.showHeaderFooter })} testId="toggle-chrome" />
           <TB icon={PanelRight} label="Properties panel" active={panelOpen} onClick={() => togglePanel()} testId="toggle-properties" />

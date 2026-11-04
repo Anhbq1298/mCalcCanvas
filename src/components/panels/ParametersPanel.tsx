@@ -3,14 +3,13 @@
  * reading order, with its current value. Inputs (plain numbers with a unit)
  * can be edited here; clicking a row jumps to its region.
  */
-import { AlertCircle, ListTree, Search, X } from 'lucide-react';
+import { AlertCircle, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { revealShape } from '../../canvas/canvasActions';
 import { updateShape, useCanvasStore } from '../../canvas/model/canvasStore';
 import type { MathShape } from '../../canvas/model/types';
 import type { CalculationResult } from '../../engine';
 import { MathRenderer } from '../../math/MathRenderer';
-import { useAppStore } from '../../store/appStore';
 import { useCalculationStore } from '../../store/calculationStore';
 
 type Filter = 'all' | 'inputs' | 'results' | 'issues';
@@ -111,10 +110,9 @@ function inputUnitLabel(row: Row): string {
   return plain;
 }
 
-export function ParametersPanel() {
+export function ParametersView() {
   const rows = useRows();
   const selection = useCanvasStore((s) => s.selection);
-  const toggleParams = useAppStore((s) => s.toggleParams);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
 
@@ -150,20 +148,7 @@ export function ParametersPanel() {
   );
 
   return (
-    <aside aria-label="Parameters" data-testid="parameters-panel" className="flex w-[300px] shrink-0 flex-col border-r border-docs-border bg-docs-bg">
-      <div className="flex items-center justify-between px-4 pb-1 pt-3">
-        <h2 className="flex items-center gap-2 text-[14px] font-medium text-docs-ink">
-          <ListTree size={17} className="text-docs-muted" aria-hidden /> Parameters
-        </h2>
-        <button
-          type="button"
-          aria-label="Close parameters panel"
-          onClick={() => toggleParams(false)}
-          className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-docs-muted transition-colors duration-150 hover:bg-docs-hover"
-        >
-          <X size={16} aria-hidden />
-        </button>
-      </div>
+    <div data-testid="parameters-panel" className="flex min-h-0 flex-1 flex-col">
       <div className="px-3 pb-2">
         <label className="flex h-8 items-center gap-2 rounded-full bg-docs-toolbar px-3 focus-within:bg-white focus-within:ring-1 focus-within:ring-docs-blue">
           <Search size={15} className="shrink-0 text-docs-muted" aria-hidden />
@@ -238,6 +223,6 @@ export function ParametersPanel() {
           </ul>
         )}
       </div>
-    </aside>
+    </div>
   );
 }

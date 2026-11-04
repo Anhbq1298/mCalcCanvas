@@ -11,7 +11,7 @@ test.describe('own canvas engine', () => {
     await openFresh(page);
     await newBlankWorksheet(page);
     // These tests use fixed screen coordinates: give the canvas the full width.
-    await page.getByLabel('Close parameters panel').click();
+    await page.getByLabel('Close side panel').click();
   });
 
   test('text region: type, format, and leave', async ({ page }) => {

@@ -126,6 +126,7 @@ const SHORTCUTS: [string, string][] = [
   ['Delete', 'Delete selection'],
   ['Arrow keys', 'Nudge (Shift = 10 px)'],
   ['Ctrl+Z / Ctrl+Y', 'Undo / redo'],
+  ['Ctrl+Alt+1 / 2 / 3, Ctrl+Alt+0', 'Heading 1 / 2 / 3, normal text'],
   ['Ctrl+S / Ctrl+O', 'Save / open (in this browser)'],
   ['Ctrl+Shift+S / Ctrl+Shift+O', 'Save to / open a .mCalcCanvas file'],
   ['F9', 'Calculate all'],

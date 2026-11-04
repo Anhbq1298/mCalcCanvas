@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import { stopEditing, updateShape } from '../model/canvasStore';
-import { fontStack, type TextShape } from '../model/types';
+import { fontStack, PARAGRAPH_STYLES, type TextShape } from '../model/types';
 import { sanitizeHtml } from '../sanitize';
 
 /**
@@ -9,7 +9,7 @@ import { sanitizeHtml } from '../sanitize';
  */
 export function TextView({ shape, editing, isStatic }: { shape: TextShape; editing: boolean; isStatic: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
-  const { html, w, fontSize, color, align, fontFamily } = shape.props;
+  const { html, w, fontSize, color, align, fontFamily, heading } = shape.props;
 
   // Keep stored height equal to the rendered height (no undo entries).
   useEffect(() => {
@@ -54,6 +54,7 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
     fontSize,
     color,
     textAlign: align,
+    fontWeight: heading ? PARAGRAPH_STYLES[heading].weight : undefined,
     lineHeight: 1.45,
     minHeight: fontSize * 1.45,
     outline: 'none',
@@ -80,5 +81,5 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
       />
     );
   }
-  return <div ref={ref} className="text-region" data-testid="text-region" style={style} dangerouslySetInnerHTML={{ __html: html || '&nbsp;' }} />;
+  return <div ref={ref} className="text-region" data-testid="text-region" data-heading={heading || undefined} style={style} dangerouslySetInnerHTML={{ __html: html || '&nbsp;' }} />;
 }

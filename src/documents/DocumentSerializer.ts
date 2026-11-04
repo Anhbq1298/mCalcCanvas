@@ -93,6 +93,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           fontSize: Math.min(72, Math.max(8, num(p.fontSize, 15))),
           color: color(p.color, '#0f172a'),
           align: (['left', 'center', 'right'].includes(p.align as string) ? p.align : 'left') as never,
+          ...([1, 2, 3].includes(p.heading as number) ? { heading: p.heading as 1 | 2 | 3 } : {}),
         },
       };
     case 'image': {

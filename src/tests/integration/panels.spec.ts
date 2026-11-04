@@ -9,6 +9,7 @@ test.describe('Parameters panel', () => {
   });
 
   test('lists definitions in reading order, jumps to a region and edits inputs', async ({ page }) => {
+    await page.getByRole('tab', { name: 'Parameters' }).click();
     const panel = page.getByTestId('parameters-panel');
     await expect(panel).toBeVisible();
     const names = await panel.getByTestId('param-row').evaluateAll((els) => els.map((e) => e.getAttribute('data-name')));
@@ -32,7 +33,7 @@ test.describe('Parameters panel', () => {
     // Search + close / reopen.
     await panel.getByLabel('Search parameters').fill('eta');
     await expect(panel.getByTestId('param-row')).toHaveCount(2);
-    await panel.getByLabel('Close parameters panel').click();
+    await page.getByLabel('Close side panel').click();
     await expect(panel).toHaveCount(0);
     await page.getByTestId('toggle-params').click();
     await expect(page.getByTestId('parameters-panel')).toBeVisible();
@@ -92,5 +93,47 @@ test.describe('.mCalcCanvas files', () => {
     await (await chooser).setFiles({ name: 'beam.mCalcCanvas', mimeType: '', buffer: await (await import('node:fs/promises')).readFile(path!) });
     await resultOf(page, 'M_{Ed}').toContain('257.39');
     expect((await region(page, 'L\\coloneq'))?.latex).toBe('L\\coloneq8.5\\,\\mathrm{m}');
+  });
+});
+
+test.describe('Outline (navigation pane)', () => {
+  test('lists headings, navigates, adds and renames sections, paragraph styles', async ({ page }) => {
+    await openFresh(page);
+    const outline = page.getByTestId('outline-panel');
+    await expect(outline).toBeVisible();
+    const items = outline.getByTestId('outline-item');
+    await expect(items).toHaveCount(6);
+    await expect(items.nth(1)).toHaveText('1. DESIGN PARAMETERS');
+    await expect(items.nth(0)).toHaveAttribute('data-level', '1');
+
+    // Click a heading: it becomes selected and highlighted.
+    await items.nth(3).click();
+    const sel = await page.evaluate(() => (window as unknown as { __calccanvas: { store: { getState(): { selection: string[]; shapes: Record<string, { props: { html: string } }> } } } }).__calccanvas.store.getState());
+    expect(sel.shapes[sel.selection[0]].props.html).toContain('3. BENDING MOMENT');
+
+    // Add a section, type its title.
+    await page.getByTestId('add-heading-1').click();
+    await page.keyboard.type('6. DEFLECTION', { delay: 10 });
+    await page.keyboard.press('Escape');
+    await expect(items).toHaveCount(7);
+    await expect(items.last()).toHaveText('6. DEFLECTION');
+
+    // Rename by double-click.
+    await items.last().dblclick();
+    const input = outline.getByLabel('Heading text');
+    await input.fill('6. SERVICEABILITY');
+    await input.press('Enter');
+    await expect(items.last()).toHaveText('6. SERVICEABILITY');
+
+    // Turn the description text into a Heading 3 with the toolbar style box.
+    const desc = page.getByTestId('text-region').filter({ hasText: 'Span, tributary width' });
+    await items.nth(1).click(); // scroll back to section 1
+    await desc.click();
+    await page.getByTestId('paragraph-style').selectOption('3');
+    await expect(items).toHaveCount(8);
+    await expect(outline.locator('[data-level="3"]')).toHaveCount(1);
+    // ...and back to normal text with Ctrl+Alt+0.
+    await page.keyboard.press('Control+Alt+0');
+    await expect(items).toHaveCount(7);
   });
 });
