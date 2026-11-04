@@ -15,7 +15,11 @@ import {
   Hand,
   FilePlus2,
   ImagePlus,
+  List,
+  ListOrdered,
   ListTree,
+  Subscript,
+  Superscript,
   Variable,
   Italic,
   Minus,
@@ -41,6 +45,7 @@ import { canUndo, updateShapes, useCanvasStore, type ShapePatch } from '../../ca
 import { fontStack, PARAGRAPH_STYLES, TEXT_FONTS, type HeadingLevel, type MathDisplayMode, type Shape } from '../../canvas/model/types';
 import { formatEditingText, hasTextSelection } from '../../canvas/textFormatting';
 import { useAppStore } from '../../store/appStore';
+import { parseDisplayUnit } from '../../engine';
 import { MenuButton, type MenuEntry } from '../common/MenuButton';
 import { CONSTANTS, OPERATORS, SYMBOLS, UNITS_PALETTE } from '../ribbon/palettes';
 import { Popover, PalettePopover } from './Popover';
@@ -128,27 +133,54 @@ function TBSelect({ value, onChange, options, label, width, testId, style }: { v
 // Toolbar sections
 // ---------------------------------------------------------------------------
 
-function FontControls() {
+/** Font size stepper for the selected regions of the given kinds. */
+function SizeControl({ kinds, label }: { kinds: ('text' | 'math')[]; label: string }) {
+  const selected = useSelectedShapes();
+  const sized = selected.find((s) => (kinds as string[]).includes(s.type));
+  const size = sized && (sized.type === 'text' || sized.type === 'math') ? sized.props.fontSize : kinds[0] === 'math' ? 18 : 15;
+  const [draft, setDraft] = useState<string | null>(null);
+  const setSize = (n: number) => {
+    const v = Math.min(72, Math.max(8, Math.round(n)));
+    patchSelected((s) => ((kinds as string[]).includes(s.type) && (s.type === 'text' || s.type === 'math') ? { props: { fontSize: v } } : null));
+  };
+  return (
+    <>
+      <TB icon={Minus} label={`Decrease ${label.toLowerCase()}`} disabled={!sized} onClick={() => setSize(size - 1)} />
+      <input
+        aria-label={label}
+        disabled={!sized}
+        value={draft ?? String(size)}
+        onChange={(e) => setDraft(e.target.value)}
+        onBlur={() => {
+          if (draft !== null && Number(draft)) setSize(Number(draft));
+          setDraft(null);
+        }}
+        onKeyDown={(e) => e.key === 'Enter' && (e.currentTarget as HTMLInputElement).blur()}
+        className="h-6 w-9 rounded border border-docs-ink/40 bg-transparent text-center text-[13px] tabular-nums disabled:opacity-40"
+      />
+      <TB icon={Plus} label={`Increase ${label.toLowerCase()}`} disabled={!sized} onClick={() => setSize(size + 1)} />
+    </>
+  );
+}
+
+/** Text formatting tab: paragraph style, font, size, emphasis, colour, alignment, lists. */
+function TextFormattingTab() {
   const selected = useSelectedShapes();
   const textFont = useAppStore((s) => s.settings.textFont);
   const editingText = useCanvasStore((s) => (s.editingId ? s.shapes[s.editingId]?.type === 'text' : false));
   const text = selected.find((s) => s.type === 'text');
-  const sized = selected.find((s) => s.type === 'text' || s.type === 'math');
   const font = text?.type === 'text' ? text.props.fontFamily : textFont;
-  const size = sized && (sized.type === 'text' || sized.type === 'math') ? sized.props.fontSize : 15;
-  const [sizeDraft, setSizeDraft] = useState<string | null>(null);
 
   const setFont = (f: string) => {
     if (selected.some((s) => s.type === 'text')) patchSelected((s) => (s.type === 'text' ? { props: { fontFamily: f } } : null));
     else useAppStore.getState().updateSettings({ textFont: f });
   };
-  const setSize = (n: number) => {
-    const v = Math.min(72, Math.max(8, Math.round(n)));
-    patchSelected((s) => (s.type === 'text' || s.type === 'math' ? { props: { fontSize: v } } : null));
-  };
 
   const textIds = selected.filter((s) => s.type === 'text').map((s) => s.id);
   const level = text?.type === 'text' ? (text.props.heading ?? 0) : 0;
+  const fmt = (icon: LucideIcon, label: string, command: string) => (
+    <TB icon={icon} label={label} disabled={!editingText} onClick={() => formatEditingText(command)} />
+  );
   return (
     <>
       <TBSelect
@@ -170,42 +202,127 @@ function FontControls() {
         options={Object.keys(TEXT_FONTS).map((f) => [f, f])}
       />
       <Sep />
-      <TB icon={Minus} label="Decrease font size" disabled={!sized} onClick={() => setSize(size - 1)} />
-      <input
-        aria-label="Font size"
-        disabled={!sized}
-        value={sizeDraft ?? String(size)}
-        onChange={(e) => setSizeDraft(e.target.value)}
-        onBlur={() => {
-          if (sizeDraft !== null && Number(sizeDraft)) setSize(Number(sizeDraft));
-          setSizeDraft(null);
-        }}
-        onKeyDown={(e) => e.key === 'Enter' && (e.currentTarget as HTMLInputElement).blur()}
-        className="h-6 w-9 rounded border border-docs-ink/40 bg-transparent text-center text-[13px] tabular-nums disabled:opacity-40"
-      />
-      <TB icon={Plus} label="Increase font size" disabled={!sized} onClick={() => setSize(size + 1)} />
+      <SizeControl kinds={['text']} label="Font size" />
       <Sep />
-      <TB icon={Bold} label={`Bold (${MOD}B)`} disabled={!editingText} onClick={() => formatEditingText('bold')} />
-      <TB icon={Italic} label={`Italic (${MOD}I)`} disabled={!editingText} onClick={() => formatEditingText('italic')} />
-      <TB icon={Underline} label={`Underline (${MOD}U)`} disabled={!editingText} onClick={() => formatEditingText('underline')} />
-      <TextColorButton />
+      {fmt(Bold, `Bold (${MOD}B)`, 'bold')}
+      {fmt(Italic, `Italic (${MOD}I)`, 'italic')}
+      {fmt(Underline, `Underline (${MOD}U)`, 'underline')}
+      {fmt(Subscript, 'Subscript', 'subscript')}
+      {fmt(Superscript, 'Superscript', 'superscript')}
+      <ColorButton testId="text-color" title="Text color" kinds={['text']} />
+      <Sep />
+      <AlignControls />
+      <Sep />
+      {fmt(List, 'Bulleted list', 'insertUnorderedList')}
+      {fmt(ListOrdered, 'Numbered list', 'insertOrderedList')}
     </>
   );
 }
 
-function TextColorButton() {
+/** Common result units for the result-unit box. */
+const RESULT_UNITS = ['mm', 'm', 'mm²', 'm²', 'mm³', 'mm⁴', 'kN', 'N', 'kN·m', 'kN·mm', 'N·mm', 'kN/m', 'kPa', 'MPa', 'GPa', 'N/mm²', 'kN/m²', 'kN/m³', 'kg', 'kg/m³', 'deg', 'kip', 'kip·ft', 'ksi', 'psi', 'ft', 'in'];
+
+/** Math formatting tab: palettes, display format, result unit, decimals, size, colour, worksheet units. */
+function MathFormattingTab() {
   const selected = useSelectedShapes();
-  const editingText = useCanvasStore((s) => (s.editingId ? s.shapes[s.editingId]?.type === 'text' : false));
+  const settings = useAppStore((s) => s.settings);
+  const math = selected.filter((s): s is Extract<Shape, { type: 'math' }> => s.type === 'math');
+  const first = math[0];
+  const [unitDraft, setUnitDraft] = useState<string | null>(null);
+  const [unitError, setUnitError] = useState<string | null>(null);
+  const applyUnit = (raw: string) => {
+    const v = raw.trim();
+    if (v) {
+      try {
+        parseDisplayUnit(v);
+      } catch (e) {
+        setUnitError((e as Error).message);
+        return;
+      }
+    }
+    setUnitError(null);
+    patchSelected((s) => (s.type === 'math' ? { props: { displayUnit: v } } : null));
+  };
+  return (
+    <>
+      <PalettePopover label="Operators" glyph="√" sections={OPERATORS} testId="palette-operators" columns={5} />
+      <PalettePopover label="Symbols" glyph="β" sections={SYMBOLS} testId="palette-symbols" />
+      <PalettePopover label="Constants" glyph="π" sections={CONSTANTS} testId="palette-constants" />
+      <PalettePopover label="Units" glyph="m" sections={UNITS_PALETTE} testId="palette-units" />
+      <Sep />
+      <DisplayModeSelect />
+      <Sep />
+      <input
+        aria-label="Result unit"
+        title={unitError ?? 'Result unit for the selected equations (e.g. kN·m, MPa). Empty = automatic.'}
+        data-testid="math-result-unit"
+        list="cc-result-units"
+        disabled={!first}
+        placeholder="Unit"
+        value={unitDraft ?? first?.props.displayUnit ?? ''}
+        onChange={(e) => {
+          setUnitDraft(e.target.value);
+          setUnitError(null);
+        }}
+        onBlur={() => {
+          if (unitDraft !== null) applyUnit(unitDraft);
+          setUnitDraft(null);
+        }}
+        onKeyDown={(e) => e.key === 'Enter' && (e.currentTarget as HTMLInputElement).blur()}
+        className={'h-7 w-[78px] rounded border bg-white px-1.5 text-[13px] disabled:opacity-40 ' + (unitError ? 'border-destructive' : 'border-docs-border')}
+      />
+      <datalist id="cc-result-units">
+        {RESULT_UNITS.map((u) => (
+          <option key={u} value={u} />
+        ))}
+      </datalist>
+      <TBSelect
+        label="Decimal places of the selected equations"
+        testId="math-decimals"
+        value={first ? String(first.props.precision) : '-1'}
+        width={92}
+        onChange={(v) => patchSelected((s) => (s.type === 'math' ? { props: { precision: Number(v) } } : null))}
+        options={[['-1', `Auto (${settings.precision})`], ...[0, 1, 2, 3, 4, 5, 6].map((d) => [String(d), `${d} dp`] as [string, string])]}
+      />
+      <Sep />
+      <SizeControl kinds={['math']} label="Equation size" />
+      <ColorButton testId="math-color" title="Equation color" kinds={['math']} />
+      <Sep />
+      <span className="px-1 text-[12px] text-docs-muted">Worksheet</span>
+      <TBSelect
+        label="Unit system for results (whole worksheet)"
+        testId="worksheet-units"
+        value={settings.unitSystem}
+        width={70}
+        onChange={(v) => useAppStore.getState().updateSettings({ unitSystem: v as 'SI' | 'Imperial' })}
+        options={[['SI', 'SI'], ['Imperial', 'USCS']]}
+      />
+      <TBSelect
+        label="Default decimal places (whole worksheet)"
+        testId="worksheet-decimals"
+        value={settings.precision}
+        width={70}
+        onChange={(v) => useAppStore.getState().updateSettings({ precision: Number(v) })}
+        options={[0, 1, 2, 3, 4, 5, 6].map((d) => [d, `${d} dp`])}
+      />
+    </>
+  );
+}
+
+function ColorButton({ testId, title, kinds }: { testId: string; title: string; kinds: ('text' | 'math')[] }) {
+  const all = useSelectedShapes();
+  const selected = all.filter((s) => (kinds as string[]).includes(s.type));
+  const editingText = useCanvasStore((s) => (s.editingId ? s.shapes[s.editingId]?.type === 'text' : false)) && kinds.includes('text');
   const first = selected[0];
   const current = !first ? '#000000' : first.type === 'text' || first.type === 'math' ? first.props.color : 'stroke' in first.props ? first.props.stroke : '#000000';
   const apply = (c: string) => {
     if (editingText && hasTextSelection()) formatEditingText('foreColor', c);
-    else patchSelected((s) => (s.type === 'text' || s.type === 'math' ? { props: { color: c } } : s.type === 'rect' || s.type === 'line' || s.type === 'draw' ? { props: { stroke: c } } : null));
+    else patchSelected((s) => ((kinds as string[]).includes(s.type) && (s.type === 'text' || s.type === 'math') ? { props: { color: c } } : null));
   };
   return (
     <Popover
-      title="Text color"
-      testId="text-color"
+      title={title}
+      testId={testId}
       width={232}
       trigger={
         <span className="flex flex-col items-center leading-none">
@@ -290,6 +407,54 @@ function ToolButtons() {
       {t('arrow', ArrowUpRight, 'Arrow')}
       {t('rect', Square, 'Rectangle')}
       {t('draw', Pencil, 'Freehand')}
+    </>
+  );
+}
+
+type FormatTab = 'math' | 'text';
+
+/**
+ * Formatting tabs (like Mathcad's Math / Text Formatting ribbons). The tab
+ * follows what you work on: selecting or editing an equation shows Math
+ * formatting, a text region shows Text formatting; it can also be chosen.
+ */
+function FormatTabs() {
+  const [tab, setTab] = useState<FormatTab>('math');
+  const focusKind = useCanvasStore((s) => {
+    const id = s.editingId ?? (s.selection.length ? s.selection[0] : null);
+    const t = id ? s.shapes[id]?.type : undefined;
+    return t === 'math' || t === 'text' ? t : null;
+  });
+  const [lastKind, setLastKind] = useState<FormatTab | null>(null);
+  if (focusKind !== lastKind) {
+    setLastKind(focusKind);
+    if (focusKind) setTab(focusKind);
+  }
+  const tabBtn = (id: FormatTab, label: string) => (
+    <button
+      type="button"
+      role="tab"
+      aria-selected={tab === id}
+      data-testid={`format-tab-${id}`}
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={() => setTab(id)}
+      className={
+        'h-7 cursor-pointer whitespace-nowrap rounded-full px-3 text-[13px] font-medium transition-colors duration-150 ' +
+        (tab === id ? 'bg-docs-active text-docs-blue' : 'text-docs-muted hover:bg-docs-hover hover:text-docs-ink')
+      }
+    >
+      {label}
+    </button>
+  );
+  return (
+    <>
+      <div role="tablist" aria-label="Formatting" className="mr-1 flex items-center gap-0.5 rounded-full bg-white/70 p-0.5">
+        {tabBtn('math', 'Math formatting')}
+        {tabBtn('text', 'Text formatting')}
+      </div>
+      <div role="tabpanel" aria-label={tab === 'math' ? 'Math formatting' : 'Text formatting'} className="flex flex-wrap items-center gap-0.5" data-testid={`format-panel-${tab}`}>
+        {tab === 'math' ? <MathFormattingTab /> : <TextFormattingTab />}
+      </div>
     </>
   );
 }
@@ -481,18 +646,9 @@ export function DocsHeader() {
         <TB icon={ImagePlus} label="Insert image" onClick={() => void commands.insertImage()} />
         <TB icon={FilePlus2} label="Insert blank page (Ctrl+Enter)" onClick={commands.insertBlankPage} testId="insert-page" />
         <Sep />
-        <PalettePopover label="Operators" glyph="√" sections={OPERATORS} testId="palette-operators" />
-        <PalettePopover label="Symbols" glyph="β" sections={SYMBOLS} testId="palette-symbols" />
-        <PalettePopover label="Constants" glyph="π" sections={CONSTANTS} testId="palette-constants" />
-        <PalettePopover label="Units" glyph="m" sections={UNITS_PALETTE} testId="palette-units" />
-        <Sep />
-        <DisplayModeSelect />
-        <Sep />
-        <FontControls />
-        <Sep />
-        <AlignControls />
-        <Sep />
         <ToolButtons />
+        <Sep />
+        <FormatTabs />
         <div className="ml-auto flex items-center gap-0.5 pl-2">
           <TB icon={ListTree} label="Outline" active={paramsOpen && leftTab === 'outline'} onClick={() => showLeftTab('outline')} testId="toggle-outline" />
           <TB icon={Variable} label="Parameters" active={paramsOpen && leftTab === 'params'} onClick={() => showLeftTab('params')} testId="toggle-params" />

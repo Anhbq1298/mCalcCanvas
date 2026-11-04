@@ -167,3 +167,36 @@ test.describe('Templates', () => {
     await expect(page.getByTestId('check-badge').filter({ hasText: 'PASS' })).toHaveCount(3);
   });
 });
+
+test.describe('Formatting tabs', () => {
+  test('math and text formatting tabs follow the selection and format regions', async ({ page }) => {
+    await openFresh(page);
+    // Select the L definition → Math formatting tab.
+    const L = page.locator('.math-region[data-latex^="L\\\\coloneq"]');
+    await L.click();
+    await expect(page.getByTestId('format-tab-math')).toHaveAttribute('aria-selected', 'true');
+    const unit = page.getByTestId('math-result-unit');
+    await unit.fill('furlong');
+    await unit.press('Enter');
+    await expect(unit).toHaveAttribute('title', /Unknown unit/);
+    await unit.fill('mm');
+    await unit.press('Enter');
+    await expect(L).toHaveAttribute('data-result', '8500 mm');
+    await page.getByTestId('math-decimals').selectOption('0');
+    await page.getByTestId('worksheet-units').selectOption('Imperial');
+    await resultOf(page, 'M_{Ed}').toContain('kip');
+    await page.getByTestId('worksheet-units').selectOption('SI');
+    // Operators gallery: unsupported operators are shown but disabled.
+    await page.getByTestId('palette-operators').click();
+    await expect(page.getByRole('button', { name: /Summation – Not supported/ })).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Square root  ( \\ )' })).toBeEnabled();
+    await page.keyboard.press('Escape');
+    // Select a text region → Text formatting tab.
+    await page.getByTestId('text-region').filter({ hasText: 'Span, tributary width' }).click();
+    await expect(page.getByTestId('format-tab-text')).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByTestId('paragraph-style')).toBeVisible();
+    // Tabs can also be switched by hand.
+    await page.getByTestId('format-tab-math').click();
+    await expect(page.getByTestId('format-panel-math')).toBeVisible();
+  });
+});

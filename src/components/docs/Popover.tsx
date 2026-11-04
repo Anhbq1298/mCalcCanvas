@@ -80,25 +80,34 @@ export function Popover({
   );
 }
 
-export function PalettePopover({ label, glyph, sections, testId }: { label: string; glyph: string; sections: PaletteSection[]; testId: string }) {
+export function PalettePopover({ label, glyph, sections, testId, columns }: { label: string; glyph: string; sections: PaletteSection[]; testId: string; columns?: number }) {
   return (
-    <Popover title={label} testId={testId} trigger={<span className="font-math text-[17px] italic leading-none text-docs-ink">{glyph}</span>}>
+    <Popover title={label} testId={testId} width={columns ? columns * 70 + 24 : undefined} trigger={<span className="font-math text-[17px] italic leading-none text-docs-ink">{glyph}</span>}>
       {() => (
         <>
           {sections.map((sec) => (
             <div key={sec.title} className="mb-2 last:mb-0">
               <div className="px-1 pb-1 text-[11px] font-medium uppercase tracking-wide text-docs-muted">{sec.title}</div>
-              <div className="flex flex-wrap gap-0.5">
+              <div
+                className={columns ? 'grid gap-0.5 rounded bg-docs-bg/60' : 'flex flex-wrap gap-0.5'}
+                style={columns ? { gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` } : undefined}
+              >
                 {sec.items.map((it) => (
                   <button
                     key={it.title + it.label}
                     type="button"
                     title={it.title}
                     aria-label={it.title}
+                    aria-disabled={it.disabled || undefined}
+                    disabled={it.disabled}
                     data-testid={`palette-${it.label}`}
                     onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => insertTemplate(it.latex)}
-                    className={'flex h-8 min-w-[36px] cursor-pointer items-center justify-center rounded px-1.5 text-[15px] text-docs-ink transition-colors duration-150 hover:bg-docs-hover ' + (it.math ? 'font-math italic' : '')}
+                    onClick={() => !it.disabled && insertTemplate(it.latex)}
+                    className={
+                      'flex h-8 min-w-[36px] items-center justify-center rounded px-1.5 text-[15px] transition-colors duration-150 ' +
+                      (it.disabled ? 'cursor-not-allowed text-docs-muted/45' : 'cursor-pointer text-docs-ink hover:bg-docs-hover ') +
+                      (it.math ? ' font-math italic' : '')
+                    }
                   >
                     {it.label}
                   </button>

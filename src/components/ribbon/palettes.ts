@@ -5,6 +5,8 @@ export interface PaletteItem {
   title: string;
   /** Render the label with the math (serif italic) face. */
   math?: boolean;
+  /** Shown for completeness but not usable yet. */
+  disabled?: boolean;
 }
 
 export interface PaletteSection {
@@ -12,38 +14,97 @@ export interface PaletteSection {
   items: PaletteItem[];
 }
 
+/** Shown on operators the calculation engine cannot evaluate yet. */
+const SOON = 'Not supported by the calculation engine yet';
+const soon = (label: string, title: string, math = false): PaletteItem => ({ label, latex: '', title: `${title} – ${SOON}`, math, disabled: true });
+
+/** Laid out like Mathcad Prime's Operators gallery. */
 export const OPERATORS: PaletteSection[] = [
+  {
+    title: 'Algebra',
+    items: [
+      { label: '+', latex: '+', title: 'Add  ( + )' },
+      { label: '−', latex: '-', title: 'Subtract  ( - )' },
+      { label: '·', latex: '\\cdot ', title: 'Multiply  ( * )' },
+      { label: '÷', latex: '\\div ', title: 'Divide inline' },
+      { label: 'a/b', latex: '\\frac{#@}{#?}', title: 'Divide  ( / )', math: true },
+      { label: 'xʸ', latex: '#@^{#?}', title: 'Power  ( ^ )', math: true },
+      { label: '√x', latex: '\\sqrt{#?}', title: 'Square root  ( \\ )', math: true },
+      { label: 'ⁿ√x', latex: '\\sqrt[#?]{#?}', title: 'Nth root  ( Ctrl+\\ )', math: true },
+      { label: '|x|', latex: '\\left|#?\\right|', title: 'Absolute value  ( | )', math: true },
+      soon('x!', 'Factorial', true),
+      { label: '%', latex: '\\%', title: 'Percent (= 0.01)' },
+      { label: '( )', latex: '\\left(#@\\right)', title: "Parentheses  ( ' )" },
+      { label: ',', latex: ',', title: 'Argument separator (min, max)' },
+      { label: 'xₐ', latex: '_{#?}', title: 'Literal subscript  ( . after a name )', math: true },
+    ],
+  },
+  {
+    title: 'Equation break',
+    items: [soon('+↲', 'Break after addition'), soon('−↲', 'Break after subtraction'), soon('·↲', 'Break after multiplication'), soon('÷↲', 'Break after division')],
+  },
+  {
+    title: 'Calculus',
+    items: [
+      soon('⊛', 'Convolution'),
+      soon('∗', 'Discrete convolution'),
+      soon('d/dx', 'Derivative', true),
+      soon('∇', 'Gradient'),
+      soon('∫dx', 'Definite integral', true),
+      soon('lim', 'Limit'),
+      soon('∂/∂x', 'Partial derivative', true),
+      soon("x′", 'Prime derivative', true),
+      soon('∏', 'Product'),
+      soon('∑', 'Summation'),
+    ],
+  },
+  {
+    title: 'Comparison',
+    items: [
+      soon('∈', 'Element of'),
+      { label: '=', latex: '\\equiv ', title: 'Equal to – comparison check  ( Ctrl+= )' },
+      soon('⊕', 'Exclusive or'),
+      { label: '>', latex: '>', title: 'Greater than' },
+      { label: '≥', latex: '\\ge ', title: 'Greater than or equal  ( Ctrl+0 )' },
+      { label: '<', latex: '<', title: 'Less than' },
+      { label: '≤', latex: '\\le ', title: 'Less than or equal  ( Ctrl+9 )' },
+      soon('∧', 'And'),
+      soon('¬', 'Not'),
+      soon('∨', 'Or'),
+      { label: '≠', latex: '\\ne ', title: 'Not equal  ( Ctrl+3 )' },
+    ],
+  },
   {
     title: 'Definition and evaluation',
     items: [
       { label: '≔', latex: '\\coloneq ', title: 'Definition  ( : )' },
       { label: '=', latex: '=', title: 'Evaluate  ( = )' },
+      soon('≡', 'Global definition'),
+      soon('→', 'Symbolic evaluation'),
     ],
   },
   {
-    title: 'Arithmetic',
+    title: 'Engineering',
     items: [
-      { label: '+', latex: '+', title: 'Add' },
-      { label: '−', latex: '-', title: 'Subtract' },
-      { label: '×', latex: '\\cdot ', title: 'Multiply  ( * )' },
-      { label: 'a/b', latex: '\\frac{#@}{#?}', title: 'Divide  ( / )', math: true },
-      { label: 'xⁿ', latex: '#@^{#?}', title: 'Power  ( ^ )', math: true },
-      { label: '√', latex: '\\sqrt{#?}', title: 'Square root  ( \\ )' },
-      { label: 'ⁿ√', latex: '\\sqrt[#?]{#?}', title: 'Nth root  ( Ctrl+\\ )' },
-      { label: '|x|', latex: '\\left|#?\\right|', title: 'Absolute value  ( | )', math: true },
-      { label: '( )', latex: '\\left(#@\\right)', title: "Parentheses  ( ' )" },
-      { label: 'xₐ', latex: '_{#?}', title: 'Literal subscript  ( . after a name )', math: true },
+      soon('z̄', 'Complex conjugate', true),
+      { label: '°', latex: '\\degree ', title: 'Degree (angle)' },
+      soon('∠', 'Phasor angle'),
+      soon('∘', 'Composition'),
     ],
   },
   {
-    title: 'Comparison (checks)',
+    title: 'Vector and matrix',
     items: [
-      { label: '≤', latex: '\\le ', title: 'Less than or equal  ( Ctrl+9 )' },
-      { label: '≥', latex: '\\ge ', title: 'Greater than or equal  ( Ctrl+0 )' },
-      { label: '<', latex: '<', title: 'Less than' },
-      { label: '>', latex: '>', title: 'Greater than' },
-      { label: '≠', latex: '\\ne ', title: 'Not equal  ( Ctrl+3 )' },
-      { label: '≡', latex: '\\equiv ', title: 'Equal (comparison)  ( Ctrl+= )' },
+      soon('×', 'Cross product'),
+      soon('‖x‖', 'Vector norm', true),
+      soon('[▫]', 'Insert matrix'),
+      soon('M⟨i⟩', 'Matrix column', true),
+      soon('Mᵢ', 'Index', true),
+      soon('Mᵀ', 'Transpose', true),
+      soon('|M|', 'Determinant', true),
+      soon('1..n', 'Range'),
+      soon('1,3..n', 'Stepped range'),
+      soon('V⃗', 'Vectorize', true),
     ],
   },
   {
