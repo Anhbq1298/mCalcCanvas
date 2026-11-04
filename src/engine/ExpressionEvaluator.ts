@@ -7,6 +7,7 @@
  * perform bounded arithmetic.
  */
 import { CalculationError } from './CalculationErrors';
+export { isAbsoluteTemperature } from './UnitSystem';
 import type { Expr } from './ExpressionTypes';
 import { walkExpr } from './ExpressionTypes';
 import {
@@ -14,13 +15,50 @@ import {
   dimensionName,
   isDimensionless,
   isUnit,
+  formatUnitString,
+  isAbsoluteTemperature,
   isUnitSymbol,
   math,
   normalize,
+  preferredUnit,
   siValue,
   unitValue,
   type Quantity,
 } from './UnitSystem';
+
+/** "Undefined variable" with the names involved (the engine may rephrase it as "defined below"). */
+export class UndefinedNamesError extends CalculationError {
+  readonly names: string[];
+  constructor(names: string[]) {
+    super('undefined-variable', undefinedMessage(names));
+    this.names = names;
+  }
+}
+
+export function undefinedMessage(names: string[]): string {
+  const q = names.map((n) => `"${n}"`);
+  return q.length === 1
+    ? `Variable ${q[0]} has not been defined above this equation.`
+    : `Variables ${q.join(', ')} have not been defined above this equation.`;
+}
+
+export function definedLaterMessage(name: string): string {
+  return `Variable "${name}" is defined below this equation. Move its definition above it (calculations run top to bottom, left to right).`;
+}
+
+/**
+ * Comparison tolerance for checks (≤, <, ≥, >, =, ≠).
+ *
+ * Values are compared in SI base units at full double precision. The only
+ * tolerance is a few units in the last place, relative to the larger
+ * magnitude: it absorbs representation error from unit conversion (e.g.
+ * 300 mm is stored as 0.30000000000000004 m) and nothing else. There is no
+ * absolute floor, so very small quantities (mm⁴ in m⁴) are compared just as
+ * strictly, and a utilisation of 1.0000001 against a limit of 1 FAILS even
+ * though it displays as 1.00. Equality (=, ≠) uses the same tolerance; no
+ * engineering tolerance is ever applied implicitly.
+ */
+export const COMPARISON_RELATIVE_TOLERANCE = 8 * Number.EPSILON;
 
 export type Resolved =
   | { kind: 'var'; name: string }
@@ -101,21 +139,77 @@ export function collectReferences(exprs: Expr[], ctx: ResolveContext): Set<strin
   return refs;
 }
 
+/**
+ * Every name whose definitions could change how these expressions resolve:
+ * each identifier as written and, for letter runs ("wL"), each letter.
+ */
+export function candidateNames(exprs: Expr[]): Set<string> {
+  const out = new Set<string>();
+  for (const expr of exprs) {
+    walkExpr(expr, (e) => {
+      if (e.type !== 'ident') return;
+      out.add(e.name);
+      if (e.splittable && !e.roman) for (const ch of e.name) out.add(ch);
+    });
+  }
+  return out;
+}
+
 export interface EvalContext extends ResolveContext {
   getValue(name: string): Quantity;
 }
 
+/** Reject complex, NaN and infinite intermediate results with a clear message. */
 function ensureFinite(q: Quantity): Quantity {
+  if (!isUnit(q) && typeof q !== 'number') {
+    throw new CalculationError('domain', 'The result is not a real number.');
+  }
   const v = isUnit(q) ? siValue(q) : q;
-  if (typeof v !== 'number' || !Number.isFinite(v)) {
-    throw new CalculationError('not-finite', 'The result is not a finite number.');
+  if (typeof v !== 'number' || Number.isNaN(v)) {
+    throw new CalculationError('domain', 'The result is not a real number (undefined operation such as 0·∞).');
+  }
+  if (!Number.isFinite(v)) {
+    throw new CalculationError('not-finite', 'The result is too large to represent (numeric overflow).');
   }
   return q;
 }
 
+/** "Force (kN)", "Length (m)", "a dimensionless number". */
+export function describeQuantity(q: Quantity): string {
+  if (isDimensionless(q)) return 'a dimensionless number';
+  const name = dimensionName(q);
+  const unit = preferredUnit(q, 'SI');
+  return unit ? `${name} (${formatUnitString(unit).text})` : name;
+}
+
+// ---------------------------------------------------------------------------
+// Absolute temperatures (°C) are affine: only a few operations make sense.
+// ---------------------------------------------------------------------------
+
+const absoluteC = (kelvin: number): Quantity => math.unit(kelvin, 'K').to('degC');
+const kelvinOf = (q: Quantity): number => (isUnit(q) ? q.toNumber('K') : q);
+
+const TEMP_HINT = 'Use a temperature difference in K (e.g. T₁ + 5 K, or ΔT := T₂ − T₁).';
+
+function temperatureError(what: string): CalculationError {
+  return new CalculationError('temperature', `${what} ${TEMP_HINT}`);
+}
+
+/** A literal "20 °C": a plain number times the °C unit symbol. */
+function isTemperatureLiteral(e: Expr): boolean {
+  const isOffsetUnit = (x: Expr) => x.type === 'ident' && isUnitSymbol(x.name) && isAbsoluteTemperature(unitValue(x.name));
+  if (isOffsetUnit(e)) return true;
+  if (e.type === 'group') return isTemperatureLiteral(e.body);
+  const isNumber = (x: Expr): boolean => x.type === 'num' || (x.type === 'unary' && isNumber(x.arg)) || (x.type === 'group' && isNumber(x.body));
+  if (e.type === 'binary' && e.op === '*') {
+    return (isOffsetUnit(e.right) && isNumber(e.left)) || (isOffsetUnit(e.left) && isNumber(e.right));
+  }
+  return false;
+}
+
 function requireDimensionless(q: Quantity, what: string): number {
   if (!isDimensionless(q)) {
-    throw new CalculationError('unit-mismatch', `${what} must be dimensionless (got ${dimensionName(q)}).`);
+    throw new CalculationError('unit-mismatch', `${what} must be a dimensionless number (got ${describeQuantity(q)}).`);
   }
   return isUnit(q) ? siValue(q) : q;
 }
@@ -124,9 +218,21 @@ function addOrSubtract(a: Quantity, b: Quantity, op: '+' | '-'): Quantity {
   if (dimensionKey(a) !== dimensionKey(b)) {
     const msg =
       op === '+'
-        ? `${dimensionName(a)} cannot be added to ${dimensionName(b)}.`
-        : `${dimensionName(b)} cannot be subtracted from ${dimensionName(a)}.`;
+        ? `${describeQuantity(b)} cannot be added to ${describeQuantity(a)}.`
+        : `${describeQuantity(b)} cannot be subtracted from ${describeQuantity(a)}.`;
     throw new CalculationError('unit-mismatch', `Unit mismatch: ${msg}`);
+  }
+  const absA = isAbsoluteTemperature(a);
+  const absB = isAbsoluteTemperature(b);
+  if (absA || absB) {
+    // °C ± K → °C;  °C − °C → K (difference);  °C + °C and K − °C are meaningless.
+    if (op === '+') {
+      if (absA && absB) throw temperatureError('Two absolute temperatures (°C) cannot be added.');
+      return absoluteC(kelvinOf(absA ? a : b) + kelvinOf(absA ? b : a));
+    }
+    if (absA && absB) return math.unit(kelvinOf(a) - kelvinOf(b), 'K');
+    if (absA) return absoluteC(kelvinOf(a) - kelvinOf(b));
+    throw temperatureError('An absolute temperature (°C) cannot be subtracted from a temperature difference.');
   }
   const res = op === '+' ? math.add(a as never, b as never) : math.subtract(a as never, b as never);
   return normalize(res as Quantity);
@@ -136,7 +242,12 @@ export function evaluateExpr(expr: Expr, ctx: EvalContext): Quantity {
   return ensureFinite(normalize(evalNode(expr, ctx)));
 }
 
+/** Every intermediate value is checked, so NaN/∞/complex never propagate. */
 function evalNode(expr: Expr, ctx: EvalContext): Quantity {
+  return ensureFinite(evalNodeRaw(expr, ctx));
+}
+
+function evalNodeRaw(expr: Expr, ctx: EvalContext): Quantity {
   switch (expr.type) {
     case 'num':
       return expr.value;
@@ -144,15 +255,13 @@ function evalNode(expr: Expr, ctx: EvalContext): Quantity {
     case 'ident': {
       const r = resolveIdent(expr, ctx);
       if (!r.ok) {
-        throw new CalculationError(
-          'undefined-variable',
-          `Undefined variable${r.undefinedNames.length > 1 ? 's' : ''}: ${r.undefinedNames.join(', ')}`,
-        );
+        throw new UndefinedNamesError(r.undefinedNames);
       }
       let acc: Quantity | null = null;
       for (const p of r.parts) {
         const v: Quantity =
           p.kind === 'var' ? ctx.getValue(p.name) : p.kind === 'unit' ? unitValue(p.symbol) : p.value;
+        if (r.parts.length > 1 && isAbsoluteTemperature(v)) throw temperatureError('An absolute temperature (°C) cannot be multiplied.');
         acc = acc === null ? v : (math.multiply(acc as never, v as never) as unknown as Quantity);
       }
       return normalize(acc as Quantity);
@@ -163,12 +272,22 @@ function evalNode(expr: Expr, ctx: EvalContext): Quantity {
 
     case 'unary': {
       const v = evalNode(expr.arg, ctx);
+      if (expr.op === '-' && isAbsoluteTemperature(v) && !isTemperatureLiteral(expr.arg)) {
+        throw temperatureError('An absolute temperature (°C) cannot be negated.');
+      }
       return expr.op === '-' ? (math.unaryMinus(v as never) as Quantity) : v;
     }
 
     case 'binary': {
       const a = evalNode(expr.left, ctx);
       const b = evalNode(expr.right, ctx);
+      if (expr.op !== '+' && expr.op !== '-' && (isAbsoluteTemperature(a) || isAbsoluteTemperature(b))) {
+        // Only a literal "20 °C" (number × °C) is allowed; scaling an absolute temperature is meaningless.
+        if (!(expr.op === '*' && isTemperatureLiteral(expr))) {
+          const verb = expr.op === '*' ? 'multiplied' : expr.op === '/' ? 'divided' : 'raised to a power';
+          throw temperatureError(`An absolute temperature (°C) cannot be ${verb}.`);
+        }
+      }
       switch (expr.op) {
         case '+':
         case '-':
@@ -176,9 +295,12 @@ function evalNode(expr: Expr, ctx: EvalContext): Quantity {
         case '*':
           return normalize(math.multiply(a as never, b as never) as unknown as Quantity);
         case '/':
-          if (siValue(b) === 0) throw new CalculationError('division-by-zero', 'Division by zero.');
+          if (siValue(b) === 0) throw new CalculationError('division-by-zero', 'Division by zero: the denominator is 0.');
           return normalize(math.divide(a as never, b as never) as Quantity);
         case '^': {
+          if (!isDimensionless(b)) {
+            throw new CalculationError('unit-mismatch', `An exponent must be a dimensionless number (got ${describeQuantity(b)}).`);
+          }
           const p = requireDimensionless(b, 'An exponent');
           // "wL^2": a run that splits into factors takes the power on its last
           // factor only (w·L²), while a whole unit or variable ("mm^2") is
@@ -210,19 +332,28 @@ function evalNode(expr: Expr, ctx: EvalContext): Quantity {
 function powQ(a: Quantity, p: number): Quantity {
   if (Math.abs(p) > 1000) throw new CalculationError('limit-exceeded', 'Exponent is too large.');
   if (!Number.isFinite(p)) throw new CalculationError('not-finite', 'Invalid exponent.');
+  if (siValue(a) < 0 && !Number.isInteger(p)) {
+    throw new CalculationError('domain', 'A negative value cannot be raised to a non-integer power (the result is not a real number). For odd roots use ⁿ√.');
+  }
+  if (siValue(a) === 0 && p < 0) throw new CalculationError('division-by-zero', 'Division by zero: 0 raised to a negative power.');
   if (isUnit(a)) return normalize(math.pow(a, p) as Quantity);
   return math.pow(a, p) as number;
 }
 
 function angleArgument(q: Quantity, fn: string): Quantity {
-  // Angle units are accepted directly; plain numbers are radians.
+  // Angle units (°, rad) are accepted directly; a plain number is in radians.
   if (isUnit(q) && dimensionName(q) === 'Angle') return q;
-  requireDimensionless(q, `The argument of ${fn}`);
+  if (!isDimensionless(q)) {
+    throw new CalculationError('unit-mismatch', `The argument of ${fn} must be an angle (°, rad) or a dimensionless number in radians (got ${describeQuantity(q)}).`);
+  }
   return q;
 }
 
 function evalCall(fn: string, args: Quantity[]): Quantity {
   const [x] = args;
+  if (args.some(isAbsoluteTemperature) && fn !== 'min' && fn !== 'max') {
+    throw temperatureError(`${fn} cannot be applied to an absolute temperature (°C).`);
+  }
   switch (fn) {
     case 'sin':
       return math.sin(angleArgument(x, fn) as never) as number;
@@ -234,6 +365,9 @@ function evalCall(fn: string, args: Quantity[]): Quantity {
     case 'acos':
     case 'atan': {
       const v = requireDimensionless(x, `The argument of ${fn}`);
+      if (fn !== 'atan' && Math.abs(v) > 1) {
+        throw new CalculationError('domain', `${fn} is only defined for values between −1 and 1 (got ${v}).`);
+      }
       const rad = fn === 'asin' ? Math.asin(v) : fn === 'acos' ? Math.acos(v) : Math.atan(v);
       return math.unit(rad, 'rad');
     }
@@ -245,23 +379,23 @@ function evalCall(fn: string, args: Quantity[]): Quantity {
       return Math.tanh(requireDimensionless(x, 'The argument of tanh'));
     case 'ln': {
       const v = requireDimensionless(x, 'The argument of ln');
-      if (v <= 0) throw new CalculationError('not-finite', 'ln is only defined for positive values.');
+      if (v <= 0) throw new CalculationError('domain', 'ln is only defined for positive values.');
       return Math.log(v);
     }
     case 'log': {
       const v = requireDimensionless(x, 'The argument of log');
-      if (v <= 0) throw new CalculationError('not-finite', 'log is only defined for positive values.');
+      if (v <= 0) throw new CalculationError('domain', 'log is only defined for positive values.');
       return Math.log10(v);
     }
     case 'exp':
       return Math.exp(requireDimensionless(x, 'The argument of exp'));
     case 'sqrt':
-      if (siValue(x) < 0) throw new CalculationError('not-finite', 'Square root of a negative value.');
+      if (siValue(x) < 0) throw new CalculationError('domain', 'Square root of a negative value (the result is not a real number).');
       return normalize(math.sqrt(x as never) as Quantity);
     case 'nthRoot': {
       const n = requireDimensionless(args[1], 'The root index');
       if (n === 0) throw new CalculationError('division-by-zero', 'Root index cannot be zero.');
-      if (siValue(x) < 0 && n % 2 !== 1) throw new CalculationError('not-finite', 'Even root of a negative value.');
+      if (siValue(x) < 0 && Math.abs(n % 2) !== 1) throw new CalculationError('domain', 'Even root of a negative value (the result is not a real number).');
       if (isUnit(x)) return normalize(math.pow(x, 1 / n) as Quantity);
       return Math.sign(x) * Math.pow(Math.abs(x), 1 / n);
     }
@@ -272,7 +406,7 @@ function evalCall(fn: string, args: Quantity[]): Quantity {
       const first = args[0];
       for (const a of args) {
         if (dimensionKey(a) !== dimensionKey(first)) {
-          throw new CalculationError('unit-mismatch', `Unit mismatch: ${fn} arguments must have the same dimension.`);
+          throw new CalculationError('unit-mismatch', `Unit mismatch: ${fn} arguments must have the same dimension (${describeQuantity(first)} vs ${describeQuantity(a)}).`);
         }
       }
       return args.reduce((best, a) =>
@@ -288,12 +422,13 @@ export function compareQuantities(a: Quantity, b: Quantity, op: string): boolean
   if (dimensionKey(a) !== dimensionKey(b)) {
     throw new CalculationError(
       'unit-mismatch',
-      `Unit mismatch: cannot compare ${dimensionName(a)} with ${dimensionName(b)}.`,
+      `Unit mismatch: cannot compare ${describeQuantity(a)} with ${describeQuantity(b)}.`,
     );
   }
+  // Full precision, SI base units; see COMPARISON_RELATIVE_TOLERANCE.
   const x = siValue(a);
   const y = siValue(b);
-  const eps = 1e-12 * Math.max(Math.abs(x), Math.abs(y), 1);
+  const eps = COMPARISON_RELATIVE_TOLERANCE * Math.max(Math.abs(x), Math.abs(y));
   switch (op) {
     case '<':
       return x < y - eps;

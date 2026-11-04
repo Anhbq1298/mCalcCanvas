@@ -9,6 +9,10 @@ export type CalculationErrorCode =
   | 'unknown-unit'
   | 'division-by-zero'
   | 'not-finite'
+  /** Result outside the real numbers (√ of a negative, log of 0, asin(2), …). */
+  | 'domain'
+  /** Unsupported operation on an absolute temperature (°C). */
+  | 'temperature'
   | 'dependency-error'
   | 'display-unit'
   | 'limit-exceeded'

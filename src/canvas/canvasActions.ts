@@ -19,6 +19,7 @@ import {
 import { screenToPage, shapeBounds, snap, unionBounds } from './model/geometry';
 import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, type Point, type Shape } from './model/types';
 import { plainTextToHtml } from './sanitize';
+import { sanitizeShape } from '../documents/DocumentSerializer';
 import { clampDelta, clampShapesIntoPage, constrained, nextWritingPoint, printableAt } from './pageConstraint';
 import { useAppStore } from '../store/appStore';
 
@@ -178,8 +179,10 @@ export function handlePasteData(data: DataTransfer | null): boolean {
   const text = data.getData('text/plain');
   if (text.startsWith(CLIP_PREFIX)) {
     try {
-      const parsed = JSON.parse(text.slice(CLIP_PREFIX.length)) as Shape[];
-      if (Array.isArray(parsed)) {
+      const raw: unknown = JSON.parse(text.slice(CLIP_PREFIX.length));
+      // The clipboard is untrusted (any page can put this prefix on it): validate like an imported file.
+      const parsed = Array.isArray(raw) ? raw.slice(0, 5000).map(sanitizeShape).filter((s): s is Shape => !!s) : null;
+      if (parsed && parsed.length) {
         if (JSON.stringify(parsed) !== JSON.stringify(internalClipboard)) pasteCount = 0;
         internalClipboard = parsed;
         pasteShapes(parsed);

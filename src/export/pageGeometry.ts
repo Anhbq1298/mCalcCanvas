@@ -1,4 +1,4 @@
-import { boxContains, boxesIntersect, shapeBounds } from '../canvas/model/geometry';
+import { boxContains, shapeBounds } from '../canvas/model/geometry';
 import type { Box, Shape } from '../canvas/model/types';
 import type { PageOrientation } from '../documents/DocumentTypes';
 
@@ -47,7 +47,18 @@ export function shapesOutsidePrintArea(shapes: Shape[], orientation: PageOrienta
   });
 }
 
+/** Page a shape belongs to: the page band containing its top edge (gaps count as the page above). */
+export function pageIndexOf(s: Shape, orientation: PageOrientation): number {
+  const { h } = pageSize(orientation);
+  return Math.max(0, Math.floor(shapeBounds(s).y / (h + PAGE_GAP)));
+}
+
+/**
+ * Shapes printed on page `index`. Every shape is printed on exactly one
+ * page – the one containing its top edge – so a shape crossing a page
+ * boundary is never duplicated; the part below that page's edge is clipped
+ * (and flagged by shapesOutsidePrintArea).
+ */
 export function shapesOnPage(shapes: Shape[], index: number, orientation: PageOrientation): Shape[] {
-  const box = pageBox(index, orientation);
-  return shapes.filter((s) => boxesIntersect(box, shapeBounds(s)));
+  return shapes.filter((s) => pageIndexOf(s, orientation) === index);
 }

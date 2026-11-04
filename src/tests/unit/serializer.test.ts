@@ -66,3 +66,59 @@ describe('document serializer', () => {
     expect(doc.metadata).toEqual({ preparedBy: 'MB' });
   });
 });
+
+describe('serializer robustness', () => {
+  const doc = (shapes: unknown[]) => ({ ...base, version: DOCUMENT_VERSION, shapes });
+
+  it('keeps duplicate ids under a new id instead of dropping content', () => {
+    const d = parseDocument(
+      doc([
+        { id: 'a', type: 'math', x: 0, y: 0, props: { latex: 'x\\coloneq1' } },
+        { id: 'a', type: 'math', x: 0, y: 40, props: { latex: 'y\\coloneq2' } },
+      ]),
+    );
+    expect(d.shapes).toHaveLength(2);
+    expect(new Set(d.shapes.map((s) => s.id)).size).toBe(2);
+    expect(d.shapes.map((s) => (s.type === 'math' ? s.props.latex : ''))).toEqual(['x\\coloneq1', 'y\\coloneq2']);
+  });
+
+  it('normalises invalid numbers and ignores unknown fields and types', () => {
+    const d = parseDocument(
+      doc([
+        { id: 'm', type: 'math', x: 1e300, y: Number.NaN, extra: { evil: true }, props: { latex: 'a\\coloneq1', precision: 900, w: -5, fontSize: 1e9 } },
+        { id: 'z', type: 'video', x: 0, y: 0, props: {} },
+        { id: 'r', type: 'rect', x: 0, y: 0, props: { w: 'big', strokeWidth: 1e6 } },
+        null,
+        42,
+      ]),
+    );
+    expect(d.shapes.map((s) => s.id)).toEqual(['m', 'r']);
+    const m = d.shapes[0];
+    expect(m.x).toBe(1e7);
+    expect(m.y).toBe(0);
+    expect(m.type === 'math' && m.props.precision).toBe(8);
+    expect(m.type === 'math' && m.props.w).toBe(1);
+    expect(m.type === 'math' && m.props.fontSize).toBe(64);
+    expect('extra' in m).toBe(false);
+    const r = d.shapes[1];
+    expect(r.type === 'rect' && r.props.strokeWidth).toBe(20);
+  });
+
+  it('round-trips every supported shape type without loss', () => {
+    const d1 = parseDocument(
+      doc([
+        { id: 'm', type: 'math', x: 10, y: 20, props: { latex: 'M\\coloneq1', displayMode: 'full', displayUnit: 'kN·m', precision: 3, autoSize: false, w: 80, h: 30, fontSize: 18, color: '#0f172a' } },
+        { id: 't', type: 'text', x: 0, y: 0, props: { html: '<b>H</b>', heading: 2, w: 300, h: 24, fontFamily: 'Inter', fontSize: 16, color: '#0f172a', align: 'center' } },
+        { id: 'r', type: 'rect', x: 1, y: 2, props: { w: 30, h: 40, stroke: '#ff0000', strokeWidth: 2 } },
+        { id: 'l', type: 'line', x: 1, y: 2, props: { x2: 30, y2: 40, stroke: '#ff0000', strokeWidth: 2, arrow: true } },
+        { id: 'p', type: 'draw', x: 1, y: 2, props: { points: [[0, 0], [5, 5]], stroke: '#ff0000', strokeWidth: 2 } },
+        { id: 'i', type: 'image', x: 1, y: 2, props: { w: 1, h: 1, src: 'data:image/png;base64,AAAA' } },
+      ]),
+    );
+    const d2 = parseDocument(JSON.parse(serializeDocument(d1)));
+    expect(d2).toEqual(d1);
+    expect(d2.shapes).toHaveLength(6);
+    // Results are never persisted.
+    expect(serializeDocument(d1)).not.toMatch(/"result"|"value"/);
+  });
+});

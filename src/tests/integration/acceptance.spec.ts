@@ -76,7 +76,7 @@ test.describe('acceptance criteria', () => {
     const pos = await shapePosition(page, L.id);
     const m = await shapePosition(page, (await region(page, 'M\\coloneq'))!.id);
     expect(pos.y).toBeGreaterThan(m.y);
-    await errorOf(page, 'M\\coloneq').toMatch(/^L is defined below this region/);
+    await errorOf(page, 'M\\coloneq').toMatch(/^Variable "L" is defined below this equation/);
     // drag it back up: fixed again
     const c3 = await regionCenter(page, L.id);
     await page.mouse.move(c3.x, c3.y);
@@ -95,23 +95,23 @@ test.describe('acceptance criteria', () => {
 
   test('G – unit mismatch is reported', async ({ page }) => {
     await addRegion(page, 300, 200, ['A:=10m+5kN']);
-    await errorOf(page, 'A').toBe('Unit mismatch: Length cannot be added to Force.');
+    await errorOf(page, 'A').toBe('Unit mismatch: Force (kN) cannot be added to Length (m).');
     // Only a symbol is shown; the message appears on hover.
     const icon = page.getByTestId('status-error');
     await expect(icon).toBeVisible();
-    await expect(page.getByText('Unit mismatch: Length cannot be added to Force.')).toBeHidden();
+    await expect(page.getByText('Unit mismatch: Force (kN) cannot be added to Length (m).')).toBeHidden();
     await icon.hover();
-    await expect(page.getByRole('tooltip')).toHaveText('Unit mismatch: Length cannot be added to Force.');
+    await expect(page.getByRole('tooltip')).toHaveText('Unit mismatch: Force (kN) cannot be added to Length (m).');
     await expect(page.getByRole('tooltip')).toBeVisible();
     await expect(page.getByTestId('calc-status')).toContainText('1 with errors');
   });
 
   test('errors – undefined variable and circular dependency', async ({ page }) => {
     await addRegion(page, 300, 200, ['M:=w*2']);
-    await errorOf(page, 'M').toBe('Undefined variable: w');
+    await errorOf(page, 'M').toBe('Variable "w" has not been defined above this equation.');
     await addRegion(page, 300, 300, ['A:=B+1']);
     await addRegion(page, 300, 380, ['B:=A+1']);
-    await errorOf(page, 'A').toContain('B is defined below this region');
+    await errorOf(page, 'A').toContain('Variable "B" is defined below this equation');
   });
 
   test('typing on an empty canvas creates a math region', async ({ page }) => {

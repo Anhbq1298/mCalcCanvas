@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import { stopEditing, updateShape } from '../model/canvasStore';
 import { fontStack, PARAGRAPH_STYLES, type TextShape } from '../model/types';
-import { sanitizeHtml } from '../sanitize';
+import { plainTextToHtml, sanitizeHtml } from '../sanitize';
 
 /**
  * Rich text region. While editing it is a contentEditable box (Ctrl+B/I/U
@@ -72,6 +72,15 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
         suppressContentEditableWarning
         style={style}
         onInput={(e) => updateShape(shape.id, { props: { html: sanitizeHtml(e.currentTarget.innerHTML) } }, { history: false })}
+        onPaste={(e) => {
+          // Insert sanitised content ourselves so foreign markup never enters the live DOM.
+          const html = e.clipboardData.getData('text/html');
+          const text = e.clipboardData.getData('text/plain');
+          if (!html && !text) return;
+          e.preventDefault();
+          const clean = html ? sanitizeHtml(html) : plainTextToHtml(text);
+          document.execCommand('insertHTML', false, clean);
+        }}
         onKeyDown={(e) => {
           if (e.key === 'Escape') {
             e.preventDefault();

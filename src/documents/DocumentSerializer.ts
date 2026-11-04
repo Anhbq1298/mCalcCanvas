@@ -53,6 +53,11 @@ const MIGRATIONS: Record<number, (doc: Raw) => Raw> = {
 export class DocumentFormatError extends Error {}
 
 const num = (v: unknown, d = 0) => (typeof v === 'number' && Number.isFinite(v) ? v : d);
+/** Finite number clamped to [min, max]. */
+const bounded = (v: unknown, d: number, min: number, max: number) => Math.min(max, Math.max(min, num(v, d)));
+/** Canvas coordinates beyond this are treated as corrupt and clamped. */
+const COORD_LIMIT = 1e7;
+const SIZE_LIMIT = 1e5;
 const str = (v: unknown, d = '') => (typeof v === 'string' ? v : d);
 const color = (v: unknown, d: string) => (typeof v === 'string' && /^#[0-9a-fA-F]{3,8}$/.test(v) ? v : d);
 
@@ -61,7 +66,13 @@ export function sanitizeShape(raw: unknown): Shape | null {
   if (!raw || typeof raw !== 'object') return null;
   const r = raw as Raw;
   const p = (r.props && typeof r.props === 'object' ? r.props : {}) as Raw;
-  const base = { id: str(r.id) || `s_${Math.random().toString(36).slice(2)}`, x: num(r.x), y: num(r.y), ...(typeof r.groupId === 'string' ? { groupId: r.groupId } : {}) };
+  const id = str(r.id).slice(0, 100) || newImportId();
+  const base = {
+    id,
+    x: bounded(r.x, 0, -COORD_LIMIT, COORD_LIMIT),
+    y: bounded(r.y, 0, -COORD_LIMIT, COORD_LIMIT),
+    ...(typeof r.groupId === 'string' ? { groupId: r.groupId.slice(0, 100) } : {}),
+  };
   switch (r.type) {
     case 'math': {
       const modes = ['auto', 'formula', 'result', 'formulaResult', 'full'];
@@ -69,12 +80,12 @@ export function sanitizeShape(raw: unknown): Shape | null {
         ...base,
         type: 'math',
         props: {
-          w: Math.max(1, num(p.w, 60)),
-          h: Math.max(1, num(p.h, 32)),
+          w: bounded(p.w, 60, 1, SIZE_LIMIT),
+          h: bounded(p.h, 32, 1, SIZE_LIMIT),
           latex: str(p.latex).slice(0, 4000),
           displayMode: (modes.includes(p.displayMode as string) ? p.displayMode : 'auto') as never,
           displayUnit: str(p.displayUnit).slice(0, 60),
-          precision: Math.round(num(p.precision, -1)),
+          precision: Math.round(bounded(p.precision, -1, -1, 8)),
           autoSize: p.autoSize !== false,
           fontSize: Math.min(64, Math.max(8, num(p.fontSize, 18))),
           color: color(p.color, '#0f172a'),
@@ -86,8 +97,8 @@ export function sanitizeShape(raw: unknown): Shape | null {
         ...base,
         type: 'text',
         props: {
-          w: Math.max(20, num(p.w, 320)),
-          h: Math.max(1, num(p.h, 24)),
+          w: bounded(p.w, 320, 20, SIZE_LIMIT),
+          h: bounded(p.h, 24, 1, SIZE_LIMIT),
           html: sanitizeHtml(str(p.html)),
           fontFamily: TEXT_FONTS[str(p.fontFamily)] ? str(p.fontFamily) : 'Inter',
           fontSize: Math.min(72, Math.max(8, num(p.fontSize, 15))),
@@ -99,20 +110,49 @@ export function sanitizeShape(raw: unknown): Shape | null {
     case 'image': {
       const src = str(p.src);
       if (!/^data:image\/(png|jpe?g|webp|gif|svg\+xml);base64,/.test(src)) return null;
-      return { ...base, type: 'image', props: { w: Math.max(1, num(p.w, 200)), h: Math.max(1, num(p.h, 150)), src } };
+      return { ...base, type: 'image', props: { w: bounded(p.w, 200, 1, SIZE_LIMIT), h: bounded(p.h, 150, 1, SIZE_LIMIT), src } };
     }
     case 'rect':
-      return { ...base, type: 'rect', props: { w: Math.max(1, num(p.w, 100)), h: Math.max(1, num(p.h, 60)), stroke: color(p.stroke, '#1e3a5f'), strokeWidth: num(p.strokeWidth, 1.5) } };
+      return { ...base, type: 'rect', props: { w: bounded(p.w, 100, 1, SIZE_LIMIT), h: bounded(p.h, 60, 1, SIZE_LIMIT), stroke: color(p.stroke, '#1e3a5f'), strokeWidth: bounded(p.strokeWidth, 1.5, 0.25, 20) } };
     case 'line':
-      return { ...base, type: 'line', props: { x2: num(p.x2), y2: num(p.y2), stroke: color(p.stroke, '#1e3a5f'), strokeWidth: num(p.strokeWidth, 1.5), arrow: p.arrow === true } };
+      return { ...base, type: 'line', props: { x2: bounded(p.x2, 0, -SIZE_LIMIT, SIZE_LIMIT), y2: bounded(p.y2, 0, -SIZE_LIMIT, SIZE_LIMIT), stroke: color(p.stroke, '#1e3a5f'), strokeWidth: bounded(p.strokeWidth, 1.5, 0.25, 20), arrow: p.arrow === true } };
     case 'draw': {
-      const pts = Array.isArray(p.points) ? (p.points as unknown[]).filter((q): q is [number, number] => Array.isArray(q) && q.length === 2 && q.every((n) => typeof n === 'number' && Number.isFinite(n))) : [];
+      const pts = Array.isArray(p.points)
+        ? (p.points as unknown[])
+            .filter((q): q is [number, number] => Array.isArray(q) && q.length === 2 && q.every((n) => typeof n === 'number' && Number.isFinite(n) && Math.abs(n) <= SIZE_LIMIT))
+            .map(([a, b]) => [a, b] as [number, number])
+        : [];
       if (!pts.length) return null;
-      return { ...base, type: 'draw', props: { points: pts.slice(0, 20000), stroke: color(p.stroke, '#1e3a5f'), strokeWidth: num(p.strokeWidth, 2) } };
+      return { ...base, type: 'draw', props: { points: pts.slice(0, 20000), stroke: color(p.stroke, '#1e3a5f'), strokeWidth: bounded(p.strokeWidth, 2, 0.25, 20) } };
     }
     default:
       return null;
   }
+}
+
+const MAX_SHAPES = 20_000;
+
+let importCounter = 0;
+function newImportId(): string {
+  return `s_${Date.now().toString(36)}_${(importCounter++).toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
+}
+
+/**
+ * Give every shape a unique id. A duplicate keeps its content under a new
+ * id (dropping it would silently lose part of the worksheet).
+ */
+export function dedupeIds(shapes: Shape[]): Shape[] {
+  const seen = new Set<string>();
+  return shapes.map((s) => {
+    if (!seen.has(s.id)) {
+      seen.add(s.id);
+      return s;
+    }
+    let id = newImportId();
+    while (seen.has(id)) id = newImportId();
+    seen.add(id);
+    return { ...s, id };
+  });
 }
 
 /** Validate and migrate untrusted JSON (imported file or IndexedDB record). */
@@ -130,12 +170,7 @@ export function parseDocument(input: unknown): CalculationDocument {
   }
   if (typeof doc.id !== 'string' || !doc.id) throw new DocumentFormatError('Document is missing an id.');
   if (!Array.isArray(doc.shapes)) throw new DocumentFormatError('Document has no canvas data.');
-  const seen = new Set<string>();
-  const shapes = (doc.shapes as unknown[]).map(sanitizeShape).filter((s): s is Shape => {
-    if (!s || seen.has(s.id)) return false;
-    seen.add(s.id);
-    return true;
-  });
+  const shapes = dedupeIds((doc.shapes as unknown[]).slice(0, MAX_SHAPES).map(sanitizeShape).filter((s): s is Shape => !!s));
   const now = new Date().toISOString();
   const settings = { ...DEFAULT_SETTINGS, ...((doc.settings as Partial<DocumentSettings>) ?? {}) };
   if (settings.unitSystem !== 'SI' && settings.unitSystem !== 'Imperial') settings.unitSystem = 'SI';

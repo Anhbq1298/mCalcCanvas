@@ -70,9 +70,15 @@ src/
 
 **Single source of truth.** Math regions store only JSON props (LaTeX, display options) in the canvas store. The engine is derived: every store change — typing, undo, paste, load — flows one way through `engineBridge.ts`. Results are never persisted; they're recomputed on load.
 
-**Evaluation order.** Regions are evaluated in reading order: page, top-to-bottom, left-to-right. A region can only use definitions above it (a name defined only below is reported as "defined below"), and uses the nearest definition above when a name is defined more than once; redefinitions are outlined in green. Within that order, recalculation is incremental over a name-based dependency graph.
+**Evaluation order.** Regions are evaluated in reading order. The canvas layer (`engineBridge.ts`) gives every math region a key `[page, y, x, id]`; the engine compares keys lexicographically (`compareOrderKeys`) and knows nothing about geometry. Coordinates are used exactly — no rounding or numeric packing — so large and negative positions order correctly, and the id makes equal positions deterministic. A region can only use definitions before it (a name defined only below is reported as "defined below"), and uses the nearest definition before it when a name is defined more than once; redefinitions are outlined in green.
+
+**Dependencies.** Every referenced name is resolved to the exact *defining region* it uses, and the graph (`DependencyGraph.ts`) stores those region-to-region edges. Two definitions of `x` therefore feed two independent sets of regions: editing the first `x` recalculates only the regions that use it. Each region also records the names that could change its resolution (each identifier and, for letter runs like `wL`, each letter); adding, removing, renaming or moving a definition of such a name re-resolves just those regions. Display-only changes (result unit, precision, unit system) re-format the region without recalculating dependents. Recalculation is incremental: changing an input in a 1 000-region worksheet evaluates only its dependency chain.
+
+**Numerics.** Values are kept at full double precision in SI base units; rounding happens only when a value is formatted for display. Checks (≤ < ≥ > = ≠) compare unrounded values with a relative tolerance of 8 ulp (`COMPARISON_RELATIVE_TOLERANCE` ≈ 1.8·10⁻¹⁵) and no absolute floor — enough to absorb unit-conversion representation error (300 mm = 0.30000000000000004 m), never an engineering tolerance: η = 1.0000001 against 1 fails although it displays as 1. Every intermediate result is checked: division by zero, results outside the real numbers (√ of a negative, log ≤ 0, asin(2), negative base with a non-integer power) and overflow are reported as errors, never as NaN/∞. Trigonometric functions take an angle unit (°, rad) or a dimensionless number in radians. Absolute temperatures in °C are affine: °C ± K → °C, °C − °C → K, while adding, scaling or applying functions to °C is rejected with an explanation.
 
 **Incremental.** A change re-evaluates only the edited region and its transitive dependents; each region subscribes to its own result, so unrelated regions don't re-render.
+
+**Rich-text and file safety.** Text from typing, pasting, the clipboard and imported files is rebuilt by an allow-list sanitiser (`sanitize.ts`): a new DOM tree is created containing only allowed tags (b, i, u, lists, headings, …) and a validated colour on `<font>`, at any nesting depth; script-like elements are dropped with their content. Clipboard shapes and imported documents go through the same validation (`sanitizeShape`), with numbers clamped to sane ranges and duplicate ids renamed rather than dropped.
 
 **Safety.** Expressions are untrusted input. There is no `eval` and no `math.evaluate` on strings: the parser builds a JSON tree and the evaluator calls a fixed set of mathjs functions on numbers and Unit objects. Input length, tree size, nesting depth and exponents are bounded, so evaluation is linear in expression size and cannot loop — which is why evaluation runs on the main thread rather than a worker for now.
 
@@ -101,13 +107,17 @@ python3 .claude/skills/ui-ux-pro-max/scripts/search.py "engineering calculation 
 
 ## Tests
 
-- **Unit (39)**: parser, units and dimension errors, display-unit conversion, symbol resolution, cycles, duplicates, drafts, beam sample values, serializer migrations.
-- **Browser (20)**: acceptance tests A–I plus canvas tests (text, undo/redo, clipboard, marquee, resize, zoom) — — free positioning and dragging, definitions/evaluations, dependent recalculation, position independence, mm→kN·m, unit mismatch, undefined/circular errors, type-to-create, persistence across reload, and the full demo flow including PDF generation.
+`npm test` (Vitest) and `npm run test:e2e` (Playwright; set `CHROME_PATH` to use a system Chrome).
+
+- **Engine**: parser, units and dimension errors, display units, symbol resolution, reading order (same row, defined below, moves, equal and very large coordinates, multiple pages), definition-level dependencies (independent redefinitions, deletion, insertion, chains, unrelated regions not re-evaluated), numerical safeguards (precision, strict checks, division by zero, domain errors, powers with units, temperatures, trigonometry), error messages and engineering reference values (bending, shear, deflection, utilisation).
+- **Performance** (`performance.test.ts`): 100 / 500 / 1 000 regions; asserts how many regions an edit or move re-evaluates and logs timings.
+- **Unit**: sanitiser (malicious input, deep nesting, formatting preserved), serializer (round trip of every shape type, migrations, duplicate ids, invalid numbers, unknown types), clipboard paste validation, canvas→engine synchronisation with the real stores (create, edit, move across pages, undo/redo, delete, load, display units), PDF page assignment.
+- **Browser**: acceptance tests A–I, canvas, Mathcad keys, page layout, grid, panels, templates, files, and pasting HTML into a text region.
 
 ## Known limitations
 
 - Default precision is 2 decimals (≥ 3 significant figures below 1), so V_Ed shows 121.13 kN; set 3 decimals to see 121.125.
-- PDF export uses the browser print dialog (vector output); multi-page is supported by stacking pages vertically. Pages don't yet repeat a title block template beyond the header/footer.
+- PDF export uses the browser print dialog (vector output); multi-page is supported by stacking pages vertically. Each object prints on the page that contains its top edge; anything extending past that page's edge is clipped (and flagged before printing).
 - Single-letter units typed bare (`8.5m`) render italic; multi-letter units render upright.
 - Variables are document-scoped; no local scopes, user-defined functions, matrices, ranges or iteration yet.
 - Text formatting uses the browser's contentEditable commands (bold, italic, underline, heading, lists); pasted HTML is reduced to a safe whitelist.

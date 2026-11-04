@@ -80,7 +80,7 @@ describe('Test B/C/D: definitions, dependencies, recalculation', () => {
   it('evaluates top to bottom like Mathcad: using a variable defined below is an error', () => {
     const e = setup({ r: 'M=', m: 'M\\coloneq\\frac{wL^2}{8}', w: 'w\\coloneq25kN/m', l: 'L\\coloneq8.5m' });
     expect(e.getResult('r')?.error?.code).toBe('defined-later');
-    expect(e.getResult('m')?.error?.message).toMatch(/w is defined below|L is defined below/);
+    expect(e.getResult('m')?.error?.message).toMatch(/Variable "(w|L)" is defined below this equation/);
   });
 
   it('follows moves: putting the definition above fixes the error', () => {
@@ -89,7 +89,7 @@ describe('Test B/C/D: definitions, dependencies, recalculation', () => {
       e.setRegion('m', { latex: 'M\\coloneq2f_1', order: 10 });
       e.setRegion('f', { latex: 'f_1\\coloneq3', order: 20 });
     });
-    expect(e.getResult('m')?.error?.message).toBe('f_1 is defined below this region. Move its definition above (calculations run top to bottom, left to right).');
+    expect(e.getResult('m')?.error?.message).toBe('Variable "f_1" is defined below this equation. Move its definition above it (calculations run top to bottom, left to right).');
     e.setRegion('f', { latex: 'f_1\\coloneq3', order: 5 });
     expect(num(e, 'm')).toBe(6);
   });
@@ -124,12 +124,12 @@ describe('Test F/G: units', () => {
 
   it('reports a unit mismatch on addition', () => {
     const e = setup({ a: 'A\\coloneq10m+5kN' });
-    expect(e.getResult('a')?.error?.message).toBe('Unit mismatch: Length cannot be added to Force.');
+    expect(e.getResult('a')?.error?.message).toBe('Unit mismatch: Force (kN) cannot be added to Length (m).');
   });
 
   it('names engineering dimensions (Length + Moment)', () => {
     const e = setup({ l: 'L\\coloneq8500mm', m: 'M\\coloneq250kN\\cdot m', r: 'R\\coloneq L+M' });
-    expect(e.getResult('r')?.error?.message).toContain('Length cannot be added to Moment');
+    expect(e.getResult('r')?.error?.message).toContain('Moment (kN·m) cannot be added to Length (m)');
   });
 
   it('supports imperial units and ksi', () => {
@@ -190,7 +190,7 @@ describe('symbol resolution', () => {
 describe('errors', () => {
   it('reports undefined variables', () => {
     const e = setup({ l: 'L\\coloneq8.5m', m: 'M\\coloneq\\frac{wL^2}{8}' });
-    expect(e.getResult('m')?.error?.message).toBe('Undefined variable: w');
+    expect(e.getResult('m')?.error?.message).toBe('Variable "w" has not been defined above this equation.');
   });
 
   it('detects circular dependencies without hanging', () => {

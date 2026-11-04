@@ -1,9 +1,10 @@
 /**
  * Reactive, position-independent calculation engine.
  *
- * Regions are registered by id with their LaTeX. The engine parses them,
- * maintains a name-based dependency graph and incrementally re-evaluates
- * only the regions affected by a change. Results are plain JSON objects
+ * Regions are registered by id with their LaTeX and a reading-order key.
+ * The engine parses them, resolves every referenced name to the exact
+ * defining region before it (Mathcad order), and incrementally re-evaluates
+ * only the regions that use a changed value. Results are plain JSON objects
  * (LaTeX strings, numbers) so UI layers can store them without holding
  * mathjs objects.
  *
@@ -11,8 +12,18 @@
  */
 import { CalculationError, isCalculationError, type CalculationErrorCode } from './CalculationErrors';
 import { DependencyGraph } from './DependencyGraph';
-import { BUILTIN_CONSTANTS, collectReferences, compareQuantities, evaluateExpr, type EvalContext } from './ExpressionEvaluator';
-import { statementExprs, type Expr, type Relation, type Statement } from './ExpressionTypes';
+import {
+  BUILTIN_CONSTANTS,
+  candidateNames,
+  collectReferences,
+  compareQuantities,
+  definedLaterMessage,
+  evaluateExpr,
+  undefinedMessage,
+  UndefinedNamesError,
+  type EvalContext,
+} from './ExpressionEvaluator';
+import { statementExprs, type Relation, type Statement } from './ExpressionTypes';
 import { exprToLatex, nameToLatex, RELATION_LATEX } from './LatexFormatter';
 import { parseLatex } from './LatexParser';
 import {
@@ -26,6 +37,36 @@ import {
   type UnitSystemName,
 } from './UnitSystem';
 
+/**
+ * Reading-order key of a region. Keys are compared lexicographically
+ * element by element (numbers numerically, strings by code unit; a number
+ * sorts before a string, a shorter key before its extensions). The canvas
+ * passes [page, y, x, id]: top to bottom, then left to right, with the id
+ * as a deterministic tie-break. The engine itself knows nothing about
+ * geometry – it only compares keys.
+ */
+export type OrderKey = readonly (number | string)[];
+
+export function compareOrderKeys(a: OrderKey, b: OrderKey): number {
+  const n = Math.min(a.length, b.length);
+  for (let i = 0; i < n; i++) {
+    const x = a[i];
+    const y = b[i];
+    if (x === y) continue;
+    if (typeof x === 'number' && typeof y === 'number') return x < y ? -1 : 1;
+    if (typeof x === 'number') return -1;
+    if (typeof y === 'number') return 1;
+    return x < y ? -1 : 1;
+  }
+  return a.length - b.length;
+}
+
+export function orderKeysEqual(a: OrderKey | undefined, b: OrderKey | undefined): boolean {
+  if (a === b) return true;
+  if (!a || !b || a.length !== b.length) return false;
+  return compareOrderKeys(a, b) === 0;
+}
+
 export interface RegionInput {
   latex: string;
   /** Optional display unit, e.g. "kN·mm". */
@@ -38,12 +79,13 @@ export interface RegionInput {
    */
   draft?: boolean;
   /**
-   * Reading-order rank on the worksheet (page, then top-to-bottom,
-   * left-to-right). As in Mathcad, a region can only use definitions that
-   * come before it, and uses the nearest such definition when a name is
-   * defined more than once. Defaults to creation order.
+   * Reading-order position on the worksheet (Mathcad order). A region can
+   * only use definitions that come before it, and uses the nearest such
+   * definition when a name is defined more than once. Either a key compared
+   * lexicographically (see OrderKey) or a plain number. Defaults to creation
+   * order.
    */
-  order?: number;
+  order?: number | OrderKey;
 }
 
 export interface EngineSettings {
@@ -84,9 +126,12 @@ export interface CalculationResult {
 
 interface RegionState {
   input: RegionInput;
+  key: OrderKey;
   statement: Statement | null;
   parseError: CalculationError | null;
   draftError: string | null;
+  /** Summary of how this region's names resolved last time (see resolve()). */
+  fingerprint: string;
 }
 
 class CycleSignal {
@@ -98,6 +143,9 @@ class CycleSignal {
 
 type Listener = (changedIds: string[]) => void;
 
+/** Decimal places accepted for display (toFixed allows 0–100; more is meaningless). */
+const MAX_DECIMALS = 12;
+
 export class CalculationEngine {
   private settings: EngineSettings;
   private regions = new Map<string, RegionState>();
@@ -106,12 +154,15 @@ export class CalculationEngine {
   private results = new Map<string, CalculationResult>();
   private listeners = new Set<Listener>();
   private batchDepth = 0;
-  private pendingIds = new Set<string>();
-  private pendingNames = new Set<string>();
-  private lastDefinedNames = new Set<string>();
-  /** A region moved: name resolution (what is "above") must be redone. */
-  private ordersChanged = false;
-  private created = new Map<string, number>();
+  /** Regions whose value may have changed: they and their dependents are recalculated. */
+  private pendingValue = new Set<string>();
+  /** Regions whose display only may have changed (units, precision, redefinition flag). */
+  private pendingFormat = new Set<string>();
+  /** Regions whose identifier resolution must be redone. */
+  private pendingResolve = new Set<string>();
+  /** Names whose set of definitions (or their order) changed. */
+  private touchedNames = new Set<string>();
+  private removedIds = new Set<string>();
   private createdCounter = 0;
 
   constructor(settings: Partial<EngineSettings> = {}) {
@@ -150,37 +201,37 @@ export class CalculationEngine {
 
   setSettings(settings: Partial<EngineSettings>): void {
     this.settings = { ...this.settings, ...settings };
-    for (const id of this.regions.keys()) this.pendingIds.add(id);
+    // Unit system and precision only change how values are displayed.
+    for (const id of this.regions.keys()) this.pendingFormat.add(id);
     if (this.batchDepth === 0) this.flush();
   }
 
-  /** Effective reading-order rank of a region. */
-  private rank(id: string): number {
-    return this.regions.get(id)?.input.order ?? this.created.get(id) ?? 0;
-  }
-
-  /** Variable names a region references, resolved against definitions above it. */
-  private refsFor(id: string, exprs: Expr[]): Set<string> {
-    const at = this.rank(id);
-    return collectReferences(exprs, { isDefined: (n) => this.definerBefore(n, at) !== undefined });
+  private keyOf(id: string): OrderKey {
+    return this.regions.get(id)?.key ?? [];
   }
 
   /**
-   * The definition of `name` that a region at reading rank `at` uses: the
-   * nearest one before it (Mathcad top-to-bottom, left-to-right).
+   * The definition of `name` that a region at reading position `at` uses:
+   * the nearest one before it (Mathcad top-to-bottom, left-to-right).
    */
-  private definerBefore(name: string, at: number): string | undefined {
+  private definerBefore(name: string, at: OrderKey): string | undefined {
     let best: string | undefined;
+    let bestKey: OrderKey | undefined;
     for (const id of this.graph.definers(name)) {
-      const r = this.rank(id);
-      if (r < at && (best === undefined || r > this.rank(best))) best = id;
+      const k = this.keyOf(id);
+      if (compareOrderKeys(k, at) < 0 && (bestKey === undefined || compareOrderKeys(k, bestKey) > 0)) {
+        best = id;
+        bestKey = k;
+      }
     }
     return best;
   }
 
   setRegion(id: string, input: RegionInput): void {
     const prev = this.regions.get(id);
-    if (!this.created.has(id)) this.created.set(id, this.createdCounter++);
+    const key = normalizeKey(input.order, prev?.key ?? [this.createdCounter++]);
+    const moved = !!prev && !orderKeysEqual(prev.key, key);
+
     if (
       prev &&
       prev.input.latex === input.latex &&
@@ -188,13 +239,10 @@ export class CalculationEngine {
       prev.input.precision === input.precision &&
       !!prev.input.draft === !!input.draft
     ) {
-      if (prev.input.order !== input.order) {
-        // Moved: what it can see, and who can see it, may have changed.
+      if (moved) {
         prev.input = input;
-        this.ordersChanged = true;
-        const name = this.graph.definesOf(id);
-        if (name) this.pendingNames.add(name);
-        this.pendingIds.add(id);
+        prev.key = key;
+        this.noteMoved(id);
         if (this.batchDepth === 0) this.flush();
       }
       return;
@@ -216,40 +264,54 @@ export class CalculationEngine {
       parseError = null;
     }
 
+    // Same text and same parse outcome: only the display (unit, precision) changed.
     const formattingOnly =
-      prev && prev.input.latex === input.latex && !!prev.statement === !!statement && prev.parseError === null && parseError === null;
+      !!prev &&
+      prev.input.latex === input.latex &&
+      prev.parseError === null &&
+      parseError === null &&
+      (prev.draftError === null) === (draftError === null);
+    if (formattingOnly) statement = prev.statement;
 
-    this.regions.set(id, { input, statement, parseError, draftError });
+    this.regions.set(id, { input, key, statement, parseError, draftError, fingerprint: prev?.fingerprint ?? '' });
 
-    const oldName = this.graph.definesOf(id);
-    const newName = statement?.kind === 'definition' ? statement.name : undefined;
-    if (!formattingOnly || oldName !== newName) {
-      const exprs = statement ? statementExprs(statement) : [];
-      // Refs are resolved against the definition set *after* this change.
-      this.graph.setNode(id, newName, new Set());
-      this.graph.setRefs(id, this.refsFor(id, exprs));
-      if (oldName) this.pendingNames.add(oldName);
-      if (newName) this.pendingNames.add(newName);
-      // A definition appeared/disappeared: what other regions "see above" may change.
-      if (oldName !== newName || !prev) this.ordersChanged = true;
+    if (formattingOnly) {
+      this.pendingFormat.add(id);
+      if (moved) this.noteMoved(id);
+    } else {
+      const oldName = this.graph.definesOf(id);
+      const newName = statement?.kind === 'definition' ? statement.name : undefined;
+      this.graph.setDefinition(id, newName);
+      if (oldName !== newName || moved) {
+        if (oldName) this.touchedNames.add(oldName);
+        if (newName) this.touchedNames.add(newName);
+      }
+      this.pendingResolve.add(id);
+      this.pendingValue.add(id);
     }
-    this.pendingIds.add(id);
     if (this.batchDepth === 0) this.flush();
+  }
+
+  /** A region moved: it and everything that resolves its name must be re-resolved. */
+  private noteMoved(id: string): void {
+    this.pendingResolve.add(id);
+    const name = this.graph.definesOf(id);
+    if (name) this.touchedNames.add(name);
   }
 
   removeRegion(id: string): void {
     if (!this.regions.has(id)) return;
     const name = this.graph.definesOf(id);
+    for (const d of this.graph.dependents(id)) this.pendingResolve.add(d);
     this.regions.delete(id);
     this.graph.removeNode(id);
     this.results.delete(id);
     this.values.delete(id);
-    this.created.delete(id);
-    if (name) {
-      this.pendingNames.add(name);
-      this.ordersChanged = true;
-    }
-    this.pendingIds.add(id);
+    this.pendingValue.delete(id);
+    this.pendingFormat.delete(id);
+    this.pendingResolve.delete(id);
+    if (name) this.touchedNames.add(name);
+    this.removedIds.add(id);
     if (this.batchDepth === 0) this.flush();
   }
 
@@ -259,43 +321,73 @@ export class CalculationEngine {
     this.graph = new DependencyGraph();
     this.values.clear();
     this.results.clear();
-    this.lastDefinedNames = new Set();
-    this.created = new Map();
+    this.pendingValue.clear();
+    this.pendingFormat.clear();
+    this.pendingResolve.clear();
+    this.touchedNames.clear();
+    this.removedIds.clear();
     this.emit(ids);
   }
 
   // -- recalculation ----------------------------------------------------------
 
-  private flush(): void {
-    if (this.pendingIds.size === 0 && this.pendingNames.size === 0) return;
-    const seeds = new Set(this.pendingIds);
-    const names = new Set(this.pendingNames);
-    this.pendingIds.clear();
-    this.pendingNames.clear();
-
-    // If the set of defined names changed, identifier resolution may change
-    // anywhere (e.g. "wL" splits differently once "wL" is defined).
-    const defined = this.graph.definedNames();
-    if (!sameSet(defined, this.lastDefinedNames) || this.ordersChanged) {
-      this.ordersChanged = false;
-      for (const id of this.graph.ids()) {
-        const st = this.regions.get(id)?.statement;
-        const refs = st ? this.refsFor(id, statementExprs(st)) : new Set<string>();
-        // Unresolved names may now resolve, or now be "defined below": re-check.
-        const code = this.results.get(id)?.error?.code;
-        if (code === 'undefined-variable' || code === 'defined-later') seeds.add(id);
-        if (!sameSet(refs, this.graph.refsOf(id))) {
-          this.graph.setRefs(id, refs);
-          seeds.add(id);
-        }
-      }
-      this.lastDefinedNames = defined;
+  /**
+   * Resolve a region's identifiers against the definitions before it and
+   * store the edges (name → defining region). Returns true if anything that
+   * affects its value or error message changed.
+   */
+  private resolve(id: string): boolean {
+    const region = this.regions.get(id);
+    if (!region) return false;
+    const exprs = region.statement && !region.parseError ? statementExprs(region.statement) : [];
+    const at = region.key;
+    const candidates = candidateNames(exprs);
+    const refs = collectReferences(exprs, { isDefined: (n) => this.definerBefore(n, at) !== undefined });
+    const deps = new Map<string, string>();
+    for (const n of refs) deps.set(n, this.definerBefore(n, at)!);
+    this.graph.setResolution(id, deps, candidates);
+    // Everything resolution depends on: which definer each candidate name
+    // uses, and whether a name exists only further down (error message).
+    const parts: string[] = [];
+    for (const n of [...candidates].sort()) {
+      parts.push(`${n}\u0000${this.definerBefore(n, at) ?? ''}\u0000${this.graph.isDefined(n) ? 1 : 0}`);
     }
+    const fingerprint = parts.join('\u0001');
+    if (fingerprint === region.fingerprint) return false;
+    region.fingerprint = fingerprint;
+    return true;
+  }
 
-    const dirty = this.graph.affected(
-      [...seeds].filter((id) => this.regions.has(id)),
-      names,
-    );
+  private flush(): void {
+    if (
+      this.pendingValue.size === 0 &&
+      this.pendingFormat.size === 0 &&
+      this.pendingResolve.size === 0 &&
+      this.touchedNames.size === 0 &&
+      this.removedIds.size === 0
+    ) {
+      return;
+    }
+    // 1. Definitions of these names appeared, disappeared or moved: every
+    //    region that could resolve one of them is re-resolved, and every
+    //    definer of them re-checks its "redefines" flag.
+    for (const name of this.touchedNames) {
+      for (const w of this.graph.watchers(name)) this.pendingResolve.add(w);
+      for (const d of this.graph.definers(name)) this.pendingFormat.add(d);
+    }
+    this.touchedNames.clear();
+
+    // 2. Re-resolve; a region whose resolution changed must be recalculated.
+    for (const id of this.pendingResolve) if (this.resolve(id)) this.pendingValue.add(id);
+    this.pendingResolve.clear();
+
+    // 3. Recalculate the changed regions and everything that uses their values.
+    const dirty = this.graph.affected([...this.pendingValue].filter((id) => this.regions.has(id)));
+    for (const id of this.pendingFormat) if (this.regions.has(id)) dirty.add(id);
+    this.pendingValue.clear();
+    this.pendingFormat.clear();
+    const removed = [...this.removedIds];
+    this.removedIds.clear();
 
     const pass = new Map<string, CalculationResult>();
     for (const id of dirty) this.values.delete(id);
@@ -303,11 +395,18 @@ export class CalculationEngine {
       try {
         this.evaluateRegion(id, [], dirty, pass);
       } catch (e) {
-        if (!(e instanceof CycleSignal)) throw e;
+        if (e instanceof CycleSignal) continue;
+        // Never let an unexpected failure break recalculation of the rest.
+        pass.set(id, {
+          status: 'error',
+          kind: this.regions.get(id)?.statement?.kind ?? 'invalid',
+          references: [...this.graph.refsOf(id)],
+          warnings: [],
+          error: { code: 'evaluation', message: `Calculation failed: ${e instanceof Error ? e.message : String(e)}` },
+        });
       }
     }
     for (const [id, r] of pass) this.results.set(id, r);
-    const removed = [...seeds].filter((id) => !this.regions.has(id));
     this.emit([...new Set([...pass.keys(), ...removed])]);
   }
 
@@ -319,6 +418,8 @@ export class CalculationEngine {
   /**
    * Evaluate one region (memoised per pass). Cycles are reported through a
    * CycleSignal that unwinds the stack until the node that closes the loop.
+   * (With strict reading order a region only uses definitions before it, so
+   * cycles cannot normally form; this is a safety net.)
    */
   private evaluateRegion(
     id: string,
@@ -387,10 +488,11 @@ export class CalculationEngine {
       error: { code, message },
     });
 
+    const myKey = region.key;
     // Definition-level checks.
     if (statement.kind === 'definition') {
       const definers = this.graph.definers(statement.name);
-      if (definers.length > 1 && this.definerBefore(statement.name, this.rank(id)) !== undefined) {
+      if (definers.length > 1 && this.definerBefore(statement.name, myKey) !== undefined) {
         base.redefines = { name: statement.name, count: definers.length };
       }
       if (statement.name in BUILTIN_CONSTANTS) {
@@ -403,34 +505,25 @@ export class CalculationEngine {
       }
     }
 
-    // Resolve dependencies first (may throw CycleSignal).
-    const myRank = this.rank(id);
-    const uses = new Map<string, string>();
-    for (const name of this.graph.refsOf(id)) {
-      const definer = this.definerBefore(name, myRank);
-      if (!definer) {
-        if (this.graph.definers(name).length) {
-          return fail('defined-later', `${name} is defined below this region. Move its definition above (calculations run top to bottom, left to right).`);
-        }
-        return fail('undefined-variable', `Undefined variable: ${name}`);
-      }
-      uses.set(name, definer);
+    // Evaluate the exact definitions this region uses first (may throw CycleSignal).
+    const uses = this.graph.depsOf(id);
+    for (const [name, definer] of uses) {
       const dep = this.evaluateRegion(definer, stack, dirty, pass);
       if (dep.status !== 'valid') {
-        return fail('dependency-error', `${name} cannot be evaluated (${dep.error?.message ?? 'no value'}).`);
+        return fail('dependency-error', `"${name}" cannot be evaluated: ${dep.error?.message ?? 'it has no value.'}`);
       }
     }
 
     const ctx: EvalContext = {
-      isDefined: (n) => this.definerBefore(n, myRank) !== undefined,
+      isDefined: (n) => uses.has(n) || this.definerBefore(n, myKey) !== undefined,
       getValue: (n) => {
-        const v = this.values.get(uses.get(n) ?? this.definerBefore(n, myRank) ?? '');
-        if (v === undefined) throw new CalculationError('undefined-variable', `Undefined variable: ${n}`);
+        const v = this.values.get(uses.get(n) ?? this.definerBefore(n, myKey) ?? '');
+        if (v === undefined) throw new CalculationError('undefined-variable', undefinedMessage([n]));
         return v;
       },
     };
 
-    const decimals = region.input.precision ?? this.settings.precision;
+    const decimals = clampDecimals(region.input.precision ?? this.settings.precision);
     let targetUnit: string | null = null;
     if (region.input.displayUnit) {
       try {
@@ -493,10 +586,16 @@ export class CalculationEngine {
       if (isCalculationError(e)) {
         // A name that exists only below this region: say so (Mathcad order).
         if (e.code === 'undefined-variable') {
-          const names = e.message.replace(/^Undefined variables?:\s*/, '').split(/,\s*/);
+          const names = e instanceof UndefinedNamesError ? e.names : [];
           // also look inside letter runs ("wL" → w, L)
-          const below = names.flatMap((n) => [n, ...n.split('')]).find((n) => this.graph.definers(n).length > 0);
-          if (below) return fail('defined-later', `${below} is defined below this region. Move its definition above (calculations run top to bottom, left to right).`);
+          const below = names.flatMap((n) => [n, ...n.split('')]).find((n) => this.graph.isDefined(n));
+          if (below) {
+            const onlySelf = this.graph.definers(below).every((d) => d === id);
+            return fail(
+              'defined-later',
+              onlySelf ? `Variable "${below}" is used in its own definition but has no value above this equation.` : definedLaterMessage(below),
+            );
+          }
         }
         return fail(e.code, e.message);
       }
@@ -504,6 +603,17 @@ export class CalculationEngine {
       return fail('evaluation', e instanceof Error ? e.message : 'Calculation failed.');
     }
   }
+}
+
+function normalizeKey(order: number | OrderKey | undefined, fallback: OrderKey): OrderKey {
+  const clean = (v: number | string) => (typeof v === 'number' && !Number.isFinite(v) ? 0 : v);
+  if (Array.isArray(order)) return (order as (number | string)[]).map(clean);
+  if (typeof order === 'number') return [clean(order)];
+  return fallback;
+}
+
+function clampDecimals(d: number): number {
+  return Number.isFinite(d) ? Math.min(MAX_DECIMALS, Math.max(0, Math.round(d))) : 2;
 }
 
 function preferredUnitOf(f: FormattedQuantity): string | null {
@@ -514,10 +624,4 @@ function preferredUnitOf(f: FormattedQuantity): string | null {
   } catch {
     return null;
   }
-}
-
-function sameSet(a: Set<string>, b: Set<string>): boolean {
-  if (a.size !== b.size) return false;
-  for (const x of a) if (!b.has(x)) return false;
-  return true;
 }

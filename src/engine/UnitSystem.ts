@@ -151,6 +151,18 @@ function describeBaseDims(u: Unit): string {
     .join('·');
 }
 
+/**
+ * True for an absolute temperature on an offset scale (°C). Such values are
+ * affine: they can be shifted by a difference (K) or subtracted from each
+ * other, but not added, scaled or used in functions. Kelvin values are
+ * treated as plain (linear) quantities.
+ */
+export function isAbsoluteTemperature(q: unknown): boolean {
+  if (!isUnit(q)) return false;
+  const units = (q as unknown as { units: { unit: { offset?: number } }[] }).units;
+  return units.some((u) => (u.unit.offset ?? 0) !== 0);
+}
+
 /** Value of a quantity in SI base units (mathjs internal representation). */
 export function siValue(q: Quantity): number {
   if (!isUnit(q)) return q;
@@ -289,6 +301,9 @@ export function formatQuantity(
   let unitStr = '';
   if (opts.targetUnit) {
     const target = math.unit(opts.targetUnit);
+    if (isAbsoluteTemperature(target) && !isAbsoluteTemperature(q)) {
+      throw new Error('A temperature difference or Kelvin value cannot be shown in °C. Use K.');
+    }
     if (!isUnit(q)) {
       if (!isDimensionless(target)) {
         throw new Error(`Cannot display a dimensionless value in ${opts.targetUnit}.`);
@@ -301,6 +316,10 @@ export function formatQuantity(
       number = q.toNumber(opts.targetUnit);
     }
     unitStr = opts.targetUnit;
+  } else if (isAbsoluteTemperature(q)) {
+    // Absolute temperatures stay on the scale they were entered in.
+    number = (q as Unit).toNumber('degC');
+    unitStr = 'degC';
   } else if (isUnit(q)) {
     const pref = preferredUnit(q, opts.system);
     if (pref) {
