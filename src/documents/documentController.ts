@@ -150,6 +150,15 @@ export async function openDocument(id: string): Promise<void> {
 }
 
 export async function initDocuments(): Promise<void> {
+  // ?template=<id> always starts a new worksheet from that template (link-friendly);
+  // the parameter is removed so a reload reopens the worksheet instead of creating another.
+  const asked = new URLSearchParams(window.location.search).get('template');
+  if (asked && templateById(asked as TemplateId)) {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('template');
+    window.history.replaceState(null, '', url);
+    return newDocument({ template: asked as TemplateId });
+  }
   try {
     const lastId = await DocumentManager.getLastOpenedId();
     const doc = lastId ? await DocumentManager.get(lastId) : null;
@@ -162,7 +171,12 @@ export async function initDocuments(): Promise<void> {
   } catch (e) {
     console.warn('Saved worksheets are unavailable here', e);
   }
-  await newDocument({ demo: true });
+  await newDocument({ template: firstRunTemplate() });
+}
+
+/** Worksheet for a first visit. */
+function firstRunTemplate(): TemplateId {
+  return 'rc-beam';
 }
 
 /** CalcCanvas worksheet file: the JSON document, saved with its own extension. */

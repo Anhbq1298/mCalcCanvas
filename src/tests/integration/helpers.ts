@@ -38,12 +38,13 @@ export async function waitReady(page: Page) {
   await expect(page.getByTestId('save-state')).toHaveText('Saved to this browser', { timeout: 10_000 });
 }
 
-export async function openFresh(page: Page) {
+/** Fresh profile; the tests are written against the steel beam sample. */
+export async function openFresh(page: Page, template = 'steel-beam') {
   await page.addInitScript(() => {
     // window.print would block headless runs; PDF is produced with page.pdf().
     window.print = () => {};
   });
-  await page.goto('/');
+  await page.goto(`/?template=${template}`);
   await waitReady(page);
 }
 

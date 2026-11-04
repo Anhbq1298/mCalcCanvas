@@ -139,6 +139,11 @@ test.describe('Outline (navigation pane)', () => {
 });
 
 test.describe('Templates', () => {
+  test('RC beam template is the default on a first visit', async ({ page }) => {
+    await openFresh(page, '');
+    await expect(page.getByLabel('Worksheet title')).toHaveValue('RC Beam Bending Design');
+  });
+
   test('RC beam template: two pages, outline, all regions calculate, checks pass', async ({ page }) => {
     await openFresh(page);
     await page.getByRole('menuitem', { name: 'File' }).click();
