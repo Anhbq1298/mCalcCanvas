@@ -7,7 +7,7 @@ import { loadShapes, orderedShapes, updateShapes, useCanvasStore } from '../canv
 import { pageSize } from '../export/pageGeometry';
 import { useAppStore } from '../store/appStore';
 import { engine } from '../store/calculationStore';
-import { demoWorksheetShapes } from './demoWorksheet';
+import { templateById, type TemplateId } from './templates';
 import { DocumentManager } from './DocumentManager';
 import { parseDocument, serializeDocument } from './DocumentSerializer';
 import { DEFAULT_SETTINGS, DOCUMENT_VERSION, type CalculationDocument } from './DocumentTypes';
@@ -121,17 +121,18 @@ export function loadDocument(doc: CalculationDocument): void {
   void DocumentManager.setLastOpenedId(doc.id).catch(() => {});
 }
 
-export async function newDocument(opts: { demo?: boolean } = {}): Promise<void> {
+export async function newDocument(opts: { demo?: boolean; template?: TemplateId } = {}): Promise<void> {
+  const tpl = templateById(opts.template ?? (opts.demo ? 'steel-beam' : 'blank'));
   withoutAutosave(() => {
     useAppStore.getState().setDocument({
       id: newId(),
-      title: opts.demo ? 'Simply Supported Steel Beam Calculation' : 'Untitled calculation',
-      metadata: opts.demo ? { project: 'Demonstration project', calculationReference: 'CALC-001', preparedBy: '', checkedBy: '', revision: 'A' } : {},
+      title: tpl?.title ?? 'Untitled calculation',
+      metadata: tpl ? { ...tpl.metadata } : {},
       settings: DEFAULT_SETTINGS,
       createdAt: new Date().toISOString(),
     });
     applySettings();
-    loadShapes(opts.demo ? demoWorksheetShapes() : []);
+    loadShapes(tpl ? tpl.shapes() : []);
     resyncAll();
     focusFirstPage();
   });

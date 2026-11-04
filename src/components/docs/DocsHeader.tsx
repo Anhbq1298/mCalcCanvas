@@ -33,6 +33,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { addHeading, setParagraphStyle } from '../../canvas/headings';
+import { TEMPLATES } from '../../documents/templates';
 import { useState, type ReactNode } from 'react';
 import { commands, type ToolId } from '../../app/commands';
 import { viewport, zoomAt } from '../../canvas/canvasActions';
@@ -316,7 +317,9 @@ export function DocsHeader() {
   const menus: Record<string, MenuEntry[]> = {
     File: [
       { label: 'New worksheet', onSelect: () => void commands.newWorksheet(false) },
-      { label: 'New from steel beam sample', onSelect: () => void commands.newWorksheet(true) },
+      { type: 'heading', label: 'New from template' },
+      ...TEMPLATES.map((t) => ({ label: t.name, onSelect: () => void commands.newFromTemplate(t.id) })),
+      { type: 'separator' },
       { label: 'Open…', shortcut: `${MOD}O`, onSelect: commands.open },
       { label: 'Save', shortcut: `${MOD}S`, onSelect: () => void commands.save() },
       { type: 'separator' },

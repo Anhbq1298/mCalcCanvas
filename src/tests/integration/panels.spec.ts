@@ -137,3 +137,17 @@ test.describe('Outline (navigation pane)', () => {
     await expect(items).toHaveCount(7);
   });
 });
+
+test.describe('Templates', () => {
+  test('RC beam template: two pages, outline, all regions calculate, checks pass', async ({ page }) => {
+    await openFresh(page);
+    await page.getByRole('menuitem', { name: 'File' }).click();
+    await page.getByRole('menuitem', { name: /RC beam/ }).click();
+    await expect(page.getByLabel('Worksheet title')).toHaveValue('RC Beam Bending Design');
+    await resultOf(page, 'M_{Ed}\\coloneq').toContain('364.5');
+    await expect(page.locator('[data-testid=math-region][data-status=error]')).toHaveCount(0);
+    await expect(page.locator('[data-testid=page-sheet]')).toHaveCount(2);
+    await expect(page.getByTestId('outline-item')).toHaveCount(14);
+    await expect(page.getByTestId('check-badge').filter({ hasText: 'PASS' })).toHaveCount(3);
+  });
+});

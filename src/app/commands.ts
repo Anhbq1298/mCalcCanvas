@@ -27,6 +27,7 @@ import type { MathDisplayMode, ToolId } from '../canvas/model/types';
 import { exportJson, FILE_ACCEPT, importJson, newDocument, saveDocument, saveToFile } from '../documents/documentController';
 import { exportPdf } from '../export/PdfExporter';
 import { useAppStore } from '../store/appStore';
+import type { TemplateId } from '../documents/templates';
 
 function pickFile(accept: string): Promise<File | null> {
   return new Promise((resolve) => {
@@ -136,6 +137,9 @@ export const commands = {
   },
   async newWorksheet(demo = false) {
     await newDocument({ demo });
+  },
+  async newFromTemplate(template: TemplateId) {
+    await newDocument({ template });
   },
   open: () => useAppStore.getState().openDialog('open'),
   exportJson,
