@@ -47,18 +47,35 @@ export function definedLaterMessage(name: string): string {
 }
 
 /**
- * Comparison tolerance for checks (≤, <, ≥, >, =, ≠).
+ * How two values are compared in a check region.
  *
- * Values are compared in SI base units at full double precision. The only
- * tolerance is a few units in the last place, relative to the larger
- * magnitude: it absorbs representation error from unit conversion (e.g.
- * 300 mm is stored as 0.30000000000000004 m) and nothing else. There is no
- * absolute floor, so very small quantities (mm⁴ in m⁴) are compared just as
- * strictly, and a utilisation of 1.0000001 against a limit of 1 FAILS even
- * though it displays as 1.00. Equality (=, ≠) uses the same tolerance; no
- * engineering tolerance is ever applied implicitly.
+ * - `strict`: exact comparison of the full-precision values in SI base
+ *   units. Used for engineering acceptance checks (≤ < ≥ >): a utilisation
+ *   of 1.0000001, or even 1 + 2⁻⁵², against a limit of 1 FAILS. No
+ *   tolerance is ever applied implicitly. (Floating-point noise can
+ *   therefore only make a borderline check fail – the safe side – never
+ *   pass. Typical unit conversions such as 300 mm = 0.3 m are exact.)
+ * - `approximate`: |x − y| ≤ max(absoluteTolerance, relativeTolerance ·
+ *   max(|x|, |y|)). Used only for numerical equality (= and ≠), where exact
+ *   equality of computed reals is meaningless (0.1 + 0.2 = 0.3).
  */
-export const COMPARISON_RELATIVE_TOLERANCE = 8 * Number.EPSILON;
+export interface ComparisonPolicy {
+  mode: 'strict' | 'approximate';
+  relativeTolerance?: number;
+  absoluteTolerance?: number;
+}
+
+/** Engineering acceptance checks (≤ < ≥ >). */
+export const CHECK_POLICY: ComparisonPolicy = { mode: 'strict' };
+/** Numerical equality (= ≠): 12 significant digits. */
+export const EQUALITY_POLICY: ComparisonPolicy = { mode: 'approximate', relativeTolerance: 1e-12, absoluteTolerance: 0 };
+
+/** |x − y| within the policy's tolerance (strict: exactly equal). */
+export function withinTolerance(x: number, y: number, policy: ComparisonPolicy): boolean {
+  if (policy.mode === 'strict') return x === y;
+  const tol = Math.max(policy.absoluteTolerance ?? 0, (policy.relativeTolerance ?? 0) * Math.max(Math.abs(x), Math.abs(y)));
+  return Math.abs(x - y) <= tol;
+}
 
 export type Resolved =
   | { kind: 'var'; name: string }
@@ -418,30 +435,38 @@ function evalCall(fn: string, args: Quantity[]): Quantity {
 }
 
 /** Compare two quantities for a check region. */
-export function compareQuantities(a: Quantity, b: Quantity, op: string): boolean {
+export function compareQuantities(
+  a: Quantity,
+  b: Quantity,
+  op: string,
+  policies: { check?: ComparisonPolicy; equality?: ComparisonPolicy } = {},
+): boolean {
   if (dimensionKey(a) !== dimensionKey(b)) {
     throw new CalculationError(
       'unit-mismatch',
       `Unit mismatch: cannot compare ${describeQuantity(a)} with ${describeQuantity(b)}.`,
     );
   }
-  // Full precision, SI base units; see COMPARISON_RELATIVE_TOLERANCE.
+  // Full precision, SI base units; see ComparisonPolicy.
   const x = siValue(a);
   const y = siValue(b);
-  const eps = COMPARISON_RELATIVE_TOLERANCE * Math.max(Math.abs(x), Math.abs(y));
+  const check = policies.check ?? CHECK_POLICY;
+  const equality = policies.equality ?? EQUALITY_POLICY;
+  // A check is only relaxed if a caller explicitly passes an approximate policy.
+  const near = check.mode === 'approximate' && withinTolerance(x, y, check);
   switch (op) {
     case '<':
-      return x < y - eps;
+      return x < y && !near;
     case '<=':
-      return x <= y + eps;
+      return x <= y || near;
     case '>':
-      return x > y + eps;
+      return x > y && !near;
     case '>=':
-      return x >= y - eps;
+      return x >= y || near;
     case '==':
-      return Math.abs(x - y) <= eps;
+      return withinTolerance(x, y, equality);
     case '!=':
-      return Math.abs(x - y) > eps;
+      return !withinTolerance(x, y, equality);
   }
   return false;
 }

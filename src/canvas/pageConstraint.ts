@@ -93,9 +93,15 @@ export function gridPoint(p: Point): Point {
   return { x: o.x + Math.round((p.x - o.x) / GRID_SIZE) * GRID_SIZE, y: o.y + Math.round((p.y - o.y) / GRID_SIZE) * GRID_SIZE };
 }
 
-/** Nearest major horizontal line (every GRID_MAJOR px from the grid origin). */
+/** Vertical snap step for baselines: a major line (40 px) or, if chosen, every minor line (10 px). */
+export function baselineStep(): number {
+  return useAppStore.getState().settings.baselineSnap === 'minor' ? GRID_SIZE : GRID_MAJOR;
+}
+
+/** Nearest snap line (major lines, or minor lines when chosen) from the grid origin. */
 function nearestMajor(y: number, originY: number): number {
-  return originY + Math.round((y - originY) / GRID_MAJOR) * GRID_MAJOR;
+  const step = baselineStep();
+  return originY + Math.round((y - originY) / step) * step;
 }
 
 /** Insertion cross: x on the minor grid, y on the nearest major line (where the next baseline goes). */
@@ -144,8 +150,9 @@ export function gridAlign(s: Shape): Shape {
     const w = s.props.w;
     const h = s.props.h;
     while (x + w > box.x + box.w && x - GRID_SIZE >= box.x) x -= GRID_SIZE;
-    while (y + h > box.y + box.h && y - GRID_MAJOR >= box.y) y -= GRID_MAJOR;
-    while (y < box.y) y += GRID_MAJOR;
+    const step = baselineStep();
+    while (y + h > box.y + box.h && y - step >= box.y) y -= step;
+    while (y < box.y) y += step;
     x = Math.max(box.x, x);
   }
   return x === s.x && y === s.y ? s : ({ ...s, x, y } as Shape);

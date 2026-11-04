@@ -1,4 +1,5 @@
 import { setParagraphStyle } from './headings';
+import { baselineStep } from './pageConstraint';
 import { deleteLineAboveCrosshair, insertLineAtCrosshair, moveCrosshair } from './canvasActions';
 import type { HeadingLevel } from './model/types';
 import { useEffect } from 'react';
@@ -145,8 +146,8 @@ export function useCanvasKeyboard(): void {
           return;
         }
         const move: Record<string, [number, number]> = {
-          ArrowDown: [0, GRID_MAJOR],
-          ArrowUp: [0, -GRID_MAJOR],
+          ArrowDown: [0, baselineStep()],
+          ArrowUp: [0, -baselineStep()],
           ArrowRight: [GRID_SIZE, 0],
           ArrowLeft: [-GRID_SIZE, 0],
         };
@@ -167,7 +168,8 @@ export function useCanvasKeyboard(): void {
         // Math/text regions move one grid square sideways and one major line up/down (baselines sit on major lines).
         const onGrid = st.selection.some((id) => st.shapes[id]?.type === 'math' || st.shapes[id]?.type === 'text');
         const stepX = onGrid ? (e.shiftKey ? GRID_MAJOR : GRID_SIZE) : e.shiftKey ? 10 : 1;
-        const stepY = onGrid ? (e.shiftKey ? 2 * GRID_MAJOR : GRID_MAJOR) : e.shiftKey ? 10 : 1;
+        const line = baselineStep();
+        const stepY = onGrid ? (e.shiftKey ? GRID_MAJOR : line) : e.shiftKey ? 10 : 1;
         nudgeSelection(arrows[e.key][0] * stepX, arrows[e.key][1] * stepY);
         return;
       }

@@ -5,7 +5,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { CalculationEngine, compareOrderKeys, type OrderKey } from '../../engine';
-import { compareQuantities, COMPARISON_RELATIVE_TOLERANCE } from '../../engine/ExpressionEvaluator';
+import { CHECK_POLICY, compareQuantities, EQUALITY_POLICY } from '../../engine/ExpressionEvaluator';
 import { math } from '../../engine/UnitSystem';
 
 type Reg = [id: string, latex: string, order: number | OrderKey];
@@ -241,15 +241,24 @@ describe('5. numerical reliability', () => {
     expect(e.getResult('c')?.check?.leftValue.text).toBe('1');
   });
 
-  it('5.3 comparison tolerance is representation-level only, with no absolute floor', () => {
-    expect(COMPARISON_RELATIVE_TOLERANCE).toBeLessThan(1e-14);
-    // Small SI magnitudes are compared strictly (the old absolute 1e-12 floor passed this).
-    expect(compareQuantities(math.unit(0.5, 'mm^4') as never, math.unit(0.4, 'mm^4') as never, '<=')).toBe(false);
-    // Unit-conversion noise (300 mm → 0.30000000000000004 m) does not cause a false FAIL.
-    expect(compareQuantities(math.unit(300, 'mm') as never, math.unit(0.3, 'm') as never, '<=')).toBe(true);
+  it('5.3 checks are strict; only = / ≠ use an explicit tolerance', () => {
+    expect(CHECK_POLICY.mode).toBe('strict');
+    expect(EQUALITY_POLICY).toEqual({ mode: 'approximate', relativeTolerance: 1e-12, absoluteTolerance: 0 });
+    // No exceedance can pass, not even by one unit in the last place.
+    expect(compareQuantities(1 + Number.EPSILON, 1, '<=')).toBe(false);
     expect(compareQuantities(1 + 1e-12, 1, '<=')).toBe(false);
-    expect(compareQuantities(0.1 + 0.2, 0.3, '==')).toBe(true);
+    expect(compareQuantities(1, 1, '<=')).toBe(true);
     expect(compareQuantities(1, 1, '<')).toBe(false);
+    // Small SI magnitudes are compared just as strictly (no absolute floor).
+    expect(compareQuantities(math.unit(0.5, 'mm^4') as never, math.unit(0.4, 'mm^4') as never, '<=')).toBe(false);
+    // Typical unit conversions are exact.
+    expect(compareQuantities(math.unit(300, 'mm') as never, math.unit(0.3, 'm') as never, '<=')).toBe(true);
+    expect(compareQuantities(math.unit(355, 'MPa') as never, math.unit(0.355, 'GPa') as never, '>=')).toBe(true);
+    // Equality of computed reals is approximate, explicitly.
+    expect(compareQuantities(0.1 + 0.2, 0.3, '==')).toBe(true);
+    expect(compareQuantities(1, 1.000001, '==')).toBe(false);
+    // An approximate check policy must be asked for explicitly.
+    expect(compareQuantities(1 + 1e-13, 1, '<=', { check: { mode: 'approximate', relativeTolerance: 1e-12 } })).toBe(true);
   });
 
   it.each([
@@ -415,5 +424,49 @@ describe('11. engineering reference values', () => {
     ]);
     expect(value(e, 'c')).toBe(0.9);
     expect(e.getResult('d')?.check?.pass).toBe(true);
+  });
+
+  it('axial stiffness EA/L in kN/mm', () => {
+    const e = sheet([
+      ['E', 'E\\coloneq210\\,\\mathrm{GPa}', 1],
+      ['A', 'A\\coloneq5000\\,\\mathrm{mm}^2', 2],
+      ['L', 'L\\coloneq6\\,\\mathrm{m}', 3],
+      ['k', 'k\\coloneq\\frac{E\\cdot A}{L}', 4],
+    ]);
+    e.setRegion('k', { latex: 'k\\coloneq\\frac{E\\cdot A}{L}', order: 4, displayUnit: 'kN/mm' });
+    expect(value(e, 'k')).toBeCloseTo(175, 9); // 210e9·5e-3/6 = 175e6 N/m = 175 kN/mm
+  });
+
+  it('rotational stiffness EI/L per radian', () => {
+    const e = sheet([
+      ['E', 'E\\coloneq200\\,\\mathrm{GPa}', 1],
+      ['I', 'I\\coloneq450000000\\,\\mathrm{mm}^4', 2],
+      ['L', 'L\\coloneq8\\,\\mathrm{m}', 3],
+      ['k', 'k_{\\theta}\\coloneq\\frac{4E\\cdot I}{L\\cdot\\mathrm{rad}}', 4],
+    ]);
+    e.setRegion('k', { latex: 'k_{\\theta}\\coloneq\\frac{4E\\cdot I}{L\\cdot\\mathrm{rad}}', order: 4, displayUnit: 'kN·m/rad' });
+    expect(value(e, 'k')).toBeCloseTo(45000, 6); // 4·2e11·4.5e-4/8 = 4.5e7 N·m/rad
+  });
+
+  it('thermal expansion α·L·ΔT in mm', () => {
+    const e = sheet([
+      ['a', '\\alpha_{T}\\coloneq1.2\\cdot10^{-5}\\,\\frac{1}{\\mathrm{K}}', 1],
+      ['L', 'L\\coloneq30\\,\\mathrm{m}', 2],
+      ['T1', 'T_{1}\\coloneq10\\,\\mathrm{degC}', 3],
+      ['T2', 'T_{2}\\coloneq45\\,\\mathrm{degC}', 4],
+      ['d', '\\delta\\coloneq\\alpha_{T}\\cdot L\\cdot\\left(T_{2}-T_{1}\\right)', 5],
+    ]);
+    e.setRegion('d', { latex: '\\delta\\coloneq\\alpha_{T}\\cdot L\\cdot\\left(T_{2}-T_{1}\\right)', order: 5, displayUnit: 'mm' });
+    expect(e.getResult('d')?.value?.dimension).toBe('Length');
+    expect(value(e, 'd')).toBeCloseTo(12.6, 9); // 1.2e-5·30 m·35 K = 12.6 mm
+  });
+
+  it('stress N/A in MPa', () => {
+    const e = sheet([
+      ['N', 'N_{Ed}\\coloneq850\\,\\mathrm{kN}', 1],
+      ['A', 'A\\coloneq5000\\,\\mathrm{mm}^2', 2],
+      ['s', '\\sigma\\coloneq\\frac{N_{Ed}}{A}', 3],
+    ]);
+    expect(text(e, 's')).toBe('170 MPa');
   });
 });

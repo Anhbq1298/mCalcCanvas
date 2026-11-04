@@ -13,6 +13,7 @@ import {
   select,
   setCamera,
   startEditing,
+  transaction,
   updateShapes,
   useCanvasStore,
   type ShapePatch,
@@ -21,8 +22,9 @@ import { screenToPage, shapeBounds, snap, unionBounds } from './model/geometry';
 import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, type Point, type Shape } from './model/types';
 import { plainTextToHtml } from './sanitize';
 import { sanitizeShape } from '../documents/DocumentSerializer';
-import { baselineOf, clampDelta, clampPoint, clampShapesIntoPage, constrained, crossPoint, nextPrintableTop, nextWritingPoint, printableAt } from './pageConstraint';
-import { pageCount, printableBox } from '../export/pageGeometry';
+import { clampDelta, clampPoint, clampShapesIntoPage, constrained, crossPoint, nextPrintableTop, nextWritingPoint, printableAt } from './pageConstraint';
+import { pageCount } from '../export/pageGeometry';
+import { globalLine, lineOccupied, lineY, planLineShift, planSeparation, type LayoutPlan } from './layout';
 import { useAppStore } from '../store/appStore';
 
 const get = () => useCanvasStore.getState();
@@ -90,7 +92,7 @@ export function insertLineAtCrosshair(): void {
   const c = get().crosshair;
   if (!c) return;
   const g = globalLine(c.y);
-  shiftLinesFrom(g, +1);
+  transaction(() => applyLayout(planLineShift(get().shapes, g, +1)));
   setCross({ x: c.x, y: lineY(g + 1) });
 }
 
@@ -102,153 +104,32 @@ export function deleteLineAboveCrosshair(): boolean {
   const c = get().crosshair;
   if (!c) return false;
   const g = globalLine(c.y);
-  if (g <= 0) return false;
-  const above = lineY(g - 1);
-  const occupied = orderedShapes().some((s) => {
-    if (globalLine(anchorY(s)) === g - 1) return true;
-    const b = shapeBounds(s);
-    return b.y < above + 10 && b.y + b.h > above - 30;
-  });
-  if (occupied) return false;
-  shiftLinesFrom(g, -1);
-  setCross({ x: c.x, y: above });
+  if (g <= 0 || lineOccupied(get().shapes, g - 1)) return false;
+  transaction(() => applyLayout(planLineShift(get().shapes, g, -1)));
+  setCross({ x: c.x, y: lineY(g - 1) });
   return true;
 }
 
-// -- line model: major lines numbered continuously across pages ---------------
-
-/** The y a shape is "written on": its first baseline (math/text) or, for drawings, a baseline under its top. */
-function anchorY(s: Shape): number {
-  if (s.type === 'math' || s.type === 'text') return s.y + baselineOf(s);
-  return shapeBounds(s).y + 22;
-}
-
-/** Index of the major line nearest to y, counted across pages (page mode) or from the origin (free canvas). */
-function globalLine(y: number): number {
-  if (!constrained()) return Math.round(y / GRID_MAJOR);
-  const { stride, top, perPage } = pageLines();
-  const page = Math.max(0, Math.floor(y / stride));
-  const l = Math.min(perPage, Math.max(1, Math.round((y - page * stride - top) / GRID_MAJOR)));
-  return page * perPage + (l - 1);
-}
-
-/** y of a global line index (inverse of globalLine). */
-function lineY(g: number): number {
-  if (!constrained()) return g * GRID_MAJOR;
-  const { stride, top, perPage } = pageLines();
-  const page = Math.floor(g / perPage);
-  return page * stride + top + GRID_MAJOR * ((g % perPage) + 1);
-}
-
-function pageLines() {
-  const orientation = useAppStore.getState().settings.pageOrientation;
-  const p0 = printableBox(0, orientation);
-  const p1 = printableBox(1, orientation);
-  return { stride: p1.y - p0.y, top: p0.y, perPage: Math.floor(p0.h / GRID_MAJOR) };
-}
-
 /**
- * Move every shape written on line ≥ g by `delta` lines (one undo step).
- * Lines are handled in order; a line whose blocks would not fit above the
- * bottom margin of their page moves to the first line of the next page,
- * and every later line moves with it, so the reading order is kept.
+ * Keep regions from sitting on top of each other (see layout.planSeparation).
+ * Runs after a drop, after a region grows or re-aligns to its baseline, and
+ * when editing ends. The whole cascade is computed first and applied as one
+ * update; it joins the current undo step (layout follows the user's action).
  */
-function shiftLinesFrom(g: number, delta: number, opts: { history?: boolean; keep?: string } = {}): void {
-  const groups = new Map<number, Shape[]>();
-  for (const s of orderedShapes()) {
-    if (s.id === opts.keep) continue;
-    const line = globalLine(anchorY(s));
-    if (line < g) continue;
-    if (!groups.has(line)) groups.set(line, []);
-    groups.get(line)!.push(s);
-  }
-  if (!groups.size) return;
-  const { perPage } = pageLines();
+export function separateRegion(...ids: string[]): void {
+  const plan = planSeparation(get().shapes, ids);
+  if (plan.patches && Object.keys(plan.patches).length) applyLayout(plan, { history: false });
+}
+
+/** Apply a layout plan in one store update (adding pages if content was pushed past the last one). */
+function applyLayout(plan: LayoutPlan, opts: { history?: boolean } = {}): void {
+  if (!Object.keys(plan.patches).length) return;
+  if (plan.pagesNeeded > totalPagesNow()) useAppStore.getState().updateSettings({ pages: plan.pagesNeeded });
+  updateShapes(plan.patches, { history: opts.history });
+}
+
+function totalPagesNow(): number {
   const orientation = useAppStore.getState().settings.pageOrientation;
-  const patches: Record<string, ShapePatch> = {};
-  let extra = 0;
-  let lowest = 0;
-  for (const line of [...groups.keys()].sort((x, y) => x - y)) {
-    const list = groups.get(line)!;
-    let target = line + delta + extra;
-    if (constrained()) {
-      const fits = (t: number) => {
-        const page = Math.floor(t / perPage);
-        const bottom = printableBox(page, orientation);
-        const dy = lineY(t) - lineY(line);
-        return list.every((s) => {
-          const b = shapeBounds(s);
-          return b.y + dy >= bottom.y - 0.5 && b.y + dy + b.h <= bottom.y + bottom.h + 0.5;
-        });
-      };
-      if (!fits(target)) {
-        // Continue at the top of the next page (moving down), or stay put (moving up).
-        const bumped = delta > 0 ? (Math.floor(target / perPage) + 1) * perPage : line + extra;
-        extra += bumped - target;
-        target = bumped;
-      }
-    }
-    const dy = lineY(target) - lineY(line);
-    for (const s of list) {
-      if (dy) patches[s.id] = { y: s.y + dy };
-      lowest = Math.max(lowest, shapeBounds(s).y + dy + shapeBounds(s).h);
-    }
-  }
-  if (!Object.keys(patches).length) return;
-  // Pages needed for content pushed past the last page.
-  if (constrained()) {
-    const need = Math.floor(lowest / pageLines().stride) + 1;
-    if (need > totalPagesNow(orientation)) useAppStore.getState().updateSettings({ pages: need });
-  }
-  updateShapes(patches, { history: opts.history });
-}
-
-/** Overlap (px) tolerated between region boxes: their 4 px paddings may touch. */
-const OVERLAP_TOLERANCE = 8;
-
-/**
- * Keep regions from sitting on top of each other (Mathcad "separate
- * regions"). If the region overlaps an equation or text region, the one
- * later in reading order – and everything after it – moves down by whole
- * lines, so the layout and the calculation order are kept. Runs after a
- * region is dropped, grows, or is re-aligned to the grid.
- */
-export function separateRegion(id: string): void {
-  for (let guard = 0; guard < 20; guard++) {
-    const shapes = get().shapes;
-    const s = shapes[id];
-    if (!s || (s.type !== 'math' && s.type !== 'text')) return;
-    const a = shapeBounds(s);
-    let pushLine: number | null = null;
-    let need = 0;
-    let keep = '';
-    for (const o of orderedShapes()) {
-      if (o.id === id || (o.type !== 'math' && o.type !== 'text')) continue;
-      if (s.type !== 'math' && o.type !== 'math') continue; // text labels may overlap each other's boxes
-      const b = shapeBounds(o);
-      const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
-      const oy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
-      if (ox <= OVERLAP_TOLERANCE || oy <= OVERLAP_TOLERANCE) continue;
-      // The later one (reading order) moves down far enough to clear the earlier one.
-      const sFirst = anchorY(s) < anchorY(o) || (anchorY(s) === anchorY(o) && s.x <= o.x);
-      const [early, late] = sFirst ? [a, b] : [b, a];
-      const lateShape = sFirst ? o : s;
-      const earlyShape = sFirst ? s : o;
-      const lines = Math.ceil((early.y + early.h - OVERLAP_TOLERANCE - late.y) / GRID_MAJOR);
-      const line = globalLine(anchorY(lateShape));
-      if (lines > 0 && (pushLine === null || line < pushLine)) {
-        pushLine = line;
-        need = lines;
-        keep = earlyShape.id;
-      }
-    }
-    if (pushLine === null) return;
-    // The earlier region stays put even if it shares the line.
-    shiftLinesFrom(pushLine, need, { history: false, keep });
-  }
-}
-
-function totalPagesNow(orientation: 'portrait' | 'landscape'): number {
   return pageCount(orderedShapes(), orientation, useAppStore.getState().settings.pages);
 }
 

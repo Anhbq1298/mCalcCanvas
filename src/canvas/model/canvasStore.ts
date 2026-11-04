@@ -76,7 +76,25 @@ export function newShapeId(): string {
 // ---------------------------------------------------------------------------
 
 /** Record an undo point before a user change. */
+let transactionDepth = 0;
+
+/**
+ * Group several changes into one undo step: the state before the first
+ * change is recorded once, and changes inside do not add further entries.
+ * Nested transactions join the outer one.
+ */
+export function transaction<T>(fn: () => T): T {
+  if (transactionDepth === 0) markHistory();
+  transactionDepth++;
+  try {
+    return fn();
+  } finally {
+    transactionDepth--;
+  }
+}
+
 export function markHistory(): void {
+  if (transactionDepth > 0) return;
   const { shapes, order, undoStack } = get();
   const last = undoStack[undoStack.length - 1];
   if (last && last.shapes === shapes && last.order === order) return;

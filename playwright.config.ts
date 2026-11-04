@@ -9,7 +9,7 @@ export default defineConfig({
   timeout: 45_000,
   fullyParallel: false,
   workers: 1,
-  reporter: [['list']],
+  reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : [['list']],
   use: {
     ...devices['Desktop Chrome'],
     baseURL: 'http://localhost:4173',

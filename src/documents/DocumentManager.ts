@@ -1,6 +1,7 @@
 import { openDB, type DBSchema, type IDBPDatabase } from 'idb';
 import { parseDocument } from './DocumentSerializer';
 import type { CalculationDocument, DocumentSummary } from './DocumentTypes';
+import type { DocumentRepository } from './DocumentRepository';
 
 interface CalcDB extends DBSchema {
   documents: { key: string; value: CalculationDocument; indexes: { updatedAt: string } };
@@ -21,7 +22,7 @@ function db(): Promise<IDBPDatabase<CalcDB>> {
 }
 
 /** Local worksheet storage in IndexedDB. */
-export const DocumentManager = {
+export const DocumentManager: DocumentRepository = {
   async list(): Promise<DocumentSummary[]> {
     const all = await (await db()).getAll('documents');
     return all

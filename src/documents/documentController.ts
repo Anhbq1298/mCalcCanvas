@@ -1,7 +1,7 @@
 /**
  * Document lifecycle: new / open / save / autosave / JSON import & export.
  */
-import { focusPage } from '../canvas/canvasActions';
+import { focusPage, separateRegion } from '../canvas/canvasActions';
 import { resyncAll } from '../canvas/engineBridge';
 import { loadShapes, orderedShapes, updateShapes, useCanvasStore } from '../canvas/model/canvasStore';
 import { pageSize } from '../export/pageGeometry';
@@ -9,12 +9,12 @@ import { useAppStore } from '../store/appStore';
 import { engine } from '../store/calculationStore';
 import { templateById, type TemplateId } from './templates';
 import { DocumentManager } from './DocumentManager';
+import { SaveCoordinator } from './SaveCoordinator';
 import { parseDocument, serializeDocument } from './DocumentSerializer';
 import { DEFAULT_SETTINGS, DOCUMENT_VERSION, type CalculationDocument } from './DocumentTypes';
 
 let suppressAutosave = false;
 let storageWarningShown = false;
-let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
 function newId(): string {
   return typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `doc-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -45,31 +45,36 @@ export function currentDocument(): CalculationDocument {
   };
 }
 
-export async function saveDocument(): Promise<void> {
-  if (saveTimer) clearTimeout(saveTimer);
-  saveTimer = null;
-  useAppStore.getState().setSaveState('saving');
-  try {
-    const doc = currentDocument();
-    await DocumentManager.put(doc);
-    await DocumentManager.setLastOpenedId(doc.id);
+/** All saving goes through one coordinator: serialised, revision-checked (see SaveCoordinator). */
+export const saves = new SaveCoordinator({
+  repository: DocumentManager,
+  snapshot: () => currentDocument(),
+  onState: (state) => useAppStore.getState().setSaveState(state),
+  onSaved: (doc) => {
     if (!useAppStore.getState().documentId) useAppStore.setState({ documentId: doc.id });
-    useAppStore.getState().setSaveState('saved');
-  } catch (e) {
+  },
+  onError: (e) => {
     console.warn('Save failed', e);
-    useAppStore.getState().setSaveState('error');
     if (!storageWarningShown) {
       storageWarningShown = true;
-      useAppStore.getState().showToast('info', 'This view can’t save to browser storage. Use File → Export JSON to keep your work.');
+      useAppStore.getState().showToast('info', 'This view can’t save to browser storage. Use File → Save to file to keep your work.');
     }
-  }
+  },
+});
+
+/** Save now (Ctrl+S): writes the current revision after any save in progress. */
+export function saveDocument(): Promise<void> {
+  return saves.flush(true);
 }
 
 function scheduleSave() {
   if (suppressAutosave) return;
-  useAppStore.getState().setSaveState('dirty');
-  if (saveTimer) clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => void saveDocument(), 800);
+  saves.markDirty();
+}
+
+/** Before switching documents: write pending edits of the current one. */
+async function flushBeforeSwitch(): Promise<void> {
+  if (saves.dirty) await saves.flush();
 }
 
 export function startAutosave(): () => void {
@@ -78,18 +83,28 @@ export function startAutosave(): () => void {
   });
   const stopApp = useAppStore.subscribe((s, prev) => {
     if (s.settings !== prev.settings) applySettings();
-    if (s.settings.canvasMode !== prev.settings.canvasMode || s.settings.pageOrientation !== prev.settings.pageOrientation) {
+    if (
+      s.settings.canvasMode !== prev.settings.canvasMode ||
+      s.settings.pageOrientation !== prev.settings.pageOrientation ||
+      s.settings.baselineSnap !== prev.settings.baselineSnap
+    ) {
       // The grid origin moved: put math/text regions back on the grid.
       const { shapes } = useCanvasStore.getState();
       updateShapes(
         Object.fromEntries(Object.values(shapes).filter((sh) => sh.type === 'math' || sh.type === 'text').map((sh) => [sh.id, { x: sh.x, y: sh.y }])),
         { history: false },
       );
+      // Re-aligning can bring regions onto the same line: separate them.
+      separateRegion(...Object.values(useCanvasStore.getState().shapes).filter((sh) => sh.type === 'math').map((sh) => sh.id));
     }
     if (s.title !== prev.title || s.metadata !== prev.metadata || s.settings !== prev.settings) scheduleSave();
   });
-  const flush = () => {
-    if (useAppStore.getState().saveState === 'dirty') void saveDocument();
+  const flush = (e: BeforeUnloadEvent) => {
+    if (!saves.dirty) return;
+    void saves.flush();
+    // The write is asynchronous and may not finish before the page closes: ask the browser to warn.
+    e.preventDefault();
+    e.returnValue = '';
   };
   window.addEventListener('beforeunload', flush);
   return () => {
@@ -118,11 +133,13 @@ export function loadDocument(doc: CalculationDocument): void {
     resyncAll();
     focusFirstPage();
   });
+  saves.reset();
   void DocumentManager.setLastOpenedId(doc.id).catch(() => {});
 }
 
 export async function newDocument(opts: { demo?: boolean; template?: TemplateId } = {}): Promise<void> {
   const tpl = templateById(opts.template ?? (opts.demo ? 'steel-beam' : 'blank'));
+  await flushBeforeSwitch();
   withoutAutosave(() => {
     useAppStore.getState().setDocument({
       id: newId(),
@@ -136,11 +153,12 @@ export async function newDocument(opts: { demo?: boolean; template?: TemplateId 
     resyncAll();
     focusFirstPage();
   });
+  saves.reset();
   await saveDocument();
 }
 
 export async function openDocument(id: string): Promise<void> {
-  if (useAppStore.getState().saveState === 'dirty') await saveDocument();
+  await flushBeforeSwitch();
   const doc = await DocumentManager.get(id);
   if (!doc) {
     useAppStore.getState().showToast('error', 'That worksheet no longer exists.');
@@ -273,6 +291,7 @@ export async function importJson(file: File): Promise<void> {
       /* storage unavailable */
     }
     const doc = existing ? { ...parsed, id: newId() } : parsed;
+    await flushBeforeSwitch();
     loadDocument(doc);
     await saveDocument();
     useAppStore.getState().showToast('info', `Imported “${doc.title}”.`);

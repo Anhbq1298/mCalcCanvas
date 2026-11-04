@@ -290,6 +290,14 @@ function MathFormattingTab() {
       <Sep />
       <span className="px-1 text-[12px] text-docs-muted">Worksheet</span>
       <TBSelect
+        label="Equations and text snap their baseline to major lines (every 4 squares) or to every grid line"
+        testId="baseline-snap"
+        value={settings.baselineSnap ?? 'major'}
+        width={110}
+        onChange={(v) => useAppStore.getState().updateSettings({ baselineSnap: v as 'major' | 'minor' })}
+        options={[['major', 'Snap: lines'], ['minor', 'Snap: squares']]}
+      />
+      <TBSelect
         label="Unit system for results (whole worksheet)"
         testId="worksheet-units"
         value={settings.unitSystem}
@@ -516,6 +524,7 @@ export function DocsHeader() {
       { type: 'separator' },
       { label: 'Grid', checked: isGrid, onSelect: commands.toggleGrid },
       { label: 'Snap to grid', checked: isSnap, onSelect: commands.toggleSnap },
+      { label: 'Snap equations to minor grid lines', checked: settings.baselineSnap === 'minor', onSelect: () => updateSettings({ baselineSnap: settings.baselineSnap === 'minor' ? 'major' : 'minor' }) },
       { label: 'Header & footer', checked: settings.showHeaderFooter, onSelect: () => updateSettings({ showHeaderFooter: !settings.showHeaderFooter }) },
       { label: 'Outline', checked: paramsOpen && leftTab === 'outline', onSelect: () => showLeftTab('outline') },
       { label: 'Parameters', checked: paramsOpen && leftTab === 'params', onSelect: () => showLeftTab('params') },

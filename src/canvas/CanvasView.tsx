@@ -404,7 +404,7 @@ export function CanvasView() {
         }
         useCanvasStore.setState({ dragging: false, dropPreview: null });
         // Dropped onto another region: push the later one down instead of overlapping.
-        if (d.moved) for (const id of Object.keys(d.orig)) separateRegion(id);
+        if (d.moved) separateRegion(...Object.keys(d.orig));
         // A plain click on an already-selected shape narrows the selection to it.
         if (!d.moved && d.wasSelected && !d.shift) select([d.clickedId]);
         if (!d.moved && d.wasSelected && d.shift) select(st.selection.filter((id) => !expandGroups([d.clickedId]).includes(id)));

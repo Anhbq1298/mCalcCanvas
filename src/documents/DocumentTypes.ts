@@ -23,6 +23,8 @@ export interface DocumentSettings {
   showHeaderFooter: boolean;
   /** Default font for new text regions (one of TEXT_FONTS). */
   textFont: string;
+  /** Baselines snap to every major line (ruled paper, default) or to every minor grid line. */
+  baselineSnap?: 'major' | 'minor';
   /** Minimum number of pages (keeps inserted blank pages). */
   pages?: number;
 }
