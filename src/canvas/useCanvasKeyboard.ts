@@ -36,6 +36,16 @@ export function useCanvasKeyboard(): void {
     const onKeyDown = (e: KeyboardEvent) => {
       const mod = e.ctrlKey || e.metaKey;
       const key = e.key.toLowerCase();
+      if (mod && e.shiftKey && !e.altKey && key === 's') {
+        e.preventDefault();
+        void commands.saveToFile();
+        return;
+      }
+      if (mod && e.shiftKey && !e.altKey && key === 'o') {
+        e.preventDefault();
+        void commands.importJson();
+        return;
+      }
       if (mod && !e.altKey && key === 's') {
         e.preventDefault();
         void commands.save();

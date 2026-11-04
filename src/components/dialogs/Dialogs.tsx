@@ -1,4 +1,5 @@
-import { FileText, Trash2, X } from 'lucide-react';
+import { FileText, FolderOpen, Trash2, X } from 'lucide-react';
+import { commands } from '../../app/commands';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { DocumentManager } from '../../documents/DocumentManager';
 import { openDocument } from '../../documents/documentController';
@@ -39,6 +40,18 @@ function OpenDialog({ onClose }: { onClose(): void }) {
   useEffect(reload, []);
   return (
     <Modal title="Open worksheet" onClose={onClose}>
+      <button
+        type="button"
+        data-testid="open-file"
+        onClick={async () => {
+          onClose();
+          await commands.importJson();
+        }}
+        className="mb-3 flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-border text-[13px] font-medium text-[#0b57d0] transition-colors duration-150 hover:bg-muted"
+      >
+        <FolderOpen size={16} aria-hidden /> Open a file from your computer (.mCalcCanvas, .json)
+      </button>
+      <h3 className="mb-1 text-[12px] font-medium uppercase tracking-wide text-muted-foreground">Saved in this browser</h3>
       {docs === null ? (
         <p className="text-muted-foreground">Loading…</p>
       ) : docs.length === 0 ? (
@@ -113,7 +126,8 @@ const SHORTCUTS: [string, string][] = [
   ['Delete', 'Delete selection'],
   ['Arrow keys', 'Nudge (Shift = 10 px)'],
   ['Ctrl+Z / Ctrl+Y', 'Undo / redo'],
-  ['Ctrl+S / Ctrl+O', 'Save / open'],
+  ['Ctrl+S / Ctrl+O', 'Save / open (in this browser)'],
+  ['Ctrl+Shift+S / Ctrl+Shift+O', 'Save to / open a .mCalcCanvas file'],
   ['F9', 'Calculate all'],
   ['Ctrl+wheel / Space+drag', 'Zoom / pan'],
 ];
@@ -190,7 +204,7 @@ function AboutDialog({ onClose }: { onClose(): void }) {
     <Modal title="About CalcCanvas" onClose={onClose}>
       <p>An engineering calculation workspace: math regions with units, automatic recalculation and A4 report export.</p>
       <p className="mt-2 text-muted-foreground">
-        Built with its own canvas engine, MathLive and mathjs. Worksheets are stored locally in this browser (IndexedDB); use Export JSON for backups.
+        Built with its own canvas engine, MathLive and mathjs. Worksheets are stored locally in this browser (IndexedDB); use File → Save to file (.mCalcCanvas) to keep a copy or share it.
       </p>
     </Modal>
   );

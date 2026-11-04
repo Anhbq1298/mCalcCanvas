@@ -72,3 +72,25 @@ test.describe('Parameters panel', () => {
     await expect(dlg.getByTestId('guide-card')).toHaveCount(6);
   });
 });
+
+test.describe('.mCalcCanvas files', () => {
+  test('save to a .mCalcCanvas file and open it again', async ({ page }) => {
+    await page.addInitScript(() => {
+      delete (window as unknown as { showSaveFilePicker?: unknown }).showSaveFilePicker;
+    });
+    await openFresh(page);
+    const dl = page.waitForEvent('download');
+    await page.keyboard.press('Control+Shift+S');
+    const download = await dl;
+    expect(download.suggestedFilename()).toBe('Simply Supported Steel Beam Calculation.mCalcCanvas');
+    const path = await download.path();
+
+    await newBlankWorksheet(page, 'page');
+    await page.getByRole('menuitem', { name: 'File' }).click();
+    const chooser = page.waitForEvent('filechooser');
+    await page.getByRole('menuitem', { name: /Open file/ }).click();
+    await (await chooser).setFiles({ name: 'beam.mCalcCanvas', mimeType: '', buffer: await (await import('node:fs/promises')).readFile(path!) });
+    await resultOf(page, 'M_{Ed}').toContain('257.39');
+    expect((await region(page, 'L\\coloneq'))?.latex).toBe('L\\coloneq8.5\\,\\mathrm{m}');
+  });
+});

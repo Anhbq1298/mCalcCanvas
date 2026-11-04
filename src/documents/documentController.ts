@@ -164,19 +164,64 @@ export async function initDocuments(): Promise<void> {
   await newDocument({ demo: true });
 }
 
-function slug(s: string): string {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'calculation';
+/** CalcCanvas worksheet file: the JSON document, saved with its own extension. */
+export const FILE_EXT = '.mCalcCanvas';
+export const FILE_ACCEPT = '.mCalcCanvas,.mcalccanvas,.json,application/json';
+
+export function isWorksheetFile(f: File): boolean {
+  return /\.(mcalccanvas|json)$/i.test(f.name) || f.type === 'application/json';
 }
 
-export function exportJson(): void {
-  const doc = currentDocument();
-  const blob = new Blob([serializeDocument(doc)], { type: 'application/json' });
+function fileBaseName(title: string): string {
+  return title.trim().replace(/[\\/:*?"<>|]+/g, '-').replace(/\s+/g, ' ').slice(0, 120) || 'calculation';
+}
+
+type SavePicker = (o: { suggestedName: string; types: { description: string; accept: Record<string, string[]> }[] }) => Promise<{
+  createWritable(): Promise<{ write(d: Blob): Promise<void>; close(): Promise<void> }>;
+}>;
+
+function downloadBlob(blob: Blob, name: string): void {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${slug(doc.title)}.calccanvas.json`;
+  a.download = name;
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/**
+ * Save the worksheet to a .mCalcCanvas file on the user's computer. Uses the
+ * browser's "Save as" dialog where available (Chrome/Edge), else a download.
+ * Returns false if the user cancelled.
+ */
+export async function saveToFile(format: 'mcalc' | 'json' = 'mcalc'): Promise<boolean> {
+  const doc = currentDocument();
+  const blob = new Blob([serializeDocument(doc)], { type: 'application/json' });
+  const name = fileBaseName(doc.title) + (format === 'json' ? '.json' : FILE_EXT);
+  const picker = (window as unknown as { showSaveFilePicker?: SavePicker }).showSaveFilePicker;
+  if (picker && window.self === window.top) {
+    try {
+      const handle = await picker({
+        suggestedName: name,
+        types: [format === 'json' ? { description: 'JSON', accept: { 'application/json': ['.json'] } } : { description: 'CalcCanvas worksheet', accept: { 'application/json': [FILE_EXT] } }],
+      });
+      const w = await handle.createWritable();
+      await w.write(blob);
+      await w.close();
+      useAppStore.getState().showToast('info', `Saved “${name}”.`);
+      return true;
+    } catch (e) {
+      if (e instanceof DOMException && e.name === 'AbortError') return false;
+      /* picker unavailable (e.g. sandboxed): fall back to a download */
+    }
+  }
+  downloadBlob(blob, name);
+  return true;
+}
+
+/** Kept for existing callers: JSON download. */
+export function exportJson(): void {
+  void saveToFile('json');
 }
 
 export async function importJson(file: File): Promise<void> {

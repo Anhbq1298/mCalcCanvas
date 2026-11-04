@@ -38,7 +38,8 @@ The interface follows Google Docs: menus and one toolbar, white A4 pages with an
 - **Checks**: `eta_M <= 1` (or Ctrl+9) shows the value with a PASS/FAIL badge.
 - Text regions: font (Inter, Arial, Segoe UI, Calibri, Times New Roman, Georgia, Cambria, Courier New), size, alignment, bold/italic/underline/heading/lists, and any colour (swatches, picker or hex) for the whole text or just the selection.
 - Drag, resize, marquee select, copy/paste (incl. screenshots), drag-and-drop images, duplicate (`Ctrl+D`), group (`Ctrl+G` on regions), undo/redo, arrow-key nudge, `Ctrl+wheel` zoom, wheel or `Space`+drag pan.
-- **Document** tab: page/free canvas, grid, header & footer, orientation, zoom, export PDF/JSON. Double-click the header to edit the worksheet details.
+- **Files**: worksheets auto-save in the browser (IndexedDB). **File → Save to file** (`Ctrl+Shift+S`) writes a `.mCalcCanvas` file (plain JSON, schema-versioned) to share or back up; **File → Open file** (`Ctrl+Shift+O`), the Open dialog, or dragging the file onto the page loads it again. `.json` works too.
+- **Document** tab: page/free canvas, grid, header & footer, orientation, zoom, export PDF. Double-click the header to edit the worksheet details.
 
 ## Architecture
 

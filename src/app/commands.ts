@@ -24,7 +24,7 @@ import { resyncAll } from '../canvas/engineBridge';
 import { pasteShapes } from '../canvas/canvasActions';
 import { redo, selectAll, setCamera, setTool, stopEditing, undo, updateShapes, useCanvasStore } from '../canvas/model/canvasStore';
 import type { MathDisplayMode, ToolId } from '../canvas/model/types';
-import { exportJson, importJson, newDocument, saveDocument } from '../documents/documentController';
+import { exportJson, FILE_ACCEPT, importJson, newDocument, saveDocument, saveToFile } from '../documents/documentController';
 import { exportPdf } from '../export/PdfExporter';
 import { useAppStore } from '../store/appStore';
 
@@ -139,8 +139,9 @@ export const commands = {
   },
   open: () => useAppStore.getState().openDialog('open'),
   exportJson,
+  saveToFile: () => saveToFile('mcalc'),
   async importJson() {
-    const file = await pickFile('application/json,.json');
+    const file = await pickFile(FILE_ACCEPT);
     if (file) await importJson(file);
   },
   exportPdf: () => exportPdf(),
