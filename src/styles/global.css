@@ -224,6 +224,13 @@ body {
   color: var(--math-color, var(--color-foreground));
   line-height: 1.3;
 }
+/* Tailwind's preflight gives every element "border: 0 solid". MathLive's
+   static radical draws a high-contrast fallback line as an ::after border
+   that is meant to stay invisible (no border style); with the preflight it
+   shows as a second, misplaced bar over √. Restore the browser default. */
+.ML__latex .ML__sqrt-line::after {
+  border-style: none;
+}
 .math-baseline {
   display: inline-block;
 }
