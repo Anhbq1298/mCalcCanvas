@@ -1,4 +1,5 @@
 import { setParagraphStyle } from './headings';
+import { moveCrosshair } from './canvasActions';
 import type { HeadingLevel } from './model/types';
 import { useEffect } from 'react';
 import { commands } from '../app/commands';
@@ -17,7 +18,7 @@ import {
   nudgeSelection,
   ungroupSelection,
 } from './canvasActions';
-import { redo, select, selectAll, setTool, undo, useCanvasStore } from './model/canvasStore';
+import { GRID_MAJOR, GRID_SIZE, redo, select, selectAll, setTool, undo, useCanvasStore } from './model/canvasStore';
 
 function isTypingTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
@@ -130,6 +131,23 @@ export function useCanvasKeyboard(): void {
         else select([]);
         return;
       }
+      // Mathcad: with the + cross on the page (nothing selected), Enter moves it down one line and
+      // the arrow keys move it (one major line up/down, one grid square sideways).
+      if (st.crosshair && st.selection.length === 0 && !e.altKey && !(e.ctrlKey || e.metaKey)) {
+        const move: Record<string, [number, number]> = {
+          Enter: [0, GRID_MAJOR],
+          ArrowDown: [0, GRID_MAJOR],
+          ArrowUp: [0, -GRID_MAJOR],
+          ArrowRight: [GRID_SIZE, 0],
+          ArrowLeft: [-GRID_SIZE, 0],
+        };
+        const d = move[e.key];
+        if (d) {
+          e.preventDefault();
+          moveCrosshair(d[0] * (e.shiftKey && e.key !== 'Enter' ? 4 : 1), d[1]);
+          return;
+        }
+      }
       if (e.key === 'Enter' && beginEditSelected()) {
         e.preventDefault();
         return;
@@ -137,10 +155,11 @@ export function useCanvasKeyboard(): void {
       const arrows: Record<string, [number, number]> = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
       if (arrows[e.key] && st.selection.length) {
         e.preventDefault();
-        // Math/text regions move one grid square at a time (they always sit on the grid).
+        // Math/text regions move one grid square sideways and one major line up/down (baselines sit on major lines).
         const onGrid = st.selection.some((id) => st.shapes[id]?.type === 'math' || st.shapes[id]?.type === 'text');
-        const step = onGrid ? (e.shiftKey ? 50 : 10) : e.shiftKey ? 10 : 1;
-        nudgeSelection(arrows[e.key][0] * step, arrows[e.key][1] * step);
+        const stepX = onGrid ? (e.shiftKey ? GRID_MAJOR : GRID_SIZE) : e.shiftKey ? 10 : 1;
+        const stepY = onGrid ? (e.shiftKey ? 2 * GRID_MAJOR : GRID_MAJOR) : e.shiftKey ? 10 : 1;
+        nudgeSelection(arrows[e.key][0] * stepX, arrows[e.key][1] * stepY);
         return;
       }
       // Mathcad: a double quote on empty space starts a text region.

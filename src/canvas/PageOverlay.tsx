@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { PageChrome } from '../export/PageChrome';
 import { PAGE_MARGIN, PAGE_MARGIN_V, pageBox, pageCount, shapesOutsidePrintArea } from '../export/pageGeometry';
 import { useAppStore } from '../store/appStore';
-import { orderedShapes, useCanvasStore } from './model/canvasStore';
+import { GRID_MAJOR, GRID_SIZE, orderedShapes, useCanvasStore } from './model/canvasStore';
 import { shapeBounds } from './model/geometry';
 
 /** A4 sheets, margins and out-of-print-area markers (Page Layout mode). */
@@ -47,11 +47,11 @@ export function PageOverlay() {
                 top: PAGE_MARGIN_V,
                 bottom: PAGE_MARGIN_V,
                 outline: isGrid ? '1px solid var(--grid-major)' : undefined,
-                // Engineering pad: 10 px minor / 50 px major squares inside the print area.
+                // Engineering pad: 10 px minor / 40 px major (4 × 4) squares inside the print area.
                 backgroundImage: isGrid
                   ? 'linear-gradient(var(--grid-major) 1px, transparent 1px), linear-gradient(90deg, var(--grid-major) 1px, transparent 1px), linear-gradient(var(--grid-minor) 1px, transparent 1px), linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px)'
                   : undefined,
-                backgroundSize: isGrid ? '50px 50px, 50px 50px, 10px 10px, 10px 10px' : undefined,
+                backgroundSize: isGrid ? `${GRID_MAJOR}px ${GRID_MAJOR}px, ${GRID_MAJOR}px ${GRID_MAJOR}px, ${GRID_SIZE}px ${GRID_SIZE}px, ${GRID_SIZE}px ${GRID_SIZE}px` : undefined,
               }}
             />
             <MarginMarks />

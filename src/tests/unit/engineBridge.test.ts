@@ -80,7 +80,7 @@ describe('engine bridge', () => {
     addShapes([math('L', 100, 100, 'L\\coloneq2\\,\\mathrm{m}'), math('A', 100, 200, 'A\\coloneq L^2')]);
     const seen: string[] = [];
     const off = engine.subscribe((ids) => seen.push(...ids));
-    updateShapes({ L: { props: { w: 300, h: 40, fontSize: 22, color: '#ff0000' } } });
+    updateShapes({ L: { props: { w: 300, h: 40, color: '#ff0000' } } });
     expect(seen).toEqual([]);
     updateShapes({ L: { props: { displayUnit: 'mm' } } });
     expect(seen).toEqual(['L']);

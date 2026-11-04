@@ -3,7 +3,7 @@
  * the margins) area of an A4 page — like typing in a Google Docs page.
  * Free canvas mode has no limits.
  */
-import { GRID_SIZE, orderedShapes, setPositionNormalizer, updateShapes, useCanvasStore, type ShapePatch } from './model/canvasStore';
+import { GRID_MAJOR, GRID_SIZE, orderedShapes, setPositionNormalizer, updateShapes, useCanvasStore, type ShapePatch } from './model/canvasStore';
 import { shapeBounds, unionBounds } from './model/geometry';
 import type { Box, Point, Shape } from './model/types';
 import { PAGE_GAP, pageCount, pageSize, printableBox } from '../export/pageGeometry';
@@ -93,18 +93,60 @@ export function gridPoint(p: Point): Point {
   return { x: o.x + Math.round((p.x - o.x) / GRID_SIZE) * GRID_SIZE, y: o.y + Math.round((p.y - o.y) / GRID_SIZE) * GRID_SIZE };
 }
 
-/** Math and text regions always sit on a grid point, inside the margins. */
+/** Nearest major horizontal line (every GRID_MAJOR px from the grid origin). */
+function nearestMajor(y: number, originY: number): number {
+  return originY + Math.round((y - originY) / GRID_MAJOR) * GRID_MAJOR;
+}
+
+/** Insertion cross: x on the minor grid, y on the nearest major line (where the next baseline goes). */
+export function crossPoint(p: Point): Point {
+  const o = gridOrigin(p);
+  return { x: gridPoint(p).x, y: nearestMajor(p.y, o.y) };
+}
+
+/** Top of the writable area of the page after the one containing y (null if that page doesn't exist yet). */
+export function nextPrintableTop(y: number): number | null {
+  const stride = pageSize(orientation()).h + PAGE_GAP;
+  const next = Math.floor(y / stride) + 1;
+  if (next >= pageCount(orderedShapes(), orientation(), useAppStore.getState().settings.pages)) return null;
+  return printableBox(next, orientation()).y;
+}
+
+/** First major line at or below y (for placing the cross under a region). */
+export function majorLineAtOrBelow(y: number): number {
+  const o = gridOrigin({ x: 0, y });
+  return o.y + Math.ceil((y - o.y) / GRID_MAJOR) * GRID_MAJOR;
+}
+
+/**
+ * Distance from a region's top to its first baseline. Math regions report a
+ * measured value (props.baseline); otherwise it is estimated from the font
+ * size (text: line-height 1.45, ascent ≈ 0.97 em).
+ */
+export function baselineOf(s: Shape): number {
+  if (s.type === 'math') return s.props.baseline ?? 4 + s.props.fontSize;
+  if (s.type === 'text') return Math.round(s.props.fontSize * 1.09);
+  return 0;
+}
+
+/**
+ * Math and text regions sit like writing on ruled paper: x on the minor
+ * grid, and the first baseline on a major line, inside the margins.
+ */
 export function gridAlign(s: Shape): Shape {
   if (s.type !== 'math' && s.type !== 'text') return s;
-  let { x, y } = gridPoint(s);
+  const b = baselineOf(s);
+  const o = gridOrigin(s);
+  let x = gridPoint(s).x;
+  let y = Math.round(nearestMajor(s.y + b, o.y) - b);
   if (constrained()) {
     const box = printableBox(pageIndexAt(s.y), orientation());
     const w = s.props.w;
     const h = s.props.h;
     while (x + w > box.x + box.w && x - GRID_SIZE >= box.x) x -= GRID_SIZE;
-    while (y + h > box.y + box.h && y - GRID_SIZE >= box.y) y -= GRID_SIZE;
+    while (y + h > box.y + box.h && y - GRID_MAJOR >= box.y) y -= GRID_MAJOR;
+    while (y < box.y) y += GRID_MAJOR;
     x = Math.max(box.x, x);
-    y = Math.max(box.y, y);
   }
   return x === s.x && y === s.y ? s : ({ ...s, x, y } as Shape);
 }

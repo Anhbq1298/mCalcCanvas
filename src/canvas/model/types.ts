@@ -19,6 +19,8 @@ export interface MathProps {
   autoSize: boolean;
   fontSize: number;
   color: string;
+  /** Measured distance from the region top to the equation baseline (px), kept so the baseline sits on a major grid line. */
+  baseline?: number;
 }
 
 export type TextAlign = 'left' | 'center' | 'right';

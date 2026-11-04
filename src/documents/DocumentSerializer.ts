@@ -89,6 +89,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           autoSize: p.autoSize !== false,
           fontSize: Math.min(64, Math.max(8, num(p.fontSize, 18))),
           color: color(p.color, '#0f172a'),
+          ...(typeof p.baseline === 'number' && Number.isFinite(p.baseline) ? { baseline: bounded(p.baseline, 20, 1, 2000) } : {}),
         },
       };
     }

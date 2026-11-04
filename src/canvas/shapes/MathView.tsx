@@ -6,6 +6,7 @@ import { MathRenderer } from '../../math/MathRenderer';
 import { useRegionResult } from '../../store/calculationStore';
 import { select, stopEditing, updateShape, useCanvasStore } from '../model/canvasStore';
 import type { MathShape } from '../model/types';
+import { majorLineAtOrBelow } from '../pageConstraint';
 
 const PAD_X = 6;
 const PAD_Y = 4;
@@ -14,6 +15,7 @@ const PAD_Y = 4;
 export function MathView({ shape, editing, isStatic }: { shape: MathShape; editing: boolean; isStatic: boolean }) {
   const result = useRegionResult(shape.id);
   const contentRef = useRef<HTMLDivElement>(null);
+  const probeRef = useRef<HTMLSpanElement>(null);
   const { latex, displayMode, autoSize, fontSize, color, w, h } = shape.props;
   const display = useMemo(() => buildDisplay(latex, result, displayMode), [latex, result, displayMode]);
 
@@ -25,15 +27,24 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     const fit = () => {
       const nw = Math.max(24, Math.ceil(el.offsetWidth));
       const nh = Math.max(20, Math.ceil(el.offsetHeight));
-      if (Math.abs(nw - shape.props.w) > 1 || Math.abs(nh - shape.props.h) > 1) {
-        updateShape(shape.id, { props: { w: nw, h: nh } }, { history: false });
+      const patch: { w?: number; h?: number; baseline?: number } = {};
+      if (Math.abs(nw - shape.props.w) > 1 || Math.abs(nh - shape.props.h) > 1) Object.assign(patch, { w: nw, h: nh });
+      // Baseline of the rendered equation (not while typing, so the region doesn't jump):
+      // it is placed on a major grid line, like writing on ruled paper.
+      const probe = probeRef.current;
+      if (probe && !editing) {
+        const r = el.getBoundingClientRect();
+        const scale = el.offsetHeight ? r.height / el.offsetHeight : 1;
+        const b = Math.round((probe.getBoundingClientRect().bottom - r.top) / (scale || 1));
+        if (b > 0 && b !== shape.props.baseline) patch.baseline = b;
       }
+      if (Object.keys(patch).length) updateShape(shape.id, { props: patch }, { history: false });
     };
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [shape.id, shape.props.w, shape.props.h, autoSize, isStatic]);
+  }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, autoSize, isStatic, editing, display.latex]);
 
   const onChange = useCallback((next: string) => updateShape(shape.id, { props: { latex: next } }, { history: false }), [shape.id]);
   const onExit = useCallback(
@@ -44,7 +55,8 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         const s = useCanvasStore.getState().shapes[shape.id];
         const bottom = s ? s.y + (s.type === 'math' ? s.props.h : 0) : 0;
         select([]);
-        if (s) useCanvasStore.setState({ crosshair: { x: s.x, y: bottom + 30 } });
+        // Next major line with room for a one-line equation above it.
+        if (s) useCanvasStore.setState({ crosshair: { x: s.x, y: majorLineAtOrBelow(bottom + 26) } });
       }
     },
     [shape.id],
@@ -88,7 +100,10 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
           <span className="math-placeholder">Empty region</span>
         ) : (
           <div className="flex items-center gap-2">
-            <MathRenderer latex={display.latex} />
+            <span className="math-baseline">
+              <MathRenderer latex={display.latex} />
+              <span ref={probeRef} className="baseline-probe" aria-hidden />
+            </span>
             {display.check && (
               <span
                 data-testid="check-badge"

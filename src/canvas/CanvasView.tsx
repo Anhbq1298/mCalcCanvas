@@ -25,10 +25,11 @@ import {
   updateShape,
   updateShapes,
   useCanvasStore,
+  GRID_MAJOR_EVERY,
   type ShapePatch,
 } from './model/canvasStore';
 import { boxFromPoints, boxesIntersect, screenToPage, shapeBounds, unionBounds } from './model/geometry';
-import { clampDelta, clampPoint, gridAlign, gridPoint, printableAt } from './pageConstraint';
+import { clampDelta, clampPoint, crossPoint, gridAlign, printableAt } from './pageConstraint';
 import type { Box, Camera, Point, Shape } from './model/types';
 import { ShapeView } from './shapes/ShapeView';
 
@@ -261,7 +262,7 @@ export function CanvasView() {
           const base = e.shiftKey ? st.selection : [];
           if (!e.shiftKey) select([]);
           // The insertion cross only lands on the writable (white) part of a page.
-          useCanvasStore.setState({ crosshair: printableAt(p) ? gridPoint(p) : null });
+          useCanvasStore.setState({ crosshair: printableAt(p) ? crossPoint(p) : null });
           drag.current = { kind: 'marquee', start: p, base };
         }
         return;
@@ -485,7 +486,7 @@ export function CanvasView() {
             : isGrid && gridPx >= 4
             ? 'linear-gradient(var(--grid-major) 1px, transparent 1px), linear-gradient(90deg, var(--grid-major) 1px, transparent 1px), linear-gradient(var(--grid-minor) 1px, transparent 1px), linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px)'
             : undefined,
-        backgroundSize: canvasMode === 'page' ? undefined : isGrid ? `${gridPx * 5}px ${gridPx * 5}px, ${gridPx * 5}px ${gridPx * 5}px, ${gridPx}px ${gridPx}px, ${gridPx}px ${gridPx}px` : undefined,
+        backgroundSize: canvasMode === 'page' ? undefined : isGrid ? `${gridPx * GRID_MAJOR_EVERY}px ${gridPx * GRID_MAJOR_EVERY}px, ${gridPx * GRID_MAJOR_EVERY}px ${gridPx * GRID_MAJOR_EVERY}px, ${gridPx}px ${gridPx}px, ${gridPx}px ${gridPx}px` : undefined,
         backgroundPosition: canvasMode === 'page' ? undefined : isGrid ? `${-camera.x * camera.z}px ${-camera.y * camera.z}px` : undefined,
       }}
       onPointerDown={onPointerDown}

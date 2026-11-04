@@ -5,6 +5,7 @@ import {
   addShapes,
   deleteShapes,
   expandGroups,
+  GRID_MAJOR,
   GRID_SIZE,
   markHistory,
   newShapeId,
@@ -20,7 +21,7 @@ import { screenToPage, shapeBounds, snap, unionBounds } from './model/geometry';
 import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, type Point, type Shape } from './model/types';
 import { plainTextToHtml } from './sanitize';
 import { sanitizeShape } from '../documents/DocumentSerializer';
-import { clampDelta, clampShapesIntoPage, constrained, nextWritingPoint, printableAt } from './pageConstraint';
+import { clampDelta, clampPoint, clampShapesIntoPage, constrained, crossPoint, nextPrintableTop, nextWritingPoint, printableAt } from './pageConstraint';
 import { useAppStore } from '../store/appStore';
 
 const get = () => useCanvasStore.getState();
@@ -47,6 +48,31 @@ export function insertionPoint(): Point {
   if (constrained()) return nextWritingPoint(viewportCenter());
   const c = viewportCenter();
   return { x: c.x - 40, y: c.y - 14 };
+}
+
+/** Move the + insertion cross, keeping it on the writable page area (it may continue onto the next page). */
+export function moveCrosshair(dx: number, dy: number): void {
+  const c = get().crosshair;
+  if (!c) return;
+  let next = crossPoint({ x: c.x + dx, y: c.y + dy });
+  if (constrained() && !printableAt(next)) {
+    if (dy > 0) {
+      // Past the bottom margin: first line of the next page.
+      const after = nextPrintableTop(next.y);
+      if (after === null) return;
+      next = crossPoint({ x: next.x, y: after + GRID_MAJOR });
+    } else if (dy < 0) {
+      return;
+    } else {
+      next = crossPoint(clampPoint(next));
+    }
+  }
+  useCanvasStore.setState({ crosshair: next });
+  const cam = get().camera;
+  const top = cam.y + 40 / cam.z;
+  const bottom = cam.y + (viewport.h - 60) / cam.z;
+  if (next.y > bottom) setCamera({ ...cam, y: next.y - (viewport.h - 120) / cam.z });
+  else if (next.y < top) setCamera({ ...cam, y: next.y - 80 / cam.z });
 }
 
 export function createMathRegion(point: Point, latex = ''): string {
@@ -148,10 +174,13 @@ export async function cutSelection(): Promise<void> {
   deleteShapes(get().selection);
 }
 
-function cloneShapes(list: Shape[], offset: number): Shape[] {
+function cloneShapes(list: Shape[], times: number): Shape[] {
   const groupMap = new Map<string, string>();
+  // Offset copies by two minor squares sideways and one major line down, so they stay on the ruled lines.
+  const dx = GRID_SIZE * 2 * times;
+  const dy = GRID_MAJOR * times;
   return list.map((s) => {
-    const clone: Shape = { ...s, id: newShapeId(), x: s.x + offset, y: s.y + offset } as Shape;
+    const clone: Shape = { ...s, id: newShapeId(), x: s.x + dx, y: s.y + dy } as Shape;
     if (s.groupId) {
       if (!groupMap.has(s.groupId)) groupMap.set(s.groupId, newShapeId());
       clone.groupId = groupMap.get(s.groupId);
@@ -163,7 +192,7 @@ function cloneShapes(list: Shape[], offset: number): Shape[] {
 export function pasteShapes(list: Shape[] = internalClipboard): void {
   if (!list.length) return;
   pasteCount++;
-  const clones = cloneShapes(list, GRID_SIZE * 2 * pasteCount);
+  const clones = cloneShapes(list, pasteCount);
   addShapes(clones, { select: true });
   clampShapesIntoPage(clones.map((s) => s.id));
 }
@@ -207,7 +236,7 @@ export function handlePasteData(data: DataTransfer | null): boolean {
 export function duplicateSelection(): void {
   const shapes = selectedShapes();
   if (!shapes.length) return;
-  const clones = cloneShapes(shapes, GRID_SIZE * 2);
+  const clones = cloneShapes(shapes, 1);
   addShapes(clones, { select: true });
   clampShapesIntoPage(clones.map((s) => s.id));
 }

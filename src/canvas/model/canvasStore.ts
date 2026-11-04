@@ -63,6 +63,9 @@ export function setPositionNormalizer(fn: (s: Shape) => Shape): void {
   normalizePosition = fn;
 }
 export const GRID_SIZE = 10;
+/** Major grid lines every 4 minor squares (40 px). Math and text sit with their baseline on a major line. */
+export const GRID_MAJOR_EVERY = 4;
+export const GRID_MAJOR = GRID_SIZE * GRID_MAJOR_EVERY;
 
 export function newShapeId(): string {
   return `s_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
@@ -149,7 +152,9 @@ export function updateShapes(patches: Record<string, ShapePatch>, opts: ChangeOp
       const prev = shapes[id];
       const p = patches[id];
       let next = { ...prev, ...p, props: p.props ? { ...prev.props, ...p.props } : prev.props } as Shape;
-      if (('x' in p || 'y' in p) && !opts.raw) next = normalizePosition(next);
+      // Re-align on moves, and when a change shifts the text baseline (font size, measured baseline).
+      const shiftsBaseline = !!p.props && ('fontSize' in p.props || 'baseline' in p.props);
+      if (('x' in p || 'y' in p || shiftsBaseline) && !opts.raw) next = normalizePosition(next);
       if ('groupId' in p && p.groupId === undefined) delete (next as { groupId?: string }).groupId;
       shapes[id] = next;
     }
