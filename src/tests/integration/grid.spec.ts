@@ -125,3 +125,35 @@ test.describe('moving regions', () => {
     await expect(page.locator('math-field')).toHaveCount(1); // still editing
   });
 });
+
+test.describe('lines like a document', () => {
+  test('Enter at the + cross pushes the blocks below down one line; Backspace pulls them back', async ({ page }) => {
+    await openFresh(page);
+    await newBlankWorksheet(page, 'page');
+    const at = async (y: number) => {
+      const p = await pageToScreen(page, 76 + 30, y - 10);
+      await page.mouse.click(p.x, p.y);
+    };
+    await at(100);
+    await page.keyboard.type('a:1', { delay: 15 });
+    await page.keyboard.press('Escape');
+    await at(180);
+    await page.keyboard.type('b:a+1', { delay: 15 });
+    await page.keyboard.press('Escape');
+    const lineOf = (s: S) => s.y + baseline(s);
+    const before = (await shapes(page)).map(lineOf).sort((x, y) => x - y);
+    expect(before).toEqual([100, 180]);
+
+    // Cross on the line between them, then Enter twice.
+    await page.mouse.click((await pageToScreen(page, 76 + 300, 140)).x, (await pageToScreen(page, 76 + 300, 140)).y);
+    await page.keyboard.press('Enter');
+    await page.keyboard.press('Enter');
+    expect((await shapes(page)).map(lineOf).sort((x, y) => x - y)).toEqual([100, 260]);
+    // Backspace removes one blank line above the cross.
+    await page.keyboard.press('Backspace');
+    expect((await shapes(page)).map(lineOf).sort((x, y) => x - y)).toEqual([100, 220]);
+    // Undo restores.
+    await page.keyboard.press('ControlOrMeta+z');
+    expect((await shapes(page)).map(lineOf).sort((x, y) => x - y)).toEqual([100, 260]);
+  });
+});

@@ -1,5 +1,5 @@
 import { setParagraphStyle } from './headings';
-import { moveCrosshair } from './canvasActions';
+import { deleteLineAboveCrosshair, insertLineAtCrosshair, moveCrosshair } from './canvasActions';
 import type { HeadingLevel } from './model/types';
 import { useEffect } from 'react';
 import { commands } from '../app/commands';
@@ -123,6 +123,10 @@ export function useCanvasKeyboard(): void {
         if (st.selection.length) {
           e.preventDefault();
           deleteSelection();
+        } else if (e.key === 'Backspace' && st.crosshair) {
+          // Remove the blank line above the + cross (undoes an Enter).
+          e.preventDefault();
+          deleteLineAboveCrosshair();
         }
         return;
       }
@@ -134,8 +138,13 @@ export function useCanvasKeyboard(): void {
       // Mathcad: with the + cross on the page (nothing selected), Enter moves it down one line and
       // the arrow keys move it (one major line up/down, one grid square sideways).
       if (st.crosshair && st.selection.length === 0 && !e.altKey && !(e.ctrlKey || e.metaKey)) {
+        if (e.key === 'Enter') {
+          // Like a document: Enter inserts a line and pushes the blocks below down.
+          e.preventDefault();
+          insertLineAtCrosshair();
+          return;
+        }
         const move: Record<string, [number, number]> = {
-          Enter: [0, GRID_MAJOR],
           ArrowDown: [0, GRID_MAJOR],
           ArrowUp: [0, -GRID_MAJOR],
           ArrowRight: [GRID_SIZE, 0],
@@ -144,7 +153,7 @@ export function useCanvasKeyboard(): void {
         const d = move[e.key];
         if (d) {
           e.preventDefault();
-          moveCrosshair(d[0] * (e.shiftKey && e.key !== 'Enter' ? 4 : 1), d[1]);
+          moveCrosshair(d[0] * (e.shiftKey ? 4 : 1), d[1]);
           return;
         }
       }
