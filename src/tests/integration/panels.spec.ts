@@ -144,6 +144,17 @@ test.describe('Templates', () => {
     await expect(page.getByLabel('Worksheet title')).toHaveValue('RC Beam Bending Design');
   });
 
+  test('returning visitors see the new default template once, then their own work', async ({ page }) => {
+    await openFresh(page); // steel sample saved in this profile
+    await page.evaluate(() => localStorage.removeItem('calccanvas.defaultTemplate'));
+    await page.reload();
+    await expect(page.getByLabel('Worksheet title')).toHaveValue('RC Beam Bending Design');
+    await page.getByLabel('Worksheet title').fill('My beam');
+    await page.keyboard.press('Control+s');
+    await page.reload();
+    await expect(page.getByLabel('Worksheet title')).toHaveValue('My beam');
+  });
+
   test('RC beam template: two pages, outline, all regions calculate, checks pass', async ({ page }) => {
     await openFresh(page);
     await page.getByRole('menuitem', { name: 'File' }).click();

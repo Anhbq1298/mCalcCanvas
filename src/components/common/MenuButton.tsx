@@ -69,7 +69,7 @@ export function MenuButton({ label, entries, open, onOpenChange, onHover }: Menu
           id={menuId}
           role="menu"
           aria-label={label}
-          className="absolute left-0 top-full z-50 mt-1 min-w-[240px] rounded-md border border-border bg-card py-1 shadow-lg"
+          className="absolute left-0 top-full z-50 mt-1 min-w-[240px] w-max max-w-[calc(100vw-16px)] rounded-md border border-border bg-card py-1 shadow-lg"
         >
           {entries.map((entry, i) => {
             if (entry.type === 'separator') return <div key={i} role="separator" className="my-1 h-px bg-border" />;
@@ -94,8 +94,8 @@ export function MenuButton({ label, entries, open, onOpenChange, onHover }: Menu
                 }}
               >
                 <span className="flex w-4 justify-center">{entry.checked && <Check size={14} aria-hidden />}</span>
-                <span className="flex-1">{entry.label}</span>
-                {entry.shortcut && <kbd className="font-sans text-[11px] text-muted-foreground">{entry.shortcut}</kbd>}
+                <span className="flex-1 whitespace-nowrap">{entry.label}</span>
+                {entry.shortcut && <kbd className="ml-4 whitespace-nowrap font-sans text-[11px] text-muted-foreground">{entry.shortcut}</kbd>}
               </button>
             );
           })}

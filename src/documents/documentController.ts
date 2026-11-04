@@ -157,7 +157,14 @@ export async function initDocuments(): Promise<void> {
     const url = new URL(window.location.href);
     url.searchParams.delete('template');
     window.history.replaceState(null, '', url);
+    writeDefaultVersion();
     return newDocument({ template: asked as TemplateId });
+  }
+  // One-time: when the default template changes, open it once for returning
+  // visitors too (their own worksheets stay in File → Open).
+  if (readDefaultVersion() !== DEFAULT_TEMPLATE_VERSION) {
+    writeDefaultVersion();
+    return newDocument({ template: firstRunTemplate() });
   }
   try {
     const lastId = await DocumentManager.getLastOpenedId();
@@ -172,6 +179,23 @@ export async function initDocuments(): Promise<void> {
     console.warn('Saved worksheets are unavailable here', e);
   }
   await newDocument({ template: firstRunTemplate() });
+}
+
+const DEFAULT_TEMPLATE_VERSION = 'rc-beam-1';
+const DEFAULT_KEY = 'calccanvas.defaultTemplate';
+function readDefaultVersion(): string | null {
+  try {
+    return localStorage.getItem(DEFAULT_KEY);
+  } catch {
+    return DEFAULT_TEMPLATE_VERSION; // storage blocked: behave as before
+  }
+}
+function writeDefaultVersion(): void {
+  try {
+    localStorage.setItem(DEFAULT_KEY, DEFAULT_TEMPLATE_VERSION);
+  } catch {
+    /* ignore */
+  }
 }
 
 /** Worksheet for a first visit. */
