@@ -1,5 +1,7 @@
 # CalcCanvas
 
+**Live app:** https://anhbq1298.github.io/mCalcCanvas/
+
 A browser-based engineering calculation workspace built on its own canvas engine: type equations anywhere on a free canvas, define variables with units, and every dependent result updates automatically. The same canvas lays out as A4 pages and exports a vector PDF calculation sheet.
 
 ```
