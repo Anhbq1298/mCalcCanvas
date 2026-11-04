@@ -77,9 +77,27 @@ describe('Test B/C/D: definitions, dependencies, recalculation', () => {
     expect(changed[0]).toEqual(expect.arrayContaining(['l', 'm', 'r']));
   });
 
-  it('is independent of insertion order (position independence)', () => {
+  it('evaluates top to bottom like Mathcad: using a variable defined below is an error', () => {
     const e = setup({ r: 'M=', m: 'M\\coloneq\\frac{wL^2}{8}', w: 'w\\coloneq25kN/m', l: 'L\\coloneq8.5m' });
-    expect(num(e, 'r')).toBeCloseTo(225.78125, 6);
+    expect(e.getResult('r')?.error?.code).toBe('defined-later');
+    expect(e.getResult('m')?.error?.message).toMatch(/w is defined below|L is defined below/);
+  });
+
+  it('follows moves: putting the definition above fixes the error', () => {
+    const e = new CalculationEngine();
+    e.batch(() => {
+      e.setRegion('m', { latex: 'M\\coloneq2f_1', order: 10 });
+      e.setRegion('f', { latex: 'f_1\\coloneq3', order: 20 });
+    });
+    expect(e.getResult('m')?.error?.message).toBe('f_1 is defined below this region. Move its definition above (calculations run top to bottom, left to right).');
+    e.setRegion('f', { latex: 'f_1\\coloneq3', order: 5 });
+    expect(num(e, 'm')).toBe(6);
+  });
+
+  it('allows x := x + 1 style redefinition using the value above', () => {
+    const e = setup({ a: 'x\\coloneq1', b: 'x\\coloneq x+1', c: 'x=' });
+    expect(num(e, 'c')).toBe(2);
+    expect(e.getResult('b')?.redefines?.name).toBe('x');
   });
 });
 
@@ -144,10 +162,17 @@ describe('symbol resolution', () => {
     expect(num(e, 'm')).toBe(7);
   });
 
-  it('re-resolves when a name becomes defined', () => {
-    const e = setup({ w: 'w\\coloneq2', l: 'L\\coloneq3', m: 'M\\coloneq wL' });
+  it('re-resolves when a name becomes defined above (not below)', () => {
+    const e = new CalculationEngine();
+    e.batch(() => {
+      e.setRegion('w', { latex: 'w\\coloneq2', order: 1 });
+      e.setRegion('l', { latex: 'L\\coloneq3', order: 2 });
+      e.setRegion('m', { latex: 'M\\coloneq wL', order: 10 });
+    });
     expect(num(e, 'm')).toBe(6);
-    e.setRegion('a', { latex: 'wL\\coloneq7' });
+    e.setRegion('below', { latex: 'wL\\coloneq7', order: 20 });
+    expect(num(e, 'm')).toBe(6); // defined below: not visible, wL still means w·L
+    e.setRegion('above', { latex: 'wL\\coloneq7', order: 5 });
     expect(num(e, 'm')).toBe(7);
   });
 
@@ -169,20 +194,20 @@ describe('errors', () => {
   });
 
   it('detects circular dependencies without hanging', () => {
+    // In reading order a cycle shows up as "defined below" on the first region.
     const e = setup({ a: 'A\\coloneq B+1', b: 'B\\coloneq A+2', c: 'C\\coloneq A' });
-    expect(e.getResult('a')?.error?.message).toBe('Circular dependency detected: A → B → A');
-    expect(e.getResult('b')?.error?.code).toBe('circular-dependency');
+    expect(e.getResult('a')?.error?.code).toBe('defined-later');
+    expect(e.getResult('b')?.error?.code).toBe('dependency-error');
     expect(e.getResult('c')?.error?.code).toBe('dependency-error');
   });
 
-  it('uses the later definition when a name is defined twice, and flags it', () => {
-    const e = setup({ a: 'L\\coloneq1m', b: 'L\\coloneq2m', c: 'L=' });
+  it('uses the nearest definition above when a name is defined twice, and flags the redefinition', () => {
+    const e = setup({ a: 'L\\coloneq1m', mid: 'L=', b: 'L\\coloneq2m', c: 'L=' });
+    expect(e.getResult('mid')?.value?.text).toBe('1 m');
     expect(e.getResult('c')?.value?.text).toBe('2 m');
     expect(e.getResult('b')?.redefines).toEqual({ name: 'L', count: 2 });
-    expect(e.getResult('a')?.overridden).toBe(true);
-    expect(e.getResult('a')?.status).toBe('valid');
-    e.removeRegion('b');
     expect(e.getResult('a')?.redefines).toBeUndefined();
+    e.removeRegion('b');
     expect(e.getResult('c')?.value?.text).toBe('1 m');
   });
 
@@ -193,8 +218,8 @@ describe('errors', () => {
       e.setRegion('b', { latex: 'L\\coloneq2m', order: 1 });
       e.setRegion('c', { latex: 'L=', order: 9 });
     });
-    expect(e.getResult('c')?.value?.text).toBe('1 m'); // a is lower on the page
-    e.setRegion('b', { latex: 'L\\coloneq2m', order: 7 }); // b dragged below a
+    expect(e.getResult('c')?.value?.text).toBe('1 m'); // a is the nearest above c
+    e.setRegion('b', { latex: 'L\\coloneq2m', order: 7 }); // b dragged below a, still above c
     expect(e.getResult('c')?.value?.text).toBe('2 m');
     expect(e.getResult('b')?.redefines?.name).toBe('L');
   });

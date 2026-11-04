@@ -146,8 +146,8 @@ function SyntaxDialog({ onClose }: { onClose(): void }) {
             <li><b>Definition</b> – <code>L := 8.5 m</code>. Add a trailing <code>=</code> to also show the value.</li>
             <li><b>Evaluation</b> – <code>M =</code> shows the current value.</li>
             <li><b>Check</b> – <code>η_M ≤ 1</code> shows the value with a PASS/FAIL badge.</li>
-            <li>Regions can reference variables defined anywhere on the worksheet (above, below or beside them).</li>
-            <li>If a variable is defined more than once, the definition that comes last in reading order (top to bottom, left to right) is used everywhere and gets a <span className="font-semibold text-[#188038]">green outline</span>; hover it for details.</li>
+            <li>Calculations run like Mathcad: <b>top to bottom, left to right</b>. A region can only use variables defined above it (or to its left on the same line); using one defined below shows an error.</li>
+            <li>A variable can be redefined: regions below the new definition use the new value, regions above keep the old one. The redefinition gets a <span className="font-semibold text-[#188038]">green outline</span>.</li>
           </ul>
         </section>
         <section>

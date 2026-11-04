@@ -12,7 +12,7 @@
 import { CalculationError, isCalculationError, type CalculationErrorCode } from './CalculationErrors';
 import { DependencyGraph } from './DependencyGraph';
 import { BUILTIN_CONSTANTS, collectReferences, compareQuantities, evaluateExpr, type EvalContext } from './ExpressionEvaluator';
-import { statementExprs, type Relation, type Statement } from './ExpressionTypes';
+import { statementExprs, type Expr, type Relation, type Statement } from './ExpressionTypes';
 import { exprToLatex, nameToLatex, RELATION_LATEX } from './LatexFormatter';
 import { parseLatex } from './LatexParser';
 import {
@@ -39,9 +39,9 @@ export interface RegionInput {
   draft?: boolean;
   /**
    * Reading-order rank on the worksheet (page, then top-to-bottom,
-   * left-to-right). When a variable is defined more than once, the
-   * definition that comes last in reading order is used everywhere.
-   * Defaults to creation order.
+   * left-to-right). As in Mathcad, a region can only use definitions that
+   * come before it, and uses the nearest such definition when a name is
+   * defined more than once. Defaults to creation order.
    */
   order?: number;
 }
@@ -66,10 +66,8 @@ export interface CalculationResult {
   status: ResultStatus;
   kind: Statement['kind'] | 'invalid';
   defines?: string;
-  /** This definition overrides earlier definition(s) of the same name. */
+  /** This definition redefines a name already defined above it. */
   redefines?: { name: string; count: number };
-  /** A later definition of the same name overrides this one. */
-  overridden?: boolean;
   definesLatex?: string;
   references: string[];
   value?: FormattedQuantity;
@@ -111,6 +109,8 @@ export class CalculationEngine {
   private pendingIds = new Set<string>();
   private pendingNames = new Set<string>();
   private lastDefinedNames = new Set<string>();
+  /** A region moved: name resolution (what is "above") must be redone. */
+  private ordersChanged = false;
   private created = new Map<string, number>();
   private createdCounter = 0;
 
@@ -159,11 +159,23 @@ export class CalculationEngine {
     return this.regions.get(id)?.input.order ?? this.created.get(id) ?? 0;
   }
 
-  /** The definition of `name` that is used: the last one in reading order. */
-  private activeDefiner(name: string): string | undefined {
-    const ds = this.graph.definers(name);
-    if (ds.length <= 1) return ds[0];
-    return ds.reduce((best, id) => (this.rank(id) > this.rank(best) ? id : best));
+  /** Variable names a region references, resolved against definitions above it. */
+  private refsFor(id: string, exprs: Expr[]): Set<string> {
+    const at = this.rank(id);
+    return collectReferences(exprs, { isDefined: (n) => this.definerBefore(n, at) !== undefined });
+  }
+
+  /**
+   * The definition of `name` that a region at reading rank `at` uses: the
+   * nearest one before it (Mathcad top-to-bottom, left-to-right).
+   */
+  private definerBefore(name: string, at: number): string | undefined {
+    let best: string | undefined;
+    for (const id of this.graph.definers(name)) {
+      const r = this.rank(id);
+      if (r < at && (best === undefined || r > this.rank(best))) best = id;
+    }
+    return best;
   }
 
   setRegion(id: string, input: RegionInput): void {
@@ -177,14 +189,13 @@ export class CalculationEngine {
       !!prev.input.draft === !!input.draft
     ) {
       if (prev.input.order !== input.order) {
-        // Only the position changed: matters when this name is defined more than once.
-        const name = this.graph.definesOf(id);
-        const before = name ? this.activeDefiner(name) : undefined;
+        // Moved: what it can see, and who can see it, may have changed.
         prev.input = input;
-        if (name && this.graph.definers(name).length > 1) {
-          if (this.activeDefiner(name) !== before) this.pendingNames.add(name);
-          if (this.batchDepth === 0) this.flush();
-        }
+        this.ordersChanged = true;
+        const name = this.graph.definesOf(id);
+        if (name) this.pendingNames.add(name);
+        this.pendingIds.add(id);
+        if (this.batchDepth === 0) this.flush();
       }
       return;
     }
@@ -216,9 +227,11 @@ export class CalculationEngine {
       const exprs = statement ? statementExprs(statement) : [];
       // Refs are resolved against the definition set *after* this change.
       this.graph.setNode(id, newName, new Set());
-      this.graph.setRefs(id, collectReferences(exprs, this.graph));
+      this.graph.setRefs(id, this.refsFor(id, exprs));
       if (oldName) this.pendingNames.add(oldName);
       if (newName) this.pendingNames.add(newName);
+      // A definition appeared/disappeared: what other regions "see above" may change.
+      if (oldName !== newName || !prev) this.ordersChanged = true;
     }
     this.pendingIds.add(id);
     if (this.batchDepth === 0) this.flush();
@@ -232,7 +245,10 @@ export class CalculationEngine {
     this.results.delete(id);
     this.values.delete(id);
     this.created.delete(id);
-    if (name) this.pendingNames.add(name);
+    if (name) {
+      this.pendingNames.add(name);
+      this.ordersChanged = true;
+    }
     this.pendingIds.add(id);
     if (this.batchDepth === 0) this.flush();
   }
@@ -260,10 +276,14 @@ export class CalculationEngine {
     // If the set of defined names changed, identifier resolution may change
     // anywhere (e.g. "wL" splits differently once "wL" is defined).
     const defined = this.graph.definedNames();
-    if (!sameSet(defined, this.lastDefinedNames)) {
+    if (!sameSet(defined, this.lastDefinedNames) || this.ordersChanged) {
+      this.ordersChanged = false;
       for (const id of this.graph.ids()) {
         const st = this.regions.get(id)?.statement;
-        const refs = st ? collectReferences(statementExprs(st), this.graph) : new Set<string>();
+        const refs = st ? this.refsFor(id, statementExprs(st)) : new Set<string>();
+        // Unresolved names may now resolve, or now be "defined below": re-check.
+        const code = this.results.get(id)?.error?.code;
+        if (code === 'undefined-variable' || code === 'defined-later') seeds.add(id);
         if (!sameSet(refs, this.graph.refsOf(id))) {
           this.graph.setRefs(id, refs);
           seeds.add(id);
@@ -370,9 +390,8 @@ export class CalculationEngine {
     // Definition-level checks.
     if (statement.kind === 'definition') {
       const definers = this.graph.definers(statement.name);
-      if (definers.length > 1) {
-        if (this.activeDefiner(statement.name) === id) base.redefines = { name: statement.name, count: definers.length };
-        else base.overridden = true;
+      if (definers.length > 1 && this.definerBefore(statement.name, this.rank(id)) !== undefined) {
+        base.redefines = { name: statement.name, count: definers.length };
       }
       if (statement.name in BUILTIN_CONSTANTS) {
         base.warnings.push(`"${statement.name}" redefines the built-in constant (${BUILTIN_CONSTANTS[statement.name].description}) in this worksheet.`);
@@ -385,9 +404,17 @@ export class CalculationEngine {
     }
 
     // Resolve dependencies first (may throw CycleSignal).
+    const myRank = this.rank(id);
+    const uses = new Map<string, string>();
     for (const name of this.graph.refsOf(id)) {
-      const definer = this.activeDefiner(name);
-      if (!definer) return fail('undefined-variable', `Undefined variable: ${name}`);
+      const definer = this.definerBefore(name, myRank);
+      if (!definer) {
+        if (this.graph.definers(name).length) {
+          return fail('defined-later', `${name} is defined below this region. Move its definition above (calculations run top to bottom, left to right).`);
+        }
+        return fail('undefined-variable', `Undefined variable: ${name}`);
+      }
+      uses.set(name, definer);
       const dep = this.evaluateRegion(definer, stack, dirty, pass);
       if (dep.status !== 'valid') {
         return fail('dependency-error', `${name} cannot be evaluated (${dep.error?.message ?? 'no value'}).`);
@@ -395,9 +422,9 @@ export class CalculationEngine {
     }
 
     const ctx: EvalContext = {
-      isDefined: (n) => this.graph.isDefined(n),
+      isDefined: (n) => this.definerBefore(n, myRank) !== undefined,
       getValue: (n) => {
-        const v = this.values.get(this.activeDefiner(n) ?? '');
+        const v = this.values.get(uses.get(n) ?? this.definerBefore(n, myRank) ?? '');
         if (v === undefined) throw new CalculationError('undefined-variable', `Undefined variable: ${n}`);
         return v;
       },
@@ -450,7 +477,7 @@ export class CalculationEngine {
       const substitutionLatex = exprToLatex(statement.expr, {
         ctx,
         substitute: (name) => {
-          const v = this.values.get(this.activeDefiner(name) ?? '');
+          const v = this.values.get(uses.get(name) ?? '');
           if (v === undefined) return null;
           const f = fmt(v);
           return { latex: f.latex, hasUnit: !!f.unitText, negative: siValue(v) < 0 };
@@ -463,7 +490,16 @@ export class CalculationEngine {
         expressionLatex: exprToLatex(statement.expr, { ctx }),
       };
     } catch (e) {
-      if (isCalculationError(e)) return fail(e.code, e.message);
+      if (isCalculationError(e)) {
+        // A name that exists only below this region: say so (Mathcad order).
+        if (e.code === 'undefined-variable') {
+          const names = e.message.replace(/^Undefined variables?:\s*/, '').split(/,\s*/);
+          // also look inside letter runs ("wL" → w, L)
+          const below = names.flatMap((n) => [n, ...n.split('')]).find((n) => this.graph.definers(n).length > 0);
+          if (below) return fail('defined-later', `${below} is defined below this region. Move its definition above (calculations run top to bottom, left to right).`);
+        }
+        return fail(e.code, e.message);
+      }
       if (e instanceof CycleSignal) throw e;
       return fail('evaluation', e instanceof Error ? e.message : 'Calculation failed.');
     }

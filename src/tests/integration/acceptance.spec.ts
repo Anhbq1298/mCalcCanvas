@@ -61,15 +61,28 @@ test.describe('acceptance criteria', () => {
     await editRegion(page, L.id, ['L:=10m']);
     await resultOf(page, 'M=').toBe('312.5 kN·m');
 
-    // E – move the L definition below everything: result unchanged
+    // E – Mathcad order: sideways moves don't matter, but moving L below M is an error
     const c = await regionCenter(page, L.id);
     await page.mouse.move(c.x, c.y);
     await page.mouse.down();
-    await page.mouse.move(c.x + 20, c.y + 380, { steps: 10 });
+    await page.mouse.move(c.x + 200, c.y, { steps: 10 });
+    await page.mouse.up();
+    await resultOf(page, 'M=').toBe('312.5 kN·m');
+    const c2 = await regionCenter(page, L.id);
+    await page.mouse.move(c2.x, c2.y);
+    await page.mouse.down();
+    await page.mouse.move(c2.x, c2.y + 380, { steps: 10 });
     await page.mouse.up();
     const pos = await shapePosition(page, L.id);
-    const m = await shapePosition(page, (await region(page, 'M='))!.id);
+    const m = await shapePosition(page, (await region(page, 'M\\coloneq'))!.id);
     expect(pos.y).toBeGreaterThan(m.y);
+    await errorOf(page, 'M\\coloneq').toMatch(/^L is defined below this region/);
+    // drag it back up: fixed again
+    const c3 = await regionCenter(page, L.id);
+    await page.mouse.move(c3.x, c3.y);
+    await page.mouse.down();
+    await page.mouse.move(c3.x, c3.y - 380, { steps: 10 });
+    await page.mouse.up();
     await resultOf(page, 'M=').toBe('312.5 kN·m');
   });
 
@@ -98,7 +111,7 @@ test.describe('acceptance criteria', () => {
     await errorOf(page, 'M').toBe('Undefined variable: w');
     await addRegion(page, 300, 300, ['A:=B+1']);
     await addRegion(page, 300, 380, ['B:=A+1']);
-    await errorOf(page, 'A').toContain('Circular dependency detected');
+    await errorOf(page, 'A').toContain('B is defined below this region');
   });
 
   test('typing on an empty canvas creates a math region', async ({ page }) => {

@@ -2,6 +2,7 @@ export type CalculationErrorCode =
   | 'syntax'
   | 'incomplete'
   | 'undefined-variable'
+  | 'defined-later'
   | 'duplicate-definition'
   | 'circular-dependency'
   | 'unit-mismatch'

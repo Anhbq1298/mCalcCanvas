@@ -10,14 +10,14 @@ import type { MathShape, Shape } from './model/types';
 const isMath = (s: Shape | undefined): s is MathShape => s?.type === 'math';
 
 /**
- * Reading order of math regions: pages stack vertically, so top-to-bottom
- * then left-to-right (rows are grid-aligned). Used only to decide which of
- * several definitions of the same name comes "later".
+ * Reading-order key of each math region (Mathcad order): pages stack
+ * vertically, so top-to-bottom, then left-to-right. The key depends only on
+ * the region's own position, so moving one region re-ranks only that region.
  */
 function readingOrder(shapes: Record<string, Shape>): Map<string, number> {
-  const list = Object.values(shapes).filter(isMath);
-  list.sort((a, b) => a.y - b.y || a.x - b.x);
-  return new Map(list.map((s, i) => [s.id, i]));
+  const m = new Map<string, number>();
+  for (const s of Object.values(shapes)) if (isMath(s)) m.set(s.id, Math.round(s.y) * 100000 + Math.round(s.x) + 50000);
+  return m;
 }
 
 function inputFor(s: MathShape, editingId: string | null, order: number | undefined) {

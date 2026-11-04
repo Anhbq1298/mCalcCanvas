@@ -44,8 +44,9 @@ test.describe('own canvas engine', () => {
     await expect.poll(async () => (await regions(page)).length).toBe(3);
     // Same variable defined three times → no errors; the last one is marked as a redefinition (green)
     await expect.poll(async () => (await regions(page)).every((r) => r.error === '')).toBe(true);
-    await expect(page.locator('.math-region[data-redefines="x"]')).toHaveCount(1);
-    const outline = await page.locator('.math-region[data-redefines="x"]').evaluate((el) => getComputedStyle(el).outlineColor);
+    // each later copy redefines x (green)
+    await expect(page.locator('.math-region[data-redefines="x"]')).toHaveCount(2);
+    const outline = await page.locator('.math-region[data-redefines="x"]').first().evaluate((el) => getComputedStyle(el).outlineColor);
     expect(outline).toBe('rgb(24, 128, 56)');
   });
 

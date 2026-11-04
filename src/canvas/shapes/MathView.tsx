@@ -66,10 +66,8 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
       data-redefines={result?.redefines ? result.redefines.name : undefined}
       title={
         result?.redefines
-          ? `Redefines ${result.redefines.name}: this later definition is used everywhere in the worksheet (${result.redefines.count} definitions).`
-          : result?.overridden
-            ? `${result.defines} is redefined later on the worksheet; that later value is used.`
-            : undefined
+          ? `Redefines ${result.redefines.name}: regions below this one use this value; regions above keep the earlier one.`
+          : undefined
       }
       style={
         {
