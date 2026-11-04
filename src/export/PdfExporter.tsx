@@ -43,7 +43,7 @@ export async function buildPrintView(): Promise<{ pages: number; outside: number
   if (!el) throw new Error('#print-root missing');
   const { settings } = useAppStore.getState();
   const shapes = orderedShapes();
-  const n = pageCount(shapes, settings.pageOrientation);
+  const n = pageCount(shapes, settings.pageOrientation, settings.pages);
   const pages = Array.from({ length: n }, (_, i) => ({ index: i, shapes: shapesOnPage(shapes, i, settings.pageOrientation) }));
   root ??= createRoot(el);
   flushSync(() => root!.render(<PrintView pages={pages} />));

@@ -268,8 +268,23 @@ export function zoomToFit(): void {
 }
 
 /** Show the top of page 1 at 100 %, centred horizontally. */
+/** Show the top of page 1, centred; zoom out to fit the width on narrow windows. */
 export function focusPage(pageWidth: number): void {
-  setCamera({ x: -Math.max(24, (viewport.w - pageWidth) / 2), y: -24, z: 1 });
+  const z = Math.min(1, Math.max(0.3, (viewport.w - 32) / pageWidth));
+  setCamera({ x: -Math.max(16, (viewport.w / z - pageWidth) / 2), y: -24 / z, z });
+}
+
+/** Scroll so a region is in view (keeping the zoom), and select it. */
+export function revealShape(id: string): void {
+  const s = get().shapes[id];
+  if (!s) return;
+  const b = shapeBounds(s);
+  const cam = get().camera;
+  const vw = viewport.w / cam.z;
+  const vh = viewport.h / cam.z;
+  const inView = b.x >= cam.x && b.y >= cam.y && b.x + b.w <= cam.x + vw && b.y + b.h <= cam.y + vh;
+  if (!inView) setCamera({ x: b.x + b.w / 2 - vw / 2, y: b.y - vh / 3, z: cam.z });
+  select([id]);
 }
 
 export { markHistory };

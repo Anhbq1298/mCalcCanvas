@@ -142,6 +142,7 @@ export function parseDocument(input: unknown): CalculationDocument {
   if (settings.pageOrientation !== 'portrait' && settings.pageOrientation !== 'landscape') settings.pageOrientation = 'portrait';
   settings.showHeaderFooter = settings.showHeaderFooter !== false;
   if (!TEXT_FONTS[settings.textFont]) settings.textFont = 'Inter';
+  settings.pages = Math.min(200, Math.max(1, Math.round(num(settings.pages, 1))));
   settings.precision = Math.min(8, Math.max(0, Math.round(num(settings.precision, DEFAULT_SETTINGS.precision))));
   return {
     id: doc.id,

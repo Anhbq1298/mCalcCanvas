@@ -25,9 +25,10 @@ export function printableBox(index: number, orientation: PageOrientation): Box {
   return { x: p.x + PAGE_MARGIN, y: p.y + PAGE_MARGIN_V, w: p.w - 2 * PAGE_MARGIN, h: p.h - 2 * PAGE_MARGIN_V };
 }
 
-export function pageCount(shapes: Shape[], orientation: PageOrientation): number {
+/** Pages needed for the shapes, but at least `minPages` (blank pages the user inserted). */
+export function pageCount(shapes: Shape[], orientation: PageOrientation, minPages = 1): number {
   const { h } = pageSize(orientation);
-  let max = 1;
+  let max = Math.max(1, Math.floor(minPages) || 1);
   for (const s of shapes) {
     const b = shapeBounds(s);
     if (b.y + b.h < 0) continue;

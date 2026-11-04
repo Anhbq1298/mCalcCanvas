@@ -14,7 +14,8 @@ export function PageOverlay() {
   const showChrome = useAppStore((s) => s.settings.showHeaderFooter);
   const order = useCanvasStore((s) => s.order);
   const shapes = useMemo(() => orderedShapes({ ...useCanvasStore.getState(), shapes: shapesMap, order }), [shapesMap, order]);
-  const pages = useMemo(() => pageCount(shapes, orientation), [shapes, orientation]);
+  const minPages = useAppStore((s) => s.settings.pages);
+  const pages = useMemo(() => pageCount(shapes, orientation, minPages), [shapes, orientation, minPages]);
   const outside = useMemo(() => (mode === 'page' ? shapesOutsidePrintArea(shapes, orientation).map(shapeBounds) : []), [shapes, orientation, mode]);
   if (mode !== 'page') return null;
 
@@ -25,6 +26,7 @@ export function PageOverlay() {
         return (
           <div
             key={i}
+            data-testid="page-sheet"
             style={{
               position: 'absolute',
               left: b.x,

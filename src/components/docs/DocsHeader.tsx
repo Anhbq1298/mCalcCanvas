@@ -13,7 +13,9 @@ import {
   FileDown,
   Grid3x3,
   Hand,
+  FilePlus2,
   ImagePlus,
+  ListTree,
   Italic,
   Minus,
   MousePointer2,
@@ -283,7 +285,8 @@ export function DocsHeader() {
   const saveState = useAppStore((s) => s.saveState);
   const settings = useAppStore((s) => s.settings);
   const panelOpen = useAppStore((s) => s.panelOpen);
-  const { updateTitle, updateSettings, togglePanel, openDialog } = useAppStore.getState();
+  const paramsOpen = useAppStore((s) => s.paramsOpen);
+  const { updateTitle, updateSettings, togglePanel, toggleParams, openDialog } = useAppStore.getState();
   const tool = useCanvasStore((s) => s.tool);
   const zoom = useCanvasStore((s) => s.camera.z);
   const isGrid = useCanvasStore((s) => s.isGrid);
@@ -326,6 +329,7 @@ export function DocsHeader() {
       { label: 'Grid', checked: isGrid, onSelect: commands.toggleGrid },
       { label: 'Snap to grid', checked: isSnap, onSelect: commands.toggleSnap },
       { label: 'Header & footer', checked: settings.showHeaderFooter, onSelect: () => updateSettings({ showHeaderFooter: !settings.showHeaderFooter }) },
+      { label: 'Parameters panel', checked: paramsOpen, onSelect: () => toggleParams() },
       { label: 'Properties panel', checked: panelOpen, onSelect: () => togglePanel() },
       { type: 'separator' },
       { label: 'Zoom in', onSelect: commands.zoomIn },
@@ -337,6 +341,9 @@ export function DocsHeader() {
       { label: 'Check (≤ limit)', onSelect: () => commands.insertCheck() },
       { label: 'Text', shortcut: '"', onSelect: () => commands.setTool('text') },
       { label: 'Image…', onSelect: () => void commands.insertImage() },
+      { type: 'separator' },
+      { label: 'Blank page', shortcut: `${MOD}↵`, onSelect: commands.insertBlankPage },
+      { label: 'Delete empty page', onSelect: commands.deletePage },
       { type: 'separator' },
       { label: 'Line', onSelect: () => commands.setTool('line') },
       { label: 'Arrow', onSelect: () => commands.setTool('arrow') },
@@ -440,6 +447,7 @@ export function DocsHeader() {
         <TB icon={Type} label="Text (or type &quot;)" active={tool === 'text'} onClick={() => commands.setTool('text')} testId="tool-text" />
         <TB icon={CheckSquare} label="Insert check (≤ 1)" onClick={() => commands.insertCheck()} testId="insert-check" />
         <TB icon={ImagePlus} label="Insert image" onClick={() => void commands.insertImage()} />
+        <TB icon={FilePlus2} label="Insert blank page (Ctrl+Enter)" onClick={commands.insertBlankPage} testId="insert-page" />
         <Sep />
         <PalettePopover label="Operators" glyph="√" sections={OPERATORS} testId="palette-operators" />
         <PalettePopover label="Symbols" glyph="β" sections={SYMBOLS} testId="palette-symbols" />
@@ -454,6 +462,7 @@ export function DocsHeader() {
         <Sep />
         <ToolButtons />
         <div className="ml-auto flex items-center gap-0.5 pl-2">
+          <TB icon={ListTree} label="Parameters panel" active={paramsOpen} onClick={() => toggleParams()} testId="toggle-params" />
           <TB icon={Grid3x3} label="Grid" active={isGrid} onClick={commands.toggleGrid} testId="toggle-grid" />
           <TB icon={PanelTop} label="Header & footer" active={settings.showHeaderFooter} onClick={() => updateSettings({ showHeaderFooter: !settings.showHeaderFooter })} testId="toggle-chrome" />
           <TB icon={PanelRight} label="Properties panel" active={panelOpen} onClick={() => togglePanel()} testId="toggle-properties" />

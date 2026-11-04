@@ -51,6 +51,12 @@ export function useCanvasKeyboard(): void {
         void commands.exportPdf();
         return;
       }
+      if (mod && !e.altKey && e.key === 'Enter') {
+        // Google Docs: Ctrl+Enter inserts a page break / blank page.
+        e.preventDefault();
+        commands.insertBlankPage();
+        return;
+      }
       if (e.key === 'F9') {
         e.preventDefault();
         commands.calculateAll();

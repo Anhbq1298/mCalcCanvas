@@ -16,10 +16,13 @@ import {
   zoomIn,
   zoomOut,
   zoomToFit,
+  viewportCenter,
 } from '../canvas/canvasActions';
+import { currentPageIndex, deletePage, insertBlankPageAfter, totalPages } from '../canvas/pageConstraint';
+import { pageBox } from '../export/pageGeometry';
 import { resyncAll } from '../canvas/engineBridge';
 import { pasteShapes } from '../canvas/canvasActions';
-import { redo, selectAll, setTool, stopEditing, undo, updateShapes, useCanvasStore } from '../canvas/model/canvasStore';
+import { redo, selectAll, setCamera, setTool, stopEditing, undo, updateShapes, useCanvasStore } from '../canvas/model/canvasStore';
 import type { MathDisplayMode, ToolId } from '../canvas/model/types';
 import { exportJson, importJson, newDocument, saveDocument } from '../documents/documentController';
 import { exportPdf } from '../export/PdfExporter';
@@ -102,6 +105,30 @@ export const commands = {
   zoomOut,
   resetZoom,
   zoomToFit,
+
+  /** Insert a blank A4 page after the current page and scroll to it. */
+  insertBlankPage() {
+    const app = useAppStore.getState();
+    if (app.settings.canvasMode !== 'page') {
+      app.showToast('info', 'Pages exist in Page layout view (View → Page layout).');
+      return;
+    }
+    stopEditing();
+    const idx = insertBlankPageAfter(currentPageIndex(viewportCenter().y));
+    const top = pageBox(idx, app.settings.pageOrientation).y;
+    const cam = useCanvasStore.getState().camera;
+    setCamera({ x: cam.x, y: top - 24 / cam.z, z: cam.z });
+    useCanvasStore.setState({ selection: [], crosshair: null });
+    app.showToast('info', `Blank page ${idx + 1} inserted.`);
+  },
+  /** Delete the current page if it is empty. */
+  deletePage() {
+    const app = useAppStore.getState();
+    if (app.settings.canvasMode !== 'page') return;
+    const idx = currentPageIndex(viewportCenter().y);
+    if (deletePage(idx)) app.showToast('info', `Page ${idx + 1} deleted.`);
+    else app.showToast('error', totalPages() <= 1 ? 'A worksheet needs at least one page.' : `Page ${idx + 1} is not empty. Delete its content first.`);
+  },
 
   async save() {
     await saveDocument();

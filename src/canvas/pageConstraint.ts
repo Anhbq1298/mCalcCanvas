@@ -20,7 +20,7 @@ function orientation() {
 /** Index of the page whose vertical band contains y (pages may be added one past the last). */
 function pageIndexAt(y: number): number {
   const { h } = pageSize(orientation());
-  const max = pageCount(orderedShapes(), orientation());
+  const max = pageCount(orderedShapes(), orientation(), useAppStore.getState().settings.pages);
   return Math.min(max, Math.max(0, Math.floor(y / (h + PAGE_GAP))));
 }
 
@@ -110,3 +110,51 @@ export function gridAlign(s: Shape): Shape {
 }
 
 setPositionNormalizer(gridAlign);
+
+// ---------------------------------------------------------------------------
+// Pages
+// ---------------------------------------------------------------------------
+
+function pageStride(): number {
+  return pageSize(orientation()).h + PAGE_GAP;
+}
+
+export function totalPages(): number {
+  return pageCount(orderedShapes(), orientation(), useAppStore.getState().settings.pages);
+}
+
+/** Page the user is working on: the selection, the crosshair, else the page in view. */
+export function currentPageIndex(viewY: number): number {
+  const st = useCanvasStore.getState();
+  const sel = st.selection.map((id) => st.shapes[id]).filter(Boolean);
+  const y = sel.length ? Math.min(...sel.map((s) => shapeBounds(s).y)) : st.crosshair ? st.crosshair.y : viewY;
+  return Math.min(totalPages() - 1, Math.max(0, Math.floor(y / pageStride())));
+}
+
+/** Insert a blank page after `index`; content on later pages moves down one page. Returns the new page's index. */
+export function insertBlankPageAfter(index: number): number {
+  const stride = pageStride();
+  const total = totalPages();
+  const startY = (index + 1) * stride;
+  useAppStore.getState().updateSettings({ pages: total + 1 });
+  const later = orderedShapes().filter((s) => shapeBounds(s).y >= startY - PAGE_GAP / 2);
+  if (later.length) updateShapes(Object.fromEntries(later.map((s) => [s.id, { y: s.y + stride }])), { raw: true });
+  return index + 1;
+}
+
+/** Remove page `index` if nothing is on it; later content moves up. Returns false if the page has content. */
+export function deletePage(index: number): boolean {
+  const stride = pageStride();
+  const total = totalPages();
+  const top = index * stride;
+  const shapes = orderedShapes();
+  const onPage = shapes.some((s) => {
+    const b = shapeBounds(s);
+    return b.y + b.h > top && b.y < top + stride - PAGE_GAP / 2;
+  });
+  if (onPage || total <= 1) return false;
+  const later = shapes.filter((s) => shapeBounds(s).y >= top + stride - PAGE_GAP / 2);
+  if (later.length) updateShapes(Object.fromEntries(later.map((s) => [s.id, { y: s.y - stride }])), { raw: true });
+  useAppStore.getState().updateSettings({ pages: total - 1 });
+  return true;
+}

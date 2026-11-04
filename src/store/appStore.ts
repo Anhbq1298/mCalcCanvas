@@ -15,6 +15,8 @@ interface AppState {
   createdAt: string;
   saveState: SaveState;
   panelOpen: boolean;
+  /** Left "Parameters" panel. */
+  paramsOpen: boolean;
   dialog: null | 'open' | 'shortcuts' | 'syntax' | 'about';
   toast: { kind: 'info' | 'error'; message: string } | null;
 
@@ -30,6 +32,7 @@ interface AppState {
   updateSettings(patch: Partial<DocumentSettings>): void;
   setSaveState(s: SaveState): void;
   togglePanel(open?: boolean): void;
+  toggleParams(open?: boolean): void;
   openDialog(d: AppState['dialog']): void;
   showToast(kind: 'info' | 'error', message: string): void;
 }
@@ -42,6 +45,7 @@ export const useAppStore = create<AppState>((set) => ({
   createdAt: new Date().toISOString(),
   saveState: 'saved',
   panelOpen: false,
+  paramsOpen: true,
   dialog: null,
   toast: null,
 
@@ -59,6 +63,7 @@ export const useAppStore = create<AppState>((set) => ({
   updateSettings: (patch) => set((s) => ({ settings: { ...s.settings, ...patch }, saveState: 'dirty' })),
   setSaveState: (saveState) => set({ saveState }),
   togglePanel: (open) => set((s) => ({ panelOpen: open ?? !s.panelOpen })),
+  toggleParams: (open) => set((s) => ({ paramsOpen: open ?? !s.paramsOpen })),
   openDialog: (dialog) => set({ dialog }),
   showToast: (kind, message) => set({ toast: { kind, message } }),
 }));

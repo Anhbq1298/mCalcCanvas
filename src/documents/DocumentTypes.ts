@@ -23,6 +23,8 @@ export interface DocumentSettings {
   showHeaderFooter: boolean;
   /** Default font for new text regions (one of TEXT_FONTS). */
   textFont: string;
+  /** Minimum number of pages (keeps inserted blank pages). */
+  pages?: number;
 }
 
 /**
