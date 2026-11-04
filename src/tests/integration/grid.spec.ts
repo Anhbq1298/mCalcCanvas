@@ -157,3 +157,28 @@ test.describe('lines like a document', () => {
     expect((await shapes(page)).map(lineOf).sort((x, y) => x - y)).toEqual([100, 260]);
   });
 });
+
+test('a region dropped onto another pushes it down instead of overlapping', async ({ page }) => {
+  await openFresh(page);
+  await newBlankWorksheet(page, 'page');
+  for (const [y, txt] of [[100, 'a:1'], [180, 'b:2'], [220, 'c:3']] as const) {
+    const p = await pageToScreen(page, 76 + 30, y - 10);
+    await page.mouse.click(p.x, p.y);
+    await page.keyboard.type(txt, { delay: 15 });
+    await page.keyboard.press('Escape');
+  }
+  const lineOf = (s: S) => s.y + baseline(s);
+  const byLatex = async () => Object.fromEntries((await shapes(page)).map((s) => [(s as unknown as { props: { latex: string } }).props.latex[0], lineOf(s)]));
+  expect(await byLatex()).toEqual({ a: 100, b: 180, c: 220 });
+  // Drag a straight onto b.
+  const box = await page.locator('.math-region').first().boundingBox();
+  await page.mouse.move(box!.x + 8, box!.y + box!.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box!.x + 8, box!.y + box!.height / 2 + 80, { steps: 6 });
+  await page.mouse.up();
+  await expect.poll(byLatex).toEqual({ a: 180, b: 220, c: 260 });
+  // No two regions overlap.
+  const boxes = await page.locator('.math-region').evaluateAll((els) => els.map((e) => e.getBoundingClientRect()).map((r) => [r.top, r.bottom]));
+  boxes.sort((x, y) => x[0] - y[0]);
+  for (let i = 1; i < boxes.length; i++) expect(boxes[i][0]).toBeGreaterThanOrEqual(boxes[i - 1][1] - 9);
+});

@@ -30,6 +30,7 @@ import {
 } from './model/canvasStore';
 import { boxFromPoints, boxesIntersect, screenToPage, shapeBounds, unionBounds } from './model/geometry';
 import { clampDelta, clampPoint, crossPoint, gridAlign, printableAt } from './pageConstraint';
+import { separateRegion } from './canvasActions';
 import type { Box, Camera, Point, Shape } from './model/types';
 import { ShapeView } from './shapes/ShapeView';
 
@@ -402,6 +403,8 @@ export function CanvasView() {
           updateShapes(patches, { history: false });
         }
         useCanvasStore.setState({ dragging: false, dropPreview: null });
+        // Dropped onto another region: push the later one down instead of overlapping.
+        if (d.moved) for (const id of Object.keys(d.orig)) separateRegion(id);
         // A plain click on an already-selected shape narrows the selection to it.
         if (!d.moved && d.wasSelected && !d.shift) select([d.clickedId]);
         if (!d.moved && d.wasSelected && d.shift) select(st.selection.filter((id) => !expandGroups([d.clickedId]).includes(id)));

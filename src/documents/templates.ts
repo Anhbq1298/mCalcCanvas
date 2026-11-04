@@ -109,7 +109,7 @@ function rcBeamShapes(): Shape[] {
 
   // ---- Page 2 -------------------------------------------------------------
   text(80, ln2(1), '4. MATERIAL DESIGN VALUES', { heading: 2 });
-  math(96, ln2(3), 'f_{cd}\\coloneq\\frac{\\alpha_{cc}f_{ck}}{\\gamma_{c}}', { displayMode: 'full' });
+  math(96, ln2(2), 'f_{cd}\\coloneq\\frac{\\alpha_{cc}f_{ck}}{\\gamma_{c}}', { displayMode: 'full' });
   math(400, ln2(2), 'f_{yd}\\coloneq\\frac{f_{yk}}{\\gamma_{s}}');
   math(96, ln2(6), 'f_{ctm}\\coloneq0.30\\left(\\frac{f_{ck}}{\\mathrm{MPa}}\\right)^{\\frac{2}{3}}\\,\\mathrm{MPa}');
 

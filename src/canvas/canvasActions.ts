@@ -153,9 +153,10 @@ function pageLines() {
  * bottom margin of their page moves to the first line of the next page,
  * and every later line moves with it, so the reading order is kept.
  */
-function shiftLinesFrom(g: number, delta: number): void {
+function shiftLinesFrom(g: number, delta: number, opts: { history?: boolean; keep?: string } = {}): void {
   const groups = new Map<number, Shape[]>();
   for (const s of orderedShapes()) {
+    if (s.id === opts.keep) continue;
     const line = globalLine(anchorY(s));
     if (line < g) continue;
     if (!groups.has(line)) groups.set(line, []);
@@ -199,7 +200,52 @@ function shiftLinesFrom(g: number, delta: number): void {
     const need = Math.floor(lowest / pageLines().stride) + 1;
     if (need > totalPagesNow(orientation)) useAppStore.getState().updateSettings({ pages: need });
   }
-  updateShapes(patches);
+  updateShapes(patches, { history: opts.history });
+}
+
+/** Overlap (px) tolerated between region boxes: their 4 px paddings may touch. */
+const OVERLAP_TOLERANCE = 8;
+
+/**
+ * Keep regions from sitting on top of each other (Mathcad "separate
+ * regions"). If the region overlaps an equation or text region, the one
+ * later in reading order – and everything after it – moves down by whole
+ * lines, so the layout and the calculation order are kept. Runs after a
+ * region is dropped, grows, or is re-aligned to the grid.
+ */
+export function separateRegion(id: string): void {
+  for (let guard = 0; guard < 20; guard++) {
+    const shapes = get().shapes;
+    const s = shapes[id];
+    if (!s || (s.type !== 'math' && s.type !== 'text')) return;
+    const a = shapeBounds(s);
+    let pushLine: number | null = null;
+    let need = 0;
+    let keep = '';
+    for (const o of orderedShapes()) {
+      if (o.id === id || (o.type !== 'math' && o.type !== 'text')) continue;
+      if (s.type !== 'math' && o.type !== 'math') continue; // text labels may overlap each other's boxes
+      const b = shapeBounds(o);
+      const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
+      const oy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
+      if (ox <= OVERLAP_TOLERANCE || oy <= OVERLAP_TOLERANCE) continue;
+      // The later one (reading order) moves down far enough to clear the earlier one.
+      const sFirst = anchorY(s) < anchorY(o) || (anchorY(s) === anchorY(o) && s.x <= o.x);
+      const [early, late] = sFirst ? [a, b] : [b, a];
+      const lateShape = sFirst ? o : s;
+      const earlyShape = sFirst ? s : o;
+      const lines = Math.ceil((early.y + early.h - OVERLAP_TOLERANCE - late.y) / GRID_MAJOR);
+      const line = globalLine(anchorY(lateShape));
+      if (lines > 0 && (pushLine === null || line < pushLine)) {
+        pushLine = line;
+        need = lines;
+        keep = earlyShape.id;
+      }
+    }
+    if (pushLine === null) return;
+    // The earlier region stays put even if it shares the line.
+    shiftLinesFrom(pushLine, need, { history: false, keep });
+  }
 }
 
 function totalPagesNow(orientation: 'portrait' | 'landscape'): number {

@@ -1,5 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
-import { stopEditing, updateShape } from '../model/canvasStore';
+import { stopEditing, updateShape, useCanvasStore } from '../model/canvasStore';
+import { separateRegion } from '../canvasActions';
+import { useSeparateAfterEditing } from './useSeparate';
 import { fontStack, PARAGRAPH_STYLES, type TextShape } from '../model/types';
 import { plainTextToHtml, sanitizeHtml } from '../sanitize';
 
@@ -18,13 +20,18 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
     if (!el) return;
     const fit = () => {
       const nh = Math.ceil(el.offsetHeight);
-      if (Math.abs(nh - shape.props.h) > 1) updateShape(shape.id, { props: { h: nh } }, { history: false });
+      if (Math.abs(nh - shape.props.h) > 1) {
+        updateShape(shape.id, { props: { h: nh } }, { history: false });
+        if (!editing && !useCanvasStore.getState().dragging) separateRegion(shape.id);
+      }
     };
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [shape.id, shape.props.h, isStatic]);
+  }, [shape.id, shape.props.h, isStatic, editing]);
+
+  useSeparateAfterEditing(shape.id, editing, isStatic);
 
   // Initialise the editable content once per editing session (not on every keystroke).
   useLayoutEffect(() => {

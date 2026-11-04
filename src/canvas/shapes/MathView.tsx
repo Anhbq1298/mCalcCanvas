@@ -7,6 +7,8 @@ import { useRegionResult } from '../../store/calculationStore';
 import { select, stopEditing, updateShape, useCanvasStore } from '../model/canvasStore';
 import type { MathShape } from '../model/types';
 import { majorLineAtOrBelow } from '../pageConstraint';
+import { separateRegion } from '../canvasActions';
+import { useSeparateAfterEditing } from './useSeparate';
 
 const PAD_X = 6;
 const PAD_Y = 4;
@@ -38,13 +40,19 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         const b = Math.round((probe.getBoundingClientRect().bottom - r.top) / (scale || 1));
         if (b > 0 && b !== shape.props.baseline) patch.baseline = b;
       }
-      if (Object.keys(patch).length) updateShape(shape.id, { props: patch }, { history: false });
+      if (Object.keys(patch).length) {
+        updateShape(shape.id, { props: patch }, { history: false });
+        // Grew or moved to its baseline: don't sit on top of the next region.
+        if (!editing && !useCanvasStore.getState().dragging) separateRegion(shape.id);
+      }
     };
     fit();
     const ro = new ResizeObserver(fit);
     ro.observe(el);
     return () => ro.disconnect();
   }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, autoSize, isStatic, editing, display.latex]);
+
+  useSeparateAfterEditing(shape.id, editing, isStatic);
 
   const onChange = useCallback((next: string) => updateShape(shape.id, { props: { latex: next } }, { history: false }), [shape.id]);
   const onExit = useCallback(
