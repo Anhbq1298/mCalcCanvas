@@ -51,17 +51,14 @@ describe('column templates', () => {
     expect(result('\\eta_{V}\\coloneq')?.value?.number).toBeCloseTo(0.612, 3);
   }, 30000);
 
-  it('RC rectangular column check calculates without errors (biaxial MRd,θ, P–Mθ curve)', () => {
+  it('RC rectangular column check calculates without errors (P–Mθ curve, radial ratio)', () => {
     const { errors, result } = evaluate('rc-rectangular-column');
     expect(errors).toEqual([]);
     // Ties: corners + every other bar, mirrored pairs in one inner closed tie (6 bars on h: one tie at bars 2–3).
     expect(result('q_{h}\\coloneq')?.value?.number).toBe(1);
     expect(result('n_{w.y}\\coloneq')?.value?.number).toBe(2);
     expect(result('n_{w.x}\\coloneq')?.value?.number).toBe(4);
-    // Biaxial, NA rotated until the moment points along θ = 63.4°: independent 500×500 fibre grid
-    // gives βM = 37.2°, MRd,θ = 1097.8 kN·m, ηM = 0.611 (template: 5° β steps, 100 strips → 1099.2).
-    expect(result('M_{Rd.\\theta}\\coloneq')?.value?.number).toBeCloseTo(1099.2, 0);
-    expect(result('\\eta_{M}\\coloneq')?.value?.number).toBeCloseTo(0.611, 2);
+    // Biaxial: P–Mθ at θ = 63.4°, the neutral axis rotated for each point (NA angle ≈ 37° near NEd).
     // P–Mθ curve point at c = 0.5·H(β), interpolated to ψ = θM: reference N = 2639 kN, M = 1101 kN·m;
     // ends: pure tension −As·fyd = −3415 kN, M = 0.
     const N = result('N_{\\theta v}\\coloneq')!.value!.items!;
