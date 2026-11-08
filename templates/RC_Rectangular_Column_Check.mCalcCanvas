@@ -2477,11 +2477,11 @@
       "id": "s_rect_4a",
       "type": "text",
       "x": 80,
-      "y": 5441,
+      "y": 5438,
       "props": {
-        "w": 310,
+        "w": 630,
         "h": 24,
-        "html": "",
+        "html": "Closed inner ties to draw (a single middle bar is a leg, drawn separately)",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -2491,12 +2491,12 @@
     {
       "id": "s_rect_4b",
       "type": "math",
-      "x": 400,
-      "y": 5434,
+      "x": 96,
+      "y": 5474,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "t_{b}\\coloneq\\mathrm{seq}\\left(0,5\\max\\left(q_{b},1\\right)-1\\right)",
+        "latex": "t_{b}\\coloneq\\mathrm{seq}\\left(0,5\\max\\left(q_{b}-m_{b},1\\right)-1\\right)",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -2509,9 +2509,9 @@
       "id": "s_rect_4c",
       "type": "text",
       "x": 80,
-      "y": 5491,
+      "y": 5518,
       "props": {
-        "w": 310,
+        "w": 630,
         "h": 24,
         "html": "",
         "fontFamily": "Inter",
@@ -2523,12 +2523,12 @@
     {
       "id": "s_rect_4d",
       "type": "math",
-      "x": 400,
-      "y": 5484,
+      "x": 96,
+      "y": 5544,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "t_{h}\\coloneq\\mathrm{seq}\\left(0,5\\max\\left(q_{h},1\\right)-1\\right)",
+        "latex": "t_{h}\\coloneq\\mathrm{seq}\\left(0,5\\max\\left(q_{h}-m_{h},1\\right)-1\\right)",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -2541,7 +2541,7 @@
       "id": "s_rect_4e",
       "type": "text",
       "x": 80,
-      "y": 5524,
+      "y": 5584,
       "props": {
         "w": 630,
         "h": 24,
@@ -2557,7 +2557,7 @@
       "id": "s_rect_4f",
       "type": "text",
       "x": 80,
-      "y": 5554,
+      "y": 5624,
       "props": {
         "w": 310,
         "h": 24,
@@ -2572,7 +2572,7 @@
       "id": "s_rect_4g",
       "type": "math",
       "x": 400,
-      "y": 5554,
+      "y": 5624,
       "props": {
         "w": 60,
         "h": 32,
@@ -2589,7 +2589,7 @@
       "id": "s_rect_4h",
       "type": "text",
       "x": 80,
-      "y": 5621,
+      "y": 5681,
       "props": {
         "w": 310,
         "h": 24,
@@ -2604,7 +2604,7 @@
       "id": "s_rect_4i",
       "type": "math",
       "x": 400,
-      "y": 5614,
+      "y": 5674,
       "props": {
         "w": 60,
         "h": 32,
@@ -3041,7 +3041,7 @@
           },
           {
             "id": "link",
-            "label": "Perimeter tie",
+            "label": "Ties",
             "x": "\\mathrm{stack}\\left(-1,1,1,-1,-1\\right)\\left(\\frac{b}{2}-c_{nom}-\\frac{\\phi_{w}}{2}\\right)",
             "y": "\\mathrm{stack}\\left(-1,-1,1,1,-1\\right)\\left(\\frac{h}{2}-c_{nom}-\\frac{\\phi_{w}}{2}\\right)",
             "style": "line",
@@ -3052,25 +3052,47 @@
           },
           {
             "id": "hoopb",
-            "label": "Inner ties ∥ y",
+            "label": "",
             "x": "\\mathrm{map}\\left(X_{B},t_{b}\\right)",
             "y": "\\mathrm{map}\\left(Y_{B},t_{b}\\right)",
             "style": "line",
             "r": "",
-            "color": "#047857",
+            "color": "#2563eb",
             "width": 1.5,
-            "show": "q_{b}\\ge1"
+            "show": "q_{b}-m_{b}\\ge1"
           },
           {
             "id": "hooph",
-            "label": "Inner ties ∥ x",
+            "label": "",
             "x": "\\mathrm{map}\\left(X_{H},t_{h}\\right)",
             "y": "\\mathrm{map}\\left(Y_{H},t_{h}\\right)",
             "style": "line",
             "r": "",
-            "color": "#047857",
+            "color": "#2563eb",
             "width": 1.5,
-            "show": "q_{h}\\ge1"
+            "show": "q_{h}-m_{h}\\ge1"
+          },
+          {
+            "id": "legb",
+            "label": "Legs ∥ y",
+            "x": "\\mathrm{stack}\\left(0,0\\right)\\mathrm{mm}",
+            "y": "\\mathrm{stack}\\left(-1,1\\right)\\left(e_{y}-\\phi_{w}\\right)",
+            "style": "line",
+            "r": "",
+            "color": "#047857",
+            "width": 2,
+            "show": "m_{b}\\ge1"
+          },
+          {
+            "id": "legh",
+            "label": "Legs ∥ x",
+            "x": "\\mathrm{stack}\\left(-1,1\\right)\\left(e_{x}-\\phi_{w}\\right)",
+            "y": "\\mathrm{stack}\\left(0,0\\right)\\mathrm{mm}",
+            "style": "line",
+            "r": "",
+            "color": "#047857",
+            "width": 2,
+            "show": "m_{h}\\ge1"
           },
           {
             "id": "bars",
@@ -6746,6 +6768,6 @@
       }
     }
   ],
-  "createdAt": "2026-11-08T13:37:37.157Z",
-  "updatedAt": "2026-11-08T13:37:37.157Z"
+  "createdAt": "2026-11-08T13:42:48.538Z",
+  "updatedAt": "2026-11-08T13:42:48.538Z"
 }
