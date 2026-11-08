@@ -48,7 +48,7 @@ function OutlineView() {
                   <input
                     autoFocus
                     aria-label="Heading text"
-                    defaultValue={h.text}
+                    defaultValue={h.title}
                     onBlur={(e) => {
                       renameHeading(h.id, e.currentTarget.value);
                       setRenaming(null);

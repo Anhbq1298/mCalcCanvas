@@ -165,6 +165,7 @@ function SyntaxDialog({ onClose }: { onClose(): void }) {
             <li><b>Check</b> – <code>η_M ≤ 1</code> shows the value with a PASS/FAIL badge.</li>
             <li>Calculations run <b>top to bottom, left to right</b>. A region can only use variables defined above it (or to its left on the same line); using one defined below shows an error.</li>
             <li>A variable can be redefined: regions below the new definition use the new value, regions above keep the old one. The redefinition gets a <span className="font-semibold text-[#188038]">green outline</span>.</li>
+            <li><b>Annex</b> – Insert → Annex link puts a link (▸ A.1 …) in the main body and a new annex page at the end. <b>An annex is calculated at its link</b>: it uses what is defined above the link, and regions below the link use its results. Annexes are numbered in link order; Tools → Sort annex by link order moves their pages into that order. Double-click a link to go to its annex, and "↩" to come back.</li>
           </ul>
         </section>
         <section>

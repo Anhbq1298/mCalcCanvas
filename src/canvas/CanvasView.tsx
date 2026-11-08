@@ -31,6 +31,7 @@ import {
 import { boxFromPoints, boxesIntersect, screenToPage, shapeBounds, unionBounds } from './model/geometry';
 import { clampDelta, clampPoint, crossPoint, gridAlign, printableAt } from './pageConstraint';
 import { separateRegion } from './canvasActions';
+import { followAnnex } from './annexActions';
 import type { Box, Camera, Point, Shape } from './model/types';
 import { ShapeView } from './shapes/ShapeView';
 
@@ -447,6 +448,16 @@ export function CanvasView() {
     if (sh?.type === 'math' && target.closest('.vec-more')) {
       // Double-click on "…" / "⋮" of a shortened array: show every entry.
       updateShape(sh.id, { props: { vectorExpanded: true } });
+      return;
+    }
+    // Annex link / "↩" on an annex heading: go to the other end.
+    const go = target.closest('[data-annex-go]')?.getAttribute('data-annex-go');
+    if (go && st.shapes[go]) {
+      followAnnex(go);
+      return;
+    }
+    if (sh?.type === 'text' && sh.props.annex?.kind === 'link') {
+      followAnnex(sh.id);
       return;
     }
     if (sh && (sh.type === 'math' || sh.type === 'text')) {

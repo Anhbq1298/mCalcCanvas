@@ -7,6 +7,7 @@ import { orderedShapes, updateShapes, useCanvasStore, type ShapePatch } from './
 import { PARAGRAPH_STYLES, type HeadingLevel, type Shape, type TextShape } from './model/types';
 import { escapeHtml } from './sanitize';
 import { shapeBounds } from './model/geometry';
+import { annexInfo, annexNumber } from './annex';
 
 export function plainText(html: string): string {
   return html
@@ -32,7 +33,10 @@ export function headingLevel(s: Shape): HeadingLevel {
 export interface OutlineItem {
   id: string;
   level: 1 | 2 | 3;
+  /** Shown text (annex headings get their A.n number in front). */
   text: string;
+  /** Editable title (the heading text itself). */
+  title: string;
 }
 
 export function readingSort<T extends { x: number; y: number }>(list: T[]): T[] {
@@ -41,7 +45,12 @@ export function readingSort<T extends { x: number; y: number }>(list: T[]): T[] 
 
 export function outlineOf(shapes: Record<string, Shape>): OutlineItem[] {
   const items = readingSort(Object.values(shapes).filter((s): s is TextShape => headingLevel(s) > 0));
-  return items.map((s) => ({ id: s.id, level: headingLevel(s) as 1 | 2 | 3, text: plainText(s.props.html) }));
+  const annex = annexInfo(shapes);
+  return items.map((s) => {
+    const block = annex.byHeading.get(s.id);
+    const title = plainText(s.props.html);
+    return { id: s.id, level: headingLevel(s) as 1 | 2 | 3, text: (block ? `${annexNumber(block.number)} ` : '') + title, title };
+  });
 }
 
 /** The heading whose section contains `shape` (nearest heading above it in reading order). */

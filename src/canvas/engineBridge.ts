@@ -14,6 +14,7 @@ import { orderKeysEqual, type OrderKey, type RegionInput } from '../engine';
 import { useCanvasStore, type CanvasState } from './model/canvasStore';
 import type { GraphShape, Shape } from './model/types';
 import { graphRegionId, isDefinitionLatex, type GraphField } from './graphData';
+import { annexInfo } from './annex';
 
 export { graphRegionId, isDefinitionLatex, type GraphField } from './graphData';
 
@@ -33,8 +34,30 @@ export function readingKey(s: Shape): OrderKey {
 
 type Regions = Map<string, RegionInput>;
 
+/**
+ * Calculation key of a shape: its reading key, or – inside an annex block
+ * placed by a link – the link's reading key followed by its own, so the block
+ * is calculated where the link stands.
+ */
+export function calcKey(s: Shape, shapes: Record<string, Shape>): OrderKey {
+  const link = annexInfo(shapes).anchorOf.get(s.id);
+  const anchor = link ? shapes[link] : undefined;
+  return anchor ? [...readingKey(anchor), ...readingKey(s)] : readingKey(s);
+}
+
+/** Changes whenever any annex placement changes (then every key is recomputed). */
+function annexSignature(shapes: Record<string, Shape>): string {
+  const info = annexInfo(shapes);
+  let sig = '';
+  for (const b of info.blocks) {
+    if (!b.link) continue;
+    sig += `${b.link}@${readingKey(shapes[b.link]).join(',')}:${b.heading},${b.members.join(',')};`;
+  }
+  return sig;
+}
+
 /** The engine regions a shape contributes (none for text, images, drawings). */
-function regionsOf(s: Shape, editingId: string | null): Regions {
+function regionsOf(s: Shape, editingId: string | null, shapes: Record<string, Shape>): Regions {
   const out: Regions = new Map();
   if (s.type === 'math') {
     out.set(s.id, {
@@ -44,16 +67,15 @@ function regionsOf(s: Shape, editingId: string | null): Regions {
       ...(s.props.vectorLayout === 'column' ? { vectorLayout: 'column' as const } : {}),
       ...(s.props.vectorExpanded ? { vectorExpanded: true } : {}),
       draft: s.id === editingId,
-      order: readingKey(s),
+      order: calcKey(s, shapes),
     });
   } else if (s.type === 'graph') {
-    graphRegions(s, out);
+    graphRegions(s, out, calcKey(s, shapes));
   }
   return out;
 }
 
-function graphRegions(s: GraphShape, out: Regions): void {
-  const key = readingKey(s);
+function graphRegions(s: GraphShape, out: Regions, key: OrderKey): void {
   const { xUnit, yUnit } = s.props;
   s.props.series.forEach((series, i) => {
     const fields: [GraphField, string, string][] = [
@@ -94,15 +116,18 @@ let registered = new Map<string, Regions>();
 function allRegions(shapes: Record<string, Shape>, editingId: string | null): Map<string, Regions> {
   const m = new Map<string, Regions>();
   for (const s of Object.values(shapes)) {
-    const r = regionsOf(s, editingId);
+    const r = regionsOf(s, editingId, shapes);
     if (r.size) m.set(s.id, r);
   }
   return m;
 }
 
+let registeredAnnex = '';
+
 export function resyncAll(): void {
   const { shapes, editingId } = useCanvasStore.getState();
   registered = allRegions(shapes, editingId);
+  registeredAnnex = annexSignature(shapes);
   engine.batch(() => {
     engine.clear();
     for (const regions of registered.values()) for (const [id, input] of regions) engine.setRegion(id, input);
@@ -126,6 +151,9 @@ function applyDiff(next: Map<string, Regions>): void {
 /** Recomputes regions only for shapes that changed (object identity), reusing the rest. */
 function regionsAfterChange(next: CanvasState, prev: CanvasState, rekeyAll: boolean): Map<string, Regions> {
   const m = new Map<string, Regions>();
+  const sig = annexSignature(next.shapes);
+  if (sig !== registeredAnnex) rekeyAll = true;
+  registeredAnnex = sig;
   const editingChanged = next.editingId !== prev.editingId;
   for (const [id, s] of Object.entries(next.shapes)) {
     const reuse =
@@ -137,7 +165,7 @@ function regionsAfterChange(next: CanvasState, prev: CanvasState, rekeyAll: bool
       m.set(id, registered.get(id)!);
       continue;
     }
-    const r = regionsOf(s, next.editingId);
+    const r = regionsOf(s, next.editingId, next.shapes);
     if (r.size) m.set(id, r);
   }
   return m;

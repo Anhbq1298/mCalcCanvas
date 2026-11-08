@@ -9,6 +9,8 @@ import type { MathShape } from '../model/types';
 import { majorLineAtOrBelow } from '../pageConstraint';
 import { separateRegion } from '../canvasActions';
 import { useSeparateAfterEditing } from './useSeparate';
+import { annexInfo, annexNumber, pageNumberOf } from '../annex';
+import { useAppStore } from '../../store/appStore';
 
 const PAD_X = 6;
 const PAD_Y = 4;
@@ -70,8 +72,10 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     [shape.id],
   );
 
+  const annexHint = useAnnexHint(shape.id);
   const error = result?.error;
   const empty = latex.trim() === '';
+  const errorMessage = error && annexHint && /defined (below|above) this equation/.test(error.message) ? `${error.message} ${annexHint}` : error?.message;
 
   return (
     <div
@@ -82,7 +86,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
       data-status={result?.status ?? 'empty'}
       data-latex={latex}
       data-result={result?.value?.text ?? ''}
-      data-error={error?.message ?? ''}
+      data-error={errorMessage ?? ''}
       data-redefines={result?.redefines ? result.redefines.name : undefined}
       title={
         result?.redefines
@@ -127,7 +131,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
           </div>
         )}
         {/* Status as compact symbols; the explanation appears on hover. */}
-        {error && !empty && !(editing && result?.draftError) && <StatusIcon kind="error" message={error.message} />}
+        {error && !empty && !(editing && result?.draftError) && <StatusIcon kind="error" message={errorMessage ?? error.message} />}
         {!isStatic && result?.warnings.map((w) => <StatusIcon key={w} kind="warning" message={w} />)}
         {editing && result?.draftError && <StatusIcon kind="draft" message="Incomplete – dependent regions use the last valid expression." />}
       </div>
@@ -155,4 +159,18 @@ function StatusIcon({ kind, message }: { kind: 'error' | 'warning' | 'draft'; me
       </span>
     </span>
   );
+}
+
+/** For a region in a linked annex block: where the block is calculated. */
+function useAnnexHint(id: string): string | null {
+  const orientation = useAppStore((s) => s.settings.pageOrientation);
+  return useCanvasStore((st) => {
+    const info = annexInfo(st.shapes);
+    const link = info.anchorOf.get(id);
+    if (!link) return null;
+    const block = info.links.get(link)?.block;
+    const at = st.shapes[link];
+    if (!block || !at) return null;
+    return `${annexNumber(block.number)} is calculated at its link on page ${pageNumberOf(at, orientation)}: it can only use names defined above that link.`;
+  });
 }

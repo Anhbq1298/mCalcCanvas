@@ -89,12 +89,17 @@ Messages name the variable or quantity involved, e.g. `Unit mismatch: Force (kN)
 - **`floor(x)`, `ceil(x)`**: plain numbers only; values within 1e-9 of an integer are taken as that integer.
 - **`angle(x, y)`** (Mathcad): direction of the vector (x, y), 0 … 2π; x and y must share a unit.
 - **`stack(a, b, …)`** joins scalars and vectors into one vector.
+- **Cached calls.** A call whose arguments are all scalars is cached on the function object (key: exact value and unit of each argument; at most 20 000 entries). Functions are pure, and the object is replaced whenever its definition or anything it uses is recalculated, so a cached result never outlives its inputs. This makes per-angle geometry (`p_c(β)`, `A_c(β)`) cost one evaluation per angle in sweeps such as the rectangular column's neutral-axis rotation.
 
 ## Graph regions
 
 A graph shape (`type: 'graph'`) is not a statement. `engineBridge` registers each series field (`x`, `y`, `r`, `show`) as a hidden region with id `shape::series::field`, order key `[...graphKey, seriesIndex, field]`, the axis display unit and precision 8. So a series sees exactly the definitions above the graph, uses the normal dependency graph and errors, and redraws when an input changes. A field containing a definition is never registered (it would leak a variable into the worksheet).
 
 Series styles: `line`, `marker`, `circle` (r = radius in x units) and `segments`. For `segments` the `r` field is a plain-number group id per point (no display unit): consecutive points with the same id are joined, a change of id starts a new piece, so one series can draw several separate polylines (the rectangular column template draws all closed ties and all cross-tie legs this way). An empty `r` draws one piece.
+
+## Annex blocks
+
+An annex block (an annex heading and everything below it up to the next annex heading, all below the ANNEX title) is calculated where its link stands in the main body: `engineBridge.calcKey` gives each region of a linked block the key `[...readingKey(link), ...readingKey(region)]`. The engine still sees one top-to-bottom order, so an annex can use only names defined above its link, and regions below the link use the annex results. When any link or block membership changes (`annexSignature`), every region is re-keyed. `canvas/annex.ts` computes blocks, numbers (link order, then unlinked blocks) and problems (missing target, duplicate link, link inside the annex, heading above the ANNEX title); unlinked blocks are calculated where they stand.
 
 ## Extending the value model (planned)
 

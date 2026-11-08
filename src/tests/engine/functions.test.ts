@@ -35,6 +35,16 @@ describe('user functions', () => {
     expect(num(e, 'r')).toBe(6);
   });
 
+  it('cached calls (scalar arguments) never outlive a change upstream, also through nested functions', () => {
+    const e = setup({ a: 'a\\coloneq10', g: 'g\\left(x\\right)\\coloneq a x', f: 'f\\left(x\\right)\\coloneq2g\\left(x\\right)', r: 'f\\left(3\\right)+f\\left(3\\right)=', s: 's\\coloneq f\\left(3\\,\\mathrm{m}\\right)', t: 't\\coloneq f\\left(3000\\,\\mathrm{mm}\\right)' });
+    expect(num(e, 'r')).toBe(120);
+    expect(res(e, 's').value?.text).toBe(res(e, 't').value?.text);
+    e.setRegion('a', { latex: 'a\\coloneq2' });
+    expect(num(e, 'r')).toBe(24);
+    e.setRegion('g', { latex: 'g\\left(x\\right)\\coloneq a+x' });
+    expect(num(e, 'r')).toBe(20);
+  });
+
   it('several parameters, units, nested calls', () => {
     const e = setup({
       g: 'g_{1}\\left(u\\right)\\coloneq u^2',

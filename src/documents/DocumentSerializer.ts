@@ -1,4 +1,4 @@
-import { DEFAULT_GRAPH_STYLE, DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, TEXT_FONTS, type GraphSeriesStyle, type Shape } from '../canvas/model/types';
+import { DEFAULT_GRAPH_STYLE, DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, TEXT_FONTS, type AnnexRole, type GraphSeriesStyle, type Shape } from '../canvas/model/types';
 import { escapeHtml, sanitizeHtml } from '../canvas/sanitize';
 import {
   DEFAULT_SETTINGS,
@@ -108,6 +108,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           color: color(p.color, '#0f172a'),
           align: (['left', 'center', 'right'].includes(p.align as string) ? p.align : 'left') as never,
           ...([1, 2, 3].includes(p.heading as number) ? { heading: p.heading as 1 | 2 | 3 } : {}),
+          ...annexRole(p.annex),
         },
       };
     case 'image': {
@@ -250,4 +251,15 @@ function sanitizeMetadata(m: unknown): CalculationDocument['metadata'] {
     if (typeof src[k] === 'string') out[k] = (src[k] as string).slice(0, 200);
   }
   return out;
+}
+
+/** Annex role of a text region; anything malformed is dropped (the text stays). */
+function annexRole(v: unknown): { annex?: AnnexRole } {
+  if (!v || typeof v !== 'object') return {};
+  const r = v as Record<string, unknown>;
+  const id = (x: unknown) => (typeof x === 'string' && /^[\w-]{1,40}$/.test(x) ? x : null);
+  if (r.kind === 'start') return { annex: { kind: 'start' } };
+  if (r.kind === 'heading' && id(r.id)) return { annex: { kind: 'heading', id: id(r.id)! } };
+  if (r.kind === 'link' && id(r.target)) return { annex: { kind: 'link', target: id(r.target)! } };
+  return {};
 }

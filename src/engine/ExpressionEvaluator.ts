@@ -187,6 +187,24 @@ export interface UserFunction {
   params: string[];
   body: Expr;
   env: EvalContext;
+  /**
+   * Results of calls with scalar arguments. A function is pure, and its object is
+   * replaced whenever its definition (or anything it uses) is recalculated, so the
+   * cache never outlives the values it was computed from.
+   */
+  cache?: Map<string, Value>;
+}
+
+const MAX_CACHED_CALLS = 20000;
+
+/** Cache key for scalar arguments (exact value and unit); null when an argument is a vector. */
+function scalarKey(args: Value[]): string | null {
+  let key = '';
+  for (const a of args) {
+    if (isVector(a)) return null;
+    key += typeof a === 'number' ? `${a};` : `${a.value}|${a.formatUnits()};`;
+  }
+  return key;
 }
 
 const MAX_CALL_DEPTH = 200;
@@ -203,9 +221,17 @@ function callUserFunction(f: UserFunction, args: Value[]): Value {
     getValue: (n) => (locals.has(n) ? locals.get(n)! : f.env.getValue(n)),
     getFunction: (n) => (locals.has(n) ? undefined : f.env.getFunction?.(n)),
   };
+  const key = scalarKey(args);
+  const hit = key !== null ? f.cache?.get(key) : undefined;
+  if (hit !== undefined) return hit;
   callDepth++;
   try {
-    return evalNode(f.body, scope);
+    const v = evalNode(f.body, scope);
+    if (key !== null) {
+      f.cache ??= new Map();
+      if (f.cache.size < MAX_CACHED_CALLS) f.cache.set(key, v);
+    }
+    return v;
   } finally {
     callDepth--;
   }

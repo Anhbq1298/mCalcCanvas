@@ -159,6 +159,7 @@ export function beginEditSelected(): boolean {
   if (selection.length !== 1) return false;
   const s = shapes[selection[0]];
   if (s?.type !== 'math' && s?.type !== 'text') return false;
+  if (s.type === 'text' && s.props.annex?.kind === 'link') return false;
   startEditing(s.id);
   return true;
 }

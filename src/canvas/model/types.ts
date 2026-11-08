@@ -44,7 +44,16 @@ export interface TextProps {
   align: TextAlign;
   /** Paragraph style: 0 normal text, 1–3 heading levels (shown in the outline). */
   heading?: HeadingLevel;
+  /** Annex role (see canvas/annex.ts): the ANNEX title, an annex heading, or a link to one. */
+  annex?: AnnexRole;
 }
+
+/**
+ * start: the ANNEX title; everything below it is the annex.
+ * heading: starts annex block `id` (until the next annex heading).
+ * link: the block `target` is calculated as if it stood at this line.
+ */
+export type AnnexRole = { kind: 'start' } | { kind: 'heading'; id: string } | { kind: 'link'; target: string };
 
 export type HeadingLevel = 0 | 1 | 2 | 3;
 

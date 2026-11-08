@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CalculationEngine } from '../../engine';
-import { readingKey } from '../../canvas/engineBridge';
+import { calcKey } from '../../canvas/engineBridge';
 import { graphRegionId } from '../../canvas/graphData';
 import { templateById, type TemplateId } from '../../documents/templates';
 
@@ -12,19 +12,20 @@ function evaluate(id: TemplateId, inputs: Record<string, string> = {}) {
     if (s.type !== 'math') continue;
     for (const [prefix, latex] of Object.entries(inputs)) if (s.props.latex.startsWith(prefix)) s.props = { ...s.props, latex };
   }
+  const rec = Object.fromEntries(shapes.map((x) => [x.id, x]));
   const e = new CalculationEngine();
   const ids: string[] = [];
   e.batch(() => {
     for (const s of shapes) {
       if (s.type === 'math') {
-        e.setRegion(s.id, { latex: s.props.latex, order: readingKey(s), displayUnit: s.props.displayUnit || null, precision: s.props.precision >= 0 ? s.props.precision : null });
+        e.setRegion(s.id, { latex: s.props.latex, order: calcKey(s, rec), displayUnit: s.props.displayUnit || null, precision: s.props.precision >= 0 ? s.props.precision : null });
         ids.push(s.id);
       } else if (s.type === 'graph') {
         s.props.series.forEach((ser, k) => {
           for (const f of ['x', 'y', 'r'] as const) {
             if (f === 'r' && ser.style !== 'segments') continue;
             const rid = graphRegionId(s.id, ser.id, f);
-            e.setRegion(rid, { latex: `${ser[f]}=`, order: [...readingKey(s), k, f] as never, displayUnit: (f === 'x' ? s.props.xUnit : f === 'y' ? s.props.yUnit : '') || null, precision: 8 });
+            e.setRegion(rid, { latex: `${ser[f]}=`, order: [...calcKey(s, rec), k, f] as never, displayUnit: (f === 'x' ? s.props.xUnit : f === 'y' ? s.props.yUnit : '') || null, precision: 8 });
             ids.push(rid);
           }
         });
@@ -61,8 +62,10 @@ describe('column templates', () => {
     expect(result('q_{h}\\coloneq')?.value?.number).toBe(1);
     expect(result('n_{w.y}\\coloneq')?.value?.number).toBe(2);
     expect(result('n_{w.x}\\coloneq')?.value?.number).toBe(4);
-    // P–Mθ (NA ⟂ θ = 63.4°): independent 400×400 fibre grid gives 1282.8 kN·m.
-    expect(result('M_{Rd.\\theta}\\coloneq')?.value?.number).toBeCloseTo(1282.6, 0);
+    // Biaxial, NA rotated until the moment points along θ = 63.4°: independent 500×500 fibre grid
+    // gives βM = 37.2°, MRd,θ = 1097.8 kN·m, ηM = 0.611 (template: 5° β steps, 100 strips → 1099.2).
+    expect(result('M_{Rd.\\theta}\\coloneq')?.value?.number).toBeCloseTo(1099.2, 0);
+    expect(result('\\eta_{M}\\coloneq')?.value?.number).toBeCloseTo(0.611, 2);
   }, 30000);
 
   it('a small rectangular section needs no inner ties (every bar within 150 mm of a corner)', () => {

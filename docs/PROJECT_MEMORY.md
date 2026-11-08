@@ -13,6 +13,7 @@
 - **Units display.** Light blue (`UNIT_COLOR`), with a `·` between number and unit (display only, `unitStyle.ts`). Temperatures keep `20 °C`.
 - **Templates.** The RC beam (EN 1992-1-1) template is the default on first visit; the steel beam is the test fixture. `?template=<id>` starts a new worksheet from a template.
 - **Files.** `.mCalcCanvas` is the JSON document. Results are never stored.
+- **Annex.** Arrays and drawing data can live in an annex without breaking the top-to-bottom chain: each annex block is calculated at its link (▸ A.n) in the main body. One rule for users: "an annex is calculated at its link". Each block starts on a new page so blocks can be sorted by moving pages; numbers and page references are computed, not stored.
 - **Operators gallery.** It mirrors Mathcad Prime. Operators the engine can't evaluate yet are shown disabled, not hidden.
 
 ## Engineering policies

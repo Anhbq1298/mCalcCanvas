@@ -3,7 +3,9 @@ import { stopEditing, updateShape, useCanvasStore } from '../model/canvasStore';
 import { separateRegion } from '../canvasActions';
 import { useSeparateAfterEditing } from './useSeparate';
 import { fontStack, PARAGRAPH_STYLES, type TextShape } from '../model/types';
-import { plainTextToHtml, sanitizeHtml } from '../sanitize';
+import { escapeHtml, plainTextToHtml, sanitizeHtml } from '../sanitize';
+import { annexInfo, annexNumber, blockTitle, pageNumberOf } from '../annex';
+import { useAppStore } from '../../store/appStore';
 
 /**
  * Rich text region. While editing it is a contentEditable box (Ctrl+B/I/U
@@ -12,6 +14,7 @@ import { plainTextToHtml, sanitizeHtml } from '../sanitize';
 export function TextView({ shape, editing, isStatic }: { shape: TextShape; editing: boolean; isStatic: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const { html, w, fontSize, color, align, fontFamily, heading } = shape.props;
+  const annexHtml = useAnnexHtml(shape);
 
   // Keep stored height equal to the rendered height (no undo entries).
   useEffect(() => {
@@ -97,5 +100,40 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
       />
     );
   }
-  return <div ref={ref} className="text-region" data-testid="text-region" data-heading={heading || undefined} style={style} dangerouslySetInnerHTML={{ __html: html || '&nbsp;' }} />;
+  return (
+    <div
+      ref={ref}
+      className={shape.props.annex?.kind === 'link' ? 'text-region text-region--annex-link' : 'text-region'}
+      data-testid="text-region"
+      data-heading={heading || undefined}
+      data-annex={shape.props.annex?.kind}
+      style={style}
+      dangerouslySetInnerHTML={{ __html: annexHtml || html || '&nbsp;' }}
+    />
+  );
+}
+
+/** Rendered content of an annex link or annex heading (number, title, page); null for other text. */
+function useAnnexHtml(shape: TextShape): string | null {
+  const role = shape.props.annex;
+  const { canvasMode, pageOrientation } = useAppStore((s) => s.settings);
+  return useCanvasStore((st) => {
+    if (!role || role.kind === 'start') return null;
+    const info = annexInfo(st.shapes);
+    const page = (id: string) => (canvasMode === 'page' && st.shapes[id] ? ` · page ${pageNumberOf(st.shapes[id], pageOrientation)}` : '');
+    if (role.kind === 'link') {
+      const ls = info.links.get(shape.id);
+      if (!ls?.block) return `▸ Annex link <span class="annex-bad">${escapeHtml(ls?.problem ?? 'Annex missing.')}</span>`;
+      const b = ls.block;
+      const where = canvasMode === 'page' ? `see page ${pageNumberOf(st.shapes[b.heading], pageOrientation)}` : 'see annex';
+      return `▸ <b>${annexNumber(b.number)}</b> ${escapeHtml(blockTitle(st.shapes, b))} <span class="annex-page">· ${where}</span>`;
+    }
+    const b = info.byHeading.get(shape.id);
+    const title = shape.props.html || 'Annex';
+    if (!b) return `${title}<span class="annex-bad">${escapeHtml(info.headingProblems.get(shape.id) ?? '')}</span>`;
+    const back = b.link
+      ? `<span class="annex-back" data-annex-go="${b.link}">↩ calculated at the link${page(b.link)}</span>`
+      : '<span class="annex-back annex-unlinked">not linked: calculated here</span>';
+    return `<span class="annex-num">${annexNumber(b.number)}</span>&nbsp; ${title}${back}`;
+  });
 }

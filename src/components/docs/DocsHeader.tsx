@@ -39,6 +39,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { addHeading, setParagraphStyle } from '../../canvas/headings';
+import { insertAnnexLink, sortAnnexByLinkOrder } from '../../canvas/annexActions';
 import { TEMPLATES } from '../../documents/templates';
 import { useState, type ReactNode } from 'react';
 import { commands, type ToolId } from '../../app/commands';
@@ -630,6 +631,7 @@ export function DocsHeader() {
       { type: 'separator' },
       { label: 'Section heading', onSelect: () => addHeading(1) },
       { label: 'Sub-section heading', onSelect: () => addHeading(2) },
+      { label: 'Annex link', onSelect: () => insertAnnexLink() },
       { type: 'separator' },
       { label: 'Blank page', shortcut: `${MOD}↵`, onSelect: commands.insertBlankPage },
       { label: 'Delete empty page', onSelect: commands.deletePage },
@@ -655,6 +657,7 @@ export function DocsHeader() {
     ],
     Tools: [
       { label: 'Calculate all', shortcut: 'F9', onSelect: commands.calculateAll },
+      { label: 'Sort annex by link order', onSelect: () => sortAnnexByLinkOrder() },
       { type: 'heading', label: 'Unit system' },
       { label: 'SI (kN, m, kPa)', checked: settings.unitSystem === 'SI', onSelect: () => updateSettings({ unitSystem: 'SI' }) },
       { label: 'USCS (kip, ft, ksi)', checked: settings.unitSystem === 'Imperial', onSelect: () => updateSettings({ unitSystem: 'Imperial' }) },
