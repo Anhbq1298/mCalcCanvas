@@ -5,9 +5,13 @@ import { graphRegionId } from '../../canvas/graphData';
 import { templateById, type TemplateId } from '../../documents/templates';
 
 /** Registers every math region and graph series field the way the canvas does, then lists errors. */
-function evaluate(id: TemplateId) {
+function evaluate(id: TemplateId, inputs: Record<string, string> = {}) {
   const tpl = templateById(id)!;
   const shapes = tpl.shapes();
+  for (const s of shapes) {
+    if (s.type !== 'math') continue;
+    for (const [prefix, latex] of Object.entries(inputs)) if (s.props.latex.startsWith(prefix)) s.props = { ...s.props, latex };
+  }
   const e = new CalculationEngine();
   const ids: string[] = [];
   e.batch(() => {
@@ -56,5 +60,19 @@ describe('column templates', () => {
     expect(result('n_{w.x}\\coloneq')?.value?.number).toBe(4);
     // P–Mθ (NA ⟂ θ = 63.4°): independent 400×400 fibre grid gives 1282.8 kN·m.
     expect(result('M_{Rd.\\theta}\\coloneq')?.value?.number).toBeCloseTo(1282.6, 0);
+  }, 30000);
+
+  it('a small rectangular section needs no inner ties (every bar within 150 mm of a corner)', () => {
+    const { errors, result } = evaluate('rc-rectangular-column', {
+      'b\\coloneq': 'b\\coloneq300\\,\\mathrm{mm}',
+      'h\\coloneq': 'h\\coloneq400\\,\\mathrm{mm}',
+      'n_{b}\\coloneq': 'n_{b}\\coloneq3',
+      'n_{h}\\coloneq': 'n_{h}\\coloneq5',
+      '\\phi\\coloneq': '\\phi\\coloneq16\\,\\mathrm{mm}',
+    });
+    expect(errors).toEqual([]);
+    expect(result('q_{b}\\coloneq')?.value?.number).toBe(0);
+    expect(result('q_{h}\\coloneq')?.value?.number).toBe(0);
+    expect(result('n_{w.x}\\coloneq')?.value?.number).toBe(2);
   }, 30000);
 });
