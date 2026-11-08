@@ -51,13 +51,9 @@ describe('column templates', () => {
     expect(result('\\eta_{V}\\coloneq')?.value?.number).toBeCloseTo(0.612, 3);
   }, 30000);
 
-  it('RC rectangular column check calculates without errors (MRd,x, MRd,y, (5.39))', () => {
+  it('RC rectangular column check calculates without errors (biaxial MRd,θ, P–Mθ curve)', () => {
     const { errors, result } = evaluate('rc-rectangular-column');
     expect(errors).toEqual([]);
-    // Independent fibre integration (2000 strips, exact root on c): 1463.7 / 955.1 kN·m, η = 0.6308.
-    expect(result('M_{Rd.x}\\coloneq')?.value?.number).toBeCloseTo(1463.5, 0);
-    expect(result('M_{Rd.y}\\coloneq')?.value?.number).toBeCloseTo(954.9, 0);
-    expect(result('\\eta_{xy}\\coloneq')?.value?.number).toBeCloseTo(0.631, 3);
     // Ties: corners + every other bar, mirrored pairs in one inner closed tie (6 bars on h: one tie at bars 2–3).
     expect(result('q_{h}\\coloneq')?.value?.number).toBe(1);
     expect(result('n_{w.y}\\coloneq')?.value?.number).toBe(2);
@@ -66,6 +62,14 @@ describe('column templates', () => {
     // gives βM = 37.2°, MRd,θ = 1097.8 kN·m, ηM = 0.611 (template: 5° β steps, 100 strips → 1099.2).
     expect(result('M_{Rd.\\theta}\\coloneq')?.value?.number).toBeCloseTo(1099.2, 0);
     expect(result('\\eta_{M}\\coloneq')?.value?.number).toBeCloseTo(0.611, 2);
+    // P–Mθ curve point at c = 0.5·H(β), interpolated to ψ = θM: reference N = 2639 kN, M = 1101 kN·m;
+    // ends: pure tension −As·fyd = −3415 kN, M = 0.
+    const N = result('N_{\\theta v}\\coloneq')!.value!.items!;
+    const Mv = result('M_{\\theta v}\\coloneq')!.value!.items!;
+    expect(N[7]).toBeCloseTo(2639, -1);
+    expect(Mv[7]).toBeCloseTo(1101, -1);
+    expect(N[0]).toBeCloseTo(-3415, -1);
+    expect(Mv[0]).toBe(0);
   }, 30000);
 
   it('a small rectangular section needs no inner ties (every bar within 150 mm of a corner)', () => {

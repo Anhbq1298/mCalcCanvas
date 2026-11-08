@@ -18,7 +18,7 @@
     "showHeaderFooter": true,
     "textFont": "Inter",
     "baselineSnap": "minor",
-    "pages": 22
+    "pages": 20
   },
   "shapes": [
     {
@@ -121,7 +121,7 @@
       "props": {
         "w": 630,
         "h": 24,
-        "html": "EC2 (5.39) with MRd,x and MRd,y is shown for comparison only.",
+        "html": "P–Mθ: for each depth c the axis is rotated until the moment points along θ (no x/y reduction).",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#475569",
@@ -2691,7 +2691,7 @@
       "props": {
         "w": 630,
         "h": 24,
-        "html": "6. N–M CURVES ABOUT x AND y",
+        "html": "7. FLEXURAL CHECK",
         "fontFamily": "Inter",
         "fontSize": 16,
         "color": "#0f172a",
@@ -2703,362 +2703,7 @@
       "id": "s_rect_4l",
       "type": "text",
       "x": 80,
-      "y": 6572,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Depth to the extreme bar, bending about x",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4m",
-      "type": "math",
-      "x": 400,
       "y": 6565,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "d_{x}\\coloneq\\frac{h}{2}+a_{y}",
-        "displayMode": "formulaResult",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_4n",
-      "type": "text",
-      "x": 80,
-      "y": 6622,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Depth to the extreme bar, bending about y",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4o",
-      "type": "math",
-      "x": 400,
-      "y": 6615,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "d_{y}\\coloneq\\frac{b}{2}+a_{x}",
-        "displayMode": "formulaResult",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_4p",
-      "type": "text",
-      "x": 80,
-      "y": 6669,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Axial resistance, bending about x",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4q",
-      "type": "math",
-      "x": 96,
-      "y": 6695,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "N_{x}\\left(c\\right)\\coloneq\\mathrm{sum}\\left(\\sigma_{C}\\left(\\varepsilon\\left(c,y_{c},h,d_{x}\\right)\\right)\\right)b\\Delta_{h}+\\mathrm{sum}\\left(F_{S}\\left(c,y_{s},h,d_{x}\\right)\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_4r",
-      "type": "text",
-      "x": 80,
-      "y": 6749,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Moment resistance about x",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4s",
-      "type": "math",
-      "x": 96,
-      "y": 6775,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "M_{x}\\left(c\\right)\\coloneq\\mathrm{sum}\\left(\\sigma_{C}\\left(\\varepsilon\\left(c,y_{c},h,d_{x}\\right)\\right)y_{c}\\right)b\\Delta_{h}+\\mathrm{sum}\\left(F_{S}\\left(c,y_{s},h,d_{x}\\right)y_{s}\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_4t",
-      "type": "text",
-      "x": 80,
-      "y": 6819,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Axial resistance, bending about y",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4u",
-      "type": "math",
-      "x": 96,
-      "y": 6845,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "N_{y}\\left(c\\right)\\coloneq\\mathrm{sum}\\left(\\sigma_{C}\\left(\\varepsilon\\left(c,x_{c},b,d_{y}\\right)\\right)\\right)h\\Delta_{b}+\\mathrm{sum}\\left(F_{S}\\left(c,x_{s},b,d_{y}\\right)\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_4v",
-      "type": "text",
-      "x": 80,
-      "y": 7110,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Moment resistance about y",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4w",
-      "type": "math",
-      "x": 96,
-      "y": 7136,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "M_{y}\\left(c\\right)\\coloneq\\mathrm{sum}\\left(\\sigma_{C}\\left(\\varepsilon\\left(c,x_{c},b,d_{y}\\right)\\right)x_{c}\\right)h\\Delta_{b}+\\mathrm{sum}\\left(F_{S}\\left(c,x_{s},b,d_{y}\\right)x_{s}\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_4x",
-      "type": "text",
-      "x": 80,
-      "y": 7186,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "",
-        "fontFamily": "Inter",
-        "fontSize": 14,
-        "color": "#2563eb",
-        "align": "left",
-        "annex": {
-          "kind": "link",
-          "target": "ax_curves"
-        }
-      }
-    },
-    {
-      "id": "s_rect_4y",
-      "type": "text",
-      "x": 80,
-      "y": 7236,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "7. FLEXURAL CHECK",
-        "fontFamily": "Inter",
-        "fontSize": 16,
-        "color": "#0f172a",
-        "align": "left",
-        "heading": 2
-      }
-    },
-    {
-      "id": "s_rect_4z",
-      "type": "text",
-      "x": 80,
-      "y": 7270,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Upper axial limit (end of the curve, uniform εc2)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_50",
-      "type": "math",
-      "x": 96,
-      "y": 7306,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "N_{Ed}\\le\\max\\left(N_{xv}\\right)",
-        "displayMode": "auto",
-        "displayUnit": "kN",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_51",
-      "type": "text",
-      "x": 80,
-      "y": 7350,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Lower axial limit (pure tension)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_52",
-      "type": "math",
-      "x": 96,
-      "y": 7376,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "N_{Ed}\\ge\\min\\left(N_{xv}\\right)",
-        "displayMode": "auto",
-        "displayUnit": "kN",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_53",
-      "type": "text",
-      "x": 80,
-      "y": 7420,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Moment resistance about x at NEd",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_54",
-      "type": "math",
-      "x": 96,
-      "y": 7456,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "M_{Rd.x}\\coloneq\\mathrm{linterp}\\left(N_{xv},M_{xv},N_{Ed}\\right)",
-        "displayMode": "formulaResult",
-        "displayUnit": "kN m",
-        "precision": 1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_55",
-      "type": "text",
-      "x": 80,
-      "y": 7500,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Moment resistance about y at NEd",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_56",
-      "type": "math",
-      "x": 96,
-      "y": 7526,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "M_{Rd.y}\\coloneq\\mathrm{linterp}\\left(N_{yv},M_{yv},N_{Ed}\\right)",
-        "displayMode": "formulaResult",
-        "displayUnit": "kN m",
-        "precision": 1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_57",
-      "type": "text",
-      "x": 80,
-      "y": 7566,
       "props": {
         "w": 630,
         "h": 24,
@@ -3071,10 +2716,10 @@
       }
     },
     {
-      "id": "s_rect_58",
+      "id": "s_rect_4m",
       "type": "text",
       "x": 80,
-      "y": 7606,
+      "y": 6595,
       "props": {
         "w": 630,
         "h": 24,
@@ -3086,10 +2731,10 @@
       }
     },
     {
-      "id": "s_rect_59",
+      "id": "s_rect_4n",
       "type": "text",
       "x": 80,
-      "y": 7636,
+      "y": 6625,
       "props": {
         "w": 630,
         "h": 24,
@@ -3101,10 +2746,10 @@
       }
     },
     {
-      "id": "s_rect_5a",
+      "id": "s_rect_4o",
       "type": "text",
       "x": 80,
-      "y": 7670,
+      "y": 6659,
       "props": {
         "w": 630,
         "h": 24,
@@ -3116,10 +2761,10 @@
       }
     },
     {
-      "id": "s_rect_5b",
+      "id": "s_rect_4p",
       "type": "math",
       "x": 96,
-      "y": 7696,
+      "y": 6695,
       "props": {
         "w": 60,
         "h": 32,
@@ -3133,10 +2778,10 @@
       }
     },
     {
-      "id": "s_rect_5c",
+      "id": "s_rect_4q",
       "type": "text",
       "x": 80,
-      "y": 7746,
+      "y": 6745,
       "props": {
         "w": 310,
         "h": 24,
@@ -3148,10 +2793,10 @@
       }
     },
     {
-      "id": "s_rect_5d",
+      "id": "s_rect_4r",
       "type": "math",
       "x": 400,
-      "y": 7746,
+      "y": 6745,
       "props": {
         "w": 60,
         "h": 32,
@@ -3165,10 +2810,10 @@
       }
     },
     {
-      "id": "s_rect_5e",
+      "id": "s_rect_4s",
       "type": "text",
       "x": 80,
-      "y": 7796,
+      "y": 6795,
       "props": {
         "w": 630,
         "h": 24,
@@ -3184,10 +2829,10 @@
       }
     },
     {
-      "id": "s_rect_5f",
+      "id": "s_rect_4t",
       "type": "text",
       "x": 80,
-      "y": 7840,
+      "y": 7110,
       "props": {
         "w": 630,
         "h": 24,
@@ -3199,10 +2844,10 @@
       }
     },
     {
-      "id": "s_rect_5g",
+      "id": "s_rect_4u",
       "type": "math",
       "x": 96,
-      "y": 7876,
+      "y": 7136,
       "props": {
         "w": 60,
         "h": 32,
@@ -3216,10 +2861,10 @@
       }
     },
     {
-      "id": "s_rect_5h",
+      "id": "s_rect_4v",
       "type": "text",
       "x": 80,
-      "y": 7920,
+      "y": 7190,
       "props": {
         "w": 630,
         "h": 24,
@@ -3231,10 +2876,10 @@
       }
     },
     {
-      "id": "s_rect_5i",
+      "id": "s_rect_4w",
       "type": "math",
       "x": 96,
-      "y": 7946,
+      "y": 7216,
       "props": {
         "w": 60,
         "h": 32,
@@ -3248,10 +2893,10 @@
       }
     },
     {
-      "id": "s_rect_5j",
+      "id": "s_rect_4x",
       "type": "text",
       "x": 80,
-      "y": 7990,
+      "y": 7260,
       "props": {
         "w": 630,
         "h": 24,
@@ -3263,10 +2908,10 @@
       }
     },
     {
-      "id": "s_rect_5k",
+      "id": "s_rect_4y",
       "type": "math",
       "x": 96,
-      "y": 8026,
+      "y": 7286,
       "props": {
         "w": 60,
         "h": 32,
@@ -3280,138 +2925,10 @@
       }
     },
     {
-      "id": "s_rect_5l",
+      "id": "s_rect_4z",
       "type": "text",
       "x": 80,
-      "y": 8281,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Depth c with N = NEd: first from coarse points c/H = uβ, then two Newton steps",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_5m",
-      "type": "math",
-      "x": 96,
-      "y": 8307,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "u_{\\beta}\\coloneq\\mathrm{stack}\\left(\\mathrm{seq}\\left(-0.1,1.1,0.1\\right),1.5,3,100\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_5n",
-      "type": "text",
-      "x": 80,
-      "y": 8361,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_5o",
-      "type": "math",
-      "x": 96,
-      "y": 8387,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "c_{0}\\left(\\beta\\right)\\coloneq\\mathrm{linterp}\\left(\\mathrm{map}\\left(N_{\\beta},u_{\\beta}H_{\\beta}\\left(\\beta\\right),\\beta\\right),u_{\\beta}H_{\\beta}\\left(\\beta\\right),N_{Ed}\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_5p",
-      "type": "text",
-      "x": 80,
-      "y": 8431,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_5q",
-      "type": "math",
-      "x": 96,
-      "y": 8457,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "c_{n}\\left(c,\\beta\\right)\\coloneq c+\\frac{\\left(N_{Ed}-N_{\\beta}\\left(c,\\beta\\right)\\right)\\cdot1\\,\\mathrm{mm}}{N_{\\beta}\\left(c+1\\,\\mathrm{mm},\\beta\\right)-N_{\\beta}\\left(c,\\beta\\right)}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_5r",
-      "type": "text",
-      "x": 80,
-      "y": 8524,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_5s",
-      "type": "math",
-      "x": 400,
-      "y": 8517,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "c_{N}\\left(\\beta\\right)\\coloneq c_{n}\\left(c_{n}\\left(c_{0}\\left(\\beta\\right),\\beta\\right),\\beta\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_5t",
-      "type": "text",
-      "x": 80,
-      "y": 8567,
+      "y": 7336,
       "props": {
         "w": 630,
         "h": 24,
@@ -3427,10 +2944,74 @@
       }
     },
     {
-      "id": "s_rect_5u",
+      "id": "s_rect_50",
       "type": "text",
       "x": 80,
-      "y": 8614,
+      "y": 7380,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Upper axial limit (uniform εc2)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_51",
+      "type": "math",
+      "x": 96,
+      "y": 7406,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{Ed}\\le\\max\\left(N_{\\theta v}\\right)",
+        "displayMode": "auto",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_52",
+      "type": "text",
+      "x": 80,
+      "y": 7450,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Lower axial limit (pure tension)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_53",
+      "type": "math",
+      "x": 96,
+      "y": 7476,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{Ed}\\ge\\min\\left(N_{\\theta v}\\right)",
+        "displayMode": "auto",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_54",
+      "type": "text",
+      "x": 80,
+      "y": 7533,
       "props": {
         "w": 310,
         "h": 24,
@@ -3442,10 +3023,10 @@
       }
     },
     {
-      "id": "s_rect_5v",
+      "id": "s_rect_55",
       "type": "math",
       "x": 400,
-      "y": 8607,
+      "y": 7526,
       "props": {
         "w": 60,
         "h": 32,
@@ -3459,10 +3040,10 @@
       }
     },
     {
-      "id": "s_rect_5w",
+      "id": "s_rect_56",
       "type": "text",
       "x": 80,
-      "y": 8651,
+      "y": 7570,
       "props": {
         "w": 630,
         "h": 24,
@@ -3474,10 +3055,10 @@
       }
     },
     {
-      "id": "s_rect_5x",
+      "id": "s_rect_57",
       "type": "math",
       "x": 96,
-      "y": 8677,
+      "y": 7596,
       "props": {
         "w": 60,
         "h": 32,
@@ -3491,10 +3072,10 @@
       }
     },
     {
-      "id": "s_rect_5y",
+      "id": "s_rect_58",
       "type": "text",
       "x": 80,
-      "y": 8726,
+      "y": 7645,
       "props": {
         "w": 310,
         "h": 24,
@@ -3506,10 +3087,10 @@
       }
     },
     {
-      "id": "s_rect_5z",
+      "id": "s_rect_59",
       "type": "math",
       "x": 400,
-      "y": 8717,
+      "y": 7636,
       "props": {
         "w": 60,
         "h": 32,
@@ -3523,10 +3104,10 @@
       }
     },
     {
-      "id": "s_rect_60",
+      "id": "s_rect_5a",
       "type": "text",
       "x": 80,
-      "y": 8784,
+      "y": 7703,
       "props": {
         "w": 310,
         "h": 24,
@@ -3538,10 +3119,10 @@
       }
     },
     {
-      "id": "s_rect_61",
+      "id": "s_rect_5b",
       "type": "math",
       "x": 400,
-      "y": 8777,
+      "y": 7696,
       "props": {
         "w": 60,
         "h": 32,
@@ -3555,14 +3136,14 @@
       }
     },
     {
-      "id": "s_rect_62",
+      "id": "s_rect_5c",
       "type": "text",
       "x": 80,
-      "y": 8817,
+      "y": 8277,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "7.2 EC2 (5.39), for comparison",
+        "html": "7.2 P–Mθ diagram",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#334155",
@@ -3571,269 +3152,29 @@
       }
     },
     {
-      "id": "s_rect_63",
-      "type": "text",
-      "x": 80,
-      "y": 8857,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Axial resistance for the exponent a, EC2 5.8.9(4)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_64",
-      "type": "math",
-      "x": 400,
-      "y": 8857,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "N_{Rd}\\coloneq A_{g}f_{cd}+A_{s}f_{yd}",
-        "displayMode": "formulaResult",
-        "displayUnit": "kN",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_65",
-      "type": "text",
-      "x": 80,
-      "y": 8911,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Axial ratio, limited to 0.1 … 1.0",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_66",
-      "type": "math",
-      "x": 96,
-      "y": 8937,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "r_{N}\\coloneq\\min\\left(1,\\max\\left(0.1,\\frac{N_{Ed}}{N_{Rd}}\\right)\\right)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_67",
-      "type": "text",
-      "x": 80,
-      "y": 9011,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Exponent a: 1.0 at 0.1, 1.5 at 0.7, 2.0 at 1.0 (linear between)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_68",
-      "type": "math",
-      "x": 96,
-      "y": 9037,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "a\\coloneq\\mathrm{linterp}\\left(\\mathrm{stack}\\left(0.1,0.7,1\\right),\\mathrm{stack}\\left(1,1.5,2\\right),r_{N}\\right)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_69",
-      "type": "text",
-      "x": 80,
-      "y": 9091,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Biaxial interaction, EC2 (5.39)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_6a",
-      "type": "math",
-      "x": 96,
-      "y": 9117,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\eta_{xy}\\coloneq\\left(\\frac{\\left|M_{Ed.x}\\right|}{M_{Rd.x}}\\right)^{a}+\\left(\\frac{\\left|M_{Ed.y}\\right|}{M_{Rd.y}}\\right)^{a}",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_6b",
-      "type": "text",
-      "x": 80,
-      "y": 9184,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Check (5.39), for comparison",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_6c",
-      "type": "math",
-      "x": 400,
-      "y": 9177,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\eta_{xy}\\le1",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_6d",
-      "type": "text",
-      "x": 80,
-      "y": 9449,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Radial ratio on the (5.39) contour (ray through the design point)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_6e",
-      "type": "math",
-      "x": 400,
-      "y": 9448,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\eta_{R}\\coloneq\\eta_{xy}^{\\frac{1}{a}}",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_6f",
-      "type": "text",
-      "x": 80,
-      "y": 9498,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Angles for drawing the contour (first quadrant)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_6g",
-      "type": "math",
-      "x": 400,
-      "y": 9498,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\varphi_{q}\\coloneq\\mathrm{seq}\\left(0,\\frac{\\pi}{2},\\frac{\\pi}{60}\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_6h",
-      "type": "text",
-      "x": 80,
-      "y": 9548,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "7.3 Diagrams",
-        "fontFamily": "Inter",
-        "fontSize": 14,
-        "color": "#334155",
-        "align": "left",
-        "heading": 3
-      }
-    },
-    {
-      "id": "s_rect_6i",
+      "id": "s_rect_5d",
       "type": "graph",
-      "x": 80,
-      "y": 9580,
+      "x": 187,
+      "y": 8309,
       "props": {
-        "w": 312,
-        "h": 312,
+        "w": 420,
+        "h": 420,
         "xLabel": "",
         "yLabel": "",
         "grid": false,
         "axesAtOrigin": true,
         "font": "Roboto",
         "background": "#fff9c4",
-        "title": "P–Mx",
+        "title": "P–Mθ at θM",
         "xUnit": "kN m",
         "yUnit": "kN",
         "equalAxes": false,
         "series": [
           {
             "id": "curve",
-            "label": "NRd–MRd",
-            "x": "M_{xv}",
-            "y": "N_{xv}",
+            "label": "NRd–MRd,θ",
+            "x": "M_{\\theta v}",
+            "y": "N_{\\theta v}",
             "style": "line",
             "r": "",
             "color": "#1e3a5f",
@@ -3843,8 +3184,8 @@
           {
             "id": "mirror",
             "label": "",
-            "x": "-M_{xv}",
-            "y": "N_{xv}",
+            "x": "-M_{\\theta v}",
+            "y": "N_{\\theta v}",
             "style": "line",
             "r": "",
             "color": "#1e3a5f",
@@ -3852,9 +3193,20 @@
             "show": ""
           },
           {
+            "id": "nline",
+            "label": "",
+            "x": "\\mathrm{stack}\\left(0,1\\right)\\max\\left(M_{Ed},M_{Rd.\\theta}\\right)",
+            "y": "\\mathrm{stack}\\left(1,1\\right)N_{Ed}",
+            "style": "line",
+            "r": "",
+            "color": "#94a3b8",
+            "width": 1,
+            "show": ""
+          },
+          {
             "id": "cap",
-            "label": "MRd(NEd)",
-            "x": "M_{Rd.x}",
+            "label": "MRd,θ at NEd",
+            "x": "M_{Rd.\\theta}",
             "y": "N_{Ed}",
             "style": "marker",
             "r": "",
@@ -3864,8 +3216,8 @@
           },
           {
             "id": "ed",
-            "label": "Design",
-            "x": "\\left|M_{Ed.x}\\right|",
+            "label": "Design (MEd, NEd)",
+            "x": "M_{Ed}",
             "y": "N_{Ed}",
             "style": "marker",
             "r": "",
@@ -3877,274 +3229,10 @@
       }
     },
     {
-      "id": "s_rect_6j",
-      "type": "graph",
-      "x": 402,
-      "y": 9580,
-      "props": {
-        "w": 312,
-        "h": 312,
-        "xLabel": "",
-        "yLabel": "",
-        "grid": false,
-        "axesAtOrigin": true,
-        "font": "Roboto",
-        "background": "#fff9c4",
-        "title": "P–My",
-        "xUnit": "kN m",
-        "yUnit": "kN",
-        "equalAxes": false,
-        "series": [
-          {
-            "id": "curve",
-            "label": "NRd–MRd",
-            "x": "M_{yv}",
-            "y": "N_{yv}",
-            "style": "line",
-            "r": "",
-            "color": "#1e3a5f",
-            "width": 2,
-            "show": ""
-          },
-          {
-            "id": "mirror",
-            "label": "",
-            "x": "-M_{yv}",
-            "y": "N_{yv}",
-            "style": "line",
-            "r": "",
-            "color": "#1e3a5f",
-            "width": 2,
-            "show": ""
-          },
-          {
-            "id": "cap",
-            "label": "MRd(NEd)",
-            "x": "M_{Rd.y}",
-            "y": "N_{Ed}",
-            "style": "marker",
-            "r": "",
-            "color": "#047857",
-            "width": 2,
-            "show": ""
-          },
-          {
-            "id": "ed",
-            "label": "Design",
-            "x": "\\left|M_{Ed.y}\\right|",
-            "y": "N_{Ed}",
-            "style": "marker",
-            "r": "",
-            "color": "#dc2626",
-            "width": 2,
-            "show": ""
-          }
-        ]
-      }
-    },
-    {
-      "id": "s_rect_6k",
-      "type": "graph",
-      "x": 80,
-      "y": 9910,
-      "props": {
-        "w": 312,
-        "h": 312,
-        "xLabel": "",
-        "yLabel": "",
-        "grid": false,
-        "axesAtOrigin": true,
-        "font": "Roboto",
-        "background": "#fff9c4",
-        "title": "Mx–My at NEd",
-        "xUnit": "kN m",
-        "yUnit": "kN m",
-        "equalAxes": false,
-        "series": [
-          {
-            "id": "c0",
-            "label": "EC2 (5.39), comparison",
-            "x": "M_{Rd.x}\\left|\\cos\\left(\\varphi_{q}\\right)\\right|^{\\frac{2}{a}}",
-            "y": "M_{Rd.y}\\left|\\sin\\left(\\varphi_{q}\\right)\\right|^{\\frac{2}{a}}",
-            "style": "line",
-            "r": "",
-            "color": "#94a3b8",
-            "width": 1,
-            "show": ""
-          },
-          {
-            "id": "c1",
-            "label": "",
-            "x": "-M_{Rd.x}\\left|\\cos\\left(\\varphi_{q}\\right)\\right|^{\\frac{2}{a}}",
-            "y": "M_{Rd.y}\\left|\\sin\\left(\\varphi_{q}\\right)\\right|^{\\frac{2}{a}}",
-            "style": "line",
-            "r": "",
-            "color": "#94a3b8",
-            "width": 1,
-            "show": ""
-          },
-          {
-            "id": "c2",
-            "label": "",
-            "x": "M_{Rd.x}\\left|\\cos\\left(\\varphi_{q}\\right)\\right|^{\\frac{2}{a}}",
-            "y": "-M_{Rd.y}\\left|\\sin\\left(\\varphi_{q}\\right)\\right|^{\\frac{2}{a}}",
-            "style": "line",
-            "r": "",
-            "color": "#94a3b8",
-            "width": 1,
-            "show": ""
-          },
-          {
-            "id": "c3",
-            "label": "",
-            "x": "-M_{Rd.x}\\left|\\cos\\left(\\varphi_{q}\\right)\\right|^{\\frac{2}{a}}",
-            "y": "-M_{Rd.y}\\left|\\sin\\left(\\varphi_{q}\\right)\\right|^{\\frac{2}{a}}",
-            "style": "line",
-            "r": "",
-            "color": "#94a3b8",
-            "width": 1,
-            "show": ""
-          },
-          {
-            "id": "t0",
-            "label": "Biaxial MRd at NEd",
-            "x": "\\left|M_{v}\\sin\\left(\\psi_{v}\\right)\\right|",
-            "y": "\\left|M_{v}\\cos\\left(\\psi_{v}\\right)\\right|",
-            "style": "line",
-            "r": "",
-            "color": "#1e3a5f",
-            "width": 2,
-            "show": ""
-          },
-          {
-            "id": "t1",
-            "label": "",
-            "x": "-\\left|M_{v}\\sin\\left(\\psi_{v}\\right)\\right|",
-            "y": "\\left|M_{v}\\cos\\left(\\psi_{v}\\right)\\right|",
-            "style": "line",
-            "r": "",
-            "color": "#1e3a5f",
-            "width": 2,
-            "show": ""
-          },
-          {
-            "id": "t2",
-            "label": "",
-            "x": "\\left|M_{v}\\sin\\left(\\psi_{v}\\right)\\right|",
-            "y": "-\\left|M_{v}\\cos\\left(\\psi_{v}\\right)\\right|",
-            "style": "line",
-            "r": "",
-            "color": "#1e3a5f",
-            "width": 2,
-            "show": ""
-          },
-          {
-            "id": "t3",
-            "label": "",
-            "x": "-\\left|M_{v}\\sin\\left(\\psi_{v}\\right)\\right|",
-            "y": "-\\left|M_{v}\\cos\\left(\\psi_{v}\\right)\\right|",
-            "style": "line",
-            "r": "",
-            "color": "#1e3a5f",
-            "width": 2,
-            "show": ""
-          },
-          {
-            "id": "ray",
-            "label": "",
-            "x": "\\mathrm{stack}\\left(0,\\max\\left(1,\\frac{1}{\\eta_{M}}\\right)\\right)M_{Ed.x}",
-            "y": "\\mathrm{stack}\\left(0,\\max\\left(1,\\frac{1}{\\eta_{M}}\\right)\\right)M_{Ed.y}",
-            "style": "line",
-            "r": "",
-            "color": "#94a3b8",
-            "width": 1,
-            "show": ""
-          },
-          {
-            "id": "cap",
-            "label": "MRd,θ",
-            "x": "\\frac{M_{Ed.x}}{\\eta_{M}}",
-            "y": "\\frac{M_{Ed.y}}{\\eta_{M}}",
-            "style": "marker",
-            "r": "",
-            "color": "#047857",
-            "width": 2,
-            "show": ""
-          },
-          {
-            "id": "ed",
-            "label": "Design",
-            "x": "M_{Ed.x}",
-            "y": "M_{Ed.y}",
-            "style": "marker",
-            "r": "",
-            "color": "#dc2626",
-            "width": 2,
-            "show": ""
-          }
-        ]
-      }
-    },
-    {
-      "id": "s_rect_6l",
-      "type": "graph",
-      "x": 402,
-      "y": 9910,
-      "props": {
-        "w": 312,
-        "h": 312,
-        "xLabel": "",
-        "yLabel": "",
-        "grid": false,
-        "axesAtOrigin": true,
-        "font": "Roboto",
-        "background": "#fff9c4",
-        "title": "Moment direction ψ vs neutral-axis angle β",
-        "xUnit": "deg",
-        "yUnit": "deg",
-        "equalAxes": false,
-        "series": [
-          {
-            "id": "psi",
-            "label": "ψ(β) at NEd",
-            "x": "\\beta_{v}",
-            "y": "\\psi_{v}",
-            "style": "line",
-            "r": "",
-            "color": "#1e3a5f",
-            "width": 2,
-            "show": ""
-          },
-          {
-            "id": "ref",
-            "label": "β = ψ (NA ⟂ θ)",
-            "x": "\\beta_{v}",
-            "y": "\\beta_{v}",
-            "style": "line",
-            "r": "",
-            "color": "#94a3b8",
-            "width": 1,
-            "show": ""
-          },
-          {
-            "id": "sol",
-            "label": "θM → βM",
-            "x": "\\mathrm{stack}\\left(\\min\\left(\\beta_{v}\\right),\\beta_{M},\\beta_{M}\\right)",
-            "y": "\\mathrm{stack}\\left(\\theta_{M},\\theta_{M},\\min\\left(\\psi_{v}\\right)\\right)",
-            "style": "line",
-            "r": "",
-            "color": "#dc2626",
-            "width": 1.5,
-            "show": ""
-          }
-        ]
-      }
-    },
-    {
-      "id": "s_rect_6m",
+      "id": "s_rect_5e",
       "type": "text",
       "x": 80,
-      "y": 10258,
+      "y": 8757,
       "props": {
         "w": 630,
         "h": 24,
@@ -4157,10 +3245,10 @@
       }
     },
     {
-      "id": "s_rect_6n",
+      "id": "s_rect_5f",
       "type": "text",
       "x": 80,
-      "y": 10288,
+      "y": 8797,
       "props": {
         "w": 630,
         "h": 24,
@@ -4172,10 +3260,10 @@
       }
     },
     {
-      "id": "s_rect_6o",
+      "id": "s_rect_5g",
       "type": "text",
       "x": 80,
-      "y": 10325,
+      "y": 8834,
       "props": {
         "w": 310,
         "h": 24,
@@ -4187,10 +3275,10 @@
       }
     },
     {
-      "id": "s_rect_6p",
+      "id": "s_rect_5h",
       "type": "math",
       "x": 400,
-      "y": 10318,
+      "y": 8827,
       "props": {
         "w": 60,
         "h": 32,
@@ -4204,10 +3292,10 @@
       }
     },
     {
-      "id": "s_rect_6q",
+      "id": "s_rect_5i",
       "type": "text",
       "x": 80,
-      "y": 10628,
+      "y": 8876,
       "props": {
         "w": 310,
         "h": 24,
@@ -4219,10 +3307,10 @@
       }
     },
     {
-      "id": "s_rect_6r",
+      "id": "s_rect_5j",
       "type": "math",
       "x": 400,
-      "y": 10619,
+      "y": 8867,
       "props": {
         "w": 60,
         "h": 32,
@@ -4236,10 +3324,10 @@
       }
     },
     {
-      "id": "s_rect_6s",
+      "id": "s_rect_5k",
       "type": "text",
       "x": 80,
-      "y": 10683,
+      "y": 8931,
       "props": {
         "w": 630,
         "h": 24,
@@ -4251,10 +3339,10 @@
       }
     },
     {
-      "id": "s_rect_6t",
+      "id": "s_rect_5l",
       "type": "math",
       "x": 96,
-      "y": 10709,
+      "y": 8957,
       "props": {
         "w": 60,
         "h": 32,
@@ -4268,10 +3356,10 @@
       }
     },
     {
-      "id": "s_rect_6u",
+      "id": "s_rect_5m",
       "type": "text",
       "x": 80,
-      "y": 10763,
+      "y": 9021,
       "props": {
         "w": 630,
         "h": 24,
@@ -4283,10 +3371,10 @@
       }
     },
     {
-      "id": "s_rect_6v",
+      "id": "s_rect_5n",
       "type": "math",
       "x": 96,
-      "y": 10799,
+      "y": 9047,
       "props": {
         "w": 60,
         "h": 32,
@@ -4300,10 +3388,10 @@
       }
     },
     {
-      "id": "s_rect_6w",
+      "id": "s_rect_5o",
       "type": "text",
       "x": 80,
-      "y": 10863,
+      "y": 9111,
       "props": {
         "w": 630,
         "h": 24,
@@ -4315,10 +3403,10 @@
       }
     },
     {
-      "id": "s_rect_6x",
+      "id": "s_rect_5p",
       "type": "math",
       "x": 96,
-      "y": 10889,
+      "y": 9147,
       "props": {
         "w": 60,
         "h": 32,
@@ -4332,10 +3420,10 @@
       }
     },
     {
-      "id": "s_rect_6y",
+      "id": "s_rect_5q",
       "type": "text",
       "x": 80,
-      "y": 10946,
+      "y": 9194,
       "props": {
         "w": 310,
         "h": 24,
@@ -4347,10 +3435,10 @@
       }
     },
     {
-      "id": "s_rect_6z",
+      "id": "s_rect_5r",
       "type": "math",
       "x": 400,
-      "y": 10939,
+      "y": 9187,
       "props": {
         "w": 60,
         "h": 32,
@@ -4364,10 +3452,10 @@
       }
     },
     {
-      "id": "s_rect_70",
+      "id": "s_rect_5s",
       "type": "text",
       "x": 80,
-      "y": 10983,
+      "y": 9452,
       "props": {
         "w": 630,
         "h": 24,
@@ -4379,10 +3467,10 @@
       }
     },
     {
-      "id": "s_rect_71",
+      "id": "s_rect_5t",
       "type": "math",
       "x": 96,
-      "y": 11009,
+      "y": 9478,
       "props": {
         "w": 60,
         "h": 32,
@@ -4396,10 +3484,10 @@
       }
     },
     {
-      "id": "s_rect_72",
+      "id": "s_rect_5u",
       "type": "text",
       "x": 80,
-      "y": 11073,
+      "y": 9542,
       "props": {
         "w": 630,
         "h": 24,
@@ -4411,10 +3499,10 @@
       }
     },
     {
-      "id": "s_rect_73",
+      "id": "s_rect_5v",
       "type": "math",
       "x": 96,
-      "y": 11099,
+      "y": 9568,
       "props": {
         "w": 60,
         "h": 32,
@@ -4428,10 +3516,10 @@
       }
     },
     {
-      "id": "s_rect_74",
+      "id": "s_rect_5w",
       "type": "text",
       "x": 80,
-      "y": 11143,
+      "y": 9612,
       "props": {
         "w": 630,
         "h": 24,
@@ -4443,10 +3531,10 @@
       }
     },
     {
-      "id": "s_rect_75",
+      "id": "s_rect_5x",
       "type": "math",
       "x": 96,
-      "y": 11169,
+      "y": 9648,
       "props": {
         "w": 60,
         "h": 32,
@@ -4460,10 +3548,10 @@
       }
     },
     {
-      "id": "s_rect_76",
+      "id": "s_rect_5y",
       "type": "text",
       "x": 80,
-      "y": 11229,
+      "y": 9698,
       "props": {
         "w": 310,
         "h": 24,
@@ -4475,10 +3563,10 @@
       }
     },
     {
-      "id": "s_rect_77",
+      "id": "s_rect_5z",
       "type": "math",
       "x": 400,
-      "y": 11219,
+      "y": 9688,
       "props": {
         "w": 60,
         "h": 32,
@@ -4492,10 +3580,10 @@
       }
     },
     {
-      "id": "s_rect_78",
+      "id": "s_rect_60",
       "type": "text",
       "x": 80,
-      "y": 11281,
+      "y": 9760,
       "props": {
         "w": 310,
         "h": 24,
@@ -4507,10 +3595,10 @@
       }
     },
     {
-      "id": "s_rect_79",
+      "id": "s_rect_61",
       "type": "math",
       "x": 400,
-      "y": 11269,
+      "y": 9748,
       "props": {
         "w": 60,
         "h": 32,
@@ -4524,10 +3612,10 @@
       }
     },
     {
-      "id": "s_rect_7a",
+      "id": "s_rect_62",
       "type": "text",
       "x": 80,
-      "y": 11339,
+      "y": 9808,
       "props": {
         "w": 630,
         "h": 24,
@@ -4540,10 +3628,10 @@
       }
     },
     {
-      "id": "s_rect_7b",
+      "id": "s_rect_63",
       "type": "text",
       "x": 80,
-      "y": 11377,
+      "y": 9846,
       "props": {
         "w": 310,
         "h": 24,
@@ -4555,10 +3643,10 @@
       }
     },
     {
-      "id": "s_rect_7c",
+      "id": "s_rect_64",
       "type": "math",
       "x": 400,
-      "y": 11369,
+      "y": 9838,
       "props": {
         "w": 60,
         "h": 32,
@@ -4572,10 +3660,10 @@
       }
     },
     {
-      "id": "s_rect_7d",
+      "id": "s_rect_65",
       "type": "text",
       "x": 80,
-      "y": 11436,
+      "y": 9905,
       "props": {
         "w": 310,
         "h": 24,
@@ -4587,10 +3675,10 @@
       }
     },
     {
-      "id": "s_rect_7e",
+      "id": "s_rect_66",
       "type": "math",
       "x": 400,
-      "y": 11429,
+      "y": 9898,
       "props": {
         "w": 60,
         "h": 32,
@@ -4604,10 +3692,10 @@
       }
     },
     {
-      "id": "s_rect_7f",
+      "id": "s_rect_67",
       "type": "text",
       "x": 80,
-      "y": 11476,
+      "y": 9945,
       "props": {
         "w": 310,
         "h": 24,
@@ -4619,10 +3707,10 @@
       }
     },
     {
-      "id": "s_rect_7g",
+      "id": "s_rect_68",
       "type": "math",
       "x": 400,
-      "y": 11469,
+      "y": 9938,
       "props": {
         "w": 60,
         "h": 32,
@@ -4636,10 +3724,10 @@
       }
     },
     {
-      "id": "s_rect_7h",
+      "id": "s_rect_69",
       "type": "text",
       "x": 80,
-      "y": 11516,
+      "y": 9985,
       "props": {
         "w": 310,
         "h": 24,
@@ -4651,10 +3739,10 @@
       }
     },
     {
-      "id": "s_rect_7i",
+      "id": "s_rect_6a",
       "type": "math",
       "x": 400,
-      "y": 11509,
+      "y": 9978,
       "props": {
         "w": 60,
         "h": 32,
@@ -4668,10 +3756,10 @@
       }
     },
     {
-      "id": "s_rect_7j",
+      "id": "s_rect_6b",
       "type": "text",
       "x": 80,
-      "y": 11794,
+      "y": 10032,
       "props": {
         "w": 630,
         "h": 24,
@@ -4683,10 +3771,10 @@
       }
     },
     {
-      "id": "s_rect_7k",
+      "id": "s_rect_6c",
       "type": "math",
       "x": 96,
-      "y": 11820,
+      "y": 10058,
       "props": {
         "w": 60,
         "h": 32,
@@ -4700,10 +3788,10 @@
       }
     },
     {
-      "id": "s_rect_7l",
+      "id": "s_rect_6d",
       "type": "text",
       "x": 80,
-      "y": 11874,
+      "y": 10102,
       "props": {
         "w": 630,
         "h": 24,
@@ -4715,10 +3803,10 @@
       }
     },
     {
-      "id": "s_rect_7m",
+      "id": "s_rect_6e",
       "type": "math",
       "x": 96,
-      "y": 11900,
+      "y": 10128,
       "props": {
         "w": 60,
         "h": 32,
@@ -4732,10 +3820,10 @@
       }
     },
     {
-      "id": "s_rect_7n",
+      "id": "s_rect_6f",
       "type": "text",
       "x": 80,
-      "y": 11940,
+      "y": 10178,
       "props": {
         "w": 630,
         "h": 24,
@@ -4748,10 +3836,10 @@
       }
     },
     {
-      "id": "s_rect_7o",
+      "id": "s_rect_6g",
       "type": "text",
       "x": 80,
-      "y": 11988,
+      "y": 10216,
       "props": {
         "w": 310,
         "h": 24,
@@ -4763,10 +3851,10 @@
       }
     },
     {
-      "id": "s_rect_7p",
+      "id": "s_rect_6h",
       "type": "math",
       "x": 400,
-      "y": 11980,
+      "y": 10208,
       "props": {
         "w": 60,
         "h": 32,
@@ -4780,10 +3868,10 @@
       }
     },
     {
-      "id": "s_rect_7q",
+      "id": "s_rect_6i",
       "type": "text",
       "x": 80,
-      "y": 12037,
+      "y": 10275,
       "props": {
         "w": 310,
         "h": 24,
@@ -4795,10 +3883,10 @@
       }
     },
     {
-      "id": "s_rect_7r",
+      "id": "s_rect_6j",
       "type": "math",
       "x": 400,
-      "y": 12030,
+      "y": 10268,
       "props": {
         "w": 60,
         "h": 32,
@@ -4812,10 +3900,10 @@
       }
     },
     {
-      "id": "s_rect_7s",
+      "id": "s_rect_6k",
       "type": "text",
       "x": 80,
-      "y": 12077,
+      "y": 10315,
       "props": {
         "w": 310,
         "h": 24,
@@ -4827,10 +3915,10 @@
       }
     },
     {
-      "id": "s_rect_7t",
+      "id": "s_rect_6l",
       "type": "math",
       "x": 400,
-      "y": 12070,
+      "y": 10308,
       "props": {
         "w": 60,
         "h": 32,
@@ -4844,10 +3932,10 @@
       }
     },
     {
-      "id": "s_rect_7u",
+      "id": "s_rect_6m",
       "type": "text",
       "x": 80,
-      "y": 12127,
+      "y": 10355,
       "props": {
         "w": 310,
         "h": 24,
@@ -4859,10 +3947,10 @@
       }
     },
     {
-      "id": "s_rect_7v",
+      "id": "s_rect_6n",
       "type": "math",
       "x": 400,
-      "y": 12120,
+      "y": 10348,
       "props": {
         "w": 60,
         "h": 32,
@@ -4876,10 +3964,10 @@
       }
     },
     {
-      "id": "s_rect_7w",
+      "id": "s_rect_6o",
       "type": "text",
       "x": 80,
-      "y": 12164,
+      "y": 10623,
       "props": {
         "w": 630,
         "h": 24,
@@ -4891,10 +3979,10 @@
       }
     },
     {
-      "id": "s_rect_7x",
+      "id": "s_rect_6p",
       "type": "math",
       "x": 96,
-      "y": 12190,
+      "y": 10649,
       "props": {
         "w": 60,
         "h": 32,
@@ -4908,10 +3996,10 @@
       }
     },
     {
-      "id": "s_rect_7y",
+      "id": "s_rect_6q",
       "type": "text",
       "x": 80,
-      "y": 12234,
+      "y": 10703,
       "props": {
         "w": 630,
         "h": 24,
@@ -4923,10 +4011,10 @@
       }
     },
     {
-      "id": "s_rect_7z",
+      "id": "s_rect_6r",
       "type": "math",
       "x": 96,
-      "y": 12270,
+      "y": 10729,
       "props": {
         "w": 60,
         "h": 32,
@@ -4940,10 +4028,10 @@
       }
     },
     {
-      "id": "s_rect_80",
+      "id": "s_rect_6s",
       "type": "text",
       "x": 80,
-      "y": 12320,
+      "y": 10779,
       "props": {
         "w": 630,
         "h": 24,
@@ -4956,10 +4044,10 @@
       }
     },
     {
-      "id": "s_rect_81",
+      "id": "s_rect_6t",
       "type": "text",
       "x": 80,
-      "y": 12367,
+      "y": 10826,
       "props": {
         "w": 310,
         "h": 24,
@@ -4971,10 +4059,10 @@
       }
     },
     {
-      "id": "s_rect_82",
+      "id": "s_rect_6u",
       "type": "math",
       "x": 400,
-      "y": 12360,
+      "y": 10819,
       "props": {
         "w": 60,
         "h": 32,
@@ -4988,42 +4076,10 @@
       }
     },
     {
-      "id": "s_rect_83",
+      "id": "s_rect_6v",
       "type": "text",
       "x": 80,
-      "y": 12407,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "EC2 (5.39), for comparison",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_84",
-      "type": "math",
-      "x": 400,
-      "y": 12400,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\eta_{xy}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_85",
-      "type": "text",
-      "x": 80,
-      "y": 12451,
+      "y": 10870,
       "props": {
         "w": 310,
         "h": 24,
@@ -5035,10 +4091,10 @@
       }
     },
     {
-      "id": "s_rect_86",
+      "id": "s_rect_6w",
       "type": "math",
       "x": 400,
-      "y": 12440,
+      "y": 10859,
       "props": {
         "w": 60,
         "h": 32,
@@ -5052,10 +4108,10 @@
       }
     },
     {
-      "id": "s_rect_87",
+      "id": "s_rect_6x",
       "type": "text",
       "x": 80,
-      "y": 12509,
+      "y": 10928,
       "props": {
         "w": 310,
         "h": 24,
@@ -5067,10 +4123,10 @@
       }
     },
     {
-      "id": "s_rect_88",
+      "id": "s_rect_6y",
       "type": "math",
       "x": 400,
-      "y": 12500,
+      "y": 10919,
       "props": {
         "w": 60,
         "h": 32,
@@ -5084,10 +4140,10 @@
       }
     },
     {
-      "id": "s_rect_89",
+      "id": "s_rect_6z",
       "type": "text",
       "x": 80,
-      "y": 12961,
+      "y": 11790,
       "props": {
         "w": 630,
         "h": 24,
@@ -5103,10 +4159,10 @@
       }
     },
     {
-      "id": "s_rect_8a",
+      "id": "s_rect_70",
       "type": "text",
       "x": 80,
-      "y": 13001,
+      "y": 11830,
       "props": {
         "w": 630,
         "h": 24,
@@ -5118,10 +4174,10 @@
       }
     },
     {
-      "id": "s_rect_8b",
+      "id": "s_rect_71",
       "type": "text",
       "x": 80,
-      "y": 13031,
+      "y": 11860,
       "props": {
         "w": 630,
         "h": 24,
@@ -5133,10 +4189,10 @@
       }
     },
     {
-      "id": "s_rect_8c",
+      "id": "s_rect_72",
       "type": "text",
       "x": 80,
-      "y": 14132,
+      "y": 12961,
       "props": {
         "w": 630,
         "h": 24,
@@ -5153,10 +4209,10 @@
       }
     },
     {
-      "id": "s_rect_8d",
+      "id": "s_rect_73",
       "type": "text",
       "x": 80,
-      "y": 14172,
+      "y": 13001,
       "props": {
         "w": 310,
         "h": 24,
@@ -5168,10 +4224,10 @@
       }
     },
     {
-      "id": "s_rect_8e",
+      "id": "s_rect_74",
       "type": "math",
       "x": 400,
-      "y": 14172,
+      "y": 13001,
       "props": {
         "w": 60,
         "h": 32,
@@ -5185,10 +4241,10 @@
       }
     },
     {
-      "id": "s_rect_8f",
+      "id": "s_rect_75",
       "type": "text",
       "x": 80,
-      "y": 14229,
+      "y": 13058,
       "props": {
         "w": 310,
         "h": 24,
@@ -5200,10 +4256,10 @@
       }
     },
     {
-      "id": "s_rect_8g",
+      "id": "s_rect_76",
       "type": "math",
       "x": 400,
-      "y": 14222,
+      "y": 13051,
       "props": {
         "w": 60,
         "h": 32,
@@ -5217,10 +4273,10 @@
       }
     },
     {
-      "id": "s_rect_8h",
+      "id": "s_rect_77",
       "type": "text",
       "x": 80,
-      "y": 14266,
+      "y": 13095,
       "props": {
         "w": 630,
         "h": 24,
@@ -5232,10 +4288,10 @@
       }
     },
     {
-      "id": "s_rect_8i",
+      "id": "s_rect_78",
       "type": "math",
       "x": 96,
-      "y": 14292,
+      "y": 13121,
       "props": {
         "w": 60,
         "h": 32,
@@ -5249,10 +4305,10 @@
       }
     },
     {
-      "id": "s_rect_8j",
+      "id": "s_rect_79",
       "type": "text",
       "x": 80,
-      "y": 14346,
+      "y": 13175,
       "props": {
         "w": 630,
         "h": 24,
@@ -5264,10 +4320,10 @@
       }
     },
     {
-      "id": "s_rect_8k",
+      "id": "s_rect_7a",
       "type": "math",
       "x": 96,
-      "y": 14372,
+      "y": 13201,
       "props": {
         "w": 60,
         "h": 32,
@@ -5281,10 +4337,10 @@
       }
     },
     {
-      "id": "s_rect_8l",
+      "id": "s_rect_7b",
       "type": "text",
       "x": 80,
-      "y": 14416,
+      "y": 13245,
       "props": {
         "w": 630,
         "h": 24,
@@ -5296,10 +4352,10 @@
       }
     },
     {
-      "id": "s_rect_8m",
+      "id": "s_rect_7c",
       "type": "math",
       "x": 96,
-      "y": 14442,
+      "y": 13271,
       "props": {
         "w": 60,
         "h": 32,
@@ -5313,10 +4369,10 @@
       }
     },
     {
-      "id": "s_rect_8n",
+      "id": "s_rect_7d",
       "type": "text",
       "x": 80,
-      "y": 14499,
+      "y": 13328,
       "props": {
         "w": 310,
         "h": 24,
@@ -5328,10 +4384,10 @@
       }
     },
     {
-      "id": "s_rect_8o",
+      "id": "s_rect_7e",
       "type": "math",
       "x": 400,
-      "y": 14492,
+      "y": 13321,
       "props": {
         "w": 60,
         "h": 32,
@@ -5345,10 +4401,10 @@
       }
     },
     {
-      "id": "s_rect_8p",
+      "id": "s_rect_7f",
       "type": "text",
       "x": 80,
-      "y": 14539,
+      "y": 13368,
       "props": {
         "w": 310,
         "h": 24,
@@ -5360,10 +4416,10 @@
       }
     },
     {
-      "id": "s_rect_8q",
+      "id": "s_rect_7g",
       "type": "math",
       "x": 400,
-      "y": 14532,
+      "y": 13361,
       "props": {
         "w": 60,
         "h": 32,
@@ -5377,10 +4433,10 @@
       }
     },
     {
-      "id": "s_rect_8r",
+      "id": "s_rect_7h",
       "type": "text",
       "x": 96,
-      "y": 14572,
+      "y": 13401,
       "props": {
         "w": 280,
         "h": 24,
@@ -5392,10 +4448,10 @@
       }
     },
     {
-      "id": "s_rect_8s",
+      "id": "s_rect_7i",
       "type": "math",
       "x": 96,
-      "y": 14602,
+      "y": 13431,
       "props": {
         "w": 60,
         "h": 32,
@@ -5411,10 +4467,10 @@
       }
     },
     {
-      "id": "s_rect_8t",
+      "id": "s_rect_7j",
       "type": "math",
       "x": 168,
-      "y": 14602,
+      "y": 13431,
       "props": {
         "w": 60,
         "h": 32,
@@ -5430,10 +4486,10 @@
       }
     },
     {
-      "id": "s_rect_8u",
+      "id": "s_rect_7k",
       "type": "math",
       "x": 283,
-      "y": 14602,
+      "y": 13431,
       "props": {
         "w": 60,
         "h": 32,
@@ -5449,10 +4505,10 @@
       }
     },
     {
-      "id": "s_rect_8v",
+      "id": "s_rect_7l",
       "type": "text",
       "x": 80,
-      "y": 14872,
+      "y": 13701,
       "props": {
         "w": 630,
         "h": 24,
@@ -5465,14 +4521,14 @@
       }
     },
     {
-      "id": "s_rect_8w",
+      "id": "s_rect_7m",
       "type": "text",
       "x": 80,
-      "y": 14902,
+      "y": 13731,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "The concrete is cut into nc thin strips parallel to the neutral axis. Each strip carries the",
+        "html": "The concrete is cut into nc thin strips parallel to the neutral axis (see A.4). Each strip",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#475569",
@@ -5480,14 +4536,14 @@
       }
     },
     {
-      "id": "s_rect_8x",
+      "id": "s_rect_7n",
       "type": "text",
       "x": 80,
-      "y": 14932,
+      "y": 13761,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "stress at its centre strain; summing strip forces (× lever arm) gives the concrete N and M.",
+        "html": "carries the stress at its centre strain; strip forces × lever arms give the concrete N and M.",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#475569",
@@ -5495,10 +4551,10 @@
       }
     },
     {
-      "id": "s_rect_8y",
+      "id": "s_rect_7o",
       "type": "text",
       "x": 80,
-      "y": 14969,
+      "y": 13798,
       "props": {
         "w": 310,
         "h": 24,
@@ -5510,10 +4566,10 @@
       }
     },
     {
-      "id": "s_rect_8z",
+      "id": "s_rect_7p",
       "type": "math",
       "x": 400,
-      "y": 14962,
+      "y": 13791,
       "props": {
         "w": 60,
         "h": 32,
@@ -5527,138 +4583,10 @@
       }
     },
     {
-      "id": "s_rect_90",
+      "id": "s_rect_7q",
       "type": "text",
       "x": 80,
-      "y": 15011,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Strip thickness across h (bending about x)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_91",
-      "type": "math",
-      "x": 400,
-      "y": 15002,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\Delta_{h}\\coloneq\\frac{h}{n_{c}}",
-        "displayMode": "formulaResult",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_92",
-      "type": "text",
-      "x": 80,
-      "y": 15312,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Strip thickness across b (bending about y)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_93",
-      "type": "math",
-      "x": 400,
-      "y": 15303,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\Delta_{b}\\coloneq\\frac{b}{n_{c}}",
-        "displayMode": "formulaResult",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_94",
-      "type": "text",
-      "x": 80,
-      "y": 15370,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Strip centre y (bending about x)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_95",
-      "type": "math",
-      "x": 400,
-      "y": 15363,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "y_{c}\\coloneq\\frac{h}{2}-\\left(j+0.5\\right)\\Delta_{h}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_96",
-      "type": "text",
-      "x": 80,
-      "y": 15420,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Strip centre x (bending about y)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_97",
-      "type": "math",
-      "x": 400,
-      "y": 15413,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "x_{c}\\coloneq\\frac{b}{2}-\\left(j+0.5\\right)\\Delta_{b}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_98",
-      "type": "text",
-      "x": 80,
-      "y": 16474,
+      "y": 14132,
       "props": {
         "w": 630,
         "h": 24,
@@ -5675,10 +4603,10 @@
       }
     },
     {
-      "id": "s_rect_99",
+      "id": "s_rect_7r",
       "type": "text",
       "x": 80,
-      "y": 16514,
+      "y": 14172,
       "props": {
         "w": 630,
         "h": 24,
@@ -5690,10 +4618,10 @@
       }
     },
     {
-      "id": "s_rect_9a",
+      "id": "s_rect_7s",
       "type": "text",
       "x": 80,
-      "y": 16544,
+      "y": 14202,
       "props": {
         "w": 630,
         "h": 24,
@@ -5705,10 +4633,10 @@
       }
     },
     {
-      "id": "s_rect_9b",
+      "id": "s_rect_7t",
       "type": "text",
       "x": 80,
-      "y": 16582,
+      "y": 14240,
       "props": {
         "w": 310,
         "h": 24,
@@ -5720,10 +4648,10 @@
       }
     },
     {
-      "id": "s_rect_9c",
+      "id": "s_rect_7u",
       "type": "math",
       "x": 400,
-      "y": 16574,
+      "y": 14232,
       "props": {
         "w": 60,
         "h": 32,
@@ -5737,10 +4665,10 @@
       }
     },
     {
-      "id": "s_rect_9d",
+      "id": "s_rect_7v",
       "type": "text",
       "x": 80,
-      "y": 16631,
+      "y": 14289,
       "props": {
         "w": 310,
         "h": 24,
@@ -5752,10 +4680,10 @@
       }
     },
     {
-      "id": "s_rect_9e",
+      "id": "s_rect_7w",
       "type": "math",
       "x": 400,
-      "y": 16624,
+      "y": 14282,
       "props": {
         "w": 60,
         "h": 32,
@@ -5769,10 +4697,10 @@
       }
     },
     {
-      "id": "s_rect_9f",
+      "id": "s_rect_7x",
       "type": "text",
       "x": 80,
-      "y": 16671,
+      "y": 14329,
       "props": {
         "w": 310,
         "h": 24,
@@ -5784,10 +4712,10 @@
       }
     },
     {
-      "id": "s_rect_9g",
+      "id": "s_rect_7y",
       "type": "math",
       "x": 400,
-      "y": 16664,
+      "y": 14322,
       "props": {
         "w": 60,
         "h": 32,
@@ -5801,10 +4729,10 @@
       }
     },
     {
-      "id": "s_rect_9h",
+      "id": "s_rect_7z",
       "type": "text",
       "x": 80,
-      "y": 16714,
+      "y": 14372,
       "props": {
         "w": 310,
         "h": 24,
@@ -5816,10 +4744,10 @@
       }
     },
     {
-      "id": "s_rect_9i",
+      "id": "s_rect_80",
       "type": "math",
       "x": 400,
-      "y": 16714,
+      "y": 14372,
       "props": {
         "w": 60,
         "h": 32,
@@ -5833,10 +4761,10 @@
       }
     },
     {
-      "id": "s_rect_9j",
+      "id": "s_rect_81",
       "type": "text",
       "x": 80,
-      "y": 16771,
+      "y": 14429,
       "props": {
         "w": 310,
         "h": 24,
@@ -5848,10 +4776,10 @@
       }
     },
     {
-      "id": "s_rect_9k",
+      "id": "s_rect_82",
       "type": "math",
       "x": 400,
-      "y": 16764,
+      "y": 14422,
       "props": {
         "w": 60,
         "h": 32,
@@ -5865,10 +4793,10 @@
       }
     },
     {
-      "id": "s_rect_9l",
+      "id": "s_rect_83",
       "type": "text",
       "x": 80,
-      "y": 16811,
+      "y": 14469,
       "props": {
         "w": 310,
         "h": 24,
@@ -5880,10 +4808,10 @@
       }
     },
     {
-      "id": "s_rect_9m",
+      "id": "s_rect_84",
       "type": "math",
       "x": 400,
-      "y": 16804,
+      "y": 14462,
       "props": {
         "w": 60,
         "h": 32,
@@ -5897,10 +4825,10 @@
       }
     },
     {
-      "id": "s_rect_9n",
+      "id": "s_rect_85",
       "type": "text",
       "x": 80,
-      "y": 16851,
+      "y": 14509,
       "props": {
         "w": 310,
         "h": 24,
@@ -5912,10 +4840,10 @@
       }
     },
     {
-      "id": "s_rect_9o",
+      "id": "s_rect_86",
       "type": "math",
       "x": 400,
-      "y": 16844,
+      "y": 14502,
       "props": {
         "w": 60,
         "h": 32,
@@ -5929,10 +4857,10 @@
       }
     },
     {
-      "id": "s_rect_9p",
+      "id": "s_rect_87",
       "type": "text",
       "x": 80,
-      "y": 16894,
+      "y": 14552,
       "props": {
         "w": 310,
         "h": 24,
@@ -5944,10 +4872,10 @@
       }
     },
     {
-      "id": "s_rect_9q",
+      "id": "s_rect_88",
       "type": "math",
       "x": 400,
-      "y": 16894,
+      "y": 14552,
       "props": {
         "w": 60,
         "h": 32,
@@ -5961,10 +4889,10 @@
       }
     },
     {
-      "id": "s_rect_9r",
+      "id": "s_rect_89",
       "type": "text",
       "x": 80,
-      "y": 16948,
+      "y": 14606,
       "props": {
         "w": 630,
         "h": 24,
@@ -5976,10 +4904,10 @@
       }
     },
     {
-      "id": "s_rect_9s",
+      "id": "s_rect_8a",
       "type": "math",
       "x": 96,
-      "y": 16974,
+      "y": 14632,
       "props": {
         "w": 60,
         "h": 32,
@@ -5993,10 +4921,10 @@
       }
     },
     {
-      "id": "s_rect_9t",
+      "id": "s_rect_8b",
       "type": "text",
       "x": 80,
-      "y": 17026,
+      "y": 14684,
       "props": {
         "w": 310,
         "h": 24,
@@ -6008,10 +4936,10 @@
       }
     },
     {
-      "id": "s_rect_9u",
+      "id": "s_rect_8c",
       "type": "math",
       "x": 400,
-      "y": 17014,
+      "y": 14672,
       "props": {
         "w": 60,
         "h": 32,
@@ -6025,10 +4953,10 @@
       }
     },
     {
-      "id": "s_rect_9v",
+      "id": "s_rect_8d",
       "type": "text",
       "x": 80,
-      "y": 17091,
+      "y": 14749,
       "props": {
         "w": 310,
         "h": 24,
@@ -6040,10 +4968,10 @@
       }
     },
     {
-      "id": "s_rect_9w",
+      "id": "s_rect_8e",
       "type": "math",
       "x": 400,
-      "y": 17084,
+      "y": 14742,
       "props": {
         "w": 60,
         "h": 32,
@@ -6057,10 +4985,10 @@
       }
     },
     {
-      "id": "s_rect_9x",
+      "id": "s_rect_8f",
       "type": "text",
       "x": 80,
-      "y": 17128,
+      "y": 14786,
       "props": {
         "w": 630,
         "h": 24,
@@ -6072,10 +5000,10 @@
       }
     },
     {
-      "id": "s_rect_9y",
+      "id": "s_rect_8g",
       "type": "math",
       "x": 96,
-      "y": 17154,
+      "y": 14812,
       "props": {
         "w": 60,
         "h": 32,
@@ -6089,10 +5017,10 @@
       }
     },
     {
-      "id": "s_rect_9z",
+      "id": "s_rect_8h",
       "type": "text",
       "x": 80,
-      "y": 17228,
+      "y": 14886,
       "props": {
         "w": 630,
         "h": 24,
@@ -6104,10 +5032,10 @@
       }
     },
     {
-      "id": "s_rect_a0",
+      "id": "s_rect_8i",
       "type": "math",
       "x": 96,
-      "y": 17254,
+      "y": 14912,
       "props": {
         "w": 60,
         "h": 32,
@@ -6121,10 +5049,10 @@
       }
     },
     {
-      "id": "s_rect_a1",
+      "id": "s_rect_8j",
       "type": "text",
       "x": 80,
-      "y": 17318,
+      "y": 14976,
       "props": {
         "w": 630,
         "h": 24,
@@ -6136,10 +5064,10 @@
       }
     },
     {
-      "id": "s_rect_a2",
+      "id": "s_rect_8k",
       "type": "math",
       "x": 96,
-      "y": 17344,
+      "y": 15002,
       "props": {
         "w": 60,
         "h": 32,
@@ -6153,10 +5081,10 @@
       }
     },
     {
-      "id": "s_rect_a3",
+      "id": "s_rect_8l",
       "type": "text",
       "x": 80,
-      "y": 17649,
+      "y": 15307,
       "props": {
         "w": 630,
         "h": 24,
@@ -6168,10 +5096,10 @@
       }
     },
     {
-      "id": "s_rect_a4",
+      "id": "s_rect_8m",
       "type": "math",
       "x": 96,
-      "y": 17675,
+      "y": 15333,
       "props": {
         "w": 60,
         "h": 32,
@@ -6185,10 +5113,10 @@
       }
     },
     {
-      "id": "s_rect_a5",
+      "id": "s_rect_8n",
       "type": "text",
       "x": 80,
-      "y": 17729,
+      "y": 15387,
       "props": {
         "w": 630,
         "h": 24,
@@ -6200,10 +5128,10 @@
       }
     },
     {
-      "id": "s_rect_a6",
+      "id": "s_rect_8o",
       "type": "math",
       "x": 96,
-      "y": 17755,
+      "y": 15413,
       "props": {
         "w": 60,
         "h": 32,
@@ -6217,10 +5145,10 @@
       }
     },
     {
-      "id": "s_rect_a7",
+      "id": "s_rect_8p",
       "type": "text",
       "x": 80,
-      "y": 17799,
+      "y": 15457,
       "props": {
         "w": 630,
         "h": 24,
@@ -6232,10 +5160,10 @@
       }
     },
     {
-      "id": "s_rect_a8",
+      "id": "s_rect_8q",
       "type": "math",
       "x": 96,
-      "y": 17825,
+      "y": 15483,
       "props": {
         "w": 60,
         "h": 32,
@@ -6249,10 +5177,10 @@
       }
     },
     {
-      "id": "s_rect_a9",
+      "id": "s_rect_8r",
       "type": "text",
       "x": 80,
-      "y": 17879,
+      "y": 15537,
       "props": {
         "w": 630,
         "h": 24,
@@ -6264,10 +5192,10 @@
       }
     },
     {
-      "id": "s_rect_aa",
+      "id": "s_rect_8s",
       "type": "math",
       "x": 96,
-      "y": 17905,
+      "y": 15563,
       "props": {
         "w": 60,
         "h": 32,
@@ -6281,10 +5209,10 @@
       }
     },
     {
-      "id": "s_rect_ab",
+      "id": "s_rect_8t",
       "type": "text",
       "x": 80,
-      "y": 17949,
+      "y": 15607,
       "props": {
         "w": 630,
         "h": 24,
@@ -6296,10 +5224,10 @@
       }
     },
     {
-      "id": "s_rect_ac",
+      "id": "s_rect_8u",
       "type": "math",
       "x": 96,
-      "y": 17975,
+      "y": 15633,
       "props": {
         "w": 60,
         "h": 32,
@@ -6313,10 +5241,10 @@
       }
     },
     {
-      "id": "s_rect_ad",
+      "id": "s_rect_8v",
       "type": "text",
       "x": 80,
-      "y": 18039,
+      "y": 15697,
       "props": {
         "w": 630,
         "h": 24,
@@ -6328,10 +5256,10 @@
       }
     },
     {
-      "id": "s_rect_ae",
+      "id": "s_rect_8w",
       "type": "math",
       "x": 96,
-      "y": 18075,
+      "y": 15733,
       "props": {
         "w": 60,
         "h": 32,
@@ -6345,10 +5273,10 @@
       }
     },
     {
-      "id": "s_rect_af",
+      "id": "s_rect_8x",
       "type": "text",
       "x": 80,
-      "y": 18142,
+      "y": 15800,
       "props": {
         "w": 310,
         "h": 24,
@@ -6360,10 +5288,10 @@
       }
     },
     {
-      "id": "s_rect_ag",
+      "id": "s_rect_8y",
       "type": "math",
       "x": 400,
-      "y": 18135,
+      "y": 15793,
       "props": {
         "w": 60,
         "h": 32,
@@ -6377,10 +5305,10 @@
       }
     },
     {
-      "id": "s_rect_ah",
+      "id": "s_rect_8z",
       "type": "text",
       "x": 80,
-      "y": 18182,
+      "y": 15840,
       "props": {
         "w": 310,
         "h": 24,
@@ -6392,10 +5320,10 @@
       }
     },
     {
-      "id": "s_rect_ai",
+      "id": "s_rect_90",
       "type": "math",
       "x": 400,
-      "y": 18175,
+      "y": 15833,
       "props": {
         "w": 60,
         "h": 32,
@@ -6409,10 +5337,10 @@
       }
     },
     {
-      "id": "s_rect_aj",
+      "id": "s_rect_91",
       "type": "text",
       "x": 80,
-      "y": 18222,
+      "y": 15880,
       "props": {
         "w": 310,
         "h": 24,
@@ -6424,10 +5352,10 @@
       }
     },
     {
-      "id": "s_rect_ak",
+      "id": "s_rect_92",
       "type": "math",
       "x": 400,
-      "y": 18215,
+      "y": 15873,
       "props": {
         "w": 60,
         "h": 32,
@@ -6441,10 +5369,10 @@
       }
     },
     {
-      "id": "s_rect_al",
+      "id": "s_rect_93",
       "type": "text",
       "x": 80,
-      "y": 18267,
+      "y": 15925,
       "props": {
         "w": 310,
         "h": 24,
@@ -6456,10 +5384,10 @@
       }
     },
     {
-      "id": "s_rect_am",
+      "id": "s_rect_94",
       "type": "math",
       "x": 400,
-      "y": 18255,
+      "y": 15913,
       "props": {
         "w": 60,
         "h": 32,
@@ -6473,10 +5401,10 @@
       }
     },
     {
-      "id": "s_rect_an",
+      "id": "s_rect_95",
       "type": "text",
       "x": 80,
-      "y": 18332,
+      "y": 15990,
       "props": {
         "w": 310,
         "h": 24,
@@ -6488,10 +5416,10 @@
       }
     },
     {
-      "id": "s_rect_ao",
+      "id": "s_rect_96",
       "type": "math",
       "x": 400,
-      "y": 18325,
+      "y": 15983,
       "props": {
         "w": 60,
         "h": 32,
@@ -6505,10 +5433,10 @@
       }
     },
     {
-      "id": "s_rect_ap",
+      "id": "s_rect_97",
       "type": "text",
       "x": 80,
-      "y": 18365,
+      "y": 16023,
       "props": {
         "w": 310,
         "h": 24,
@@ -6520,10 +5448,10 @@
       }
     },
     {
-      "id": "s_rect_aq",
+      "id": "s_rect_98",
       "type": "math",
       "x": 400,
-      "y": 18365,
+      "y": 16023,
       "props": {
         "w": 60,
         "h": 32,
@@ -6537,10 +5465,10 @@
       }
     },
     {
-      "id": "s_rect_ar",
+      "id": "s_rect_99",
       "type": "text",
       "x": 80,
-      "y": 18419,
+      "y": 16077,
       "props": {
         "w": 630,
         "h": 24,
@@ -6552,10 +5480,10 @@
       }
     },
     {
-      "id": "s_rect_as",
+      "id": "s_rect_9a",
       "type": "math",
       "x": 96,
-      "y": 18445,
+      "y": 16103,
       "props": {
         "w": 60,
         "h": 32,
@@ -6569,10 +5497,10 @@
       }
     },
     {
-      "id": "s_rect_at",
+      "id": "s_rect_9b",
       "type": "text",
       "x": 80,
-      "y": 18820,
+      "y": 16478,
       "props": {
         "w": 630,
         "h": 24,
@@ -6584,10 +5512,10 @@
       }
     },
     {
-      "id": "s_rect_au",
+      "id": "s_rect_9c",
       "type": "math",
       "x": 96,
-      "y": 18846,
+      "y": 16504,
       "props": {
         "w": 60,
         "h": 32,
@@ -6601,10 +5529,10 @@
       }
     },
     {
-      "id": "s_rect_av",
+      "id": "s_rect_9d",
       "type": "text",
       "x": 80,
-      "y": 18910,
+      "y": 16568,
       "props": {
         "w": 630,
         "h": 24,
@@ -6616,10 +5544,10 @@
       }
     },
     {
-      "id": "s_rect_aw",
+      "id": "s_rect_9e",
       "type": "math",
       "x": 96,
-      "y": 18936,
+      "y": 16594,
       "props": {
         "w": 60,
         "h": 32,
@@ -6633,10 +5561,10 @@
       }
     },
     {
-      "id": "s_rect_ax",
+      "id": "s_rect_9f",
       "type": "text",
       "x": 80,
-      "y": 18993,
+      "y": 16651,
       "props": {
         "w": 310,
         "h": 24,
@@ -6648,10 +5576,10 @@
       }
     },
     {
-      "id": "s_rect_ay",
+      "id": "s_rect_9g",
       "type": "math",
       "x": 400,
-      "y": 18986,
+      "y": 16644,
       "props": {
         "w": 60,
         "h": 32,
@@ -6665,10 +5593,10 @@
       }
     },
     {
-      "id": "s_rect_az",
+      "id": "s_rect_9h",
       "type": "text",
       "x": 80,
-      "y": 19033,
+      "y": 16691,
       "props": {
         "w": 310,
         "h": 24,
@@ -6680,10 +5608,10 @@
       }
     },
     {
-      "id": "s_rect_b0",
+      "id": "s_rect_9i",
       "type": "math",
       "x": 400,
-      "y": 19026,
+      "y": 16684,
       "props": {
         "w": 60,
         "h": 32,
@@ -6697,10 +5625,10 @@
       }
     },
     {
-      "id": "s_rect_b1",
+      "id": "s_rect_9j",
       "type": "text",
       "x": 80,
-      "y": 19073,
+      "y": 16731,
       "props": {
         "w": 310,
         "h": 24,
@@ -6712,10 +5640,10 @@
       }
     },
     {
-      "id": "s_rect_b2",
+      "id": "s_rect_9k",
       "type": "math",
       "x": 400,
-      "y": 19066,
+      "y": 16724,
       "props": {
         "w": 60,
         "h": 32,
@@ -6729,10 +5657,10 @@
       }
     },
     {
-      "id": "s_rect_b3",
+      "id": "s_rect_9l",
       "type": "text",
       "x": 80,
-      "y": 19113,
+      "y": 16771,
       "props": {
         "w": 310,
         "h": 24,
@@ -6744,10 +5672,10 @@
       }
     },
     {
-      "id": "s_rect_b4",
+      "id": "s_rect_9m",
       "type": "math",
       "x": 400,
-      "y": 19106,
+      "y": 16764,
       "props": {
         "w": 60,
         "h": 32,
@@ -6761,10 +5689,10 @@
       }
     },
     {
-      "id": "s_rect_b5",
+      "id": "s_rect_9n",
       "type": "text",
       "x": 80,
-      "y": 19160,
+      "y": 16818,
       "props": {
         "w": 630,
         "h": 24,
@@ -6776,10 +5704,10 @@
       }
     },
     {
-      "id": "s_rect_b6",
+      "id": "s_rect_9o",
       "type": "math",
       "x": 96,
-      "y": 19186,
+      "y": 16844,
       "props": {
         "w": 60,
         "h": 32,
@@ -6793,10 +5721,10 @@
       }
     },
     {
-      "id": "s_rect_b7",
+      "id": "s_rect_9p",
       "type": "text",
       "x": 80,
-      "y": 19250,
+      "y": 16908,
       "props": {
         "w": 630,
         "h": 24,
@@ -6808,10 +5736,10 @@
       }
     },
     {
-      "id": "s_rect_b8",
+      "id": "s_rect_9q",
       "type": "math",
       "x": 96,
-      "y": 19276,
+      "y": 16934,
       "props": {
         "w": 60,
         "h": 32,
@@ -6825,10 +5753,10 @@
       }
     },
     {
-      "id": "s_rect_b9",
+      "id": "s_rect_9r",
       "type": "text",
       "x": 80,
-      "y": 19343,
+      "y": 17001,
       "props": {
         "w": 310,
         "h": 24,
@@ -6840,10 +5768,10 @@
       }
     },
     {
-      "id": "s_rect_ba",
+      "id": "s_rect_9s",
       "type": "math",
       "x": 400,
-      "y": 19336,
+      "y": 16994,
       "props": {
         "w": 60,
         "h": 32,
@@ -6857,300 +5785,10 @@
       }
     },
     {
-      "id": "s_rect_bb",
+      "id": "s_rect_9t",
       "type": "text",
       "x": 80,
-      "y": 19987,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Control points and N–M curves about x and y",
-        "fontFamily": "Inter",
-        "fontSize": 16,
-        "color": "#0f172a",
-        "align": "left",
-        "heading": 2,
-        "annex": {
-          "kind": "heading",
-          "id": "ax_curves"
-        }
-      }
-    },
-    {
-      "id": "s_rect_bc",
-      "type": "text",
-      "x": 80,
-      "y": 20031,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Control points: c / H from −0.1 (pure tension) to 100 (uniform εc2)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_bd",
-      "type": "math",
-      "x": 96,
-      "y": 20057,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "u_{v}\\coloneq\\mathrm{stack}\\left(\\mathrm{seq}\\left(-0.1,1,0.025\\right),\\frac{1}{\\mathrm{seq}\\left(0.9,0.1,-0.1\\right)},100\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_be",
-      "type": "text",
-      "x": 80,
-      "y": 20124,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Curve about x",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_bf",
-      "type": "math",
-      "x": 400,
-      "y": 20117,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "N_{xv}\\coloneq\\mathrm{map}\\left(N_{x},u_{v}h\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_bg",
-      "type": "text",
-      "x": 80,
-      "y": 20164,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_bh",
-      "type": "math",
-      "x": 400,
-      "y": 20157,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "M_{xv}\\coloneq\\mathrm{map}\\left(M_{x},u_{v}h\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_bi",
-      "type": "text",
-      "x": 80,
-      "y": 20214,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Curve about y",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_bj",
-      "type": "math",
-      "x": 400,
-      "y": 20207,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "N_{yv}\\coloneq\\mathrm{map}\\left(N_{y},u_{v}b\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_bk",
-      "type": "text",
-      "x": 80,
-      "y": 20254,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_bl",
-      "type": "math",
-      "x": 400,
-      "y": 20247,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "M_{yv}\\coloneq\\mathrm{map}\\left(M_{y},u_{v}b\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_bm",
-      "type": "text",
-      "x": 96,
-      "y": 21158,
-      "props": {
-        "w": 400,
-        "h": 24,
-        "html": "Control points (N compression +)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#1e3a5f",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_bn",
-      "type": "math",
-      "x": 96,
-      "y": 21188,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "u_{v}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "vectorLayout": "column",
-        "vectorExpanded": true
-      }
-    },
-    {
-      "id": "s_rect_bo",
-      "type": "math",
-      "x": 214,
-      "y": 21188,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "N_{xv}=",
-        "displayMode": "auto",
-        "displayUnit": "kN",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "vectorLayout": "column",
-        "vectorExpanded": true
-      }
-    },
-    {
-      "id": "s_rect_bp",
-      "type": "math",
-      "x": 334,
-      "y": 21188,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "M_{xv}=",
-        "displayMode": "auto",
-        "displayUnit": "kN m",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "vectorLayout": "column",
-        "vectorExpanded": true
-      }
-    },
-    {
-      "id": "s_rect_bq",
-      "type": "math",
-      "x": 474,
-      "y": 21188,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "N_{yv}=",
-        "displayMode": "auto",
-        "displayUnit": "kN",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "vectorLayout": "column",
-        "vectorExpanded": true
-      }
-    },
-    {
-      "id": "s_rect_br",
-      "type": "math",
-      "x": 594,
-      "y": 21188,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "M_{yv}=",
-        "displayMode": "auto",
-        "displayUnit": "kN m",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "vectorLayout": "column",
-        "vectorExpanded": true
-      }
-    },
-    {
-      "id": "s_rect_bs",
-      "type": "text",
-      "x": 80,
-      "y": 22329,
+      "y": 17645,
       "props": {
         "w": 630,
         "h": 24,
@@ -7167,10 +5805,10 @@
       }
     },
     {
-      "id": "s_rect_bt",
+      "id": "s_rect_9u",
       "type": "text",
       "x": 80,
-      "y": 22373,
+      "y": 17689,
       "props": {
         "w": 630,
         "h": 24,
@@ -7182,10 +5820,10 @@
       }
     },
     {
-      "id": "s_rect_bu",
+      "id": "s_rect_9v",
       "type": "math",
       "x": 96,
-      "y": 22399,
+      "y": 17715,
       "props": {
         "w": 60,
         "h": 32,
@@ -7199,10 +5837,10 @@
       }
     },
     {
-      "id": "s_rect_bv",
+      "id": "s_rect_9w",
       "type": "text",
       "x": 80,
-      "y": 22443,
+      "y": 17759,
       "props": {
         "w": 630,
         "h": 24,
@@ -7214,10 +5852,10 @@
       }
     },
     {
-      "id": "s_rect_bw",
+      "id": "s_rect_9x",
       "type": "math",
       "x": 96,
-      "y": 22469,
+      "y": 17785,
       "props": {
         "w": 60,
         "h": 32,
@@ -7231,10 +5869,10 @@
       }
     },
     {
-      "id": "s_rect_bx",
+      "id": "s_rect_9y",
       "type": "text",
       "x": 80,
-      "y": 22526,
+      "y": 17842,
       "props": {
         "w": 310,
         "h": 24,
@@ -7246,10 +5884,10 @@
       }
     },
     {
-      "id": "s_rect_by",
+      "id": "s_rect_9z",
       "type": "math",
       "x": 400,
-      "y": 22519,
+      "y": 17835,
       "props": {
         "w": 60,
         "h": 32,
@@ -7263,10 +5901,10 @@
       }
     },
     {
-      "id": "s_rect_bz",
+      "id": "s_rect_a0",
       "type": "text",
       "x": 80,
-      "y": 22566,
+      "y": 17882,
       "props": {
         "w": 310,
         "h": 24,
@@ -7278,10 +5916,10 @@
       }
     },
     {
-      "id": "s_rect_c0",
+      "id": "s_rect_a1",
       "type": "math",
       "x": 400,
-      "y": 22559,
+      "y": 17875,
       "props": {
         "w": 60,
         "h": 32,
@@ -7295,10 +5933,10 @@
       }
     },
     {
-      "id": "s_rect_c1",
+      "id": "s_rect_a2",
       "type": "text",
       "x": 80,
-      "y": 22606,
+      "y": 17922,
       "props": {
         "w": 310,
         "h": 24,
@@ -7310,10 +5948,10 @@
       }
     },
     {
-      "id": "s_rect_c2",
+      "id": "s_rect_a3",
       "type": "math",
       "x": 400,
-      "y": 22599,
+      "y": 17915,
       "props": {
         "w": 60,
         "h": 32,
@@ -7327,10 +5965,10 @@
       }
     },
     {
-      "id": "s_rect_c3",
+      "id": "s_rect_a4",
       "type": "text",
       "x": 80,
-      "y": 22661,
+      "y": 17977,
       "props": {
         "w": 310,
         "h": 24,
@@ -7342,10 +5980,10 @@
       }
     },
     {
-      "id": "s_rect_c4",
+      "id": "s_rect_a5",
       "type": "math",
       "x": 400,
-      "y": 22649,
+      "y": 17965,
       "props": {
         "w": 60,
         "h": 32,
@@ -7359,10 +5997,10 @@
       }
     },
     {
-      "id": "s_rect_c5",
+      "id": "s_rect_a6",
       "type": "text",
       "x": 80,
-      "y": 22714,
+      "y": 18030,
       "props": {
         "w": 310,
         "h": 24,
@@ -7374,10 +6012,10 @@
       }
     },
     {
-      "id": "s_rect_c6",
+      "id": "s_rect_a7",
       "type": "math",
       "x": 400,
-      "y": 22709,
+      "y": 18025,
       "props": {
         "w": 60,
         "h": 32,
@@ -7391,10 +6029,10 @@
       }
     },
     {
-      "id": "s_rect_c7",
+      "id": "s_rect_a8",
       "type": "text",
       "x": 80,
-      "y": 22783,
+      "y": 18099,
       "props": {
         "w": 310,
         "h": 24,
@@ -7406,10 +6044,10 @@
       }
     },
     {
-      "id": "s_rect_c8",
+      "id": "s_rect_a9",
       "type": "math",
       "x": 400,
-      "y": 22769,
+      "y": 18085,
       "props": {
         "w": 60,
         "h": 32,
@@ -7423,10 +6061,10 @@
       }
     },
     {
-      "id": "s_rect_c9",
+      "id": "s_rect_aa",
       "type": "text",
       "x": 80,
-      "y": 22853,
+      "y": 18169,
       "props": {
         "w": 310,
         "h": 24,
@@ -7438,10 +6076,10 @@
       }
     },
     {
-      "id": "s_rect_ca",
+      "id": "s_rect_ab",
       "type": "math",
       "x": 400,
-      "y": 22839,
+      "y": 18155,
       "props": {
         "w": 60,
         "h": 32,
@@ -7455,10 +6093,10 @@
       }
     },
     {
-      "id": "s_rect_cb",
+      "id": "s_rect_ac",
       "type": "text",
       "x": 80,
-      "y": 22913,
+      "y": 18229,
       "props": {
         "w": 310,
         "h": 24,
@@ -7470,10 +6108,10 @@
       }
     },
     {
-      "id": "s_rect_cc",
+      "id": "s_rect_ad",
       "type": "math",
       "x": 400,
-      "y": 22899,
+      "y": 18215,
       "props": {
         "w": 60,
         "h": 32,
@@ -7487,10 +6125,10 @@
       }
     },
     {
-      "id": "s_rect_cd",
+      "id": "s_rect_ae",
       "type": "text",
       "x": 80,
-      "y": 22973,
+      "y": 18289,
       "props": {
         "w": 630,
         "h": 24,
@@ -7502,10 +6140,10 @@
       }
     },
     {
-      "id": "s_rect_ce",
+      "id": "s_rect_af",
       "type": "math",
       "x": 96,
-      "y": 22999,
+      "y": 18315,
       "props": {
         "w": 60,
         "h": 32,
@@ -7519,10 +6157,10 @@
       }
     },
     {
-      "id": "s_rect_cf",
+      "id": "s_rect_ag",
       "type": "text",
       "x": 80,
-      "y": 23043,
+      "y": 18359,
       "props": {
         "w": 630,
         "h": 24,
@@ -7534,10 +6172,10 @@
       }
     },
     {
-      "id": "s_rect_cg",
+      "id": "s_rect_ah",
       "type": "math",
       "x": 96,
-      "y": 23069,
+      "y": 18385,
       "props": {
         "w": 60,
         "h": 32,
@@ -7551,10 +6189,10 @@
       }
     },
     {
-      "id": "s_rect_ch",
+      "id": "s_rect_ai",
       "type": "text",
       "x": 80,
-      "y": 23123,
+      "y": 18439,
       "props": {
         "w": 630,
         "h": 24,
@@ -7566,10 +6204,10 @@
       }
     },
     {
-      "id": "s_rect_ci",
+      "id": "s_rect_aj",
       "type": "math",
       "x": 96,
-      "y": 23149,
+      "y": 18465,
       "props": {
         "w": 60,
         "h": 32,
@@ -7583,10 +6221,10 @@
       }
     },
     {
-      "id": "s_rect_cj",
+      "id": "s_rect_ak",
       "type": "text",
       "x": 80,
-      "y": 23218,
+      "y": 18534,
       "props": {
         "w": 310,
         "h": 24,
@@ -7598,10 +6236,10 @@
       }
     },
     {
-      "id": "s_rect_ck",
+      "id": "s_rect_al",
       "type": "math",
       "x": 400,
-      "y": 23209,
+      "y": 18525,
       "props": {
         "w": 60,
         "h": 32,
@@ -7615,10 +6253,10 @@
       }
     },
     {
-      "id": "s_rect_cl",
+      "id": "s_rect_am",
       "type": "text",
       "x": 80,
-      "y": 23500,
+      "y": 18816,
       "props": {
         "w": 310,
         "h": 24,
@@ -7630,10 +6268,10 @@
       }
     },
     {
-      "id": "s_rect_cm",
+      "id": "s_rect_an",
       "type": "math",
       "x": 400,
-      "y": 23500,
+      "y": 18816,
       "props": {
         "w": 60,
         "h": 32,
@@ -7647,10 +6285,10 @@
       }
     },
     {
-      "id": "s_rect_cn",
+      "id": "s_rect_ao",
       "type": "text",
       "x": 80,
-      "y": 23557,
+      "y": 18873,
       "props": {
         "w": 310,
         "h": 24,
@@ -7662,10 +6300,10 @@
       }
     },
     {
-      "id": "s_rect_co",
+      "id": "s_rect_ap",
       "type": "math",
       "x": 400,
-      "y": 23550,
+      "y": 18866,
       "props": {
         "w": 60,
         "h": 32,
@@ -7679,10 +6317,10 @@
       }
     },
     {
-      "id": "s_rect_cp",
+      "id": "s_rect_aq",
       "type": "text",
       "x": 80,
-      "y": 23609,
+      "y": 18925,
       "props": {
         "w": 310,
         "h": 24,
@@ -7694,10 +6332,10 @@
       }
     },
     {
-      "id": "s_rect_cq",
+      "id": "s_rect_ar",
       "type": "math",
       "x": 400,
-      "y": 23600,
+      "y": 18916,
       "props": {
         "w": 60,
         "h": 32,
@@ -7711,10 +6349,10 @@
       }
     },
     {
-      "id": "s_rect_cr",
+      "id": "s_rect_as",
       "type": "text",
       "x": 80,
-      "y": 23654,
+      "y": 18970,
       "props": {
         "w": 630,
         "h": 24,
@@ -7726,10 +6364,10 @@
       }
     },
     {
-      "id": "s_rect_cs",
+      "id": "s_rect_at",
       "type": "math",
       "x": 96,
-      "y": 23680,
+      "y": 18996,
       "props": {
         "w": 60,
         "h": 32,
@@ -7743,10 +6381,10 @@
       }
     },
     {
-      "id": "s_rect_ct",
+      "id": "s_rect_au",
       "type": "text",
       "x": 80,
-      "y": 23734,
+      "y": 19050,
       "props": {
         "w": 630,
         "h": 24,
@@ -7758,10 +6396,10 @@
       }
     },
     {
-      "id": "s_rect_cu",
+      "id": "s_rect_av",
       "type": "math",
       "x": 96,
-      "y": 23760,
+      "y": 19076,
       "props": {
         "w": 60,
         "h": 32,
@@ -7775,14 +6413,14 @@
       }
     },
     {
-      "id": "s_rect_cv",
+      "id": "s_rect_aw",
       "type": "text",
       "x": 80,
-      "y": 24671,
+      "y": 19987,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "Neutral-axis sweep β",
+        "html": "Neutral-axis sweep: P–Mθ curve and MRd,θ at NEd",
         "fontFamily": "Inter",
         "fontSize": 16,
         "color": "#0f172a",
@@ -7795,10 +6433,10 @@
       }
     },
     {
-      "id": "s_rect_cw",
+      "id": "s_rect_ax",
       "type": "text",
       "x": 80,
-      "y": 24715,
+      "y": 20031,
       "props": {
         "w": 630,
         "h": 24,
@@ -7810,10 +6448,10 @@
       }
     },
     {
-      "id": "s_rect_cx",
+      "id": "s_rect_ay",
       "type": "math",
       "x": 96,
-      "y": 24741,
+      "y": 20057,
       "props": {
         "w": 60,
         "h": 32,
@@ -7827,10 +6465,509 @@
       }
     },
     {
-      "id": "s_rect_cy",
+      "id": "s_rect_az",
       "type": "text",
       "x": 80,
-      "y": 24801,
+      "y": 20117,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "P–Mθ curve",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_rect_b0",
+      "type": "text",
+      "x": 80,
+      "y": 20147,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "For each depth c = u·H(β) the moment direction ψ is found for every β of the sweep; the point",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_b1",
+      "type": "text",
+      "x": 80,
+      "y": 20177,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "with ψ = θM (interpolated between the β steps) is the point of the P–Mθ curve.",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_b2",
+      "type": "text",
+      "x": 80,
+      "y": 20207,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Axial force, moment and its direction at c = u·H(β)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_b3",
+      "type": "math",
+      "x": 400,
+      "y": 20207,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{u}\\left(u,\\beta\\right)\\coloneq N_{\\beta}\\left(uH_{\\beta}\\left(\\beta\\right),\\beta\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_b4",
+      "type": "text",
+      "x": 80,
+      "y": 20261,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_b5",
+      "type": "math",
+      "x": 96,
+      "y": 20297,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{u}\\left(u,\\beta\\right)\\coloneq\\sqrt{\\left(M_{p}\\left(uH_{\\beta}\\left(\\beta\\right),\\beta\\right)\\right)^2+\\left(M_{q}\\left(uH_{\\beta}\\left(\\beta\\right),\\beta\\right)\\right)^2}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_b6",
+      "type": "text",
+      "x": 80,
+      "y": 20351,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_b7",
+      "type": "math",
+      "x": 96,
+      "y": 20377,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\psi_{u}\\left(u,\\beta\\right)\\coloneq\\beta+\\arctan\\left(\\frac{M_{q}\\left(uH_{\\beta}\\left(\\beta\\right),\\beta\\right)}{M_{p}\\left(uH_{\\beta}\\left(\\beta\\right),\\beta\\right)}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_b8",
+      "type": "text",
+      "x": 80,
+      "y": 20441,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Curve point for u (ψ = θM)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_b9",
+      "type": "math",
+      "x": 96,
+      "y": 20467,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{\\theta}\\left(u\\right)\\coloneq\\mathrm{linterp}\\left(\\mathrm{map}\\left(\\psi_{u},u,\\beta_{v}\\right),\\mathrm{map}\\left(N_{u},u,\\beta_{v}\\right),\\theta_{M}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_ba",
+      "type": "text",
+      "x": 80,
+      "y": 20521,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_bb",
+      "type": "math",
+      "x": 96,
+      "y": 20547,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{\\theta}\\left(u\\right)\\coloneq\\mathrm{linterp}\\left(\\mathrm{map}\\left(\\psi_{u},u,\\beta_{v}\\right),\\mathrm{map}\\left(M_{u},u,\\beta_{v}\\right),\\theta_{M}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_bc",
+      "type": "text",
+      "x": 80,
+      "y": 20591,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Control points u = c/H (the ends, pure tension and uniform εc2, have M = 0)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_bd",
+      "type": "math",
+      "x": 96,
+      "y": 20617,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "u_{t}\\coloneq\\mathrm{stack}\\left(0.02,0.05,\\mathrm{seq}\\left(0.1,1.1,0.1\\right),1.5,3\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_be",
+      "type": "text",
+      "x": 80,
+      "y": 20671,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "P–Mθ curve",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_bf",
+      "type": "math",
+      "x": 96,
+      "y": 20697,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{\\theta v}\\coloneq\\mathrm{stack}\\left(N_{\\beta}\\left(-0.1H_{\\beta}\\left(\\theta_{M}\\right),\\theta_{M}\\right),\\mathrm{map}\\left(N_{\\theta},u_{t}\\right),N_{\\beta}\\left(100H_{\\beta}\\left(\\theta_{M}\\right),\\theta_{M}\\right)\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_bg",
+      "type": "text",
+      "x": 80,
+      "y": 20741,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_bh",
+      "type": "math",
+      "x": 96,
+      "y": 20767,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{\\theta v}\\coloneq\\mathrm{stack}\\left(0\\,\\mathrm{kN}\\cdot\\mathrm{m},\\mathrm{map}\\left(M_{\\theta},u_{t}\\right),0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_bi",
+      "type": "text",
+      "x": 96,
+      "y": 21158,
+      "props": {
+        "w": 400,
+        "h": 24,
+        "html": "P–Mθ control points",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#1e3a5f",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_bj",
+      "type": "math",
+      "x": 96,
+      "y": 21188,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{\\theta v}=",
+        "displayMode": "auto",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_rect_bk",
+      "type": "math",
+      "x": 276,
+      "y": 21188,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{\\theta v}=",
+        "displayMode": "auto",
+        "displayUnit": "kN m",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_rect_bl",
+      "type": "text",
+      "x": 80,
+      "y": 21468,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "MRd,θ at NEd",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_rect_bm",
+      "type": "text",
+      "x": 80,
+      "y": 21502,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Depth c with N = NEd: first from coarse points c/H = uβ, then two Newton steps",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_bn",
+      "type": "math",
+      "x": 96,
+      "y": 21538,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "u_{\\beta}\\coloneq\\mathrm{stack}\\left(\\mathrm{seq}\\left(-0.1,1.1,0.1\\right),1.5,3,100\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_bo",
+      "type": "text",
+      "x": 80,
+      "y": 21582,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_bp",
+      "type": "math",
+      "x": 96,
+      "y": 21608,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "c_{0}\\left(\\beta\\right)\\coloneq\\mathrm{linterp}\\left(\\mathrm{map}\\left(N_{\\beta},u_{\\beta}H_{\\beta}\\left(\\beta\\right),\\beta\\right),u_{\\beta}H_{\\beta}\\left(\\beta\\right),N_{Ed}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_bq",
+      "type": "text",
+      "x": 80,
+      "y": 21652,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_br",
+      "type": "math",
+      "x": 96,
+      "y": 21688,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "c_{n}\\left(c,\\beta\\right)\\coloneq c+\\frac{\\left(N_{Ed}-N_{\\beta}\\left(c,\\beta\\right)\\right)\\cdot1\\,\\mathrm{mm}}{N_{\\beta}\\left(c+1\\,\\mathrm{mm},\\beta\\right)-N_{\\beta}\\left(c,\\beta\\right)}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_bs",
+      "type": "text",
+      "x": 80,
+      "y": 21755,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_bt",
+      "type": "math",
+      "x": 400,
+      "y": 21748,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "c_{N}\\left(\\beta\\right)\\coloneq c_{n}\\left(c_{n}\\left(c_{0}\\left(\\beta\\right),\\beta\\right),\\beta\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_bu",
+      "type": "text",
+      "x": 80,
+      "y": 21788,
       "props": {
         "w": 310,
         "h": 24,
@@ -7842,10 +6979,10 @@
       }
     },
     {
-      "id": "s_rect_cz",
+      "id": "s_rect_bv",
       "type": "math",
       "x": 400,
-      "y": 24801,
+      "y": 21788,
       "props": {
         "w": 60,
         "h": 32,
@@ -7859,10 +6996,10 @@
       }
     },
     {
-      "id": "s_rect_d0",
+      "id": "s_rect_bw",
       "type": "text",
       "x": 80,
-      "y": 24858,
+      "y": 21845,
       "props": {
         "w": 310,
         "h": 24,
@@ -7874,10 +7011,10 @@
       }
     },
     {
-      "id": "s_rect_d1",
+      "id": "s_rect_bx",
       "type": "math",
       "x": 400,
-      "y": 24851,
+      "y": 21838,
       "props": {
         "w": 60,
         "h": 32,
@@ -7891,10 +7028,10 @@
       }
     },
     {
-      "id": "s_rect_d2",
+      "id": "s_rect_by",
       "type": "text",
       "x": 80,
-      "y": 24898,
+      "y": 21895,
       "props": {
         "w": 310,
         "h": 24,
@@ -7906,10 +7043,10 @@
       }
     },
     {
-      "id": "s_rect_d3",
+      "id": "s_rect_bz",
       "type": "math",
       "x": 400,
-      "y": 24891,
+      "y": 21888,
       "props": {
         "w": 60,
         "h": 32,
@@ -7923,10 +7060,10 @@
       }
     },
     {
-      "id": "s_rect_d4",
+      "id": "s_rect_c0",
       "type": "text",
       "x": 80,
-      "y": 24943,
+      "y": 21940,
       "props": {
         "w": 310,
         "h": 24,
@@ -7938,10 +7075,10 @@
       }
     },
     {
-      "id": "s_rect_d5",
+      "id": "s_rect_c1",
       "type": "math",
       "x": 400,
-      "y": 24931,
+      "y": 21928,
       "props": {
         "w": 60,
         "h": 32,
@@ -7955,10 +7092,10 @@
       }
     },
     {
-      "id": "s_rect_d6",
+      "id": "s_rect_c2",
       "type": "text",
       "x": 80,
-      "y": 25008,
+      "y": 21995,
       "props": {
         "w": 310,
         "h": 24,
@@ -7970,10 +7107,10 @@
       }
     },
     {
-      "id": "s_rect_d7",
+      "id": "s_rect_c3",
       "type": "math",
       "x": 400,
-      "y": 25001,
+      "y": 21988,
       "props": {
         "w": 60,
         "h": 32,
@@ -7987,10 +7124,10 @@
       }
     },
     {
-      "id": "s_rect_d8",
+      "id": "s_rect_c4",
       "type": "text",
       "x": 96,
-      "y": 25051,
+      "y": 22329,
       "props": {
         "w": 400,
         "h": 24,
@@ -8002,10 +7139,10 @@
       }
     },
     {
-      "id": "s_rect_d9",
+      "id": "s_rect_c5",
       "type": "math",
       "x": 96,
-      "y": 25081,
+      "y": 22359,
       "props": {
         "w": 60,
         "h": 32,
@@ -8021,10 +7158,10 @@
       }
     },
     {
-      "id": "s_rect_da",
+      "id": "s_rect_c6",
       "type": "math",
       "x": 236,
-      "y": 25081,
+      "y": 22359,
       "props": {
         "w": 60,
         "h": 32,
@@ -8040,10 +7177,10 @@
       }
     },
     {
-      "id": "s_rect_db",
+      "id": "s_rect_c7",
       "type": "math",
       "x": 376,
-      "y": 25081,
+      "y": 22359,
       "props": {
         "w": 60,
         "h": 32,
@@ -8059,10 +7196,10 @@
       }
     },
     {
-      "id": "s_rect_dc",
+      "id": "s_rect_c8",
       "type": "math",
       "x": 516,
-      "y": 25081,
+      "y": 22359,
       "props": {
         "w": 60,
         "h": 32,
@@ -8078,6 +7215,6 @@
       }
     }
   ],
-  "createdAt": "2026-11-08T15:23:46.534Z",
-  "updatedAt": "2026-11-08T15:23:46.534Z"
+  "createdAt": "2026-11-08T15:40:58.127Z",
+  "updatedAt": "2026-11-08T15:40:58.127Z"
 }
