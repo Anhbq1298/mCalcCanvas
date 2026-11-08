@@ -1,0 +1,5383 @@
+{
+  "format": "calccanvas",
+  "id": "doc_rc_circular_column",
+  "version": 2,
+  "title": "RC Circular Column Check",
+  "metadata": {
+    "project": "Project name",
+    "calculationReference": "CALC-COL-01",
+    "preparedBy": "Mark",
+    "checkedBy": "",
+    "revision": "A"
+  },
+  "settings": {
+    "unitSystem": "SI",
+    "precision": 2,
+    "canvasMode": "page",
+    "pageOrientation": "portrait",
+    "showHeaderFooter": true,
+    "textFont": "Inter",
+    "baselineSnap": "minor",
+    "pages": 12
+  },
+  "shapes": [
+    {
+      "id": "s_col_0",
+      "type": "text",
+      "x": 80,
+      "y": 80,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "RC CIRCULAR COLUMN CHECK – FLEXURE AND SHEAR (EC2)",
+        "fontFamily": "Inter",
+        "fontSize": 20,
+        "color": "#1e3a5f",
+        "align": "left",
+        "heading": 1
+      }
+    },
+    {
+      "id": "s_col_1",
+      "type": "text",
+      "x": 80,
+      "y": 120,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Biaxial bending with axial force by fibre integration (MBColumn logic); shear by §6.2.3.",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_2",
+      "type": "text",
+      "x": 80,
+      "y": 170,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "1. DESIGN BASIS",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_col_3",
+      "type": "text",
+      "x": 80,
+      "y": 200,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Plane sections; neutral-axis depth c swept through the EC2 strain pivots A, B, C.",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_4",
+      "type": "text",
+      "x": 80,
+      "y": 230,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Concrete: parabola-rectangle (n = 2), summed over strips; steel elastic-plastic within ±fyd.",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_5",
+      "type": "text",
+      "x": 80,
+      "y": 260,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Flexure: ηM = MEd / MRd(NEd) at constant NEd and the radial ratio ηR (MBColumn).",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6",
+      "type": "text",
+      "x": 80,
+      "y": 290,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Shear: spirals only (VRd,c = 0); θ from CSA εx in tension, cotθ,opt in compression.",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7",
+      "type": "text",
+      "x": 80,
+      "y": 320,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Sign: N positive in compression.",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8",
+      "type": "text",
+      "x": 80,
+      "y": 360,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "2. INPUTS",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_col_9",
+      "type": "text",
+      "x": 80,
+      "y": 400,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "2.1 Materials",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_a",
+      "type": "text",
+      "x": 80,
+      "y": 447,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Characteristic concrete cylinder strength",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_b",
+      "type": "math",
+      "x": 400,
+      "y": 440,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "f_{ck}\\coloneq35\\,\\mathrm{MPa}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_c",
+      "type": "text",
+      "x": 80,
+      "y": 487,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Partial factor for concrete",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_d",
+      "type": "math",
+      "x": 400,
+      "y": 480,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\gamma_{c}\\coloneq1.5",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_e",
+      "type": "text",
+      "x": 80,
+      "y": 527,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Coefficient αcc for flexure (NA)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_f",
+      "type": "math",
+      "x": 400,
+      "y": 520,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\alpha_{cc}\\coloneq0.85",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_g",
+      "type": "text",
+      "x": 80,
+      "y": 567,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Coefficient αcc for the shear strut (NA)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_h",
+      "type": "math",
+      "x": 400,
+      "y": 560,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\alpha_{cc.v}\\coloneq1.0",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_i",
+      "type": "text",
+      "x": 80,
+      "y": 617,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Yield strength of longitudinal bars",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_j",
+      "type": "math",
+      "x": 400,
+      "y": 610,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "f_{yk}\\coloneq500\\,\\mathrm{MPa}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_k",
+      "type": "text",
+      "x": 80,
+      "y": 657,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Yield strength of spirals",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_l",
+      "type": "math",
+      "x": 400,
+      "y": 650,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "f_{ywk}\\coloneq500\\,\\mathrm{MPa}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_m",
+      "type": "text",
+      "x": 80,
+      "y": 697,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Partial factor for reinforcement",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_n",
+      "type": "math",
+      "x": 400,
+      "y": 690,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\gamma_{s}\\coloneq1.15",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_o",
+      "type": "text",
+      "x": 80,
+      "y": 747,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Elastic modulus of reinforcement",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_p",
+      "type": "math",
+      "x": 400,
+      "y": 740,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "E_{s}\\coloneq200\\,\\mathrm{GPa}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_q",
+      "type": "text",
+      "x": 80,
+      "y": 787,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Ultimate concrete strain (Table 3.1)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_r",
+      "type": "math",
+      "x": 400,
+      "y": 780,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon_{cu2}\\coloneq0.0035",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_s",
+      "type": "text",
+      "x": 80,
+      "y": 827,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Concrete strain at peak stress",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_t",
+      "type": "math",
+      "x": 400,
+      "y": 820,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon_{c2}\\coloneq0.002",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_u",
+      "type": "text",
+      "x": 80,
+      "y": 877,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Design limit of steel strain, 0.9·εuk",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_v",
+      "type": "math",
+      "x": 400,
+      "y": 870,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon_{ud}\\coloneq0.045",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_w",
+      "type": "text",
+      "x": 80,
+      "y": 910,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "2.2 Section and reinforcement sets",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_x",
+      "type": "text",
+      "x": 80,
+      "y": 947,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Column diameter",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_y",
+      "type": "math",
+      "x": 400,
+      "y": 940,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "D\\coloneq1200\\,\\mathrm{mm}",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_z",
+      "type": "text",
+      "x": 80,
+      "y": 997,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Nominal cover to the set-1 spiral",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_10",
+      "type": "math",
+      "x": 400,
+      "y": 990,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "c_{nom}\\coloneq75\\,\\mathrm{mm}",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_11",
+      "type": "text",
+      "x": 80,
+      "y": 1251,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Reinforcement sets: 1 = outer, 2 = outer + inner",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_12",
+      "type": "math",
+      "x": 400,
+      "y": 1251,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "n_{set}\\coloneq1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_13",
+      "type": "text",
+      "x": 80,
+      "y": 1308,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set 1 (outer): longitudinal bar diameter",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_14",
+      "type": "math",
+      "x": 400,
+      "y": 1301,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\phi_{l1}\\coloneq32\\,\\mathrm{mm}",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_15",
+      "type": "text",
+      "x": 80,
+      "y": 1348,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set 1: number of bars (evenly spaced)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_16",
+      "type": "math",
+      "x": 400,
+      "y": 1341,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "n_{l1}\\coloneq22",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_17",
+      "type": "text",
+      "x": 80,
+      "y": 1388,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set 1: spiral bar diameter",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_18",
+      "type": "math",
+      "x": 400,
+      "y": 1381,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\phi_{w1}\\coloneq20\\,\\mathrm{mm}",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_19",
+      "type": "text",
+      "x": 80,
+      "y": 1438,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set 1: spiral pitch",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_1a",
+      "type": "math",
+      "x": 400,
+      "y": 1431,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "s_{1}\\coloneq85\\,\\mathrm{mm}",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_1b",
+      "type": "text",
+      "x": 80,
+      "y": 1478,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set 2 (inner): longitudinal bar diameter",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_1c",
+      "type": "math",
+      "x": 400,
+      "y": 1471,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\phi_{l2}\\coloneq25\\,\\mathrm{mm}",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_1d",
+      "type": "text",
+      "x": 80,
+      "y": 1518,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set 2: number of longitudinal bars",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_1e",
+      "type": "math",
+      "x": 400,
+      "y": 1511,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "n_{l2}\\coloneq16",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_1f",
+      "type": "text",
+      "x": 80,
+      "y": 1558,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set 2: spiral bar diameter",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_1g",
+      "type": "math",
+      "x": 400,
+      "y": 1551,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\phi_{w2}\\coloneq16\\,\\mathrm{mm}",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_1h",
+      "type": "text",
+      "x": 80,
+      "y": 1608,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set 2: spiral pitch",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_1i",
+      "type": "math",
+      "x": 400,
+      "y": 1601,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "s_{2}\\coloneq150\\,\\mathrm{mm}",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_1j",
+      "type": "text",
+      "x": 80,
+      "y": 1641,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "2.3 Integration",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_1k",
+      "type": "text",
+      "x": 80,
+      "y": 1688,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Number of concrete strips across D",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_1l",
+      "type": "math",
+      "x": 400,
+      "y": 1681,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "n_{c}\\coloneq100",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_1m",
+      "type": "text",
+      "x": 80,
+      "y": 1721,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "2.4 Design actions (ULS)",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_1n",
+      "type": "text",
+      "x": 80,
+      "y": 1758,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Axial force, compression positive",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_1o",
+      "type": "math",
+      "x": 400,
+      "y": 1751,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{Ed}\\coloneq8000\\,\\mathrm{kN}",
+        "displayMode": "auto",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_1p",
+      "type": "text",
+      "x": 80,
+      "y": 1808,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Bending moment about x",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_1q",
+      "type": "math",
+      "x": 400,
+      "y": 1801,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{Ed.x}\\coloneq3000\\,\\mathrm{kN}\\cdot\\mathrm{m}",
+        "displayMode": "auto",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_1r",
+      "type": "text",
+      "x": 80,
+      "y": 1848,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Bending moment about y",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_1s",
+      "type": "math",
+      "x": 400,
+      "y": 1841,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{Ed.y}\\coloneq2000\\,\\mathrm{kN}\\cdot\\mathrm{m}",
+        "displayMode": "auto",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_1t",
+      "type": "text",
+      "x": 80,
+      "y": 1888,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Shear force",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_1u",
+      "type": "math",
+      "x": 400,
+      "y": 1881,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "V_{Ed}\\coloneq2500\\,\\mathrm{kN}",
+        "displayMode": "auto",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_1v",
+      "type": "text",
+      "x": 80,
+      "y": 1941,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "3. DESIGN VALUES",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_col_1w",
+      "type": "text",
+      "x": 80,
+      "y": 1981,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Design compressive strength for flexure",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_1x",
+      "type": "math",
+      "x": 400,
+      "y": 1971,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "f_{cd}\\coloneq\\frac{\\alpha_{cc}f_{ck}}{\\gamma_{c}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "MPa",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_1y",
+      "type": "text",
+      "x": 80,
+      "y": 2032,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Design compressive strength for the shear strut",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_1z",
+      "type": "math",
+      "x": 400,
+      "y": 2031,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "f_{cd.v}\\coloneq\\frac{\\alpha_{cc.v}f_{ck}}{\\gamma_{c}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "MPa",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_20",
+      "type": "text",
+      "x": 80,
+      "y": 2102,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Design yield strength of longitudinal bars",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_21",
+      "type": "math",
+      "x": 400,
+      "y": 2091,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "f_{yd}\\coloneq\\frac{f_{yk}}{\\gamma_{s}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "MPa",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_22",
+      "type": "text",
+      "x": 80,
+      "y": 2162,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Design yield strength of spirals",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_23",
+      "type": "math",
+      "x": 400,
+      "y": 2151,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "f_{ywd}\\coloneq\\frac{f_{ywk}}{\\gamma_{s}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "MPa",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_24",
+      "type": "text",
+      "x": 80,
+      "y": 2432,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Design yield strain of longitudinal bars",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_25",
+      "type": "math",
+      "x": 400,
+      "y": 2422,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon_{yd}\\coloneq\\frac{f_{yd}}{E_{s}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 5,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_26",
+      "type": "text",
+      "x": 80,
+      "y": 2485,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strength reduction for cracked concrete (6.6N)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_27",
+      "type": "math",
+      "x": 400,
+      "y": 2482,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\nu_{1}\\coloneq0.6\\left(1-\\frac{f_{ck}}{250\\,\\mathrm{MPa}}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_28",
+      "type": "text",
+      "x": 80,
+      "y": 2549,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set-2 switch: 1 = included, 0 = ignored",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_29",
+      "type": "math",
+      "x": 400,
+      "y": 2542,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\delta_{2}\\coloneq\\mathrm{if}\\left(n_{set}\\ge2,1,0\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_2a",
+      "type": "text",
+      "x": 80,
+      "y": 2592,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "4. SECTION GEOMETRY",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_col_2b",
+      "type": "text",
+      "x": 80,
+      "y": 2632,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "4.1 Rings, bars and spirals",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_2c",
+      "type": "text",
+      "x": 80,
+      "y": 2679,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Section radius R (centroid to the outer face)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_2d",
+      "type": "math",
+      "x": 400,
+      "y": 2672,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "R\\coloneq\\frac{D}{2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_2e",
+      "type": "text",
+      "x": 80,
+      "y": 2729,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Cover to set-2 spiral (inside set-1 bars)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_2f",
+      "type": "math",
+      "x": 400,
+      "y": 2722,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "c_{2}\\coloneq c_{nom}+\\phi_{w1}+\\phi_{l1}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_2g",
+      "type": "text",
+      "x": 80,
+      "y": 2770,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Radius to set-1 bar centres",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_2h",
+      "type": "math",
+      "x": 400,
+      "y": 2762,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "r_{1}\\coloneq R-c_{nom}-\\phi_{w1}-\\frac{\\phi_{l1}}{2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_2i",
+      "type": "text",
+      "x": 80,
+      "y": 2830,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Radius to set-2 bar centres",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_2j",
+      "type": "math",
+      "x": 400,
+      "y": 2822,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "r_{2}\\coloneq R-c_{2}-\\phi_{w2}-\\frac{\\phi_{l2}}{2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_2k",
+      "type": "text",
+      "x": 80,
+      "y": 2876,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Set 2 must sit inside set 1",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_2l",
+      "type": "math",
+      "x": 96,
+      "y": 2902,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "r_{2}\\le r_{1}-\\frac{\\phi_{l1}+\\phi_{l2}}{2}",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_2m",
+      "type": "text",
+      "x": 80,
+      "y": 2969,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Area of one set-1 longitudinal bar",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_2n",
+      "type": "math",
+      "x": 400,
+      "y": 2962,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "A_{b1}\\coloneq0.25\\pi\\phi_{l1}^2",
+        "displayMode": "auto",
+        "displayUnit": "mm^2",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_2o",
+      "type": "text",
+      "x": 80,
+      "y": 3009,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Area of one set-2 longitudinal bar",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_2p",
+      "type": "math",
+      "x": 400,
+      "y": 3002,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "A_{b2}\\coloneq0.25\\pi\\phi_{l2}^2",
+        "displayMode": "auto",
+        "displayUnit": "mm^2",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_2q",
+      "type": "text",
+      "x": 80,
+      "y": 3049,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Gross section area",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_2r",
+      "type": "math",
+      "x": 400,
+      "y": 3042,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "A_{g}\\coloneq\\pi R^2",
+        "displayMode": "auto",
+        "displayUnit": "mm^2",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_2s",
+      "type": "text",
+      "x": 80,
+      "y": 3089,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Total longitudinal steel area",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_2t",
+      "type": "math",
+      "x": 400,
+      "y": 3082,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "A_{st}\\coloneq n_{l1}A_{b1}+\\delta_{2}n_{l2}A_{b2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm^2",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_2u",
+      "type": "text",
+      "x": 80,
+      "y": 3139,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Spiral centreline diameter, set 1",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_2v",
+      "type": "math",
+      "x": 400,
+      "y": 3132,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "D_{sp.1}\\coloneq D-2c_{nom}-\\phi_{w1}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_2w",
+      "type": "text",
+      "x": 80,
+      "y": 3179,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Spiral centreline diameter, set 2",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_2x",
+      "type": "math",
+      "x": 400,
+      "y": 3172,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "D_{sp.2}\\coloneq D-2c_{2}-\\phi_{w2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_2y",
+      "type": "text",
+      "x": 80,
+      "y": 3219,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Area of one set-1 spiral bar",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_2z",
+      "type": "math",
+      "x": 400,
+      "y": 3212,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "A_{w1}\\coloneq0.25\\pi\\phi_{w1}^2",
+        "displayMode": "auto",
+        "displayUnit": "mm^2",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_30",
+      "type": "text",
+      "x": 80,
+      "y": 3269,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Area of one set-2 spiral bar",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_31",
+      "type": "math",
+      "x": 400,
+      "y": 3262,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "A_{w2}\\coloneq0.25\\pi\\phi_{w2}^2",
+        "displayMode": "auto",
+        "displayUnit": "mm^2",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_32",
+      "type": "text",
+      "x": 80,
+      "y": 3311,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Clear spacing of set-1 bars on the ring",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_33",
+      "type": "math",
+      "x": 400,
+      "y": 3302,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "s_{cl.1}\\coloneq\\frac{2\\pi r_{1}}{n_{l1}}-\\phi_{l1}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_34",
+      "type": "text",
+      "x": 80,
+      "y": 3600,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Minimum clear spacing, EN 1536 bored piles",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_35",
+      "type": "math",
+      "x": 400,
+      "y": 3593,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "s_{cl.1}\\ge100\\,\\mathrm{mm}",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_36",
+      "type": "text",
+      "x": 80,
+      "y": 3633,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "4.2 Bar coordinates and section",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_37",
+      "type": "text",
+      "x": 80,
+      "y": 3680,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Bar index, set 1 (edit seq to renumber)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_38",
+      "type": "math",
+      "x": 400,
+      "y": 3673,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "i_{1}\\coloneq\\mathrm{seq}\\left(0,n_{l1}-1\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_39",
+      "type": "text",
+      "x": 80,
+      "y": 3720,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Bar index, set 2",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_3a",
+      "type": "math",
+      "x": 400,
+      "y": 3713,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "i_{2}\\coloneq\\mathrm{seq}\\left(0,n_{l2}-1\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_3b",
+      "type": "text",
+      "x": 80,
+      "y": 3770,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Angles for drawing circles",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_3c",
+      "type": "math",
+      "x": 400,
+      "y": 3763,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varphi_{t}\\coloneq\\mathrm{seq}\\left(0,2\\pi,\\frac{\\pi}{36}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_3d",
+      "type": "text",
+      "x": 80,
+      "y": 3825,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set-1 bar coordinates, x",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_3e",
+      "type": "math",
+      "x": 400,
+      "y": 3813,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "x_{l1}\\coloneq r_{1}\\cos\\left(\\frac{2\\pi i_{1}}{n_{l1}}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_3f",
+      "type": "text",
+      "x": 80,
+      "y": 3885,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set-1 bar coordinates, y",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_3g",
+      "type": "math",
+      "x": 400,
+      "y": 3873,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "y_{l1}\\coloneq r_{1}\\sin\\left(\\frac{2\\pi i_{1}}{n_{l1}}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_3h",
+      "type": "text",
+      "x": 80,
+      "y": 3945,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set-2 bar coordinates, x",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_3i",
+      "type": "math",
+      "x": 400,
+      "y": 3933,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "x_{l2}\\coloneq r_{2}\\cos\\left(\\frac{2\\pi i_{2}}{n_{l2}}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_3j",
+      "type": "text",
+      "x": 80,
+      "y": 4005,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set-2 bar coordinates, y",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_3k",
+      "type": "math",
+      "x": 400,
+      "y": 3993,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "y_{l2}\\coloneq r_{2}\\sin\\left(\\frac{2\\pi i_{2}}{n_{l2}}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_3l",
+      "type": "text",
+      "x": 96,
+      "y": 4053,
+      "props": {
+        "w": 280,
+        "h": 24,
+        "html": "Set 1 (outer)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#dc2626",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_3m",
+      "type": "text",
+      "x": 400,
+      "y": 4053,
+      "props": {
+        "w": 300,
+        "h": 24,
+        "html": "Set 2 (inner, used when nset = 2)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#ea580c",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_3n",
+      "type": "math",
+      "x": 96,
+      "y": 4083,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "i_{1}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_3o",
+      "type": "math",
+      "x": 168,
+      "y": 4083,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "x_{l1}=",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_3p",
+      "type": "math",
+      "x": 283,
+      "y": 4083,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "y_{l1}=",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_3q",
+      "type": "math",
+      "x": 396,
+      "y": 4083,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "i_{2}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_3r",
+      "type": "math",
+      "x": 468,
+      "y": 4083,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "x_{l2}=",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_3s",
+      "type": "math",
+      "x": 583,
+      "y": 4083,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "y_{l2}=",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_3t",
+      "type": "graph",
+      "x": 247,
+      "y": 4756,
+      "props": {
+        "w": 300,
+        "h": 300,
+        "xLabel": "",
+        "yLabel": "",
+        "grid": false,
+        "axesAtOrigin": true,
+        "font": "Roboto",
+        "background": "#fff9c4",
+        "title": "Section",
+        "xUnit": "mm",
+        "yUnit": "mm",
+        "equalAxes": true,
+        "series": [
+          {
+            "id": "pile",
+            "label": "",
+            "x": "R\\cos\\left(\\varphi_{t}\\right)",
+            "y": "R\\sin\\left(\\varphi_{t}\\right)",
+            "style": "line",
+            "r": "",
+            "color": "#1e3a5f",
+            "width": 2,
+            "show": ""
+          },
+          {
+            "id": "sp1",
+            "label": "",
+            "x": "0.5D_{sp.1}\\cos\\left(\\varphi_{t}\\right)",
+            "y": "0.5D_{sp.1}\\sin\\left(\\varphi_{t}\\right)",
+            "style": "line",
+            "r": "",
+            "color": "#2563eb",
+            "width": 1,
+            "show": ""
+          },
+          {
+            "id": "bar1",
+            "label": "Set 1",
+            "x": "x_{l1}",
+            "y": "y_{l1}",
+            "style": "circle",
+            "r": "0.5\\phi_{l1}",
+            "color": "#dc2626",
+            "width": 1,
+            "show": ""
+          },
+          {
+            "id": "sp2",
+            "label": "",
+            "x": "0.5D_{sp.2}\\cos\\left(\\varphi_{t}\\right)",
+            "y": "0.5D_{sp.2}\\sin\\left(\\varphi_{t}\\right)",
+            "style": "line",
+            "r": "",
+            "color": "#047857",
+            "width": 1,
+            "show": "n_{set}\\ge2"
+          },
+          {
+            "id": "bar2",
+            "label": "Set 2",
+            "x": "x_{l2}",
+            "y": "y_{l2}",
+            "style": "circle",
+            "r": "0.5\\phi_{l2}",
+            "color": "#ea580c",
+            "width": 1,
+            "show": "n_{set}\\ge2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "s_col_3u",
+      "type": "text",
+      "x": 80,
+      "y": 5084,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "4.3 Concrete strips (perpendicular to the bending direction)",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_3v",
+      "type": "text",
+      "x": 80,
+      "y": 5121,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strip index",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_3w",
+      "type": "math",
+      "x": 400,
+      "y": 5114,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "j\\coloneq\\mathrm{seq}\\left(0,n_{c}-1\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_3x",
+      "type": "text",
+      "x": 80,
+      "y": 5173,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strip width",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_3y",
+      "type": "math",
+      "x": 400,
+      "y": 5164,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\Delta\\coloneq\\frac{D}{n_{c}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_3z",
+      "type": "text",
+      "x": 80,
+      "y": 5221,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strip centre coordinate, from the centroid",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_40",
+      "type": "math",
+      "x": 400,
+      "y": 5214,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "x_{c}\\coloneq R-\\left(j+0.5\\right)\\Delta",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_41",
+      "type": "text",
+      "x": 80,
+      "y": 5261,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strip area (chord length × width)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_42",
+      "type": "math",
+      "x": 400,
+      "y": 5254,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "A_{c}\\coloneq2\\sqrt{R^2-x_{c}^2}\\cdot\\Delta",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_43",
+      "type": "text",
+      "x": 80,
+      "y": 5316,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strip area / gross area (check of nc)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_44",
+      "type": "math",
+      "x": 400,
+      "y": 5304,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\frac{\\mathrm{sum}\\left(A_{c}\\right)}{A_{g}}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 4,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_45",
+      "type": "text",
+      "x": 80,
+      "y": 5384,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "5. INTERACTION CURVE (N–M AT THE DEMAND DIRECTION)",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_col_46",
+      "type": "text",
+      "x": 80,
+      "y": 5414,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "5.1 Bending direction",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_47",
+      "type": "text",
+      "x": 80,
+      "y": 5458,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Resultant design moment",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_48",
+      "type": "math",
+      "x": 96,
+      "y": 5484,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{Ed}\\coloneq\\sqrt{M_{Ed.x}^2+M_{Ed.y}^2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_49",
+      "type": "text",
+      "x": 80,
+      "y": 5541,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Direction of MEd, signs kept (0 … 360°)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_4a",
+      "type": "math",
+      "x": 400,
+      "y": 5534,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\theta_{M}\\coloneq\\mathrm{angle}\\left(M_{Ed.x},M_{Ed.y}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "deg",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_4b",
+      "type": "text",
+      "x": 80,
+      "y": 5577,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set-1 bar coordinate p along θM (from centroid)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_4c",
+      "type": "math",
+      "x": 400,
+      "y": 5574,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "p_{l1}\\coloneq r_{1}\\cos\\left(\\frac{2\\pi i_{1}}{n_{l1}}\\mathrm{rad}-\\theta_{M}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_4d",
+      "type": "text",
+      "x": 80,
+      "y": 5656,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set-2 bar coordinate p along θM",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_4e",
+      "type": "math",
+      "x": 400,
+      "y": 5644,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "p_{l2}\\coloneq r_{2}\\cos\\left(\\frac{2\\pi i_{2}}{n_{l2}}\\mathrm{rad}-\\theta_{M}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_4f",
+      "type": "text",
+      "x": 80,
+      "y": 5939,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Depth dθ: compression edge to extreme bar",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_4g",
+      "type": "math",
+      "x": 96,
+      "y": 5965,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "d_{\\theta}\\coloneq R-\\mathrm{if}\\left(n_{set}\\ge2,\\min\\left(p_{l1},p_{l2}\\right),\\min\\left(p_{l1}\\right)\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_4h",
+      "type": "text",
+      "x": 80,
+      "y": 6024,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Depth cA at pivot A/B boundary",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_4i",
+      "type": "math",
+      "x": 400,
+      "y": 6015,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "c_{A}\\coloneq\\frac{\\varepsilon_{cu2}d_{\\theta}}{\\varepsilon_{cu2}+\\varepsilon_{ud}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_4j",
+      "type": "text",
+      "x": 80,
+      "y": 6077,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Depth yC of pivot C (εc2 in full compression)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_4k",
+      "type": "math",
+      "x": 400,
+      "y": 6065,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "y_{C}\\coloneq\\left(1-\\frac{\\varepsilon_{c2}}{\\varepsilon_{cu2}}\\right)D",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_4l",
+      "type": "text",
+      "x": 80,
+      "y": 6125,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "5.2 Strain plane (+ compression)",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_4m",
+      "type": "text",
+      "x": 80,
+      "y": 6165,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "c = neutral-axis depth below the compression edge;",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_4n",
+      "type": "text",
+      "x": 80,
+      "y": 6195,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "p = fibre coordinate from the centroid along θM, so R − p = fibre depth below the edge.",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_4o",
+      "type": "text",
+      "x": 80,
+      "y": 6234,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Pivot A (c &lt; cA): extreme bar at −εud",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_4p",
+      "type": "math",
+      "x": 400,
+      "y": 6225,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon_{A}\\left(c,p\\right)\\coloneq\\varepsilon_{ud}\\frac{c-R+p}{d_{\\theta}-c}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_4q",
+      "type": "text",
+      "x": 80,
+      "y": 6283,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Pivot B (cA ≤ c ≤ D): edge at εcu2",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_4r",
+      "type": "math",
+      "x": 400,
+      "y": 6275,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon_{B}\\left(c,p\\right)\\coloneq\\varepsilon_{cu2}\\frac{c-R+p}{c}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_4s",
+      "type": "text",
+      "x": 80,
+      "y": 6345,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Pivot C (c &gt; D): εc2 at depth yC",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_4t",
+      "type": "math",
+      "x": 400,
+      "y": 6335,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon_{C}\\left(c,p\\right)\\coloneq\\varepsilon_{c2}\\frac{c-R+p}{c-y_{C}}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_4u",
+      "type": "text",
+      "x": 80,
+      "y": 6389,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Strain at fibre p for depth c (pivot chosen by c)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_4v",
+      "type": "math",
+      "x": 96,
+      "y": 6425,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon\\left(c,p\\right)\\coloneq\\mathrm{if}\\left(c<c_{A},\\varepsilon_{A}\\left(c,p\\right),\\mathrm{if}\\left(c\\le D,\\varepsilon_{B}\\left(c,p\\right),\\varepsilon_{C}\\left(c,p\\right)\\right)\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_4w",
+      "type": "text",
+      "x": 80,
+      "y": 6465,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "5.3 Stress laws",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_4x",
+      "type": "text",
+      "x": 80,
+      "y": 6509,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Concrete strain argument u limited to 0 … εc2",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_4y",
+      "type": "math",
+      "x": 96,
+      "y": 6535,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon_{k}\\left(u\\right)\\coloneq0.5\\left(0.5\\left(u+\\left|u\\right|\\right)+\\varepsilon_{c2}-\\left|0.5\\left(u+\\left|u\\right|\\right)-\\varepsilon_{c2}\\right|\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_4z",
+      "type": "text",
+      "x": 80,
+      "y": 6583,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Concrete stress at strain u (parabola-rectangle)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_50",
+      "type": "math",
+      "x": 400,
+      "y": 6575,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\sigma_{C}\\left(u\\right)\\coloneq f_{cd}\\left(1-\\left(1-\\frac{\\varepsilon_{k}\\left(u\\right)}{\\varepsilon_{c2}}\\right)^2\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_51",
+      "type": "text",
+      "x": 80,
+      "y": 6649,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Steel stress at strain u (±fyd)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_52",
+      "type": "math",
+      "x": 96,
+      "y": 6675,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\sigma_{S}\\left(u\\right)\\coloneq0.5\\left(\\left|E_{s}u+f_{yd}\\right|-\\left|E_{s}u-f_{yd}\\right|\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_53",
+      "type": "text",
+      "x": 80,
+      "y": 6729,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Bar force at p, bar area A (displaced concrete subtracted)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_54",
+      "type": "math",
+      "x": 96,
+      "y": 6755,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "F_{S}\\left(c,p,A\\right)\\coloneq\\left(\\sigma_{S}\\left(\\varepsilon\\left(c,p\\right)\\right)-\\sigma_{C}\\left(\\varepsilon\\left(c,p\\right)\\right)\\right)A",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_55",
+      "type": "text",
+      "x": 80,
+      "y": 6795,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "5.4 Section resultants",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_56",
+      "type": "text",
+      "x": 80,
+      "y": 6842,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Concrete axial force (strips xc, Ac)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_57",
+      "type": "math",
+      "x": 400,
+      "y": 6835,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{C}\\left(c\\right)\\coloneq\\mathrm{sum}\\left(\\sigma_{C}\\left(\\varepsilon\\left(c,x_{c}\\right)\\right)A_{c}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_58",
+      "type": "text",
+      "x": 80,
+      "y": 7113,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Concrete moment about the centroid",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_59",
+      "type": "math",
+      "x": 400,
+      "y": 7106,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{C}\\left(c\\right)\\coloneq\\mathrm{sum}\\left(\\sigma_{C}\\left(\\varepsilon\\left(c,x_{c}\\right)\\right)A_{c}x_{c}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_5a",
+      "type": "text",
+      "x": 80,
+      "y": 7150,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Steel axial force (set 2 when δ2 = 1)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_5b",
+      "type": "math",
+      "x": 96,
+      "y": 7186,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{S}\\left(c\\right)\\coloneq\\mathrm{sum}\\left(F_{S}\\left(c,p_{l1},A_{b1}\\right)\\right)+\\delta_{2}\\mathrm{sum}\\left(F_{S}\\left(c,p_{l2},A_{b2}\\right)\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_5c",
+      "type": "text",
+      "x": 80,
+      "y": 7230,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Steel moment about the centroid",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_5d",
+      "type": "math",
+      "x": 96,
+      "y": 7256,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{S}\\left(c\\right)\\coloneq\\mathrm{sum}\\left(F_{S}\\left(c,p_{l1},A_{b1}\\right)p_{l1}\\right)+\\delta_{2}\\mathrm{sum}\\left(F_{S}\\left(c,p_{l2},A_{b2}\\right)p_{l2}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_5e",
+      "type": "text",
+      "x": 80,
+      "y": 7303,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Axial resistance for neutral-axis depth c",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_5f",
+      "type": "math",
+      "x": 400,
+      "y": 7296,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{R}\\left(c\\right)\\coloneq N_{C}\\left(c\\right)+N_{S}\\left(c\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_5g",
+      "type": "text",
+      "x": 80,
+      "y": 7353,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Moment resistance for neutral-axis depth c",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_5h",
+      "type": "math",
+      "x": 400,
+      "y": 7346,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{R}\\left(c\\right)\\coloneq M_{C}\\left(c\\right)+M_{S}\\left(c\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_5i",
+      "type": "text",
+      "x": 80,
+      "y": 7386,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "5.5 Control points of the curve",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_5j",
+      "type": "text",
+      "x": 80,
+      "y": 7430,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Neutral-axis depths: −0.1D (all bars yielded in tension) … 100D (uniform εc2)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_5k",
+      "type": "math",
+      "x": 96,
+      "y": 7456,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "c_{v}\\coloneq\\mathrm{stack}\\left(\\mathrm{seq}\\left(-0.1,1,0.025\\right)D,\\frac{D}{\\mathrm{seq}\\left(0.9,0.1,-0.1\\right)},100D\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_5l",
+      "type": "text",
+      "x": 80,
+      "y": 7522,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Number of control points",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_5m",
+      "type": "math",
+      "x": 400,
+      "y": 7516,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\mathrm{len}\\left(c_{v}\\right)=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_5n",
+      "type": "text",
+      "x": 80,
+      "y": 7563,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strain at the compression edge for each point",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_5o",
+      "type": "math",
+      "x": 400,
+      "y": 7556,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon_{top}\\coloneq\\mathrm{map}\\left(\\varepsilon,c_{v},R\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_5p",
+      "type": "text",
+      "x": 80,
+      "y": 7596,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strain at the extreme tension bar for each point",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_5q",
+      "type": "math",
+      "x": 400,
+      "y": 7596,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon_{bar}\\coloneq\\mathrm{map}\\left(\\varepsilon,c_{v},R-d_{\\theta}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_5r",
+      "type": "text",
+      "x": 80,
+      "y": 7653,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Axial resistance at each point",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_5s",
+      "type": "math",
+      "x": 400,
+      "y": 7646,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{v}\\coloneq\\mathrm{map}\\left(N_{R},c_{v}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_5t",
+      "type": "text",
+      "x": 80,
+      "y": 7693,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Moment resistance at each point",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_5u",
+      "type": "math",
+      "x": 400,
+      "y": 7686,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{v}\\coloneq\\mathrm{map}\\left(M_{R},c_{v}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_5v",
+      "type": "text",
+      "x": 96,
+      "y": 8277,
+      "props": {
+        "w": 400,
+        "h": 24,
+        "html": "Control points at θM (N compression +)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#1e3a5f",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_5w",
+      "type": "math",
+      "x": 96,
+      "y": 8307,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "c_{v}=",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_5x",
+      "type": "math",
+      "x": 214,
+      "y": 8307,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon_{top}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 4,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_5y",
+      "type": "math",
+      "x": 340,
+      "y": 8307,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon_{bar}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 4,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_5z",
+      "type": "math",
+      "x": 480,
+      "y": 8307,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{v}=",
+        "displayMode": "auto",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_60",
+      "type": "math",
+      "x": 596,
+      "y": 8307,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{v}=",
+        "displayMode": "auto",
+        "displayUnit": "kN m",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_61",
+      "type": "text",
+      "x": 80,
+      "y": 9144,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Max. axial resistance (uniform εc2)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_62",
+      "type": "math",
+      "x": 400,
+      "y": 9137,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{Rd.max}\\coloneq\\max\\left(N_{v}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_63",
+      "type": "text",
+      "x": 80,
+      "y": 9194,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Min. axial resistance (pure tension)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_64",
+      "type": "math",
+      "x": 400,
+      "y": 9187,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{Rd.min}\\coloneq\\min\\left(N_{v}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_65",
+      "type": "text",
+      "x": 80,
+      "y": 9455,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Maximum moment resistance on the curve",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_66",
+      "type": "math",
+      "x": 400,
+      "y": 9448,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{Rd.max}\\coloneq\\max\\left(M_{v}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_67",
+      "type": "text",
+      "x": 80,
+      "y": 9508,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "6. FLEXURAL CHECK",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_col_68",
+      "type": "text",
+      "x": 80,
+      "y": 9542,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "NEd within the axial range: upper",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_69",
+      "type": "math",
+      "x": 96,
+      "y": 9568,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{Ed}\\le N_{Rd.max}",
+        "displayMode": "auto",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6a",
+      "type": "text",
+      "x": 80,
+      "y": 9622,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "NEd within the axial range: lower",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6b",
+      "type": "math",
+      "x": 96,
+      "y": 9648,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{Ed}\\ge N_{Rd.min}",
+        "displayMode": "auto",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6c",
+      "type": "text",
+      "x": 80,
+      "y": 9692,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "MRd at NEd (interpolated on the curve)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6d",
+      "type": "math",
+      "x": 96,
+      "y": 9718,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{Rd.N}\\coloneq\\mathrm{linterp}\\left(N_{v},M_{v},N_{Ed}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6e",
+      "type": "text",
+      "x": 80,
+      "y": 9777,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Moment ratio at constant NEd",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6f",
+      "type": "math",
+      "x": 400,
+      "y": 9768,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\eta_{M}\\coloneq\\frac{M_{Ed}}{M_{Rd.N}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6g",
+      "type": "text",
+      "x": 80,
+      "y": 9825,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Check",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6h",
+      "type": "math",
+      "x": 400,
+      "y": 9818,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\eta_{M}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6i",
+      "type": "text",
+      "x": 80,
+      "y": 9858,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "6.1 Radial ratio (ray from the origin through the design point)",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_6j",
+      "type": "text",
+      "x": 80,
+      "y": 9907,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Normalised N of the control points",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6k",
+      "type": "math",
+      "x": 400,
+      "y": 9898,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "n_{v}\\coloneq\\frac{N_{v}}{N_{Rd.max}}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6l",
+      "type": "text",
+      "x": 80,
+      "y": 9967,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Normalised M of the control points",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6m",
+      "type": "math",
+      "x": 400,
+      "y": 9958,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "m_{v}\\coloneq\\frac{M_{v}}{M_{Rd.max}}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6n",
+      "type": "text",
+      "x": 80,
+      "y": 10008,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Distance of each control point from the origin",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6o",
+      "type": "math",
+      "x": 400,
+      "y": 10008,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\rho_{v}\\coloneq\\sqrt{n_{v}^2+m_{v}^2}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6p",
+      "type": "text",
+      "x": 80,
+      "y": 10065,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Direction of each point (sine of angle)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6q",
+      "type": "math",
+      "x": 400,
+      "y": 10058,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "s_{v}\\coloneq\\frac{n_{v}}{\\rho_{v}}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6r",
+      "type": "text",
+      "x": 80,
+      "y": 10117,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Normalised design axial force",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6s",
+      "type": "math",
+      "x": 400,
+      "y": 10108,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "n_{Ed}\\coloneq\\frac{N_{Ed}}{N_{Rd.max}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 4,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6t",
+      "type": "text",
+      "x": 80,
+      "y": 10177,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Normalised design moment",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6u",
+      "type": "math",
+      "x": 400,
+      "y": 10168,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "m_{Ed}\\coloneq\\frac{M_{Ed}}{M_{Rd.max}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 4,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6v",
+      "type": "text",
+      "x": 80,
+      "y": 10225,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Distance of the design point from the origin",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6w",
+      "type": "math",
+      "x": 400,
+      "y": 10218,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\rho_{Ed}\\coloneq\\sqrt{n_{Ed}^2+m_{Ed}^2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 4,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6x",
+      "type": "text",
+      "x": 80,
+      "y": 10280,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Curve distance along the design ray",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6y",
+      "type": "math",
+      "x": 400,
+      "y": 10268,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\rho_{Rd}\\coloneq\\mathrm{linterp}\\left(s_{v},\\rho_{v},\\frac{n_{Ed}}{\\rho_{Ed}}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 4,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6z",
+      "type": "text",
+      "x": 80,
+      "y": 10335,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Radial ratio (scale-independent)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_70",
+      "type": "math",
+      "x": 400,
+      "y": 10328,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\eta_{R}\\coloneq\\frac{\\rho_{Ed}}{\\rho_{Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_71",
+      "type": "text",
+      "x": 80,
+      "y": 10626,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Check",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_72",
+      "type": "math",
+      "x": 400,
+      "y": 10619,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\eta_{R}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_73",
+      "type": "text",
+      "x": 80,
+      "y": 10659,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "6.2 P–M diagram at θM and Mx–My contour at NEd",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_74",
+      "type": "text",
+      "x": 80,
+      "y": 10699,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Evenly spaced bars: the Mx–My contour is close to a circle of radius MRd(NEd).",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_75",
+      "type": "graph",
+      "x": 80,
+      "y": 10721,
+      "props": {
+        "h": 312,
+        "w": 312,
+        "xLabel": "",
+        "yLabel": "",
+        "grid": false,
+        "axesAtOrigin": true,
+        "font": "Roboto",
+        "background": "#fff9c4",
+        "title": "P–M at θM",
+        "xUnit": "kN m",
+        "yUnit": "kN",
+        "equalAxes": false,
+        "series": [
+          {
+            "id": "curve",
+            "label": "NRd–MRd",
+            "x": "M_{v}",
+            "y": "N_{v}",
+            "style": "line",
+            "r": "",
+            "color": "#1e3a5f",
+            "width": 2,
+            "show": ""
+          },
+          {
+            "id": "mirror",
+            "label": "",
+            "x": "-M_{v}",
+            "y": "N_{v}",
+            "style": "line",
+            "r": "",
+            "color": "#1e3a5f",
+            "width": 2,
+            "show": ""
+          },
+          {
+            "id": "pts",
+            "label": "Points",
+            "x": "M_{v}",
+            "y": "N_{v}",
+            "style": "marker",
+            "r": "",
+            "color": "#64748b",
+            "width": 1,
+            "show": ""
+          },
+          {
+            "id": "ray",
+            "label": "",
+            "x": "\\mathrm{stack}\\left(0,\\max\\left(1,\\frac{1}{\\eta_{R}}\\right)\\right)M_{Ed}",
+            "y": "\\mathrm{stack}\\left(0,\\max\\left(1,\\frac{1}{\\eta_{R}}\\right)\\right)N_{Ed}",
+            "style": "line",
+            "r": "",
+            "color": "#94a3b8",
+            "width": 1,
+            "show": ""
+          },
+          {
+            "id": "cap",
+            "label": "Capacity",
+            "x": "\\frac{M_{Ed}}{\\eta_{R}}",
+            "y": "\\frac{N_{Ed}}{\\eta_{R}}",
+            "style": "marker",
+            "r": "",
+            "color": "#047857",
+            "width": 2,
+            "show": ""
+          },
+          {
+            "id": "ed",
+            "label": "Design",
+            "x": "M_{Ed}",
+            "y": "N_{Ed}",
+            "style": "marker",
+            "r": "",
+            "color": "#dc2626",
+            "width": 2,
+            "show": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "s_col_76",
+      "type": "graph",
+      "x": 402,
+      "y": 10721,
+      "props": {
+        "h": 312,
+        "w": 312,
+        "xLabel": "",
+        "yLabel": "",
+        "grid": false,
+        "axesAtOrigin": true,
+        "font": "Roboto",
+        "background": "#fff9c4",
+        "title": "Mx–My at NEd",
+        "xUnit": "kN m",
+        "yUnit": "kN m",
+        "equalAxes": true,
+        "series": [
+          {
+            "id": "ring",
+            "label": "MRd(NEd)",
+            "x": "M_{Rd.N}\\cos\\left(\\varphi_{t}\\right)",
+            "y": "M_{Rd.N}\\sin\\left(\\varphi_{t}\\right)",
+            "style": "line",
+            "r": "",
+            "color": "#1e3a5f",
+            "width": 2,
+            "show": ""
+          },
+          {
+            "id": "ray",
+            "label": "",
+            "x": "\\mathrm{stack}\\left(0,\\max\\left(1,\\frac{1}{\\eta_{M}}\\right)\\right)M_{Ed.x}",
+            "y": "\\mathrm{stack}\\left(0,\\max\\left(1,\\frac{1}{\\eta_{M}}\\right)\\right)M_{Ed.y}",
+            "style": "line",
+            "r": "",
+            "color": "#94a3b8",
+            "width": 1,
+            "show": ""
+          },
+          {
+            "id": "cap",
+            "label": "Capacity",
+            "x": "\\frac{M_{Ed.x}}{\\eta_{M}}",
+            "y": "\\frac{M_{Ed.y}}{\\eta_{M}}",
+            "style": "marker",
+            "r": "",
+            "color": "#047857",
+            "width": 2,
+            "show": ""
+          },
+          {
+            "id": "ed",
+            "label": "Design",
+            "x": "M_{Ed.x}",
+            "y": "M_{Ed.y}",
+            "style": "marker",
+            "r": "",
+            "color": "#dc2626",
+            "width": 2,
+            "show": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "s_col_77",
+      "type": "text",
+      "x": 80,
+      "y": 11069,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "7. SHEAR CHECK (§6.2.3, SPIRALS)",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_col_78",
+      "type": "text",
+      "x": 80,
+      "y": 11109,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "7.1 Equivalent rectangle",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_79",
+      "type": "text",
+      "x": 80,
+      "y": 11143,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Effective depth: D/2 + half-ring centroid 2r/π, weighted by bar area",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7a",
+      "type": "math",
+      "x": 96,
+      "y": 11169,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "d\\coloneq\\frac{D}{2}+\\frac{2}{\\pi}\\cdot\\frac{n_{l1}A_{b1}r_{1}+\\delta_{2}n_{l2}A_{b2}r_{2}}{n_{l1}A_{b1}+\\delta_{2}n_{l2}A_{b2}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7b",
+      "type": "text",
+      "x": 80,
+      "y": 11236,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Lever arm",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7c",
+      "type": "math",
+      "x": 400,
+      "y": 11229,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "z\\coloneq0.9d",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7d",
+      "type": "text",
+      "x": 80,
+      "y": 11276,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Web width",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7e",
+      "type": "math",
+      "x": 400,
+      "y": 11269,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "b_{w}\\coloneq D",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7f",
+      "type": "text",
+      "x": 80,
+      "y": 11319,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "7.2 Strut angle",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_7g",
+      "type": "text",
+      "x": 80,
+      "y": 11358,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strut capacity at 45° / VEd",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7h",
+      "type": "math",
+      "x": 400,
+      "y": 11349,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "a\\coloneq\\frac{b_{w}z\\nu_{1}f_{cd.v}}{V_{Ed}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7i",
+      "type": "text",
+      "x": 80,
+      "y": 11416,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "The strut can carry VEd at θ = 45°",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7j",
+      "type": "math",
+      "x": 400,
+      "y": 11409,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "a\\ge2",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7k",
+      "type": "text",
+      "x": 80,
+      "y": 11453,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Largest cotθ with VRd,max = VEd (≤ 2.5)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7l",
+      "type": "math",
+      "x": 96,
+      "y": 11479,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\mathrm{cot}_{\\theta.opt}\\coloneq\\min\\left(2.5,0.5\\left(a+\\sqrt{\\max\\left(a^2-4,0\\right)}\\right)\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7m",
+      "type": "text",
+      "x": 80,
+      "y": 11797,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Bars in the flexural tension half (CSA)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7n",
+      "type": "math",
+      "x": 400,
+      "y": 11790,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "A_{s.t}\\coloneq0.5A_{st}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm^2",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7o",
+      "type": "text",
+      "x": 80,
+      "y": 11837,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Effective shear depth (CSA)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7p",
+      "type": "math",
+      "x": 400,
+      "y": 11830,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "d_{v}\\coloneq\\max\\left(0.9d,0.72D\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7q",
+      "type": "text",
+      "x": 80,
+      "y": 11884,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Moment for εx, not less than VEd·dv (CSA)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7r",
+      "type": "math",
+      "x": 96,
+      "y": 11910,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{f}\\coloneq\\max\\left(M_{Ed},V_{Ed}d_{v}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7s",
+      "type": "text",
+      "x": 80,
+      "y": 11954,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Tension chord force (N compression +)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7t",
+      "type": "math",
+      "x": 96,
+      "y": 11980,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "F_{t}\\coloneq\\frac{M_{f}}{d_{v}}+V_{Ed}-0.5N_{Ed}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7u",
+      "type": "text",
+      "x": 80,
+      "y": 12049,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Longitudinal strain at mid-depth (CSA A23.3)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7v",
+      "type": "math",
+      "x": 400,
+      "y": 12040,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon_{x}\\coloneq\\frac{F_{t}}{2E_{s}A_{s.t}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 5,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7w",
+      "type": "text",
+      "x": 80,
+      "y": 12104,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "εx within the CSA limits −0.2‰ … 3.0‰",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7x",
+      "type": "math",
+      "x": 96,
+      "y": 12130,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon_{x.d}\\coloneq\\min\\left(3\\cdot10^{-3},\\max\\left(-0.2\\cdot10^{-3},\\varepsilon_{x}\\right)\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 5,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7y",
+      "type": "text",
+      "x": 80,
+      "y": 12177,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Crack angle (CSA)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7z",
+      "type": "math",
+      "x": 400,
+      "y": 12170,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\theta_{CSA}\\coloneq\\left(29+7000\\varepsilon_{x.d}\\right)^{\\circ}",
+        "displayMode": "formulaResult",
+        "displayUnit": "deg",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_80",
+      "type": "text",
+      "x": 80,
+      "y": 12219,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "cotθ from the CSA angle",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_81",
+      "type": "math",
+      "x": 400,
+      "y": 12210,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\mathrm{cot}_{\\theta.CSA}\\coloneq\\frac{1}{\\tan\\left(\\theta_{CSA}\\right)}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_82",
+      "type": "text",
+      "x": 80,
+      "y": 12274,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Design cotθ: tension (NEd &lt; 0) → CSA within 1 … cotθ,opt; compression → cotθ,opt",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_83",
+      "type": "math",
+      "x": 96,
+      "y": 12300,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\mathrm{cot}_{\\theta}\\coloneq\\mathrm{if}\\left(N_{Ed}<0\\,\\mathrm{kN},\\max\\left(1,\\min\\left(\\mathrm{cot}_{\\theta.CSA},\\mathrm{cot}_{\\theta.opt}\\right)\\right),\\mathrm{cot}_{\\theta.opt}\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_84",
+      "type": "text",
+      "x": 80,
+      "y": 12346,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "EC2 lower limit of cotθ",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_85",
+      "type": "math",
+      "x": 400,
+      "y": 12340,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "1\\le\\mathrm{cot}_{\\theta}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_86",
+      "type": "text",
+      "x": 80,
+      "y": 12396,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "EC2 upper limit of cotθ",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_87",
+      "type": "math",
+      "x": 400,
+      "y": 12390,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\mathrm{cot}_{\\theta}\\le2.5",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_88",
+      "type": "text",
+      "x": 80,
+      "y": 12442,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strut angle",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_89",
+      "type": "math",
+      "x": 400,
+      "y": 12430,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\theta\\coloneq\\arctan\\left(\\frac{1}{\\mathrm{cot}_{\\theta}}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "deg",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_8a",
+      "type": "text",
+      "x": 80,
+      "y": 12490,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "7.3 Resistance",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_8b",
+      "type": "text",
+      "x": 80,
+      "y": 12524,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Set-1 spiral resistance",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8c",
+      "type": "math",
+      "x": 96,
+      "y": 12560,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "V_{Rd.s1}\\coloneq\\frac{\\pi}{2}\\cdot\\frac{A_{w1}}{s_{1}}D_{sp.1}f_{ywd}\\mathrm{cot}_{\\theta}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_8d",
+      "type": "text",
+      "x": 80,
+      "y": 12614,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Set-2 spiral resistance",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8e",
+      "type": "math",
+      "x": 96,
+      "y": 12640,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "V_{Rd.s2}\\coloneq\\frac{\\pi}{2}\\cdot\\frac{A_{w2}}{s_{2}}D_{sp.2}f_{ywd}\\mathrm{cot}_{\\theta}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_8f",
+      "type": "text",
+      "x": 80,
+      "y": 12707,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Spiral resistance (set 2 when δ2 = 1)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8g",
+      "type": "math",
+      "x": 400,
+      "y": 12700,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "V_{Rd.s}\\coloneq V_{Rd.s1}+\\delta_{2}V_{Rd.s2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_8h",
+      "type": "text",
+      "x": 80,
+      "y": 12968,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strut stress-state coefficient (conservative)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8i",
+      "type": "math",
+      "x": 400,
+      "y": 12961,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\alpha_{cw}\\coloneq1.0",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_8j",
+      "type": "text",
+      "x": 80,
+      "y": 13011,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strut resistance, EC2 (6.9)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8k",
+      "type": "math",
+      "x": 400,
+      "y": 13001,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "V_{Rd.max}\\coloneq\\frac{\\alpha_{cw}b_{w}z\\nu_{1}f_{cd.v}}{\\mathrm{cot}_{\\theta}+\\tan\\left(\\theta\\right)}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_8l",
+      "type": "text",
+      "x": 80,
+      "y": 13065,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Shear resistance",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8m",
+      "type": "math",
+      "x": 96,
+      "y": 13091,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "V_{Rd}\\coloneq\\min\\left(V_{Rd.s},V_{Rd.max}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_8n",
+      "type": "text",
+      "x": 80,
+      "y": 13150,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Shear ratio",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8o",
+      "type": "math",
+      "x": 400,
+      "y": 13141,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\eta_{V}\\coloneq\\frac{V_{Ed}}{V_{Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_8p",
+      "type": "text",
+      "x": 80,
+      "y": 13198,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Check",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8q",
+      "type": "math",
+      "x": 400,
+      "y": 13191,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\eta_{V}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_8r",
+      "type": "text",
+      "x": 80,
+      "y": 13251,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "8. SUMMARY",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_col_8s",
+      "type": "text",
+      "x": 80,
+      "y": 13288,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Moment ratio at constant NEd",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8t",
+      "type": "math",
+      "x": 400,
+      "y": 13281,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\eta_{M}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_8u",
+      "type": "text",
+      "x": 80,
+      "y": 13338,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Radial ratio",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8v",
+      "type": "math",
+      "x": 400,
+      "y": 13331,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\eta_{R}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_8w",
+      "type": "text",
+      "x": 80,
+      "y": 13378,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Shear ratio",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8x",
+      "type": "math",
+      "x": 400,
+      "y": 13371,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\eta_{V}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    }
+  ],
+  "createdAt": "2026-11-08T12:04:47.134Z",
+  "updatedAt": "2026-11-08T12:04:47.134Z"
+}

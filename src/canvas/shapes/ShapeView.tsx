@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import type { Shape } from '../model/types';
 import { DrawView, ImageView, LineView, RectView } from './GeoViews';
+import { GraphView } from './GraphView';
 import { MathView } from './MathView';
 import { TextView } from './TextView';
 
@@ -10,7 +11,7 @@ import { TextView } from './TextView';
  */
 export const ShapeView = memo(function ShapeView({ shape, editing, selected = false, isStatic = false }: { shape: Shape; editing: boolean; selected?: boolean; isStatic?: boolean }) {
   // Box-like shapes take pointer events on their whole area; strokes only on the stroke.
-  const boxLike = shape.type === 'math' || shape.type === 'text' || shape.type === 'image';
+  const boxLike = shape.type === 'math' || shape.type === 'text' || shape.type === 'image' || shape.type === 'graph';
   let body: React.ReactNode;
   switch (shape.type) {
     case 'math':
@@ -30,6 +31,9 @@ export const ShapeView = memo(function ShapeView({ shape, editing, selected = fa
       break;
     case 'draw':
       body = <DrawView shape={shape} />;
+      break;
+    case 'graph':
+      body = <GraphView shape={shape} />;
       break;
   }
   return (

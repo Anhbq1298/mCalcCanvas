@@ -22,10 +22,12 @@ import {
   undefinedMessage,
   UndefinedNamesError,
   type EvalContext,
+  type UserFunction,
 } from './ExpressionEvaluator';
-import { statementExprs, type Relation, type Statement } from './ExpressionTypes';
+import { statementExprs, statementLocals, type Relation, type Statement } from './ExpressionTypes';
 import { exprToLatex, nameToLatex, RELATION_LATEX } from './LatexFormatter';
 import { parseLatex } from './LatexParser';
+import { formatVector, isVector, requireScalar, type Value } from './Vector';
 import {
   formatQuantity,
   isUnit,
@@ -73,6 +75,10 @@ export interface RegionInput {
   displayUnit?: string | null;
   /** Decimal places; falls back to the worksheet precision. */
   precision?: number | null;
+  /** Vector results: compact row (default) or a column with every entry. */
+  vectorLayout?: 'row' | 'column';
+  /** Show every entry of a long vector (the user expanded it). */
+  vectorExpanded?: boolean;
   /**
    * While the user is typing: if the new LaTeX does not parse, keep the
    * last valid statement so dependents do not flicker into errors.
@@ -91,6 +97,8 @@ export interface RegionInput {
 export interface EngineSettings {
   unitSystem: UnitSystemName;
   precision: number;
+  /** Arrays longer than this are shown shortened (first half … last half); 0 = show all. */
+  vectorLimit?: number;
 }
 
 export type ResultStatus = 'valid' | 'error' | 'empty';
@@ -101,6 +109,8 @@ export interface CheckOutcome {
   opLatex: string;
   leftLatex: string;
   leftValue: FormattedQuantity;
+  /** The limit as written, when it is computed from variables (shown as "N_Rd = 29159 kN"). */
+  rightLatex?: string;
   rightValue: FormattedQuantity;
 }
 
@@ -112,6 +122,8 @@ export interface CalculationResult {
   redefines?: { name: string; count: number };
   definesLatex?: string;
   references: string[];
+  /** Name → id of the region whose definition this region uses (for "go to definition"). */
+  sources?: Record<string, string>;
   value?: FormattedQuantity;
   check?: CheckOutcome;
   /** Expression with variable values substituted (full-calculation mode). */
@@ -150,7 +162,8 @@ export class CalculationEngine {
   private settings: EngineSettings;
   private regions = new Map<string, RegionState>();
   private graph = new DependencyGraph();
-  private values = new Map<string, Quantity>();
+  private values = new Map<string, Value>();
+  private readonly functions = new Map<string, UserFunction>();
   private results = new Map<string, CalculationResult>();
   private listeners = new Set<Listener>();
   private batchDepth = 0;
@@ -237,6 +250,8 @@ export class CalculationEngine {
       prev.input.latex === input.latex &&
       prev.input.displayUnit === input.displayUnit &&
       prev.input.precision === input.precision &&
+      (prev.input.vectorLayout ?? 'row') === (input.vectorLayout ?? 'row') &&
+      !!prev.input.vectorExpanded === !!input.vectorExpanded &&
       !!prev.input.draft === !!input.draft
     ) {
       if (moved) {
@@ -307,6 +322,7 @@ export class CalculationEngine {
     this.graph.removeNode(id);
     this.results.delete(id);
     this.values.delete(id);
+    this.functions.delete(id);
     this.pendingValue.delete(id);
     this.pendingFormat.delete(id);
     this.pendingResolve.delete(id);
@@ -320,6 +336,7 @@ export class CalculationEngine {
     this.regions.clear();
     this.graph = new DependencyGraph();
     this.values.clear();
+    this.functions.clear();
     this.results.clear();
     this.pendingValue.clear();
     this.pendingFormat.clear();
@@ -342,7 +359,8 @@ export class CalculationEngine {
     const exprs = region.statement && !region.parseError ? statementExprs(region.statement) : [];
     const at = region.key;
     const candidates = candidateNames(exprs);
-    const refs = collectReferences(exprs, { isDefined: (n) => this.definerBefore(n, at) !== undefined });
+    const locals = region.statement && !region.parseError ? statementLocals(region.statement) : new Set<string>();
+    const refs = collectReferences(exprs, { isDefined: (n) => this.definerBefore(n, at) !== undefined }, locals);
     const deps = new Map<string, string>();
     for (const n of refs) deps.set(n, this.definerBefore(n, at)!);
     this.graph.setResolution(id, deps, candidates);
@@ -390,7 +408,10 @@ export class CalculationEngine {
     this.removedIds.clear();
 
     const pass = new Map<string, CalculationResult>();
-    for (const id of dirty) this.values.delete(id);
+    for (const id of dirty) {
+      this.values.delete(id);
+      this.functions.delete(id);
+    }
     for (const id of dirty) {
       try {
         this.evaluateRegion(id, [], dirty, pass);
@@ -442,6 +463,7 @@ export class CalculationEngine {
       status: 'valid',
       kind: statement?.kind ?? 'invalid',
       references: [...this.graph.refsOf(id)],
+      sources: Object.fromEntries(this.graph.depsOf(id)),
       warnings: [],
       draftError: region.draftError ?? undefined,
       ...(defines ? { defines, definesLatex: nameToLatex(defines) } : {}),
@@ -517,11 +539,23 @@ export class CalculationEngine {
     const ctx: EvalContext = {
       isDefined: (n) => uses.has(n) || this.definerBefore(n, myKey) !== undefined,
       getValue: (n) => {
-        const v = this.values.get(uses.get(n) ?? this.definerBefore(n, myKey) ?? '');
-        if (v === undefined) throw new CalculationError('undefined-variable', undefinedMessage([n]));
+        const definer = uses.get(n) ?? this.definerBefore(n, myKey) ?? '';
+        const v = this.values.get(definer);
+        if (v === undefined) {
+          if (this.functions.has(definer)) throw new CalculationError('syntax', `${n} is a function: call it with arguments, e.g. ${n}(x).`);
+          throw new CalculationError('undefined-variable', undefinedMessage([n]));
+        }
         return v;
       },
+      getFunction: (n) => this.functions.get(uses.get(n) ?? this.definerBefore(n, myKey) ?? ''),
     };
+
+    if (statement.kind === 'definition' && statement.params) {
+      // A function: store the body; it is evaluated by each call.
+      this.functions.set(id, { name: statement.name, params: statement.params, body: statement.expr, env: ctx });
+      const scope = { isDefined: (n: string) => statement.params!.includes(n) || ctx.isDefined(n) };
+      return { ...base, expressionLatex: exprToLatex(statement.expr, { ctx: scope }) };
+    }
 
     const decimals = clampDecimals(region.input.precision ?? this.settings.precision);
     let targetUnit: string | null = null;
@@ -534,11 +568,13 @@ export class CalculationEngine {
     }
     const fmt = (q: Quantity, unit: string | null = null) =>
       formatQuantity(q, { decimals, system: this.settings.unitSystem, targetUnit: unit });
+    const fmtValue = (v: Value, unit: string | null = null): FormattedQuantity =>
+      isVector(v) ? formatVector(v, { decimals, system: this.settings.unitSystem, targetUnit: unit, layout: region.input.vectorLayout, limit: this.settings.vectorLimit, expanded: region.input.vectorExpanded }) : fmt(v, unit);
 
     try {
       if (statement.kind === 'check') {
-        const left = evaluateExpr(statement.left, ctx);
-        const right = evaluateExpr(statement.right, ctx);
+        const left = requireScalar(evaluateExpr(statement.left, ctx), 'A check');
+        const right = requireScalar(evaluateExpr(statement.right, ctx), 'The limit of a check');
         const pass_ = compareQuantities(left, right, statement.op);
         const leftValue = fmt(left, targetUnit);
         // Show the limit in the same unit as the value so they are comparable.
@@ -552,6 +588,7 @@ export class CalculationEngine {
             opLatex: RELATION_LATEX[statement.op],
             leftLatex: exprToLatex(statement.left, { ctx }),
             leftValue,
+            ...(collectReferences([statement.right], ctx).size ? { rightLatex: exprToLatex(statement.right, { ctx }) } : {}),
             rightValue,
           },
         };
@@ -562,7 +599,7 @@ export class CalculationEngine {
 
       let formatted: FormattedQuantity;
       try {
-        formatted = fmt(value, targetUnit);
+        formatted = fmtValue(value, targetUnit);
       } catch (e) {
         return { ...fail('display-unit', (e as Error).message) };
       }
@@ -571,7 +608,8 @@ export class CalculationEngine {
         ctx,
         substitute: (name) => {
           const v = this.values.get(uses.get(name) ?? '');
-          if (v === undefined) return null;
+          // A vector is shown by name in the substituted line.
+          if (v === undefined || isVector(v)) return null;
           const f = fmt(v);
           return { latex: f.latex, hasUnit: !!f.unitText, negative: siValue(v) < 0 };
         },

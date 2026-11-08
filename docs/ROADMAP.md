@@ -9,10 +9,11 @@
 | P1 | Strict engineering comparisons; explicit approximate equality | Done (`ComparisonPolicy`) |
 | P1 | Agent documentation | Done (AGENTS.md, CLAUDE.md, docs/) |
 | P2 | `DocumentRepository` abstraction | Interface done; IndexedDB is the only backend |
-| P2 | `CalculationValue` abstraction (scalar + matrix) introduced incrementally | Planned |
+| P2 | `CalculationValue` abstraction (scalar + matrix) introduced incrementally | Vectors done (`Value = Quantity \| QVector`); matrices planned |
 | P2 | User-defined functions `f(x) := …` | Planned |
 | P2 | Matrices and vectors with per-entry units | Planned |
 | P2 | Units tests: stiffness (kN/mm), rotational stiffness (kN·m/rad), thermal expansion | Planned |
-| P3 | Σ / ∏ / ranges, numerical solver, plots, tables | Planned |
+| P3 | Ranges, `sum`/`len`, X-Y graphs | Done (`a..b`, Graph shape) |
+| P3 | Σ / ∏ notation, indexing `x[i]`, numerical solver, tables | Planned |
 | P3 | Automation API | Design first |
 | P3 | Spatial index for layout on very large worksheets (only if measurements show a need) | Not needed yet (500 regions re-flow in ~0.15 s) |

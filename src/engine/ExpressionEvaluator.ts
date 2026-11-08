@@ -3,13 +3,15 @@
  *
  * Evaluation walks the JSON tree and calls mathjs functions directly on
  * numbers and Unit objects – there is no string evaluation, no property
- * access and no user-defined functions, so untrusted input can only ever
- * perform bounded arithmetic.
+ * access, and user functions are worksheet expression trees with a bounded
+ * call depth, so untrusted input can only ever perform bounded arithmetic.
  */
 import { CalculationError } from './CalculationErrors';
 export { isAbsoluteTemperature } from './UnitSystem';
+import { QVector, broadcast1, broadcast2, broadcastN, flatten, isVector, requireScalar, type Value } from './Vector';
+export { QVector, isVector, type Value } from './Vector';
 import type { Expr } from './ExpressionTypes';
-import { walkExpr } from './ExpressionTypes';
+import { walkExpr, walkScoped } from './ExpressionTypes';
 import {
   dimensionKey,
   dimensionName,
@@ -142,16 +144,17 @@ export function resolveIdent(
 }
 
 /** Variable names an expression depends on (under the current definition set). */
-export function collectReferences(exprs: Expr[], ctx: ResolveContext): Set<string> {
+export function collectReferences(exprs: Expr[], ctx: ResolveContext, params: ReadonlySet<string> = new Set()): Set<string> {
   const refs = new Set<string>();
   for (const expr of exprs) {
-    walkExpr(expr, (e) => {
+    walkScoped(expr, (e, locals) => {
       if (e.type !== 'ident') return;
-      const r = resolveIdent(e, ctx);
+      // let-names are local: they shadow worksheet variables and are not references.
+      const r = resolveIdent(e, locals.size ? { isDefined: (n) => locals.has(n) || ctx.isDefined(n) } : ctx);
       if (r.ok) {
-        for (const p of r.parts) if (p.kind === 'var') refs.add(p.name);
+        for (const p of r.parts) if (p.kind === 'var' && !locals.has(p.name)) refs.add(p.name);
       }
-    });
+    }, params);
   }
   return refs;
 }
@@ -173,11 +176,85 @@ export function candidateNames(exprs: Expr[]): Set<string> {
 }
 
 export interface EvalContext extends ResolveContext {
-  getValue(name: string): Quantity;
+  getValue(name: string): Value;
+  /** The user function a name refers to here, if it is one. */
+  getFunction?(name: string): UserFunction | undefined;
+}
+
+/** f(a, b) := body. Names other than the parameters resolve where f is defined. */
+export interface UserFunction {
+  name: string;
+  params: string[];
+  body: Expr;
+  env: EvalContext;
+}
+
+const MAX_CALL_DEPTH = 200;
+let callDepth = 0;
+
+function callUserFunction(f: UserFunction, args: Value[]): Value {
+  if (args.length !== f.params.length) {
+    throw new CalculationError('syntax', `${f.name} takes ${f.params.length} argument${f.params.length === 1 ? '' : 's'} (got ${args.length}).`);
+  }
+  if (callDepth >= MAX_CALL_DEPTH) throw new CalculationError('evaluation', `${f.name} calls itself too deeply.`);
+  const locals = new Map(f.params.map((p, k) => [p, args[k]] as const));
+  const scope: EvalContext = {
+    isDefined: (n) => locals.has(n) || f.env.isDefined(n),
+    getValue: (n) => (locals.has(n) ? locals.get(n)! : f.env.getValue(n)),
+    getFunction: (n) => (locals.has(n) ? undefined : f.env.getFunction?.(n)),
+  };
+  callDepth++;
+  try {
+    return evalNode(f.body, scope);
+  } finally {
+    callDepth--;
+  }
+}
+
+/** linterp(xs, ys, x): xs ascending or descending; x outside the data is an error. */
+function linterp(xs: QVector, ys: QVector, x: Quantity): Quantity {
+  if (xs.length !== ys.length || xs.length < 2) {
+    throw new CalculationError('vector', 'linterp needs two vectors of the same length (at least 2 entries).');
+  }
+  if (dimensionKey(xs.items[0]) !== dimensionKey(x)) {
+    throw new CalculationError('unit-mismatch', `linterp: x (${describeQuantity(x)}) and the x data must have the same unit.`);
+  }
+  const xv = xs.items.map(siValue);
+  const t = siValue(x);
+  const asc = xv[xv.length - 1] >= xv[0];
+  // Equal neighbours are allowed, and steps back within round-off.
+  const tol = 1e-9 * Math.abs(xv[xv.length - 1] - xv[0]);
+  for (let k = 1; k < xv.length; k++) {
+    if (asc ? xv[k] < xv[k - 1] - tol : xv[k] > xv[k - 1] + tol) throw new CalculationError('domain', 'linterp: the x data must be in increasing or decreasing order.');
+  }
+  const lo = Math.min(xv[0], xv[xv.length - 1]);
+  const hi = Math.max(xv[0], xv[xv.length - 1]);
+  if (t < lo - 1e-12 * Math.abs(hi - lo) || t > hi + 1e-12 * Math.abs(hi - lo)) {
+    throw new CalculationError('domain', 'linterp: x is outside the range of the x data.');
+  }
+  for (let k = 1; k < xv.length; k++) {
+    const a = xv[k - 1];
+    const b = xv[k];
+    if ((asc && t <= b) || (!asc && t >= b) || k === xv.length - 1) {
+      const w = b === a ? 0 : (t - a) / (b - a);
+      const y0 = ys.items[k - 1];
+      const dy = addOrSubtract(ys.items[k], y0, '-');
+      return addOrSubtract(y0, multiplyQ(dy, w), '+');
+    }
+  }
+  return ys.items[ys.length - 1];
 }
 
 /** Reject complex, NaN and infinite intermediate results with a clear message. */
-function ensureFinite(q: Quantity): Quantity {
+function ensureFinite(v: Value): Value {
+  if (isVector(v)) {
+    for (const q of v.items) ensureFiniteQ(q);
+    return v;
+  }
+  return ensureFiniteQ(v);
+}
+
+function ensureFiniteQ(q: Quantity): Quantity {
   if (!isUnit(q) && typeof q !== 'number') {
     throw new CalculationError('domain', 'The result is not a real number.');
   }
@@ -255,16 +332,19 @@ function addOrSubtract(a: Quantity, b: Quantity, op: '+' | '-'): Quantity {
   return normalize(res as Quantity);
 }
 
-export function evaluateExpr(expr: Expr, ctx: EvalContext): Quantity {
-  return ensureFinite(normalize(evalNode(expr, ctx)));
+export function evaluateExpr(expr: Expr, ctx: EvalContext): Value {
+  return ensureFinite(broadcast1(evalNode(expr, ctx), normalize));
 }
 
 /** Every intermediate value is checked, so NaN/∞/complex never propagate. */
-function evalNode(expr: Expr, ctx: EvalContext): Quantity {
+function evalNode(expr: Expr, ctx: EvalContext): Value {
   return ensureFinite(evalNodeRaw(expr, ctx));
 }
 
-function evalNodeRaw(expr: Expr, ctx: EvalContext): Quantity {
+const hasAbsoluteTemperature = (v: Value): boolean => (isVector(v) ? v.items.some(isAbsoluteTemperature) : isAbsoluteTemperature(v));
+const multiplyQ = (x: Quantity, y: Quantity): Quantity => normalize(math.multiply(x as never, y as never) as unknown as Quantity);
+
+function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
   switch (expr.type) {
     case 'num':
       return expr.value;
@@ -274,14 +354,14 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Quantity {
       if (!r.ok) {
         throw new UndefinedNamesError(r.undefinedNames);
       }
-      let acc: Quantity | null = null;
+      let acc: Value | null = null;
       for (const p of r.parts) {
-        const v: Quantity =
+        const v: Value =
           p.kind === 'var' ? ctx.getValue(p.name) : p.kind === 'unit' ? unitValue(p.symbol) : p.value;
-        if (r.parts.length > 1 && isAbsoluteTemperature(v)) throw temperatureError('An absolute temperature (°C) cannot be multiplied.');
-        acc = acc === null ? v : (math.multiply(acc as never, v as never) as unknown as Quantity);
+        if (r.parts.length > 1 && hasAbsoluteTemperature(v)) throw temperatureError('An absolute temperature (°C) cannot be multiplied.');
+        acc = acc === null ? v : broadcast2(acc, v, multiplyQ);
       }
-      return normalize(acc as Quantity);
+      return broadcast1(acc as Value, normalize);
     }
 
     case 'group':
@@ -289,16 +369,16 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Quantity {
 
     case 'unary': {
       const v = evalNode(expr.arg, ctx);
-      if (expr.op === '-' && isAbsoluteTemperature(v) && !isTemperatureLiteral(expr.arg)) {
+      if (expr.op === '-' && hasAbsoluteTemperature(v) && !isTemperatureLiteral(expr.arg)) {
         throw temperatureError('An absolute temperature (°C) cannot be negated.');
       }
-      return expr.op === '-' ? (math.unaryMinus(v as never) as Quantity) : v;
+      return expr.op === '-' ? broadcast1(v, (q) => math.unaryMinus(q as never) as Quantity) : v;
     }
 
     case 'binary': {
       const a = evalNode(expr.left, ctx);
       const b = evalNode(expr.right, ctx);
-      if (expr.op !== '+' && expr.op !== '-' && (isAbsoluteTemperature(a) || isAbsoluteTemperature(b))) {
+      if (expr.op !== '+' && expr.op !== '-' && (hasAbsoluteTemperature(a) || hasAbsoluteTemperature(b))) {
         // Only a literal "20 °C" (number × °C) is allowed; scaling an absolute temperature is meaningless.
         if (!(expr.op === '*' && isTemperatureLiteral(expr))) {
           const verb = expr.op === '*' ? 'multiplied' : expr.op === '/' ? 'divided' : 'raised to a power';
@@ -307,43 +387,169 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Quantity {
       }
       switch (expr.op) {
         case '+':
-        case '-':
-          return addOrSubtract(a, b, expr.op);
+        case '-': {
+          const op = expr.op;
+          return broadcast2(a, b, (x, y) => addOrSubtract(x, y, op));
+        }
         case '*':
-          return normalize(math.multiply(a as never, b as never) as unknown as Quantity);
+          return broadcast2(a, b, multiplyQ);
         case '/':
-          if (siValue(b) === 0) throw new CalculationError('division-by-zero', 'Division by zero: the denominator is 0.');
-          return normalize(math.divide(a as never, b as never) as Quantity);
+          return broadcast2(a, b, (x, y) => {
+            if (siValue(y) === 0) throw new CalculationError('division-by-zero', 'Division by zero: the denominator is 0.');
+            return normalize(math.divide(x as never, y as never) as Quantity);
+          });
         case '^': {
-          if (!isDimensionless(b)) {
-            throw new CalculationError('unit-mismatch', `An exponent must be a dimensionless number (got ${describeQuantity(b)}).`);
-          }
-          const p = requireDimensionless(b, 'An exponent');
+          const exponent = (y: Quantity): number => {
+            if (!isDimensionless(y)) {
+              throw new CalculationError('unit-mismatch', `An exponent must be a dimensionless number (got ${describeQuantity(y)}).`);
+            }
+            return requireDimensionless(y, 'An exponent');
+          };
           // "wL^2": a run that splits into factors takes the power on its last
           // factor only (w·L²), while a whole unit or variable ("mm^2") is
           // raised as one symbol.
           if (expr.left.type === 'ident' && expr.left.splittable) {
             const r = resolveIdent(expr.left, ctx);
             if (r.ok && r.parts.length > 1) {
-              const values = r.parts.map((part) =>
+              const values: Value[] = r.parts.map((part) =>
                 part.kind === 'var' ? ctx.getValue(part.name) : part.kind === 'unit' ? unitValue(part.symbol) : part.value,
               );
               const last = values.pop()!;
-              let acc: Quantity = powQ(last, p);
-              for (const v of values) acc = math.multiply(v as never, acc as never) as unknown as Quantity;
-              return normalize(acc);
+              let acc: Value = broadcast2(last, b, (x, y) => powQ(x, exponent(y)));
+              for (const v of values) acc = broadcast2(v, acc, multiplyQ);
+              return acc;
             }
           }
-          return powQ(a, p);
+          return broadcast2(a, b, (x, y) => powQ(x, exponent(y)));
         }
       }
       break;
     }
 
-    case 'call':
-      return evalCall(expr.fn, expr.args.map((a) => evalNode(a, ctx)));
+    case 'apply': {
+      const f = expr.head.roman ? undefined : ctx.getFunction?.(expr.head.name);
+      if (f) return callUserFunction(f, expr.args.map((a) => evalNode(a, ctx)));
+      if (expr.args.length !== 1) {
+        throw new CalculationError('undefined-variable', `"${expr.head.name}" is not a function (define it as ${expr.head.name}(x) := …).`);
+      }
+      return evalNode(applyAsProduct(expr), ctx);
+    }
+
+    case 'call': {
+      if (expr.fn === 'map') return evalMap(expr.args, ctx);
+      const args = expr.args.map((a) => evalNode(a, ctx));
+      const fn = expr.fn;
+      if (fn === 'stack') {
+        return new QVector(flatten(args));
+      }
+      if (fn === 'linterp') {
+        if (args.length !== 3) throw new CalculationError('syntax', 'linterp takes three arguments: linterp(xs, ys, x).');
+        const [xs, ys, x] = args;
+        if (!isVector(xs) || !isVector(ys)) throw new CalculationError('vector', 'linterp: the x and y data must be vectors.');
+        return broadcast1(x, (q) => linterp(xs, ys, q));
+      }
+      // Aggregates take every entry of every argument.
+      if (fn === 'min' || fn === 'max') return evalCall(fn, flatten(args));
+      if (fn === 'sum') return sumOf(flatten(args));
+      if (fn === 'seq') {
+        if (args.length < 2 || args.length > 3) throw new CalculationError('syntax', 'seq takes 2 or 3 arguments: seq(start, end) or seq(start, end, step).');
+        const [a, b, d] = args.map((v, k) => requireScalar(v, ['The start of seq', 'The end of seq', 'The step of seq'][k]));
+        return makeRange(a, b, d === undefined ? null : addOrSubtract(a, d, '+'));
+      }
+      if (fn === 'len') {
+        if (args.length !== 1) throw new CalculationError('syntax', 'len takes exactly one argument.');
+        return isVector(args[0]) ? args[0].length : 1;
+      }
+      return broadcastN(args, (xs) => evalCall(fn, xs));
+    }
+
+    case 'if': {
+      // Same comparison rules as a check region; only the chosen branch is
+      // evaluated, so the other may be undefined for these inputs (e.g. √ of a negative).
+      const left = requireScalar(evalNode(expr.cond.left, ctx), 'The condition of if');
+      const right = requireScalar(evalNode(expr.cond.right, ctx), 'The condition of if');
+      return evalNode(compareQuantities(left, right, expr.cond.op) ? expr.then : expr.else, ctx);
+    }
+
+    case 'range':
+      return evalRange(expr, ctx);
+
+    case 'let': {
+      const locals = new Map<string, Value>();
+      const scope: EvalContext = {
+        isDefined: (n) => locals.has(n) || ctx.isDefined(n),
+        getValue: (n) => (locals.has(n) ? locals.get(n)! : ctx.getValue(n)),
+      };
+      for (const b of expr.bindings) locals.set(b.name, evalNode(b.value, scope));
+      return evalNode(expr.body, scope);
+    }
   }
   throw new CalculationError('evaluation', 'Unsupported expression.');
+}
+
+/** The non-function reading of name(arg): name × (arg), exactly as before calls existed. */
+export function applyAsProduct(expr: Extract<Expr, { type: 'apply' }>): Expr {
+  return { type: 'binary', op: '*', implicit: true, left: expr.head, right: { type: 'group', body: expr.args[0], visible: true } };
+}
+
+/** map(f, v…): f called once per entry; scalar arguments repeat, vectors must share a length. */
+function evalMap(argExprs: Expr[], ctx: EvalContext): Value {
+  const [fExpr, ...rest] = argExprs;
+  if (!fExpr || rest.length === 0) throw new CalculationError('syntax', 'map takes a function and at least one argument: map(f, v).');
+  const f = fExpr.type === 'ident' ? ctx.getFunction?.(fExpr.name) : undefined;
+  if (!f) throw new CalculationError('syntax', 'The first argument of map must be the name of a user function, e.g. map(f, x).');
+  const args = rest.map((a) => evalNode(a, ctx));
+  const lengths = [...new Set(args.filter(isVector).map((v) => v.length))];
+  if (lengths.length > 1) throw new CalculationError('vector', `map: the vectors have different lengths (${lengths.join(', ')}).`);
+  if (lengths.length === 0) return callUserFunction(f, args);
+  const out: Quantity[] = [];
+  for (let k = 0; k < lengths[0]; k++) {
+    const r = callUserFunction(f, args.map((v) => (isVector(v) ? v.items[k] : v)));
+    out.push(requireScalar(r, `Each result of map(${f.name}, …)`));
+  }
+  return new QVector(out);
+}
+
+function sumOf(items: Quantity[]): Quantity {
+  if (items.length === 0) return 0;
+  return items.slice(1).reduce((acc, q) => addOrSubtract(acc, q, '+'), items[0]);
+}
+
+/** a..b (step 1) or a, a+Δ..b: the entries from a towards b, b included when reached. */
+function evalRange(expr: Extract<Expr, { type: 'range' }>, ctx: EvalContext): QVector {
+  const start = requireScalar(evalNode(expr.start, ctx), 'The start of a range');
+  const end = requireScalar(evalNode(expr.end, ctx), 'The end of a range');
+  const next = expr.next ? requireScalar(evalNode(expr.next, ctx), 'The second value of a range') : null;
+  return makeRange(start, end, next);
+}
+
+/** Entries from start towards end; the step is next − start, or ±1 for plain numbers. */
+function makeRange(start: Quantity, end: Quantity, next: Quantity | null): QVector {
+  if (dimensionKey(start) !== dimensionKey(end)) {
+    throw new CalculationError('unit-mismatch', `Unit mismatch: a range from ${describeQuantity(start)} to ${describeQuantity(end)}.`);
+  }
+  let step: Quantity;
+  if (next !== null) {
+    step = addOrSubtract(next, start, '-');
+  } else {
+    if (!isDimensionless(start)) {
+      throw new CalculationError('syntax', 'A range with units needs a step: write a, a+Δ..b (e.g. 0 m, 0.5 m..3 m) or seq(a, b, Δ).');
+    }
+    step = siValue(end) >= siValue(start) ? 1 : -1;
+  }
+  const s0 = siValue(start);
+  const ds = siValue(step);
+  const span = siValue(end) - s0;
+  if (ds === 0) throw new CalculationError('domain', 'The step of a range cannot be zero.');
+  if (span !== 0 && Math.sign(span) !== Math.sign(ds)) {
+    throw new CalculationError('domain', 'The step of a range must move from the start towards the end.');
+  }
+  // Tolerance so that 0, 0.1..1 includes 1 despite floating-point rounding.
+  const count = Math.floor(span / ds + 1e-9) + 1;
+  if (count > 10_000) throw new CalculationError('limit-exceeded', `A range may have at most 10000 entries (got ${count}).`);
+  const items: Quantity[] = [];
+  for (let k = 0; k < count; k++) items.push(k === 0 ? start : addOrSubtract(start, multiplyQ(step, k), '+'));
+  return new QVector(items);
 }
 
 function powQ(a: Quantity, p: number): Quantity {
@@ -387,6 +593,15 @@ function evalCall(fn: string, args: Quantity[]): Quantity {
       }
       const rad = fn === 'asin' ? Math.asin(v) : fn === 'acos' ? Math.acos(v) : Math.atan(v);
       return math.unit(rad, 'rad');
+    }
+    case 'angle': {
+      const [xq, y] = args;
+      if (dimensionKey(y) !== dimensionKey(xq)) {
+        throw new CalculationError('unit-mismatch', `angle: x (${describeQuantity(xq)}) and y (${describeQuantity(y)}) must have the same unit.`);
+      }
+      if (siValue(y) === 0 && siValue(xq) === 0) throw new CalculationError('domain', 'angle(0, 0) has no direction.');
+      const a = Math.atan2(siValue(y), siValue(xq));
+      return math.unit(a < 0 ? a + 2 * Math.PI : a, 'rad');
     }
     case 'sinh':
       return Math.sinh(requireDimensionless(x, 'The argument of sinh'));

@@ -19,7 +19,7 @@ import {
   type ShapePatch,
 } from './model/canvasStore';
 import { screenToPage, shapeBounds, snap, unionBounds } from './model/geometry';
-import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, type Point, type Shape } from './model/types';
+import { DEFAULT_GRAPH_STYLE, DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, type GraphProps, type GraphSeries, type Point, type Shape } from './model/types';
 import { plainTextToHtml } from './sanitize';
 import { sanitizeShape } from '../documents/DocumentSerializer';
 import { clampDelta, clampPoint, clampShapesIntoPage, constrained, crossPoint, nextPrintableTop, nextWritingPoint, printableAt } from './pageConstraint';
@@ -199,6 +199,27 @@ export async function insertImageFile(file: Blob, at?: Point): Promise<void> {
   addShapes([{ id: imgId, type: 'image', x: p.x, y: p.y, props: { w, h, src } }], { select: true });
   clampShapesIntoPage([imgId]);
   useCanvasStore.setState({ tool: 'select' });
+}
+
+/** A new X-Y graph at the insertion point (series are added in the Graph tab). */
+export function insertGraph(at?: Point, props: Partial<GraphProps> = {}): string {
+  const p = snapPoint(at ?? insertionPoint());
+  const id = newShapeId();
+  const graph: GraphProps = { w: 360, h: 280, title: '', xLabel: '', yLabel: '', xUnit: '', yUnit: '', equalAxes: false, ...DEFAULT_GRAPH_STYLE, series: [], ...props };
+  addShapes([{ id, type: 'graph', x: p.x, y: p.y, props: graph }], { select: true });
+  clampShapesIntoPage([id]);
+  useCanvasStore.setState({ tool: 'select' });
+  return id;
+}
+
+const SERIES_COLORS = ['#1e3a5f', '#dc2626', '#047857', '#ea580c', '#7c3aed', '#0891b2'];
+
+/** A new empty series for a graph (unique id, next colour). */
+export function newGraphSeries(existing: GraphSeries[]): GraphSeries {
+  let n = existing.length + 1;
+  const ids = new Set(existing.map((s) => s.id));
+  while (ids.has(`s${n}`)) n++;
+  return { id: `s${n}`, label: '', x: '', y: '', style: 'line', r: '', color: SERIES_COLORS[existing.length % SERIES_COLORS.length], width: 1.5, show: '' };
 }
 
 // ---------------------------------------------------------------------------

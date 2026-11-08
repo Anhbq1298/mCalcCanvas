@@ -2,18 +2,23 @@
  * One-way synchronisation: canvas store (authoritative) → calculation engine.
  * Every change — typing, undo/redo, paste, load, move — flows through here,
  * so results can never drift from what is on the canvas.
+ *
+ * A math shape is one engine region. A graph is several hidden regions, one
+ * per series field (x, y, r, show), keyed at the graph's own reading
+ * position, so a graph sees exactly the variables defined above it.
  */
 import { engine } from '../store/calculationStore';
 import { useAppStore } from '../store/appStore';
 import { PAGE_GAP, pageSize } from '../export/pageGeometry';
-import { orderKeysEqual, type OrderKey } from '../engine';
+import { orderKeysEqual, type OrderKey, type RegionInput } from '../engine';
 import { useCanvasStore, type CanvasState } from './model/canvasStore';
-import type { MathShape, Shape } from './model/types';
+import type { GraphShape, Shape } from './model/types';
+import { graphRegionId, isDefinitionLatex, type GraphField } from './graphData';
 
-const isMath = (s: Shape | undefined): s is MathShape => s?.type === 'math';
+export { graphRegionId, isDefinitionLatex, type GraphField } from './graphData';
 
 /**
- * Reading-order key of a math region (Mathcad order), compared
+ * Reading-order key of a region (Mathcad order), compared
  * lexicographically by the engine: page, then top to bottom, then left to
  * right, then the region id so equal positions still have a fixed order.
  * Coordinates are used exactly (no rounding or numeric packing), so large
@@ -26,78 +31,130 @@ export function readingKey(s: Shape): OrderKey {
   return [page, s.y, s.x, s.id];
 }
 
-function readingOrder(shapes: Record<string, Shape>): Map<string, OrderKey> {
-  const m = new Map<string, OrderKey>();
-  for (const s of Object.values(shapes)) if (isMath(s)) m.set(s.id, readingKey(s));
+type Regions = Map<string, RegionInput>;
+
+/** The engine regions a shape contributes (none for text, images, drawings). */
+function regionsOf(s: Shape, editingId: string | null): Regions {
+  const out: Regions = new Map();
+  if (s.type === 'math') {
+    out.set(s.id, {
+      latex: s.props.latex,
+      displayUnit: s.props.displayUnit.trim() || null,
+      precision: s.props.precision >= 0 ? s.props.precision : null,
+      ...(s.props.vectorLayout === 'column' ? { vectorLayout: 'column' as const } : {}),
+      ...(s.props.vectorExpanded ? { vectorExpanded: true } : {}),
+      draft: s.id === editingId,
+      order: readingKey(s),
+    });
+  } else if (s.type === 'graph') {
+    graphRegions(s, out);
+  }
+  return out;
+}
+
+function graphRegions(s: GraphShape, out: Regions): void {
+  const key = readingKey(s);
+  const { xUnit, yUnit } = s.props;
+  s.props.series.forEach((series, i) => {
+    const fields: [GraphField, string, string][] = [
+      ['x', series.x, xUnit],
+      ['y', series.y, yUnit],
+      ['r', series.style === 'circle' ? series.r : '', xUnit],
+      ['show', series.show, ''],
+    ];
+    for (const [field, latex, unit] of fields) {
+      if (!latex.trim() || isDefinitionLatex(latex)) continue;
+      out.set(graphRegionId(s.id, series.id, field), {
+        latex,
+        displayUnit: unit.trim() || null,
+        // Full precision: graphs plot the numbers, not their display text.
+        precision: 8,
+        order: [...key, i, field],
+      });
+    }
+  });
+}
+
+function sameInput(a: RegionInput | undefined, b: RegionInput): boolean {
+  return (
+    !!a &&
+    a.latex === b.latex &&
+    a.displayUnit === b.displayUnit &&
+    a.precision === b.precision &&
+    (a.vectorLayout ?? 'row') === (b.vectorLayout ?? 'row') &&
+    !!a.vectorExpanded === !!b.vectorExpanded &&
+    !!a.draft === !!b.draft &&
+    orderKeysEqual(a.order as OrderKey, b.order as OrderKey)
+  );
+}
+
+/** Regions currently registered with the engine, per shape. */
+let registered = new Map<string, Regions>();
+
+function allRegions(shapes: Record<string, Shape>, editingId: string | null): Map<string, Regions> {
+  const m = new Map<string, Regions>();
+  for (const s of Object.values(shapes)) {
+    const r = regionsOf(s, editingId);
+    if (r.size) m.set(s.id, r);
+  }
   return m;
 }
 
-function inputFor(s: MathShape, editingId: string | null, order: OrderKey | undefined) {
-  return {
-    latex: s.props.latex,
-    displayUnit: s.props.displayUnit.trim() || null,
-    precision: s.props.precision >= 0 ? s.props.precision : null,
-    draft: s.id === editingId,
-    order,
-  };
-}
-
-let lastOrder = new Map<string, OrderKey>();
-
 export function resyncAll(): void {
   const { shapes, editingId } = useCanvasStore.getState();
-  lastOrder = readingOrder(shapes);
+  registered = allRegions(shapes, editingId);
   engine.batch(() => {
     engine.clear();
-    for (const s of Object.values(shapes)) if (isMath(s)) engine.setRegion(s.id, inputFor(s, editingId, lastOrder.get(s.id)));
+    for (const regions of registered.values()) for (const [id, input] of regions) engine.setRegion(id, input);
   });
 }
 
-/** Re-key every region (page size or layout mode changed). Only regions whose key changed are touched. */
-function syncOrder(): void {
-  const { shapes, editingId } = useCanvasStore.getState();
-  const order = readingOrder(shapes);
+/** Sends only the regions that changed since the last sync. */
+function applyDiff(next: Map<string, Regions>): void {
   engine.batch(() => {
-    for (const [id, key] of order) {
-      if (!orderKeysEqual(key, lastOrder.get(id))) engine.setRegion(id, inputFor(shapes[id] as MathShape, editingId, key));
+    for (const [shapeId, regions] of next) {
+      const old = registered.get(shapeId);
+      if (old === regions) continue;
+      for (const [id, input] of regions) if (!sameInput(old?.get(id), input)) engine.setRegion(id, input);
+      if (old) for (const id of old.keys()) if (!regions.has(id)) engine.removeRegion(id);
     }
+    for (const [shapeId, old] of registered) if (!next.has(shapeId)) for (const id of old.keys()) engine.removeRegion(id);
   });
-  lastOrder = order;
+  registered = next;
+}
+
+/** Recomputes regions only for shapes that changed (object identity), reusing the rest. */
+function regionsAfterChange(next: CanvasState, prev: CanvasState, rekeyAll: boolean): Map<string, Regions> {
+  const m = new Map<string, Regions>();
+  const editingChanged = next.editingId !== prev.editingId;
+  for (const [id, s] of Object.entries(next.shapes)) {
+    const reuse =
+      !rekeyAll &&
+      prev.shapes[id] === s &&
+      !(editingChanged && (id === next.editingId || id === prev.editingId)) &&
+      registered.has(id);
+    if (reuse) {
+      m.set(id, registered.get(id)!);
+      continue;
+    }
+    const r = regionsOf(s, next.editingId);
+    if (r.size) m.set(id, r);
+  }
+  return m;
 }
 
 export function connectEngine(): () => void {
   resyncAll();
   const offCanvas = useCanvasStore.subscribe((next: CanvasState, prev: CanvasState) => {
     if (next.shapes === prev.shapes && next.editingId === prev.editingId) return;
-    const order = next.shapes === prev.shapes ? lastOrder : readingOrder(next.shapes);
-    engine.batch(() => {
-      if (next.shapes !== prev.shapes) {
-        for (const [id, s] of Object.entries(next.shapes)) {
-          if (!isMath(s)) continue;
-          const old = prev.shapes[id] as MathShape | undefined;
-          const calcChanged =
-            !old ||
-            old.props.latex !== s.props.latex ||
-            old.props.displayUnit !== s.props.displayUnit ||
-            old.props.precision !== s.props.precision;
-          // Size-only changes (auto-size) don't matter; position matters for reading order.
-          if (calcChanged || !orderKeysEqual(order.get(id), lastOrder.get(id))) {
-            engine.setRegion(id, inputFor(s, next.editingId, order.get(id)));
-          }
-        }
-        for (const id of Object.keys(prev.shapes)) if (!next.shapes[id] && isMath(prev.shapes[id])) engine.removeRegion(id);
-      }
-      if (next.editingId !== prev.editingId) {
-        for (const id of [prev.editingId, next.editingId]) {
-          const s = id ? next.shapes[id] : undefined;
-          if (isMath(s)) engine.setRegion(s.id, inputFor(s, next.editingId, order.get(s.id)));
-        }
-      }
-    });
-    lastOrder = order;
+    applyDiff(regionsAfterChange(next, prev, false));
   });
   const offApp = useAppStore.subscribe((next, prev) => {
-    if (next.settings.canvasMode !== prev.settings.canvasMode || next.settings.pageOrientation !== prev.settings.pageOrientation) syncOrder();
+    if (next.settings.canvasMode !== prev.settings.canvasMode || next.settings.pageOrientation !== prev.settings.pageOrientation) {
+      // Page size or layout mode changed: every reading key may change.
+      const st = useCanvasStore.getState();
+      applyDiff(regionsAfterChange(st, st, true));
+    }
   });
   return () => {
     offCanvas();

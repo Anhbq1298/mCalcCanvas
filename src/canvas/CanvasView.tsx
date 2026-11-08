@@ -444,6 +444,11 @@ export function CanvasView() {
     }
     const id = target.closest('[data-shape-id]')?.getAttribute('data-shape-id');
     const sh = id ? st.shapes[id] : null;
+    if (sh?.type === 'math' && target.closest('.vec-more')) {
+      // Double-click on "…" / "⋮" of a shortened array: show every entry.
+      updateShape(sh.id, { props: { vectorExpanded: true } });
+      return;
+    }
     if (sh && (sh.type === 'math' || sh.type === 'text')) {
       startEditing(sh.id);
     } else if (!sh) {
@@ -501,6 +506,7 @@ export function CanvasView() {
       onDragOver={(e) => e.preventDefault()}
       onDrop={onDrop}
     >
+
       <div
         className="cc-layer"
         style={{ position: 'absolute', left: 0, top: 0, transformOrigin: '0 0', transform: `scale(${camera.z}) translate(${-camera.x}px, ${-camera.y}px)` }}

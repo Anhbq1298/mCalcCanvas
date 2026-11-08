@@ -1,5 +1,6 @@
 import { AlertCircle, CheckCircle2, FileWarning } from 'lucide-react';
 import { useMemo } from 'react';
+import { isGraphRegionId } from '../../canvas/graphData';
 import { select, useCanvasStore } from '../../canvas/model/canvasStore';
 import { shapesOutsidePrintArea } from '../../export/pageGeometry';
 import { useAppStore } from '../../store/appStore';
@@ -14,7 +15,10 @@ export function StatusBar() {
     [shapes, settings.pageOrientation],
   );
 
-  const all = Object.values(results).filter((r) => r && r.status !== 'empty');
+  // Graph series fields are hidden regions; the graph shows their errors itself.
+  const all = Object.entries(results)
+    .filter(([id, r]) => r && r.status !== 'empty' && !isGraphRegionId(id))
+    .map(([, r]) => r);
   const errors = all.filter((r) => r?.status === 'error').length;
   const failedChecks = all.filter((r) => r?.check && !r.check.pass).length;
 

@@ -112,6 +112,7 @@ const SHORTCUTS: [string, string][] = [
   ['=', 'Evaluate the whole region'],
   ['/  ^', 'Fraction / exponent'],
   ['.  after a name', 'Literal subscript (M.Ed → M_Ed)'],
+  [';', 'Range i := 0..n−1 (also a, a+Δ..b)'],
   ['\\', 'Square root'],
   ['Ctrl+\\', 'Nth root'],
   ['|', 'Absolute value'],

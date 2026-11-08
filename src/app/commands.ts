@@ -9,6 +9,7 @@ import {
   duplicateSelection,
   groupSelection,
   handlePasteData,
+  insertGraph,
   insertImageFile,
   insertionPoint,
   resetZoom,
@@ -51,6 +52,10 @@ export const commands = {
   insertCheck() {
     // Empty slot for the checked value, then "≤ 1"; the caret starts in the slot.
     this.insertMath('\\placeholder{}\\le1');
+  },
+  insertGraph() {
+    stopEditing();
+    insertGraph();
   },
   async insertImage() {
     const file = await pickFile('image/png,image/jpeg,image/webp,image/svg+xml,image/gif');

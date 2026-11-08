@@ -282,10 +282,17 @@ function superscript(p: string): string {
 export interface FormattedQuantity {
   text: string;
   latex: string;
+  /** The value in the shown unit (a vector: its first entry, or NaN when empty). */
   number: number;
   unitText: string;
   unitLatex: string;
   dimension: string;
+  /** Vectors only: every entry in the shown unit (absent when entries have different dimensions). */
+  items?: number[];
+  /** Vectors only: number of entries. */
+  length?: number;
+  /** A vector shown shortened (first … last entries). */
+  truncated?: boolean;
 }
 
 /**

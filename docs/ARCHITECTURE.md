@@ -24,16 +24,17 @@ documentController ── SaveCoordinator ── DocumentRepository (IndexedDB: 
 | `src/engine/` | LaTeX parser → JSON AST, symbol resolution, evaluation with mathjs units, dependency graph, incremental recalculation, errors, formatting. See ENGINE_DESIGN.md. |
 | `src/store/calculationStore.ts` | The single engine instance; results mirrored into Zustand keyed by region id. |
 | `src/store/appStore.ts` | Document metadata, settings (unit system, precision, page mode/orientation, header/footer, fonts, `pages`, `baselineSnap`), panels, dialogs, save state. |
-| `src/canvas/model/canvasStore.ts` | Shapes (math, text, image, rect, line, draw), z-order, selection, editing, tool, camera, crosshair. Snapshot undo/redo and `transaction()`. A position normaliser (grid alignment) runs on every move. |
+| `src/canvas/model/canvasStore.ts` | Shapes (math, text, image, rect, line, draw, graph), z-order, selection, editing, tool, camera, crosshair. Snapshot undo/redo and `transaction()`. A position normaliser (grid alignment) runs on every move. |
 | `src/canvas/pageConstraint.ts` | Page-layout rules: printable boxes, clamping, grid origin, baseline alignment (`gridAlign`, `baselineOf`, `baselineStep`). |
 | `src/canvas/layout.ts` | Pure layout service: the line model across pages, `planLineShift` (Enter/Backspace line insertion with page flow) and `planSeparation` (overlap resolution). It returns plans; it never mutates the store. |
 | `src/canvas/canvasActions.ts` | User-level operations: create regions, clipboard, duplicate, nudge, camera, crosshair, and applying layout plans. |
-| `src/canvas/engineBridge.ts` | One-way sync from canvas to engine. It computes reading-order keys and passes only calculation-relevant changes. |
+| `src/canvas/engineBridge.ts` | One-way sync from canvas to engine. It computes reading-order keys and passes only calculation-relevant changes. A math shape is one region; a graph is one hidden region per series field (see ENGINE_DESIGN.md, Graph regions). |
+| `src/canvas/graphData.ts`, `shapes/GraphView.tsx` | X-Y graphs: pure conversion of series results to drawable data (ranges, ticks, errors) and the SVG view used on the canvas and in the PDF. Series are edited in the Graph tab and the Properties panel (`math/MathInput`); `SeriesSources` lists the variables a series uses and the literal inputs behind them (from `CalculationResult.sources`), each a link to its definition. |
 | `src/canvas/CanvasView.tsx`, `shapes/` | Pointer state machine (pan, move, marquee, resize, draw) and DOM rendering of shapes. MathView measures size and baseline. |
 | `src/math/` | MathLive editor and Mathcad-style keys, static rendering (`MathRenderer`), display composition (`MathFormatter`), unit styling (`unitStyle`). |
 | `src/documents/` | Types and version, serializer with migrations and validation, IndexedDB repository, `SaveCoordinator`, templates, controller (new/open/import/export/autosave). |
 | `src/export/` | A4 geometry, header/footer, PDF via `window.print` of statically rendered pages. Each shape prints on one page. |
-| `src/components/` | Google-Docs-style chrome: menus, a toolbar with Math/Text formatting tabs, Outline/Parameters panel, Properties panel, dialogs, help guide. |
+| `src/components/` | Google-Docs-style chrome: menus, a toolbar with Math/Text formatting and Graph tabs, Outline/Parameters panel, Properties panel, dialogs, help guide. |
 
 ## Data flow rules
 

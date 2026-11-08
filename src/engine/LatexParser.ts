@@ -10,7 +10,8 @@
  *   term       := unary (('*' | '/' | implicit) unary)*
  *   unary      := ('-' | '+') unary | power
  *   power      := primary ('^' scriptArg)?
- *   primary    := number | identifier | function | \frac | \sqrt | (expr) | |expr|
+ *   primary    := number | identifier | function | if | \frac | \sqrt | (expr) | |expr|
+ *   if         := 'if' '(' expr relation expr ',' expr ',' expr ')'
  *
  * Identifier policy (see README "Symbol resolution"):
  *   - runs of italic letters ("wL", "kN") become one splittable identifier;
@@ -20,7 +21,7 @@
  *     unambiguous way to write units.
  */
 import { CalculationError } from './CalculationErrors';
-import type { Expr, FunctionName, Relation, Statement } from './ExpressionTypes';
+import type { Condition, Expr, FunctionName, Relation, Statement } from './ExpressionTypes';
 
 type Token =
   | { t: 'num'; v: string }
@@ -53,12 +54,20 @@ const FUNCTION_COMMANDS: Record<string, FunctionName> = {
 const FUNCTION_WORDS: Record<string, FunctionName> = {
   ...FUNCTION_COMMANDS,
   asin: 'asin', acos: 'acos', atan: 'atan', sqrt: 'sqrt', abs: 'abs',
+  sum: 'sum', len: 'len', seq: 'seq', angle: 'angle', map: 'map', linterp: 'linterp', stack: 'stack',
 };
+
+/** Functions written upright (\mathrm{sum}) that would otherwise read as a variable. */
+const ROMAN_FUNCTION_WORDS = new Set<FunctionName>(['sum', 'len', 'seq', 'angle', 'map', 'linterp', 'stack']);
 
 const ROMAN_COMMANDS = new Set([
   'mathrm', 'text', 'textrm', 'operatorname', 'mathit', 'mathbf', 'mathsf',
   'textit', 'textbf', 'mathup', 'textup', 'mathbfit', 'textnormal', 'unit',
 ]);
+/** Written as letters (if) or upright (\mathrm{if}, \operatorname{if}). */
+const IF_WORD = 'if';
+/** let(name, value, …, expression): local names (Excel LET). */
+const LET_WORD = 'let';
 const FRAC_COMMANDS = new Set(['frac', 'dfrac', 'tfrac', 'cfrac']);
 const IGNORED_COMMANDS = new Set([
   ',', ';', ':', '!', ' ', '>', 'quad', 'qquad', 'displaystyle', 'textstyle',
@@ -100,10 +109,16 @@ export function tokenize(latex: string): Token[] {
       i++;
       continue;
     }
+    if (s.startsWith('..', i)) {
+      // Range operator a..b (Mathcad); "..." is the same.
+      tokens.push({ t: 'sym', v: '..' });
+      i += s.startsWith('...', i) ? 3 : 2;
+      continue;
+    }
     if (isDigit(c) || (c === '.' && isDigit(s[i + 1]))) {
       let v = '';
       while (i < s.length) {
-        if (isDigit(s[i]) || (s[i] === '.' && !v.includes('.'))) {
+        if (isDigit(s[i]) || (s[i] === '.' && !v.includes('.') && s[i + 1] !== '.')) {
           v += s[i++];
         } else if (s.startsWith('{,}', i) && isDigit(s[i + 3]) && !v.includes('.')) {
           // MathLive's decimal comma: 8{,}5
@@ -315,11 +330,23 @@ class Parser {
 
     if (this.isAssign()) {
       this.consumeAssign();
-      if (left.type !== 'ident') {
-        throw new CalculationError('invalid-definition', 'The left side of ":=" must be a single variable name.');
+      let params: string[] | undefined;
+      let target: Expr = left;
+      if (left.type === 'apply' && !left.head.roman) {
+        params = left.args.map((a) => {
+          if (a.type !== 'ident' || a.roman) {
+            throw new CalculationError('invalid-definition', 'Function parameters must be single variable names, e.g. f(x, y) := ….');
+          }
+          return a.name;
+        });
+        if (new Set(params).size !== params.length) throw new CalculationError('invalid-definition', 'Each parameter name may appear only once.');
+        target = left.head;
       }
-      if (this.restIsEmpty()) throw new CalculationError('incomplete', `Incomplete definition of ${left.name}.`);
-      const expr = this.parseExpr();
+      if (target.type !== 'ident') {
+        throw new CalculationError('invalid-definition', 'The left side of ":=" must be a single variable name or a function f(x).');
+      }
+      if (this.restIsEmpty()) throw new CalculationError('incomplete', `Incomplete definition of ${target.name}.`);
+      const expr = this.parseRangeOrExpr();
       let evaluate = false;
       if (this.isSym('=')) {
         this.next();
@@ -329,7 +356,12 @@ class Parser {
         }
       }
       this.expectEnd();
-      return { kind: 'definition', name: left.name, expr, evaluate };
+      if (params) {
+        if (evaluate) throw new CalculationError('syntax', 'A function definition has no single value to display: evaluate a call instead, e.g. f(2) =.');
+        if (expr.type === 'range') throw new CalculationError('syntax', 'A function body cannot be a range; use seq(a, b) instead.');
+        return { kind: 'definition', name: target.name, expr, evaluate, params };
+      }
+      return { kind: 'definition', name: target.name, expr, evaluate };
     }
 
     if (this.isSym('=')) {
@@ -349,6 +381,26 @@ class Parser {
 
     this.expectEnd();
     return { kind: 'expression', expr: left };
+  }
+
+  private isRangeOp(): boolean {
+    return this.isSym('..') || this.isCmd('ldots') || this.isCmd('dots') || this.isCmd('cdots');
+  }
+
+  /** a..b or a, a+Δ..b on the right side of a definition; otherwise an ordinary expression. */
+  private parseRangeOrExpr(): Expr {
+    const start = this.parseExpr();
+    let next: Expr | null = null;
+    if (this.isSym(',')) {
+      this.next();
+      next = this.parseExpr();
+      if (!this.isRangeOp()) throw new CalculationError('syntax', 'A range is written a..b or a, a+Δ..b.');
+    }
+    if (!this.isRangeOp()) return start;
+    this.next();
+    if (this.restIsEmpty() || this.isSym('=')) throw new CalculationError('incomplete', 'Incomplete range: add the end value (e.g. 0..10).');
+    const end = this.parseExpr();
+    return this.node({ type: 'range', start, next, end });
   }
 
   private expectEnd(): void {
@@ -477,6 +529,21 @@ class Parser {
   }
 
   private parsePrimary(): Expr {
+    const e = this.parsePrimaryAtom();
+    if (e.type !== 'ident' || !(this.isSym('(') || this.isCmd('lparen'))) return e;
+    // name(args): a user-function call when "name" is one (decided at evaluation).
+    // name(x)^2 keeps the old reading name·(x)², so leave it to the caller.
+    const save = this.pos;
+    const parts = this.readArgumentTokens();
+    if (this.isSym('^')) {
+      this.pos = save;
+      return e;
+    }
+    const args = parts.map((p) => this.subParse(p));
+    return this.node({ type: 'apply', head: e, args });
+  }
+
+  private parsePrimaryAtom(): Expr {
     const tok = this.peek();
     switch (tok.t) {
       case 'eof':
@@ -511,6 +578,12 @@ class Parser {
       const fn = FUNCTION_WORDS[name];
       if (fn && !this.roman && (this.isSym('(') || this.isCmd('lparen'))) {
         return this.parseFunctionArgs(fn);
+      }
+      if (name === IF_WORD && !this.roman && (this.isSym('(') || this.isCmd('lparen'))) {
+        return this.parseIf();
+      }
+      if (name === LET_WORD && !this.roman && (this.isSym('(') || this.isCmd('lparen'))) {
+        return this.parseLet();
       }
       return this.node({ type: 'ident', name, splittable: !this.roman && name.length > 1, roman: this.roman });
     }
@@ -635,6 +708,15 @@ class Parser {
       if (v === 'operatorname' && word && FUNCTION_WORDS[word]) {
         return this.parseFunctionArgs(FUNCTION_WORDS[word]);
       }
+      if (word && ROMAN_FUNCTION_WORDS.has(FUNCTION_WORDS[word]) && (this.isSym('(') || this.isCmd('lparen'))) {
+        return this.parseFunctionArgs(FUNCTION_WORDS[word]);
+      }
+      if (word === IF_WORD && (this.isSym('(') || this.isCmd('lparen'))) {
+        return this.parseIf();
+      }
+      if (word === LET_WORD && (this.isSym('(') || this.isCmd('lparen'))) {
+        return this.parseLet();
+      }
       const e = this.subParse(inner, true);
       if (e.type === 'ident') return this.withOptionalSubscript(e);
       return this.node({ type: 'group', body: e, visible: false });
@@ -648,39 +730,89 @@ class Parser {
       throw new CalculationError('syntax', 'Write powers of functions as (sin(x))^2.');
     }
     if (this.isSym('(') || this.isCmd('lparen')) {
-      const close = this.isSym('(') ? ')' : 'rparen';
-      let inner: Token[];
-      if (close === ')') inner = this.readBalancedTokens('(', ')');
-      else {
-        this.next();
-        inner = [];
-        let level = 1;
-        for (;;) {
-          const tok = this.next();
-          if (tok.t === 'eof') throw new CalculationError('syntax', 'Missing ")".');
-          if (tok.t === 'cmd' && tok.v === 'lparen') level++;
-          if (tok.t === 'cmd' && tok.v === 'rparen' && --level === 0) break;
-          inner.push(tok);
-        }
-      }
-      // split on top-level commas
-      const parts: Token[][] = [[]];
-      let level = 0;
-      for (const tok of inner) {
-        if (tok.t === 'sym' && (tok.v === '(' || tok.v === '{' || tok.v === '[')) level++;
-        if (tok.t === 'sym' && (tok.v === ')' || tok.v === '}' || tok.v === ']')) level--;
-        if (tok.t === 'sym' && tok.v === ',' && level === 0) parts.push([]);
-        else parts[parts.length - 1].push(tok);
-      }
-      const args = parts.map((p) => this.subParse(p));
-      const arity = fn === 'min' || fn === 'max' ? null : 1;
+      const args = this.readArgumentTokens().map((p) => this.subParse(p));
+      const arity = fn === 'min' || fn === 'max' || fn === 'sum' || fn === 'seq' || fn === 'map' || fn === 'stack' ? null : fn === 'linterp' ? 3 : fn === 'angle' ? 2 : 1;
       if (arity !== null && args.length !== arity) {
-        throw new CalculationError('syntax', `${fn} takes exactly one argument.`);
+        throw new CalculationError('syntax', arity === 1 ? `${fn} takes exactly one argument.` : `${fn} takes ${arity} arguments.`);
       }
       return this.node({ type: 'call', fn, args });
     }
     // \sin x, \sin 30^{\circ}
     return this.node({ type: 'call', fn, args: [this.parsePower()] });
+  }
+
+  /** Reads a parenthesised argument list and splits it on top-level commas. */
+  private readArgumentTokens(): Token[][] {
+    let inner: Token[];
+    if (this.isSym('(')) inner = this.readBalancedTokens('(', ')');
+    else {
+      this.next();
+      inner = [];
+      let level = 1;
+      for (;;) {
+        const tok = this.next();
+        if (tok.t === 'eof') throw new CalculationError('syntax', 'Missing ")".');
+        if (tok.t === 'cmd' && tok.v === 'lparen') level++;
+        if (tok.t === 'cmd' && tok.v === 'rparen' && --level === 0) break;
+        inner.push(tok);
+      }
+    }
+    const parts: Token[][] = [[]];
+    let level = 0;
+    for (const tok of inner) {
+      if (tok.t === 'sym' && (tok.v === '(' || tok.v === '{' || tok.v === '[')) level++;
+      if (tok.t === 'sym' && (tok.v === ')' || tok.v === '}' || tok.v === ']')) level--;
+      if (tok.t === 'sym' && tok.v === ',' && level === 0) parts.push([]);
+      else parts[parts.length - 1].push(tok);
+    }
+    return parts;
+  }
+
+  /** if(condition, value if true, value if false); branches may themselves be if(…). */
+  private parseIf(): Expr {
+    const parts = this.readArgumentTokens();
+    if (parts.length !== 3) {
+      throw new CalculationError('syntax', 'if takes three arguments: if(condition, value if true, value if false).');
+    }
+    const cond = this.subParseCondition(parts[0]);
+    const then = this.subParse(parts[1]);
+    const otherwise = this.subParse(parts[2]);
+    return this.node({ type: 'if', cond, then, else: otherwise });
+  }
+
+  /** let(n₁, v₁, …, body): an odd number (≥ 3) of arguments; every name a single variable. */
+  private parseLet(): Expr {
+    const parts = this.readArgumentTokens();
+    if (parts.length < 3 || parts.length % 2 === 0) {
+      throw new CalculationError('syntax', 'let takes name, value pairs and then an expression: let(i, seq(0, n−1), r·cos(2π·i/n)).');
+    }
+    const bindings: { name: string; value: Expr }[] = [];
+    for (let k = 0; k + 1 < parts.length; k += 2) {
+      const n = this.subParse(parts[k]);
+      if (n.type !== 'ident') throw new CalculationError('syntax', 'In let, every name must be a single variable name (e.g. i or x_{1}).');
+      bindings.push({ name: n.name, value: this.subParse(parts[k + 1]) });
+    }
+    return this.node({ type: 'let', bindings, body: this.subParse(parts[parts.length - 1]) });
+  }
+
+  private subParseCondition(inner: Token[]): Condition {
+    const sub = new Parser([...inner, { t: 'eof', v: '' }], this.roman);
+    sub.nodes = this.nodes;
+    sub.depth = this.depth;
+    if (sub.atEnd()) throw new CalculationError('incomplete', 'Incomplete condition in if.');
+    const left = sub.parseExpr();
+    // Inside if, a plain "=" can only mean equality.
+    const op: Relation | null = sub.isSym('=') ? '==' : sub.peekRelation();
+    if (!op) {
+      throw new CalculationError('syntax', 'The first argument of if must be a comparison, e.g. if(N > 0 kN, a, b).');
+    }
+    if (op === '==' && sub.isSym('=')) sub.next();
+    else sub.consumeRelation(op);
+    if (sub.atEnd()) throw new CalculationError('incomplete', 'Incomplete condition in if: add the value to compare with.');
+    const right = sub.parseExpr();
+    if (!sub.atEnd()) throw new CalculationError('syntax', `Unexpected "${sub.peek().v}" in the condition of if.`);
+    this.nodes = sub.nodes;
+    return { left, op, right };
   }
 }
 

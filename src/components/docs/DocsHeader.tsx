@@ -18,6 +18,8 @@ import {
   List,
   ListOrdered,
   ListTree,
+  LineChart,
+  Crosshair,
   Subscript,
   Superscript,
   Variable,
@@ -40,9 +42,9 @@ import { addHeading, setParagraphStyle } from '../../canvas/headings';
 import { TEMPLATES } from '../../documents/templates';
 import { useState, type ReactNode } from 'react';
 import { commands, type ToolId } from '../../app/commands';
-import { viewport, zoomAt } from '../../canvas/canvasActions';
+import { newGraphSeries, viewport, zoomAt } from '../../canvas/canvasActions';
 import { canUndo, updateShapes, useCanvasStore, type ShapePatch } from '../../canvas/model/canvasStore';
-import { fontStack, PARAGRAPH_STYLES, TEXT_FONTS, type HeadingLevel, type MathDisplayMode, type Shape } from '../../canvas/model/types';
+import { fontStack, PARAGRAPH_STYLES, TEXT_FONTS, type GraphShape, type HeadingLevel, type MathDisplayMode, type Shape } from '../../canvas/model/types';
 import { formatEditingText, hasTextSelection } from '../../canvas/textFormatting';
 import { useAppStore } from '../../store/appStore';
 import { parseDisplayUnit } from '../../engine';
@@ -284,6 +286,24 @@ function MathFormattingTab() {
         onChange={(v) => patchSelected((s) => (s.type === 'math' ? { props: { precision: Number(v) } } : null))}
         options={[['-1', `Auto (${settings.precision})`], ...[0, 1, 2, 3, 4, 5, 6].map((d) => [String(d), `${d} dp`] as [string, string])]}
       />
+      <TBSelect
+        label="Array results of the selected equations: row or column, shortened (first … last) or every entry"
+        testId="math-array"
+        value={first ? `${first.props.vectorLayout ?? 'row'}-${first.props.vectorExpanded ? 'all' : 'short'}` : 'row-short'}
+        width={156}
+        onChange={(v) => {
+          const [layout, entries] = v.split('-');
+          patchSelected((s) =>
+            s.type === 'math' ? { props: { vectorLayout: layout === 'column' ? 'column' : undefined, vectorExpanded: entries === 'all' ? true : undefined } } : null,
+          );
+        }}
+        options={[
+          ['row-short', 'Array: row, short'],
+          ['row-all', 'Array: row, all'],
+          ['column-short', 'Array: column, short'],
+          ['column-all', 'Array: column, all'],
+        ]}
+      />
       <Sep />
       <SizeControl kinds={['math']} label="Equation size" />
       <ColorButton testId="math-color" title="Equation color" kinds={['math']} />
@@ -419,7 +439,73 @@ function ToolButtons() {
   );
 }
 
-type FormatTab = 'math' | 'text';
+/** Graph tab: insert an X-Y graph; axes and series of the selected graph. */
+function GraphTab() {
+  const selected = useSelectedShapes();
+  const graph = selected.find((s): s is GraphShape => s.type === 'graph');
+  const [draft, setDraft] = useState<{ field: 'xUnit' | 'yUnit' | 'title'; value: string } | null>(null);
+  const [unitError, setUnitError] = useState<string | null>(null);
+  const patch = (props: Partial<GraphShape['props']>) => graph && updateShapes({ [graph.id]: { props } as ShapePatch });
+  const field = (f: 'xUnit' | 'yUnit' | 'title', label: string, width: number, placeholder: string) => (
+    <input
+      aria-label={label}
+      title={f === 'title' ? label : unitError ?? `${label} (e.g. mm, kN). Empty = automatic.`}
+      data-testid={`graph-${f}`}
+      disabled={!graph}
+      placeholder={placeholder}
+      value={draft?.field === f ? draft.value : graph?.props[f] ?? ''}
+      onChange={(e) => {
+        setDraft({ field: f, value: e.target.value });
+        setUnitError(null);
+      }}
+      onBlur={() => {
+        if (!draft || draft.field !== f) return;
+        const v = draft.value.trim();
+        setDraft(null);
+        if (f !== 'title' && v) {
+          try {
+            parseDisplayUnit(v);
+          } catch (err) {
+            setUnitError((err as Error).message);
+            return;
+          }
+        }
+        patch({ [f]: v });
+      }}
+      onKeyDown={(e) => e.key === 'Enter' && (e.currentTarget as HTMLInputElement).blur()}
+      style={{ width }}
+      className={'h-7 rounded border bg-white px-1.5 text-[13px] disabled:opacity-40 ' + (unitError && f !== 'title' ? 'border-destructive' : 'border-docs-border')}
+    />
+  );
+  return (
+    <>
+      <TB icon={LineChart} label="Insert X-Y graph" onClick={() => commands.insertGraph()} testId="graph-insert" />
+      <Sep />
+      {field('title', 'Graph title', 120, 'Title')}
+      {field('xUnit', 'X axis unit', 56, 'X unit')}
+      {field('yUnit', 'Y axis unit', 56, 'Y unit')}
+      <TB label="Equal axes (same scale on X and Y, for sections and plans)" disabled={!graph} active={!!graph?.props.equalAxes} onClick={() => patch({ equalAxes: !graph!.props.equalAxes })} testId="graph-equal">
+        <span className="text-[13px]">1:1</span>
+      </TB>
+      <TB icon={Grid3x3} label="Grid lines" disabled={!graph} active={!!graph?.props.grid} onClick={() => patch({ grid: !graph!.props.grid })} testId="graph-grid" />
+      <TB icon={Crosshair} label="Axes through origin (values on bottom/left)" disabled={!graph} active={!!graph?.props.axesAtOrigin} onClick={() => patch({ axesAtOrigin: !graph!.props.axesAtOrigin })} testId="graph-origin" />
+      <Sep />
+      <TB
+        icon={Plus}
+        label="Add a series (edit x, y and style in the Properties panel)"
+        disabled={!graph}
+        onClick={() => {
+          patch({ series: [...graph!.props.series, newGraphSeries(graph!.props.series)] });
+          useAppStore.getState().togglePanel(true);
+        }}
+        testId="graph-add-series"
+      />
+      <span className="px-1 text-[12px] text-docs-muted">{graph ? `${graph.props.series.length} series` : 'Select a graph'}</span>
+    </>
+  );
+}
+
+type FormatTab = 'math' | 'text' | 'graph';
 
 /**
  * Formatting tabs (like Mathcad's Math / Text Formatting ribbons). The tab
@@ -431,7 +517,7 @@ function FormatTabs() {
   const focusKind = useCanvasStore((s) => {
     const id = s.editingId ?? (s.selection.length ? s.selection[0] : null);
     const t = id ? s.shapes[id]?.type : undefined;
-    return t === 'math' || t === 'text' ? t : null;
+    return t === 'math' || t === 'text' || t === 'graph' ? t : null;
   });
   const [lastKind, setLastKind] = useState<FormatTab | null>(null);
   if (focusKind !== lastKind) {
@@ -459,9 +545,10 @@ function FormatTabs() {
       <div role="tablist" aria-label="Formatting" className="mr-1 flex items-center gap-0.5 rounded-full bg-white/70 p-0.5">
         {tabBtn('math', 'Math formatting')}
         {tabBtn('text', 'Text formatting')}
+        {tabBtn('graph', 'Graph')}
       </div>
-      <div role="tabpanel" aria-label={tab === 'math' ? 'Math formatting' : 'Text formatting'} className="flex flex-wrap items-center gap-0.5" data-testid={`format-panel-${tab}`}>
-        {tab === 'math' ? <MathFormattingTab /> : <TextFormattingTab />}
+      <div role="tabpanel" aria-label={tab === 'math' ? 'Math formatting' : tab === 'text' ? 'Text formatting' : 'Graph'} className="flex flex-wrap items-center gap-0.5" data-testid={`format-panel-${tab}`}>
+        {tab === 'math' ? <MathFormattingTab /> : tab === 'text' ? <TextFormattingTab /> : <GraphTab />}
       </div>
     </>
   );
@@ -539,6 +626,7 @@ export function DocsHeader() {
       { label: 'Check (≤ limit)', onSelect: () => commands.insertCheck() },
       { label: 'Text', shortcut: '"', onSelect: () => commands.setTool('text') },
       { label: 'Image…', onSelect: () => void commands.insertImage() },
+      { label: 'Graph (X-Y plot)', onSelect: () => commands.insertGraph() },
       { type: 'separator' },
       { label: 'Section heading', onSelect: () => addHeading(1) },
       { label: 'Sub-section heading', onSelect: () => addHeading(2) },
@@ -653,6 +741,7 @@ export function DocsHeader() {
         <TB icon={Type} label="Text (or type &quot;)" active={tool === 'text'} onClick={() => commands.setTool('text')} testId="tool-text" />
         <TB icon={CheckSquare} label="Insert check (≤ 1)" onClick={() => commands.insertCheck()} testId="insert-check" />
         <TB icon={ImagePlus} label="Insert image" onClick={() => void commands.insertImage()} />
+        <TB icon={LineChart} label="Insert X-Y graph" onClick={() => commands.insertGraph()} testId="insert-graph" />
         <TB icon={FilePlus2} label="Insert blank page (Ctrl+Enter)" onClick={commands.insertBlankPage} testId="insert-page" />
         <Sep />
         <ToolButtons />

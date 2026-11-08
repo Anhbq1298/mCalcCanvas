@@ -22,7 +22,7 @@ function newId(): string {
 
 function applySettings() {
   const { settings } = useAppStore.getState();
-  engine.setSettings({ unitSystem: settings.unitSystem, precision: settings.precision });
+  engine.setSettings({ unitSystem: settings.unitSystem, precision: settings.precision, vectorLimit: settings.vectorLimit ?? 10 });
 }
 
 function focusFirstPage() {

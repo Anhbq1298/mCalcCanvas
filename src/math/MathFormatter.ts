@@ -46,7 +46,7 @@ export function buildDisplay(sourceLatex: string, result: CalculationResult | un
   if (result.kind === 'check' && result.check) {
     const c = result.check;
     return {
-      latex: `${c.leftLatex}=${c.leftValue.latex}\\;${c.opLatex}\\;${c.rightValue.latex}`,
+      latex: `${c.leftLatex}=${c.leftValue.latex}\\;${c.opLatex}\\;${c.rightLatex ? `${c.rightLatex}=` : ''}${c.rightValue.latex}`,
       check: { pass: c.pass },
     };
   }

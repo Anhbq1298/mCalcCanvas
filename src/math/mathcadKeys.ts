@@ -6,6 +6,7 @@
  *   \          square root           Ctrl+\   nth root
  *   |          absolute value        '        parentheses around selection
  *   .          literal subscript after a name (M.Ed → M_Ed)
+ *   ;          range operator  ..    (i := 0..n−1)
  *   Ctrl+G     Greek ↔ Latin for the letter before the caret (a ↔ α)
  *   Ctrl+9 / Ctrl+0 / Ctrl+3 / Ctrl+=    ≤  ≥  ≠  (boolean =)
  *   Ctrl+Shift+P   π
@@ -95,6 +96,10 @@ export function handleMathcadKey(e: KeyboardEvent, mf: MathfieldElement, changed
     }
     case '\\':
       insert('\\sqrt{#?}');
+      return true;
+    case ';':
+      // Range variable: i := 0..n−1 (Mathcad).
+      insert('..');
       return true;
     case '|':
       insert('\\left|#?\\right|');

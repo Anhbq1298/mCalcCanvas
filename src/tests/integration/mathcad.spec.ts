@@ -33,6 +33,12 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
     expect(Math.abs(y.x - x.x)).toBeLessThan(12);
   });
 
+  test('if(condition, true, false) typed on the keyboard picks the branch', async ({ page }) => {
+    await addRegion(page, 300, 220, ['N:2000kN']);
+    await addRegion(page, 300, 300, ['c:if(N>0kN,1,2.5', '{ArrowRight}', '=']);
+    await resultOf(page, 'c').toBe('1');
+  });
+
   test('constants: g, π and % from the keyboard and the Constants palette', async ({ page }) => {
     await addRegion(page, 300, 220, ['W:10kg*g=']);
     await resultOf(page, 'W').toBe('0.0981 kN');

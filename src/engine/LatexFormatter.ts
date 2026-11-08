@@ -7,7 +7,7 @@
  */
 import type { Expr, Relation } from './ExpressionTypes';
 import { GREEK } from './LatexParser';
-import { resolveIdent, type ResolveContext } from './ExpressionEvaluator';
+import { applyAsProduct, resolveIdent, type EvalContext, type ResolveContext } from './ExpressionEvaluator';
 import { UNITS } from './UnitSystem';
 
 const GREEK_BY_CHAR: Record<string, string> = Object.fromEntries(
@@ -145,6 +145,14 @@ function print(expr: Expr, opts: PrintOptions): Printed {
           return { latex: `\\sqrt[${args[1]}]{${args[0]}}`, prec: PREC.atom };
         case 'abs':
           return { latex: `\\left|${args[0]}\\right|`, prec: PREC.atom };
+        case 'sum':
+        case 'len':
+        case 'seq':
+        case 'angle':
+        case 'map':
+        case 'linterp':
+        case 'stack':
+          return { latex: `\\mathrm{${expr.fn}}\\left(${args.join(',')}\\right)`, prec: PREC.atom };
         case 'asin':
         case 'acos':
         case 'atan':
@@ -152,6 +160,49 @@ function print(expr: Expr, opts: PrintOptions): Printed {
         default:
           return { latex: `\\${expr.fn}\\left(${args.join(',')}\\right)`, prec: PREC.atom };
       }
+    }
+
+    case 'let': {
+      // Local names are printed by name (never substituted) and resolve as variables.
+      const parts: string[] = [];
+      let scope = opts;
+      const locals = new Set<string>();
+      for (const b of expr.bindings) {
+        parts.push(nameToLatex(b.name), print(b.value, scope).latex);
+        locals.add(b.name);
+        const outer = opts;
+        scope = {
+          ctx: { isDefined: (n) => locals.has(n) || outer.ctx.isDefined(n) },
+          substitute: outer.substitute && ((n) => (locals.has(n) ? null : outer.substitute!(n))),
+        };
+      }
+      return { latex: `\\mathrm{let}\\left(${[...parts, print(expr.body, scope).latex].join(',')}\\right)`, prec: PREC.atom };
+    }
+
+    case 'apply': {
+      const isFn = !expr.head.roman && !!(opts.ctx as Partial<EvalContext>).getFunction?.(expr.head.name);
+      if (isFn) {
+        const args = expr.args.map((a) => print(a, opts).latex);
+        return { latex: `${nameToLatex(expr.head.name)}\\left(${args.join(',')}\\right)`, prec: PREC.atom };
+      }
+      if (expr.args.length !== 1) {
+        return { latex: `${nameToLatex(expr.head.name)}\\left(${expr.args.map((a) => print(a, opts).latex).join(',')}\\right)`, prec: PREC.atom };
+      }
+      // name·(arg): one factor followed by a bracket, so it binds like an atom.
+      return { ...print(applyAsProduct(expr), opts), prec: PREC.atom };
+    }
+
+    case 'range': {
+      const start = print(expr.start, opts).latex;
+      const next = expr.next ? `,${print(expr.next, opts).latex}` : '';
+      return { latex: `${start}${next}\\,..\\,${print(expr.end, opts).latex}`, prec: PREC.add };
+    }
+
+    case 'if': {
+      const cond = `${print(expr.cond.left, opts).latex} ${RELATION_LATEX[expr.cond.op]} ${print(expr.cond.right, opts).latex}`;
+      const t = print(expr.then, opts).latex;
+      const f = print(expr.else, opts).latex;
+      return { latex: `\\mathrm{if}\\left(${cond},${t},${f}\\right)`, prec: PREC.atom };
     }
   }
   return { latex: '', prec: PREC.atom };

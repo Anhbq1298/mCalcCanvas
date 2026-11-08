@@ -1,9 +1,13 @@
-import { AlignCenter, AlignLeft, AlignRight, Bold, Heading2, Italic, List, ListOrdered, Pilcrow, Underline, X, type LucideIcon } from 'lucide-react';
+import { AlignCenter, AlignLeft, AlignRight, Bold, Heading2, Italic, List, ListOrdered, Pilcrow, Plus, Trash2, Underline, X, type LucideIcon } from 'lucide-react';
 import { useId, useState, type ReactNode } from 'react';
 import { updateShape, useCanvasStore } from '../../canvas/model/canvasStore';
 import { shapeBounds } from '../../canvas/model/geometry';
 import { formatEditingText, hasTextSelection } from '../../canvas/textFormatting';
-import { fontStack, TEXT_FONTS, type DrawShape, type LineShape, type MathDisplayMode, type MathShape, type RectShape, type Shape, type TextShape } from '../../canvas/model/types';
+import { fontStack, TEXT_FONTS, type DrawShape, type GraphProps, type GraphSeries, type GraphShape, type LineShape, type MathDisplayMode, type MathShape, type RectShape, type Shape, type TextShape } from '../../canvas/model/types';
+import { newGraphSeries } from '../../canvas/canvasActions';
+import { MathInput } from '../../math/MathInput';
+import { SeriesSources } from './SeriesSources';
+import { parseDisplayUnit } from '../../engine';
 import { useAppStore } from '../../store/appStore';
 import { useRegionResult } from '../../store/calculationStore';
 
@@ -139,6 +143,27 @@ function MathProperties({ shape }: { shape: MathShape }) {
             </select>
           )}
         </Field>
+        {result?.value?.length !== undefined && (
+          <Field label="Vector display">
+            {(id) => (
+              <select
+                id={id}
+                data-testid="vector-layout"
+                className={inputCls + ' cursor-pointer'}
+                value={`${shape.props.vectorLayout ?? 'row'}-${shape.props.vectorExpanded ? 'all' : 'short'}`}
+                onChange={(e) => {
+                  const [layout, entries] = e.target.value.split('-');
+                  update({ vectorLayout: layout === 'column' ? 'column' : undefined, vectorExpanded: entries === 'all' ? true : undefined });
+                }}
+              >
+                <option value="row-short">Row, shortened</option>
+                <option value="row-all">Row, every entry</option>
+                <option value="column-short">Column, shortened</option>
+                <option value="column-all">Column, every entry</option>
+              </select>
+            )}
+          </Field>
+        )}
         <Field
           label="Result unit"
           hint={
@@ -387,6 +412,177 @@ function StrokeProperties({ shape }: { shape: RectShape | LineShape | DrawShape 
   );
 }
 
+/** Text input that commits on blur / Enter; remounts when the stored value changes. */
+function CommitInput({ id, value, onCommit, placeholder, testId, validate }: { id: string; value: string; onCommit(v: string): void; placeholder?: string; testId?: string; validate?(v: string): string | null }) {
+  const [draft, setDraft] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  return (
+    <>
+      <input
+        id={id}
+        data-testid={testId}
+        className={inputCls + (error ? ' border-destructive' : '')}
+        placeholder={placeholder}
+        value={draft ?? value}
+        onChange={(e) => {
+          setDraft(e.target.value);
+          setError(null);
+        }}
+        onBlur={() => {
+          if (draft === null) return;
+          const v = draft.trim();
+          const err = validate?.(v) ?? null;
+          setDraft(null);
+          if (err) return void setError(err);
+          if (v !== value) onCommit(v);
+        }}
+        onKeyDown={(e) => {
+          e.stopPropagation();
+          if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur();
+        }}
+      />
+      {error && <p className="text-[11px] text-destructive">{error}</p>}
+    </>
+  );
+}
+
+const unitError = (v: string): string | null => {
+  if (!v) return null;
+  try {
+    parseDisplayUnit(v);
+    return null;
+  } catch (e) {
+    return (e as Error).message;
+  }
+};
+
+function SeriesEditor({ shapeId, series, index, onChange, onDelete }: { shapeId: string; series: GraphSeries; index: number; onChange(patch: Partial<GraphSeries>): void; onDelete(): void }) {
+  const tid = (f: string) => `series-${index}-${f}`;
+  return (
+    <div className="space-y-2 rounded border border-border p-2" data-testid={`series-${index}`}>
+      <div className="flex items-center gap-2">
+        <input type="color" aria-label="Series colour" value={series.color} onChange={(e) => onChange({ color: e.target.value })} className="h-6 w-6 cursor-pointer rounded border border-border" />
+        <input
+          aria-label="Series label"
+          data-testid={tid('label')}
+          className={inputCls + ' h-7'}
+          placeholder={`Series ${index + 1} (legend)`}
+          defaultValue={series.label}
+          key={series.label}
+          onBlur={(e) => e.target.value !== series.label && onChange({ label: e.target.value })}
+          onKeyDown={(e) => {
+            e.stopPropagation();
+            if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur();
+          }}
+        />
+        <button type="button" aria-label="Delete series" title="Delete series" onClick={onDelete} className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded text-muted-foreground hover:bg-muted hover:text-destructive">
+          <Trash2 size={14} aria-hidden />
+        </button>
+      </div>
+      <div className="grid grid-cols-[18px_1fr] items-center gap-x-1.5 gap-y-1.5 text-[12px] text-muted-foreground">
+        <span>x</span>
+        <MathInput label="X values" testId={tid('x')} value={series.x} onCommit={(x) => onChange({ x })} />
+        <span>y</span>
+        <MathInput label="Y values" testId={tid('y')} value={series.y} onCommit={(y) => onChange({ y })} />
+        {series.style === 'circle' && (
+          <>
+            <span>r</span>
+            <MathInput label="Circle radius" testId={tid('r')} value={series.r} onCommit={(r) => onChange({ r })} />
+          </>
+        )}
+      </div>
+      <div className="flex items-center gap-2">
+        <select aria-label="Series style" data-testid={tid('style')} className={inputCls + ' h-7 cursor-pointer'} value={series.style} onChange={(e) => onChange({ style: e.target.value as GraphSeries['style'] })}>
+          <option value="line">Line</option>
+          <option value="marker">Markers</option>
+          <option value="circle">Circles (radius r)</option>
+        </select>
+        <select aria-label="Line width / marker size" className={inputCls + ' h-7 w-20 cursor-pointer'} value={series.width} onChange={(e) => onChange({ width: Number(e.target.value) })}>
+          {[0.75, 1, 1.5, 2, 3, 4].map((v) => (
+            <option key={v} value={v}>
+              {v} px
+            </option>
+          ))}
+        </select>
+      </div>
+      <SeriesSources shapeId={shapeId} seriesId={series.id} index={index} />
+      <div className="space-y-1">
+        <span className="block text-[11px] text-muted-foreground">Show when (optional, e.g. n_set ≥ 2)</span>
+        <MathInput label="Show when" testId={tid('show')} value={series.show} onCommit={(show) => onChange({ show })} />
+      </div>
+    </div>
+  );
+}
+
+function GraphProperties({ shape }: { shape: GraphShape }) {
+  const update = (props: Partial<GraphProps>) => updateShape(shape.id, { props });
+  const series = shape.props.series;
+  const setSeries = (next: GraphSeries[]) => update({ series: next });
+  return (
+    <>
+      <Section title="Graph">
+        <Field label="Title">{(id) => <CommitInput id={id} value={shape.props.title} onCommit={(title) => update({ title })} testId="graph-prop-title" />}</Field>
+        <div className="grid grid-cols-2 gap-2">
+          <Field label="X label">{(id) => <CommitInput id={id} value={shape.props.xLabel} onCommit={(xLabel) => update({ xLabel })} />}</Field>
+          <Field label="X unit">{(id) => <CommitInput id={id} value={shape.props.xUnit} placeholder="auto" validate={unitError} onCommit={(xUnit) => update({ xUnit })} testId="graph-prop-xunit" />}</Field>
+          <Field label="Y label">{(id) => <CommitInput id={id} value={shape.props.yLabel} onCommit={(yLabel) => update({ yLabel })} />}</Field>
+          <Field label="Y unit">{(id) => <CommitInput id={id} value={shape.props.yUnit} placeholder="auto" validate={unitError} onCommit={(yUnit) => update({ yUnit })} testId="graph-prop-yunit" />}</Field>
+        </div>
+        <label className="flex cursor-pointer items-center gap-2 text-[13px]">
+          <input type="checkbox" className="h-4 w-4 cursor-pointer accent-accent" checked={shape.props.equalAxes} onChange={(e) => update({ equalAxes: e.target.checked })} />
+          Equal axes (1:1 scale)
+        </label>
+        <label className="flex cursor-pointer items-center gap-2 text-[13px]">
+          <input type="checkbox" className="h-4 w-4 cursor-pointer accent-accent" checked={shape.props.grid} onChange={(e) => update({ grid: e.target.checked })} />
+          Grid lines
+        </label>
+        <label className="flex cursor-pointer items-center gap-2 text-[13px]">
+          <input type="checkbox" data-testid="graph-prop-origin" className="h-4 w-4 cursor-pointer accent-accent" checked={shape.props.axesAtOrigin} onChange={(e) => update({ axesAtOrigin: e.target.checked })} />
+          Axes through origin (values on bottom/left)
+        </label>
+        <div className="grid grid-cols-[1fr_auto] items-end gap-2">
+          <Field label="Font">
+            {(id) => (
+              <select id={id} data-testid="graph-prop-font" className={inputCls + ' cursor-pointer'} value={shape.props.font} onChange={(e) => update({ font: e.target.value })}>
+                {Object.keys(TEXT_FONTS).map((f) => (
+                  <option key={f} value={f} style={{ fontFamily: fontStack(f) }}>
+                    {f}
+                  </option>
+                ))}
+              </select>
+            )}
+          </Field>
+          <Field label="Background">
+            {(id) => <input id={id} type="color" data-testid="graph-prop-background" value={shape.props.background} onChange={(e) => update({ background: e.target.value })} className="h-8 w-12 cursor-pointer rounded border border-border" />}
+          </Field>
+        </div>
+      </Section>
+      <Section title="Series">
+        <p className="text-[12px] leading-relaxed text-muted-foreground">x and y are expressions using variables defined above the graph, e.g. a vector from a range (i := 0..n−1, type ;).</p>
+        {series.map((s, i) => (
+          <SeriesEditor
+            key={s.id}
+            shapeId={shape.id}
+            series={s}
+            index={i}
+            onChange={(patch) => setSeries(series.map((q) => (q.id === s.id ? { ...q, ...patch } : q)))}
+            onDelete={() => setSeries(series.filter((q) => q.id !== s.id))}
+          />
+        ))}
+        <button
+          type="button"
+          data-testid="graph-prop-add-series"
+          onClick={() => setSeries([...series, newGraphSeries(series)])}
+          disabled={series.length >= 20}
+          className="flex h-8 w-full cursor-pointer items-center justify-center gap-1.5 rounded border border-dashed border-border text-[13px] text-muted-foreground hover:border-accent hover:text-foreground disabled:opacity-40"
+        >
+          <Plus size={14} aria-hidden /> Add series
+        </button>
+      </Section>
+    </>
+  );
+}
+
 function DocumentProperties() {
   const title = useAppStore((s) => s.title);
   const metadata = useAppStore((s) => s.metadata);
@@ -426,6 +622,24 @@ function DocumentProperties() {
                   {p}
                 </option>
               ))}
+            </select>
+          )}
+        </Field>
+        <Field label="Array display">
+          {(id) => (
+            <select
+              id={id}
+              data-testid="vector-limit"
+              className={inputCls + ' cursor-pointer'}
+              value={settings.vectorLimit ?? 10}
+              onChange={(e) => updateSettings({ vectorLimit: Number(e.target.value) })}
+            >
+              {[6, 10, 20, 50].map((n) => (
+                <option key={n} value={n}>
+                  First {n / 2} … last {n / 2}
+                </option>
+              ))}
+              <option value={0}>All entries</option>
             </select>
           )}
         </Field>
@@ -478,6 +692,7 @@ export function PropertiesPanel() {
         {selected.type === 'math' && <MathProperties shape={selected} />}
         {selected.type === 'text' && <TextProperties shape={selected} />}
         {(selected.type === 'rect' || selected.type === 'line' || selected.type === 'draw') && <StrokeProperties shape={selected} />}
+        {selected.type === 'graph' && <GraphProperties shape={selected} />}
         {selected.type === 'image' && (
           <Section title="Image">
             <p className="text-[12px] leading-relaxed text-muted-foreground">Drag a corner to resize; the aspect ratio is kept (hold Shift to stretch).</p>
@@ -487,7 +702,7 @@ export function PropertiesPanel() {
       </>
     );
 
-  const heading = count === 0 ? 'Worksheet' : selected?.type === 'math' ? 'Math region' : selected?.type === 'text' ? 'Text' : 'Properties';
+  const heading = count === 0 ? 'Worksheet' : selected?.type === 'math' ? 'Math region' : selected?.type === 'text' ? 'Text' : selected?.type === 'graph' ? 'Graph' : 'Properties';
   return (
     <aside aria-label="Properties" className="flex w-72 shrink-0 flex-col border-l border-border bg-card" data-testid="properties-panel">
       <div className="flex h-10 shrink-0 items-center justify-between border-b border-border px-4">

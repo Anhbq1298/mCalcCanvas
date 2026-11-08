@@ -5,6 +5,8 @@
 
 export type MathDisplayMode = 'auto' | 'formula' | 'result' | 'formulaResult' | 'full';
 
+export type VectorLayout = 'row' | 'column';
+
 export interface MathProps {
   w: number;
   h: number;
@@ -15,6 +17,10 @@ export interface MathProps {
   displayUnit: string;
   /** Decimal places; -1 = worksheet default. */
   precision: number;
+  /** How a vector result is shown: a compact row (default) or a column with every entry. */
+  vectorLayout?: VectorLayout;
+  /** Show every entry of a long vector result instead of the shortened first … last view. */
+  vectorExpanded?: boolean;
   /** Box follows the rendered equation until resized manually. */
   autoSize: boolean;
   fontSize: number;
@@ -79,6 +85,50 @@ export interface DrawProps {
   strokeWidth: number;
 }
 
+/** House style for new graphs: Roboto, light lemon background, no grid, axes through the origin. */
+export const DEFAULT_GRAPH_STYLE = { grid: false, axesAtOrigin: true, font: 'Roboto', background: '#fff9c4' } as const;
+
+export type GraphSeriesStyle = 'line' | 'marker' | 'circle';
+
+/** One data series of an X-Y graph. x, y, r and show are LaTeX expressions evaluated by the engine. */
+export interface GraphSeries {
+  id: string;
+  label: string;
+  /** X values: a vector (e.g. x_{l1}) or a single value. */
+  x: string;
+  /** Y values, same length as x (or a single value). */
+  y: string;
+  style: GraphSeriesStyle;
+  /** Circle radius in x units (style 'circle'); a single value or one per point. */
+  r: string;
+  color: string;
+  /** Line width / marker size in px. */
+  width: number;
+  /** Optional condition (e.g. n_{set}\ge2); empty = always shown. */
+  show: string;
+}
+
+export interface GraphProps {
+  w: number;
+  h: number;
+  title: string;
+  xLabel: string;
+  yLabel: string;
+  /** Display units of the axes (e.g. "mm"); empty = automatic. */
+  xUnit: string;
+  yUnit: string;
+  /** Same scale on both axes (sections, plans). */
+  equalAxes: boolean;
+  grid: boolean;
+  /** Axis lines drawn through (0, 0); tick values stay on the bottom and left edges. */
+  axesAtOrigin: boolean;
+  /** One of TEXT_FONTS. */
+  font: string;
+  /** Background colour of the whole graph. */
+  background: string;
+  series: GraphSeries[];
+}
+
 interface Base<T extends string, P> {
   id: string;
   type: T;
@@ -94,8 +144,9 @@ export type ImageShape = Base<'image', ImageProps>;
 export type RectShape = Base<'rect', RectProps>;
 export type LineShape = Base<'line', LineProps>;
 export type DrawShape = Base<'draw', DrawProps>;
+export type GraphShape = Base<'graph', GraphProps>;
 
-export type Shape = MathShape | TextShape | ImageShape | RectShape | LineShape | DrawShape;
+export type Shape = MathShape | TextShape | ImageShape | RectShape | LineShape | DrawShape | GraphShape;
 export type ShapeType = Shape['type'];
 
 export type ToolId = 'select' | 'hand' | 'math' | 'text' | 'rect' | 'line' | 'arrow' | 'draw';
@@ -123,6 +174,7 @@ export interface Box {
 /** Text fonts: Inter is bundled via Google Fonts, the rest are system fonts with fallbacks. */
 export const TEXT_FONTS: Record<string, string> = {
   Inter: "'Inter', ui-sans-serif, system-ui, sans-serif",
+  Roboto: "'Roboto', 'Segoe UI', Arial, sans-serif",
   Arial: "Arial, 'Helvetica Neue', Helvetica, sans-serif",
   'Segoe UI': "'Segoe UI', system-ui, sans-serif",
   Calibri: "Calibri, Carlito, 'Segoe UI', sans-serif",

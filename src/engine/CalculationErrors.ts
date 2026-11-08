@@ -17,6 +17,8 @@ export type CalculationErrorCode =
   | 'display-unit'
   | 'limit-exceeded'
   | 'invalid-definition'
+  /** A vector where a single value is required, or vectors of different lengths. */
+  | 'vector'
   | 'evaluation';
 
 /** An expected, user-facing calculation failure (never a crash). */

@@ -121,6 +121,13 @@ export const OPERATORS: PaletteSection[] = [
       { label: 'exp', latex: '\\exp\\left(#?\\right)', title: 'Exponential' },
       { label: 'min', latex: '\\min\\left(#?,#?\\right)', title: 'Minimum' },
       { label: 'max', latex: '\\max\\left(#?,#?\\right)', title: 'Maximum' },
+      { label: 'seq', latex: '\\mathrm{seq}\\left(#?,#?\\right)', title: 'seq(start, end) or seq(start, end, step): a vector, e.g. seq(0, n-1)' },
+      { label: 'let', latex: '\\mathrm{let}\\left(#?,#?,#?\\right)', title: 'let(name, value, …, expression): local names, e.g. let(i, seq(0, n-1), r·cos(2π·i/n))' },
+      { label: 'angle', latex: '\\mathrm{angle}\\left(#?,#?\\right)', title: 'angle(x, y): direction of the vector (x, y), 0 … 360°' },
+      { label: 'map', latex: '\\mathrm{map}\\left(#?,#?\\right)', title: 'map(f, v): calls the user function f for each entry of v, e.g. map(N_R, c_v)' },
+      { label: 'linterp', latex: '\\mathrm{linterp}\\left(#?,#?,#?\\right)', title: 'linterp(xs, ys, x): linear interpolation (xs increasing or decreasing)' },
+      { label: 'stack', latex: '\\mathrm{stack}\\left(#?,#?\\right)', title: 'stack(a, b, …): joins scalars and vectors into one vector' },
+      { label: 'if', latex: '\\mathrm{if}\\left(#?,#?,#?\\right)', title: 'if(condition, value if true, value if false), e.g. if(N > 0 kN, 1, 2.5)' },
     ],
   },
 ];

@@ -1,4 +1,4 @@
-import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, TEXT_FONTS, type Shape } from '../canvas/model/types';
+import { DEFAULT_GRAPH_STYLE, DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, TEXT_FONTS, type GraphSeriesStyle, type Shape } from '../canvas/model/types';
 import { escapeHtml, sanitizeHtml } from '../canvas/sanitize';
 import {
   DEFAULT_SETTINGS,
@@ -86,6 +86,8 @@ export function sanitizeShape(raw: unknown): Shape | null {
           displayMode: (modes.includes(p.displayMode as string) ? p.displayMode : 'auto') as never,
           displayUnit: str(p.displayUnit).slice(0, 60),
           precision: Math.round(bounded(p.precision, -1, -1, 8)),
+          ...(p.vectorLayout === 'column' ? { vectorLayout: 'column' as const } : {}),
+          ...(p.vectorExpanded === true ? { vectorExpanded: true } : {}),
           autoSize: p.autoSize !== false,
           fontSize: Math.min(64, Math.max(8, num(p.fontSize, 18))),
           color: color(p.color, '#0f172a'),
@@ -126,10 +128,50 @@ export function sanitizeShape(raw: unknown): Shape | null {
       if (!pts.length) return null;
       return { ...base, type: 'draw', props: { points: pts.slice(0, 20000), stroke: color(p.stroke, '#1e3a5f'), strokeWidth: bounded(p.strokeWidth, 2, 0.25, 20) } };
     }
+    case 'graph': {
+      const styles = ['line', 'marker', 'circle'];
+      const latex = (v: unknown) => str(v).slice(0, 2000);
+      const series = (Array.isArray(p.series) ? (p.series as unknown[]) : [])
+        .filter((q): q is Record<string, unknown> => !!q && typeof q === 'object')
+        .slice(0, MAX_GRAPH_SERIES)
+        .map((q, i) => ({
+          id: str(q.id).slice(0, 40) || `s${i}`,
+          label: str(q.label).slice(0, 80),
+          x: latex(q.x),
+          y: latex(q.y),
+          style: (styles.includes(q.style as string) ? q.style : 'line') as GraphSeriesStyle,
+          r: latex(q.r),
+          color: color(q.color, '#1e3a5f'),
+          width: bounded(q.width, 1.5, 0.25, 20),
+          show: latex(q.show),
+        }));
+      return {
+        ...base,
+        type: 'graph',
+        props: {
+          w: bounded(p.w, 360, 40, SIZE_LIMIT),
+          h: bounded(p.h, 280, 40, SIZE_LIMIT),
+          title: str(p.title).slice(0, 120),
+          xLabel: str(p.xLabel).slice(0, 80),
+          yLabel: str(p.yLabel).slice(0, 80),
+          xUnit: str(p.xUnit).slice(0, 40),
+          yUnit: str(p.yUnit).slice(0, 40),
+          equalAxes: p.equalAxes === true,
+          grid: typeof p.grid === 'boolean' ? p.grid : DEFAULT_GRAPH_STYLE.grid,
+          axesAtOrigin: typeof p.axesAtOrigin === 'boolean' ? p.axesAtOrigin : DEFAULT_GRAPH_STYLE.axesAtOrigin,
+          font: typeof p.font === 'string' && p.font in TEXT_FONTS ? p.font : DEFAULT_GRAPH_STYLE.font,
+          background: color(p.background, DEFAULT_GRAPH_STYLE.background),
+          series,
+        },
+      };
+    }
     default:
       return null;
   }
 }
+
+/** Upper bound on series per graph (each series is evaluated by the engine). */
+export const MAX_GRAPH_SERIES = 20;
 
 const MAX_SHAPES = 20_000;
 
@@ -181,6 +223,8 @@ export function parseDocument(input: unknown): CalculationDocument {
   if (!TEXT_FONTS[settings.textFont]) settings.textFont = 'Inter';
   settings.baselineSnap = settings.baselineSnap === 'minor' ? 'minor' : 'major';
   settings.pages = Math.min(200, Math.max(1, Math.round(num(settings.pages, 1))));
+  settings.vectorLimit = Math.min(1000, Math.max(0, Math.round(num(settings.vectorLimit, 10))));
+  if (settings.vectorLimit === 1) settings.vectorLimit = 2;
   settings.precision = Math.min(8, Math.max(0, Math.round(num(settings.precision, DEFAULT_SETTINGS.precision))));
   return {
     id: doc.id,

@@ -120,7 +120,7 @@ function rcBeamShapes(): Shape[] {
   math(96, ln2(13), 'K_{Ed}\\coloneq\\frac{M_{Ed}}{b\\cdot d^2\\cdot f_{ck}}');
   math(400, ln2(13), 'K_{lim}\\coloneq0.167');
   math(96, ln2(14), 'K_{Ed}\\le K_{lim}');
-  text(400, ln2(14) + 3, 'No compression steel needed.', { w: 300, size: 12.5, italic: true });
+  text(470, ln2(14) + 3, 'No compression steel needed.', { w: 240, size: 12.5, italic: true });
   math(96, ln2(15), 'z\\coloneq\\min\\left(d\\left(0.5+\\sqrt{0.25-\\frac{K_{Ed}}{1.134}}\\right),0.95d\\right)', { displayUnit: 'mm', precision: 0 });
   text(80, ln2(16), '5.3 Tension reinforcement', { heading: 3 });
   math(96, ln2(17), 'A_{s.req}\\coloneq\\frac{M_{Ed}}{f_{yd}z}', { displayUnit: 'mm^2', precision: 0 });
