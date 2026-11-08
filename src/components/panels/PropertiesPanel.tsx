@@ -484,6 +484,12 @@ function SeriesEditor({ shapeId, series, index, onChange, onDelete }: { shapeId:
         <MathInput label="X values" testId={tid('x')} value={series.x} onCommit={(x) => onChange({ x })} />
         <span>y</span>
         <MathInput label="Y values" testId={tid('y')} value={series.y} onCommit={(y) => onChange({ y })} />
+        {series.style === 'segments' && (
+          <>
+            <span>g</span>
+            <MathInput label="Group id per point (a change starts a new piece)" testId={tid('r')} value={series.r} onCommit={(r) => onChange({ r })} />
+          </>
+        )}
         {series.style === 'circle' && (
           <>
             <span>r</span>
@@ -496,6 +502,7 @@ function SeriesEditor({ shapeId, series, index, onChange, onDelete }: { shapeId:
           <option value="line">Line</option>
           <option value="marker">Markers</option>
           <option value="circle">Circles (radius r)</option>
+          <option value="segments">Segments (group g)</option>
         </select>
         <select aria-label="Line width / marker size" className={inputCls + ' h-7 w-20 cursor-pointer'} value={series.width} onChange={(e) => onChange({ width: Number(e.target.value) })}>
           {[0.75, 1, 1.5, 2, 3, 4].map((v) => (

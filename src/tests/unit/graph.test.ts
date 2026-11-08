@@ -76,6 +76,17 @@ describe('graph series in the engine', () => {
     expect(dataOf('g').plots).toHaveLength(2);
   });
 
+  it('segments split into pieces by a plain-number group id', () => {
+    addShapes([
+      ...ring,
+      math('gi', 300, 'g_{i}\\coloneq\\mathrm{stack}\\left(0,0,1,1\\right)'),
+      graph('g', 400, [series({ id: 'a', x: 'x', y: 'y', style: 'segments', r: 'g_{i}' }), series({ id: 'b', x: 'x', y: 'y', style: 'segments', r: 'g_{i}\\,\\mathrm{mm}' })], { xUnit: 'mm', yUnit: 'mm' }),
+    ]);
+    const d = dataOf('g');
+    expect(d.plots[0].groups).toEqual([0, 0, 1, 1]);
+    expect(d.errors[0]).toMatch(/plain numbers/);
+  });
+
   it('stretches a single value and reports length mismatches', () => {
     addShapes([...ring, math('z', 300, 'z\\coloneq0..2'), graph('g', 400, [series({ id: 'a', x: 'x', y: '0', label: 'axis' }), series({ id: 'b', x: 'x', y: 'z' })])]);
     const d = dataOf('g');

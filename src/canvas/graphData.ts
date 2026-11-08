@@ -30,6 +30,8 @@ export interface PlotSeries {
   xs: number[];
   ys: number[];
   rs: number[] | null;
+  /** segments style: group id per point (null: one piece). */
+  groups?: number[] | null;
 }
 
 export interface GraphData {
@@ -64,7 +66,7 @@ export function buildGraphData(shape: GraphShape, results: (id: string) => Calcu
   shape.props.series.forEach((series, i) => {
     const name = series.label || `Series ${i + 1}`;
     const get = (f: GraphField) => results(graphRegionId(shape.id, series.id, f));
-    for (const [f, latex] of [['x', series.x], ['y', series.y], ['r', series.style === 'circle' ? series.r : ''], ['show', series.show]] as const) {
+    for (const [f, latex] of [['x', series.x], ['y', series.y], ['r', series.style === 'circle' || series.style === 'segments' ? series.r : ''], ['show', series.show]] as const) {
       if (latex && isDefinitionLatex(latex)) {
         errors.push(`${name}: ${f} cannot define a variable (use an expression such as x_{1}).`);
         return;
@@ -91,6 +93,16 @@ export function buildGraphData(shape: GraphShape, results: (id: string) => Calcu
     const ys = fit(ys0, n);
     if (!xs || !ys) return void errors.push(`${name}: x has ${xs0.length} values but y has ${ys0.length}.`);
     let rs: number[] | null = null;
+    let groups: number[] | null = null;
+    if (series.style === 'segments' && series.r.trim()) {
+      const rg = get('r');
+      if (rg?.status === 'error') return void errors.push(`${name} (group): ${rg.error?.message}`);
+      const g0 = numbersOf(rg);
+      if (!g0) return;
+      groups = fit(g0, n);
+      if (!groups) return void errors.push(`${name}: group has ${g0.length} values but x has ${n}.`);
+      if (rg?.value?.unitText) return void errors.push(`${name}: the group ids must be plain numbers.`);
+    }
     if (series.style === 'circle') {
       const rr = get('r');
       if (!series.r.trim()) return void errors.push(`${name}: enter the circle radius r.`);
@@ -105,7 +117,7 @@ export function buildGraphData(shape: GraphShape, results: (id: string) => Calcu
     }
     if (!xUnit && rx?.value?.unitText) xUnit = rx.value.unitText;
     if (!yUnit && ry?.value?.unitText) yUnit = ry.value.unitText;
-    plots.push({ series, xs, ys, rs });
+    plots.push({ series, xs, ys, rs, groups });
   });
   if (shape.props.equalAxes && plots.length && xUnit !== yUnit) {
     errors.push(`Equal axes need the same unit on both axes (x: ${xUnit || 'none'}, y: ${yUnit || 'none'}).`);

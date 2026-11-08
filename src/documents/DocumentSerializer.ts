@@ -129,7 +129,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
       return { ...base, type: 'draw', props: { points: pts.slice(0, 20000), stroke: color(p.stroke, '#1e3a5f'), strokeWidth: bounded(p.strokeWidth, 2, 0.25, 20) } };
     }
     case 'graph': {
-      const styles = ['line', 'marker', 'circle'];
+      const styles = ['line', 'marker', 'circle', 'segments'];
       const latex = (v: unknown) => str(v).slice(0, 2000);
       const series = (Array.isArray(p.series) ? (p.series as unknown[]) : [])
         .filter((q): q is Record<string, unknown> => !!q && typeof q === 'object')

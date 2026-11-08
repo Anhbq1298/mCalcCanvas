@@ -59,7 +59,7 @@ function graphRegions(s: GraphShape, out: Regions): void {
     const fields: [GraphField, string, string][] = [
       ['x', series.x, xUnit],
       ['y', series.y, yUnit],
-      ['r', series.style === 'circle' ? series.r : '', xUnit],
+      series.style === 'segments' ? ['r', series.r, ''] : ['r', series.style === 'circle' ? series.r : '', xUnit],
       ['show', series.show, ''],
     ];
     for (const [field, latex, unit] of fields) {

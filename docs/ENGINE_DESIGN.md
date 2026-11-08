@@ -94,6 +94,8 @@ Messages name the variable or quantity involved, e.g. `Unit mismatch: Force (kN)
 
 A graph shape (`type: 'graph'`) is not a statement. `engineBridge` registers each series field (`x`, `y`, `r`, `show`) as a hidden region with id `shape::series::field`, order key `[...graphKey, seriesIndex, field]`, the axis display unit and precision 8. So a series sees exactly the definitions above the graph, uses the normal dependency graph and errors, and redraws when an input changes. A field containing a definition is never registered (it would leak a variable into the worksheet).
 
+Series styles: `line`, `marker`, `circle` (r = radius in x units) and `segments`. For `segments` the `r` field is a plain-number group id per point (no display unit): consecutive points with the same id are joined, a change of id starts a new piece, so one series can draw several separate polylines (the rectangular column template draws all closed ties and all cross-tie legs this way). An empty `r` draws one piece.
+
 ## Extending the value model (planned)
 
 Matrices, user functions and solvers need a richer value type. Vectors (above) are the first step; matrices extend `Value` with a 2-D type. Matrices in structural engineering can mix units per entry (translational and rotational DOFs), so a matrix must not assume one common unit.

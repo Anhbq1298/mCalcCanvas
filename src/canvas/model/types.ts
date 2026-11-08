@@ -88,7 +88,8 @@ export interface DrawProps {
 /** House style for new graphs: Roboto, light lemon background, no grid, axes through the origin. */
 export const DEFAULT_GRAPH_STYLE = { grid: false, axesAtOrigin: true, font: 'Roboto', background: '#fff9c4' } as const;
 
-export type GraphSeriesStyle = 'line' | 'marker' | 'circle';
+/** segments: like line, but r holds a group id per point; a change of id starts a new piece. */
+export type GraphSeriesStyle = 'line' | 'marker' | 'circle' | 'segments';
 
 /** One data series of an X-Y graph. x, y, r and show are LaTeX expressions evaluated by the engine. */
 export interface GraphSeries {

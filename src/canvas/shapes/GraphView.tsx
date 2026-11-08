@@ -103,6 +103,18 @@ export const GraphView = memo(function GraphView({ shape }: { shape: GraphShape 
           {data.plots.map((p) => {
             const { series } = p;
             const common = { 'data-testid': 'graph-series', 'data-series': series.id, 'data-points': p.xs.length } as const;
+            if (series.style === 'segments') {
+              const pieces: string[][] = [];
+              p.xs.forEach((v, i) => {
+                if (i === 0 || !p.groups || p.groups[i] !== p.groups[i - 1]) pieces.push([]);
+                pieces[pieces.length - 1].push(`${X(v).toFixed(2)},${Y(p.ys[i]).toFixed(2)}`);
+              });
+              return (
+                <g key={series.id} {...common} data-pieces={pieces.length} fill="none" stroke={series.color} strokeWidth={series.width} strokeLinejoin="round" strokeLinecap="round">
+                  {pieces.map((pts, j) => (pts.length > 1 ? <polyline key={j} points={pts.join(' ')} /> : null))}
+                </g>
+              );
+            }
             if (series.style === 'line') {
               const pts = p.xs.map((v, i) => `${X(v).toFixed(2)},${Y(p.ys[i]).toFixed(2)}`).join(' ');
               return <polyline key={series.id} {...common} points={pts} fill="none" stroke={series.color} strokeWidth={series.width} strokeLinejoin="round" />;
@@ -155,7 +167,7 @@ export const GraphView = memo(function GraphView({ shape }: { shape: GraphShape 
         <g fontSize={10} fontFamily={FONT} fill="#334155" data-testid="graph-legend">
           {legend.map((p, i) => (
             <g key={p.series.id} transform={`translate(${m.l + legendPos[i].x} ${h - legendH + 10 + legendPos[i].row * LEG_ROW})`}>
-              {p.series.style === 'line' ? (
+              {p.series.style === 'line' || p.series.style === 'segments' ? (
                 <line x1={0} x2={14} y1={-3} y2={-3} stroke={p.series.color} strokeWidth={2} />
               ) : (
                 <circle cx={7} cy={-3} r={3.5} fill={p.series.color} fillOpacity={p.series.style === 'circle' ? 0.35 : 1} stroke={p.series.color} />

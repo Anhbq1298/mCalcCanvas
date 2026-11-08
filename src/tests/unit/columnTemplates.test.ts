@@ -21,9 +21,10 @@ function evaluate(id: TemplateId, inputs: Record<string, string> = {}) {
         ids.push(s.id);
       } else if (s.type === 'graph') {
         s.props.series.forEach((ser, k) => {
-          for (const f of ['x', 'y'] as const) {
+          for (const f of ['x', 'y', 'r'] as const) {
+            if (f === 'r' && ser.style !== 'segments') continue;
             const rid = graphRegionId(s.id, ser.id, f);
-            e.setRegion(rid, { latex: `${ser[f]}=`, order: [...readingKey(s), k, f] as never, displayUnit: (f === 'x' ? s.props.xUnit : s.props.yUnit) || null, precision: 8 });
+            e.setRegion(rid, { latex: `${ser[f]}=`, order: [...readingKey(s), k, f] as never, displayUnit: (f === 'x' ? s.props.xUnit : f === 'y' ? s.props.yUnit : '') || null, precision: 8 });
             ids.push(rid);
           }
         });
@@ -34,7 +35,9 @@ function evaluate(id: TemplateId, inputs: Record<string, string> = {}) {
     const s = shapes.find((x) => x.type === 'math' && x.props.latex.startsWith(latexStart));
     return s ? e.getResult(s.id) : undefined;
   };
-  return { errors: ids.filter((i) => e.getResult(i)?.status === 'error').map((i) => `${i}: ${e.getResult(i)?.error?.message}`), result, tpl };
+  const section = shapes.find((x) => x.type === 'graph' && x.props.title === 'Section')!;
+  const points = (sid: string, f: 'x' | 'y' | 'r') => e.getResult(graphRegionId(section.id, sid, f))?.value?.items ?? [];
+  return { points, errors: ids.filter((i) => e.getResult(i)?.status === 'error').map((i) => `${i}: ${e.getResult(i)?.error?.message}`), result, tpl };
 }
 
 describe('column templates', () => {
@@ -74,5 +77,30 @@ describe('column templates', () => {
     expect(result('q_{b}\\coloneq')?.value?.number).toBe(0);
     expect(result('q_{h}\\coloneq')?.value?.number).toBe(0);
     expect(result('n_{w.x}\\coloneq')?.value?.number).toBe(2);
+  }, 30000);
+
+  it('ties and legs wrap the bars (never cut into one); legs in both directions', () => {
+    const { errors, result, points } = evaluate('rc-rectangular-column', {
+      'b\\coloneq': 'b\\coloneq700\\,\\mathrm{mm}',
+      'h\\coloneq': 'h\\coloneq1200\\,\\mathrm{mm}',
+      'n_{b}\\coloneq': 'n_{b}\\coloneq5',
+      'n_{h}\\coloneq': 'n_{h}\\coloneq9',
+    });
+    expect(errors).toEqual([]);
+    expect(result('n_{T}\\coloneq')?.value?.number).toBe(2);
+    expect(result('n_{L}\\coloneq')?.value?.number).toBe(2);
+    const bx = points('bars', 'x');
+    const by = points('bars', 'y');
+    expect(bx).toHaveLength(24);
+    const dw = result('\\delta_{w}\\coloneq')!.value!.number!;
+    for (const sid of ['ties', 'legs']) {
+      const xs = points(sid, 'x');
+      const ys = points(sid, 'y');
+      const g = points(sid, 'r');
+      expect(xs.length).toBeGreaterThan(0);
+      expect(new Set(g).size).toBe(2);
+      const gap = Math.min(...xs.map((x, i) => Math.min(...bx.map((b, k) => Math.hypot(x - b, ys[i] - by[k])))));
+      expect(gap).toBeGreaterThan(dw - 0.01);
+    }
   }, 30000);
 });
