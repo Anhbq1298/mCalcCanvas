@@ -1793,11 +1793,11 @@
       "id": "s_rect_33",
       "type": "text",
       "x": 80,
-      "y": 3887,
+      "y": 3883,
       "props": {
-        "w": 630,
+        "w": 310,
         "h": 24,
-        "html": "Leg drawing points (two per leg; legs at restrained bars)",
+        "html": "Intermediate legs for the drawing (two points per leg, at restrained bars)",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -1807,12 +1807,12 @@
     {
       "id": "s_rect_34",
       "type": "math",
-      "x": 96,
-      "y": 3923,
+      "x": 400,
+      "y": 3883,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "X_{w}\\left(i\\right)\\coloneq-a_{x}+\\min\\left(\\mathrm{floor}\\left(\\frac{i}{2}\\right)k_{x},n_{b}-1\\right)s_{x}",
+        "latex": "X_{w}\\left(i\\right)\\coloneq-a_{x}+\\left(\\mathrm{floor}\\left(\\frac{i}{2}\\right)+1\\right)k_{x}s_{x}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -1825,7 +1825,7 @@
       "id": "s_rect_35",
       "type": "text",
       "x": 80,
-      "y": 3983,
+      "y": 3953,
       "props": {
         "w": 310,
         "h": 24,
@@ -1840,7 +1840,7 @@
       "id": "s_rect_36",
       "type": "math",
       "x": 400,
-      "y": 3973,
+      "y": 3943,
       "props": {
         "w": 60,
         "h": 32,
@@ -1857,9 +1857,9 @@
       "id": "s_rect_37",
       "type": "text",
       "x": 80,
-      "y": 4027,
+      "y": 4002,
       "props": {
-        "w": 630,
+        "w": 310,
         "h": 24,
         "html": "",
         "fontFamily": "Inter",
@@ -1871,12 +1871,12 @@
     {
       "id": "s_rect_38",
       "type": "math",
-      "x": 96,
-      "y": 4053,
+      "x": 400,
+      "y": 3993,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "Y_{u}\\left(i\\right)\\coloneq-a_{y}+\\min\\left(\\mathrm{floor}\\left(\\frac{i}{2}\\right)k_{y},n_{h}-1\\right)s_{y}",
+        "latex": "Y_{u}\\left(i\\right)\\coloneq-a_{y}+\\left(\\mathrm{floor}\\left(\\frac{i}{2}\\right)+1\\right)k_{y}s_{y}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -1889,7 +1889,7 @@
       "id": "s_rect_39",
       "type": "text",
       "x": 80,
-      "y": 4123,
+      "y": 4053,
       "props": {
         "w": 310,
         "h": 24,
@@ -1904,7 +1904,7 @@
       "id": "s_rect_3a",
       "type": "math",
       "x": 400,
-      "y": 4113,
+      "y": 4043,
       "props": {
         "w": 60,
         "h": 32,
@@ -1921,11 +1921,11 @@
       "id": "s_rect_3b",
       "type": "text",
       "x": 80,
-      "y": 4160,
+      "y": 4093,
       "props": {
         "w": 310,
         "h": 24,
-        "html": "Index of the drawing points",
+        "html": "Index of the drawing points (perimeter tie = 2 legs)",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -1936,11 +1936,11 @@
       "id": "s_rect_3c",
       "type": "math",
       "x": 400,
-      "y": 4153,
+      "y": 4093,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "i_{w}\\coloneq\\mathrm{seq}\\left(0,2n_{w.y}-1\\right)",
+        "latex": "i_{w}\\coloneq\\mathrm{seq}\\left(0,2\\max\\left(n_{w.y}-2,1\\right)-1\\right)",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -1953,7 +1953,7 @@
       "id": "s_rect_3d",
       "type": "text",
       "x": 80,
-      "y": 4210,
+      "y": 4150,
       "props": {
         "w": 310,
         "h": 24,
@@ -1968,11 +1968,11 @@
       "id": "s_rect_3e",
       "type": "math",
       "x": 400,
-      "y": 4203,
+      "y": 4143,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "i_{u}\\coloneq\\mathrm{seq}\\left(0,2n_{w.x}-1\\right)",
+        "latex": "i_{u}\\coloneq\\mathrm{seq}\\left(0,2\\max\\left(n_{w.x}-2,1\\right)-1\\right)",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -1985,7 +1985,7 @@
       "id": "s_rect_3f",
       "type": "text",
       "x": 80,
-      "y": 4243,
+      "y": 4193,
       "props": {
         "w": 630,
         "h": 24,
@@ -2001,7 +2001,7 @@
       "id": "s_rect_3g",
       "type": "text",
       "x": 80,
-      "y": 4283,
+      "y": 4223,
       "props": {
         "w": 310,
         "h": 24,
@@ -2016,7 +2016,7 @@
       "id": "s_rect_3h",
       "type": "math",
       "x": 400,
-      "y": 4283,
+      "y": 4223,
       "props": {
         "w": 60,
         "h": 32,
@@ -2033,7 +2033,7 @@
       "id": "s_rect_3i",
       "type": "text",
       "x": 80,
-      "y": 4340,
+      "y": 4280,
       "props": {
         "w": 310,
         "h": 24,
@@ -2048,7 +2048,7 @@
       "id": "s_rect_3j",
       "type": "math",
       "x": 400,
-      "y": 4333,
+      "y": 4273,
       "props": {
         "w": 60,
         "h": 32,
@@ -2065,7 +2065,7 @@
       "id": "s_rect_3k",
       "type": "text",
       "x": 80,
-      "y": 4377,
+      "y": 4327,
       "props": {
         "w": 630,
         "h": 24,
@@ -2080,7 +2080,7 @@
       "id": "s_rect_3l",
       "type": "math",
       "x": 96,
-      "y": 4403,
+      "y": 4353,
       "props": {
         "w": 60,
         "h": 32,
@@ -2097,7 +2097,7 @@
       "id": "s_rect_3m",
       "type": "text",
       "x": 80,
-      "y": 4457,
+      "y": 4397,
       "props": {
         "w": 630,
         "h": 24,
@@ -2112,7 +2112,7 @@
       "id": "s_rect_3n",
       "type": "math",
       "x": 96,
-      "y": 4483,
+      "y": 4423,
       "props": {
         "w": 60,
         "h": 32,
@@ -2129,7 +2129,7 @@
       "id": "s_rect_3o",
       "type": "text",
       "x": 80,
-      "y": 4768,
+      "y": 4477,
       "props": {
         "w": 630,
         "h": 24,
@@ -2144,7 +2144,7 @@
       "id": "s_rect_3p",
       "type": "math",
       "x": 96,
-      "y": 4794,
+      "y": 4503,
       "props": {
         "w": 60,
         "h": 32,
@@ -2161,7 +2161,7 @@
       "id": "s_rect_3q",
       "type": "text",
       "x": 80,
-      "y": 4851,
+      "y": 4771,
       "props": {
         "w": 310,
         "h": 24,
@@ -2176,7 +2176,7 @@
       "id": "s_rect_3r",
       "type": "math",
       "x": 400,
-      "y": 4844,
+      "y": 4764,
       "props": {
         "w": 60,
         "h": 32,
@@ -2193,7 +2193,7 @@
       "id": "s_rect_3s",
       "type": "text",
       "x": 80,
-      "y": 4891,
+      "y": 4811,
       "props": {
         "w": 310,
         "h": 24,
@@ -2208,7 +2208,7 @@
       "id": "s_rect_3t",
       "type": "math",
       "x": 400,
-      "y": 4884,
+      "y": 4804,
       "props": {
         "w": 60,
         "h": 32,
@@ -2225,7 +2225,7 @@
       "id": "s_rect_3u",
       "type": "text",
       "x": 80,
-      "y": 4931,
+      "y": 4861,
       "props": {
         "w": 310,
         "h": 24,
@@ -2240,7 +2240,7 @@
       "id": "s_rect_3v",
       "type": "math",
       "x": 400,
-      "y": 4924,
+      "y": 4854,
       "props": {
         "w": 60,
         "h": 32,
@@ -2257,7 +2257,7 @@
       "id": "s_rect_3w",
       "type": "text",
       "x": 80,
-      "y": 4971,
+      "y": 4901,
       "props": {
         "w": 310,
         "h": 24,
@@ -2272,7 +2272,7 @@
       "id": "s_rect_3x",
       "type": "math",
       "x": 400,
-      "y": 4964,
+      "y": 4894,
       "props": {
         "w": 60,
         "h": 32,
@@ -2289,7 +2289,7 @@
       "id": "s_rect_3y",
       "type": "text",
       "x": 80,
-      "y": 5021,
+      "y": 4941,
       "props": {
         "w": 310,
         "h": 24,
@@ -2304,7 +2304,7 @@
       "id": "s_rect_3z",
       "type": "math",
       "x": 400,
-      "y": 5014,
+      "y": 4934,
       "props": {
         "w": 60,
         "h": 32,
@@ -2321,7 +2321,7 @@
       "id": "s_rect_40",
       "type": "text",
       "x": 80,
-      "y": 5058,
+      "y": 4988,
       "props": {
         "w": 630,
         "h": 24,
@@ -2336,7 +2336,7 @@
       "id": "s_rect_41",
       "type": "math",
       "x": 96,
-      "y": 5084,
+      "y": 5014,
       "props": {
         "w": 60,
         "h": 32,
@@ -2353,7 +2353,7 @@
       "id": "s_rect_42",
       "type": "text",
       "x": 80,
-      "y": 5148,
+      "y": 5078,
       "props": {
         "w": 630,
         "h": 24,
@@ -2368,7 +2368,7 @@
       "id": "s_rect_43",
       "type": "math",
       "x": 96,
-      "y": 5184,
+      "y": 5104,
       "props": {
         "w": 60,
         "h": 32,
@@ -2385,7 +2385,7 @@
       "id": "s_rect_44",
       "type": "text",
       "x": 96,
-      "y": 5224,
+      "y": 5144,
       "props": {
         "w": 280,
         "h": 24,
@@ -2400,7 +2400,7 @@
       "id": "s_rect_45",
       "type": "math",
       "x": 96,
-      "y": 5254,
+      "y": 5174,
       "props": {
         "w": 60,
         "h": 32,
@@ -2419,7 +2419,7 @@
       "id": "s_rect_46",
       "type": "math",
       "x": 168,
-      "y": 5254,
+      "y": 5174,
       "props": {
         "w": 60,
         "h": 32,
@@ -2438,7 +2438,7 @@
       "id": "s_rect_47",
       "type": "math",
       "x": 283,
-      "y": 5254,
+      "y": 5174,
       "props": {
         "w": 60,
         "h": 32,
@@ -2457,7 +2457,7 @@
       "id": "s_rect_48",
       "type": "graph",
       "x": 420,
-      "y": 5246,
+      "y": 5166,
       "props": {
         "w": 290,
         "h": 290,
@@ -2485,7 +2485,7 @@
           },
           {
             "id": "link",
-            "label": "",
+            "label": "Perimeter tie",
             "x": "\\mathrm{stack}\\left(-1,1,1,-1,-1\\right)\\left(\\frac{b}{2}-c_{nom}-\\frac{\\phi_{w}}{2}\\right)",
             "y": "\\mathrm{stack}\\left(-1,-1,1,1,-1\\right)\\left(\\frac{h}{2}-c_{nom}-\\frac{\\phi_{w}}{2}\\right)",
             "style": "line",
@@ -2496,25 +2496,25 @@
           },
           {
             "id": "legy",
-            "label": "Tie legs",
+            "label": "Cross-ties ∥ y",
             "x": "\\mathrm{map}\\left(X_{w},i_{w}\\right)",
             "y": "\\mathrm{map}\\left(Y_{w},i_{w}\\right)",
             "style": "line",
             "r": "",
             "color": "#047857",
-            "width": 1,
-            "show": ""
+            "width": 1.5,
+            "show": "n_{w.y}\\ge3"
           },
           {
             "id": "legx",
-            "label": "",
+            "label": "Cross-ties ∥ x",
             "x": "\\mathrm{map}\\left(X_{u},i_{u}\\right)",
             "y": "\\mathrm{map}\\left(Y_{u},i_{u}\\right)",
             "style": "line",
             "r": "",
             "color": "#047857",
-            "width": 1,
-            "show": ""
+            "width": 1.5,
+            "show": "n_{w.x}\\ge3"
           },
           {
             "id": "bars",
@@ -2534,7 +2534,7 @@
       "id": "s_rect_49",
       "type": "text",
       "x": 80,
-      "y": 5564,
+      "y": 5484,
       "props": {
         "w": 630,
         "h": 24,
@@ -2550,7 +2550,7 @@
       "id": "s_rect_4a",
       "type": "text",
       "x": 80,
-      "y": 5594,
+      "y": 5524,
       "props": {
         "w": 630,
         "h": 24,
@@ -2565,7 +2565,7 @@
       "id": "s_rect_4b",
       "type": "text",
       "x": 80,
-      "y": 5624,
+      "y": 5554,
       "props": {
         "w": 630,
         "h": 24,
@@ -2580,7 +2580,7 @@
       "id": "s_rect_4c",
       "type": "text",
       "x": 80,
-      "y": 5661,
+      "y": 5591,
       "props": {
         "w": 310,
         "h": 24,
@@ -2595,7 +2595,7 @@
       "id": "s_rect_4d",
       "type": "math",
       "x": 400,
-      "y": 5654,
+      "y": 5584,
       "props": {
         "w": 60,
         "h": 32,
@@ -2612,7 +2612,7 @@
       "id": "s_rect_4e",
       "type": "text",
       "x": 80,
-      "y": 5944,
+      "y": 5633,
       "props": {
         "w": 310,
         "h": 24,
@@ -2627,7 +2627,7 @@
       "id": "s_rect_4f",
       "type": "math",
       "x": 400,
-      "y": 5935,
+      "y": 5624,
       "props": {
         "w": 60,
         "h": 32,
@@ -2644,7 +2644,7 @@
       "id": "s_rect_4g",
       "type": "text",
       "x": 80,
-      "y": 6004,
+      "y": 5944,
       "props": {
         "w": 310,
         "h": 24,
@@ -2659,7 +2659,7 @@
       "id": "s_rect_4h",
       "type": "math",
       "x": 400,
-      "y": 5995,
+      "y": 5935,
       "props": {
         "w": 60,
         "h": 32,
@@ -2676,7 +2676,7 @@
       "id": "s_rect_4i",
       "type": "text",
       "x": 80,
-      "y": 6052,
+      "y": 6002,
       "props": {
         "w": 310,
         "h": 24,
@@ -2691,7 +2691,7 @@
       "id": "s_rect_4j",
       "type": "math",
       "x": 400,
-      "y": 6045,
+      "y": 5995,
       "props": {
         "w": 60,
         "h": 32,
@@ -2708,7 +2708,7 @@
       "id": "s_rect_4k",
       "type": "text",
       "x": 80,
-      "y": 6102,
+      "y": 6052,
       "props": {
         "w": 310,
         "h": 24,
@@ -2723,7 +2723,7 @@
       "id": "s_rect_4l",
       "type": "math",
       "x": 400,
-      "y": 6095,
+      "y": 6045,
       "props": {
         "w": 60,
         "h": 32,
@@ -2740,7 +2740,7 @@
       "id": "s_rect_4m",
       "type": "text",
       "x": 80,
-      "y": 6165,
+      "y": 6105,
       "props": {
         "w": 630,
         "h": 24,
@@ -2756,7 +2756,7 @@
       "id": "s_rect_4n",
       "type": "text",
       "x": 80,
-      "y": 6195,
+      "y": 6145,
       "props": {
         "w": 630,
         "h": 24,
@@ -2771,7 +2771,7 @@
       "id": "s_rect_4o",
       "type": "text",
       "x": 80,
-      "y": 6225,
+      "y": 6175,
       "props": {
         "w": 630,
         "h": 24,
@@ -2786,7 +2786,7 @@
       "id": "s_rect_4p",
       "type": "text",
       "x": 80,
-      "y": 6255,
+      "y": 6205,
       "props": {
         "w": 630,
         "h": 24,
@@ -2801,7 +2801,7 @@
       "id": "s_rect_4q",
       "type": "text",
       "x": 80,
-      "y": 6297,
+      "y": 6247,
       "props": {
         "w": 310,
         "h": 24,
@@ -2816,7 +2816,7 @@
       "id": "s_rect_4r",
       "type": "math",
       "x": 400,
-      "y": 6285,
+      "y": 6235,
       "props": {
         "w": 60,
         "h": 32,
@@ -2833,7 +2833,7 @@
       "id": "s_rect_4s",
       "type": "text",
       "x": 80,
-      "y": 6356,
+      "y": 6306,
       "props": {
         "w": 310,
         "h": 24,
@@ -2848,7 +2848,7 @@
       "id": "s_rect_4t",
       "type": "math",
       "x": 400,
-      "y": 6345,
+      "y": 6295,
       "props": {
         "w": 60,
         "h": 32,
@@ -2865,7 +2865,7 @@
       "id": "s_rect_4u",
       "type": "text",
       "x": 80,
-      "y": 6425,
+      "y": 6375,
       "props": {
         "w": 310,
         "h": 24,
@@ -2880,7 +2880,7 @@
       "id": "s_rect_4v",
       "type": "math",
       "x": 400,
-      "y": 6405,
+      "y": 6355,
       "props": {
         "w": 60,
         "h": 32,
@@ -2897,7 +2897,7 @@
       "id": "s_rect_4w",
       "type": "text",
       "x": 80,
-      "y": 6494,
+      "y": 6444,
       "props": {
         "w": 310,
         "h": 24,
@@ -2912,7 +2912,7 @@
       "id": "s_rect_4x",
       "type": "math",
       "x": 400,
-      "y": 6485,
+      "y": 6435,
       "props": {
         "w": 60,
         "h": 32,
@@ -2929,7 +2929,7 @@
       "id": "s_rect_4y",
       "type": "text",
       "x": 80,
-      "y": 6549,
+      "y": 6489,
       "props": {
         "w": 630,
         "h": 24,
@@ -2944,7 +2944,7 @@
       "id": "s_rect_4z",
       "type": "math",
       "x": 96,
-      "y": 6575,
+      "y": 6515,
       "props": {
         "w": 60,
         "h": 32,
@@ -2961,7 +2961,7 @@
       "id": "s_rect_50",
       "type": "text",
       "x": 80,
-      "y": 6619,
+      "y": 6569,
       "props": {
         "w": 630,
         "h": 24,
@@ -2976,7 +2976,7 @@
       "id": "s_rect_51",
       "type": "math",
       "x": 96,
-      "y": 6645,
+      "y": 6595,
       "props": {
         "w": 60,
         "h": 32,
@@ -2993,7 +2993,7 @@
       "id": "s_rect_52",
       "type": "text",
       "x": 80,
-      "y": 6699,
+      "y": 6639,
       "props": {
         "w": 630,
         "h": 24,
@@ -3008,7 +3008,7 @@
       "id": "s_rect_53",
       "type": "math",
       "x": 96,
-      "y": 6725,
+      "y": 6665,
       "props": {
         "w": 60,
         "h": 32,
@@ -3025,7 +3025,7 @@
       "id": "s_rect_54",
       "type": "text",
       "x": 80,
-      "y": 6773,
+      "y": 6723,
       "props": {
         "w": 310,
         "h": 24,
@@ -3040,7 +3040,7 @@
       "id": "s_rect_55",
       "type": "math",
       "x": 400,
-      "y": 6765,
+      "y": 6715,
       "props": {
         "w": 60,
         "h": 32,
@@ -3057,7 +3057,7 @@
       "id": "s_rect_56",
       "type": "text",
       "x": 80,
-      "y": 7110,
+      "y": 6789,
       "props": {
         "w": 630,
         "h": 24,
@@ -3072,7 +3072,7 @@
       "id": "s_rect_57",
       "type": "math",
       "x": 96,
-      "y": 7136,
+      "y": 6815,
       "props": {
         "w": 60,
         "h": 32,
@@ -3089,7 +3089,7 @@
       "id": "s_rect_58",
       "type": "text",
       "x": 80,
-      "y": 7190,
+      "y": 7110,
       "props": {
         "w": 630,
         "h": 24,
@@ -3104,7 +3104,7 @@
       "id": "s_rect_59",
       "type": "math",
       "x": 96,
-      "y": 7216,
+      "y": 7136,
       "props": {
         "w": 60,
         "h": 32,
@@ -3121,7 +3121,7 @@
       "id": "s_rect_5a",
       "type": "text",
       "x": 80,
-      "y": 7266,
+      "y": 7196,
       "props": {
         "w": 630,
         "h": 24,
@@ -3137,7 +3137,7 @@
       "id": "s_rect_5b",
       "type": "text",
       "x": 80,
-      "y": 7313,
+      "y": 7233,
       "props": {
         "w": 310,
         "h": 24,
@@ -3152,7 +3152,7 @@
       "id": "s_rect_5c",
       "type": "math",
       "x": 400,
-      "y": 7306,
+      "y": 7226,
       "props": {
         "w": 60,
         "h": 32,
@@ -3169,7 +3169,7 @@
       "id": "s_rect_5d",
       "type": "text",
       "x": 80,
-      "y": 7363,
+      "y": 7293,
       "props": {
         "w": 310,
         "h": 24,
@@ -3184,7 +3184,7 @@
       "id": "s_rect_5e",
       "type": "math",
       "x": 400,
-      "y": 7356,
+      "y": 7286,
       "props": {
         "w": 60,
         "h": 32,
@@ -3201,7 +3201,7 @@
       "id": "s_rect_5f",
       "type": "text",
       "x": 80,
-      "y": 7410,
+      "y": 7340,
       "props": {
         "w": 630,
         "h": 24,
@@ -3216,7 +3216,7 @@
       "id": "s_rect_5g",
       "type": "math",
       "x": 96,
-      "y": 7436,
+      "y": 7366,
       "props": {
         "w": 60,
         "h": 32,
@@ -3233,7 +3233,7 @@
       "id": "s_rect_5h",
       "type": "text",
       "x": 80,
-      "y": 7490,
+      "y": 7410,
       "props": {
         "w": 630,
         "h": 24,
@@ -3248,7 +3248,7 @@
       "id": "s_rect_5i",
       "type": "math",
       "x": 96,
-      "y": 7516,
+      "y": 7436,
       "props": {
         "w": 60,
         "h": 32,
@@ -3265,7 +3265,7 @@
       "id": "s_rect_5j",
       "type": "text",
       "x": 80,
-      "y": 7560,
+      "y": 7490,
       "props": {
         "w": 630,
         "h": 24,
@@ -3280,7 +3280,7 @@
       "id": "s_rect_5k",
       "type": "math",
       "x": 96,
-      "y": 7586,
+      "y": 7516,
       "props": {
         "w": 60,
         "h": 32,
@@ -3297,7 +3297,7 @@
       "id": "s_rect_5l",
       "type": "text",
       "x": 80,
-      "y": 7640,
+      "y": 7560,
       "props": {
         "w": 630,
         "h": 24,
@@ -3312,7 +3312,7 @@
       "id": "s_rect_5m",
       "type": "math",
       "x": 96,
-      "y": 7666,
+      "y": 7586,
       "props": {
         "w": 60,
         "h": 32,
@@ -3329,7 +3329,7 @@
       "id": "s_rect_5n",
       "type": "text",
       "x": 80,
-      "y": 7710,
+      "y": 7640,
       "props": {
         "w": 630,
         "h": 24,
@@ -3344,7 +3344,7 @@
       "id": "s_rect_5o",
       "type": "math",
       "x": 96,
-      "y": 7736,
+      "y": 7666,
       "props": {
         "w": 60,
         "h": 32,
@@ -3361,7 +3361,7 @@
       "id": "s_rect_5p",
       "type": "text",
       "x": 80,
-      "y": 7813,
+      "y": 7733,
       "props": {
         "w": 310,
         "h": 24,
@@ -3376,7 +3376,7 @@
       "id": "s_rect_5q",
       "type": "math",
       "x": 400,
-      "y": 7806,
+      "y": 7726,
       "props": {
         "w": 60,
         "h": 32,
@@ -3393,7 +3393,7 @@
       "id": "s_rect_5r",
       "type": "text",
       "x": 80,
-      "y": 7853,
+      "y": 7773,
       "props": {
         "w": 310,
         "h": 24,
@@ -3408,7 +3408,7 @@
       "id": "s_rect_5s",
       "type": "math",
       "x": 400,
-      "y": 7846,
+      "y": 7766,
       "props": {
         "w": 60,
         "h": 32,
@@ -3425,7 +3425,7 @@
       "id": "s_rect_5t",
       "type": "text",
       "x": 80,
-      "y": 7893,
+      "y": 7823,
       "props": {
         "w": 310,
         "h": 24,
@@ -3440,7 +3440,7 @@
       "id": "s_rect_5u",
       "type": "math",
       "x": 400,
-      "y": 7886,
+      "y": 7816,
       "props": {
         "w": 60,
         "h": 32,
@@ -3457,7 +3457,7 @@
       "id": "s_rect_5v",
       "type": "text",
       "x": 80,
-      "y": 7933,
+      "y": 7863,
       "props": {
         "w": 310,
         "h": 24,
@@ -3472,7 +3472,7 @@
       "id": "s_rect_5w",
       "type": "math",
       "x": 400,
-      "y": 7926,
+      "y": 7856,
       "props": {
         "w": 60,
         "h": 32,
@@ -6190,6 +6190,6 @@
       }
     }
   ],
-  "createdAt": "2026-11-08T13:19:56.604Z",
-  "updatedAt": "2026-11-08T13:19:56.604Z"
+  "createdAt": "2026-11-08T13:27:40.805Z",
+  "updatedAt": "2026-11-08T13:27:40.805Z"
 }
