@@ -82,15 +82,18 @@ describe('column templates', () => {
     expect(result('\\eta_{R}\\coloneq')?.value?.number).toBeCloseTo(0.6435, 2);
   }, 30000);
 
-  it('rectangular column in tension: cotθ from CSA, kept within 1 … Copt', () => {
+  it('rectangular column in tension: cotθ limited by EN 1992-1-1:2023 (8.41)', () => {
     const { errors, result } = evaluate('rc-rectangular-column', { 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq-500\\,\\mathrm{kN}' });
     expect(errors).toEqual([]);
-    const t = result('t_{y}\\coloneq')!.value!.number!;
-    const csa = result('C_{CSA.y}\\coloneq')!.value!.number!;
+    const cot = result('\\mathrm{cot}_{\\theta.y}\\coloneq')!.value!.number!;
+    const lim = result('\\mathrm{cot}_{\\theta.lim.y}\\coloneq')!.value!.number!;
     const opt = result('C_{opt.y}\\coloneq')!.value!.number!;
-    expect(t).toBeCloseTo(Math.max(1, Math.min(csa, opt)), 6);
-    expect(t).toBeLessThan(opt);
-  }, 30000);
+    // VEd.y = 400 kN: 2.5 − 0.1·500/400 = 2.375
+    expect(lim).toBeCloseTo(2.375, 6);
+    expect(cot).toBeCloseTo(Math.min(opt, lim), 6);
+    const big = evaluate('rc-rectangular-column', { 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq-20000\\,\\mathrm{kN}' });
+    expect(big.result('\\mathrm{cot}_{\\theta.lim.y}\\coloneq')!.value!.number!).toBe(1);
+  }, 60000);
 
   it('a small rectangular section needs no inner ties (every bar within 150 mm of a corner)', () => {
     const { errors, result } = evaluate('rc-rectangular-column', {
