@@ -828,22 +828,50 @@ class Parser {
       else rows[rows.length - 1][rows[rows.length - 1].length - 1].push(tok);
     }
     const filled = rows.filter((r) => r.some((cell) => cell.length));
-    const usage = 'Write an if block as rows "value & if condition", the last row "value & otherwise".';
-    if (filled.length < 2) throw new CalculationError('syntax', usage);
-    const branches = filled.map((r, k) => {
-      if (r.length !== 2) throw new CalculationError('syntax', usage);
-      const [value, rest] = r;
-      const word = leadingWord(rest);
-      if (!word) throw new CalculationError('syntax', usage);
-      const last = k === filled.length - 1;
-      if (word.word === 'otherwise' || word.word === 'else') {
-        if (!last || word.rest.length) throw new CalculationError('syntax', '"otherwise" must be the last row, without a condition.');
-        return { value: this.subParse(value), cond: null };
+    const usage = 'Write an if block as: if condition / value / else if condition / value / else / value (one per line).';
+    type Branch = { value: Expr; cond: Condition | null };
+    let branches: Branch[];
+    if (filled.some((r) => r.length > 1)) {
+      // Two columns: "value & if condition", last row "value & otherwise".
+      if (filled.length < 2) throw new CalculationError('syntax', usage);
+      branches = filled.map((r, k) => {
+        if (r.length !== 2) throw new CalculationError('syntax', usage);
+        const [value, rest] = r;
+        const word = leadingWord(rest);
+        if (!word) throw new CalculationError('syntax', usage);
+        const last = k === filled.length - 1;
+        if (word.word === 'otherwise' || word.word === 'else') {
+          if (!last || word.rest.length) throw new CalculationError('syntax', '"otherwise" must be the last row, without a condition.');
+          return { value: this.subParse(value), cond: null };
+        }
+        if (word.word !== IF_WORD) throw new CalculationError('syntax', usage);
+        if (last) throw new CalculationError('syntax', 'The last row of an if block must be "otherwise".');
+        return { value: this.subParse(value), cond: this.subParseCondition(word.rest) };
+      });
+    } else {
+      // Mathcad Prime layout, one column: "if c₁" / value / "else if c₂" / value / "else" / value.
+      const lines = filled.map((r) => r[0]);
+      branches = [];
+      let k = 0;
+      while (k < lines.length) {
+        const w = leadingWord(lines[k]);
+        if (!w) throw new CalculationError('syntax', usage);
+        let cond: Condition | null;
+        if (w.word === IF_WORD && branches.length === 0) cond = this.subParseCondition(w.rest);
+        else if (w.word === 'else' || w.word === 'otherwise') {
+          const w2 = w.rest.length ? leadingWord(w.rest) : null;
+          if (w2 && w2.word === IF_WORD && branches.length > 0) cond = this.subParseCondition(w2.rest);
+          else if (!w.rest.length && branches.length > 0) cond = null;
+          else throw new CalculationError('syntax', usage);
+        } else throw new CalculationError('syntax', usage);
+        const valueTokens = lines[k + 1];
+        if (!valueTokens || ['if', 'else', 'otherwise'].includes(leadingWord(valueTokens)?.word ?? '')) throw new CalculationError('syntax', 'Each "if", "else if" and "else" line needs a value on the next line.');
+        branches.push({ value: this.subParse(valueTokens), cond });
+        k += 2;
+        if (cond === null && k < lines.length) throw new CalculationError('syntax', '"else" must be the last case.');
       }
-      if (word.word !== IF_WORD) throw new CalculationError('syntax', usage);
-      if (last) throw new CalculationError('syntax', 'The last row of an if block must be "otherwise".');
-      return { value: this.subParse(value), cond: this.subParseCondition(word.rest) };
-    });
+      if (branches.length < 2 || branches[branches.length - 1].cond !== null) throw new CalculationError('syntax', 'An if block must end with "else" and a value.');
+    }
     let out: Expr = branches[branches.length - 1].value;
     for (let k = branches.length - 2; k >= 0; k--) out = this.node({ type: 'if', cond: branches[k].cond!, then: branches[k].value, else: out });
     return out;

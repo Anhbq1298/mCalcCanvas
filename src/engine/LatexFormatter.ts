@@ -201,16 +201,18 @@ function print(expr: Expr, opts: PrintOptions): Printed {
     }
 
     case 'if': {
-      // Mathcad-style block: one row per branch, "otherwise" last.
+      // Mathcad Prime block: "if c" / value / "else if c" / value / "else" / value.
       const rows: string[] = [];
       let e: Expr = expr;
+      let first = true;
       while (e.type === 'if') {
         const cond = `${print(e.cond.left, opts).latex} ${RELATION_LATEX[e.cond.op]} ${print(e.cond.right, opts).latex}`;
-        rows.push(`\\displaystyle ${print(e.then, opts).latex} & \\mathrm{if}\\ ${cond}`);
+        rows.push(`${first ? '\\mathrm{if}' : '\\mathrm{else}\\ \\mathrm{if}'}\\ ${cond}`, `\\quad\\displaystyle ${print(e.then, opts).latex}`);
+        first = false;
         e = e.else;
       }
-      rows.push(`\\displaystyle ${print(e, opts).latex} & \\mathrm{otherwise}`);
-      return { latex: `\\begin{array}{|ll}${rows.join('\\\\')}\\end{array}`, prec: PREC.atom };
+      rows.push('\\mathrm{else}', `\\quad\\displaystyle ${print(e, opts).latex}`);
+      return { latex: `\\begin{array}{|l}${rows.join('\\\\')}\\end{array}`, prec: PREC.atom };
     }
   }
   return { latex: '', prec: PREC.atom };

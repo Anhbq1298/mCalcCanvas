@@ -99,7 +99,7 @@ Series styles: `line`, `marker`, `circle` (r = radius in x units) and `segments`
 
 ## If blocks
 
-`\begin{array}{|ll} a & \mathrm{if}\ c_1 \\ b & \mathrm{if}\ c_2 \\ c & \mathrm{otherwise} \end{array}` (or `\begin{cases}`, `\text{if}`) parses to nested `if` nodes: rows are tried top to bottom and the last row must be "otherwise". Inside these environments the tokenizer keeps `&` and `\\`; other environments are rejected. The formatter prints every `if` (also `if(c, a, b)`) as such a block, so function definitions show the Mathcad layout.
+Mathcad Prime layout, one column: `\begin{array}{|l} \mathrm{if}\ c_1 \\ \quad a \\ \mathrm{else}\ \mathrm{if}\ c_2 \\ \quad b \\ \mathrm{else} \\ \quad c \end{array}` parses to nested `if` nodes (each keyword line is followed by its value line; "else" last). The two-column form (`a & \mathrm{if}\ c_1 \\ … \\ c & \mathrm{otherwise}`, also `\begin{cases}`) is accepted too. Inside these environments the tokenizer keeps `&` and `\\`; other environments are rejected. The formatter prints every `if` (also `if(c, a, b)`) in the Prime layout.
 
 ## Annex blocks
 

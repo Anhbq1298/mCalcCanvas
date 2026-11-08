@@ -77,7 +77,7 @@ describe('if(condition, value if true, value if false)', () => {
   it('prints an if back as a Mathcad-style block (value if condition / otherwise) that parses again', () => {
     const e = pile('2000');
     const latex = e.getResult('c')?.expressionLatex ?? '';
-    expect(latex).toMatch(/^\\begin\{array\}\{\|ll\}.*& \\mathrm\{if\}\\ .*>.*\\\\.*& \\mathrm\{otherwise\}\\end\{array\}$/);
+    expect(latex).toMatch(/^\\begin\{array\}\{\|l\}\\mathrm\{if\}\\ .*>.*\\\\\\quad.*\\\\\\mathrm\{else\}\\\\\\quad.*\\end\{array\}$/);
     const f = setup({ a: 'a\\coloneq2', g: 'g\\left(x\\right)\\coloneq\\mathrm{if}\\left(x>a,x^2,\\mathrm{if}\\left(x=a,0,-1\\right)\\right)' });
     const printed = f.getResult('g')?.expressionLatex ?? '';
     expect(printed.match(/\\mathrm\{if\}/g)).toHaveLength(2);
@@ -96,6 +96,14 @@ describe('if(condition, value if true, value if false)', () => {
     expect(() => parseLatex('y\\coloneq\\begin{array}{|ll}1 & \\mathrm{if}\\ a>0\\\\2 & \\mathrm{if}\\ a<0\\end{array}')).toThrow(/last row/);
     expect(() => parseLatex('y\\coloneq\\begin{array}{|ll}1 & \\mathrm{otherwise}\\\\2 & \\mathrm{if}\\ a<0\\end{array}')).toThrow(/otherwise/);
     expect(() => parseLatex('y\\coloneq\\begin{matrix}1\\end{matrix}')).toThrow(/environment/);
+  });
+
+  it('Mathcad Prime layout: if c / value / else if c / value / else / value', () => {
+    const blk = (x: string) =>
+      `y\\coloneq\\begin{array}{|l}\\mathrm{if}\\ ${x}<0\\\\\\quad-1\\\\\\mathrm{else}\\ \\mathrm{if}\\ ${x}=0\\\\\\quad\\mathrm{floor}\\left(0.5\\right)\\\\\\mathrm{else}\\\\\\quad\\displaystyle\\frac{1}{2}\\end{array}`;
+    for (const [x, want] of [['-3', -1], ['0', 0], ['4', 0.5]] as const) expect(res(setup({ y: blk(x) }), 'y').value?.number).toBe(want);
+    expect(() => parseLatex('y\\coloneq\\begin{array}{|l}\\mathrm{if}\\ a>0\\\\\\quad1\\end{array}')).toThrow(/end with "else"/);
+    expect(() => parseLatex('y\\coloneq\\begin{array}{|l}\\mathrm{if}\\ a>0\\\\\\mathrm{else}\\\\\\quad1\\end{array}')).toThrow(/needs a value/);
   });
 
   it('a vector condition is decided entry by entry (EC2 parabola-rectangle as an if block)', () => {
