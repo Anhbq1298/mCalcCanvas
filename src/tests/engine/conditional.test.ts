@@ -77,7 +77,7 @@ describe('if(condition, value if true, value if false)', () => {
   it('prints an if back as a Mathcad-style block (value if condition / otherwise) that parses again', () => {
     const e = pile('2000');
     const latex = e.getResult('c')?.expressionLatex ?? '';
-    expect(latex).toMatch(/^\\begin\{array\}\{\|l\}\\mathrm\{if\}\\ .*>.*\\\\\\quad.*\\\\\\mathrm\{else\}\\\\\\quad.*\\end\{array\}$/);
+    expect(latex).toMatch(/^\\begin\{array\}\{\|\|l\}\\mathrm\{if\}\\ .*>.*\\\\\\quad\\left\\Vert.*\\right\.\\\\\\mathrm\{else\}\\\\\\quad\\left\\Vert.*\\right\.\\end\{array\}$/);
     const f = setup({ a: 'a\\coloneq2', g: 'g\\left(x\\right)\\coloneq\\mathrm{if}\\left(x>a,x^2,\\mathrm{if}\\left(x=a,0,-1\\right)\\right)' });
     const printed = f.getResult('g')?.expressionLatex ?? '';
     expect(printed.match(/\\mathrm\{if\}/g)).toHaveLength(2);

@@ -155,6 +155,8 @@ export function tokenize(latex: string): Token[] {
           continue;
         }
         if (IGNORED_COMMANDS.has(name)) continue;
+        // Inside an if block, \left\Vert … \right. only draws the bar beside a value (Mathcad Prime).
+        if (name === 'Vert' && blockDepth > 0) continue;
         if (name === 'begin' || name === 'end') {
           const m = /^\{(array|cases)\}/.exec(s.slice(i));
           if (!m) throw new CalculationError('syntax', `Unsupported LaTeX environment ${s.slice(i, i + 20)}`);

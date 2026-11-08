@@ -1273,7 +1273,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\delta_{2}\\coloneq\\begin{array}{|l}\\mathrm{if}\\ n_{set}\\ge2\\\\\\quad\\displaystyle 1\\\\\\mathrm{else}\\\\\\quad\\displaystyle 0\\end{array}",
+        "latex": "\\delta_{2}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ n_{set}\\ge2\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": -1,
@@ -2644,7 +2644,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "d_{\\theta}\\coloneq\\begin{array}{|l}\\mathrm{if}\\ n_{set}\\ge2\\\\\\quad\\displaystyle R-\\min\\left(p_{l1},p_{l2}\\right)\\\\\\mathrm{else}\\\\\\quad\\displaystyle R-\\min\\left(p_{l1}\\right)\\end{array}",
+        "latex": "d_{\\theta}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ n_{set}\\ge2\\\\\\quad\\left\\Vert\\displaystyle R-\\min\\left(p_{l1},p_{l2}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle R-\\min\\left(p_{l1}\\right)\\right.\\end{array}",
         "displayMode": "formulaResult",
         "displayUnit": "mm",
         "precision": 0,
@@ -2782,7 +2782,7 @@
       "id": "s_col_4o",
       "type": "text",
       "x": 80,
-      "y": 6455,
+      "y": 6464,
       "props": {
         "w": 310,
         "h": 24,
@@ -2801,7 +2801,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\varepsilon\\left(c,p\\right)\\coloneq\\begin{array}{|l}\\mathrm{if}\\ c<c_{A}\\\\\\quad\\displaystyle \\varepsilon_{ud}\\frac{c-R+p}{d_{\\theta}-c}\\\\\\mathrm{else}\\ \\mathrm{if}\\ c\\le D\\\\\\quad\\displaystyle \\varepsilon_{cu2}\\frac{c-R+p}{c}\\\\\\mathrm{else}\\\\\\quad\\displaystyle \\varepsilon_{c2}\\frac{c-R+p}{c-y_{C}}\\end{array}",
+        "latex": "\\varepsilon\\left(c,p\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ c<c_{A}\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{ud}\\frac{c-R+p}{d_{\\theta}-c}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ c\\le D\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{cu2}\\frac{c-R+p}{c}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{c2}\\frac{c-R+p}{c-y_{C}}\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -2814,7 +2814,7 @@
       "id": "s_col_4q",
       "type": "text",
       "x": 80,
-      "y": 6575,
+      "y": 6595,
       "props": {
         "w": 630,
         "h": 24,
@@ -2830,7 +2830,7 @@
       "id": "s_col_4r",
       "type": "text",
       "x": 80,
-      "y": 6679,
+      "y": 6689,
       "props": {
         "w": 310,
         "h": 24,
@@ -2845,11 +2845,11 @@
       "id": "s_col_4s",
       "type": "math",
       "x": 400,
-      "y": 6615,
+      "y": 6625,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\sigma_{c}\\left(\\varepsilon\\right)\\coloneq\\begin{array}{|l}\\mathrm{if}\\ \\varepsilon\\le0\\\\\\quad\\displaystyle 0\\,\\mathrm{MPa}\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\varepsilon<\\varepsilon_{c2}\\\\\\quad\\displaystyle f_{cd}\\left(1-\\left(1-\\frac{\\varepsilon}{\\varepsilon_{c2}}\\right)^2\\right)\\\\\\mathrm{else}\\\\\\quad\\displaystyle f_{cd}\\end{array}",
+        "latex": "\\sigma_{c}\\left(\\varepsilon\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\varepsilon\\le0\\\\\\quad\\left\\Vert\\displaystyle 0\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\varepsilon<\\varepsilon_{c2}\\\\\\quad\\left\\Vert\\displaystyle f_{cd}\\left(1-\\left(1-\\frac{\\varepsilon}{\\varepsilon_{c2}}\\right)^2\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{cd}\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -2881,7 +2881,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\sigma_{s}\\left(\\varepsilon\\right)\\coloneq\\begin{array}{|l}\\mathrm{if}\\ E_{s}\\varepsilon<-f_{yd}\\\\\\quad\\displaystyle -f_{yd}\\\\\\mathrm{else}\\ \\mathrm{if}\\ E_{s}\\varepsilon>f_{yd}\\\\\\quad\\displaystyle f_{yd}\\\\\\mathrm{else}\\\\\\quad\\displaystyle E_{s}\\varepsilon\\end{array}",
+        "latex": "\\sigma_{s}\\left(\\varepsilon\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ E_{s}\\varepsilon<-f_{yd}\\\\\\quad\\left\\Vert\\displaystyle -f_{yd}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ E_{s}\\varepsilon>f_{yd}\\\\\\quad\\left\\Vert\\displaystyle f_{yd}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle E_{s}\\varepsilon\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -4498,7 +4498,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\mathrm{cot}_{\\theta}\\coloneq\\begin{array}{|l}\\mathrm{if}\\ N_{Ed}<0\\,\\mathrm{kN}\\\\\\quad\\displaystyle \\max\\left(1,\\min\\left(\\mathrm{cot}_{\\theta.CSA},\\mathrm{cot}_{\\theta.opt}\\right)\\right)\\\\\\mathrm{else}\\\\\\quad\\displaystyle \\mathrm{cot}_{\\theta.opt}\\end{array}",
+        "latex": "\\mathrm{cot}_{\\theta}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ N_{Ed}<0\\,\\mathrm{kN}\\\\\\quad\\left\\Vert\\displaystyle \\max\\left(1,\\min\\left(\\mathrm{cot}_{\\theta.CSA},\\mathrm{cot}_{\\theta.opt}\\right)\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{cot}_{\\theta.opt}\\right.\\end{array}",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": 2,
@@ -5297,6 +5297,6 @@
       }
     }
   ],
-  "createdAt": "2026-11-08T17:47:27.478Z",
-  "updatedAt": "2026-11-08T17:47:27.478Z"
+  "createdAt": "2026-11-08T18:08:45.509Z",
+  "updatedAt": "2026-11-08T18:08:45.509Z"
 }

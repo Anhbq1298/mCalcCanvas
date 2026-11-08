@@ -207,12 +207,12 @@ function print(expr: Expr, opts: PrintOptions): Printed {
       let first = true;
       while (e.type === 'if') {
         const cond = `${print(e.cond.left, opts).latex} ${RELATION_LATEX[e.cond.op]} ${print(e.cond.right, opts).latex}`;
-        rows.push(`${first ? '\\mathrm{if}' : '\\mathrm{else}\\ \\mathrm{if}'}\\ ${cond}`, `\\quad\\displaystyle ${print(e.then, opts).latex}`);
+        rows.push(`${first ? '\\mathrm{if}' : '\\mathrm{else}\\ \\mathrm{if}'}\\ ${cond}`, `\\quad\\left\\Vert\\displaystyle ${print(e.then, opts).latex}\\right.`);
         first = false;
         e = e.else;
       }
-      rows.push('\\mathrm{else}', `\\quad\\displaystyle ${print(e, opts).latex}`);
-      return { latex: `\\begin{array}{|l}${rows.join('\\\\')}\\end{array}`, prec: PREC.atom };
+      rows.push('\\mathrm{else}', `\\quad\\left\\Vert\\displaystyle ${print(e, opts).latex}\\right.`);
+      return { latex: `\\begin{array}{||l}${rows.join('\\\\')}\\end{array}`, prec: PREC.atom };
     }
   }
   return { latex: '', prec: PREC.atom };

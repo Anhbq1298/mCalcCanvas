@@ -1748,7 +1748,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "q_{b}\\coloneq\\begin{array}{|l}\\mathrm{if}\\ l_{b}>150\\,\\mathrm{mm}\\\\\\quad\\displaystyle \\mathrm{floor}\\left(\\frac{n_{b}-1}{4}\\right)\\\\\\mathrm{else}\\\\\\quad\\displaystyle 0\\end{array}",
+        "latex": "q_{b}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ l_{b}>150\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{floor}\\left(\\frac{n_{b}-1}{4}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": -1,
@@ -1780,7 +1780,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "q_{h}\\coloneq\\begin{array}{|l}\\mathrm{if}\\ l_{h}>150\\,\\mathrm{mm}\\\\\\quad\\displaystyle \\mathrm{floor}\\left(\\frac{n_{h}-1}{4}\\right)\\\\\\mathrm{else}\\\\\\quad\\displaystyle 0\\end{array}",
+        "latex": "q_{h}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ l_{h}>150\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{floor}\\left(\\frac{n_{h}-1}{4}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": -1,
@@ -1812,7 +1812,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "m_{b}\\coloneq\\begin{array}{|l}\\mathrm{if}\\ q_{b}<1\\\\\\quad\\displaystyle 0\\\\\\mathrm{else}\\ \\mathrm{if}\\ 4q_{b}=n_{b}-1\\\\\\quad\\displaystyle 1\\\\\\mathrm{else}\\\\\\quad\\displaystyle 0\\end{array}",
+        "latex": "m_{b}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ q_{b}<1\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ 4q_{b}=n_{b}-1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": -1,
@@ -1844,7 +1844,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "m_{h}\\coloneq\\begin{array}{|l}\\mathrm{if}\\ q_{h}<1\\\\\\quad\\displaystyle 0\\\\\\mathrm{else}\\ \\mathrm{if}\\ 4q_{h}=n_{h}-1\\\\\\quad\\displaystyle 1\\\\\\mathrm{else}\\\\\\quad\\displaystyle 0\\end{array}",
+        "latex": "m_{h}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ q_{h}<1\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ 4q_{h}=n_{h}-1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": -1,
@@ -2003,7 +2003,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "x_{s}\\coloneq\\begin{array}{|l}\\mathrm{if}\\ k_{s}<n_{b}\\\\\\quad\\displaystyle -a_{x}+k_{s}s_{x}\\\\\\mathrm{else}\\ \\mathrm{if}\\ k_{s}<2n_{b}\\\\\\quad\\displaystyle -a_{x}+\\left(k_{s}-n_{b}\\right)s_{x}\\\\\\mathrm{else}\\ \\mathrm{if}\\ k_{s}<2n_{b}+n_{h}-2\\\\\\quad\\displaystyle -a_{x}\\\\\\mathrm{else}\\\\\\quad\\displaystyle a_{x}\\end{array}",
+        "latex": "x_{s}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ k_{s}<n_{b}\\\\\\quad\\left\\Vert\\displaystyle -a_{x}+k_{s}s_{x}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ k_{s}<2n_{b}\\\\\\quad\\left\\Vert\\displaystyle -a_{x}+\\left(k_{s}-n_{b}\\right)s_{x}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ k_{s}<2n_{b}+n_{h}-2\\\\\\quad\\left\\Vert\\displaystyle -a_{x}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle a_{x}\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -2016,9 +2016,9 @@
       "id": "s_rect_3h",
       "type": "text",
       "x": 80,
-      "y": 5032,
+      "y": 4958,
       "props": {
-        "w": 310,
+        "w": 630,
         "h": 24,
         "html": "y of each bar",
         "fontFamily": "Inter",
@@ -2030,12 +2030,12 @@
     {
       "id": "s_rect_3i",
       "type": "math",
-      "x": 400,
-      "y": 4954,
+      "x": 96,
+      "y": 4994,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "y_{s}\\coloneq\\begin{array}{|l}\\mathrm{if}\\ k_{s}<n_{b}\\\\\\quad\\displaystyle a_{y}\\\\\\mathrm{else}\\ \\mathrm{if}\\ k_{s}<2n_{b}\\\\\\quad\\displaystyle -a_{y}\\\\\\mathrm{else}\\ \\mathrm{if}\\ k_{s}<2n_{b}+n_{h}-2\\\\\\quad\\displaystyle -a_{y}+\\left(k_{s}-2n_{b}+1\\right)s_{y}\\\\\\mathrm{else}\\\\\\quad\\displaystyle -a_{y}+\\left(k_{s}-2n_{b}-n_{h}+3\\right)s_{y}\\end{array}",
+        "latex": "y_{s}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ k_{s}<n_{b}\\\\\\quad\\left\\Vert\\displaystyle a_{y}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ k_{s}<2n_{b}\\\\\\quad\\left\\Vert\\displaystyle -a_{y}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ k_{s}<2n_{b}+n_{h}-2\\\\\\quad\\left\\Vert\\displaystyle -a_{y}+\\left(k_{s}-2n_{b}+1\\right)s_{y}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle -a_{y}+\\left(k_{s}-2n_{b}-n_{h}+3\\right)s_{y}\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -2048,7 +2048,7 @@
       "id": "s_rect_3j",
       "type": "text",
       "x": 96,
-      "y": 5154,
+      "y": 5184,
       "props": {
         "w": 280,
         "h": 24,
@@ -2063,7 +2063,7 @@
       "id": "s_rect_3k",
       "type": "math",
       "x": 96,
-      "y": 5184,
+      "y": 5214,
       "props": {
         "w": 60,
         "h": 32,
@@ -2082,7 +2082,7 @@
       "id": "s_rect_3l",
       "type": "math",
       "x": 168,
-      "y": 5184,
+      "y": 5214,
       "props": {
         "w": 60,
         "h": 32,
@@ -2101,7 +2101,7 @@
       "id": "s_rect_3m",
       "type": "math",
       "x": 283,
-      "y": 5184,
+      "y": 5214,
       "props": {
         "w": 60,
         "h": 32,
@@ -2120,7 +2120,7 @@
       "id": "s_rect_3n",
       "type": "text",
       "x": 80,
-      "y": 5444,
+      "y": 5474,
       "props": {
         "w": 630,
         "h": 24,
@@ -2136,7 +2136,7 @@
       "id": "s_rect_3o",
       "type": "text",
       "x": 80,
-      "y": 5484,
+      "y": 5514,
       "props": {
         "w": 630,
         "h": 24,
@@ -2151,7 +2151,7 @@
       "id": "s_rect_3p",
       "type": "text",
       "x": 80,
-      "y": 5521,
+      "y": 5551,
       "props": {
         "w": 310,
         "h": 24,
@@ -2166,7 +2166,7 @@
       "id": "s_rect_3q",
       "type": "math",
       "x": 400,
-      "y": 5514,
+      "y": 5544,
       "props": {
         "w": 60,
         "h": 32,
@@ -2183,7 +2183,7 @@
       "id": "s_rect_3r",
       "type": "text",
       "x": 80,
-      "y": 5558,
+      "y": 5588,
       "props": {
         "w": 630,
         "h": 24,
@@ -2198,7 +2198,7 @@
       "id": "s_rect_3s",
       "type": "math",
       "x": 96,
-      "y": 5584,
+      "y": 5614,
       "props": {
         "w": 60,
         "h": 32,
@@ -2631,9 +2631,9 @@
       "id": "s_rect_4g",
       "type": "text",
       "x": 80,
-      "y": 7293,
+      "y": 7200,
       "props": {
-        "w": 310,
+        "w": 630,
         "h": 24,
         "html": "Strain at fibre p",
         "fontFamily": "Inter",
@@ -2645,12 +2645,12 @@
     {
       "id": "s_rect_4h",
       "type": "math",
-      "x": 400,
-      "y": 7196,
+      "x": 96,
+      "y": 7226,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\varepsilon\\left(c,p,H,d_{t}\\right)\\coloneq\\begin{array}{|l}\\mathrm{if}\\ c<\\frac{\\varepsilon_{cu2}d_{t}}{\\varepsilon_{cu2}+\\varepsilon_{ud}}\\\\\\quad\\displaystyle \\varepsilon_{ud}\\frac{c-\\frac{H}{2}+p}{d_{t}-c}\\\\\\mathrm{else}\\ \\mathrm{if}\\ c\\le H\\\\\\quad\\displaystyle \\varepsilon_{cu2}\\frac{c-\\frac{H}{2}+p}{c}\\\\\\mathrm{else}\\\\\\quad\\displaystyle \\varepsilon_{c2}\\frac{c-\\frac{H}{2}+p}{c-\\left(1-\\frac{\\varepsilon_{c2}}{\\varepsilon_{cu2}}\\right)H}\\end{array}",
+        "latex": "\\varepsilon\\left(c,p,H,d_{t}\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ c<\\frac{\\varepsilon_{cu2}d_{t}}{\\varepsilon_{cu2}+\\varepsilon_{ud}}\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{ud}\\frac{c-\\frac{H}{2}+p}{d_{t}-c}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ c\\le H\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{cu2}\\frac{c-\\frac{H}{2}+p}{c}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{c2}\\frac{c-\\frac{H}{2}+p}{c-\\left(1-\\frac{\\varepsilon_{c2}}{\\varepsilon_{cu2}}\\right)H}\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -2663,7 +2663,7 @@
       "id": "s_rect_4i",
       "type": "text",
       "x": 80,
-      "y": 7490,
+      "y": 7550,
       "props": {
         "w": 310,
         "h": 24,
@@ -2678,11 +2678,11 @@
       "id": "s_rect_4j",
       "type": "math",
       "x": 400,
-      "y": 7426,
+      "y": 7486,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\sigma_{c}\\left(\\varepsilon\\right)\\coloneq\\begin{array}{|l}\\mathrm{if}\\ \\varepsilon\\le0\\\\\\quad\\displaystyle 0\\,\\mathrm{MPa}\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\varepsilon<\\varepsilon_{c2}\\\\\\quad\\displaystyle f_{cd}\\left(1-\\left(1-\\frac{\\varepsilon}{\\varepsilon_{c2}}\\right)^2\\right)\\\\\\mathrm{else}\\\\\\quad\\displaystyle f_{cd}\\end{array}",
+        "latex": "\\sigma_{c}\\left(\\varepsilon\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\varepsilon\\le0\\\\\\quad\\left\\Vert\\displaystyle 0\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\varepsilon<\\varepsilon_{c2}\\\\\\quad\\left\\Vert\\displaystyle f_{cd}\\left(1-\\left(1-\\frac{\\varepsilon}{\\varepsilon_{c2}}\\right)^2\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{cd}\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -2695,7 +2695,7 @@
       "id": "s_rect_4k",
       "type": "text",
       "x": 80,
-      "y": 7662,
+      "y": 7732,
       "props": {
         "w": 310,
         "h": 24,
@@ -2710,11 +2710,11 @@
       "id": "s_rect_4l",
       "type": "math",
       "x": 400,
-      "y": 7606,
+      "y": 7676,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\sigma_{s}\\left(\\varepsilon\\right)\\coloneq\\begin{array}{|l}\\mathrm{if}\\ E_{s}\\varepsilon<-f_{yd}\\\\\\quad\\displaystyle -f_{yd}\\\\\\mathrm{else}\\ \\mathrm{if}\\ E_{s}\\varepsilon>f_{yd}\\\\\\quad\\displaystyle f_{yd}\\\\\\mathrm{else}\\\\\\quad\\displaystyle E_{s}\\varepsilon\\end{array}",
+        "latex": "\\sigma_{s}\\left(\\varepsilon\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ E_{s}\\varepsilon<-f_{yd}\\\\\\quad\\left\\Vert\\displaystyle -f_{yd}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ E_{s}\\varepsilon>f_{yd}\\\\\\quad\\left\\Vert\\displaystyle f_{yd}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle E_{s}\\varepsilon\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -2727,7 +2727,7 @@
       "id": "s_rect_4m",
       "type": "text",
       "x": 80,
-      "y": 7776,
+      "y": 7836,
       "props": {
         "w": 630,
         "h": 24,
@@ -2743,7 +2743,7 @@
       "id": "s_rect_4n",
       "type": "text",
       "x": 80,
-      "y": 7806,
+      "y": 7876,
       "props": {
         "w": 630,
         "h": 24,
@@ -2759,7 +2759,7 @@
       "id": "s_rect_4o",
       "type": "text",
       "x": 80,
-      "y": 7846,
+      "y": 7906,
       "props": {
         "w": 630,
         "h": 24,
@@ -2774,7 +2774,7 @@
       "id": "s_rect_4p",
       "type": "text",
       "x": 80,
-      "y": 7876,
+      "y": 7936,
       "props": {
         "w": 630,
         "h": 24,
@@ -2789,7 +2789,7 @@
       "id": "s_rect_4q",
       "type": "text",
       "x": 80,
-      "y": 7910,
+      "y": 7970,
       "props": {
         "w": 630,
         "h": 24,
@@ -2804,7 +2804,7 @@
       "id": "s_rect_4r",
       "type": "math",
       "x": 96,
-      "y": 7936,
+      "y": 7996,
       "props": {
         "w": 60,
         "h": 32,
@@ -2821,7 +2821,7 @@
       "id": "s_rect_4s",
       "type": "text",
       "x": 80,
-      "y": 7986,
+      "y": 8277,
       "props": {
         "w": 310,
         "h": 24,
@@ -2836,7 +2836,7 @@
       "id": "s_rect_4t",
       "type": "math",
       "x": 400,
-      "y": 7986,
+      "y": 8277,
       "props": {
         "w": 60,
         "h": 32,
@@ -2853,7 +2853,7 @@
       "id": "s_rect_4u",
       "type": "text",
       "x": 80,
-      "y": 8277,
+      "y": 8327,
       "props": {
         "w": 630,
         "h": 24,
@@ -2868,7 +2868,7 @@
       "id": "s_rect_4v",
       "type": "text",
       "x": 80,
-      "y": 8314,
+      "y": 8364,
       "props": {
         "w": 310,
         "h": 24,
@@ -2883,7 +2883,7 @@
       "id": "s_rect_4w",
       "type": "math",
       "x": 400,
-      "y": 8307,
+      "y": 8357,
       "props": {
         "w": 60,
         "h": 32,
@@ -2900,7 +2900,7 @@
       "id": "s_rect_4x",
       "type": "text",
       "x": 80,
-      "y": 8351,
+      "y": 8411,
       "props": {
         "w": 630,
         "h": 24,
@@ -2915,7 +2915,7 @@
       "id": "s_rect_4y",
       "type": "math",
       "x": 96,
-      "y": 8387,
+      "y": 8437,
       "props": {
         "w": 60,
         "h": 32,
@@ -2932,7 +2932,7 @@
       "id": "s_rect_4z",
       "type": "text",
       "x": 80,
-      "y": 8441,
+      "y": 8491,
       "props": {
         "w": 630,
         "h": 24,
@@ -2947,7 +2947,7 @@
       "id": "s_rect_50",
       "type": "math",
       "x": 96,
-      "y": 8467,
+      "y": 8527,
       "props": {
         "w": 60,
         "h": 32,
@@ -2964,7 +2964,7 @@
       "id": "s_rect_51",
       "type": "text",
       "x": 80,
-      "y": 8521,
+      "y": 8571,
       "props": {
         "w": 630,
         "h": 24,
@@ -2979,7 +2979,7 @@
       "id": "s_rect_52",
       "type": "math",
       "x": 96,
-      "y": 8547,
+      "y": 8597,
       "props": {
         "w": 60,
         "h": 32,
@@ -2996,7 +2996,7 @@
       "id": "s_rect_53",
       "type": "text",
       "x": 80,
-      "y": 8587,
+      "y": 8637,
       "props": {
         "w": 310,
         "h": 24,
@@ -3011,7 +3011,7 @@
       "id": "s_rect_54",
       "type": "math",
       "x": 400,
-      "y": 8587,
+      "y": 8637,
       "props": {
         "w": 60,
         "h": 32,
@@ -3028,7 +3028,7 @@
       "id": "s_rect_55",
       "type": "text",
       "x": 80,
-      "y": 8641,
+      "y": 8701,
       "props": {
         "w": 630,
         "h": 24,
@@ -3043,7 +3043,7 @@
       "id": "s_rect_56",
       "type": "math",
       "x": 96,
-      "y": 8677,
+      "y": 8727,
       "props": {
         "w": 60,
         "h": 32,
@@ -3060,7 +3060,7 @@
       "id": "s_rect_57",
       "type": "text",
       "x": 80,
-      "y": 8721,
+      "y": 8771,
       "props": {
         "w": 630,
         "h": 24,
@@ -3075,7 +3075,7 @@
       "id": "s_rect_58",
       "type": "math",
       "x": 96,
-      "y": 8747,
+      "y": 8797,
       "props": {
         "w": 60,
         "h": 32,
@@ -3092,7 +3092,7 @@
       "id": "s_rect_59",
       "type": "text",
       "x": 80,
-      "y": 8791,
+      "y": 8851,
       "props": {
         "w": 630,
         "h": 24,
@@ -3107,7 +3107,7 @@
       "id": "s_rect_5a",
       "type": "math",
       "x": 96,
-      "y": 8827,
+      "y": 8877,
       "props": {
         "w": 60,
         "h": 32,
@@ -3124,7 +3124,7 @@
       "id": "s_rect_5b",
       "type": "text",
       "x": 80,
-      "y": 8867,
+      "y": 8917,
       "props": {
         "w": 630,
         "h": 24,
@@ -3143,7 +3143,7 @@
       "id": "s_rect_5c",
       "type": "text",
       "x": 80,
-      "y": 8907,
+      "y": 8957,
       "props": {
         "w": 630,
         "h": 24,
@@ -3158,7 +3158,7 @@
       "id": "s_rect_5d",
       "type": "text",
       "x": 80,
-      "y": 8938,
+      "y": 8988,
       "props": {
         "w": 310,
         "h": 24,
@@ -3173,7 +3173,7 @@
       "id": "s_rect_5e",
       "type": "math",
       "x": 400,
-      "y": 8937,
+      "y": 8987,
       "props": {
         "w": 60,
         "h": 32,
@@ -3190,7 +3190,7 @@
       "id": "s_rect_5f",
       "type": "text",
       "x": 80,
-      "y": 9007,
+      "y": 9057,
       "props": {
         "w": 310,
         "h": 24,
@@ -3205,7 +3205,7 @@
       "id": "s_rect_5g",
       "type": "math",
       "x": 400,
-      "y": 8997,
+      "y": 9047,
       "props": {
         "w": 60,
         "h": 32,
@@ -3222,7 +3222,7 @@
       "id": "s_rect_5h",
       "type": "text",
       "x": 80,
-      "y": 9057,
+      "y": 9107,
       "props": {
         "w": 310,
         "h": 24,
@@ -3237,7 +3237,7 @@
       "id": "s_rect_5i",
       "type": "math",
       "x": 400,
-      "y": 9047,
+      "y": 9097,
       "props": {
         "w": 60,
         "h": 32,
@@ -3254,7 +3254,7 @@
       "id": "s_rect_5j",
       "type": "text",
       "x": 80,
-      "y": 9117,
+      "y": 9167,
       "props": {
         "w": 310,
         "h": 24,
@@ -3269,7 +3269,7 @@
       "id": "s_rect_5k",
       "type": "math",
       "x": 400,
-      "y": 9107,
+      "y": 9157,
       "props": {
         "w": 60,
         "h": 32,
@@ -4270,7 +4270,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "t_{y}\\coloneq\\begin{array}{|l}\\mathrm{if}\\ N_{Ed}<0\\,\\mathrm{kN}\\\\\\quad\\displaystyle \\max\\left(1,\\min\\left(C_{CSA.y},C_{opt.y}\\right)\\right)\\\\\\mathrm{else}\\\\\\quad\\displaystyle C_{opt.y}\\end{array}",
+        "latex": "t_{y}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ N_{Ed}<0\\,\\mathrm{kN}\\\\\\quad\\left\\Vert\\displaystyle \\max\\left(1,\\min\\left(C_{CSA.y},C_{opt.y}\\right)\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle C_{opt.y}\\right.\\end{array}",
         "displayMode": "full",
         "displayUnit": "",
         "precision": 2,
@@ -4683,9 +4683,9 @@
       "id": "s_rect_7x",
       "type": "text",
       "x": 80,
-      "y": 15387,
+      "y": 15307,
       "props": {
-        "w": 310,
+        "w": 630,
         "h": 24,
         "html": "Design cotθ: CSA in tension (within 1 … Copt), Copt in compression",
         "fontFamily": "Inter",
@@ -4697,12 +4697,12 @@
     {
       "id": "s_rect_7y",
       "type": "math",
-      "x": 400,
-      "y": 15303,
+      "x": 96,
+      "y": 15333,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "t_{x}\\coloneq\\begin{array}{|l}\\mathrm{if}\\ N_{Ed}<0\\,\\mathrm{kN}\\\\\\quad\\displaystyle \\max\\left(1,\\min\\left(C_{CSA.x},C_{opt.x}\\right)\\right)\\\\\\mathrm{else}\\\\\\quad\\displaystyle C_{opt.x}\\end{array}",
+        "latex": "t_{x}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ N_{Ed}<0\\,\\mathrm{kN}\\\\\\quad\\left\\Vert\\displaystyle \\max\\left(1,\\min\\left(C_{CSA.x},C_{opt.x}\\right)\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle C_{opt.x}\\right.\\end{array}",
         "displayMode": "full",
         "displayUnit": "",
         "precision": 2,
@@ -4715,7 +4715,7 @@
       "id": "s_rect_7z",
       "type": "text",
       "x": 80,
-      "y": 15527,
+      "y": 15567,
       "props": {
         "w": 630,
         "h": 24,
@@ -4730,7 +4730,7 @@
       "id": "s_rect_80",
       "type": "math",
       "x": 96,
-      "y": 15563,
+      "y": 15593,
       "props": {
         "w": 60,
         "h": 32,
@@ -4747,7 +4747,7 @@
       "id": "s_rect_81",
       "type": "text",
       "x": 80,
-      "y": 15687,
+      "y": 15717,
       "props": {
         "w": 630,
         "h": 24,
@@ -4762,7 +4762,7 @@
       "id": "s_rect_82",
       "type": "math",
       "x": 96,
-      "y": 15713,
+      "y": 15753,
       "props": {
         "w": 60,
         "h": 32,
@@ -4779,7 +4779,7 @@
       "id": "s_rect_83",
       "type": "text",
       "x": 80,
-      "y": 15881,
+      "y": 15911,
       "props": {
         "w": 310,
         "h": 24,
@@ -4794,7 +4794,7 @@
       "id": "s_rect_84",
       "type": "math",
       "x": 400,
-      "y": 15853,
+      "y": 15883,
       "props": {
         "w": 60,
         "h": 32,
@@ -4811,7 +4811,7 @@
       "id": "s_rect_85",
       "type": "text",
       "x": 80,
-      "y": 15957,
+      "y": 15987,
       "props": {
         "w": 630,
         "h": 24,
@@ -4826,7 +4826,7 @@
       "id": "s_rect_86",
       "type": "math",
       "x": 96,
-      "y": 15983,
+      "y": 16013,
       "props": {
         "w": 60,
         "h": 32,
@@ -4843,7 +4843,7 @@
       "id": "s_rect_87",
       "type": "text",
       "x": 80,
-      "y": 16033,
+      "y": 16073,
       "props": {
         "w": 630,
         "h": 24,
@@ -4859,7 +4859,7 @@
       "id": "s_rect_88",
       "type": "text",
       "x": 80,
-      "y": 16080,
+      "y": 16110,
       "props": {
         "w": 310,
         "h": 24,
@@ -4874,7 +4874,7 @@
       "id": "s_rect_89",
       "type": "math",
       "x": 400,
-      "y": 16073,
+      "y": 16103,
       "props": {
         "w": 60,
         "h": 32,
@@ -4891,7 +4891,7 @@
       "id": "s_rect_8a",
       "type": "text",
       "x": 80,
-      "y": 16124,
+      "y": 16154,
       "props": {
         "w": 310,
         "h": 24,
@@ -4906,7 +4906,7 @@
       "id": "s_rect_8b",
       "type": "math",
       "x": 400,
-      "y": 16113,
+      "y": 16143,
       "props": {
         "w": 60,
         "h": 32,
@@ -4923,7 +4923,7 @@
       "id": "s_rect_8c",
       "type": "text",
       "x": 80,
-      "y": 16182,
+      "y": 16212,
       "props": {
         "w": 310,
         "h": 24,
@@ -4938,7 +4938,7 @@
       "id": "s_rect_8d",
       "type": "math",
       "x": 400,
-      "y": 16173,
+      "y": 16203,
       "props": {
         "w": 60,
         "h": 32,
@@ -5267,7 +5267,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "b_{T}\\left(t\\right)\\coloneq\\begin{array}{|l}\\mathrm{if}\\ t\\le Q_{b}\\\\\\quad\\displaystyle a_{x}-2t\\cdot s_{x}\\\\\\mathrm{else}\\\\\\quad\\displaystyle a_{x}\\end{array}",
+        "latex": "b_{T}\\left(t\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ t\\le Q_{b}\\\\\\quad\\left\\Vert\\displaystyle a_{x}-2t\\cdot s_{x}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle a_{x}\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -5299,7 +5299,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "h_{T}\\left(t\\right)\\coloneq\\begin{array}{|l}\\mathrm{if}\\ t\\le Q_{b}\\\\\\quad\\displaystyle a_{y}\\\\\\mathrm{else}\\\\\\quad\\displaystyle a_{y}-2\\left(t-Q_{b}\\right)s_{y}\\end{array}",
+        "latex": "h_{T}\\left(t\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ t\\le Q_{b}\\\\\\quad\\left\\Vert\\displaystyle a_{y}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle a_{y}-2\\left(t-Q_{b}\\right)s_{y}\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -5459,7 +5459,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\alpha_{T}\\left(j\\right)\\coloneq\\begin{array}{|l}\\mathrm{if}\\ a_{T}\\left(j\\right)=0\\\\\\quad\\displaystyle 225-135w_{T}\\left(j\\right)\\\\\\mathrm{else}\\ \\mathrm{if}\\ a_{T}\\left(j\\right)=4\\\\\\quad\\displaystyle -180-135w_{T}\\left(j\\right)\\\\\\mathrm{else}\\\\\\quad\\displaystyle 180-90a_{T}\\left(j\\right)-90w_{T}\\left(j\\right)\\end{array}",
+        "latex": "\\alpha_{T}\\left(j\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ a_{T}\\left(j\\right)=0\\\\\\quad\\left\\Vert\\displaystyle 225-135w_{T}\\left(j\\right)\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ a_{T}\\left(j\\right)=4\\\\\\quad\\left\\Vert\\displaystyle -180-135w_{T}\\left(j\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 180-90a_{T}\\left(j\\right)-90w_{T}\\left(j\\right)\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -5491,7 +5491,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "o_{T}\\left(j\\right)\\coloneq\\begin{array}{|l}\\mathrm{if}\\ u_{T}\\left(j\\right)=0\\\\\\quad\\displaystyle 1\\\\\\mathrm{else}\\ \\mathrm{if}\\ u_{T}\\left(j\\right)=M_{T}-1\\\\\\quad\\displaystyle 1\\\\\\mathrm{else}\\\\\\quad\\displaystyle 0\\end{array}",
+        "latex": "o_{T}\\left(j\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ u_{T}\\left(j\\right)=0\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ u_{T}\\left(j\\right)=M_{T}-1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -5523,7 +5523,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "X_{c}\\left(j\\right)\\coloneq\\begin{array}{|l}\\mathrm{if}\\ a_{T}\\left(j\\right)=1\\\\\\quad\\displaystyle b_{T}\\left(i_{T}\\left(j\\right)\\right)\\\\\\mathrm{else}\\ \\mathrm{if}\\ a_{T}\\left(j\\right)=2\\\\\\quad\\displaystyle b_{T}\\left(i_{T}\\left(j\\right)\\right)\\\\\\mathrm{else}\\\\\\quad\\displaystyle -b_{T}\\left(i_{T}\\left(j\\right)\\right)\\end{array}",
+        "latex": "X_{c}\\left(j\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ a_{T}\\left(j\\right)=1\\\\\\quad\\left\\Vert\\displaystyle b_{T}\\left(i_{T}\\left(j\\right)\\right)\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ a_{T}\\left(j\\right)=2\\\\\\quad\\left\\Vert\\displaystyle b_{T}\\left(i_{T}\\left(j\\right)\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle -b_{T}\\left(i_{T}\\left(j\\right)\\right)\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -5555,7 +5555,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "Y_{c}\\left(j\\right)\\coloneq\\begin{array}{|l}\\mathrm{if}\\ a_{T}\\left(j\\right)=2\\\\\\quad\\displaystyle -h_{T}\\left(i_{T}\\left(j\\right)\\right)\\\\\\mathrm{else}\\ \\mathrm{if}\\ a_{T}\\left(j\\right)=3\\\\\\quad\\displaystyle -h_{T}\\left(i_{T}\\left(j\\right)\\right)\\\\\\mathrm{else}\\\\\\quad\\displaystyle h_{T}\\left(i_{T}\\left(j\\right)\\right)\\end{array}",
+        "latex": "Y_{c}\\left(j\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ a_{T}\\left(j\\right)=2\\\\\\quad\\left\\Vert\\displaystyle -h_{T}\\left(i_{T}\\left(j\\right)\\right)\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ a_{T}\\left(j\\right)=3\\\\\\quad\\left\\Vert\\displaystyle -h_{T}\\left(i_{T}\\left(j\\right)\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle h_{T}\\left(i_{T}\\left(j\\right)\\right)\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -5939,7 +5939,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "o_{s}\\left(j\\right)\\coloneq\\begin{array}{|l}\\mathrm{if}\\ u_{L}\\left(j\\right)=0\\\\\\quad\\displaystyle 1\\\\\\mathrm{else}\\\\\\quad\\displaystyle 0\\end{array}",
+        "latex": "o_{s}\\left(j\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ u_{L}\\left(j\\right)=0\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -5971,7 +5971,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "o_{e}\\left(j\\right)\\coloneq\\begin{array}{|l}\\mathrm{if}\\ u_{L}\\left(j\\right)=M_{L}-1\\\\\\quad\\displaystyle 1\\\\\\mathrm{else}\\\\\\quad\\displaystyle 0\\end{array}",
+        "latex": "o_{e}\\left(j\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ u_{L}\\left(j\\right)=M_{L}-1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -6612,6 +6612,6 @@
       }
     }
   ],
-  "createdAt": "2026-11-08T17:47:27.433Z",
-  "updatedAt": "2026-11-08T17:47:27.433Z"
+  "createdAt": "2026-11-08T18:08:45.457Z",
+  "updatedAt": "2026-11-08T18:08:45.457Z"
 }
