@@ -145,7 +145,7 @@ export async function newDocument(opts: { demo?: boolean; template?: TemplateId 
       id: newId(),
       title: tpl?.title ?? 'Untitled calculation',
       metadata: tpl ? { ...tpl.metadata } : {},
-      settings: DEFAULT_SETTINGS,
+      settings: { ...DEFAULT_SETTINGS, ...(tpl?.settings ?? {}) },
       createdAt: new Date().toISOString(),
     });
     applySettings();

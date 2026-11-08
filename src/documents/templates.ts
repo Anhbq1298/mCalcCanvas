@@ -5,12 +5,15 @@
  */
 import { newShapeId } from '../canvas/model/canvasStore';
 import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, PARAGRAPH_STYLES, type MathProps, type Shape } from '../canvas/model/types';
-import type { DocumentMetadata } from './DocumentTypes';
+import type { DocumentMetadata, DocumentSettings } from './DocumentTypes';
+import { parseDocument } from './DocumentSerializer';
+import rcCircularColumn from '../../templates/RC_Circular_Column_Check.mCalcCanvas?raw';
+import rcRectangularColumn from '../../templates/RC_Rectangular_Column_Check.mCalcCanvas?raw';
 import { escapeHtml } from '../canvas/sanitize';
 import { demoWorksheetShapes } from './demoWorksheet';
 import { A4, PAGE_GAP } from '../export/pageGeometry';
 
-export type TemplateId = 'blank' | 'steel-beam' | 'rc-beam';
+export type TemplateId = 'blank' | 'steel-beam' | 'rc-beam' | 'rc-circular-column' | 'rc-rectangular-column';
 
 export interface WorksheetTemplate {
   id: TemplateId;
@@ -18,8 +21,26 @@ export interface WorksheetTemplate {
   description: string;
   title: string;
   metadata: DocumentMetadata;
+  /** Worksheet settings the template relies on (pages, snapping…). */
+  settings?: Partial<DocumentSettings>;
   shapes(): Shape[];
 }
+
+/** A template saved as a .mCalcCanvas file (repo folder templates/): fresh shape ids each time. */
+function fileTemplate(raw: string) {
+  const doc = parseDocument(JSON.parse(raw));
+  return {
+    title: doc.title,
+    metadata: doc.metadata,
+    settings: doc.settings,
+    shapes: (): Shape[] => {
+      const ids = new Map(doc.shapes.map((s) => [s.id, newShapeId()] as const));
+      return doc.shapes.map((s) => ({ ...structuredClone(s), id: ids.get(s.id)! }));
+    },
+  };
+}
+const circular = fileTemplate(rcCircularColumn);
+const rectangular = fileTemplate(rcRectangularColumn);
 
 function builder() {
   const out: Shape[] = [];
@@ -140,6 +161,18 @@ function rcBeamShapes(): Shape[] {
 }
 
 export const TEMPLATES: WorksheetTemplate[] = [
+  {
+    id: 'rc-circular-column',
+    name: 'RC circular column check (EN 1992-1-1)',
+    description: 'N–M curve at the moment direction (fibre strips), flexural check, P–M and Mx–My graphs, shear with spirals.',
+    ...circular,
+  },
+  {
+    id: 'rc-rectangular-column',
+    name: 'RC rectangular column check (EN 1992-1-1)',
+    description: 'N–M curves about x and y, biaxial check (5.39), P–M and Mx–My graphs, shear in both directions.',
+    ...rectangular,
+  },
   {
     id: 'rc-beam',
     name: 'RC beam – bending (EN 1992-1-1)',
