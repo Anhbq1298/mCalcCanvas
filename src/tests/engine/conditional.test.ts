@@ -98,6 +98,17 @@ describe('if(condition, value if true, value if false)', () => {
     expect(() => parseLatex('y\\coloneq\\begin{matrix}1\\end{matrix}')).toThrow(/environment/);
   });
 
+  it('a vector condition is decided entry by entry (EC2 parabola-rectangle as an if block)', () => {
+    const e = setup({
+      u: 'u\\coloneq\\mathrm{stack}\\left(-0.001,0.001,0.002,0.003\\right)',
+      s: 's\\coloneq\\begin{array}{|ll}0\\,\\mathrm{MPa} & \\mathrm{if}\\ u\\le0\\\\20\\,\\mathrm{MPa}\\left(1-\\left(1-\\frac{u}{0.002}\\right)^2\\right) & \\mathrm{if}\\ u<0.002\\\\20\\,\\mathrm{MPa} & \\mathrm{otherwise}\\end{array}',
+      k: 'k\\coloneq\\mathrm{if}\\left(u>0,1,0\\right)+\\mathrm{stack}\\left(1,2\\right)',
+    });
+    const v = res(e, 's').value!.items!;
+    expect([v[0], v[1] / v[3], v[2] / v[3]]).toEqual([0, 0.75, 1]);
+    expect(res(e, 'k').error?.message).toMatch(/different lengths/);
+  });
+
   it('gives clear errors', () => {
     expect(() => parseLatex('x\\coloneq\\mathrm{if}\\left(a>1,2\\right)')).toThrow(/three arguments/);
     expect(() => parseLatex('x\\coloneq\\mathrm{if}\\left(a,2,3\\right)')).toThrow(/must be a comparison/);

@@ -71,7 +71,7 @@ Messages name the variable or quantity involved, e.g. `Unit mismatch: Force (kN)
 - **`seq(a, b)` / `seq(a, b, Δ)`**: the same vector as a range, usable anywhere in an expression (e.g. `2·seq(1, 3) + 1`).
 - **`let(n₁, v₁, n₂, v₂, …, body)`** (Excel LET): local names, each visible to later values and the body. They shadow worksheet variables, are never references (no dependency edge, no worksheet variable) and are printed by name in substituted lines. Use it for helpers that should not clutter the worksheet.
 - **Aggregates**: `min`, `max` and `sum` take every entry of every argument; `len(v)` is the number of entries (1 for a scalar). `sum` keeps units.
-- **Single values required**: check regions and if-conditions reject vectors (code `vector`); if-branches may be vectors.
+- **Checks need single values** (code `vector`). **if with a vector condition** is decided entry by entry: both branches are evaluated (scalars repeat, vectors must share the length) and each entry takes the branch its condition selects — e.g. the EC2 parabola-rectangle law over all fibres as one if block. With a scalar condition only the chosen branch is evaluated.
 - **Display**: `[0, 1, 2, …, 20, 21] (22)` — first 3 and last 2 entries. With a common dimension all entries use one unit (the display unit or the first entry's preferred unit) and `FormattedQuantity.items` holds every number in that unit (graphs use it). In a substituted line a vector is shown by name.
 
 ## Array display

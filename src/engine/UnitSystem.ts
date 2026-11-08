@@ -127,13 +127,28 @@ export function isUnit(q: unknown): q is Unit {
   return math.isUnit(q);
 }
 
+const DIMENSIONLESS: DimKey = key(0, 0, 0);
+
 export function dimensionKey(q: Quantity): DimKey {
-  if (!isUnit(q)) return key(0, 0, 0);
+  if (typeof q === 'number' || !isUnit(q)) return DIMENSIONLESS;
   return q.dimensions.join(',');
 }
 
+const allZero = (d: readonly number[]) => d.every((x) => x === 0);
+
+/** Hot path (every vector entry): no string keys. */
 export function isDimensionless(q: Quantity): boolean {
-  return dimensionKey(q) === key(0, 0, 0);
+  return typeof q === 'number' || !isUnit(q) || allZero(q.dimensions);
+}
+
+/** Same physical dimension (exact exponents, as dimensionKey). Hot path: no string keys. */
+export function sameDimension(a: Quantity, b: Quantity): boolean {
+  const da = typeof a === 'number' || !isUnit(a) ? null : a.dimensions;
+  const db = typeof b === 'number' || !isUnit(b) ? null : b.dimensions;
+  if (!da || !db) return (!da || allZero(da)) && (!db || allZero(db));
+  if (da.length !== db.length) return dimensionKey(a) === dimensionKey(b);
+  for (let i = 0; i < da.length; i++) if (da[i] !== db[i]) return false;
+  return true;
 }
 
 export function dimensionName(q: Quantity): string {

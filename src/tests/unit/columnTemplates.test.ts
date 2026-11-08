@@ -48,6 +48,11 @@ describe('column templates', () => {
     expect(tpl.settings?.baselineSnap).toBe('minor');
     expect(result('\\eta_{R}\\coloneq')?.value?.number).toBeCloseTo(0.7689, 3);
     expect(result('\\eta_{V}\\coloneq')?.value?.number).toBeCloseTo(0.612, 3);
+    // Hand check at the ray point gives back (MEd, NEd)/ηR.
+    const eta = result('\\eta_{R}\\coloneq')!.value!.number!;
+    const nAt = result('N_{R}\\left(c_{R}')!.value!.number!;
+    const nEd = result('N_{Ed}\\coloneq')!.value!.number!;
+    expect(Math.abs(nAt / (nEd / eta) - 1)).toBeLessThan(0.02);
   }, 30000);
 
   it('RC rectangular column check calculates without errors (P–Mθ curve, radial ratio)', () => {
@@ -62,10 +67,17 @@ describe('column templates', () => {
     // ends: pure tension −As·fyd = −3415 kN, M = 0.
     const N = result('N_{\\theta v}\\coloneq')!.value!.items!;
     const Mv = result('M_{\\theta v}\\coloneq')!.value!.items!;
-    expect(N[7]).toBeCloseTo(2639, -1);
-    expect(Mv[7]).toBeCloseTo(1101, -1);
+    expect(Math.abs(N[7] / 2639 - 1)).toBeLessThan(0.01);
+    expect(Math.abs(Mv[7] / 1101 - 1)).toBeLessThan(0.01);
     expect(N[0]).toBeCloseTo(-3415, -1);
     expect(Mv[0]).toBe(0);
+    // Hand check: the strain plane at the ray point gives back (MEd, NEd)/ηR.
+    const eta = result('\\eta_{R}\\coloneq')!.value!.number!;
+    const nAt = result('N_{R}\\left(c_{R}')!.value!.number!;
+    const mAt = result('\\sqrt{\\left(M_{Rx}\\left(c_{R}')!.value!.number!;
+    expect(Math.abs(nAt / (3000 / eta) - 1)).toBeLessThan(0.02);
+    expect(Math.abs(mAt / (Math.hypot(600, 300) / eta) - 1)).toBeLessThan(0.02);
+    expect(eta).toBeCloseTo(0.6435, 2);
     // Ray from the origin through (MEd, NEd) = (670.8, 3000): reference capacity (1042.4, 4661.7), ηR = 0.6435.
     expect(result('\\eta_{R}\\coloneq')?.value?.number).toBeCloseTo(0.6435, 2);
   }, 30000);

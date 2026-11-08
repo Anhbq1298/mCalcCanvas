@@ -4,7 +4,7 @@
  */
 import { CalculationError } from './CalculationErrors';
 import {
-  dimensionKey,
+  sameDimension,
   formatNumber,
   formatQuantity,
   parseDisplayUnit,
@@ -112,7 +112,7 @@ export function formatVector(
     return { text: '[ ] (0)', latex: '\\left[\\;\\right]', number: Number.NaN, unitText: '', unitLatex: '', dimension: 'empty', items: [], length: 0 };
   }
   const first = formatQuantity(v.items[0], opts);
-  const common = v.items.every((q) => dimensionKey(q) === dimensionKey(v.items[0]));
+  const common = v.items.every((q) => sameDimension(q, v.items[0]));
   const limit = opts.expanded || opts.limit === 0 ? EXPANDED_MAX : Math.max(2, opts.limit ?? DEFAULT_VECTOR_LIMIT);
   const all = limit;
   const head = Math.ceil(limit / 2);

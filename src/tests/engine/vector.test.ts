@@ -175,10 +175,10 @@ describe('vector arithmetic', () => {
     expect(res(e, 'x').value?.latex).toMatch(/^\\begin\{bmatrix\}0\\\\500\\\\1000\\end\{bmatrix\}\\,/);
   });
 
-  it('checks and if-conditions require a single value', () => {
+  it('checks require a single value; an if with a vector condition works entry by entry', () => {
     const e = setup({ a: 'a\\coloneq1..3', c: 'a\\le5', f: 'f\\coloneq\\mathrm{if}\\left(a>1,1,0\\right)' });
     expect(res(e, 'c').error?.code).toBe('vector');
-    expect(res(e, 'f').error?.code).toBe('vector');
+    expect(items(e, 'f')).toEqual([0, 1, 1]);
   });
 
   it('if may return a vector, and a vector shows by name in the substituted line', () => {

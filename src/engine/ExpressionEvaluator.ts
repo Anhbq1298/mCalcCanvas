@@ -13,7 +13,7 @@ export { QVector, isVector, type Value } from './Vector';
 import type { Expr } from './ExpressionTypes';
 import { walkExpr, walkScoped } from './ExpressionTypes';
 import {
-  dimensionKey,
+  sameDimension,
   dimensionName,
   isDimensionless,
   isUnit,
@@ -242,7 +242,7 @@ function linterp(xs: QVector, ys: QVector, x: Quantity): Quantity {
   if (xs.length !== ys.length || xs.length < 2) {
     throw new CalculationError('vector', 'linterp needs two vectors of the same length (at least 2 entries).');
   }
-  if (dimensionKey(xs.items[0]) !== dimensionKey(x)) {
+  if (!sameDimension(xs.items[0], x)) {
     throw new CalculationError('unit-mismatch', `linterp: x (${describeQuantity(x)}) and the x data must have the same unit.`);
   }
   const xv = xs.items.map(siValue);
@@ -335,7 +335,7 @@ function requireDimensionless(q: Quantity, what: string): number {
 }
 
 function addOrSubtract(a: Quantity, b: Quantity, op: '+' | '-'): Quantity {
-  if (dimensionKey(a) !== dimensionKey(b)) {
+  if (!sameDimension(a, b)) {
     const msg =
       op === '+'
         ? `${describeQuantity(b)} cannot be added to ${describeQuantity(a)}.`
@@ -354,6 +354,14 @@ function addOrSubtract(a: Quantity, b: Quantity, op: '+' | '-'): Quantity {
     if (absA) return absoluteC(kelvinOf(a) - kelvinOf(b));
     throw temperatureError('An absolute temperature (°C) cannot be subtracted from a temperature difference.');
   }
+  if (typeof a === 'number' && typeof b === 'number') return op === '+' ? a + b : a - b;
+  if (isUnit(a) && isUnit(b) && a.value !== null && b.value !== null) {
+    // Fast path (vector arithmetic): same result as math.add/subtract, keeping a's units.
+    const r = a.clone();
+    r.value = op === '+' ? a.value + b.value : a.value - b.value;
+    r.fixPrefix = false;
+    return normalize(r);
+  }
   const res = op === '+' ? math.add(a as never, b as never) : math.subtract(a as never, b as never);
   return normalize(res as Quantity);
 }
@@ -368,7 +376,19 @@ function evalNode(expr: Expr, ctx: EvalContext): Value {
 }
 
 const hasAbsoluteTemperature = (v: Value): boolean => (isVector(v) ? v.items.some(isAbsoluteTemperature) : isAbsoluteTemperature(v));
-const multiplyQ = (x: Quantity, y: Quantity): Quantity => normalize(math.multiply(x as never, y as never) as unknown as Quantity);
+const multiplyQ = (x: Quantity, y: Quantity): Quantity => {
+  if (typeof x === 'number' && typeof y === 'number') return x * y;
+  // Fast path: a number scales a unit value (as math.multiply does).
+  const scaled = (n: number, u: Quantity) => {
+    if (!isUnit(u) || u.value === null || isAbsoluteTemperature(u)) return null;
+    const r = u.clone();
+    r.value = n * u.value;
+    return normalize(r);
+  };
+  if (typeof x === 'number') return scaled(x, y) ?? normalize(math.multiply(x as never, y as never) as unknown as Quantity);
+  if (typeof y === 'number') return scaled(y, x) ?? normalize(math.multiply(x as never, y as never) as unknown as Quantity);
+  return normalize(math.multiply(x as never, y as never) as unknown as Quantity);
+};
 
 function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
   switch (expr.type) {
@@ -398,7 +418,7 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
       if (expr.op === '-' && hasAbsoluteTemperature(v) && !isTemperatureLiteral(expr.arg)) {
         throw temperatureError('An absolute temperature (°C) cannot be negated.');
       }
-      return expr.op === '-' ? broadcast1(v, (q) => math.unaryMinus(q as never) as Quantity) : v;
+      return expr.op === '-' ? broadcast1(v, (q) => (typeof q === 'number' ? -q : isAbsoluteTemperature(q) ? (math.unaryMinus(q as never) as Quantity) : multiplyQ(-1, q))) : v;
     }
 
     case 'binary': {
@@ -422,6 +442,8 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
         case '/':
           return broadcast2(a, b, (x, y) => {
             if (siValue(y) === 0) throw new CalculationError('division-by-zero', 'Division by zero: the denominator is 0.');
+            if (typeof x === 'number' && typeof y === 'number') return x / y;
+            if (typeof y === 'number') return multiplyQ(x, 1 / y);
             return normalize(math.divide(x as never, y as never) as Quantity);
           });
         case '^': {
@@ -492,9 +514,13 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
     case 'if': {
       // Same comparison rules as a check region; only the chosen branch is
       // evaluated, so the other may be undefined for these inputs (e.g. √ of a negative).
-      const left = requireScalar(evalNode(expr.cond.left, ctx), 'The condition of if');
-      const right = requireScalar(evalNode(expr.cond.right, ctx), 'The condition of if');
-      return evalNode(compareQuantities(left, right, expr.cond.op) ? expr.then : expr.else, ctx);
+      const lv = evalNode(expr.cond.left, ctx);
+      const rv = evalNode(expr.cond.right, ctx);
+      if (!isVector(lv) && !isVector(rv)) return evalNode(compareQuantities(lv, rv, expr.cond.op) ? expr.then : expr.else, ctx);
+      // Vector condition: decided entry by entry (both branches are evaluated; scalars repeat).
+      const t = evalNode(expr.then, ctx);
+      const f = evalNode(expr.else, ctx);
+      return broadcastN([lv, rv, t, f], ([a, b, x, y]) => (compareQuantities(a, b, expr.cond.op) ? x : y));
     }
 
     case 'range':
@@ -551,7 +577,7 @@ function evalRange(expr: Extract<Expr, { type: 'range' }>, ctx: EvalContext): QV
 
 /** Entries from start towards end; the step is next − start, or ±1 for plain numbers. */
 function makeRange(start: Quantity, end: Quantity, next: Quantity | null): QVector {
-  if (dimensionKey(start) !== dimensionKey(end)) {
+  if (!sameDimension(start, end)) {
     throw new CalculationError('unit-mismatch', `Unit mismatch: a range from ${describeQuantity(start)} to ${describeQuantity(end)}.`);
   }
   let step: Quantity;
@@ -622,7 +648,7 @@ function evalCall(fn: string, args: Quantity[]): Quantity {
     }
     case 'angle': {
       const [xq, y] = args;
-      if (dimensionKey(y) !== dimensionKey(xq)) {
+      if (!sameDimension(y, xq)) {
         throw new CalculationError('unit-mismatch', `angle: x (${describeQuantity(xq)}) and y (${describeQuantity(y)}) must have the same unit.`);
       }
       if (siValue(y) === 0 && siValue(xq) === 0) throw new CalculationError('domain', 'angle(0, 0) has no direction.');
@@ -671,7 +697,7 @@ function evalCall(fn: string, args: Quantity[]): Quantity {
     case 'max': {
       const first = args[0];
       for (const a of args) {
-        if (dimensionKey(a) !== dimensionKey(first)) {
+        if (!sameDimension(a, first)) {
           throw new CalculationError('unit-mismatch', `Unit mismatch: ${fn} arguments must have the same dimension (${describeQuantity(first)} vs ${describeQuantity(a)}).`);
         }
       }
@@ -690,7 +716,7 @@ export function compareQuantities(
   op: string,
   policies: { check?: ComparisonPolicy; equality?: ComparisonPolicy } = {},
 ): boolean {
-  if (dimensionKey(a) !== dimensionKey(b)) {
+  if (!sameDimension(a, b)) {
     throw new CalculationError(
       'unit-mismatch',
       `Unit mismatch: cannot compare ${describeQuantity(a)} with ${describeQuantity(b)}.`,
