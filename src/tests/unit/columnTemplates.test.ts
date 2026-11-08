@@ -82,6 +82,16 @@ describe('column templates', () => {
     expect(result('\\eta_{R}\\coloneq')?.value?.number).toBeCloseTo(0.6435, 2);
   }, 30000);
 
+  it('rectangular column in tension: cotθ from CSA, kept within 1 … Copt', () => {
+    const { errors, result } = evaluate('rc-rectangular-column', { 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq-500\\,\\mathrm{kN}' });
+    expect(errors).toEqual([]);
+    const t = result('t_{y}\\coloneq')!.value!.number!;
+    const csa = result('C_{CSA.y}\\coloneq')!.value!.number!;
+    const opt = result('C_{opt.y}\\coloneq')!.value!.number!;
+    expect(t).toBeCloseTo(Math.max(1, Math.min(csa, opt)), 6);
+    expect(t).toBeLessThan(opt);
+  }, 30000);
+
   it('a small rectangular section needs no inner ties (every bar within 150 mm of a corner)', () => {
     const { errors, result } = evaluate('rc-rectangular-column', {
       'b\\coloneq': 'b\\coloneq300\\,\\mathrm{mm}',
