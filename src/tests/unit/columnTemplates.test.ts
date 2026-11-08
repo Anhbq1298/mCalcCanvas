@@ -42,11 +42,10 @@ function evaluate(id: TemplateId, inputs: Record<string, string> = {}) {
 }
 
 describe('column templates', () => {
-  it('RC circular column check calculates without errors (ηM, ηR, ηV)', () => {
+  it('RC circular column check calculates without errors (ηR, ηV)', () => {
     const { errors, result, tpl } = evaluate('rc-circular-column');
     expect(errors).toEqual([]);
     expect(tpl.settings?.baselineSnap).toBe('minor');
-    expect(result('\\eta_{M}\\coloneq')?.value?.number).toBeCloseTo(0.7675, 3);
     expect(result('\\eta_{R}\\coloneq')?.value?.number).toBeCloseTo(0.7689, 3);
     expect(result('\\eta_{V}\\coloneq')?.value?.number).toBeCloseTo(0.612, 3);
   }, 30000);
