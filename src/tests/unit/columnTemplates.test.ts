@@ -70,6 +70,8 @@ describe('column templates', () => {
     expect(Mv[7]).toBeCloseTo(1101, -1);
     expect(N[0]).toBeCloseTo(-3415, -1);
     expect(Mv[0]).toBe(0);
+    // Ray from the origin through (MEd, NEd) = (670.8, 3000): reference capacity (1042.4, 4661.7), ηR = 0.6435.
+    expect(result('\\eta_{R}\\coloneq')?.value?.number).toBeCloseTo(0.6435, 2);
   }, 30000);
 
   it('a small rectangular section needs no inner ties (every bar within 150 mm of a corner)', () => {

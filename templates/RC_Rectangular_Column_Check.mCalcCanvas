@@ -106,7 +106,7 @@
       "props": {
         "w": 630,
         "h": 24,
-        "html": "Biaxial: neutral axis rotated until the moment points along MEd; ηM = MEd/MRd,θ at NEd.",
+        "html": "Biaxial: neutral axis rotated until the moment points along MEd; P–Mθ curve at that direction.",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#475569",
@@ -121,7 +121,7 @@
       "props": {
         "w": 630,
         "h": 24,
-        "html": "P–Mθ: for each depth c the axis is rotated until the moment points along θ (no x/y reduction).",
+        "html": "Utilisation ηR: ray from the origin through (MEd, NEd) to the curve (as MBColumn).",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#475569",
@@ -136,7 +136,7 @@
       "props": {
         "w": 630,
         "h": 24,
-        "html": "Arrays and drawing data are in the annex; each annex is calculated at its link (▸ A.n).",
+        "html": "P–Mθ: for each depth c the axis is rotated until the moment points along θ (no x/y reduction).",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#475569",
@@ -151,7 +151,7 @@
       "props": {
         "w": 630,
         "h": 24,
-        "html": "Shear per direction: links only (VRd,c = 0); CSA θ in tension, cotθ,opt in compression.",
+        "html": "Arrays and drawing data are in the annex; each annex is calculated at its link (▸ A.n).",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#475569",
@@ -166,7 +166,7 @@
       "props": {
         "w": 630,
         "h": 24,
-        "html": "x along b, y along h; MEd,x bends about x (depth h), MEd,y about y (depth b).",
+        "html": "Shear per direction: links only (VRd,c = 0); CSA θ in tension, cotθ,opt in compression.",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#475569",
@@ -181,7 +181,7 @@
       "props": {
         "w": 630,
         "h": 24,
-        "html": "N positive in compression.",
+        "html": "x along b, y along h; MEd,x bends about x (depth h), MEd,y about y (depth b).",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#475569",
@@ -192,7 +192,22 @@
       "id": "s_rect_b",
       "type": "text",
       "x": 80,
-      "y": 450,
+      "y": 440,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "N positive in compression.",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_c",
+      "type": "text",
+      "x": 80,
+      "y": 480,
       "props": {
         "w": 630,
         "h": 24,
@@ -205,10 +220,10 @@
       }
     },
     {
-      "id": "s_rect_c",
+      "id": "s_rect_d",
       "type": "text",
       "x": 80,
-      "y": 490,
+      "y": 520,
       "props": {
         "w": 630,
         "h": 24,
@@ -221,10 +236,10 @@
       }
     },
     {
-      "id": "s_rect_d",
+      "id": "s_rect_e",
       "type": "text",
       "x": 80,
-      "y": 537,
+      "y": 567,
       "props": {
         "w": 310,
         "h": 24,
@@ -236,10 +251,10 @@
       }
     },
     {
-      "id": "s_rect_e",
+      "id": "s_rect_f",
       "type": "math",
       "x": 400,
-      "y": 530,
+      "y": 560,
       "props": {
         "w": 60,
         "h": 32,
@@ -253,10 +268,10 @@
       }
     },
     {
-      "id": "s_rect_f",
+      "id": "s_rect_g",
       "type": "text",
       "x": 80,
-      "y": 577,
+      "y": 607,
       "props": {
         "w": 310,
         "h": 24,
@@ -268,10 +283,10 @@
       }
     },
     {
-      "id": "s_rect_g",
+      "id": "s_rect_h",
       "type": "math",
       "x": 400,
-      "y": 570,
+      "y": 600,
       "props": {
         "w": 60,
         "h": 32,
@@ -285,10 +300,10 @@
       }
     },
     {
-      "id": "s_rect_h",
+      "id": "s_rect_i",
       "type": "text",
       "x": 80,
-      "y": 617,
+      "y": 647,
       "props": {
         "w": 310,
         "h": 24,
@@ -300,10 +315,10 @@
       }
     },
     {
-      "id": "s_rect_i",
+      "id": "s_rect_j",
       "type": "math",
       "x": 400,
-      "y": 610,
+      "y": 640,
       "props": {
         "w": 60,
         "h": 32,
@@ -317,10 +332,10 @@
       }
     },
     {
-      "id": "s_rect_j",
+      "id": "s_rect_k",
       "type": "text",
       "x": 80,
-      "y": 667,
+      "y": 697,
       "props": {
         "w": 310,
         "h": 24,
@@ -332,10 +347,10 @@
       }
     },
     {
-      "id": "s_rect_k",
+      "id": "s_rect_l",
       "type": "math",
       "x": 400,
-      "y": 660,
+      "y": 690,
       "props": {
         "w": 60,
         "h": 32,
@@ -349,10 +364,10 @@
       }
     },
     {
-      "id": "s_rect_l",
+      "id": "s_rect_m",
       "type": "text",
       "x": 80,
-      "y": 707,
+      "y": 737,
       "props": {
         "w": 310,
         "h": 24,
@@ -364,10 +379,10 @@
       }
     },
     {
-      "id": "s_rect_m",
+      "id": "s_rect_n",
       "type": "math",
       "x": 400,
-      "y": 700,
+      "y": 730,
       "props": {
         "w": 60,
         "h": 32,
@@ -381,10 +396,10 @@
       }
     },
     {
-      "id": "s_rect_n",
+      "id": "s_rect_o",
       "type": "text",
       "x": 80,
-      "y": 747,
+      "y": 777,
       "props": {
         "w": 310,
         "h": 24,
@@ -396,10 +411,10 @@
       }
     },
     {
-      "id": "s_rect_o",
+      "id": "s_rect_p",
       "type": "math",
       "x": 400,
-      "y": 740,
+      "y": 770,
       "props": {
         "w": 60,
         "h": 32,
@@ -413,10 +428,10 @@
       }
     },
     {
-      "id": "s_rect_p",
+      "id": "s_rect_q",
       "type": "text",
       "x": 80,
-      "y": 787,
+      "y": 817,
       "props": {
         "w": 310,
         "h": 24,
@@ -428,10 +443,10 @@
       }
     },
     {
-      "id": "s_rect_q",
+      "id": "s_rect_r",
       "type": "math",
       "x": 400,
-      "y": 780,
+      "y": 810,
       "props": {
         "w": 60,
         "h": 32,
@@ -445,10 +460,10 @@
       }
     },
     {
-      "id": "s_rect_r",
+      "id": "s_rect_s",
       "type": "text",
       "x": 80,
-      "y": 837,
+      "y": 867,
       "props": {
         "w": 310,
         "h": 24,
@@ -460,10 +475,10 @@
       }
     },
     {
-      "id": "s_rect_s",
+      "id": "s_rect_t",
       "type": "math",
       "x": 400,
-      "y": 830,
+      "y": 860,
       "props": {
         "w": 60,
         "h": 32,
@@ -477,10 +492,10 @@
       }
     },
     {
-      "id": "s_rect_t",
+      "id": "s_rect_u",
       "type": "text",
       "x": 80,
-      "y": 877,
+      "y": 907,
       "props": {
         "w": 310,
         "h": 24,
@@ -492,10 +507,10 @@
       }
     },
     {
-      "id": "s_rect_u",
+      "id": "s_rect_v",
       "type": "math",
       "x": 400,
-      "y": 870,
+      "y": 900,
       "props": {
         "w": 60,
         "h": 32,
@@ -509,10 +524,10 @@
       }
     },
     {
-      "id": "s_rect_v",
+      "id": "s_rect_w",
       "type": "text",
       "x": 80,
-      "y": 917,
+      "y": 947,
       "props": {
         "w": 310,
         "h": 24,
@@ -524,10 +539,10 @@
       }
     },
     {
-      "id": "s_rect_w",
+      "id": "s_rect_x",
       "type": "math",
       "x": 400,
-      "y": 910,
+      "y": 940,
       "props": {
         "w": 60,
         "h": 32,
@@ -541,10 +556,10 @@
       }
     },
     {
-      "id": "s_rect_x",
+      "id": "s_rect_y",
       "type": "text",
       "x": 80,
-      "y": 967,
+      "y": 997,
       "props": {
         "w": 310,
         "h": 24,
@@ -556,10 +571,10 @@
       }
     },
     {
-      "id": "s_rect_y",
+      "id": "s_rect_z",
       "type": "math",
       "x": 400,
-      "y": 960,
+      "y": 990,
       "props": {
         "w": 60,
         "h": 32,
@@ -573,7 +588,7 @@
       }
     },
     {
-      "id": "s_rect_z",
+      "id": "s_rect_10",
       "type": "text",
       "x": 80,
       "y": 1251,
@@ -589,7 +604,7 @@
       }
     },
     {
-      "id": "s_rect_10",
+      "id": "s_rect_11",
       "type": "text",
       "x": 80,
       "y": 1298,
@@ -604,7 +619,7 @@
       }
     },
     {
-      "id": "s_rect_11",
+      "id": "s_rect_12",
       "type": "math",
       "x": 400,
       "y": 1291,
@@ -621,7 +636,7 @@
       }
     },
     {
-      "id": "s_rect_12",
+      "id": "s_rect_13",
       "type": "text",
       "x": 80,
       "y": 1338,
@@ -636,7 +651,7 @@
       }
     },
     {
-      "id": "s_rect_13",
+      "id": "s_rect_14",
       "type": "math",
       "x": 400,
       "y": 1331,
@@ -653,7 +668,7 @@
       }
     },
     {
-      "id": "s_rect_14",
+      "id": "s_rect_15",
       "type": "text",
       "x": 80,
       "y": 1378,
@@ -668,7 +683,7 @@
       }
     },
     {
-      "id": "s_rect_15",
+      "id": "s_rect_16",
       "type": "math",
       "x": 400,
       "y": 1371,
@@ -685,7 +700,7 @@
       }
     },
     {
-      "id": "s_rect_16",
+      "id": "s_rect_17",
       "type": "text",
       "x": 80,
       "y": 1428,
@@ -700,7 +715,7 @@
       }
     },
     {
-      "id": "s_rect_17",
+      "id": "s_rect_18",
       "type": "math",
       "x": 400,
       "y": 1421,
@@ -717,7 +732,7 @@
       }
     },
     {
-      "id": "s_rect_18",
+      "id": "s_rect_19",
       "type": "text",
       "x": 80,
       "y": 1461,
@@ -732,7 +747,7 @@
       }
     },
     {
-      "id": "s_rect_19",
+      "id": "s_rect_1a",
       "type": "math",
       "x": 400,
       "y": 1461,
@@ -749,7 +764,7 @@
       }
     },
     {
-      "id": "s_rect_1a",
+      "id": "s_rect_1b",
       "type": "text",
       "x": 80,
       "y": 1511,
@@ -764,7 +779,7 @@
       }
     },
     {
-      "id": "s_rect_1b",
+      "id": "s_rect_1c",
       "type": "math",
       "x": 400,
       "y": 1511,
@@ -781,7 +796,7 @@
       }
     },
     {
-      "id": "s_rect_1c",
+      "id": "s_rect_1d",
       "type": "text",
       "x": 80,
       "y": 1568,
@@ -796,7 +811,7 @@
       }
     },
     {
-      "id": "s_rect_1d",
+      "id": "s_rect_1e",
       "type": "math",
       "x": 400,
       "y": 1561,
@@ -813,7 +828,7 @@
       }
     },
     {
-      "id": "s_rect_1e",
+      "id": "s_rect_1f",
       "type": "text",
       "x": 80,
       "y": 1618,
@@ -828,7 +843,7 @@
       }
     },
     {
-      "id": "s_rect_1f",
+      "id": "s_rect_1g",
       "type": "math",
       "x": 400,
       "y": 1611,
@@ -845,7 +860,7 @@
       }
     },
     {
-      "id": "s_rect_1g",
+      "id": "s_rect_1h",
       "type": "text",
       "x": 80,
       "y": 1651,
@@ -860,7 +875,7 @@
       }
     },
     {
-      "id": "s_rect_1h",
+      "id": "s_rect_1i",
       "type": "text",
       "x": 80,
       "y": 1681,
@@ -876,7 +891,7 @@
       }
     },
     {
-      "id": "s_rect_1i",
+      "id": "s_rect_1j",
       "type": "text",
       "x": 80,
       "y": 1718,
@@ -891,7 +906,7 @@
       }
     },
     {
-      "id": "s_rect_1j",
+      "id": "s_rect_1k",
       "type": "math",
       "x": 400,
       "y": 1711,
@@ -908,7 +923,7 @@
       }
     },
     {
-      "id": "s_rect_1k",
+      "id": "s_rect_1l",
       "type": "text",
       "x": 80,
       "y": 1761,
@@ -924,7 +939,7 @@
       }
     },
     {
-      "id": "s_rect_1l",
+      "id": "s_rect_1m",
       "type": "text",
       "x": 80,
       "y": 1798,
@@ -939,7 +954,7 @@
       }
     },
     {
-      "id": "s_rect_1m",
+      "id": "s_rect_1n",
       "type": "math",
       "x": 400,
       "y": 1791,
@@ -956,7 +971,7 @@
       }
     },
     {
-      "id": "s_rect_1n",
+      "id": "s_rect_1o",
       "type": "text",
       "x": 80,
       "y": 1841,
@@ -971,7 +986,7 @@
       }
     },
     {
-      "id": "s_rect_1o",
+      "id": "s_rect_1p",
       "type": "math",
       "x": 400,
       "y": 1841,
@@ -988,7 +1003,7 @@
       }
     },
     {
-      "id": "s_rect_1p",
+      "id": "s_rect_1q",
       "type": "text",
       "x": 80,
       "y": 1891,
@@ -1003,7 +1018,7 @@
       }
     },
     {
-      "id": "s_rect_1q",
+      "id": "s_rect_1r",
       "type": "math",
       "x": 400,
       "y": 1891,
@@ -1020,7 +1035,7 @@
       }
     },
     {
-      "id": "s_rect_1r",
+      "id": "s_rect_1s",
       "type": "text",
       "x": 80,
       "y": 1948,
@@ -1035,7 +1050,7 @@
       }
     },
     {
-      "id": "s_rect_1s",
+      "id": "s_rect_1t",
       "type": "math",
       "x": 400,
       "y": 1941,
@@ -1052,7 +1067,7 @@
       }
     },
     {
-      "id": "s_rect_1t",
+      "id": "s_rect_1u",
       "type": "text",
       "x": 80,
       "y": 1988,
@@ -1067,7 +1082,7 @@
       }
     },
     {
-      "id": "s_rect_1u",
+      "id": "s_rect_1v",
       "type": "math",
       "x": 400,
       "y": 1981,
@@ -1084,7 +1099,7 @@
       }
     },
     {
-      "id": "s_rect_1v",
+      "id": "s_rect_1w",
       "type": "text",
       "x": 80,
       "y": 2041,
@@ -1100,7 +1115,7 @@
       }
     },
     {
-      "id": "s_rect_1w",
+      "id": "s_rect_1x",
       "type": "text",
       "x": 80,
       "y": 2081,
@@ -1115,7 +1130,7 @@
       }
     },
     {
-      "id": "s_rect_1x",
+      "id": "s_rect_1y",
       "type": "math",
       "x": 400,
       "y": 2071,
@@ -1132,7 +1147,7 @@
       }
     },
     {
-      "id": "s_rect_1y",
+      "id": "s_rect_1z",
       "type": "text",
       "x": 80,
       "y": 2132,
@@ -1147,7 +1162,7 @@
       }
     },
     {
-      "id": "s_rect_1z",
+      "id": "s_rect_20",
       "type": "math",
       "x": 400,
       "y": 2131,
@@ -1164,7 +1179,7 @@
       }
     },
     {
-      "id": "s_rect_20",
+      "id": "s_rect_21",
       "type": "text",
       "x": 80,
       "y": 2433,
@@ -1179,7 +1194,7 @@
       }
     },
     {
-      "id": "s_rect_21",
+      "id": "s_rect_22",
       "type": "math",
       "x": 400,
       "y": 2422,
@@ -1196,7 +1211,7 @@
       }
     },
     {
-      "id": "s_rect_22",
+      "id": "s_rect_23",
       "type": "text",
       "x": 80,
       "y": 2493,
@@ -1211,7 +1226,7 @@
       }
     },
     {
-      "id": "s_rect_23",
+      "id": "s_rect_24",
       "type": "math",
       "x": 400,
       "y": 2482,
@@ -1228,7 +1243,7 @@
       }
     },
     {
-      "id": "s_rect_24",
+      "id": "s_rect_25",
       "type": "text",
       "x": 80,
       "y": 2552,
@@ -1243,7 +1258,7 @@
       }
     },
     {
-      "id": "s_rect_25",
+      "id": "s_rect_26",
       "type": "math",
       "x": 400,
       "y": 2542,
@@ -1260,7 +1275,7 @@
       }
     },
     {
-      "id": "s_rect_26",
+      "id": "s_rect_27",
       "type": "text",
       "x": 80,
       "y": 2605,
@@ -1275,7 +1290,7 @@
       }
     },
     {
-      "id": "s_rect_27",
+      "id": "s_rect_28",
       "type": "math",
       "x": 400,
       "y": 2602,
@@ -1292,7 +1307,7 @@
       }
     },
     {
-      "id": "s_rect_28",
+      "id": "s_rect_29",
       "type": "text",
       "x": 80,
       "y": 2672,
@@ -1308,7 +1323,7 @@
       }
     },
     {
-      "id": "s_rect_29",
+      "id": "s_rect_2a",
       "type": "text",
       "x": 80,
       "y": 2712,
@@ -1324,7 +1339,7 @@
       }
     },
     {
-      "id": "s_rect_2a",
+      "id": "s_rect_2b",
       "type": "text",
       "x": 80,
       "y": 2742,
@@ -1339,7 +1354,7 @@
       }
     },
     {
-      "id": "s_rect_2b",
+      "id": "s_rect_2c",
       "type": "math",
       "x": 400,
       "y": 2742,
@@ -1356,7 +1371,7 @@
       }
     },
     {
-      "id": "s_rect_2c",
+      "id": "s_rect_2d",
       "type": "text",
       "x": 80,
       "y": 2802,
@@ -1371,7 +1386,7 @@
       }
     },
     {
-      "id": "s_rect_2d",
+      "id": "s_rect_2e",
       "type": "math",
       "x": 400,
       "y": 2802,
@@ -1388,7 +1403,7 @@
       }
     },
     {
-      "id": "s_rect_2e",
+      "id": "s_rect_2f",
       "type": "text",
       "x": 80,
       "y": 2861,
@@ -1403,7 +1418,7 @@
       }
     },
     {
-      "id": "s_rect_2f",
+      "id": "s_rect_2g",
       "type": "math",
       "x": 400,
       "y": 2852,
@@ -1420,7 +1435,7 @@
       }
     },
     {
-      "id": "s_rect_2g",
+      "id": "s_rect_2h",
       "type": "text",
       "x": 80,
       "y": 2912,
@@ -1435,7 +1450,7 @@
       }
     },
     {
-      "id": "s_rect_2h",
+      "id": "s_rect_2i",
       "type": "math",
       "x": 400,
       "y": 2902,
@@ -1452,7 +1467,7 @@
       }
     },
     {
-      "id": "s_rect_2i",
+      "id": "s_rect_2j",
       "type": "text",
       "x": 80,
       "y": 2966,
@@ -1467,7 +1482,7 @@
       }
     },
     {
-      "id": "s_rect_2j",
+      "id": "s_rect_2k",
       "type": "math",
       "x": 96,
       "y": 2992,
@@ -1484,7 +1499,7 @@
       }
     },
     {
-      "id": "s_rect_2k",
+      "id": "s_rect_2l",
       "type": "text",
       "x": 80,
       "y": 3046,
@@ -1499,7 +1514,7 @@
       }
     },
     {
-      "id": "s_rect_2l",
+      "id": "s_rect_2m",
       "type": "math",
       "x": 96,
       "y": 3072,
@@ -1516,7 +1531,7 @@
       }
     },
     {
-      "id": "s_rect_2m",
+      "id": "s_rect_2n",
       "type": "text",
       "x": 80,
       "y": 3119,
@@ -1531,7 +1546,7 @@
       }
     },
     {
-      "id": "s_rect_2n",
+      "id": "s_rect_2o",
       "type": "math",
       "x": 400,
       "y": 3112,
@@ -1548,7 +1563,7 @@
       }
     },
     {
-      "id": "s_rect_2o",
+      "id": "s_rect_2p",
       "type": "text",
       "x": 80,
       "y": 3152,
@@ -1564,7 +1579,7 @@
       }
     },
     {
-      "id": "s_rect_2p",
+      "id": "s_rect_2q",
       "type": "text",
       "x": 80,
       "y": 3196,
@@ -1579,7 +1594,7 @@
       }
     },
     {
-      "id": "s_rect_2q",
+      "id": "s_rect_2r",
       "type": "math",
       "x": 96,
       "y": 3222,
@@ -1596,7 +1611,7 @@
       }
     },
     {
-      "id": "s_rect_2r",
+      "id": "s_rect_2s",
       "type": "text",
       "x": 80,
       "y": 3286,
@@ -1611,7 +1626,7 @@
       }
     },
     {
-      "id": "s_rect_2s",
+      "id": "s_rect_2t",
       "type": "math",
       "x": 96,
       "y": 3312,
@@ -1628,7 +1643,7 @@
       }
     },
     {
-      "id": "s_rect_2t",
+      "id": "s_rect_2u",
       "type": "text",
       "x": 80,
       "y": 3593,
@@ -1643,7 +1658,7 @@
       }
     },
     {
-      "id": "s_rect_2u",
+      "id": "s_rect_2v",
       "type": "text",
       "x": 80,
       "y": 3623,
@@ -1658,7 +1673,7 @@
       }
     },
     {
-      "id": "s_rect_2v",
+      "id": "s_rect_2w",
       "type": "text",
       "x": 80,
       "y": 3653,
@@ -1673,7 +1688,7 @@
       }
     },
     {
-      "id": "s_rect_2w",
+      "id": "s_rect_2x",
       "type": "text",
       "x": 80,
       "y": 3683,
@@ -1688,7 +1703,7 @@
       }
     },
     {
-      "id": "s_rect_2x",
+      "id": "s_rect_2y",
       "type": "text",
       "x": 80,
       "y": 3720,
@@ -1703,7 +1718,7 @@
       }
     },
     {
-      "id": "s_rect_2y",
+      "id": "s_rect_2z",
       "type": "math",
       "x": 400,
       "y": 3713,
@@ -1720,7 +1735,7 @@
       }
     },
     {
-      "id": "s_rect_2z",
+      "id": "s_rect_30",
       "type": "text",
       "x": 80,
       "y": 3760,
@@ -1735,7 +1750,7 @@
       }
     },
     {
-      "id": "s_rect_30",
+      "id": "s_rect_31",
       "type": "math",
       "x": 400,
       "y": 3753,
@@ -1752,7 +1767,7 @@
       }
     },
     {
-      "id": "s_rect_31",
+      "id": "s_rect_32",
       "type": "text",
       "x": 80,
       "y": 3810,
@@ -1767,7 +1782,7 @@
       }
     },
     {
-      "id": "s_rect_32",
+      "id": "s_rect_33",
       "type": "math",
       "x": 400,
       "y": 3803,
@@ -1784,7 +1799,7 @@
       }
     },
     {
-      "id": "s_rect_33",
+      "id": "s_rect_34",
       "type": "text",
       "x": 80,
       "y": 3860,
@@ -1799,7 +1814,7 @@
       }
     },
     {
-      "id": "s_rect_34",
+      "id": "s_rect_35",
       "type": "math",
       "x": 400,
       "y": 3853,
@@ -1816,7 +1831,7 @@
       }
     },
     {
-      "id": "s_rect_35",
+      "id": "s_rect_36",
       "type": "text",
       "x": 80,
       "y": 3907,
@@ -1831,7 +1846,7 @@
       }
     },
     {
-      "id": "s_rect_36",
+      "id": "s_rect_37",
       "type": "math",
       "x": 96,
       "y": 3933,
@@ -1848,7 +1863,7 @@
       }
     },
     {
-      "id": "s_rect_37",
+      "id": "s_rect_38",
       "type": "text",
       "x": 80,
       "y": 3997,
@@ -1863,7 +1878,7 @@
       }
     },
     {
-      "id": "s_rect_38",
+      "id": "s_rect_39",
       "type": "math",
       "x": 96,
       "y": 4023,
@@ -1880,7 +1895,7 @@
       }
     },
     {
-      "id": "s_rect_39",
+      "id": "s_rect_3a",
       "type": "text",
       "x": 80,
       "y": 4087,
@@ -1895,7 +1910,7 @@
       }
     },
     {
-      "id": "s_rect_3a",
+      "id": "s_rect_3b",
       "type": "math",
       "x": 96,
       "y": 4113,
@@ -1912,7 +1927,7 @@
       }
     },
     {
-      "id": "s_rect_3b",
+      "id": "s_rect_3c",
       "type": "text",
       "x": 80,
       "y": 4157,
@@ -1927,7 +1942,7 @@
       }
     },
     {
-      "id": "s_rect_3c",
+      "id": "s_rect_3d",
       "type": "math",
       "x": 96,
       "y": 4183,
@@ -1944,7 +1959,7 @@
       }
     },
     {
-      "id": "s_rect_3d",
+      "id": "s_rect_3e",
       "type": "text",
       "x": 80,
       "y": 4233,
@@ -1959,7 +1974,7 @@
       }
     },
     {
-      "id": "s_rect_3e",
+      "id": "s_rect_3f",
       "type": "math",
       "x": 400,
       "y": 4233,
@@ -1976,7 +1991,7 @@
       }
     },
     {
-      "id": "s_rect_3f",
+      "id": "s_rect_3g",
       "type": "text",
       "x": 80,
       "y": 4283,
@@ -1991,7 +2006,7 @@
       }
     },
     {
-      "id": "s_rect_3g",
+      "id": "s_rect_3h",
       "type": "math",
       "x": 400,
       "y": 4283,
@@ -2008,7 +2023,7 @@
       }
     },
     {
-      "id": "s_rect_3h",
+      "id": "s_rect_3i",
       "type": "text",
       "x": 80,
       "y": 4333,
@@ -2023,7 +2038,7 @@
       }
     },
     {
-      "id": "s_rect_3i",
+      "id": "s_rect_3j",
       "type": "text",
       "x": 80,
       "y": 4363,
@@ -2042,7 +2057,7 @@
       }
     },
     {
-      "id": "s_rect_3j",
+      "id": "s_rect_3k",
       "type": "text",
       "x": 80,
       "y": 4403,
@@ -2061,7 +2076,7 @@
       }
     },
     {
-      "id": "s_rect_3k",
+      "id": "s_rect_3l",
       "type": "graph",
       "x": 247,
       "y": 4756,
@@ -2127,7 +2142,7 @@
       }
     },
     {
-      "id": "s_rect_3l",
+      "id": "s_rect_3m",
       "type": "text",
       "x": 80,
       "y": 5084,
@@ -2143,7 +2158,7 @@
       }
     },
     {
-      "id": "s_rect_3m",
+      "id": "s_rect_3n",
       "type": "text",
       "x": 80,
       "y": 5121,
@@ -2158,7 +2173,7 @@
       }
     },
     {
-      "id": "s_rect_3n",
+      "id": "s_rect_3o",
       "type": "math",
       "x": 400,
       "y": 5114,
@@ -2175,7 +2190,7 @@
       }
     },
     {
-      "id": "s_rect_3o",
+      "id": "s_rect_3p",
       "type": "text",
       "x": 80,
       "y": 5171,
@@ -2190,7 +2205,7 @@
       }
     },
     {
-      "id": "s_rect_3p",
+      "id": "s_rect_3q",
       "type": "math",
       "x": 400,
       "y": 5164,
@@ -2207,7 +2222,7 @@
       }
     },
     {
-      "id": "s_rect_3q",
+      "id": "s_rect_3r",
       "type": "text",
       "x": 80,
       "y": 5211,
@@ -2222,7 +2237,7 @@
       }
     },
     {
-      "id": "s_rect_3r",
+      "id": "s_rect_3s",
       "type": "math",
       "x": 400,
       "y": 5204,
@@ -2239,7 +2254,7 @@
       }
     },
     {
-      "id": "s_rect_3s",
+      "id": "s_rect_3t",
       "type": "text",
       "x": 80,
       "y": 5248,
@@ -2254,7 +2269,7 @@
       }
     },
     {
-      "id": "s_rect_3t",
+      "id": "s_rect_3u",
       "type": "math",
       "x": 96,
       "y": 5274,
@@ -2271,7 +2286,7 @@
       }
     },
     {
-      "id": "s_rect_3u",
+      "id": "s_rect_3v",
       "type": "text",
       "x": 80,
       "y": 5338,
@@ -2286,7 +2301,7 @@
       }
     },
     {
-      "id": "s_rect_3v",
+      "id": "s_rect_3w",
       "type": "math",
       "x": 96,
       "y": 5374,
@@ -2303,7 +2318,7 @@
       }
     },
     {
-      "id": "s_rect_3w",
+      "id": "s_rect_3x",
       "type": "text",
       "x": 80,
       "y": 5424,
@@ -2319,7 +2334,7 @@
       }
     },
     {
-      "id": "s_rect_3x",
+      "id": "s_rect_3y",
       "type": "text",
       "x": 80,
       "y": 5464,
@@ -2334,7 +2349,7 @@
       }
     },
     {
-      "id": "s_rect_3y",
+      "id": "s_rect_3z",
       "type": "text",
       "x": 80,
       "y": 5494,
@@ -2349,7 +2364,7 @@
       }
     },
     {
-      "id": "s_rect_3z",
+      "id": "s_rect_40",
       "type": "text",
       "x": 80,
       "y": 5524,
@@ -2364,7 +2379,7 @@
       }
     },
     {
-      "id": "s_rect_40",
+      "id": "s_rect_41",
       "type": "text",
       "x": 80,
       "y": 5566,
@@ -2379,7 +2394,7 @@
       }
     },
     {
-      "id": "s_rect_41",
+      "id": "s_rect_42",
       "type": "math",
       "x": 400,
       "y": 5554,
@@ -2396,7 +2411,7 @@
       }
     },
     {
-      "id": "s_rect_42",
+      "id": "s_rect_43",
       "type": "text",
       "x": 80,
       "y": 5625,
@@ -2411,7 +2426,7 @@
       }
     },
     {
-      "id": "s_rect_43",
+      "id": "s_rect_44",
       "type": "math",
       "x": 400,
       "y": 5614,
@@ -2428,7 +2443,7 @@
       }
     },
     {
-      "id": "s_rect_44",
+      "id": "s_rect_45",
       "type": "text",
       "x": 80,
       "y": 5955,
@@ -2443,7 +2458,7 @@
       }
     },
     {
-      "id": "s_rect_45",
+      "id": "s_rect_46",
       "type": "math",
       "x": 400,
       "y": 5935,
@@ -2460,7 +2475,7 @@
       }
     },
     {
-      "id": "s_rect_46",
+      "id": "s_rect_47",
       "type": "text",
       "x": 80,
       "y": 6024,
@@ -2475,7 +2490,7 @@
       }
     },
     {
-      "id": "s_rect_47",
+      "id": "s_rect_48",
       "type": "math",
       "x": 400,
       "y": 6015,
@@ -2492,7 +2507,7 @@
       }
     },
     {
-      "id": "s_rect_48",
+      "id": "s_rect_49",
       "type": "text",
       "x": 80,
       "y": 6069,
@@ -2507,7 +2522,7 @@
       }
     },
     {
-      "id": "s_rect_49",
+      "id": "s_rect_4a",
       "type": "math",
       "x": 96,
       "y": 6095,
@@ -2524,7 +2539,7 @@
       }
     },
     {
-      "id": "s_rect_4a",
+      "id": "s_rect_4b",
       "type": "text",
       "x": 80,
       "y": 6149,
@@ -2539,7 +2554,7 @@
       }
     },
     {
-      "id": "s_rect_4b",
+      "id": "s_rect_4c",
       "type": "math",
       "x": 96,
       "y": 6175,
@@ -2556,7 +2571,7 @@
       }
     },
     {
-      "id": "s_rect_4c",
+      "id": "s_rect_4d",
       "type": "text",
       "x": 80,
       "y": 6219,
@@ -2571,7 +2586,7 @@
       }
     },
     {
-      "id": "s_rect_4d",
+      "id": "s_rect_4e",
       "type": "math",
       "x": 96,
       "y": 6255,
@@ -2588,7 +2603,7 @@
       }
     },
     {
-      "id": "s_rect_4e",
+      "id": "s_rect_4f",
       "type": "text",
       "x": 80,
       "y": 6303,
@@ -2603,7 +2618,7 @@
       }
     },
     {
-      "id": "s_rect_4f",
+      "id": "s_rect_4g",
       "type": "math",
       "x": 400,
       "y": 6295,
@@ -2620,7 +2635,7 @@
       }
     },
     {
-      "id": "s_rect_4g",
+      "id": "s_rect_4h",
       "type": "text",
       "x": 80,
       "y": 6369,
@@ -2635,7 +2650,7 @@
       }
     },
     {
-      "id": "s_rect_4h",
+      "id": "s_rect_4i",
       "type": "math",
       "x": 96,
       "y": 6395,
@@ -2652,7 +2667,7 @@
       }
     },
     {
-      "id": "s_rect_4i",
+      "id": "s_rect_4j",
       "type": "text",
       "x": 80,
       "y": 6449,
@@ -2667,7 +2682,7 @@
       }
     },
     {
-      "id": "s_rect_4j",
+      "id": "s_rect_4k",
       "type": "math",
       "x": 96,
       "y": 6475,
@@ -2684,7 +2699,7 @@
       }
     },
     {
-      "id": "s_rect_4k",
+      "id": "s_rect_4l",
       "type": "text",
       "x": 80,
       "y": 6525,
@@ -2700,7 +2715,7 @@
       }
     },
     {
-      "id": "s_rect_4l",
+      "id": "s_rect_4m",
       "type": "text",
       "x": 80,
       "y": 6565,
@@ -2716,7 +2731,7 @@
       }
     },
     {
-      "id": "s_rect_4m",
+      "id": "s_rect_4n",
       "type": "text",
       "x": 80,
       "y": 6595,
@@ -2731,7 +2746,7 @@
       }
     },
     {
-      "id": "s_rect_4n",
+      "id": "s_rect_4o",
       "type": "text",
       "x": 80,
       "y": 6625,
@@ -2746,7 +2761,7 @@
       }
     },
     {
-      "id": "s_rect_4o",
+      "id": "s_rect_4p",
       "type": "text",
       "x": 80,
       "y": 6659,
@@ -2761,7 +2776,7 @@
       }
     },
     {
-      "id": "s_rect_4p",
+      "id": "s_rect_4q",
       "type": "math",
       "x": 96,
       "y": 6695,
@@ -2778,7 +2793,7 @@
       }
     },
     {
-      "id": "s_rect_4q",
+      "id": "s_rect_4r",
       "type": "text",
       "x": 80,
       "y": 6745,
@@ -2793,7 +2808,7 @@
       }
     },
     {
-      "id": "s_rect_4r",
+      "id": "s_rect_4s",
       "type": "math",
       "x": 400,
       "y": 6745,
@@ -2810,7 +2825,7 @@
       }
     },
     {
-      "id": "s_rect_4s",
+      "id": "s_rect_4t",
       "type": "text",
       "x": 80,
       "y": 6795,
@@ -2829,7 +2844,7 @@
       }
     },
     {
-      "id": "s_rect_4t",
+      "id": "s_rect_4u",
       "type": "text",
       "x": 80,
       "y": 7110,
@@ -2844,7 +2859,7 @@
       }
     },
     {
-      "id": "s_rect_4u",
+      "id": "s_rect_4v",
       "type": "math",
       "x": 96,
       "y": 7136,
@@ -2861,7 +2876,7 @@
       }
     },
     {
-      "id": "s_rect_4v",
+      "id": "s_rect_4w",
       "type": "text",
       "x": 80,
       "y": 7190,
@@ -2876,7 +2891,7 @@
       }
     },
     {
-      "id": "s_rect_4w",
+      "id": "s_rect_4x",
       "type": "math",
       "x": 96,
       "y": 7216,
@@ -2893,7 +2908,7 @@
       }
     },
     {
-      "id": "s_rect_4x",
+      "id": "s_rect_4y",
       "type": "text",
       "x": 80,
       "y": 7260,
@@ -2908,7 +2923,7 @@
       }
     },
     {
-      "id": "s_rect_4y",
+      "id": "s_rect_4z",
       "type": "math",
       "x": 96,
       "y": 7286,
@@ -2925,7 +2940,7 @@
       }
     },
     {
-      "id": "s_rect_4z",
+      "id": "s_rect_50",
       "type": "text",
       "x": 80,
       "y": 7336,
@@ -2944,7 +2959,7 @@
       }
     },
     {
-      "id": "s_rect_50",
+      "id": "s_rect_51",
       "type": "text",
       "x": 80,
       "y": 7380,
@@ -2959,7 +2974,7 @@
       }
     },
     {
-      "id": "s_rect_51",
+      "id": "s_rect_52",
       "type": "math",
       "x": 96,
       "y": 7406,
@@ -2976,7 +2991,7 @@
       }
     },
     {
-      "id": "s_rect_52",
+      "id": "s_rect_53",
       "type": "text",
       "x": 80,
       "y": 7450,
@@ -2991,7 +3006,7 @@
       }
     },
     {
-      "id": "s_rect_53",
+      "id": "s_rect_54",
       "type": "math",
       "x": 96,
       "y": 7476,
@@ -3008,7 +3023,7 @@
       }
     },
     {
-      "id": "s_rect_54",
+      "id": "s_rect_55",
       "type": "text",
       "x": 80,
       "y": 7533,
@@ -3023,7 +3038,7 @@
       }
     },
     {
-      "id": "s_rect_55",
+      "id": "s_rect_56",
       "type": "math",
       "x": 400,
       "y": 7526,
@@ -3040,7 +3055,7 @@
       }
     },
     {
-      "id": "s_rect_56",
+      "id": "s_rect_57",
       "type": "text",
       "x": 80,
       "y": 7570,
@@ -3055,7 +3070,7 @@
       }
     },
     {
-      "id": "s_rect_57",
+      "id": "s_rect_58",
       "type": "math",
       "x": 96,
       "y": 7596,
@@ -3072,14 +3087,14 @@
       }
     },
     {
-      "id": "s_rect_58",
+      "id": "s_rect_59",
       "type": "text",
       "x": 80,
-      "y": 7645,
+      "y": 7636,
       "props": {
         "w": 310,
         "h": 24,
-        "html": "Utilisation (governs)",
+        "html": "Moment utilisation at constant NEd (for information)",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -3087,7 +3102,7 @@
       }
     },
     {
-      "id": "s_rect_59",
+      "id": "s_rect_5a",
       "type": "math",
       "x": 400,
       "y": 7636,
@@ -3104,10 +3119,217 @@
       }
     },
     {
-      "id": "s_rect_5a",
+      "id": "s_rect_5b",
       "type": "text",
       "x": 80,
-      "y": 7703,
+      "y": 7696,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Governing ratio (as MBColumn): ray from the origin through (MEd, NEd) to the P–Mθ curve.",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_5c",
+      "type": "text",
+      "x": 80,
+      "y": 7727,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Curve and design point scaled by the curve maxima (the ratio does not depend on the scale)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_5d",
+      "type": "math",
+      "x": 400,
+      "y": 7726,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "n_{v}\\coloneq\\frac{N_{\\theta v}}{\\max\\left(N_{\\theta v}\\right)}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_5e",
+      "type": "text",
+      "x": 80,
+      "y": 7796,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_5f",
+      "type": "math",
+      "x": 400,
+      "y": 7786,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "m_{v}\\coloneq\\frac{M_{\\theta v}}{\\max\\left(M_{\\theta v}\\right)}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_5g",
+      "type": "text",
+      "x": 80,
+      "y": 7846,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_5h",
+      "type": "math",
+      "x": 400,
+      "y": 7836,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "n_{Ed}\\coloneq\\frac{N_{Ed}}{\\max\\left(N_{\\theta v}\\right)}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 4,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_5i",
+      "type": "text",
+      "x": 80,
+      "y": 7906,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_5j",
+      "type": "math",
+      "x": 400,
+      "y": 7896,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "m_{Ed}\\coloneq\\frac{M_{Ed}}{\\max\\left(M_{\\theta v}\\right)}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 4,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_5k",
+      "type": "text",
+      "x": 80,
+      "y": 7960,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Distance to the curve along the ray (interpolated by direction)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_5l",
+      "type": "math",
+      "x": 96,
+      "y": 7986,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\rho_{Rd}\\coloneq\\mathrm{linterp}\\left(\\frac{n_{v}}{\\sqrt{n_{v}^2+m_{v}^2}},\\sqrt{n_{v}^2+m_{v}^2},\\frac{n_{Ed}}{\\sqrt{n_{Ed}^2+m_{Ed}^2}}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 4,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_5m",
+      "type": "text",
+      "x": 80,
+      "y": 8290,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Radial utilisation (governs)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_5n",
+      "type": "math",
+      "x": 400,
+      "y": 8277,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\eta_{R}\\coloneq\\frac{\\sqrt{n_{Ed}^2+m_{Ed}^2}}{\\rho_{Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_5o",
+      "type": "text",
+      "x": 80,
+      "y": 8344,
       "props": {
         "w": 310,
         "h": 24,
@@ -3119,14 +3341,14 @@
       }
     },
     {
-      "id": "s_rect_5b",
+      "id": "s_rect_5p",
       "type": "math",
       "x": 400,
-      "y": 7696,
+      "y": 8337,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\eta_{M}\\le1",
+        "latex": "\\eta_{R}\\le1",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": 3,
@@ -3136,10 +3358,10 @@
       }
     },
     {
-      "id": "s_rect_5c",
+      "id": "s_rect_5q",
       "type": "text",
       "x": 80,
-      "y": 8277,
+      "y": 8387,
       "props": {
         "w": 630,
         "h": 24,
@@ -3152,10 +3374,10 @@
       }
     },
     {
-      "id": "s_rect_5d",
+      "id": "s_rect_5r",
       "type": "graph",
       "x": 187,
-      "y": 8309,
+      "y": 8409,
       "props": {
         "w": 420,
         "h": 420,
@@ -3193,10 +3415,10 @@
             "show": ""
           },
           {
-            "id": "nline",
+            "id": "ray",
             "label": "",
-            "x": "\\mathrm{stack}\\left(0,1\\right)\\max\\left(M_{Ed},M_{Rd.\\theta}\\right)",
-            "y": "\\mathrm{stack}\\left(1,1\\right)N_{Ed}",
+            "x": "\\mathrm{stack}\\left(0,\\max\\left(1,\\frac{1}{\\eta_{R}}\\right)\\right)M_{Ed}",
+            "y": "\\mathrm{stack}\\left(0,\\max\\left(1,\\frac{1}{\\eta_{R}}\\right)\\right)N_{Ed}",
             "style": "line",
             "r": "",
             "color": "#94a3b8",
@@ -3205,9 +3427,9 @@
           },
           {
             "id": "cap",
-            "label": "MRd,θ at NEd",
-            "x": "M_{Rd.\\theta}",
-            "y": "N_{Ed}",
+            "label": "Capacity on the ray",
+            "x": "\\frac{M_{Ed}}{\\eta_{R}}",
+            "y": "\\frac{N_{Ed}}{\\eta_{R}}",
             "style": "marker",
             "r": "",
             "color": "#047857",
@@ -3229,10 +3451,10 @@
       }
     },
     {
-      "id": "s_rect_5e",
+      "id": "s_rect_5s",
       "type": "text",
       "x": 80,
-      "y": 8757,
+      "y": 8867,
       "props": {
         "w": 630,
         "h": 24,
@@ -3245,10 +3467,10 @@
       }
     },
     {
-      "id": "s_rect_5f",
+      "id": "s_rect_5t",
       "type": "text",
       "x": 80,
-      "y": 8797,
+      "y": 8907,
       "props": {
         "w": 630,
         "h": 24,
@@ -3260,10 +3482,10 @@
       }
     },
     {
-      "id": "s_rect_5g",
+      "id": "s_rect_5u",
       "type": "text",
       "x": 80,
-      "y": 8834,
+      "y": 8944,
       "props": {
         "w": 310,
         "h": 24,
@@ -3275,10 +3497,10 @@
       }
     },
     {
-      "id": "s_rect_5h",
+      "id": "s_rect_5v",
       "type": "math",
       "x": 400,
-      "y": 8827,
+      "y": 8937,
       "props": {
         "w": 60,
         "h": 32,
@@ -3292,10 +3514,10 @@
       }
     },
     {
-      "id": "s_rect_5i",
+      "id": "s_rect_5w",
       "type": "text",
       "x": 80,
-      "y": 8876,
+      "y": 8986,
       "props": {
         "w": 310,
         "h": 24,
@@ -3307,10 +3529,10 @@
       }
     },
     {
-      "id": "s_rect_5j",
+      "id": "s_rect_5x",
       "type": "math",
       "x": 400,
-      "y": 8867,
+      "y": 8977,
       "props": {
         "w": 60,
         "h": 32,
@@ -3324,10 +3546,10 @@
       }
     },
     {
-      "id": "s_rect_5k",
+      "id": "s_rect_5y",
       "type": "text",
       "x": 80,
-      "y": 8931,
+      "y": 9041,
       "props": {
         "w": 630,
         "h": 24,
@@ -3339,10 +3561,10 @@
       }
     },
     {
-      "id": "s_rect_5l",
+      "id": "s_rect_5z",
       "type": "math",
       "x": 96,
-      "y": 8957,
+      "y": 9067,
       "props": {
         "w": 60,
         "h": 32,
@@ -3356,10 +3578,10 @@
       }
     },
     {
-      "id": "s_rect_5m",
+      "id": "s_rect_60",
       "type": "text",
       "x": 80,
-      "y": 9021,
+      "y": 9121,
       "props": {
         "w": 630,
         "h": 24,
@@ -3371,10 +3593,10 @@
       }
     },
     {
-      "id": "s_rect_5n",
+      "id": "s_rect_61",
       "type": "math",
       "x": 96,
-      "y": 9047,
+      "y": 9157,
       "props": {
         "w": 60,
         "h": 32,
@@ -3388,10 +3610,10 @@
       }
     },
     {
-      "id": "s_rect_5o",
+      "id": "s_rect_62",
       "type": "text",
       "x": 80,
-      "y": 9111,
+      "y": 9452,
       "props": {
         "w": 630,
         "h": 24,
@@ -3403,10 +3625,10 @@
       }
     },
     {
-      "id": "s_rect_5p",
+      "id": "s_rect_63",
       "type": "math",
       "x": 96,
-      "y": 9147,
+      "y": 9478,
       "props": {
         "w": 60,
         "h": 32,
@@ -3420,10 +3642,10 @@
       }
     },
     {
-      "id": "s_rect_5q",
+      "id": "s_rect_64",
       "type": "text",
       "x": 80,
-      "y": 9194,
+      "y": 9535,
       "props": {
         "w": 310,
         "h": 24,
@@ -3435,10 +3657,10 @@
       }
     },
     {
-      "id": "s_rect_5r",
+      "id": "s_rect_65",
       "type": "math",
       "x": 400,
-      "y": 9187,
+      "y": 9528,
       "props": {
         "w": 60,
         "h": 32,
@@ -3452,10 +3674,10 @@
       }
     },
     {
-      "id": "s_rect_5s",
+      "id": "s_rect_66",
       "type": "text",
       "x": 80,
-      "y": 9452,
+      "y": 9572,
       "props": {
         "w": 630,
         "h": 24,
@@ -3467,10 +3689,10 @@
       }
     },
     {
-      "id": "s_rect_5t",
+      "id": "s_rect_67",
       "type": "math",
       "x": 96,
-      "y": 9478,
+      "y": 9598,
       "props": {
         "w": 60,
         "h": 32,
@@ -3484,10 +3706,10 @@
       }
     },
     {
-      "id": "s_rect_5u",
+      "id": "s_rect_68",
       "type": "text",
       "x": 80,
-      "y": 9542,
+      "y": 9662,
       "props": {
         "w": 630,
         "h": 24,
@@ -3499,10 +3721,10 @@
       }
     },
     {
-      "id": "s_rect_5v",
+      "id": "s_rect_69",
       "type": "math",
       "x": 96,
-      "y": 9568,
+      "y": 9688,
       "props": {
         "w": 60,
         "h": 32,
@@ -3516,10 +3738,10 @@
       }
     },
     {
-      "id": "s_rect_5w",
+      "id": "s_rect_6a",
       "type": "text",
       "x": 80,
-      "y": 9612,
+      "y": 9732,
       "props": {
         "w": 630,
         "h": 24,
@@ -3531,10 +3753,10 @@
       }
     },
     {
-      "id": "s_rect_5x",
+      "id": "s_rect_6b",
       "type": "math",
       "x": 96,
-      "y": 9648,
+      "y": 9758,
       "props": {
         "w": 60,
         "h": 32,
@@ -3548,10 +3770,10 @@
       }
     },
     {
-      "id": "s_rect_5y",
+      "id": "s_rect_6c",
       "type": "text",
       "x": 80,
-      "y": 9698,
+      "y": 9818,
       "props": {
         "w": 310,
         "h": 24,
@@ -3563,10 +3785,10 @@
       }
     },
     {
-      "id": "s_rect_5z",
+      "id": "s_rect_6d",
       "type": "math",
       "x": 400,
-      "y": 9688,
+      "y": 9808,
       "props": {
         "w": 60,
         "h": 32,
@@ -3580,10 +3802,10 @@
       }
     },
     {
-      "id": "s_rect_60",
+      "id": "s_rect_6e",
       "type": "text",
       "x": 80,
-      "y": 9760,
+      "y": 9870,
       "props": {
         "w": 310,
         "h": 24,
@@ -3595,10 +3817,10 @@
       }
     },
     {
-      "id": "s_rect_61",
+      "id": "s_rect_6f",
       "type": "math",
       "x": 400,
-      "y": 9748,
+      "y": 9858,
       "props": {
         "w": 60,
         "h": 32,
@@ -3612,10 +3834,10 @@
       }
     },
     {
-      "id": "s_rect_62",
+      "id": "s_rect_6g",
       "type": "text",
       "x": 80,
-      "y": 9808,
+      "y": 9928,
       "props": {
         "w": 630,
         "h": 24,
@@ -3628,10 +3850,10 @@
       }
     },
     {
-      "id": "s_rect_63",
+      "id": "s_rect_6h",
       "type": "text",
       "x": 80,
-      "y": 9846,
+      "y": 9966,
       "props": {
         "w": 310,
         "h": 24,
@@ -3643,10 +3865,10 @@
       }
     },
     {
-      "id": "s_rect_64",
+      "id": "s_rect_6i",
       "type": "math",
       "x": 400,
-      "y": 9838,
+      "y": 9958,
       "props": {
         "w": 60,
         "h": 32,
@@ -3660,10 +3882,10 @@
       }
     },
     {
-      "id": "s_rect_65",
+      "id": "s_rect_6j",
       "type": "text",
       "x": 80,
-      "y": 9905,
+      "y": 10025,
       "props": {
         "w": 310,
         "h": 24,
@@ -3675,10 +3897,10 @@
       }
     },
     {
-      "id": "s_rect_66",
+      "id": "s_rect_6k",
       "type": "math",
       "x": 400,
-      "y": 9898,
+      "y": 10018,
       "props": {
         "w": 60,
         "h": 32,
@@ -3692,10 +3914,10 @@
       }
     },
     {
-      "id": "s_rect_67",
+      "id": "s_rect_6l",
       "type": "text",
       "x": 80,
-      "y": 9945,
+      "y": 10065,
       "props": {
         "w": 310,
         "h": 24,
@@ -3707,10 +3929,10 @@
       }
     },
     {
-      "id": "s_rect_68",
+      "id": "s_rect_6m",
       "type": "math",
       "x": 400,
-      "y": 9938,
+      "y": 10058,
       "props": {
         "w": 60,
         "h": 32,
@@ -3724,10 +3946,10 @@
       }
     },
     {
-      "id": "s_rect_69",
+      "id": "s_rect_6n",
       "type": "text",
       "x": 80,
-      "y": 9985,
+      "y": 10105,
       "props": {
         "w": 310,
         "h": 24,
@@ -3739,10 +3961,10 @@
       }
     },
     {
-      "id": "s_rect_6a",
+      "id": "s_rect_6o",
       "type": "math",
       "x": 400,
-      "y": 9978,
+      "y": 10098,
       "props": {
         "w": 60,
         "h": 32,
@@ -3756,10 +3978,10 @@
       }
     },
     {
-      "id": "s_rect_6b",
+      "id": "s_rect_6p",
       "type": "text",
       "x": 80,
-      "y": 10032,
+      "y": 10142,
       "props": {
         "w": 630,
         "h": 24,
@@ -3771,10 +3993,10 @@
       }
     },
     {
-      "id": "s_rect_6c",
+      "id": "s_rect_6q",
       "type": "math",
       "x": 96,
-      "y": 10058,
+      "y": 10178,
       "props": {
         "w": 60,
         "h": 32,
@@ -3788,10 +4010,10 @@
       }
     },
     {
-      "id": "s_rect_6d",
+      "id": "s_rect_6r",
       "type": "text",
       "x": 80,
-      "y": 10102,
+      "y": 10222,
       "props": {
         "w": 630,
         "h": 24,
@@ -3803,10 +4025,10 @@
       }
     },
     {
-      "id": "s_rect_6e",
+      "id": "s_rect_6s",
       "type": "math",
       "x": 96,
-      "y": 10128,
+      "y": 10248,
       "props": {
         "w": 60,
         "h": 32,
@@ -3820,10 +4042,10 @@
       }
     },
     {
-      "id": "s_rect_6f",
+      "id": "s_rect_6t",
       "type": "text",
       "x": 80,
-      "y": 10178,
+      "y": 10288,
       "props": {
         "w": 630,
         "h": 24,
@@ -3836,10 +4058,10 @@
       }
     },
     {
-      "id": "s_rect_6g",
+      "id": "s_rect_6u",
       "type": "text",
       "x": 80,
-      "y": 10216,
+      "y": 10336,
       "props": {
         "w": 310,
         "h": 24,
@@ -3851,10 +4073,10 @@
       }
     },
     {
-      "id": "s_rect_6h",
+      "id": "s_rect_6v",
       "type": "math",
       "x": 400,
-      "y": 10208,
+      "y": 10328,
       "props": {
         "w": 60,
         "h": 32,
@@ -3868,10 +4090,10 @@
       }
     },
     {
-      "id": "s_rect_6i",
+      "id": "s_rect_6w",
       "type": "text",
       "x": 80,
-      "y": 10275,
+      "y": 10626,
       "props": {
         "w": 310,
         "h": 24,
@@ -3883,10 +4105,10 @@
       }
     },
     {
-      "id": "s_rect_6j",
+      "id": "s_rect_6x",
       "type": "math",
       "x": 400,
-      "y": 10268,
+      "y": 10619,
       "props": {
         "w": 60,
         "h": 32,
@@ -3900,10 +4122,10 @@
       }
     },
     {
-      "id": "s_rect_6k",
+      "id": "s_rect_6y",
       "type": "text",
       "x": 80,
-      "y": 10315,
+      "y": 10666,
       "props": {
         "w": 310,
         "h": 24,
@@ -3915,10 +4137,10 @@
       }
     },
     {
-      "id": "s_rect_6l",
+      "id": "s_rect_6z",
       "type": "math",
       "x": 400,
-      "y": 10308,
+      "y": 10659,
       "props": {
         "w": 60,
         "h": 32,
@@ -3932,10 +4154,10 @@
       }
     },
     {
-      "id": "s_rect_6m",
+      "id": "s_rect_70",
       "type": "text",
       "x": 80,
-      "y": 10355,
+      "y": 10716,
       "props": {
         "w": 310,
         "h": 24,
@@ -3947,10 +4169,10 @@
       }
     },
     {
-      "id": "s_rect_6n",
+      "id": "s_rect_71",
       "type": "math",
       "x": 400,
-      "y": 10348,
+      "y": 10709,
       "props": {
         "w": 60,
         "h": 32,
@@ -3964,10 +4186,10 @@
       }
     },
     {
-      "id": "s_rect_6o",
+      "id": "s_rect_72",
       "type": "text",
       "x": 80,
-      "y": 10623,
+      "y": 10753,
       "props": {
         "w": 630,
         "h": 24,
@@ -3979,10 +4201,10 @@
       }
     },
     {
-      "id": "s_rect_6p",
+      "id": "s_rect_73",
       "type": "math",
       "x": 96,
-      "y": 10649,
+      "y": 10779,
       "props": {
         "w": 60,
         "h": 32,
@@ -3996,10 +4218,10 @@
       }
     },
     {
-      "id": "s_rect_6q",
+      "id": "s_rect_74",
       "type": "text",
       "x": 80,
-      "y": 10703,
+      "y": 10823,
       "props": {
         "w": 630,
         "h": 24,
@@ -4011,10 +4233,10 @@
       }
     },
     {
-      "id": "s_rect_6r",
+      "id": "s_rect_75",
       "type": "math",
       "x": 96,
-      "y": 10729,
+      "y": 10859,
       "props": {
         "w": 60,
         "h": 32,
@@ -4028,10 +4250,10 @@
       }
     },
     {
-      "id": "s_rect_6s",
+      "id": "s_rect_76",
       "type": "text",
       "x": 80,
-      "y": 10779,
+      "y": 10909,
       "props": {
         "w": 630,
         "h": 24,
@@ -4044,14 +4266,14 @@
       }
     },
     {
-      "id": "s_rect_6t",
+      "id": "s_rect_77",
       "type": "text",
       "x": 80,
-      "y": 10826,
+      "y": 10956,
       "props": {
         "w": 310,
         "h": 24,
-        "html": "Biaxial utilisation along θ (governs)",
+        "html": "Radial utilisation on P–Mθ (governs)",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -4059,10 +4281,42 @@
       }
     },
     {
-      "id": "s_rect_6u",
+      "id": "s_rect_78",
       "type": "math",
       "x": 400,
-      "y": 10819,
+      "y": 10949,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\eta_{R}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_79",
+      "type": "text",
+      "x": 80,
+      "y": 10996,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Moment utilisation at constant NEd",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_7a",
+      "type": "math",
+      "x": 400,
+      "y": 10989,
       "props": {
         "w": 60,
         "h": 32,
@@ -4076,10 +4330,10 @@
       }
     },
     {
-      "id": "s_rect_6v",
+      "id": "s_rect_7b",
       "type": "text",
       "x": 80,
-      "y": 10870,
+      "y": 11040,
       "props": {
         "w": 310,
         "h": 24,
@@ -4091,10 +4345,10 @@
       }
     },
     {
-      "id": "s_rect_6w",
+      "id": "s_rect_7c",
       "type": "math",
       "x": 400,
-      "y": 10859,
+      "y": 11029,
       "props": {
         "w": 60,
         "h": 32,
@@ -4108,10 +4362,10 @@
       }
     },
     {
-      "id": "s_rect_6x",
+      "id": "s_rect_7d",
       "type": "text",
       "x": 80,
-      "y": 10928,
+      "y": 11098,
       "props": {
         "w": 310,
         "h": 24,
@@ -4123,10 +4377,10 @@
       }
     },
     {
-      "id": "s_rect_6y",
+      "id": "s_rect_7e",
       "type": "math",
       "x": 400,
-      "y": 10919,
+      "y": 11089,
       "props": {
         "w": 60,
         "h": 32,
@@ -4140,7 +4394,7 @@
       }
     },
     {
-      "id": "s_rect_6z",
+      "id": "s_rect_7f",
       "type": "text",
       "x": 80,
       "y": 11790,
@@ -4159,7 +4413,7 @@
       }
     },
     {
-      "id": "s_rect_70",
+      "id": "s_rect_7g",
       "type": "text",
       "x": 80,
       "y": 11830,
@@ -4174,7 +4428,7 @@
       }
     },
     {
-      "id": "s_rect_71",
+      "id": "s_rect_7h",
       "type": "text",
       "x": 80,
       "y": 11860,
@@ -4189,7 +4443,7 @@
       }
     },
     {
-      "id": "s_rect_72",
+      "id": "s_rect_7i",
       "type": "text",
       "x": 80,
       "y": 12961,
@@ -4209,7 +4463,7 @@
       }
     },
     {
-      "id": "s_rect_73",
+      "id": "s_rect_7j",
       "type": "text",
       "x": 80,
       "y": 13001,
@@ -4224,7 +4478,7 @@
       }
     },
     {
-      "id": "s_rect_74",
+      "id": "s_rect_7k",
       "type": "math",
       "x": 400,
       "y": 13001,
@@ -4241,7 +4495,7 @@
       }
     },
     {
-      "id": "s_rect_75",
+      "id": "s_rect_7l",
       "type": "text",
       "x": 80,
       "y": 13058,
@@ -4256,7 +4510,7 @@
       }
     },
     {
-      "id": "s_rect_76",
+      "id": "s_rect_7m",
       "type": "math",
       "x": 400,
       "y": 13051,
@@ -4273,7 +4527,7 @@
       }
     },
     {
-      "id": "s_rect_77",
+      "id": "s_rect_7n",
       "type": "text",
       "x": 80,
       "y": 13095,
@@ -4288,7 +4542,7 @@
       }
     },
     {
-      "id": "s_rect_78",
+      "id": "s_rect_7o",
       "type": "math",
       "x": 96,
       "y": 13121,
@@ -4305,7 +4559,7 @@
       }
     },
     {
-      "id": "s_rect_79",
+      "id": "s_rect_7p",
       "type": "text",
       "x": 80,
       "y": 13175,
@@ -4320,7 +4574,7 @@
       }
     },
     {
-      "id": "s_rect_7a",
+      "id": "s_rect_7q",
       "type": "math",
       "x": 96,
       "y": 13201,
@@ -4337,7 +4591,7 @@
       }
     },
     {
-      "id": "s_rect_7b",
+      "id": "s_rect_7r",
       "type": "text",
       "x": 80,
       "y": 13245,
@@ -4352,7 +4606,7 @@
       }
     },
     {
-      "id": "s_rect_7c",
+      "id": "s_rect_7s",
       "type": "math",
       "x": 96,
       "y": 13271,
@@ -4369,7 +4623,7 @@
       }
     },
     {
-      "id": "s_rect_7d",
+      "id": "s_rect_7t",
       "type": "text",
       "x": 80,
       "y": 13328,
@@ -4384,7 +4638,7 @@
       }
     },
     {
-      "id": "s_rect_7e",
+      "id": "s_rect_7u",
       "type": "math",
       "x": 400,
       "y": 13321,
@@ -4401,7 +4655,7 @@
       }
     },
     {
-      "id": "s_rect_7f",
+      "id": "s_rect_7v",
       "type": "text",
       "x": 80,
       "y": 13368,
@@ -4416,7 +4670,7 @@
       }
     },
     {
-      "id": "s_rect_7g",
+      "id": "s_rect_7w",
       "type": "math",
       "x": 400,
       "y": 13361,
@@ -4433,7 +4687,7 @@
       }
     },
     {
-      "id": "s_rect_7h",
+      "id": "s_rect_7x",
       "type": "text",
       "x": 96,
       "y": 13401,
@@ -4448,7 +4702,7 @@
       }
     },
     {
-      "id": "s_rect_7i",
+      "id": "s_rect_7y",
       "type": "math",
       "x": 96,
       "y": 13431,
@@ -4467,7 +4721,7 @@
       }
     },
     {
-      "id": "s_rect_7j",
+      "id": "s_rect_7z",
       "type": "math",
       "x": 168,
       "y": 13431,
@@ -4486,7 +4740,7 @@
       }
     },
     {
-      "id": "s_rect_7k",
+      "id": "s_rect_80",
       "type": "math",
       "x": 283,
       "y": 13431,
@@ -4505,7 +4759,7 @@
       }
     },
     {
-      "id": "s_rect_7l",
+      "id": "s_rect_81",
       "type": "text",
       "x": 80,
       "y": 13701,
@@ -4521,7 +4775,7 @@
       }
     },
     {
-      "id": "s_rect_7m",
+      "id": "s_rect_82",
       "type": "text",
       "x": 80,
       "y": 13731,
@@ -4536,7 +4790,7 @@
       }
     },
     {
-      "id": "s_rect_7n",
+      "id": "s_rect_83",
       "type": "text",
       "x": 80,
       "y": 13761,
@@ -4551,7 +4805,7 @@
       }
     },
     {
-      "id": "s_rect_7o",
+      "id": "s_rect_84",
       "type": "text",
       "x": 80,
       "y": 13798,
@@ -4566,7 +4820,7 @@
       }
     },
     {
-      "id": "s_rect_7p",
+      "id": "s_rect_85",
       "type": "math",
       "x": 400,
       "y": 13791,
@@ -4583,7 +4837,7 @@
       }
     },
     {
-      "id": "s_rect_7q",
+      "id": "s_rect_86",
       "type": "text",
       "x": 80,
       "y": 14132,
@@ -4603,7 +4857,7 @@
       }
     },
     {
-      "id": "s_rect_7r",
+      "id": "s_rect_87",
       "type": "text",
       "x": 80,
       "y": 14172,
@@ -4618,7 +4872,7 @@
       }
     },
     {
-      "id": "s_rect_7s",
+      "id": "s_rect_88",
       "type": "text",
       "x": 80,
       "y": 14202,
@@ -4633,7 +4887,7 @@
       }
     },
     {
-      "id": "s_rect_7t",
+      "id": "s_rect_89",
       "type": "text",
       "x": 80,
       "y": 14240,
@@ -4648,7 +4902,7 @@
       }
     },
     {
-      "id": "s_rect_7u",
+      "id": "s_rect_8a",
       "type": "math",
       "x": 400,
       "y": 14232,
@@ -4665,7 +4919,7 @@
       }
     },
     {
-      "id": "s_rect_7v",
+      "id": "s_rect_8b",
       "type": "text",
       "x": 80,
       "y": 14289,
@@ -4680,7 +4934,7 @@
       }
     },
     {
-      "id": "s_rect_7w",
+      "id": "s_rect_8c",
       "type": "math",
       "x": 400,
       "y": 14282,
@@ -4697,7 +4951,7 @@
       }
     },
     {
-      "id": "s_rect_7x",
+      "id": "s_rect_8d",
       "type": "text",
       "x": 80,
       "y": 14329,
@@ -4712,7 +4966,7 @@
       }
     },
     {
-      "id": "s_rect_7y",
+      "id": "s_rect_8e",
       "type": "math",
       "x": 400,
       "y": 14322,
@@ -4729,7 +4983,7 @@
       }
     },
     {
-      "id": "s_rect_7z",
+      "id": "s_rect_8f",
       "type": "text",
       "x": 80,
       "y": 14372,
@@ -4744,7 +4998,7 @@
       }
     },
     {
-      "id": "s_rect_80",
+      "id": "s_rect_8g",
       "type": "math",
       "x": 400,
       "y": 14372,
@@ -4761,7 +5015,7 @@
       }
     },
     {
-      "id": "s_rect_81",
+      "id": "s_rect_8h",
       "type": "text",
       "x": 80,
       "y": 14429,
@@ -4776,7 +5030,7 @@
       }
     },
     {
-      "id": "s_rect_82",
+      "id": "s_rect_8i",
       "type": "math",
       "x": 400,
       "y": 14422,
@@ -4793,7 +5047,7 @@
       }
     },
     {
-      "id": "s_rect_83",
+      "id": "s_rect_8j",
       "type": "text",
       "x": 80,
       "y": 14469,
@@ -4808,7 +5062,7 @@
       }
     },
     {
-      "id": "s_rect_84",
+      "id": "s_rect_8k",
       "type": "math",
       "x": 400,
       "y": 14462,
@@ -4825,7 +5079,7 @@
       }
     },
     {
-      "id": "s_rect_85",
+      "id": "s_rect_8l",
       "type": "text",
       "x": 80,
       "y": 14509,
@@ -4840,7 +5094,7 @@
       }
     },
     {
-      "id": "s_rect_86",
+      "id": "s_rect_8m",
       "type": "math",
       "x": 400,
       "y": 14502,
@@ -4857,7 +5111,7 @@
       }
     },
     {
-      "id": "s_rect_87",
+      "id": "s_rect_8n",
       "type": "text",
       "x": 80,
       "y": 14552,
@@ -4872,7 +5126,7 @@
       }
     },
     {
-      "id": "s_rect_88",
+      "id": "s_rect_8o",
       "type": "math",
       "x": 400,
       "y": 14552,
@@ -4889,7 +5143,7 @@
       }
     },
     {
-      "id": "s_rect_89",
+      "id": "s_rect_8p",
       "type": "text",
       "x": 80,
       "y": 14606,
@@ -4904,7 +5158,7 @@
       }
     },
     {
-      "id": "s_rect_8a",
+      "id": "s_rect_8q",
       "type": "math",
       "x": 96,
       "y": 14632,
@@ -4921,7 +5175,7 @@
       }
     },
     {
-      "id": "s_rect_8b",
+      "id": "s_rect_8r",
       "type": "text",
       "x": 80,
       "y": 14684,
@@ -4936,7 +5190,7 @@
       }
     },
     {
-      "id": "s_rect_8c",
+      "id": "s_rect_8s",
       "type": "math",
       "x": 400,
       "y": 14672,
@@ -4953,7 +5207,7 @@
       }
     },
     {
-      "id": "s_rect_8d",
+      "id": "s_rect_8t",
       "type": "text",
       "x": 80,
       "y": 14749,
@@ -4968,7 +5222,7 @@
       }
     },
     {
-      "id": "s_rect_8e",
+      "id": "s_rect_8u",
       "type": "math",
       "x": 400,
       "y": 14742,
@@ -4985,7 +5239,7 @@
       }
     },
     {
-      "id": "s_rect_8f",
+      "id": "s_rect_8v",
       "type": "text",
       "x": 80,
       "y": 14786,
@@ -5000,7 +5254,7 @@
       }
     },
     {
-      "id": "s_rect_8g",
+      "id": "s_rect_8w",
       "type": "math",
       "x": 96,
       "y": 14812,
@@ -5017,7 +5271,7 @@
       }
     },
     {
-      "id": "s_rect_8h",
+      "id": "s_rect_8x",
       "type": "text",
       "x": 80,
       "y": 14886,
@@ -5032,7 +5286,7 @@
       }
     },
     {
-      "id": "s_rect_8i",
+      "id": "s_rect_8y",
       "type": "math",
       "x": 96,
       "y": 14912,
@@ -5049,7 +5303,7 @@
       }
     },
     {
-      "id": "s_rect_8j",
+      "id": "s_rect_8z",
       "type": "text",
       "x": 80,
       "y": 14976,
@@ -5064,7 +5318,7 @@
       }
     },
     {
-      "id": "s_rect_8k",
+      "id": "s_rect_90",
       "type": "math",
       "x": 96,
       "y": 15002,
@@ -5081,7 +5335,7 @@
       }
     },
     {
-      "id": "s_rect_8l",
+      "id": "s_rect_91",
       "type": "text",
       "x": 80,
       "y": 15307,
@@ -5096,7 +5350,7 @@
       }
     },
     {
-      "id": "s_rect_8m",
+      "id": "s_rect_92",
       "type": "math",
       "x": 96,
       "y": 15333,
@@ -5113,7 +5367,7 @@
       }
     },
     {
-      "id": "s_rect_8n",
+      "id": "s_rect_93",
       "type": "text",
       "x": 80,
       "y": 15387,
@@ -5128,7 +5382,7 @@
       }
     },
     {
-      "id": "s_rect_8o",
+      "id": "s_rect_94",
       "type": "math",
       "x": 96,
       "y": 15413,
@@ -5145,7 +5399,7 @@
       }
     },
     {
-      "id": "s_rect_8p",
+      "id": "s_rect_95",
       "type": "text",
       "x": 80,
       "y": 15457,
@@ -5160,7 +5414,7 @@
       }
     },
     {
-      "id": "s_rect_8q",
+      "id": "s_rect_96",
       "type": "math",
       "x": 96,
       "y": 15483,
@@ -5177,7 +5431,7 @@
       }
     },
     {
-      "id": "s_rect_8r",
+      "id": "s_rect_97",
       "type": "text",
       "x": 80,
       "y": 15537,
@@ -5192,7 +5446,7 @@
       }
     },
     {
-      "id": "s_rect_8s",
+      "id": "s_rect_98",
       "type": "math",
       "x": 96,
       "y": 15563,
@@ -5209,7 +5463,7 @@
       }
     },
     {
-      "id": "s_rect_8t",
+      "id": "s_rect_99",
       "type": "text",
       "x": 80,
       "y": 15607,
@@ -5224,7 +5478,7 @@
       }
     },
     {
-      "id": "s_rect_8u",
+      "id": "s_rect_9a",
       "type": "math",
       "x": 96,
       "y": 15633,
@@ -5241,7 +5495,7 @@
       }
     },
     {
-      "id": "s_rect_8v",
+      "id": "s_rect_9b",
       "type": "text",
       "x": 80,
       "y": 15697,
@@ -5256,7 +5510,7 @@
       }
     },
     {
-      "id": "s_rect_8w",
+      "id": "s_rect_9c",
       "type": "math",
       "x": 96,
       "y": 15733,
@@ -5273,7 +5527,7 @@
       }
     },
     {
-      "id": "s_rect_8x",
+      "id": "s_rect_9d",
       "type": "text",
       "x": 80,
       "y": 15800,
@@ -5288,7 +5542,7 @@
       }
     },
     {
-      "id": "s_rect_8y",
+      "id": "s_rect_9e",
       "type": "math",
       "x": 400,
       "y": 15793,
@@ -5305,7 +5559,7 @@
       }
     },
     {
-      "id": "s_rect_8z",
+      "id": "s_rect_9f",
       "type": "text",
       "x": 80,
       "y": 15840,
@@ -5320,7 +5574,7 @@
       }
     },
     {
-      "id": "s_rect_90",
+      "id": "s_rect_9g",
       "type": "math",
       "x": 400,
       "y": 15833,
@@ -5337,7 +5591,7 @@
       }
     },
     {
-      "id": "s_rect_91",
+      "id": "s_rect_9h",
       "type": "text",
       "x": 80,
       "y": 15880,
@@ -5352,7 +5606,7 @@
       }
     },
     {
-      "id": "s_rect_92",
+      "id": "s_rect_9i",
       "type": "math",
       "x": 400,
       "y": 15873,
@@ -5369,7 +5623,7 @@
       }
     },
     {
-      "id": "s_rect_93",
+      "id": "s_rect_9j",
       "type": "text",
       "x": 80,
       "y": 15925,
@@ -5384,7 +5638,7 @@
       }
     },
     {
-      "id": "s_rect_94",
+      "id": "s_rect_9k",
       "type": "math",
       "x": 400,
       "y": 15913,
@@ -5401,7 +5655,7 @@
       }
     },
     {
-      "id": "s_rect_95",
+      "id": "s_rect_9l",
       "type": "text",
       "x": 80,
       "y": 15990,
@@ -5416,7 +5670,7 @@
       }
     },
     {
-      "id": "s_rect_96",
+      "id": "s_rect_9m",
       "type": "math",
       "x": 400,
       "y": 15983,
@@ -5433,7 +5687,7 @@
       }
     },
     {
-      "id": "s_rect_97",
+      "id": "s_rect_9n",
       "type": "text",
       "x": 80,
       "y": 16023,
@@ -5448,7 +5702,7 @@
       }
     },
     {
-      "id": "s_rect_98",
+      "id": "s_rect_9o",
       "type": "math",
       "x": 400,
       "y": 16023,
@@ -5465,7 +5719,7 @@
       }
     },
     {
-      "id": "s_rect_99",
+      "id": "s_rect_9p",
       "type": "text",
       "x": 80,
       "y": 16077,
@@ -5480,7 +5734,7 @@
       }
     },
     {
-      "id": "s_rect_9a",
+      "id": "s_rect_9q",
       "type": "math",
       "x": 96,
       "y": 16103,
@@ -5497,7 +5751,7 @@
       }
     },
     {
-      "id": "s_rect_9b",
+      "id": "s_rect_9r",
       "type": "text",
       "x": 80,
       "y": 16478,
@@ -5512,7 +5766,7 @@
       }
     },
     {
-      "id": "s_rect_9c",
+      "id": "s_rect_9s",
       "type": "math",
       "x": 96,
       "y": 16504,
@@ -5529,7 +5783,7 @@
       }
     },
     {
-      "id": "s_rect_9d",
+      "id": "s_rect_9t",
       "type": "text",
       "x": 80,
       "y": 16568,
@@ -5544,7 +5798,7 @@
       }
     },
     {
-      "id": "s_rect_9e",
+      "id": "s_rect_9u",
       "type": "math",
       "x": 96,
       "y": 16594,
@@ -5561,7 +5815,7 @@
       }
     },
     {
-      "id": "s_rect_9f",
+      "id": "s_rect_9v",
       "type": "text",
       "x": 80,
       "y": 16651,
@@ -5576,7 +5830,7 @@
       }
     },
     {
-      "id": "s_rect_9g",
+      "id": "s_rect_9w",
       "type": "math",
       "x": 400,
       "y": 16644,
@@ -5593,7 +5847,7 @@
       }
     },
     {
-      "id": "s_rect_9h",
+      "id": "s_rect_9x",
       "type": "text",
       "x": 80,
       "y": 16691,
@@ -5608,7 +5862,7 @@
       }
     },
     {
-      "id": "s_rect_9i",
+      "id": "s_rect_9y",
       "type": "math",
       "x": 400,
       "y": 16684,
@@ -5625,7 +5879,7 @@
       }
     },
     {
-      "id": "s_rect_9j",
+      "id": "s_rect_9z",
       "type": "text",
       "x": 80,
       "y": 16731,
@@ -5640,7 +5894,7 @@
       }
     },
     {
-      "id": "s_rect_9k",
+      "id": "s_rect_a0",
       "type": "math",
       "x": 400,
       "y": 16724,
@@ -5657,7 +5911,7 @@
       }
     },
     {
-      "id": "s_rect_9l",
+      "id": "s_rect_a1",
       "type": "text",
       "x": 80,
       "y": 16771,
@@ -5672,7 +5926,7 @@
       }
     },
     {
-      "id": "s_rect_9m",
+      "id": "s_rect_a2",
       "type": "math",
       "x": 400,
       "y": 16764,
@@ -5689,7 +5943,7 @@
       }
     },
     {
-      "id": "s_rect_9n",
+      "id": "s_rect_a3",
       "type": "text",
       "x": 80,
       "y": 16818,
@@ -5704,7 +5958,7 @@
       }
     },
     {
-      "id": "s_rect_9o",
+      "id": "s_rect_a4",
       "type": "math",
       "x": 96,
       "y": 16844,
@@ -5721,7 +5975,7 @@
       }
     },
     {
-      "id": "s_rect_9p",
+      "id": "s_rect_a5",
       "type": "text",
       "x": 80,
       "y": 16908,
@@ -5736,7 +5990,7 @@
       }
     },
     {
-      "id": "s_rect_9q",
+      "id": "s_rect_a6",
       "type": "math",
       "x": 96,
       "y": 16934,
@@ -5753,7 +6007,7 @@
       }
     },
     {
-      "id": "s_rect_9r",
+      "id": "s_rect_a7",
       "type": "text",
       "x": 80,
       "y": 17001,
@@ -5768,7 +6022,7 @@
       }
     },
     {
-      "id": "s_rect_9s",
+      "id": "s_rect_a8",
       "type": "math",
       "x": 400,
       "y": 16994,
@@ -5785,7 +6039,7 @@
       }
     },
     {
-      "id": "s_rect_9t",
+      "id": "s_rect_a9",
       "type": "text",
       "x": 80,
       "y": 17645,
@@ -5805,7 +6059,7 @@
       }
     },
     {
-      "id": "s_rect_9u",
+      "id": "s_rect_aa",
       "type": "text",
       "x": 80,
       "y": 17689,
@@ -5820,7 +6074,7 @@
       }
     },
     {
-      "id": "s_rect_9v",
+      "id": "s_rect_ab",
       "type": "math",
       "x": 96,
       "y": 17715,
@@ -5837,7 +6091,7 @@
       }
     },
     {
-      "id": "s_rect_9w",
+      "id": "s_rect_ac",
       "type": "text",
       "x": 80,
       "y": 17759,
@@ -5852,7 +6106,7 @@
       }
     },
     {
-      "id": "s_rect_9x",
+      "id": "s_rect_ad",
       "type": "math",
       "x": 96,
       "y": 17785,
@@ -5869,7 +6123,7 @@
       }
     },
     {
-      "id": "s_rect_9y",
+      "id": "s_rect_ae",
       "type": "text",
       "x": 80,
       "y": 17842,
@@ -5884,7 +6138,7 @@
       }
     },
     {
-      "id": "s_rect_9z",
+      "id": "s_rect_af",
       "type": "math",
       "x": 400,
       "y": 17835,
@@ -5901,7 +6155,7 @@
       }
     },
     {
-      "id": "s_rect_a0",
+      "id": "s_rect_ag",
       "type": "text",
       "x": 80,
       "y": 17882,
@@ -5916,7 +6170,7 @@
       }
     },
     {
-      "id": "s_rect_a1",
+      "id": "s_rect_ah",
       "type": "math",
       "x": 400,
       "y": 17875,
@@ -5933,7 +6187,7 @@
       }
     },
     {
-      "id": "s_rect_a2",
+      "id": "s_rect_ai",
       "type": "text",
       "x": 80,
       "y": 17922,
@@ -5948,7 +6202,7 @@
       }
     },
     {
-      "id": "s_rect_a3",
+      "id": "s_rect_aj",
       "type": "math",
       "x": 400,
       "y": 17915,
@@ -5965,7 +6219,7 @@
       }
     },
     {
-      "id": "s_rect_a4",
+      "id": "s_rect_ak",
       "type": "text",
       "x": 80,
       "y": 17977,
@@ -5980,7 +6234,7 @@
       }
     },
     {
-      "id": "s_rect_a5",
+      "id": "s_rect_al",
       "type": "math",
       "x": 400,
       "y": 17965,
@@ -5997,7 +6251,7 @@
       }
     },
     {
-      "id": "s_rect_a6",
+      "id": "s_rect_am",
       "type": "text",
       "x": 80,
       "y": 18030,
@@ -6012,7 +6266,7 @@
       }
     },
     {
-      "id": "s_rect_a7",
+      "id": "s_rect_an",
       "type": "math",
       "x": 400,
       "y": 18025,
@@ -6029,7 +6283,7 @@
       }
     },
     {
-      "id": "s_rect_a8",
+      "id": "s_rect_ao",
       "type": "text",
       "x": 80,
       "y": 18099,
@@ -6044,7 +6298,7 @@
       }
     },
     {
-      "id": "s_rect_a9",
+      "id": "s_rect_ap",
       "type": "math",
       "x": 400,
       "y": 18085,
@@ -6061,7 +6315,7 @@
       }
     },
     {
-      "id": "s_rect_aa",
+      "id": "s_rect_aq",
       "type": "text",
       "x": 80,
       "y": 18169,
@@ -6076,7 +6330,7 @@
       }
     },
     {
-      "id": "s_rect_ab",
+      "id": "s_rect_ar",
       "type": "math",
       "x": 400,
       "y": 18155,
@@ -6093,7 +6347,7 @@
       }
     },
     {
-      "id": "s_rect_ac",
+      "id": "s_rect_as",
       "type": "text",
       "x": 80,
       "y": 18229,
@@ -6108,7 +6362,7 @@
       }
     },
     {
-      "id": "s_rect_ad",
+      "id": "s_rect_at",
       "type": "math",
       "x": 400,
       "y": 18215,
@@ -6125,7 +6379,7 @@
       }
     },
     {
-      "id": "s_rect_ae",
+      "id": "s_rect_au",
       "type": "text",
       "x": 80,
       "y": 18289,
@@ -6140,7 +6394,7 @@
       }
     },
     {
-      "id": "s_rect_af",
+      "id": "s_rect_av",
       "type": "math",
       "x": 96,
       "y": 18315,
@@ -6157,7 +6411,7 @@
       }
     },
     {
-      "id": "s_rect_ag",
+      "id": "s_rect_aw",
       "type": "text",
       "x": 80,
       "y": 18359,
@@ -6172,7 +6426,7 @@
       }
     },
     {
-      "id": "s_rect_ah",
+      "id": "s_rect_ax",
       "type": "math",
       "x": 96,
       "y": 18385,
@@ -6189,7 +6443,7 @@
       }
     },
     {
-      "id": "s_rect_ai",
+      "id": "s_rect_ay",
       "type": "text",
       "x": 80,
       "y": 18439,
@@ -6204,7 +6458,7 @@
       }
     },
     {
-      "id": "s_rect_aj",
+      "id": "s_rect_az",
       "type": "math",
       "x": 96,
       "y": 18465,
@@ -6221,7 +6475,7 @@
       }
     },
     {
-      "id": "s_rect_ak",
+      "id": "s_rect_b0",
       "type": "text",
       "x": 80,
       "y": 18534,
@@ -6236,7 +6490,7 @@
       }
     },
     {
-      "id": "s_rect_al",
+      "id": "s_rect_b1",
       "type": "math",
       "x": 400,
       "y": 18525,
@@ -6253,7 +6507,7 @@
       }
     },
     {
-      "id": "s_rect_am",
+      "id": "s_rect_b2",
       "type": "text",
       "x": 80,
       "y": 18816,
@@ -6268,7 +6522,7 @@
       }
     },
     {
-      "id": "s_rect_an",
+      "id": "s_rect_b3",
       "type": "math",
       "x": 400,
       "y": 18816,
@@ -6285,7 +6539,7 @@
       }
     },
     {
-      "id": "s_rect_ao",
+      "id": "s_rect_b4",
       "type": "text",
       "x": 80,
       "y": 18873,
@@ -6300,7 +6554,7 @@
       }
     },
     {
-      "id": "s_rect_ap",
+      "id": "s_rect_b5",
       "type": "math",
       "x": 400,
       "y": 18866,
@@ -6317,7 +6571,7 @@
       }
     },
     {
-      "id": "s_rect_aq",
+      "id": "s_rect_b6",
       "type": "text",
       "x": 80,
       "y": 18925,
@@ -6332,7 +6586,7 @@
       }
     },
     {
-      "id": "s_rect_ar",
+      "id": "s_rect_b7",
       "type": "math",
       "x": 400,
       "y": 18916,
@@ -6349,7 +6603,7 @@
       }
     },
     {
-      "id": "s_rect_as",
+      "id": "s_rect_b8",
       "type": "text",
       "x": 80,
       "y": 18970,
@@ -6364,7 +6618,7 @@
       }
     },
     {
-      "id": "s_rect_at",
+      "id": "s_rect_b9",
       "type": "math",
       "x": 96,
       "y": 18996,
@@ -6381,7 +6635,7 @@
       }
     },
     {
-      "id": "s_rect_au",
+      "id": "s_rect_ba",
       "type": "text",
       "x": 80,
       "y": 19050,
@@ -6396,7 +6650,7 @@
       }
     },
     {
-      "id": "s_rect_av",
+      "id": "s_rect_bb",
       "type": "math",
       "x": 96,
       "y": 19076,
@@ -6413,7 +6667,7 @@
       }
     },
     {
-      "id": "s_rect_aw",
+      "id": "s_rect_bc",
       "type": "text",
       "x": 80,
       "y": 19987,
@@ -6433,7 +6687,7 @@
       }
     },
     {
-      "id": "s_rect_ax",
+      "id": "s_rect_bd",
       "type": "text",
       "x": 80,
       "y": 20031,
@@ -6448,7 +6702,7 @@
       }
     },
     {
-      "id": "s_rect_ay",
+      "id": "s_rect_be",
       "type": "math",
       "x": 96,
       "y": 20057,
@@ -6465,7 +6719,7 @@
       }
     },
     {
-      "id": "s_rect_az",
+      "id": "s_rect_bf",
       "type": "text",
       "x": 80,
       "y": 20117,
@@ -6481,7 +6735,7 @@
       }
     },
     {
-      "id": "s_rect_b0",
+      "id": "s_rect_bg",
       "type": "text",
       "x": 80,
       "y": 20147,
@@ -6496,7 +6750,7 @@
       }
     },
     {
-      "id": "s_rect_b1",
+      "id": "s_rect_bh",
       "type": "text",
       "x": 80,
       "y": 20177,
@@ -6511,7 +6765,7 @@
       }
     },
     {
-      "id": "s_rect_b2",
+      "id": "s_rect_bi",
       "type": "text",
       "x": 80,
       "y": 20207,
@@ -6526,7 +6780,7 @@
       }
     },
     {
-      "id": "s_rect_b3",
+      "id": "s_rect_bj",
       "type": "math",
       "x": 400,
       "y": 20207,
@@ -6543,7 +6797,7 @@
       }
     },
     {
-      "id": "s_rect_b4",
+      "id": "s_rect_bk",
       "type": "text",
       "x": 80,
       "y": 20261,
@@ -6558,7 +6812,7 @@
       }
     },
     {
-      "id": "s_rect_b5",
+      "id": "s_rect_bl",
       "type": "math",
       "x": 96,
       "y": 20297,
@@ -6575,7 +6829,7 @@
       }
     },
     {
-      "id": "s_rect_b6",
+      "id": "s_rect_bm",
       "type": "text",
       "x": 80,
       "y": 20351,
@@ -6590,7 +6844,7 @@
       }
     },
     {
-      "id": "s_rect_b7",
+      "id": "s_rect_bn",
       "type": "math",
       "x": 96,
       "y": 20377,
@@ -6607,7 +6861,7 @@
       }
     },
     {
-      "id": "s_rect_b8",
+      "id": "s_rect_bo",
       "type": "text",
       "x": 80,
       "y": 20441,
@@ -6622,7 +6876,7 @@
       }
     },
     {
-      "id": "s_rect_b9",
+      "id": "s_rect_bp",
       "type": "math",
       "x": 96,
       "y": 20467,
@@ -6639,7 +6893,7 @@
       }
     },
     {
-      "id": "s_rect_ba",
+      "id": "s_rect_bq",
       "type": "text",
       "x": 80,
       "y": 20521,
@@ -6654,7 +6908,7 @@
       }
     },
     {
-      "id": "s_rect_bb",
+      "id": "s_rect_br",
       "type": "math",
       "x": 96,
       "y": 20547,
@@ -6671,7 +6925,7 @@
       }
     },
     {
-      "id": "s_rect_bc",
+      "id": "s_rect_bs",
       "type": "text",
       "x": 80,
       "y": 20591,
@@ -6686,7 +6940,7 @@
       }
     },
     {
-      "id": "s_rect_bd",
+      "id": "s_rect_bt",
       "type": "math",
       "x": 96,
       "y": 20617,
@@ -6703,7 +6957,7 @@
       }
     },
     {
-      "id": "s_rect_be",
+      "id": "s_rect_bu",
       "type": "text",
       "x": 80,
       "y": 20671,
@@ -6718,7 +6972,7 @@
       }
     },
     {
-      "id": "s_rect_bf",
+      "id": "s_rect_bv",
       "type": "math",
       "x": 96,
       "y": 20697,
@@ -6735,7 +6989,7 @@
       }
     },
     {
-      "id": "s_rect_bg",
+      "id": "s_rect_bw",
       "type": "text",
       "x": 80,
       "y": 20741,
@@ -6750,7 +7004,7 @@
       }
     },
     {
-      "id": "s_rect_bh",
+      "id": "s_rect_bx",
       "type": "math",
       "x": 96,
       "y": 20767,
@@ -6767,7 +7021,7 @@
       }
     },
     {
-      "id": "s_rect_bi",
+      "id": "s_rect_by",
       "type": "text",
       "x": 96,
       "y": 21158,
@@ -6782,7 +7036,7 @@
       }
     },
     {
-      "id": "s_rect_bj",
+      "id": "s_rect_bz",
       "type": "math",
       "x": 96,
       "y": 21188,
@@ -6801,7 +7055,7 @@
       }
     },
     {
-      "id": "s_rect_bk",
+      "id": "s_rect_c0",
       "type": "math",
       "x": 276,
       "y": 21188,
@@ -6820,7 +7074,7 @@
       }
     },
     {
-      "id": "s_rect_bl",
+      "id": "s_rect_c1",
       "type": "text",
       "x": 80,
       "y": 21468,
@@ -6836,7 +7090,7 @@
       }
     },
     {
-      "id": "s_rect_bm",
+      "id": "s_rect_c2",
       "type": "text",
       "x": 80,
       "y": 21502,
@@ -6851,7 +7105,7 @@
       }
     },
     {
-      "id": "s_rect_bn",
+      "id": "s_rect_c3",
       "type": "math",
       "x": 96,
       "y": 21538,
@@ -6868,7 +7122,7 @@
       }
     },
     {
-      "id": "s_rect_bo",
+      "id": "s_rect_c4",
       "type": "text",
       "x": 80,
       "y": 21582,
@@ -6883,7 +7137,7 @@
       }
     },
     {
-      "id": "s_rect_bp",
+      "id": "s_rect_c5",
       "type": "math",
       "x": 96,
       "y": 21608,
@@ -6900,7 +7154,7 @@
       }
     },
     {
-      "id": "s_rect_bq",
+      "id": "s_rect_c6",
       "type": "text",
       "x": 80,
       "y": 21652,
@@ -6915,7 +7169,7 @@
       }
     },
     {
-      "id": "s_rect_br",
+      "id": "s_rect_c7",
       "type": "math",
       "x": 96,
       "y": 21688,
@@ -6932,7 +7186,7 @@
       }
     },
     {
-      "id": "s_rect_bs",
+      "id": "s_rect_c8",
       "type": "text",
       "x": 80,
       "y": 21755,
@@ -6947,7 +7201,7 @@
       }
     },
     {
-      "id": "s_rect_bt",
+      "id": "s_rect_c9",
       "type": "math",
       "x": 400,
       "y": 21748,
@@ -6964,7 +7218,7 @@
       }
     },
     {
-      "id": "s_rect_bu",
+      "id": "s_rect_ca",
       "type": "text",
       "x": 80,
       "y": 21788,
@@ -6979,7 +7233,7 @@
       }
     },
     {
-      "id": "s_rect_bv",
+      "id": "s_rect_cb",
       "type": "math",
       "x": 400,
       "y": 21788,
@@ -6996,7 +7250,7 @@
       }
     },
     {
-      "id": "s_rect_bw",
+      "id": "s_rect_cc",
       "type": "text",
       "x": 80,
       "y": 21845,
@@ -7011,7 +7265,7 @@
       }
     },
     {
-      "id": "s_rect_bx",
+      "id": "s_rect_cd",
       "type": "math",
       "x": 400,
       "y": 21838,
@@ -7028,7 +7282,7 @@
       }
     },
     {
-      "id": "s_rect_by",
+      "id": "s_rect_ce",
       "type": "text",
       "x": 80,
       "y": 21895,
@@ -7043,7 +7297,7 @@
       }
     },
     {
-      "id": "s_rect_bz",
+      "id": "s_rect_cf",
       "type": "math",
       "x": 400,
       "y": 21888,
@@ -7060,7 +7314,7 @@
       }
     },
     {
-      "id": "s_rect_c0",
+      "id": "s_rect_cg",
       "type": "text",
       "x": 80,
       "y": 21940,
@@ -7075,7 +7329,7 @@
       }
     },
     {
-      "id": "s_rect_c1",
+      "id": "s_rect_ch",
       "type": "math",
       "x": 400,
       "y": 21928,
@@ -7092,7 +7346,7 @@
       }
     },
     {
-      "id": "s_rect_c2",
+      "id": "s_rect_ci",
       "type": "text",
       "x": 80,
       "y": 21995,
@@ -7107,7 +7361,7 @@
       }
     },
     {
-      "id": "s_rect_c3",
+      "id": "s_rect_cj",
       "type": "math",
       "x": 400,
       "y": 21988,
@@ -7124,7 +7378,7 @@
       }
     },
     {
-      "id": "s_rect_c4",
+      "id": "s_rect_ck",
       "type": "text",
       "x": 96,
       "y": 22329,
@@ -7139,7 +7393,7 @@
       }
     },
     {
-      "id": "s_rect_c5",
+      "id": "s_rect_cl",
       "type": "math",
       "x": 96,
       "y": 22359,
@@ -7158,7 +7412,7 @@
       }
     },
     {
-      "id": "s_rect_c6",
+      "id": "s_rect_cm",
       "type": "math",
       "x": 236,
       "y": 22359,
@@ -7177,7 +7431,7 @@
       }
     },
     {
-      "id": "s_rect_c7",
+      "id": "s_rect_cn",
       "type": "math",
       "x": 376,
       "y": 22359,
@@ -7196,7 +7450,7 @@
       }
     },
     {
-      "id": "s_rect_c8",
+      "id": "s_rect_co",
       "type": "math",
       "x": 516,
       "y": 22359,
@@ -7215,6 +7469,6 @@
       }
     }
   ],
-  "createdAt": "2026-11-08T15:40:58.127Z",
-  "updatedAt": "2026-11-08T15:40:58.127Z"
+  "createdAt": "2026-11-08T15:49:26.200Z",
+  "updatedAt": "2026-11-08T15:49:26.200Z"
 }
