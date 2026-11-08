@@ -128,6 +128,7 @@ export const OPERATORS: PaletteSection[] = [
       { label: 'linterp', latex: '\\mathrm{linterp}\\left(#?,#?,#?\\right)', title: 'linterp(xs, ys, x): linear interpolation (xs increasing or decreasing)' },
       { label: 'stack', latex: '\\mathrm{stack}\\left(#?,#?\\right)', title: 'stack(a, b, …): joins scalars and vectors into one vector' },
       { label: 'if', latex: '\\mathrm{if}\\left(#?,#?,#?\\right)', title: 'if(condition, value if true, value if false), e.g. if(N > 0 kN, 1, 2.5)' },
+      { label: 'if block', latex: '\\begin{array}{|ll}#? & \\mathrm{if}\\ #?\\\\#? & \\mathrm{otherwise}\\end{array}', title: 'Mathcad-style if block: value if condition, … , value otherwise (rows are tried top to bottom)' },
     ],
   },
 ];

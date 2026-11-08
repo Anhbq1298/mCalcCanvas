@@ -196,6 +196,9 @@ function SyntaxDialog({ onClose }: { onClose(): void }) {
         <section>
           <h3 className="mb-1 font-semibold">Functions</h3>
           <p className="text-muted-foreground">sin cos tan (radians, or degrees with °) · asin acos atan · ln log exp · √ and ⁿ√ · |x| · min max</p>
+          <p className="mt-1">
+            <b>If block</b> (Operators → if block), as in Mathcad: one row per case, <i>value</i> if <i>condition</i>, tried top to bottom; the last row is <i>value</i> otherwise. <code>if(condition, a, b)</code> still works and is shown as a block.
+          </p>
         </section>
       </div>
     </Modal>

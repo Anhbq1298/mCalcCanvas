@@ -103,8 +103,15 @@ export function tokenize(latex: string): Token[] {
   const tokens: Token[] = [];
   let i = 0;
   const s = latex;
+  // Inside \begin{array}/\begin{cases} (an if block), & and \\ separate cells and rows.
+  let blockDepth = 0;
   while (i < s.length) {
     const c = s[i];
+    if (c === '&' && blockDepth > 0) {
+      tokens.push({ t: 'sym', v: '&' });
+      i++;
+      continue;
+    }
     if (c === ' ' || c === '\t' || c === '\n' || c === '~' || c === '&') {
       i++;
       continue;
@@ -148,6 +155,19 @@ export function tokenize(latex: string): Token[] {
           continue;
         }
         if (IGNORED_COMMANDS.has(name)) continue;
+        if (name === 'begin' || name === 'end') {
+          const m = /^\{(array|cases)\}/.exec(s.slice(i));
+          if (!m) throw new CalculationError('syntax', `Unsupported LaTeX environment ${s.slice(i, i + 20)}`);
+          i += m[0].length;
+          if (name === 'begin' && m[1] === 'array') {
+            // Column spec, e.g. {|ll}
+            const spec = /^\{[|lcr\s]*\}/.exec(s.slice(i));
+            if (spec) i += spec[0].length;
+          }
+          blockDepth += name === 'begin' ? 1 : -1;
+          tokens.push({ t: 'cmd', v: name === 'begin' ? 'beginblock' : 'endblock' });
+          continue;
+        }
         tokens.push({ t: 'cmd', v: name });
       } else {
         const ch = s[j] ?? '';
@@ -160,6 +180,7 @@ export function tokenize(latex: string): Token[] {
         } else if (ch === '%') {
           tokens.push({ t: 'sym', v: '%' });
         } else if (ch === '\\') {
+          if (blockDepth > 0) tokens.push({ t: 'sym', v: 'row' });
           continue;
         } else {
           throw new CalculationError('syntax', `Unsupported LaTeX command \\${ch}`);
@@ -545,6 +566,7 @@ class Parser {
 
   private parsePrimaryAtom(): Expr {
     const tok = this.peek();
+    if (this.isCmd('beginblock')) return this.parseIfBlock();
     switch (tok.t) {
       case 'eof':
         throw new CalculationError('incomplete', 'Incomplete expression.');
@@ -780,6 +802,53 @@ class Parser {
     return this.node({ type: 'if', cond, then, else: otherwise });
   }
 
+  /**
+   * Mathcad-style if block:
+   *   \begin{array}{|ll} a & \mathrm{if}\ c_1 \\ b & \mathrm{if}\ c_2 \\ c & \mathrm{otherwise} \end{array}
+   * (\begin{cases} … \end{cases} too). Rows are tried top to bottom; the last row is "otherwise".
+   */
+  private parseIfBlock(): Expr {
+    this.next(); // beginblock
+    const inner: Token[] = [];
+    let level = 1;
+    for (;;) {
+      const tok = this.next();
+      if (tok.t === 'eof') throw new CalculationError('syntax', 'An if block is not closed.');
+      if (tok.t === 'cmd' && tok.v === 'beginblock') level++;
+      if (tok.t === 'cmd' && tok.v === 'endblock' && --level === 0) break;
+      inner.push(tok);
+    }
+    const rows: Token[][][] = [[[]]];
+    level = 0;
+    for (const tok of inner) {
+      if (tok.t === 'cmd' && tok.v === 'beginblock') level++;
+      if (tok.t === 'cmd' && tok.v === 'endblock') level--;
+      if (level === 0 && tok.t === 'sym' && tok.v === 'row') rows.push([[]]);
+      else if (level === 0 && tok.t === 'sym' && tok.v === '&') rows[rows.length - 1].push([]);
+      else rows[rows.length - 1][rows[rows.length - 1].length - 1].push(tok);
+    }
+    const filled = rows.filter((r) => r.some((cell) => cell.length));
+    const usage = 'Write an if block as rows "value & if condition", the last row "value & otherwise".';
+    if (filled.length < 2) throw new CalculationError('syntax', usage);
+    const branches = filled.map((r, k) => {
+      if (r.length !== 2) throw new CalculationError('syntax', usage);
+      const [value, rest] = r;
+      const word = leadingWord(rest);
+      if (!word) throw new CalculationError('syntax', usage);
+      const last = k === filled.length - 1;
+      if (word.word === 'otherwise' || word.word === 'else') {
+        if (!last || word.rest.length) throw new CalculationError('syntax', '"otherwise" must be the last row, without a condition.');
+        return { value: this.subParse(value), cond: null };
+      }
+      if (word.word !== IF_WORD) throw new CalculationError('syntax', usage);
+      if (last) throw new CalculationError('syntax', 'The last row of an if block must be "otherwise".');
+      return { value: this.subParse(value), cond: this.subParseCondition(word.rest) };
+    });
+    let out: Expr = branches[branches.length - 1].value;
+    for (let k = branches.length - 2; k >= 0; k--) out = this.node({ type: 'if', cond: branches[k].cond!, then: branches[k].value, else: out });
+    return out;
+  }
+
   /** let(n₁, v₁, …, body): an odd number (≥ 3) of arguments; every name a single variable. */
   private parseLet(): Expr {
     const parts = this.readArgumentTokens();
@@ -820,4 +889,20 @@ class Parser {
 export function parseLatex(latex: string): Statement {
   const parser = new Parser(tokenize(latex));
   return parser.parseStatement();
+}
+
+/** "if"/"otherwise" at the start of a cell: \mathrm{if}, \text{if} or plain letters; the rest is the condition. */
+function leadingWord(tokens: Token[]): { word: string; rest: Token[] } | null {
+  const t = tokens;
+  if (t[0]?.t === 'cmd' && ROMAN_COMMANDS.has(t[0].v) && t[1]?.t === 'sym' && t[1].v === '{') {
+    let k = 2;
+    let word = '';
+    while (t[k]?.t === 'letter') word += t[k++].v;
+    if (t[k]?.t === 'sym' && t[k].v === '}' && word) return { word, rest: t.slice(k + 1) };
+    return null;
+  }
+  for (const w of ['otherwise', 'else', IF_WORD]) {
+    if (w.split('').every((ch, k) => t[k]?.t === 'letter' && t[k].v === ch)) return { word: w, rest: t.slice(w.length) };
+  }
+  return null;
 }

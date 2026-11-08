@@ -201,10 +201,16 @@ function print(expr: Expr, opts: PrintOptions): Printed {
     }
 
     case 'if': {
-      const cond = `${print(expr.cond.left, opts).latex} ${RELATION_LATEX[expr.cond.op]} ${print(expr.cond.right, opts).latex}`;
-      const t = print(expr.then, opts).latex;
-      const f = print(expr.else, opts).latex;
-      return { latex: `\\mathrm{if}\\left(${cond},${t},${f}\\right)`, prec: PREC.atom };
+      // Mathcad-style block: one row per branch, "otherwise" last.
+      const rows: string[] = [];
+      let e: Expr = expr;
+      while (e.type === 'if') {
+        const cond = `${print(e.cond.left, opts).latex} ${RELATION_LATEX[e.cond.op]} ${print(e.cond.right, opts).latex}`;
+        rows.push(`\\displaystyle ${print(e.then, opts).latex} & \\mathrm{if}\\ ${cond}`);
+        e = e.else;
+      }
+      rows.push(`\\displaystyle ${print(e, opts).latex} & \\mathrm{otherwise}`);
+      return { latex: `\\begin{array}{|ll}${rows.join('\\\\')}\\end{array}`, prec: PREC.atom };
     }
   }
   return { latex: '', prec: PREC.atom };

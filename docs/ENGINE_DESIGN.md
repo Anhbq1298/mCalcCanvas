@@ -97,6 +97,10 @@ A graph shape (`type: 'graph'`) is not a statement. `engineBridge` registers eac
 
 Series styles: `line`, `marker`, `circle` (r = radius in x units) and `segments`. For `segments` the `r` field is a plain-number group id per point (no display unit): consecutive points with the same id are joined, a change of id starts a new piece, so one series can draw several separate polylines (the rectangular column template draws all closed ties and all cross-tie legs this way). An empty `r` draws one piece.
 
+## If blocks
+
+`\begin{array}{|ll} a & \mathrm{if}\ c_1 \\ b & \mathrm{if}\ c_2 \\ c & \mathrm{otherwise} \end{array}` (or `\begin{cases}`, `\text{if}`) parses to nested `if` nodes: rows are tried top to bottom and the last row must be "otherwise". Inside these environments the tokenizer keeps `&` and `\\`; other environments are rejected. The formatter prints every `if` (also `if(c, a, b)`) as such a block, so function definitions show the Mathcad layout.
+
 ## Annex blocks
 
 An annex block (an annex heading and everything below it up to the next annex heading, all below the ANNEX title) is calculated where its link stands in the main body: `engineBridge.calcKey` gives each region of a linked block the key `[...readingKey(link), ...readingKey(region)]`. The engine still sees one top-to-bottom order, so an annex can use only names defined above its link, and regions below the link use the annex results. When any link or block membership changes (`annexSignature`), every region is re-keyed. `canvas/annex.ts` computes blocks, numbers (link order, then unlinked blocks) and problems (missing target, duplicate link, link inside the annex, heading above the ANNEX title); unlinked blocks are calculated where they stand.

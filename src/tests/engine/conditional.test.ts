@@ -11,6 +11,7 @@ function setup(regions: Record<string, string>) {
 
 const num = (engine: CalculationEngine, id: string) => engine.getResult(id)?.value?.number;
 const err = (engine: CalculationEngine, id: string) => engine.getResult(id)?.error;
+const res = (engine: CalculationEngine, id: string) => engine.getResult(id)!;
 
 /** cotθ for a pile: 1.0 in axial tension, the optimised value otherwise. */
 const pile = (n: string) =>
@@ -73,9 +74,28 @@ describe('if(condition, value if true, value if false)', () => {
     expect(num(e, 'r')).toBe(7);
   });
 
-  it('prints the expression back as \\mathrm{if}', () => {
+  it('prints an if back as a Mathcad-style block (value if condition / otherwise) that parses again', () => {
     const e = pile('2000');
-    expect(e.getResult('c')?.expressionLatex).toMatch(/\\mathrm\{if\}\\left\(.*>.*,1,.*\\right\)/);
+    const latex = e.getResult('c')?.expressionLatex ?? '';
+    expect(latex).toMatch(/^\\begin\{array\}\{\|ll\}.*& \\mathrm\{if\}\\ .*>.*\\\\.*& \\mathrm\{otherwise\}\\end\{array\}$/);
+    const f = setup({ a: 'a\\coloneq2', g: 'g\\left(x\\right)\\coloneq\\mathrm{if}\\left(x>a,x^2,\\mathrm{if}\\left(x=a,0,-1\\right)\\right)' });
+    const printed = f.getResult('g')?.expressionLatex ?? '';
+    expect(printed.match(/\\mathrm\{if\}/g)).toHaveLength(2);
+    expect(parseLatex(`y\\coloneq${printed.replace(/x/g, '3')}`)).toMatchObject({ kind: 'definition', expr: { type: 'if' } });
+  });
+
+  it('if blocks: rows tried top to bottom, last row "otherwise"; \\begin{cases} and \\text{if} work too', () => {
+    const block = (x: string) =>
+      `y\\coloneq\\begin{array}{|ll}-1 & \\mathrm{if}\\ ${x}<0\\\\0 & \\mathrm{if}\\ ${x}=0\\\\\\displaystyle\\frac{1}{2} & \\mathrm{otherwise}\\end{array}`;
+    for (const [x, want] of [['-3', -1], ['0', 0], ['4', 0.5]] as const) {
+      const e = setup({ y: block(x) });
+      expect(res(e, 'y').value?.number).toBe(want);
+    }
+    const e = setup({ a: 'a\\coloneq2', z: 'z\\coloneq\\begin{cases}a^2 & \\text{if } a>1\\\\0 & \\text{otherwise}\\end{cases}' });
+    expect(res(e, 'z').value?.number).toBe(4);
+    expect(() => parseLatex('y\\coloneq\\begin{array}{|ll}1 & \\mathrm{if}\\ a>0\\\\2 & \\mathrm{if}\\ a<0\\end{array}')).toThrow(/last row/);
+    expect(() => parseLatex('y\\coloneq\\begin{array}{|ll}1 & \\mathrm{otherwise}\\\\2 & \\mathrm{if}\\ a<0\\end{array}')).toThrow(/otherwise/);
+    expect(() => parseLatex('y\\coloneq\\begin{matrix}1\\end{matrix}')).toThrow(/environment/);
   });
 
   it('gives clear errors', () => {
