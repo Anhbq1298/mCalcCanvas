@@ -86,6 +86,7 @@ Messages name the variable or quantity involved, e.g. `Unit mismatch: Force (kN)
 - **`name(args)`** parses as an `apply` node when the parenthesis follows a name directly. It is a call when `name` is a user function at that position; otherwise it keeps the old reading `name·(arg)` (so `x(a+b)` is unchanged). `name(x)^2` is not an apply (it stays `name·(x)²`).
 - **`map(f, v…)`** calls `f` once per entry (scalars repeat, vectors share a length); each call must return a scalar. Use it when the body aggregates (`sum`) over another vector, e.g. a P–M curve `N_v := map(N_R, c_v)`.
 - **`linterp(xs, ys, x)`**: xs monotonic (steps back within 1e-9 of the span are accepted as round-off); x outside the data is an error. Broadcasts over a vector x.
+- **`floor(x)`, `ceil(x)`**: plain numbers only; values within 1e-9 of an integer are taken as that integer.
 - **`angle(x, y)`** (Mathcad): direction of the vector (x, y), 0 … 2π; x and y must share a unit.
 - **`stack(a, b, …)`** joins scalars and vectors into one vector.
 

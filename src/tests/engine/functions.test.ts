@@ -131,4 +131,19 @@ describe('map, linterp, stack', () => {
     expect(res(e, 'c').check?.rightLatex).toBe('N_{\\mathrm{Rd}}');
     expect(res(e, 'd').check?.rightLatex).toBeUndefined();
   });
+
+  it('floor and ceil round plain numbers (round-off tolerant) and reject units', () => {
+    const e = setup({
+      a: '\\mathrm{floor}\\left(2.7\\right)=',
+      b: '\\mathrm{ceil}\\left(2.1\\right)=',
+      c: '\\mathrm{ceil}\\left(0.1\\cdot30\\right)=',
+      d: '\\mathrm{floor}\\left(\\frac{150\\,\\mathrm{mm}}{100\\,\\mathrm{mm}}\\right)=',
+      u: '\\mathrm{floor}\\left(2\\,\\mathrm{m}\\right)=',
+    });
+    expect(num(e, 'a')).toBe(2);
+    expect(num(e, 'b')).toBe(3);
+    expect(num(e, 'c')).toBe(3);
+    expect(num(e, 'd')).toBe(1);
+    expect(res(e, 'u').error?.message).toMatch(/dimensionless/);
+  });
 });

@@ -54,11 +54,11 @@ const FUNCTION_COMMANDS: Record<string, FunctionName> = {
 const FUNCTION_WORDS: Record<string, FunctionName> = {
   ...FUNCTION_COMMANDS,
   asin: 'asin', acos: 'acos', atan: 'atan', sqrt: 'sqrt', abs: 'abs',
-  sum: 'sum', len: 'len', seq: 'seq', angle: 'angle', map: 'map', linterp: 'linterp', stack: 'stack',
+  sum: 'sum', len: 'len', seq: 'seq', angle: 'angle', map: 'map', floor: 'floor', ceil: 'ceil', linterp: 'linterp', stack: 'stack',
 };
 
 /** Functions written upright (\mathrm{sum}) that would otherwise read as a variable. */
-const ROMAN_FUNCTION_WORDS = new Set<FunctionName>(['sum', 'len', 'seq', 'angle', 'map', 'linterp', 'stack']);
+const ROMAN_FUNCTION_WORDS = new Set<FunctionName>(['sum', 'len', 'seq', 'angle', 'map', 'linterp', 'stack', 'floor', 'ceil']);
 
 const ROMAN_COMMANDS = new Set([
   'mathrm', 'text', 'textrm', 'operatorname', 'mathit', 'mathbf', 'mathsf',

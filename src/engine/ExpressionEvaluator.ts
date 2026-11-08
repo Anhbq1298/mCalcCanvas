@@ -633,6 +633,14 @@ function evalCall(fn: string, args: Quantity[]): Quantity {
     }
     case 'abs':
       return math.abs(x as never) as Quantity;
+    case 'floor':
+    case 'ceil': {
+      const v = requireDimensionless(x, `The argument of ${fn}`);
+      // Round-off such as 2.9999999999 is taken as 3.
+      const r = Math.round(v);
+      const n = Math.abs(v - r) < 1e-9 * Math.max(1, Math.abs(v)) ? r : fn === 'floor' ? Math.floor(v) : Math.ceil(v);
+      return n;
+    }
     case 'min':
     case 'max': {
       const first = args[0];

@@ -50,5 +50,10 @@ describe('column templates', () => {
     expect(result('M_{Rd.x}\\coloneq')?.value?.number).toBeCloseTo(1463.5, 0);
     expect(result('M_{Rd.y}\\coloneq')?.value?.number).toBeCloseTo(954.9, 0);
     expect(result('\\eta_{xy}\\coloneq')?.value?.number).toBeCloseTo(0.631, 3);
+    // Ties: no bar more than 150 mm from a restrained bar (EC2 9.5.3(6)).
+    expect(result('n_{w.y}\\coloneq')?.value?.number).toBe(2);
+    expect(result('n_{w.x}\\coloneq')?.value?.number).toBe(3);
+    // P–Mθ (NA ⟂ θ = 63.4°): independent 400×400 fibre grid gives 1282.8 kN·m.
+    expect(result('M_{Rd.\\theta}\\coloneq')?.value?.number).toBeCloseTo(1282.6, 0);
   }, 30000);
 });

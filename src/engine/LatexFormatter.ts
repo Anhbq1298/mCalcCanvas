@@ -149,6 +149,8 @@ function print(expr: Expr, opts: PrintOptions): Printed {
         case 'len':
         case 'seq':
         case 'angle':
+        case 'floor':
+        case 'ceil':
         case 'map':
         case 'linterp':
         case 'stack':

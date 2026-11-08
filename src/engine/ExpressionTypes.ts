@@ -25,7 +25,10 @@ export type FunctionName =
   /** linterp(xs, ys, x): linear interpolation; xs must be monotonic. */
   | 'linterp'
   /** stack(a, b, …): joins scalars and vectors into one vector. */
-  | 'stack';
+  | 'stack'
+  /** floor(x), ceil(x): rounding of a plain number (no unit). */
+  | 'floor'
+  | 'ceil';
 
 export type Expr =
   | { type: 'num'; value: number; raw: string }
