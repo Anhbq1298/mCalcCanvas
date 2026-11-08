@@ -197,7 +197,7 @@ function SyntaxDialog({ onClose }: { onClose(): void }) {
           <h3 className="mb-1 font-semibold">Functions</h3>
           <p className="text-muted-foreground">sin cos tan (radians, or degrees with °) · asin acos atan · ln log exp · √ and ⁿ√ · |x| · min max</p>
           <p className="mt-1">
-            <b>If block</b> (Operators → if block), as in Mathcad Prime: <i>if</i> condition, the value on the next line, then <i>else if</i> condition / value as needed, and <i>else</i> / value last. <code>if(condition, a, b)</code> still works and is shown as a block.
+            <b>If block</b> (Operators → if block), as in Mathcad Prime: <i>if</i> condition, the value on the next line, then <i>else if</i> condition / value as needed, and <i>else</i> / value last. Join comparisons with ∧ (and) or ∨ (or). <code>if(condition, a, b)</code> still works and is shown as a block.
           </p>
         </section>
       </div>

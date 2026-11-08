@@ -5,7 +5,7 @@
  * substituted line is printed from the same tree and the same values the
  * engine evaluated, so intermediate steps are never invented.
  */
-import type { Expr, Relation } from './ExpressionTypes';
+import type { Condition, Expr, Relation } from './ExpressionTypes';
 import { GREEK } from './LatexParser';
 import { applyAsProduct, resolveIdent, type EvalContext, type ResolveContext } from './ExpressionEvaluator';
 import { UNITS } from './UnitSystem';
@@ -206,7 +206,7 @@ function print(expr: Expr, opts: PrintOptions): Printed {
       let e: Expr = expr;
       let first = true;
       while (e.type === 'if') {
-        const cond = `${print(e.cond.left, opts).latex} ${RELATION_LATEX[e.cond.op]} ${print(e.cond.right, opts).latex}`;
+        const cond = conditionLatex(e.cond, opts);
         rows.push(`${first ? '\\mathrm{if}' : '\\mathrm{else}\\ \\mathrm{if}'}\\ ${cond}`, `\\quad\\left\\Vert\\displaystyle ${print(e.then, opts).latex}\\right.`);
         first = false;
         e = e.else;
@@ -216,4 +216,12 @@ function print(expr: Expr, opts: PrintOptions): Printed {
     }
   }
   return { latex: '', prec: PREC.atom };
+}
+
+function conditionLatex(c: Condition, opts: PrintOptions): string {
+  if ('logic' in c) {
+    const side = (x: Condition) => ('logic' in x && x.logic === 'or' && c.logic === 'and' ? `\\left(${conditionLatex(x, opts)}\\right)` : conditionLatex(x, opts));
+    return `${side(c.a)}${c.logic === 'and' ? '\\land ' : '\\lor '}${side(c.b)}`;
+  }
+  return `${print(c.left, opts).latex} ${RELATION_LATEX[c.op]} ${print(c.right, opts).latex}`;
 }

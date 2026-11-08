@@ -106,6 +106,17 @@ describe('if(condition, value if true, value if false)', () => {
     expect(() => parseLatex('y\\coloneq\\begin{array}{|l}\\mathrm{if}\\ a>0\\\\\\mathrm{else}\\\\\\quad1\\end{array}')).toThrow(/needs a value/);
   });
 
+  it('conditions join comparisons with ∨ (or) and ∧ (and); ∧ binds tighter; vectors entry by entry', () => {
+    const f = (x: number) =>
+      res(setup({ y: `y\\coloneq\\begin{array}{||l}\\mathrm{if}\\ ${x}=3\\lor ${x}=18\\\\\\quad\\left\\Vert1\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ ${x}>4\\land ${x}<10\\\\\\quad\\left\\Vert2\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert0\\right.\\end{array}` }), 'y').value?.number;
+    expect([3, 18, 5, 9, 4, 12].map(f)).toEqual([1, 1, 2, 2, 0, 0]);
+    // a ∨ b ∧ c = a ∨ (b ∧ c)
+    expect(res(setup({ y: 'y\\coloneq\\mathrm{if}\\left(1=1\\lor 1=2\\land 1=3,1,0\\right)' }), 'y').value?.number).toBe(1);
+    const e = setup({ k: 'k\\coloneq\\mathrm{seq}\\left(0,4\\right)', y: 'y\\coloneq\\mathrm{if}\\left(k=0\\lor k=4,1,0\\right)', g: 'g\\left(x\\right)\\coloneq\\mathrm{if}\\left(x>0\\land x<2,1,0\\right)' });
+    expect(res(e, 'y').value?.items).toEqual([1, 0, 0, 0, 1]);
+    expect(res(e, 'g').expressionLatex).toContain('\\land');
+  });
+
   it('a vector condition is decided entry by entry (EC2 parabola-rectangle as an if block)', () => {
     const e = setup({
       u: 'u\\coloneq\\mathrm{stack}\\left(-0.001,0.001,0.002,0.003\\right)',

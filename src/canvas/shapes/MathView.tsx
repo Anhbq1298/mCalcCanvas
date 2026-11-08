@@ -75,6 +75,8 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   const annexHint = useAnnexHint(shape.id);
   const error = result?.error;
   const empty = latex.trim() === '';
+  // Inputs (a definition from literals only, e.g. fck := 35 MPa): light-yellow highlight, blue text.
+  const isInput = !!result && result.status === 'valid' && result.kind === 'definition' && result.references.length === 0 && !!result.value;
   const errorMessage = error && annexHint && /defined (below|above) this equation/.test(error.message) ? `${error.message} ${annexHint}` : error?.message;
 
   return (
@@ -88,6 +90,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
       data-result={result?.value?.text ?? ''}
       data-error={errorMessage ?? ''}
       data-redefines={result?.redefines ? result.redefines.name : undefined}
+      data-input={isInput || undefined}
       title={
         result?.redefines
           ? `Redefines ${result.redefines.name}: regions below this one use this value; regions above keep the earlier one.`
@@ -96,11 +99,12 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
       style={
         {
           '--math-size': `${fontSize}px`,
-          '--math-color': color,
+          '--math-color': isInput ? INPUT_COLOR : color,
           width: autoSize ? 'max-content' : w,
           minHeight: autoSize ? undefined : h,
           padding: `${PAD_Y}px ${PAD_X}px`,
           // Green outline: this region redefines a variable defined earlier.
+          ...(isInput && !editing ? { background: INPUT_BACKGROUND, borderRadius: 3 } : {}),
           ...(result?.redefines && !isStatic ? { outline: '1.5px solid var(--color-redefine)', outlineOffset: -1, borderRadius: 3 } : {}),
         } as React.CSSProperties
       }
@@ -138,6 +142,10 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     </div>
   );
 }
+
+/** Input regions: light yellow highlight and blue text (also in the PDF). */
+const INPUT_BACKGROUND = '#fff6bf';
+const INPUT_COLOR = '#1d4ed8';
 
 const ICONS = { error: AlertCircle, warning: AlertTriangle, draft: CircleDashed };
 const TONE = { error: 'text-destructive', warning: 'text-warning', draft: 'text-muted-foreground' };

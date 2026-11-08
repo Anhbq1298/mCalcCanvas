@@ -21,7 +21,7 @@
  *     unambiguous way to write units.
  */
 import { CalculationError } from './CalculationErrors';
-import type { Condition, Expr, FunctionName, Relation, Statement } from './ExpressionTypes';
+import type { Comparison, Condition, Expr, FunctionName, Relation, Statement } from './ExpressionTypes';
 
 type Token =
   | { t: 'num'; v: string }
@@ -894,7 +894,27 @@ class Parser {
     return this.node({ type: 'let', bindings, body: this.subParse(parts[parts.length - 1]) });
   }
 
+  /** Condition with ∨ (or, \\lor/\\vee) and ∧ (and, \\land/\\wedge); ∧ binds tighter. */
   private subParseCondition(inner: Token[]): Condition {
+    const split = (toks: Token[], names: string[]): Token[][] => {
+      const parts: Token[][] = [[]];
+      let level = 0;
+      for (const t of toks) {
+        if (t.t === 'sym' && (t.v === '(' || t.v === '{' || t.v === '[')) level++;
+        if (t.t === 'sym' && (t.v === ')' || t.v === '}' || t.v === ']')) level--;
+        if (t.t === 'cmd' && (t.v === 'lparen')) level++;
+        if (t.t === 'cmd' && (t.v === 'rparen')) level--;
+        if (level === 0 && t.t === 'cmd' && names.includes(t.v)) parts.push([]);
+        else parts[parts.length - 1].push(t);
+      }
+      return parts;
+    };
+    const join = (logic: 'and' | 'or', cs: Condition[]): Condition => cs.reduce((a, b) => ({ logic, a, b }));
+    const ors = split(inner, ['lor', 'vee']);
+    return join('or', ors.map((o) => join('and', split(o, ['land', 'wedge']).map((t) => this.subParseComparison(t)))));
+  }
+
+  private subParseComparison(inner: Token[]): Comparison {
     const sub = new Parser([...inner, { t: 'eof', v: '' }], this.roman);
     sub.nodes = this.nodes;
     sub.depth = this.depth;

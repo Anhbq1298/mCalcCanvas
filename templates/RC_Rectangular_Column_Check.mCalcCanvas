@@ -1793,7 +1793,7 @@
       "id": "s_rect_33",
       "type": "text",
       "x": 80,
-      "y": 4030,
+      "y": 4009,
       "props": {
         "w": 310,
         "h": 24,
@@ -1812,7 +1812,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "m_{b}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ q_{b}<1\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ 4q_{b}=n_{b}-1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "latex": "m_{b}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ q_{b}\\ge1\\land4q_{b}=n_{b}-1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": -1,
@@ -1825,7 +1825,7 @@
       "id": "s_rect_35",
       "type": "text",
       "x": 80,
-      "y": 4189,
+      "y": 4118,
       "props": {
         "w": 310,
         "h": 24,
@@ -1840,11 +1840,11 @@
       "id": "s_rect_36",
       "type": "math",
       "x": 400,
-      "y": 4133,
+      "y": 4083,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "m_{h}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ q_{h}<1\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ 4q_{h}=n_{h}-1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "latex": "m_{h}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ q_{h}\\ge1\\land4q_{h}=n_{h}-1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": -1,
@@ -1857,7 +1857,7 @@
       "id": "s_rect_37",
       "type": "text",
       "x": 80,
-      "y": 4283,
+      "y": 4193,
       "props": {
         "w": 310,
         "h": 24,
@@ -1872,7 +1872,7 @@
       "id": "s_rect_38",
       "type": "math",
       "x": 400,
-      "y": 4283,
+      "y": 4193,
       "props": {
         "w": 60,
         "h": 32,
@@ -1889,7 +1889,7 @@
       "id": "s_rect_39",
       "type": "text",
       "x": 80,
-      "y": 4333,
+      "y": 4243,
       "props": {
         "w": 310,
         "h": 24,
@@ -1904,7 +1904,7 @@
       "id": "s_rect_3a",
       "type": "math",
       "x": 400,
-      "y": 4333,
+      "y": 4243,
       "props": {
         "w": 60,
         "h": 32,
@@ -1921,7 +1921,7 @@
       "id": "s_rect_3b",
       "type": "text",
       "x": 80,
-      "y": 4383,
+      "y": 4303,
       "props": {
         "w": 630,
         "h": 24,
@@ -1937,7 +1937,7 @@
       "id": "s_rect_3c",
       "type": "text",
       "x": 80,
-      "y": 4423,
+      "y": 4333,
       "props": {
         "w": 630,
         "h": 24,
@@ -1952,7 +1952,7 @@
       "id": "s_rect_3d",
       "type": "text",
       "x": 80,
-      "y": 4460,
+      "y": 4370,
       "props": {
         "w": 310,
         "h": 24,
@@ -1967,7 +1967,7 @@
       "id": "s_rect_3e",
       "type": "math",
       "x": 400,
-      "y": 4453,
+      "y": 4363,
       "props": {
         "w": 60,
         "h": 32,
@@ -5472,9 +5472,9 @@
       "id": "s_rect_9a",
       "type": "text",
       "x": 80,
-      "y": 17971,
+      "y": 17919,
       "props": {
-        "w": 310,
+        "w": 630,
         "h": 24,
         "html": "1 at the two hook ends",
         "fontFamily": "Inter",
@@ -5486,12 +5486,12 @@
     {
       "id": "s_rect_9b",
       "type": "math",
-      "x": 400,
-      "y": 17915,
+      "x": 96,
+      "y": 17945,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "o_{T}\\left(j\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ u_{T}\\left(j\\right)=0\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ u_{T}\\left(j\\right)=M_{T}-1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "latex": "o_{T}\\left(j\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ u_{T}\\left(j\\right)=0\\lor u_{T}\\left(j\\right)=M_{T}-1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -5504,7 +5504,7 @@
       "id": "s_rect_9c",
       "type": "text",
       "x": 80,
-      "y": 18121,
+      "y": 18090,
       "props": {
         "w": 310,
         "h": 24,
@@ -5519,11 +5519,11 @@
       "id": "s_rect_9d",
       "type": "math",
       "x": 400,
-      "y": 18065,
+      "y": 18055,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "X_{c}\\left(j\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ a_{T}\\left(j\\right)=1\\\\\\quad\\left\\Vert\\displaystyle b_{T}\\left(i_{T}\\left(j\\right)\\right)\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ a_{T}\\left(j\\right)=2\\\\\\quad\\left\\Vert\\displaystyle b_{T}\\left(i_{T}\\left(j\\right)\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle -b_{T}\\left(i_{T}\\left(j\\right)\\right)\\right.\\end{array}",
+        "latex": "X_{c}\\left(j\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ a_{T}\\left(j\\right)=1\\lor a_{T}\\left(j\\right)=2\\\\\\quad\\left\\Vert\\displaystyle b_{T}\\left(i_{T}\\left(j\\right)\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle -b_{T}\\left(i_{T}\\left(j\\right)\\right)\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -5536,7 +5536,7 @@
       "id": "s_rect_9e",
       "type": "text",
       "x": 80,
-      "y": 18271,
+      "y": 18200,
       "props": {
         "w": 310,
         "h": 24,
@@ -5551,11 +5551,11 @@
       "id": "s_rect_9f",
       "type": "math",
       "x": 400,
-      "y": 18215,
+      "y": 18165,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "Y_{c}\\left(j\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ a_{T}\\left(j\\right)=2\\\\\\quad\\left\\Vert\\displaystyle -h_{T}\\left(i_{T}\\left(j\\right)\\right)\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ a_{T}\\left(j\\right)=3\\\\\\quad\\left\\Vert\\displaystyle -h_{T}\\left(i_{T}\\left(j\\right)\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle h_{T}\\left(i_{T}\\left(j\\right)\\right)\\right.\\end{array}",
+        "latex": "Y_{c}\\left(j\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ a_{T}\\left(j\\right)=2\\lor a_{T}\\left(j\\right)=3\\\\\\quad\\left\\Vert\\displaystyle -h_{T}\\left(i_{T}\\left(j\\right)\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle h_{T}\\left(i_{T}\\left(j\\right)\\right)\\right.\\end{array}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -5568,7 +5568,7 @@
       "id": "s_rect_9g",
       "type": "text",
       "x": 80,
-      "y": 18369,
+      "y": 18279,
       "props": {
         "w": 630,
         "h": 24,
@@ -5583,7 +5583,7 @@
       "id": "s_rect_9h",
       "type": "math",
       "x": 96,
-      "y": 18395,
+      "y": 18305,
       "props": {
         "w": 60,
         "h": 32,
@@ -5600,7 +5600,7 @@
       "id": "s_rect_9i",
       "type": "text",
       "x": 80,
-      "y": 18469,
+      "y": 18369,
       "props": {
         "w": 630,
         "h": 24,
@@ -5615,7 +5615,7 @@
       "id": "s_rect_9j",
       "type": "math",
       "x": 96,
-      "y": 18495,
+      "y": 18395,
       "props": {
         "w": 60,
         "h": 32,
@@ -5632,7 +5632,7 @@
       "id": "s_rect_9k",
       "type": "text",
       "x": 80,
-      "y": 18562,
+      "y": 18462,
       "props": {
         "w": 310,
         "h": 24,
@@ -5647,7 +5647,7 @@
       "id": "s_rect_9l",
       "type": "math",
       "x": 400,
-      "y": 18555,
+      "y": 18455,
       "props": {
         "w": 60,
         "h": 32,
@@ -5664,7 +5664,7 @@
       "id": "s_rect_9m",
       "type": "text",
       "x": 80,
-      "y": 18823,
+      "y": 18502,
       "props": {
         "w": 310,
         "h": 24,
@@ -5679,7 +5679,7 @@
       "id": "s_rect_9n",
       "type": "math",
       "x": 400,
-      "y": 18816,
+      "y": 18495,
       "props": {
         "w": 60,
         "h": 32,
@@ -5696,7 +5696,7 @@
       "id": "s_rect_9o",
       "type": "text",
       "x": 80,
-      "y": 18863,
+      "y": 18552,
       "props": {
         "w": 310,
         "h": 24,
@@ -5711,7 +5711,7 @@
       "id": "s_rect_9p",
       "type": "math",
       "x": 400,
-      "y": 18856,
+      "y": 18545,
       "props": {
         "w": 60,
         "h": 32,
@@ -5728,7 +5728,7 @@
       "id": "s_rect_9q",
       "type": "text",
       "x": 80,
-      "y": 18918,
+      "y": 18828,
       "props": {
         "w": 310,
         "h": 24,
@@ -5743,7 +5743,7 @@
       "id": "s_rect_9r",
       "type": "math",
       "x": 400,
-      "y": 18906,
+      "y": 18816,
       "props": {
         "w": 60,
         "h": 32,
@@ -5760,7 +5760,7 @@
       "id": "s_rect_9s",
       "type": "text",
       "x": 80,
-      "y": 18973,
+      "y": 18883,
       "props": {
         "w": 310,
         "h": 24,
@@ -5775,7 +5775,7 @@
       "id": "s_rect_9t",
       "type": "math",
       "x": 400,
-      "y": 18966,
+      "y": 18876,
       "props": {
         "w": 60,
         "h": 32,
@@ -5792,7 +5792,7 @@
       "id": "s_rect_9u",
       "type": "text",
       "x": 80,
-      "y": 19006,
+      "y": 18916,
       "props": {
         "w": 310,
         "h": 24,
@@ -5807,7 +5807,7 @@
       "id": "s_rect_9v",
       "type": "math",
       "x": 400,
-      "y": 19006,
+      "y": 18916,
       "props": {
         "w": 60,
         "h": 32,
@@ -5824,7 +5824,7 @@
       "id": "s_rect_9w",
       "type": "text",
       "x": 80,
-      "y": 19060,
+      "y": 18980,
       "props": {
         "w": 630,
         "h": 24,
@@ -5839,7 +5839,7 @@
       "id": "s_rect_9x",
       "type": "math",
       "x": 96,
-      "y": 19086,
+      "y": 19006,
       "props": {
         "w": 60,
         "h": 32,
@@ -5856,7 +5856,7 @@
       "id": "s_rect_9y",
       "type": "text",
       "x": 80,
-      "y": 19160,
+      "y": 19080,
       "props": {
         "w": 630,
         "h": 24,
@@ -5871,7 +5871,7 @@
       "id": "s_rect_9z",
       "type": "math",
       "x": 96,
-      "y": 19196,
+      "y": 19106,
       "props": {
         "w": 60,
         "h": 32,
@@ -5888,7 +5888,7 @@
       "id": "s_rect_a0",
       "type": "text",
       "x": 80,
-      "y": 19250,
+      "y": 19170,
       "props": {
         "w": 630,
         "h": 24,
@@ -5903,7 +5903,7 @@
       "id": "s_rect_a1",
       "type": "math",
       "x": 96,
-      "y": 19286,
+      "y": 19196,
       "props": {
         "w": 60,
         "h": 32,
@@ -5920,7 +5920,7 @@
       "id": "s_rect_a2",
       "type": "text",
       "x": 80,
-      "y": 19361,
+      "y": 19271,
       "props": {
         "w": 310,
         "h": 24,
@@ -5935,7 +5935,7 @@
       "id": "s_rect_a3",
       "type": "math",
       "x": 400,
-      "y": 19326,
+      "y": 19236,
       "props": {
         "w": 60,
         "h": 32,
@@ -5952,7 +5952,7 @@
       "id": "s_rect_a4",
       "type": "text",
       "x": 80,
-      "y": 19471,
+      "y": 19381,
       "props": {
         "w": 310,
         "h": 24,
@@ -5967,7 +5967,7 @@
       "id": "s_rect_a5",
       "type": "math",
       "x": 400,
-      "y": 19436,
+      "y": 19346,
       "props": {
         "w": 60,
         "h": 32,
@@ -5984,7 +5984,7 @@
       "id": "s_rect_a6",
       "type": "text",
       "x": 80,
-      "y": 19543,
+      "y": 19463,
       "props": {
         "w": 310,
         "h": 24,
@@ -5999,7 +5999,7 @@
       "id": "s_rect_a7",
       "type": "math",
       "x": 400,
-      "y": 19536,
+      "y": 19456,
       "props": {
         "w": 60,
         "h": 32,
@@ -6016,7 +6016,7 @@
       "id": "s_rect_a8",
       "type": "text",
       "x": 80,
-      "y": 19593,
+      "y": 19503,
       "props": {
         "w": 310,
         "h": 24,
@@ -6031,7 +6031,7 @@
       "id": "s_rect_a9",
       "type": "math",
       "x": 400,
-      "y": 19586,
+      "y": 19496,
       "props": {
         "w": 60,
         "h": 32,
@@ -6048,7 +6048,7 @@
       "id": "s_rect_aa",
       "type": "text",
       "x": 80,
-      "y": 19630,
+      "y": 19540,
       "props": {
         "w": 630,
         "h": 24,
@@ -6063,7 +6063,7 @@
       "id": "s_rect_ab",
       "type": "math",
       "x": 96,
-      "y": 19656,
+      "y": 19576,
       "props": {
         "w": 60,
         "h": 32,
@@ -6080,7 +6080,7 @@
       "id": "s_rect_ac",
       "type": "text",
       "x": 80,
-      "y": 19991,
+      "y": 19640,
       "props": {
         "w": 630,
         "h": 24,
@@ -6095,7 +6095,7 @@
       "id": "s_rect_ad",
       "type": "math",
       "x": 96,
-      "y": 20017,
+      "y": 19666,
       "props": {
         "w": 60,
         "h": 32,
@@ -6112,7 +6112,7 @@
       "id": "s_rect_ae",
       "type": "text",
       "x": 80,
-      "y": 20084,
+      "y": 19733,
       "props": {
         "w": 310,
         "h": 24,
@@ -6127,7 +6127,7 @@
       "id": "s_rect_af",
       "type": "math",
       "x": 400,
-      "y": 20077,
+      "y": 19726,
       "props": {
         "w": 60,
         "h": 32,
@@ -6144,7 +6144,7 @@
       "id": "s_rect_ag",
       "type": "text",
       "x": 80,
-      "y": 20137,
+      "y": 19987,
       "props": {
         "w": 630,
         "h": 24,
@@ -6164,7 +6164,7 @@
       "id": "s_rect_ah",
       "type": "text",
       "x": 80,
-      "y": 20181,
+      "y": 20031,
       "props": {
         "w": 630,
         "h": 24,
@@ -6179,7 +6179,7 @@
       "id": "s_rect_ai",
       "type": "math",
       "x": 96,
-      "y": 20207,
+      "y": 20057,
       "props": {
         "w": 60,
         "h": 32,
@@ -6196,7 +6196,7 @@
       "id": "s_rect_aj",
       "type": "text",
       "x": 80,
-      "y": 20267,
+      "y": 20117,
       "props": {
         "w": 630,
         "h": 24,
@@ -6212,7 +6212,7 @@
       "id": "s_rect_ak",
       "type": "text",
       "x": 80,
-      "y": 20297,
+      "y": 20147,
       "props": {
         "w": 630,
         "h": 24,
@@ -6227,7 +6227,7 @@
       "id": "s_rect_al",
       "type": "text",
       "x": 80,
-      "y": 20327,
+      "y": 20177,
       "props": {
         "w": 630,
         "h": 24,
@@ -6242,7 +6242,7 @@
       "id": "s_rect_am",
       "type": "text",
       "x": 80,
-      "y": 20384,
+      "y": 20224,
       "props": {
         "w": 310,
         "h": 24,
@@ -6257,7 +6257,7 @@
       "id": "s_rect_an",
       "type": "math",
       "x": 400,
-      "y": 20377,
+      "y": 20217,
       "props": {
         "w": 60,
         "h": 32,
@@ -6274,7 +6274,7 @@
       "id": "s_rect_ao",
       "type": "text",
       "x": 80,
-      "y": 20421,
+      "y": 20271,
       "props": {
         "w": 630,
         "h": 24,
@@ -6289,7 +6289,7 @@
       "id": "s_rect_ap",
       "type": "math",
       "x": 96,
-      "y": 20447,
+      "y": 20297,
       "props": {
         "w": 60,
         "h": 32,
@@ -6306,7 +6306,7 @@
       "id": "s_rect_aq",
       "type": "text",
       "x": 80,
-      "y": 20501,
+      "y": 20351,
       "props": {
         "w": 630,
         "h": 24,
@@ -6321,7 +6321,7 @@
       "id": "s_rect_ar",
       "type": "math",
       "x": 96,
-      "y": 20527,
+      "y": 20377,
       "props": {
         "w": 60,
         "h": 32,
@@ -6338,7 +6338,7 @@
       "id": "s_rect_as",
       "type": "text",
       "x": 80,
-      "y": 20601,
+      "y": 20441,
       "props": {
         "w": 630,
         "h": 24,
@@ -6353,7 +6353,7 @@
       "id": "s_rect_at",
       "type": "math",
       "x": 96,
-      "y": 20627,
+      "y": 20477,
       "props": {
         "w": 60,
         "h": 32,
@@ -6370,7 +6370,7 @@
       "id": "s_rect_au",
       "type": "text",
       "x": 80,
-      "y": 20671,
+      "y": 20521,
       "props": {
         "w": 630,
         "h": 24,
@@ -6385,7 +6385,7 @@
       "id": "s_rect_av",
       "type": "math",
       "x": 96,
-      "y": 20697,
+      "y": 20547,
       "props": {
         "w": 60,
         "h": 32,
@@ -6402,7 +6402,7 @@
       "id": "s_rect_aw",
       "type": "text",
       "x": 80,
-      "y": 20751,
+      "y": 20591,
       "props": {
         "w": 630,
         "h": 24,
@@ -6417,7 +6417,7 @@
       "id": "s_rect_ax",
       "type": "math",
       "x": 96,
-      "y": 20777,
+      "y": 20627,
       "props": {
         "w": 60,
         "h": 32,
@@ -6434,7 +6434,7 @@
       "id": "s_rect_ay",
       "type": "text",
       "x": 80,
-      "y": 20821,
+      "y": 20671,
       "props": {
         "w": 630,
         "h": 24,
@@ -6449,7 +6449,7 @@
       "id": "s_rect_az",
       "type": "math",
       "x": 96,
-      "y": 20847,
+      "y": 20697,
       "props": {
         "w": 60,
         "h": 32,
@@ -6466,7 +6466,7 @@
       "id": "s_rect_b0",
       "type": "text",
       "x": 80,
-      "y": 21162,
+      "y": 20741,
       "props": {
         "w": 630,
         "h": 24,
@@ -6481,7 +6481,7 @@
       "id": "s_rect_b1",
       "type": "math",
       "x": 96,
-      "y": 21188,
+      "y": 20777,
       "props": {
         "w": 60,
         "h": 32,
@@ -6498,7 +6498,7 @@
       "id": "s_rect_b2",
       "type": "text",
       "x": 80,
-      "y": 21242,
+      "y": 20821,
       "props": {
         "w": 630,
         "h": 24,
@@ -6513,7 +6513,7 @@
       "id": "s_rect_b3",
       "type": "math",
       "x": 96,
-      "y": 21268,
+      "y": 20847,
       "props": {
         "w": 60,
         "h": 32,
@@ -6530,7 +6530,7 @@
       "id": "s_rect_b4",
       "type": "text",
       "x": 80,
-      "y": 21315,
+      "y": 20894,
       "props": {
         "w": 310,
         "h": 24,
@@ -6545,7 +6545,7 @@
       "id": "s_rect_b5",
       "type": "math",
       "x": 400,
-      "y": 21308,
+      "y": 20887,
       "props": {
         "w": 60,
         "h": 32,
@@ -6562,7 +6562,7 @@
       "id": "s_rect_b6",
       "type": "text",
       "x": 96,
-      "y": 21348,
+      "y": 21158,
       "props": {
         "w": 400,
         "h": 24,
@@ -6577,7 +6577,7 @@
       "id": "s_rect_b7",
       "type": "math",
       "x": 96,
-      "y": 21378,
+      "y": 21188,
       "props": {
         "w": 60,
         "h": 32,
@@ -6596,7 +6596,7 @@
       "id": "s_rect_b8",
       "type": "math",
       "x": 276,
-      "y": 21378,
+      "y": 21188,
       "props": {
         "w": 60,
         "h": 32,
@@ -6612,6 +6612,6 @@
       }
     }
   ],
-  "createdAt": "2026-11-08T18:08:45.457Z",
-  "updatedAt": "2026-11-08T18:08:45.457Z"
+  "createdAt": "2026-11-08T18:20:37.826Z",
+  "updatedAt": "2026-11-08T18:20:37.826Z"
 }

@@ -72,6 +72,8 @@ export const OPERATORS: PaletteSection[] = [
       soon('¬', 'Not'),
       soon('∨', 'Or'),
       { label: '≠', latex: '\\ne ', title: 'Not equal  ( Ctrl+3 )' },
+      { label: '∧', latex: '\\land ', title: 'And: both comparisons hold (in an if condition)' },
+      { label: '∨', latex: '\\lor ', title: 'Or: either comparison holds (in an if condition)' },
     ],
   },
   {

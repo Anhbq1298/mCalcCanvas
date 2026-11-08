@@ -99,7 +99,7 @@ Series styles: `line`, `marker`, `circle` (r = radius in x units) and `segments`
 
 ## If blocks
 
-Mathcad Prime layout, one column with a double bar, each value with its own bar: `\begin{array}{||l} \mathrm{if}\ c_1 \\ \quad\left\Vert a\right. \\ \mathrm{else}\ \mathrm{if}\ c_2 \\ \quad\left\Vert b\right. \\ \mathrm{else} \\ \quad\left\Vert c\right. \end{array}` (the bars are display only) parses to nested `if` nodes (each keyword line is followed by its value line; "else" last). The two-column form (`a & \mathrm{if}\ c_1 \\ … \\ c & \mathrm{otherwise}`, also `\begin{cases}`) is accepted too. Inside these environments the tokenizer keeps `&` and `\\`; other environments are rejected. The formatter prints every `if` (also `if(c, a, b)`) in the Prime layout.
+Mathcad Prime layout, one column with a double bar, each value with its own bar: `\begin{array}{||l} \mathrm{if}\ c_1 \\ \quad\left\Vert a\right. \\ \mathrm{else}\ \mathrm{if}\ c_2 \\ \quad\left\Vert b\right. \\ \mathrm{else} \\ \quad\left\Vert c\right. \end{array}` (the bars are display only). A condition is a comparison, or comparisons joined by `\land` (∧) and `\lor` (∨); ∧ binds tighter, single values short-circuit, vectors combine entry by entry parses to nested `if` nodes (each keyword line is followed by its value line; "else" last). The two-column form (`a & \mathrm{if}\ c_1 \\ … \\ c & \mathrm{otherwise}`, also `\begin{cases}`) is accepted too. Inside these environments the tokenizer keeps `&` and `\\`; other environments are rejected. The formatter prints every `if` (also `if(c, a, b)`) in the Prime layout.
 
 ## Annex blocks
 

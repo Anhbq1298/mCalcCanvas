@@ -10,7 +10,7 @@ import { CalculationError } from './CalculationErrors';
 export { isAbsoluteTemperature } from './UnitSystem';
 import { QVector, broadcast1, broadcast2, broadcastN, flatten, isVector, requireScalar, type Value } from './Vector';
 export { QVector, isVector, type Value } from './Vector';
-import type { Expr } from './ExpressionTypes';
+import type { Condition, Expr } from './ExpressionTypes';
 import { walkExpr, walkScoped } from './ExpressionTypes';
 import {
   sameDimension,
@@ -196,6 +196,26 @@ export interface UserFunction {
 }
 
 const MAX_CACHED_CALLS = 20000;
+
+/** A condition: one boolean, or one per entry when a side is a vector. ∧ binds tighter than ∨ (parser). */
+function evalCondition(c: Condition, ctx: EvalContext): boolean | boolean[] {
+  if ('logic' in c) {
+    const a = evalCondition(c.a, ctx);
+    // Short-circuit for single values, as in Mathcad.
+    if (typeof a === 'boolean' && ((c.logic === 'and' && !a) || (c.logic === 'or' && a))) return a;
+    const b = evalCondition(c.b, ctx);
+    if (typeof a === 'boolean' && typeof b === 'boolean') return c.logic === 'and' ? a && b : a || b;
+    const n = typeof a === 'boolean' ? (b as boolean[]).length : a.length;
+    if (typeof b !== 'boolean' && b.length !== n) throw new CalculationError('vector', `Vectors of different lengths cannot be combined (${n} and ${b.length} entries).`);
+    const at = (v: boolean | boolean[], i: number) => (typeof v === 'boolean' ? v : v[i]);
+    return Array.from({ length: n }, (_, i) => (c.logic === 'and' ? at(a, i) && at(b, i) : at(a, i) || at(b, i)));
+  }
+  const lv = evalNode(c.left, ctx);
+  const rv = evalNode(c.right, ctx);
+  if (!isVector(lv) && !isVector(rv)) return compareQuantities(lv, rv, c.op);
+  const r = broadcastN([lv, rv], ([x, y]) => (compareQuantities(x, y, c.op) ? 1 : 0));
+  return (r as QVector).items.map((q) => q === 1);
+}
 
 /** Cache key for scalar arguments (exact value and unit); null when an argument is a vector. */
 function scalarKey(args: Value[]): string | null {
@@ -514,13 +534,13 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
     case 'if': {
       // Same comparison rules as a check region; only the chosen branch is
       // evaluated, so the other may be undefined for these inputs (e.g. √ of a negative).
-      const lv = evalNode(expr.cond.left, ctx);
-      const rv = evalNode(expr.cond.right, ctx);
-      if (!isVector(lv) && !isVector(rv)) return evalNode(compareQuantities(lv, rv, expr.cond.op) ? expr.then : expr.else, ctx);
+      const c = evalCondition(expr.cond, ctx);
+      if (typeof c === 'boolean') return evalNode(c ? expr.then : expr.else, ctx);
       // Vector condition: decided entry by entry (both branches are evaluated; scalars repeat).
       const t = evalNode(expr.then, ctx);
       const f = evalNode(expr.else, ctx);
-      return broadcastN([lv, rv, t, f], ([a, b, x, y]) => (compareQuantities(a, b, expr.cond.op) ? x : y));
+      const mask = new QVector(c.map((b) => (b ? 1 : 0)));
+      return broadcastN([mask, t, f], ([m, x, y]) => (m ? x : y));
     }
 
     case 'range':

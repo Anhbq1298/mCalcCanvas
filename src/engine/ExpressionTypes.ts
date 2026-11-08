@@ -61,10 +61,18 @@ export type IdentNode = { type: 'ident'; name: string; splittable: boolean; roma
 export type Relation = '<' | '<=' | '>' | '>=' | '==' | '!=';
 
 /** A comparison used as the condition of `if`. */
-export interface Condition {
+export interface Comparison {
   left: Expr;
   op: Relation;
   right: Expr;
+}
+
+/** Condition of `if`: a comparison, or comparisons joined by ∧ (and) / ∨ (or). */
+export type Condition = Comparison | { logic: 'and' | 'or'; a: Condition; b: Condition };
+
+/** Every expression inside a condition (for walkers). */
+export function conditionExprs(c: Condition): Expr[] {
+  return 'logic' in c ? [...conditionExprs(c.a), ...conditionExprs(c.b)] : [c.left, c.right];
 }
 
 export type Statement =
@@ -100,8 +108,7 @@ export function walkExpr(expr: Expr, visit: (e: Expr) => void): void {
       walkExpr(expr.end, visit);
       break;
     case 'if':
-      walkExpr(expr.cond.left, visit);
-      walkExpr(expr.cond.right, visit);
+      for (const e of conditionExprs(expr.cond)) walkExpr(e, visit);
       walkExpr(expr.then, visit);
       walkExpr(expr.else, visit);
       break;
@@ -140,8 +147,7 @@ export function walkScoped(expr: Expr, visit: (e: Expr, locals: ReadonlySet<stri
       w(expr.end);
       break;
     case 'if':
-      w(expr.cond.left);
-      w(expr.cond.right);
+      conditionExprs(expr.cond).forEach(w);
       w(expr.then);
       w(expr.else);
       break;

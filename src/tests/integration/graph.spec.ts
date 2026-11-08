@@ -25,6 +25,15 @@ test.describe('ranges and graphs', () => {
     await newBlankWorksheet(page);
   });
 
+  test('inputs (definitions from literals) are highlighted: light yellow, blue text', async ({ page }) => {
+    await addRegion(page, 300, 220, ['L:8.5 m']);
+    await addRegion(page, 300, 300, ['M:2L']);
+    const input = page.locator('[data-testid=math-region][data-latex^="L"]');
+    await expect(input).toHaveAttribute('data-input', 'true');
+    await expect(input).toHaveCSS('background-color', 'rgb(255, 246, 191)');
+    await expect(page.locator('[data-testid=math-region][data-latex^="M"]')).not.toHaveAttribute('data-input', 'true');
+  });
+
   test('";" types a range and the result is a vector', async ({ page }) => {
     await addRegion(page, 300, 220, ['n:4']);
     await addRegion(page, 300, 280, ['i:0;n-1', '{ArrowRight}', '=']);
