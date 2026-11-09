@@ -96,6 +96,10 @@ test.describe('moving regions', () => {
     await page.mouse.click(p.x, p.y);
     await page.keyboard.type('b:2', { delay: 15 });
     await page.keyboard.press('Enter');
+    // Let the new region get its result and settle on its baseline before grabbing it.
+    await page.evaluate(() => (window as unknown as { __calccanvas: { idle(): Promise<void> } }).__calccanvas.idle());
+    await expect(page.locator('.math-region').first()).toHaveAttribute('data-status', 'valid');
+    await page.waitForTimeout(200);
     const box = await page.locator('.math-region').first().boundingBox();
     await page.mouse.move(box!.x + 8, box!.y + box!.height / 2);
     await page.mouse.down();

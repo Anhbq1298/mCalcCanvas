@@ -12,7 +12,8 @@ import {
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { revealShape } from '../../canvas/canvasActions';
-import { readingKey } from '../../canvas/engineBridge';
+import { readingKey, worksheetRegions } from '../../canvas/engineBridge';
+import { compareOrderKeys, type OrderKey } from '../../engine/light';
 import { select, updateShapes, useCanvasStore } from '../../canvas/model/canvasStore';
 import type { MathShape } from '../../canvas/model/types';
 import type { CalculationResult } from '../../engine';
@@ -226,10 +227,13 @@ export function InputResultsPage() {
   // Results belong to the exact worksheet and table they were calculated from:
   // any later change (inputs, columns, formulas, settings) makes them outdated.
   const documentId = useAppStore((s) => s.documentId);
-  const docVersion = useCanvasStore((s) => s.docVersion);
+  // Only what the calculation depends on: each region's formula, units and
+  // precision in reading order. Measuring, moving without reordering, or just
+  // switching tabs does not make results outdated.
+  const worksheetSignature = useMemo(() => JSON.stringify(worksheetRegions(shapes).sort((a, b) => compareOrderKeys((a.input.order ?? []) as OrderKey, (b.input.order ?? []) as OrderKey)).map((r) => [r.id, r.input.latex, r.input.displayUnit, r.input.precision])), [shapes]);
   const revision = useMemo(
-    () => JSON.stringify([documentId, docVersion, settings.unitSystem, settings.precision, config.inputs, config.outputs, config.rows.map((r) => [r.id, r.values])]),
-    [documentId, docVersion, settings.unitSystem, settings.precision, config.inputs, config.outputs, config.rows],
+    () => JSON.stringify([documentId, worksheetSignature, settings.unitSystem, settings.precision, config.inputs, config.outputs, config.rows.map((r) => [r.id, r.values])]),
+    [documentId, worksheetSignature, settings.unitSystem, settings.precision, config.inputs, config.outputs, config.rows],
   );
   const [resultRevision, setResultRevision] = useState<string | null>(null);
   const runState: RunState = running ? 'running' : resultRevision === null ? 'not-run' : resultRevision === revision ? 'current' : 'stale';

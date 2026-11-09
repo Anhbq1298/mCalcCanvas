@@ -16,6 +16,12 @@ test('rectangular column template: load cases in Input & Results calculate UR fo
   await expect(rows.first()).toContainText(worksheetUR.match(/\d\.\d{3}/)![0]);
   await expect(page.getByText('FAIL', { exact: true })).toHaveCount(0);
   await page.screenshot({ path: 'test-results/ui-snapshots/rect-column-load-cases.png' });
+  // Switching to the sheet and back keeps the results current.
+  await page.getByRole('tab', { name: 'Calculation' }).click();
+  await page.waitForTimeout(500);
+  await page.getByRole('tab', { name: 'Input & Results' }).click();
+  await expect(page.getByText('Results outdated')).toHaveCount(0);
+  await expect(page.getByText('Current')).toHaveCount(5);
 });
 
 test('rectangular column: case reports print a summary and the full worksheet per case', async ({ page }) => {
