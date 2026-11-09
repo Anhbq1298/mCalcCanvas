@@ -1,6 +1,6 @@
 import { setParagraphStyle } from './headings';
 import { baselineStep } from './pageConstraint';
-import { deleteLineAboveCrosshair, insertLineAtCrosshair, moveCrosshair } from './canvasActions';
+import { deleteLineAboveCrosshair, deleteLineAtCrosshair, insertLineAtCrosshair, moveCrosshair } from './canvasActions';
 import type { HeadingLevel } from './model/types';
 import { useEffect } from 'react';
 import { commands } from '../app/commands';
@@ -128,6 +128,10 @@ export function useCanvasKeyboard(): void {
           // Remove the blank line above the + cross (undoes an Enter).
           e.preventDefault();
           deleteLineAboveCrosshair();
+        } else if (e.key === 'Delete' && st.crosshair) {
+          // Remove the blank line the + cross is on: what is below moves up.
+          e.preventDefault();
+          deleteLineAtCrosshair();
         }
         return;
       }

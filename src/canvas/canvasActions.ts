@@ -24,7 +24,7 @@ import { plainTextToHtml } from './sanitize';
 import { sanitizeShape } from '../documents/DocumentSerializer';
 import { clampDelta, clampPoint, clampShapesIntoPage, constrained, crossPoint, nextPrintableTop, nextWritingPoint, printableAt } from './pageConstraint';
 import { pageCount } from '../export/pageGeometry';
-import { globalLine, lineOccupied, lineY, planLineShift, planSeparation, type LayoutPlan } from './layout';
+import { globalLine, lineOccupied, lineRemovable, lineY, planLineShift, planSeparation, type LayoutPlan } from './layout';
 import { useAppStore } from '../store/appStore';
 
 const get = () => useCanvasStore.getState();
@@ -94,6 +94,19 @@ export function insertLineAtCrosshair(): void {
   const g = globalLine(c.y);
   transaction(() => applyLayout(planLineShift(get().shapes, g, +1)));
   setCross({ x: c.x, y: lineY(g + 1) });
+}
+
+/**
+ * Delete at the + cross removes the blank line the cross is on: everything
+ * below moves up one line and the cross stays. Does nothing if that line has content.
+ */
+export function deleteLineAtCrosshair(): boolean {
+  const c = get().crosshair;
+  if (!c) return false;
+  const g = globalLine(c.y);
+  if (!lineRemovable(get().shapes, g)) return false;
+  transaction(() => applyLayout(planLineShift(get().shapes, g + 1, -1)));
+  return true;
 }
 
 /**
@@ -341,7 +354,7 @@ export function deleteSelection(): void {
     deleteShapes(ids);
     // Bottom-up, so the line numbers above stay valid.
     for (const g of [...lines].sort((a, b) => b - a)) {
-      if (lineOccupied(get().shapes, g)) continue;
+      if (!lineRemovable(get().shapes, g)) continue;
       applyLayout(planLineShift(get().shapes, g + 1, -1));
     }
   });

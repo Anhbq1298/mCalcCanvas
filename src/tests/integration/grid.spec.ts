@@ -155,6 +155,16 @@ test.describe('lines like a document', () => {
     // Undo restores.
     await page.keyboard.press('ControlOrMeta+z');
     expect((await shapes(page)).map(lineOf).sort((x, y) => x - y)).toEqual([100, 260]);
+    // Delete with the cross on a blank line removes that line: what is below moves up.
+    await page.mouse.click((await pageToScreen(page, 76 + 300, 140)).x, (await pageToScreen(page, 76 + 300, 140)).y);
+    await page.keyboard.press('Delete');
+    expect((await shapes(page)).map(lineOf).sort((x, y) => x - y)).toEqual([100, 220]);
+    await page.keyboard.press('Delete');
+    await page.keyboard.press('Delete');
+    expect((await shapes(page)).map(lineOf).sort((x, y) => x - y)).toEqual([100, 140]);
+    // The cross is on b's line now: Delete changes nothing.
+    await page.keyboard.press('Delete');
+    expect((await shapes(page)).map(lineOf).sort((x, y) => x - y)).toEqual([100, 140]);
   });
 });
 

@@ -68,6 +68,19 @@ export function lineOccupied(shapes: Record<string, Shape>, g: number): boolean 
   });
 }
 
+/**
+ * True if line g can be removed: nothing is written on it and nothing crosses
+ * it (the descent of a region on the line above does not count).
+ */
+export function lineRemovable(shapes: Record<string, Shape>, g: number): boolean {
+  const y = lineY(g);
+  return !Object.values(shapes).some((s) => {
+    if (globalLine(anchorY(s)) === g) return true;
+    const b = shapeBounds(s);
+    return b.y < y - 20 && b.y + b.h > y + 5;
+  });
+}
+
 const byReadingOrder = (a: Shape, b: Shape) => anchorY(a) - anchorY(b) || a.x - b.x || (a.id < b.id ? -1 : 1);
 
 /**
