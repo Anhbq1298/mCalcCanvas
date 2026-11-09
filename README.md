@@ -2,7 +2,7 @@
 
 **Live app:** https://anhbq1298.github.io/mCalcCanvas/
 
-A browser-based engineering calculation workspace in the style of Mathcad Prime, built on its own canvas engine. You type equations anywhere on A4/A3 pages, define variables with units, and every dependent result updates automatically. A worksheet prints to a vector PDF calculation sheet. The same worksheet can be run for many load cases (Input & Results), and each case can be printed as a report.
+A browser-based engineering calculation workspace in the style of Mathcad Prime, built on its own canvas engine. You type equations anywhere on A4/A3 pages, define variables with units, and every dependent result updates automatically. A worksheet prints to a vector PDF calculation sheet. The same worksheet can be run for many load cases (Table In&Out), and each case can be printed as a report.
 
 ```
 L := 8.5 m           w := (1.35G + 1.5Q)·b = 28.5 kN/m
@@ -33,7 +33,7 @@ Playwright needs a Chromium. Run `npx playwright install chromium`, or point it 
 
 ## Using it
 
-**Layout.** As in Mathcad Prime, the ribbon carries the commands; the menu row keeps only File and Templates. Next to it are the workspaces (**Calculation**, **Input & Results**) and the ribbon tabs, in Mathcad Prime order: **Math**, **Calculation**, **Plots**, **Math Formatting**, **Text Formatting**, **Document**, **Help**. Undo and redo sit next to the title.
+**Layout.** As in Mathcad Prime, the ribbon carries the commands; the menu row keeps only File and Templates. Then come the ribbon tabs in Mathcad Prime order (**Math**, **Calculation**, **Plots**, **Math Formatting**, **Text Formatting**, **Document**), the two workspaces (**CalcCanvas**, the worksheet, and **Table In&Out**, the load-case table) and **Help**, each part split by a separator. Undo and redo sit next to the title.
 
 The ribbon follows Mathcad Prime: each group has large buttons (icon above the label) for its main commands and small labelled buttons stacked three high, with the group name underneath. Math holds Clipboard, Regions, Operators and Symbols, and Draw; Calculation holds Calculate and the worksheet unit system, decimals and snap; Document holds Page Setup, Show (page boundaries, grid, ruler, header & footer), Zoom and Pages. The tab stays where you put it; selecting a region does not switch it. The Outline, Parameters and Properties toggles sit at the right end of the ribbon.
 
@@ -78,7 +78,7 @@ The left side panel has the **Outline** (headings, click to jump) and **Paramete
 - *Steel beam – simply supported*.
 - *RC rectangular column check (EN 1992-1-1)* and *RC circular column check (EN 1992-1-1)*. These cover a P–Mθ interaction curve from fibres, shear to EN 1992-1-1:2023 §8.2.3, and an annex with the derivations. The rectangular column comes with 5 load cases.
 
-**Input & Results** (workspace tab):
+**Table In&Out** (workspace tab):
 - **Load cases**: bind worksheet inputs and results to columns, enter numbers for each case, then press **Calculate All**. Cases run off the UI thread on a small pool of workers. Each worker sets up the worksheet once and changes only the bound inputs from case to case.
 - **Outdated results**: results are marked *Outdated* as soon as anything they depend on changes.
 - **Right-click a case** to show it on the calculation sheet (its values go into the inputs as one undo step), print its report, or delete it.
@@ -110,7 +110,7 @@ src/
   math/          MathLive editor, Mathcad keys, static renderer, display composition
   documents/     IndexedDB storage, (de)serialisation with migrations, templates
   export/        page geometry (paper, margins), print/PDF, case reports
-  components/    header + ribbon, Input & Results, panels, dialogs (Help center, Page setup)
+  components/    header + ribbon, Table In&Out, panels, dialogs (Help center, Page setup)
   store/         Zustand stores, engine client (worker), batch worker pool
 tools/templates/ generators for the column templates
 ```

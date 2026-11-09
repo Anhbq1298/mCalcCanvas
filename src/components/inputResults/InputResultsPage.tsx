@@ -194,7 +194,7 @@ function ColumnPicker({ fields, config, onClose, onSave }: { fields: AvailableFi
         <header className="flex items-center gap-3 border-b border-border px-5 py-3">
           <Columns3 size={18} className="text-primary" aria-hidden />
           <div className="min-w-0 flex-1">
-            <h2 id="column-picker-title" className="text-[15px] font-semibold text-foreground">Configure Input & Results columns</h2>
+            <h2 id="column-picker-title" className="text-[15px] font-semibold text-foreground">Configure Table In&Out columns</h2>
             <p className="text-[12px] text-muted-foreground">Units are inherited from the worksheet. Batch cells contain numbers only.</p>
           </div>
           <button type="button" onClick={onClose} aria-label="Close column settings" className="docs-tb-btn"><X size={17} aria-hidden /></button>
@@ -480,8 +480,8 @@ export function InputResultsPage() {
         );
         return (
           <div role="menu" aria-label={`${row.name} actions`} data-testid="row-menu" className="ir-menu" style={{ left: Math.min(menu.x, window.innerWidth - 260), top: Math.min(menu.y, window.innerHeight - 160) }}>
-            {item(`Show ${row.name} on the calculation sheet`, () => showCaseOnSheet(row.id), config.inputs.some((c) => row.values[c.id] === null))}
-            {item('Go to the calculation sheet', () => setWorkspace('calculation'))}
+            {item(`Show ${row.name} in CalcCanvas`, () => showCaseOnSheet(row.id), config.inputs.some((c) => row.values[c.id] === null))}
+            {item('Go to CalcCanvas', () => setWorkspace('calculation'))}
             <div className="ir-menu-sep" role="separator" />
             {item(`Print report for ${row.name}`, () => void printReports([row.id]), !canCalculate || printing)}
             {item(`Delete ${row.name}`, () => changeConfig({ ...config, rows: config.rows.filter((r) => r.id !== row.id) }))}

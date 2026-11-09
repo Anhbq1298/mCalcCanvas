@@ -76,7 +76,7 @@ const HELP_SECTIONS: { id: string; title: string; body: ReactNode; text: string 
     body: (
       <>
         <p>A region uses the definitions above it (or to its left on the same line). Redefining a name is allowed and outlined in green. Unit mismatches, undefined names and division by zero are reported on the region.</p>
-        <p>Input &amp; Results runs many cases (load cases) of the same worksheet: bind inputs and results, enter numbers per case and press Calculate All. Results are outdated as soon as something they depend on changes.</p>
+        <p>Table In&amp;Out runs many cases (load cases) of the same worksheet: bind inputs and results, enter numbers per case and press Calculate All. Results are outdated as soon as something they depend on changes.</p>
       </>
     ),
   },
@@ -87,7 +87,7 @@ const HELP_SECTIONS: { id: string; title: string; body: ReactNode; text: string 
     body: (
       <>
         <p>File → Download PDF / Print (<Kbd k="Ctrl" />+<Kbd k="P" />) prints every page with the document's paper size, orientation and margins, without grid, rulers or selection marks. Choose “Save as PDF” in the print dialog.</p>
-        <p>Input &amp; Results → Print reports prints a summary of all cases and the full worksheet for each case.</p>
+        <p>Table In&amp;Out → Print reports prints a summary of all cases and the full worksheet for each case.</p>
       </>
     ),
   },

@@ -14,7 +14,7 @@ function cellText(r: CalculationResult | undefined): { text: string; cls: string
 export function CaseSummary({ config, fields, rows, results, stamp }: { config: InputResultConfig; fields: Map<string, AvailableField>; rows: InputResultRow[]; results: BatchResults; stamp: string }) {
   return (
     <div className="report-summary" data-testid="report-summary">
-      <h1>{config.title || 'Input & Results'}</h1>
+      <h1>{config.title || 'Table In&Out'}</h1>
       <p className="report-stamp">{stamp}</p>
       <table>
         <thead>

@@ -5,7 +5,7 @@ test('capture the Input & Results workspace at desktop and mobile widths', async
   test.skip(!process.env.UI_SNAPSHOTS, 'Visual artifact capture runs in CI.');
 
   await openFresh(page, 'steel-beam');
-  await page.getByRole('tab', { name: 'Input & Results' }).click();
+  await page.getByRole('tab', { name: 'Table In&Out' }).click();
   await page.getByRole('button', { name: 'Configure columns' }).click();
 
   const inputs = page.getByRole('group', { name: 'Inputs · editable' });

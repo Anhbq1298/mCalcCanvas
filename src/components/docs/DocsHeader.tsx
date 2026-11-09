@@ -967,10 +967,10 @@ const TAB_LABELS: [RibbonTabId, string][] = [
   ['help', 'Help'],
 ];
 
-function RibbonTabs({ tab, setTab }: { tab: RibbonTabId; setTab(t: RibbonTabId): void }) {
+function RibbonTabs({ tab, setTab, only, label = 'Ribbon' }: { tab: RibbonTabId; setTab(t: RibbonTabId): void; only: (id: RibbonTabId) => boolean; label?: string }) {
   return (
-    <div role="tablist" aria-label="Ribbon" className="rb-tabs">
-      {TAB_LABELS.map(([id, label]) => (
+    <div role="tablist" aria-label={label} className="rb-tabs">
+      {TAB_LABELS.filter(([id]) => only(id)).map(([id, label]) => (
         <button
           key={id}
           type="button"
@@ -1086,7 +1086,13 @@ export function DocsHeader() {
                 highlight={name === 'Templates'}
               />
             ))}
-            <span className="mx-1 h-4 w-px bg-docs-border" aria-hidden />
+            <span className="mx-1.5 h-4 w-px bg-docs-border" aria-hidden />
+            {workspace === 'calculation' && (
+              <>
+                <RibbonTabs tab={ribbonTab} setTab={setRibbonTab} only={(id) => id !== 'help'} />
+                <span className="mx-1.5 h-4 w-px bg-docs-border" aria-hidden />
+              </>
+            )}
             <div role="tablist" aria-label="Workspace" className="flex items-center gap-0.5">
               <button
                 type="button"
@@ -1094,8 +1100,9 @@ export function DocsHeader() {
                 aria-selected={workspace === 'calculation'}
                 onClick={() => setWorkspace('calculation')}
                 className={'docs-workspace-tab ' + (workspace === 'calculation' ? 'is-active' : '')}
+                data-testid="workspace-calccanvas"
               >
-                <Sigma size={13} aria-hidden /> Calculation
+                <Sigma size={13} aria-hidden /> CalcCanvas
               </button>
               <button
                 type="button"
@@ -1105,13 +1112,13 @@ export function DocsHeader() {
                 className={'docs-workspace-tab ' + (workspace === 'input-results' ? 'is-active' : '')}
                 data-testid="workspace-input-results"
               >
-                <TableProperties size={13} aria-hidden /> Input &amp; Results
+                <TableProperties size={13} aria-hidden /> Table In&amp;Out
               </button>
             </div>
             {workspace === 'calculation' && (
               <>
                 <span className="mx-1.5 h-4 w-px bg-docs-border" aria-hidden />
-                <RibbonTabs tab={ribbonTab} setTab={setRibbonTab} />
+                <RibbonTabs tab={ribbonTab} setTab={setRibbonTab} only={(id) => id === 'help'} label="Help" />
               </>
             )}
           </nav>
