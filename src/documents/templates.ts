@@ -187,6 +187,7 @@ export const TEMPLATES: WorksheetTemplate[] = [
     description: 'Two-page report with sections, inputs, full calculations, checks and a section sketch.',
     title: 'RC Beam Bending Design',
     metadata: { project: 'Project name', calculationReference: 'CALC-002', preparedBy: '', checkedBy: '', revision: 'A' },
+    settings: { snapToGrid: true },
     shapes: rcBeamShapes,
   },
   {

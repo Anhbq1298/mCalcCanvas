@@ -100,7 +100,9 @@ export function sanitizeShape(raw: unknown): Shape | null {
           ...(typeof p.trailingZeros === 'boolean' ? { trailingZeros: p.trailingZeros } : {}),
           ...(typeof p.highlight === 'string' && /^#[0-9a-fA-F]{6}$/.test(p.highlight) ? { highlight: p.highlight } : {}),
           textFont: TEXT_FONTS[str(p.textFont)] ? str(p.textFont) : 'Inter',
-          autoSize: p.autoSize !== false,
+          // Math regions are intrinsically sized; keep the legacy field only
+          // so older documents round-trip into the current behaviour.
+          autoSize: true,
           fontSize: Math.min(64, Math.max(8, num(p.fontSize, 18))),
           color: color(p.color, '#0f172a'),
           ...(typeof p.baseline === 'number' && Number.isFinite(p.baseline) ? { baseline: bounded(p.baseline, 20, 1, 2000) } : {}),
@@ -243,6 +245,7 @@ export function parseDocument(input: unknown): CalculationDocument {
   settings.showHeaderFooter = settings.showHeaderFooter !== false;
   if (!TEXT_FONTS[settings.textFont]) settings.textFont = 'Inter';
   settings.baselineSnap = settings.baselineSnap === 'minor' ? 'minor' : 'major';
+  if (typeof settings.snapToGrid !== 'boolean') delete settings.snapToGrid;
   settings.pages = Math.min(200, Math.max(1, Math.round(num(settings.pages, 1))));
   settings.showMatrixIndices = settings.showMatrixIndices === true;
   settings.collapseNestedMatrices = settings.collapseNestedMatrices === true;

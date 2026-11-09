@@ -233,10 +233,6 @@ function MathProperties({ shape }: { shape: MathShape }) {
           )}
         </Field>
         <ColorSwatches label="Color" value={shape.props.color} onChange={(color) => update({ color })} />
-        <label className="flex cursor-pointer items-center gap-2 text-[13px]">
-          <input type="checkbox" className="h-4 w-4 cursor-pointer accent-accent" checked={shape.props.autoSize} onChange={(e) => update({ autoSize: e.target.checked })} />
-          Size to fit equation
-        </label>
       </Section>
     </>
   );

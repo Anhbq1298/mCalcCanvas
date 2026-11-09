@@ -63,9 +63,8 @@ test.describe('Page layout keeps content inside the margins', () => {
     await page.mouse.up();
     const [s] = await shapes(page);
     expect(s.x).toBeCloseTo(76, 0);
-    // Its baseline sits on the first major line inside the top margin (60 + 40).
-    const b = (s as unknown as { props: { baseline: number } }).props.baseline;
-    expect(s.y + b).toBe(100);
+    // Free positioning clamps the region itself to the top margin without snapping its baseline.
+    expect(s.y).toBe(60);
   });
 
   test('Check button inserts an editable "□ ≤ 1" with the caret in the slot', async ({ page }) => {

@@ -58,6 +58,8 @@ export interface DocumentSettings {
   textFont: string;
   /** Baselines snap to every major line (ruled paper, default) or to every minor grid line. */
   baselineSnap?: 'major' | 'minor';
+  /** Snap region anchors to the worksheet grid. Free positioning when absent. */
+  snapToGrid?: boolean;
   /** Minimum number of pages (keeps inserted blank pages). */
   pages?: number;
   showMatrixIndices?: boolean;

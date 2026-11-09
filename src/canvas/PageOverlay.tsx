@@ -11,6 +11,7 @@ export function PageOverlay() {
   const orientation = useAppStore((s) => s.settings.pageOrientation);
   const shapesMap = useCanvasStore((s) => s.shapes);
   const isGrid = useCanvasStore((s) => s.isGrid);
+  const zoom = useCanvasStore((s) => s.camera.z);
   const showChrome = useAppStore((s) => s.settings.showHeaderFooter);
   const order = useCanvasStore((s) => s.order);
   const shapes = useMemo(() => orderedShapes({ ...useCanvasStore.getState(), shapes: shapesMap, order }), [shapesMap, order]);
@@ -28,6 +29,8 @@ export function PageOverlay() {
     <div style={{ position: 'absolute', left: 0, top: 0, pointerEvents: 'none' }} aria-hidden>
       {Array.from({ length: pages }, (_, i) => {
         const b = pageBox(i, orientation);
+        const line = 1 / zoom;
+        const gridImage = `linear-gradient(var(--grid-major) ${line}px, transparent ${line}px), linear-gradient(90deg, var(--grid-major) ${line}px, transparent ${line}px), linear-gradient(var(--grid-minor) ${line}px, transparent ${line}px), linear-gradient(90deg, var(--grid-minor) ${line}px, transparent ${line}px)`;
         return (
           <div
             key={i}
@@ -53,9 +56,7 @@ export function PageOverlay() {
                 bottom: m.bottom,
                 outline: boundaries ? '1px dashed var(--color-docs-blue)' : isGrid ? '1px solid var(--grid-major)' : undefined,
                 // Engineering pad: 10 px minor / 40 px major (4 × 4) squares inside the print area.
-                backgroundImage: isGrid
-                  ? 'linear-gradient(var(--grid-major) 1px, transparent 1px), linear-gradient(90deg, var(--grid-major) 1px, transparent 1px), linear-gradient(var(--grid-minor) 1px, transparent 1px), linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px)'
-                  : undefined,
+                backgroundImage: isGrid ? gridImage : undefined,
                 backgroundSize: isGrid ? `${GRID_MAJOR}px ${GRID_MAJOR}px, ${GRID_MAJOR}px ${GRID_MAJOR}px, ${GRID_SIZE}px ${GRID_SIZE}px, ${GRID_SIZE}px ${GRID_SIZE}px` : undefined,
               }}
             />

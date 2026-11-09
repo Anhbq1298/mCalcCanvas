@@ -22,6 +22,7 @@ function newId(): string {
 
 function applySettings() {
   const { settings } = useAppStore.getState();
+  useCanvasStore.setState({ isSnap: settings.snapToGrid === true });
   engine.setSettings({
     unitSystem: settings.unitSystem,
     precision: settings.precision,

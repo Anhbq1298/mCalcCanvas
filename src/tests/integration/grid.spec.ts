@@ -18,10 +18,58 @@ async function pageToScreen(page: Page, x: number, y: number) {
   }, [x, y]);
 }
 
+test.describe('optional grid snapping', () => {
+  test('free positioning is the default and snapping is opt-in', async ({ page }) => {
+    await openFresh(page);
+    await newBlankWorksheet(page, 'free');
+    await page.getByTestId('tool-math').click();
+    await page.mouse.click(413, 317);
+    await page.keyboard.type('x:1', { delay: 15 });
+    await page.keyboard.press('Enter');
+    const [free] = await shapes(page);
+    expect(free.x % 20 === 0 && free.y % 20 === 0).toBe(false);
+
+    await page.getByTestId('format-tab-document').click();
+    await page.getByTestId('doc-snap').check();
+    await page.getByTestId('format-tab-math').click();
+    await page.getByTestId('tool-math').click();
+    await page.mouse.click(613, 417);
+    await page.keyboard.type('y:2', { delay: 15 });
+    await page.keyboard.press('Enter');
+    const snapped = (await shapes(page)).find((s) => s.id !== free.id)!;
+    expect(snapped.x % 20).toBe(0);
+  });
+
+  test('grid, regions and selection stay synchronized through zoom levels', async ({ page }) => {
+    await openFresh(page);
+    await newBlankWorksheet(page, 'free');
+    await page.getByTestId('tool-math').click();
+    await page.mouse.click(413, 317);
+    await page.keyboard.type('L:8.5m', { delay: 15 });
+    await page.keyboard.press('Enter');
+    await page.getByTestId('math-region').click();
+    await page.getByTestId('format-tab-document').click();
+    for (const zoom of [50, 75, 100, 125, 150, 200]) {
+      await page.getByRole('group', { name: 'Zoom' }).getByLabel('Zoom').selectOption(String(zoom));
+      await expect.poll(async () => {
+        const region = await page.getByTestId('math-region').boundingBox();
+        const outline = await page.getByTestId('selection-outline').boundingBox();
+        if (!region || !outline) return 99;
+        return Math.max(Math.abs(region.x - outline.x), Math.abs(region.y - outline.y));
+      }).toBeLessThan(5);
+      const size = await page.getByTestId('canvas').evaluate((el) => getComputedStyle(el).backgroundSize);
+      expect(size).toContain(`${20 * zoom / 100}px`);
+    }
+  });
+});
+
 test.describe('math and text regions snap strictly to the grid', () => {
   test.beforeEach(async ({ page }) => {
     await openFresh(page);
     await newBlankWorksheet(page, 'page');
+    await page.getByTestId('format-tab-document').click();
+    await page.getByTestId('doc-snap').check();
+    await page.getByTestId('format-tab-math').click();
   });
 
   test('created, dragged and nudged regions stay on grid points', async ({ page }) => {
@@ -89,6 +137,9 @@ test.describe('moving regions', () => {
   test.beforeEach(async ({ page }) => {
     await openFresh(page);
     await newBlankWorksheet(page, 'page');
+    await page.getByTestId('format-tab-document').click();
+    await page.getByTestId('doc-snap').check();
+    await page.getByTestId('format-tab-math').click();
   });
 
   test('drag follows the pointer, shows where it lands, then drops on the grid', async ({ page }) => {
@@ -134,6 +185,9 @@ test.describe('lines like a document', () => {
   test('Enter at the + cross pushes the blocks below down one line; Backspace pulls them back', async ({ page }) => {
     await openFresh(page);
     await newBlankWorksheet(page, 'page');
+    await page.getByTestId('format-tab-document').click();
+    await page.getByTestId('doc-snap').check();
+    await page.getByTestId('format-tab-math').click();
     const at = async (y: number) => {
       const p = await pageToScreen(page, 76 + 30, y - 10);
       await page.mouse.click(p.x, p.y);
@@ -175,6 +229,9 @@ test.describe('lines like a document', () => {
 test('a region dropped onto another pushes it down instead of overlapping', async ({ page }) => {
   await openFresh(page);
   await newBlankWorksheet(page, 'page');
+  await page.getByTestId('format-tab-document').click();
+  await page.getByTestId('doc-snap').check();
+  await page.getByTestId('format-tab-math').click();
   for (const [y, txt] of [[100, 'a:1'], [180, 'b:2'], [220, 'c:3']] as const) {
     const p = await pageToScreen(page, 76 + 30, y - 10);
     await page.mouse.click(p.x, p.y);

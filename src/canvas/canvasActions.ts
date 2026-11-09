@@ -10,6 +10,7 @@ import {
   markHistory,
   newShapeId,
   orderedShapes,
+  replaceShape,
   select,
   setCamera,
   setCameraClamp,
@@ -21,7 +22,7 @@ import {
 } from './model/canvasStore';
 import { screenToPage, shapeBounds, snap, unionBounds } from './model/geometry';
 import { DEFAULT_GRAPH_STYLE, DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, defaultTableProps, type GraphProps, type GraphSeries, type Point, type Shape } from './model/types';
-import { plainTextToHtml } from './sanitize';
+import { escapeHtml, plainTextToHtml } from './sanitize';
 import { sanitizeShape } from '../documents/DocumentSerializer';
 import { clampDelta, clampPoint, clampShapesIntoPage, constrained, crossPoint, nextPrintableTop, nextWritingPoint, printableAt } from './pageConstraint';
 import { PAGE_GAP, pageBox, pageCount, pageSize } from '../export/pageGeometry';
@@ -60,7 +61,7 @@ setCameraClamp((cam) => {
 export const lastPointer = { x: 0, y: 0, inside: false };
 
 export function snapPoint(p: Point): Point {
-  const on = get().isSnap || get().isGrid;
+  const on = get().isSnap;
   return { x: snap(p.x, GRID_SIZE, on), y: snap(p.y, GRID_SIZE, on) };
 }
 
@@ -190,6 +191,33 @@ export function createTextRegion(point: Point, html = ''): string {
   clampShapesIntoPage([id]);
   useCanvasStore.setState({ editingId: id, tool: 'select', crosshair: null });
   return id;
+}
+
+/** Replace an eligible math word with editable text as one undoable action. */
+export function convertMathRegionToText(id: string, text: string, caretOffset: number): boolean {
+  const shape = get().shapes[id];
+  if (shape?.type !== 'math') return false;
+  const fontFamily = useAppStore.getState().settings.textFont;
+  transaction(() => {
+    replaceShape(
+      {
+        id: shape.id,
+        type: 'text',
+        x: shape.x,
+        y: shape.y,
+        ...(shape.groupId ? { groupId: shape.groupId } : {}),
+        props: {
+          ...DEFAULT_TEXT_PROPS,
+          w: Math.max(DEFAULT_TEXT_PROPS.w, shape.props.w),
+          h: Math.max(DEFAULT_TEXT_PROPS.h, shape.props.h),
+          fontFamily,
+          html: escapeHtml(text),
+        },
+      },
+      { history: false, raw: true, edit: true, caretOffset },
+    );
+  });
+  return true;
 }
 
 export function createTableRegion(point: Point, rows = 3, columns = 3): string {

@@ -106,7 +106,11 @@ export const commands = {
   },
 
   toggleGrid: () => useCanvasStore.setState((s) => ({ isGrid: !s.isGrid })),
-  toggleSnap: () => useCanvasStore.setState((s) => ({ isSnap: !s.isSnap })),
+  toggleSnap() {
+    const isSnap = !useCanvasStore.getState().isSnap;
+    useCanvasStore.setState({ isSnap });
+    useAppStore.getState().updateSettings({ snapToGrid: isSnap });
+  },
   setCanvasMode(mode: 'free' | 'page') {
     useAppStore.getState().updateSettings({ canvasMode: mode });
   },

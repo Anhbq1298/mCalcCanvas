@@ -16,6 +16,8 @@ export interface CanvasState {
   order: string[];
   selection: string[];
   editingId: string | null;
+  /** One-shot caret request used when a math region becomes editable text. */
+  pendingTextCaret: { id: string; offset: number } | null;
   activeGridCell: { shapeId: string; row: number; column: number } | null;
   tool: ToolId;
   camera: Camera;
@@ -38,6 +40,7 @@ export const useCanvasStore = create<CanvasState>(() => ({
   order: [],
   selection: [],
   editingId: null,
+  pendingTextCaret: null,
   activeGridCell: null,
   tool: 'select',
   camera: { x: -40, y: -24, z: 1 },
@@ -58,7 +61,7 @@ const HISTORY_LIMIT = 200;
 
 /**
  * Position normaliser applied whenever a shape is added, loaded or moved.
- * Installed by the page module: math and text regions snap to the grid.
+ * Installed by the page module; math and text snap only when the setting is on.
  */
 let normalizePosition: (s: Shape) => Shape = (s) => s;
 export function setPositionNormalizer(fn: (s: Shape) => Shape): void {
@@ -105,7 +108,7 @@ export function markHistory(): void {
 
 function restore(snap: Snapshot) {
   const sel = get().selection.filter((id) => snap.shapes[id]);
-  set((s) => ({ shapes: snap.shapes, order: snap.order, selection: sel, editingId: null, activeGridCell: null, docVersion: s.docVersion + 1 }));
+  set((s) => ({ shapes: snap.shapes, order: snap.order, selection: sel, editingId: null, pendingTextCaret: null, activeGridCell: null, docVersion: s.docVersion + 1 }));
 }
 
 export function undo(): void {
@@ -186,6 +189,20 @@ export function updateShape(id: string, patch: ShapePatch, opts: ChangeOptions =
   updateShapes({ [id]: patch }, opts);
 }
 
+/** Replace a shape without changing its id or reading-order slot. */
+export function replaceShape(shape: Shape, opts: ChangeOptions & { edit?: boolean; caretOffset?: number } = {}): void {
+  if (!get().shapes[shape.id]) return;
+  if (opts.history !== false) markHistory();
+  const next = opts.raw ? shape : normalizePosition(shape);
+  set((s) => ({
+    shapes: { ...s.shapes, [shape.id]: next },
+    selection: [shape.id],
+    editingId: opts.edit ? shape.id : s.editingId === shape.id ? null : s.editingId,
+    pendingTextCaret: opts.edit && typeof opts.caretOffset === 'number' ? { id: shape.id, offset: Math.max(0, opts.caretOffset) } : null,
+    docVersion: s.docVersion + 1,
+  }));
+}
+
 export function deleteShapes(ids: string[], opts: ChangeOptions = {}): void {
   const existing = ids.filter((id) => get().shapes[id]);
   if (!existing.length) return;
@@ -199,6 +216,7 @@ export function deleteShapes(ids: string[], opts: ChangeOptions = {}): void {
       order: s.order.filter((id) => !gone.has(id)),
       selection: s.selection.filter((id) => !gone.has(id)),
       editingId: s.editingId && gone.has(s.editingId) ? null : s.editingId,
+      pendingTextCaret: s.pendingTextCaret && gone.has(s.pendingTextCaret.id) ? null : s.pendingTextCaret,
       activeGridCell: s.activeGridCell && gone.has(s.activeGridCell.shapeId) ? null : s.activeGridCell,
       docVersion: s.docVersion + 1,
     };
@@ -220,6 +238,7 @@ export function loadShapes(list: Shape[]): void {
     order: list.map((s) => s.id),
     selection: [],
     editingId: null,
+    pendingTextCaret: null,
     activeGridCell: null,
     undoStack: [],
     redoStack: [],
@@ -258,13 +277,13 @@ export function startEditing(id: string): void {
   const sh = get().shapes[id];
   if (!sh || (sh.type !== 'math' && sh.type !== 'text' && sh.type !== 'table')) return;
   markHistory();
-  set({ editingId: id, selection: [id], tool: 'select' });
+  set({ editingId: id, pendingTextCaret: null, selection: [id], tool: 'select' });
 }
 
 export function stopEditing(): void {
   const { editingId, shapes } = get();
   if (!editingId) return;
-  set({ editingId: null });
+  set({ editingId: null, pendingTextCaret: null });
   const sh = shapes[editingId];
   // Like Mathcad, an empty region disappears when you leave it (same undo step).
   if (sh && ((sh.type === 'math' && !sh.props.latex.trim()) || (sh.type === 'text' && !sh.props.html.replace(/<[^>]*>|&nbsp;/g, '').trim()))) {

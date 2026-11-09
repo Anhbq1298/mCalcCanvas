@@ -26,6 +26,7 @@ import {
   updateShapes,
   useCanvasStore,
   GRID_MAJOR_EVERY,
+  GRID_SIZE,
   type ShapePatch,
 } from './model/canvasStore';
 import { boxFromPoints, boxesIntersect, screenToPage, shapeBounds, unionBounds } from './model/geometry';
@@ -64,7 +65,7 @@ function resizePatch(orig: Shape, handle: HandleId, p: Point, keepAspect: boolea
     if (handle === 'start') return { x: p.x, y: p.y, props: { x2: endX - p.x, y2: endY - p.y } };
     return null;
   }
-  if (orig.type === 'draw') return null;
+  if (orig.type === 'draw' || orig.type === 'math') return null;
   const b = shapeBounds(orig);
   let left = b.x, top = b.y, right = b.x + b.w, bottom = b.y + b.h;
   if (handle.includes('w')) left = Math.min(p.x, right - MIN_SIZE);
@@ -82,14 +83,20 @@ function resizePatch(orig: Shape, handle: HandleId, p: Point, keepAspect: boolea
     if (handle.includes('w')) left = right - w;
     if (handle.includes('n')) top = bottom - h;
   }
-  if (orig.type === 'text') return { x: left, props: { w } };
-  if (orig.type === 'math') return { x: left, y: top, props: { w, h, autoSize: false } };
+  if (orig.type === 'text') {
+    const minTextHeight = Math.ceil(orig.props.fontSize * 1.45);
+    if (h < minTextHeight) {
+      h = minTextHeight;
+      if (handle.includes('n')) top = bottom - h;
+    }
+    return { x: left, y: top, props: { w: Math.max(48, w), h } };
+  }
   return { x: left, y: top, props: { w, h } };
 }
 
 /**
- * Grid-snapped landing spot for a dragged block: math/text snap strictly to
- * the grid (anchor = first such shape), others follow the same offset.
+ * Landing spot for a dragged block. When snapping is enabled, the first
+ * math/text shape is the anchor and the remaining selection follows its offset.
  */
 function landing(orig: Record<string, Point>, dx: number, dy: number): { patches: Record<string, ShapePatch>; preview: Box | null } {
   const shapes = useCanvasStore.getState().shapes;
@@ -346,7 +353,7 @@ export function CanvasView() {
         return;
       }
       case 'resize': {
-        const keepAspect = d.orig.type === 'image' ? !e.shiftKey : e.shiftKey;
+        const keepAspect = d.orig.type === 'image' ? !e.shiftKey : d.orig.type === 'text' ? false : e.shiftKey;
         const ob = shapeBounds(d.orig);
         const patch = resizePatch(d.orig, d.handle, clampPoint(snapPoint(p), printableAt({ x: ob.x + 1, y: ob.y + 1 })), keepAspect);
         if (patch) updateShape(d.id, patch, { history: false });
@@ -484,7 +491,7 @@ export function CanvasView() {
   };
 
   const cursor = dragging ? 'grabbing' : panning || tool === 'hand' ? 'grab' : tool === 'select' ? 'default' : tool === 'text' ? 'text' : 'crosshair';
-  const gridPx = 10 * camera.z;
+  const gridPx = GRID_SIZE * camera.z;
 
   return (
     <div
