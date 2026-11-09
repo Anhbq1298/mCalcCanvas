@@ -4,7 +4,7 @@ import { openFresh } from './helpers.js';
 test('capture the Input & Results workspace at desktop and mobile widths', async ({ page }) => {
   test.skip(!process.env.UI_SNAPSHOTS, 'Visual artifact capture runs in CI.');
 
-  await openFresh(page, 'rc-column');
+  await openFresh(page, 'steel-beam');
   await page.getByRole('tab', { name: 'Input & Results' }).click();
   await page.getByRole('button', { name: 'Configure columns' }).click();
 
@@ -14,9 +14,9 @@ test('capture the Input & Results workspace at desktop and mobile widths', async
   const outputChoices = outputs.locator('input[type="checkbox"]');
 
   await expect(inputChoices.first()).toBeVisible();
-  for (const index of [0, 1, 5, 6, 7, 8]) {
-    await inputChoices.nth(index).check();
-  }
+  await inputChoices.nth(0).check();
+  await inputChoices.nth(1).check();
+  await inputChoices.nth(2).check();
 
   const outputCount = await outputChoices.count();
   for (let index = Math.max(0, outputCount - 4); index < outputCount; index += 1) {
