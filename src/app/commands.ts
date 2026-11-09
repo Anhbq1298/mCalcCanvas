@@ -133,7 +133,7 @@ export const commands = {
   insertBlankPage() {
     const app = useAppStore.getState();
     if (app.settings.canvasMode !== 'page') {
-      app.showToast('info', 'Pages exist in Page layout view (View → Page layout).');
+      app.showToast('info', 'Pages exist in Page layout view (Document → Pages).');
       return;
     }
     stopEditing();

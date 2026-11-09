@@ -56,8 +56,9 @@ export async function newBlankWorksheet(page: Page, mode: 'free' | 'page' = 'fre
   await waitReady(page);
   if (mode === 'free') {
     // These tests use absolute screen positions, so they work without page margins.
-    await page.getByRole('menuitem', { name: 'View' }).click();
-    await page.getByRole('menuitemcheckbox', { name: 'Free canvas (no margins)' }).click();
+    await page.getByTestId('format-tab-document').click();
+    await page.getByTestId('doc-pages').uncheck();
+    await page.getByTestId('format-tab-math').click();
   }
 }
 

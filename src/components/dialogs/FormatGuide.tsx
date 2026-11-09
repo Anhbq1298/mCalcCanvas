@@ -1,5 +1,5 @@
 /**
- * Help → "Display formats & units": every snapshot is computed live by the
+ * Help tab → Formats: every snapshot is computed live by the
  * real engine and rendered with the same formatter as the worksheet, so the
  * guide always matches what the user will see.
  */
@@ -124,10 +124,10 @@ function UnitsTab() {
           <Snapshot latex={show('Mmm').latex} />
         </div>
       </Card>
-      <Card title="Decimal places" how={<>For the whole worksheet: <b>Tools → Decimal places</b>. For one region: properties panel → <b>Decimal places</b>.</>}>
+      <Card title="Decimal places" how={<>For the whole worksheet: <b>Calculation → Decimals</b>. For one region: properties panel → <b>Decimal places</b>.</>}>
         <Snapshot latex={show('M0').latex} />
       </Card>
-      <Card title="Unit system" tag="SI · USCS" how={<><b>Tools → Unit system</b> switches automatic result units between SI (kN, m, kPa) and USCS (kip, ft, ksi). Inputs keep the units you typed.</>}>
+      <Card title="Unit system" tag="SI · USCS" how={<><b>Calculation → Unit system</b> switches automatic result units between SI (kN, m, kPa) and USCS (kip, ft, ksi). Inputs keep the units you typed.</>}>
         <div className="space-y-1.5">
           <Snapshot latex={us('wus').latex} />
           <Snapshot latex={us('Mus').latex} />

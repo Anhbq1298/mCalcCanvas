@@ -7,9 +7,8 @@ test.describe('annex links', () => {
     await newBlankWorksheet(page, 'page');
   });
 
-  test('Insert → Annex link adds the ANNEX page, a numbered block and a link that follows its title', async ({ page }) => {
-    await page.getByRole('menuitem', { name: 'Insert' }).click();
-    await page.getByRole('menuitem', { name: 'Annex link' }).click();
+  test('Math → Annex link adds the ANNEX page, a numbered block and a link that follows its title', async ({ page }) => {
+    await page.getByTestId('insert-annex').click();
     // The new annex heading is being edited: name it.
     const editing = page.locator('.text-region--editing');
     await expect(editing).toBeFocused();

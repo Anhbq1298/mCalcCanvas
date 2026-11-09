@@ -42,7 +42,7 @@ const HELP_SECTIONS: { id: string; title: string; body: ReactNode; text: string 
       <>
         <p>Document tab → Page setup: paper A4 or A3, portrait or landscape, and margins in millimetres (presets or custom). These only move the page frames: regions keep their positions and nothing is recalculated. If a region ends up outside the printable area it is marked with a red dashed box.</p>
         <p>Page view: page boundaries (dashed printable area), grid, rulers in mm (they follow zoom and scrolling and shade the margins), header and footer. Zoom: 100 %, fit page, fit width.</p>
-        <p>Insert → Page break (<Kbd k="Ctrl" />+<Kbd k="Shift" />+<Kbd k="Enter" />) starts a new page at the + cross; Blank page (<Kbd k="Ctrl" />+<Kbd k="Enter" />) adds an empty page after the current one.</p>
+        <p>Document → Page Break (<Kbd k="Ctrl" />+<Kbd k="Shift" />+<Kbd k="Enter" />) starts a new page at the + cross; Blank page (<Kbd k="Ctrl" />+<Kbd k="Enter" />) adds an empty page after the current one.</p>
       </>
     ),
   },

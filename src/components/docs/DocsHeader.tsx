@@ -27,6 +27,10 @@ import {
   SquareDashed,
   ArrowUpRight,
   Bold,
+  BoxSelect,
+  Group as Group_,
+  Heading2,
+  Ungroup,
   ClipboardPaste,
   Copy,
   CopyPlus,
@@ -690,12 +694,23 @@ function MathTab() {
           <SmallButton icon={CheckSquare} label="Check" title="Insert check (≤ 1)" onClick={() => commands.insertCheck()} testId="insert-check" />
           <SmallButton icon={Heading} label="Heading" title="Section heading (shown in the outline)" onClick={() => addHeading(1)} />
         </Col>
+        <Col>
+          <SmallButton icon={Heading2} label="Sub-heading" title="Sub-section heading (shown in the outline)" onClick={() => addHeading(2)} />
+          <SmallButton icon={Link2} label="Annex link" title="Link to a new annex block on the ANNEX page" onClick={() => insertAnnexLink()} testId="insert-annex" />
+        </Col>
       </Group>
       <Group label="Operators and Symbols">
         <PalettePopover big label="Operators" glyph="√" sections={OPERATORS} testId="palette-operators" columns={5} />
         <PalettePopover big label="Symbols" glyph="β" sections={SYMBOLS} testId="palette-symbols" />
         <PalettePopover big label="Constants" glyph="π" sections={CONSTANTS} testId="palette-constants" />
         <PalettePopover big label="Units" glyph="m" sections={UNITS_PALETTE} testId="palette-units" />
+      </Group>
+      <Group label="Selection">
+        <Col>
+          <SmallButton icon={BoxSelect} label="Select all" title={`Select all (${MOD}A)`} onClick={commands.selectAll} />
+          <SmallButton icon={Group_} label="Group" title={`Group (${MOD}G)`} onClick={commands.group} />
+          <SmallButton icon={Ungroup} label="Ungroup" title={`Ungroup (${MOD}⇧G)`} onClick={commands.ungroup} />
+        </Col>
       </Group>
       <Group label="Draw">
         <Col>
@@ -758,8 +773,7 @@ function CalculationTab() {
       </Group>
       <Group label="Annex">
         <Col>
-          <SmallButton icon={Link2} label="Annex link" title="Insert a link to an annex" onClick={() => insertAnnexLink()} />
-          <SmallButton icon={ListOrdered} label="Sort annex" title="Sort annex by link order" onClick={() => sortAnnexByLinkOrder()} />
+          <SmallButton icon={ListOrdered} label="Sort annex" title="Sort annex blocks by link order" onClick={() => sortAnnexByLinkOrder()} />
         </Col>
       </Group>
     </>
@@ -845,6 +859,7 @@ function DocumentTab() {
   const settings = useAppStore((s) => s.settings);
   const view = useAppStore((s) => s.view);
   const isGrid = useCanvasStore((s) => s.isGrid);
+  const isSnap = useCanvasStore((s) => s.isSnap);
   const zoom = useCanvasStore((s) => s.camera.z);
   const { updateSettings, setView, openDialog } = useAppStore.getState();
   const paged = settings.canvasMode === 'page';
@@ -884,6 +899,7 @@ function DocumentTab() {
         </Col>
         <Col>
           <Check label="Header & footer" testId="toggle-chrome" checked={settings.showHeaderFooter} onChange={(v) => updateSettings({ showHeaderFooter: v })} />
+          <Check label="Snap to grid" testId="doc-snap" checked={isSnap} onChange={() => commands.toggleSnap()} />
           <Check label="Pages" testId="doc-pages" checked={paged} onChange={(v) => updateSettings({ canvasMode: v ? 'page' : 'free' })} title="Page layout (checked) or a free canvas without pages" />
         </Col>
       </Group>
@@ -910,7 +926,7 @@ function DocumentTab() {
         <BigButton icon={ScissorsLineDashed} label="Page Break" title={withShortcut('Page break at the + cross', 'page-break')} onClick={commands.pageBreak} testId="doc-page-break" disabled={!paged} />
         <Col>
           <SmallButton icon={FilePlus2} label="Blank page" title={withShortcut('Insert blank page', 'blank-page')} onClick={commands.insertBlankPage} testId="insert-page" disabled={!paged} />
-          <SmallButton icon={FileMinus2} label="Delete empty page" onClick={commands.deletePage} disabled={!paged} />
+          <SmallButton icon={FileMinus2} label="Delete empty page" onClick={commands.deletePage} disabled={!paged} testId="doc-delete-page" />
         </Col>
       </Group>
     </>
@@ -1005,10 +1021,7 @@ export function DocsHeader() {
   const paramsOpen = useAppStore((s) => s.paramsOpen);
   const leftTab = useAppStore((s) => s.leftTab);
   const workspace = useAppStore((s) => s.workspace);
-  const view = useAppStore((s) => s.view);
-  const { updateTitle, updateSettings, togglePanel, showLeftTab, openDialog, setWorkspace } = useAppStore.getState();
-  const isGrid = useCanvasStore((s) => s.isGrid);
-  const isSnap = useCanvasStore((s) => s.isSnap);
+  const { updateTitle, updateSettings, togglePanel, showLeftTab, setWorkspace } = useAppStore.getState();
   const undoable = useCanvasStore(canUndo);
   const [ribbonTab, setRibbonTab] = useState<RibbonTabId>('math');
   const redoable = useCanvasStore((s) => s.redoStack.length > 0);
@@ -1033,77 +1046,6 @@ export function DocsHeader() {
       { label: 'Blank worksheet', onSelect: () => void commands.newWorksheet(false) },
       { type: 'separator' },
       ...TEMPLATES.map((t) => ({ label: t.name, onSelect: () => void commands.newFromTemplate(t.id) })),
-    ],
-    Edit: [
-      { label: 'Undo', shortcut: `${MOD}Z`, onSelect: commands.undo },
-      { label: 'Redo', shortcut: `${MOD}Y`, onSelect: commands.redo },
-      { type: 'separator' },
-      { label: 'Cut', shortcut: `${MOD}X`, onSelect: commands.cut },
-      { label: 'Copy', shortcut: `${MOD}C`, onSelect: commands.copy },
-      { label: 'Paste', shortcut: `${MOD}V`, onSelect: () => void commands.paste() },
-      { label: 'Duplicate', shortcut: `${MOD}D`, onSelect: commands.duplicate },
-      { label: 'Delete', shortcut: 'Del', onSelect: commands.deleteSelection },
-      { type: 'separator' },
-      { label: 'Select all', shortcut: `${MOD}A`, onSelect: commands.selectAll },
-      { label: 'Group', shortcut: `${MOD}G`, onSelect: commands.group },
-      { label: 'Ungroup', shortcut: `${MOD}⇧G`, onSelect: commands.ungroup },
-    ],
-    View: [
-      { label: 'Page layout', checked: settings.canvasMode === 'page', onSelect: () => commands.setCanvasMode('page') },
-      { label: 'Free canvas (no margins)', checked: settings.canvasMode === 'free', onSelect: () => commands.setCanvasMode('free') },
-      { type: 'separator' },
-      { label: 'Grid', checked: isGrid, onSelect: commands.toggleGrid },
-      { label: 'Snap to grid', checked: isSnap, onSelect: commands.toggleSnap },
-      { label: 'Snap equations to minor grid lines', checked: settings.baselineSnap === 'minor', onSelect: () => updateSettings({ baselineSnap: settings.baselineSnap === 'minor' ? 'major' : 'minor' }) },
-      { label: 'Header & footer', checked: settings.showHeaderFooter, onSelect: () => updateSettings({ showHeaderFooter: !settings.showHeaderFooter }) },
-      { label: 'Page boundaries', checked: view.boundaries, onSelect: () => useAppStore.getState().setView({ boundaries: !view.boundaries }) },
-      { label: 'Ruler', checked: view.ruler, onSelect: () => useAppStore.getState().setView({ ruler: !view.ruler }) },
-      { label: 'Page setup…', onSelect: () => openDialog('page-setup') },
-      { label: 'Outline', checked: paramsOpen && leftTab === 'outline', onSelect: () => showLeftTab('outline') },
-      { label: 'Parameters', checked: paramsOpen && leftTab === 'params', onSelect: () => showLeftTab('params') },
-      { label: 'Properties panel', checked: panelOpen, onSelect: () => togglePanel() },
-      { type: 'separator' },
-      { label: 'Zoom in', onSelect: commands.zoomIn },
-      { label: 'Zoom out', onSelect: commands.zoomOut },
-      { label: 'Zoom to 100%', onSelect: commands.resetZoom },
-      { label: 'Fit page', onSelect: commands.zoomFitPage },
-      { label: 'Fit width', onSelect: commands.zoomFitWidth },
-    ],
-    Insert: [
-      { label: 'Equation', shortcut: 'type', onSelect: () => commands.insertMath() },
-      { label: 'Check (≤ limit)', onSelect: () => commands.insertCheck() },
-      { label: 'Text', shortcut: '"', onSelect: () => commands.setTool('text') },
-      { label: 'Image…', onSelect: () => void commands.insertImage() },
-      { label: 'Graph (X-Y plot)', onSelect: () => commands.insertGraph() },
-      { type: 'separator' },
-      { label: 'Section heading', onSelect: () => addHeading(1) },
-      { label: 'Sub-section heading', onSelect: () => addHeading(2) },
-      { label: 'Annex link', onSelect: () => insertAnnexLink() },
-      { type: 'separator' },
-      { label: 'Page break', shortcut: `${MOD}⇧↵`, onSelect: commands.pageBreak },
-      { label: 'Blank page', shortcut: `${MOD}↵`, onSelect: commands.insertBlankPage },
-      { label: 'Delete empty page', onSelect: commands.deletePage },
-      { type: 'separator' },
-      { label: 'Line', onSelect: () => commands.setTool('line') },
-      { label: 'Arrow', onSelect: () => commands.setTool('arrow') },
-      { label: 'Rectangle', onSelect: () => commands.setTool('rect') },
-      { label: 'Freehand', onSelect: () => commands.setTool('draw') },
-    ],
-    Tools: [
-      { label: 'Calculate all', shortcut: 'F9', onSelect: commands.calculateAll },
-      { label: 'Sort annex by link order', onSelect: () => sortAnnexByLinkOrder() },
-      { type: 'heading', label: 'Unit system' },
-      { label: 'SI (kN, m, kPa)', checked: settings.unitSystem === 'SI', onSelect: () => updateSettings({ unitSystem: 'SI' }) },
-      { label: 'USCS (kip, ft, ksi)', checked: settings.unitSystem === 'Imperial', onSelect: () => updateSettings({ unitSystem: 'Imperial' }) },
-      { type: 'heading', label: 'Decimal places' },
-      ...[1, 2, 3, 4].map((p) => ({ label: String(p), checked: settings.precision === p, onSelect: () => updateSettings({ precision: p }) })),
-    ],
-    Help: [
-      { label: 'Help center', shortcut: 'F1', onSelect: () => useAppStore.getState().openHelp('getting-started') },
-      { label: 'Keyboard shortcuts', onSelect: () => useAppStore.getState().openHelp('shortcuts') },
-      { label: 'Display formats & units guide', onSelect: () => openDialog('guide') },
-      { label: 'Math syntax, units & constants', onSelect: () => openDialog('syntax') },
-      { label: 'About CalcCanvas', onSelect: () => openDialog('about') },
     ],
   };
 
@@ -1174,14 +1116,6 @@ export function DocsHeader() {
             )}
           </nav>
         </div>
-        {workspace === 'calculation' && <button
-          type="button"
-          onClick={commands.calculateAll}
-          title="Calculate all (F9)"
-          className="flex h-9 cursor-pointer items-center gap-1.5 rounded-full px-3 text-[14px] text-docs-ink transition-colors duration-150 hover:bg-docs-hover"
-        >
-          <Calculator size={17} aria-hidden /> Calculate
-        </button>}
         {workspace === 'calculation' && <button
           type="button"
           data-testid="export-pdf"

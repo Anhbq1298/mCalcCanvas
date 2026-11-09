@@ -54,12 +54,11 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
   });
 
   test('header/footer and grid show on the page and can be toggled', async ({ page }) => {
-    await page.getByRole('menuitem', { name: 'View' }).click();
-    await page.getByRole('menuitemcheckbox', { name: 'Page layout' }).click();
+    await page.getByTestId('format-tab-document').click();
+    await page.getByTestId('doc-pages').check();
     await expect(page.getByTestId('page-header').first()).toBeVisible();
     await expect(page.getByTestId('page-footer').first()).toContainText('Page 1 of 1');
     await expect(page.getByTestId('page-grid').first()).toBeVisible();
-    await page.getByTestId('format-tab-document').click();
     await page.getByTestId('toggle-chrome').click();
     await expect(page.getByTestId('page-header')).toHaveCount(0);
     await page.getByTestId('toggle-grid').click();

@@ -48,8 +48,8 @@ test.describe('Parameters panel', () => {
     await page.keyboard.press('Control+Enter');
     await expect.poll(() => pageCount(page)).toBe(3);
     // The view is on the last inserted page (empty) → it can be deleted.
-    await page.getByRole('menuitem', { name: 'Insert' }).click();
-    await page.getByRole('menuitem', { name: 'Delete empty page' }).click();
+    await page.getByTestId('format-tab-document').click();
+    await page.getByTestId('doc-delete-page').click();
     await expect.poll(() => pageCount(page)).toBe(2);
   });
 
@@ -65,8 +65,8 @@ test.describe('Parameters panel', () => {
   });
 
   test('help guide shows a live snapshot for each display format and unit topic', async ({ page }) => {
-    await page.getByRole('menuitem', { name: 'Help' }).click();
-    await page.getByRole('menuitem', { name: 'Display formats & units guide' }).click();
+    await page.getByTestId('format-tab-help').click();
+    await page.getByTestId('help-guide').click();
     const dlg = page.getByRole('dialog', { name: 'Display formats & units' });
     await expect(dlg.getByTestId('guide-card')).toHaveCount(6);
     await expect(dlg).toContainText('257.39');
