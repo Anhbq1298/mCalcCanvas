@@ -8,6 +8,7 @@
   - `:` defines, `=` evaluates.
   - Mathcad keyboard shortcuts.
   - The red + insertion cross: Enter inserts a line and pushes content down; Backspace removes a blank line.
+  - Delete removes the selected regions and the lines they leave empty (content below moves up; a line still holding a label stays). One undo step.
 - **Ruled-paper grid.** 20 px squares in light grey (no blue); major lines every 2 squares (40 px), drawn the same as the others. Math and text snap their *first baseline* onto a major line by default; View → "Snap equations to minor grid lines" changes this to 20 px. The math baseline is measured from the DOM (`props.baseline`, not persisted as authoritative).
 - **No overlaps.** When a region would overlap an equation, the later region in reading order, and everything after it, moves down by whole lines (`layout.planSeparation`).
 - **Inputs.** A definition from literals only (`fck := 35 MPa`, no variables) is an input: light-yellow highlight and blue text, on screen and in the PDF.

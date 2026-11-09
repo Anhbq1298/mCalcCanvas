@@ -321,8 +321,30 @@ export function duplicateSelection(): void {
   clampShapesIntoPage(clones.map((s) => s.id));
 }
 
+/**
+ * Delete the selected regions and close the gap they leave, like deleting
+ * lines in a document: each line they covered that is now empty is removed
+ * and everything below moves up. A line still holding something (a label
+ * beside the deleted equation) stays. One undo step.
+ */
 export function deleteSelection(): void {
-  deleteShapes(get().selection);
+  const before = get().shapes;
+  const ids = get().selection.filter((id) => before[id]);
+  if (!ids.length) return;
+  const lines = new Set<number>();
+  for (const id of ids) {
+    const b = shapeBounds(before[id]);
+    // Lines whose baseline lies inside the region.
+    for (let g = globalLine(b.y + 10); lineY(g) <= b.y + b.h + 9; g++) if (lineY(g) >= b.y + 10) lines.add(g);
+  }
+  transaction(() => {
+    deleteShapes(ids);
+    // Bottom-up, so the line numbers above stay valid.
+    for (const g of [...lines].sort((a, b) => b - a)) {
+      if (lineOccupied(get().shapes, g)) continue;
+      applyLayout(planLineShift(get().shapes, g + 1, -1));
+    }
+  });
 }
 
 export function groupSelection(): void {

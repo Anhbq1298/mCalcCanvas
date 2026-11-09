@@ -5,9 +5,9 @@
  */
 import { beforeEach, describe, expect, it } from 'vitest';
 import { step } from '../step';
-import { separateRegion } from '../../canvas/canvasActions';
+import { deleteSelection, separateRegion } from '../../canvas/canvasActions';
 import { anchorY, globalLine, lineY, planLineShift, planSeparation } from '../../canvas/layout';
-import { addShapes, loadShapes, redo, transaction, undo, updateShapes, useCanvasStore } from '../../canvas/model/canvasStore';
+import { addShapes, loadShapes, redo, select, transaction, undo, updateShapes, useCanvasStore } from '../../canvas/model/canvasStore';
 import { DEFAULT_MATH_PROPS, type Shape } from '../../canvas/model/types';
 import { useAppStore } from '../../store/appStore';
 
@@ -40,6 +40,24 @@ describe('layout plans', () => {
       expect(moved.c).toBe(4); // kept its distance below b
       expect(moved.d).toBe(8); // everything after moves with them
       expect(plan.patches.a).toBeUndefined(); // the earlier region stays
+    });
+    resetEach();
+    step('deleting regions closes the lines they leave empty (one undo step); a shared line stays', () => {
+      const label: Shape = { ...region('label', 4), id: 'label', x: 420 };
+      loadShapes([region('a', 1), region('b', 2, 110, 40), region('c', 4), label, region('d', 6)]);
+      select(['b']);
+      deleteSelection();
+      const line = (id: string) => lineOf(useCanvasStore.getState().shapes[id]);
+      // b covered lines 2–3: both close, everything below moves up two lines.
+      expect([line('a'), line('c'), line('label'), line('d')]).toEqual([1, 2, 2, 4]);
+      // c shares its line with a label: deleting c alone leaves the line.
+      select(['c']);
+      deleteSelection();
+      expect([line('label'), line('d')]).toEqual([2, 4]);
+      undo();
+      undo();
+      expect(Object.keys(useCanvasStore.getState().shapes).sort()).toEqual(['a', 'b', 'c', 'd', 'label']);
+      expect(line('d')).toBe(6);
     });
     resetEach();
     step('plans are pure: the store is not touched until applied', () => {
