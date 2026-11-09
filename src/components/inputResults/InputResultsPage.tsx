@@ -320,7 +320,7 @@ export function InputResultsPage() {
                 {config.rows.length === 0 ? (
                   <tr><td colSpan={config.inputs.length + config.outputs.length + 3} className="px-4 py-12 text-center text-[13px] text-muted-foreground">Add a row to enter the first case.</td></tr>
                 ) : config.rows.map((row) => {
-                  const rowResults = batchResults[row.id] ?? {};
+                  const rowResults = batchResults[row.id]?.outputs ?? {};
                   const hasError = runState === 'current' && config.outputs.some((column) => rowResults[column.id]?.status === 'error');
                   return (
                     <tr key={row.id}>
