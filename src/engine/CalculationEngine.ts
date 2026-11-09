@@ -31,6 +31,7 @@ import {
   isUnit,
   isUnitSymbol,
   parseDisplayUnit,
+  quantityFromDisplayValue,
   siValue,
   type FormattedQuantity,
   type Quantity,
@@ -93,6 +94,13 @@ export interface EngineSettings {
   precision: number;
 }
 
+/** Numeric scenario value applied to one existing definition region. */
+export interface DefinitionOverride {
+  value: number;
+  /** Unit label inherited from the source definition, e.g. "kN" or "kN·m". */
+  unit?: string | null;
+}
+
 export type ResultStatus = 'valid' | 'error' | 'empty';
 
 export interface CheckOutcome {
@@ -120,6 +128,8 @@ export interface CalculationResult {
   expressionLatex?: string;
   error?: { code: CalculationErrorCode; message: string };
   warnings: string[];
+  /** True when this definition was evaluated from a scenario override. */
+  overridden?: boolean;
   /** Parse problem in the text being edited; result reflects the last valid input. */
   draftError?: string;
 }
@@ -163,6 +173,7 @@ export class CalculationEngine {
   /** Names whose set of definitions (or their order) changed. */
   private touchedNames = new Set<string>();
   private removedIds = new Set<string>();
+  private definitionOverrides = new Map<string, DefinitionOverride>();
   private createdCounter = 0;
 
   constructor(settings: Partial<EngineSettings> = {}) {
@@ -178,6 +189,11 @@ export class CalculationEngine {
 
   getResult(id: string): CalculationResult | undefined {
     return this.results.get(id);
+  }
+
+  /** Plain snapshot of every region result, suitable for reports or storage in runtime state. */
+  getResultsSnapshot(): Record<string, CalculationResult> {
+    return Object.fromEntries(this.results);
   }
 
   getSettings(): EngineSettings {
@@ -203,6 +219,28 @@ export class CalculationEngine {
     this.settings = { ...this.settings, ...settings };
     // Unit system and precision only change how values are displayed.
     for (const id of this.regions.keys()) this.pendingFormat.add(id);
+    if (this.batchDepth === 0) this.flush();
+  }
+
+  /**
+   * Override one definition's numeric value without changing its LaTeX,
+   * identity, reading order or dependency graph. Null restores the worksheet
+   * value. Overrides are local to this engine instance.
+   */
+  setDefinitionOverride(id: string, override: DefinitionOverride | null): void {
+    const previous = this.definitionOverrides.get(id);
+    if (override === null) {
+      if (!previous) return;
+      this.definitionOverrides.delete(id);
+    } else {
+      if (!Number.isFinite(override.value)) {
+        throw new CalculationError('not-finite', 'Override value must be a finite number.');
+      }
+      const next = { value: override.value, unit: override.unit?.trim() || null };
+      if (previous?.value === next.value && (previous.unit ?? null) === next.unit) return;
+      this.definitionOverrides.set(id, next);
+    }
+    if (this.regions.has(id)) this.pendingValue.add(id);
     if (this.batchDepth === 0) this.flush();
   }
 
@@ -312,6 +350,7 @@ export class CalculationEngine {
     this.pendingResolve.delete(id);
     if (name) this.touchedNames.add(name);
     this.removedIds.add(id);
+    this.definitionOverrides.delete(id);
     if (this.batchDepth === 0) this.flush();
   }
 
@@ -326,6 +365,7 @@ export class CalculationEngine {
     this.pendingResolve.clear();
     this.touchedNames.clear();
     this.removedIds.clear();
+    this.definitionOverrides.clear();
     this.emit(ids);
   }
 
@@ -505,6 +545,11 @@ export class CalculationEngine {
       }
     }
 
+    const override = this.definitionOverrides.get(id);
+    if (override && statement.kind !== 'definition') {
+      return fail('invalid-definition', 'Only definition regions can be overridden.');
+    }
+
     // Evaluate the exact definitions this region uses first (may throw CycleSignal).
     const uses = this.graph.depsOf(id);
     for (const [name, definer] of uses) {
@@ -536,6 +581,24 @@ export class CalculationEngine {
       formatQuantity(q, { decimals, system: this.settings.unitSystem, targetUnit: unit });
 
     try {
+      if (statement.kind === 'definition' && override) {
+        const value = quantityFromDisplayValue(override.value, override.unit ?? null);
+        this.values.set(id, value);
+        let formatted: FormattedQuantity;
+        try {
+          formatted = fmt(value, targetUnit);
+        } catch (e) {
+          return fail('display-unit', (e as Error).message);
+        }
+        return {
+          ...base,
+          value: formatted,
+          substitutionLatex: formatted.latex,
+          expressionLatex: exprToLatex(statement.expr, { ctx }),
+          overridden: true,
+        };
+      }
+
       if (statement.kind === 'check') {
         const left = evaluateExpr(statement.left, ctx);
         const right = evaluateExpr(statement.right, ctx);
