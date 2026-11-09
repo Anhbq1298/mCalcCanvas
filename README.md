@@ -27,15 +27,16 @@ On a first visit the **RC beam** template opens. Worksheets autosave to the brow
 | `npm test` | Engine and unit tests (Vitest) |
 | `npm run test:e2e` | Browser tests (Playwright) |
 | `npm run typecheck` / `npm run lint` | |
+| `npm run deadcode` | Unused files, exports and dependencies (knip) |
 | `npm run templates:columns` | Regenerate the column templates (needs a build; see AGENTS.md) |
 
 Playwright needs a Chromium. Run `npx playwright install chromium`, or point it at an installed Chrome with `CHROME_PATH=/path/to/chrome npm run test:e2e`.
 
 ## Using it
 
-**Layout.** As in Mathcad Prime, the ribbon carries the commands; the menu row keeps only File and Templates. Then come the ribbon tabs in Mathcad Prime order (**Math**, **Insert**, **Matrices/Tables**, **Plots**, **Math Formatting**, **Text Formatting**, **Calculation**, **Document**), the two workspaces (**CalcCanvas**, the worksheet, and **Table In&Out**, the load-case table) and **Help**, each part split by a separator. Undo and redo sit next to the title.
+**Layout.** As in Mathcad Prime, the ribbon carries the commands; the menu row keeps only **File** and **Templates**, then the ribbon tabs, the two workspaces (**CalcCanvas**, the worksheet, and **Table In&Out**, the load-case table) and **Help**, split by separators. Undo and redo sit next to the title; the Outline, Parameters and Properties toggles sit at the right end of the ribbon.
 
-The ribbon follows Mathcad Prime: each group has large buttons (icon above the label) for its main commands and small labelled buttons stacked three high, with the group name underneath. Math holds Clipboard, Regions, Operators and Symbols, and Selection; Insert holds the free drawing tools (freehand, line, arrow, rectangle), ready-made Shapes (basic outlines and structural symbols such as supports, loads, moments and dimensions, inserted as one group), Image and a Character Map (Greek, math, unit and arrow characters, typed into the text or equation being edited); Matrices/Tables inserts a matrix (sized on a grid) or an editable table, holds the matrix operators and functions, and inserts or deletes rows and columns of the selected matrix or table (the calculation engine does not evaluate matrices yet); Calculation holds Calculate and the worksheet unit system, decimals and snap; Document holds Page Setup, Show (page boundaries, grid, ruler, header & footer), Zoom and Pages. The tab stays where you put it; selecting a region does not switch it. The Outline, Parameters and Properties toggles sit at the right end of the ribbon.
+Each ribbon group has large buttons (icon above the label) for its main commands and small labelled buttons stacked three high, with the group name underneath. The tab stays where you put it; selecting a region does not switch it.
 
 The left side panel has the **Outline** (headings, click to jump) and **Parameters**. The right side panel holds the properties.
 
@@ -51,37 +52,45 @@ The left side panel has the **Outline** (headings, click to jump) and **Paramete
 - **Functions**: user functions `f(x) := …`, ranges `i := 0..n−1`, vectors with `map`, `linterp` and `stack`, if blocks laid out like Mathcad Prime, and checks (`η ≤ 1` shows PASS/FAIL).
 - **Constants**: π, e, g, ∞ and %. A worksheet definition with the same name overrides a constant (with a warning).
 
-**Tabs**:
-- **Document**:
-  - Page setup: paper A4 or A3, portrait or landscape, margins in mm (Standard 20/16, Normal 25, Narrow 12.7, Wide 30, or custom). The Page setup dialog shows a preview of the paper and its printable area.
-  - Page view: page boundaries, millimetre rulers (they follow zoom and scrolling, and shade the margins), grid, header & footer, and pages on or off.
-  - Zoom: zoom level, 100 %, fit page and fit width.
-  - Insert: math or text region, page break (`Ctrl+Shift+Enter`), blank page (`Ctrl+Enter`).
-  - Page settings only move the page frames. Regions keep their positions and nothing is recalculated. A region left outside the printable area is marked in red.
+**Ribbon tabs** (Mathcad Prime order):
+- **Math**: Clipboard (paste, cut, copy, duplicate); Regions (math, text, check, heading, sub-heading, annex link); Operators and Symbols (operator, symbol, constant and unit palettes); Selection (select all, group, ungroup).
+- **Insert**:
+  - Free Shapes: select, pan, freehand, line, arrow, rectangle.
+  - Shapes: ready-made outlines (rectangle, circle, ellipse, triangle, diamond, arrows) and structural symbols (pin, roller and fixed supports, point load, distributed load, moment, dimension), placed at the + cross as one group.
+  - Image, and a Character Map (Greek, math, unit and arrow characters) that types into the text or equation being edited, or starts a new text region.
+- **Matrices/Tables**: insert a matrix (sized on a grid or typed) or an editable table; matrix operators and functions; insert or delete rows and columns of the selected matrix or table; result format (indices, collapse nested). The engine does not evaluate matrices yet.
+- **Plots**: X-Y plot with title, axis units, equal axes, grid lines, axes at origin, and series.
 - **Math Formatting**:
-  - Operators & Symbols: operator, symbol, constant and unit palettes.
   - Display: formula only, result only, formula = result, or the full calculation with values substituted; result unit; how arrays are shown.
   - Results: number format (general, decimal, scientific, engineering), decimal places, trailing zeros. These apply to the selected equations, or are the worksheet default when nothing is selected. They change only how a number is written; the value keeps full precision.
-  - Math Font: size, colour, highlight.
+  - Math Font: equation font family and style, font for text inside equations, size, colour, highlight.
   - Label Styles: colours of units and of inputs.
-  - Worksheet: unit system (SI or USCS), default decimal places, snap.
 - **Text Formatting**:
-  - Font, size, bold/italic/underline, sub/superscript, colour, highlight and clear formatting. These apply to the selected characters, or to the whole region.
-  - Alignment (including justify), lists and indent.
+  - Text Font: font, size, bold/italic/underline, sub/superscript, colour, highlight and clear formatting. These apply to the selected characters, or to the whole region.
+  - Paragraph: alignment (including justify), lists and indent.
   - Styles: Normal, Title, Subtitle, Heading 1–3. Headings appear in the outline (`Ctrl+Alt+0–3`).
   - Links: http, https and mailto only.
-- **Graph**: X-Y graphs with series, axis units, equal axes and grid.
-- **Help**: the Help center (`F1`), with guides and a searchable list of every keyboard shortcut; the display-formats guide; the math syntax reference.
+- **Calculation**: Calculate (`F9`); worksheet unit system (SI or USCS), default decimal places and snap; sort annex.
+- **Document**:
+  - Page Setup: paper A4 or A3, portrait or landscape, margins in mm (Standard 20/16, Normal 25, Narrow 12.7, Wide 30, or custom). The Page setup dialog previews the paper and its printable area.
+  - Show: page boundaries, grid, millimetre rulers (they follow zoom and scrolling, and shade the margins), header & footer, snap to grid, pages on or off.
+  - Zoom: zoom level, 100 %, fit page, fit width.
+  - Pages: page break (`Ctrl+Shift+Enter`), blank page (`Ctrl+Enter`), delete empty page, and **Optimize print layout**, which reflows a copy of the worksheet for printing without moving anything on the page.
+  - Page settings only move the page frames. Regions keep their positions and nothing is recalculated. A region left outside the printable area is marked in red.
+- **Help**: the Help center (`F1`) with guides and a searchable list of every keyboard shortcut; the display-formats guide; the math syntax reference.
+
+Scrolling stops a little above the first page and below the last, so the view never drifts into empty space.
 
 **Templates** (Templates menu, or a link such as `?template=rc-beam`):
 - *RC beam – bending (EN 1992-1-1)*.
 - *Steel beam – simply supported*.
 - *RC rectangular column check (EN 1992-1-1)* and *RC circular column check (EN 1992-1-1)*. These cover a P–Mθ interaction curve from fibres, shear to EN 1992-1-1:2023 §8.2.3, and an annex with the derivations. The rectangular column comes with 5 load cases.
+- The templates are laid out compactly from measured region sizes and print with **Optimize print layout** on: 26 A4 pages for all four, down from 36.
 
 **Table In&Out** (workspace tab):
 - **Load cases**: bind worksheet inputs and results to columns, enter numbers for each case, then press **Calculate All**. Cases run off the UI thread on a small pool of workers. Each worker sets up the worksheet once and changes only the bound inputs from case to case.
 - **Outdated results**: results are marked *Outdated* as soon as anything they depend on changes.
-- **Right-click a case** to show it on the calculation sheet (its values go into the inputs as one undo step), print its report, or delete it.
+- **Right-click a case** to show it in CalcCanvas (its values go into the inputs as one undo step), print its report, or delete it.
 - **Print reports** prints a summary page of all cases, then the full worksheet for each case with that case's values and results.
 
 **Files**:
@@ -99,10 +108,13 @@ src/
     UnitSystem.ts         unit registry, dimension names, display units, number formats
     DependencyGraph.ts    region-to-region dependency edges, affected-set expansion
     CalculationEngine.ts  incremental recalculation, overrides (batch), progressive results
-    batch.ts              Input & Results: one engine per worker, cases via definition overrides
+    batch.ts              Table In&Out: one engine per worker, cases via definition overrides
     worker/               the calculation Web Worker and its message protocol
   canvas/        Own canvas engine (no third-party canvas SDK)
     model/              shape types, geometry, document store with snapshot undo/redo
+    shapeLibrary.ts     ready-made shapes and structural symbols (Insert tab)
+    matrixTableCommands matrix/table insertion and row/column commands
+    templateLayout.ts   compact print layout planner (Optimize print layout)
     CanvasView.tsx      pan/zoom viewport, select/marquee/move/resize, drawing tools, rulers
     layout.ts           ruled-line model: insert/remove lines, separation, page flow
     engineBridge.ts     canvas store → calculation engine sync (reading-order keys)
@@ -110,7 +122,12 @@ src/
   math/          MathLive editor, Mathcad keys, static renderer, display composition
   documents/     IndexedDB storage, (de)serialisation with migrations, templates
   export/        page geometry (paper, margins), print/PDF, case reports
-  components/    header + ribbon, Table In&Out, panels, dialogs (Help center, Page setup)
+  components/
+    docs/               header: title, File/Templates, tab strip
+    ribbon/             Mathcad-style ribbon: Ribbon.tsx, tabs.tsx, formatTabs.tsx,
+                        parts.tsx (buttons, groups), ribbonState.ts, popovers
+    inputResults/       Table In&Out workspace
+    panels/, dialogs/   Outline/Parameters, Properties, Help center, Page setup
   store/         Zustand stores, engine client (worker), batch worker pool
 tools/templates/ generators for the column templates
 ```
@@ -171,20 +188,21 @@ See **AGENTS.md** (the rules for every agent and contributor) and `docs/` (ARCHI
   - engineering reference values.
 - **Unit**:
   - column templates against hand calculations, and that they match their generators;
-  - Input & Results: every case equals a fresh engine, in either order;
+  - Table In&Out: every case equals a fresh engine, in either order;
+  - matrix and table commands, template layout planner;
   - layout (lines, separation, deleting regions);
   - shortcut registry, sanitiser, serializer and annex.
 - **Browser**:
   - acceptance tests, canvas, Mathcad keys, grid and lines;
+  - Insert tab (shapes, character map) and Matrices/Tables tab;
   - panels and templates;
   - load cases, case reports and the right-click menu.
 
 ## Known limitations
 
-- PDF export uses the browser's print dialog. Each object prints on the page that contains its top edge; anything past that page's edge is clipped (and flagged before printing).
-- The math font family is set by the renderer: equations can change size and colour, not font.
+- PDF export uses the browser's print dialog. Each object prints on the page that contains its top edge; anything past that page's edge is clipped (and flagged before printing). Optimize print layout packs greedily: it keeps reading order and groups but does not guarantee the minimum page count.
 - Changing a text style does not update text already formatted with it; the style's size and colour are copied when it is applied.
-- There are no matrices, solvers or symbolic algebra yet, and no free-positioned table regions on the canvas (Input & Results is a separate workspace).
+- Matrices can be inserted and edited but are not evaluated yet; there are no solvers or symbolic algebra. Tables are text grids and do not take part in calculations.
 - No rotation or z-order controls; multi-selection moves but doesn't resize.
 
 ## Licensing
