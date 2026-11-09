@@ -47,8 +47,17 @@ describe('column templates', () => {
     expect(errors).toEqual([]);
     expect(tpl.settings?.baselineSnap).toBe('minor');
     expect(result('\\eta_{R}\\coloneq')?.value?.number).toBeCloseTo(0.7689, 3);
-    // EN 1992-1-1:2023: τEd = 2.540 MPa, x = 587 mm ≥ 0.25d → cotθ = 2.5; strut σcd = 7.37 ≤ ν·fcd = 9.92 MPa governs.
-    expect(result('\\eta_{V}\\coloneq')?.value?.number).toBeCloseTo(0.7428, 3);
+    // EN 1992-1-1:2023 §8.2.3: x = 587 mm, compression chord centroid at 285.9 mm → bw = 2√(R² − (R − 285.9)²) = 1022.4 mm
+    // (narrower than at the tension chord d = 911.3 mm); τEd = 2.981 MPa; ρw = 2·Aw/(bw·s) = 0.00723;
+    // x ≥ 0.25d → cotθ = 2.5; strut σcd = 8.646 ≤ ν·fcd = 9.917 MPa governs.
+    expect(result('b_{w}\\coloneq')?.value?.number).toBeCloseTo(2 * Math.sqrt(600 ** 2 - (600 - result('y_{cc}\\coloneq')!.value!.number!) ** 2), 6);
+    expect(result('b_{w}\\coloneq')?.value?.number).toBeCloseTo(1022.41, 1);
+    expect(result('\\rho_{w}\\coloneq')?.value?.number).toBeCloseTo((2 * Math.PI * 100) / 85 / 1022.415, 6);
+    expect(result('\\eta_{V}\\coloneq')?.value?.number).toBeCloseTo(0.8718, 3);
+    // Class A spirals: cot θmin × 0.8 = 2.0.
+    const a = evaluate('rc-circular-column', { '\\delta_{A}\\coloneq': '\\delta_{A}\\coloneq1' });
+    expect(a.errors).toEqual([]);
+    expect(a.result('\\mathrm{cot}_{\\theta min}\\coloneq')?.value?.number).toBe(2);
     // Hand check at the ray point gives back (MEd, NEd)/ηR.
     const eta = result('\\eta_{R}\\coloneq')!.value!.number!;
     const nAt = result('N_{R}\\left(c_{R}')!.value!.number!;
@@ -98,7 +107,8 @@ describe('column templates', () => {
     expect(t.errors).toEqual([]);
     expect(num(t, COTMIN)).toBeCloseTo(2.375, 6);
     expect(num(t, COT)).toBeCloseTo(2.375, 6);
-    expect(num(evaluate('rc-rectangular-column', { 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq-20000\\,\\mathrm{kN}' }), COTMIN)).toBe(1);
+    // 2.5 − 0.1 · 3000 / 100 < 1 → 1 (NEd within the pure-tension resistance of 3415 kN).
+    expect(num(evaluate('rc-rectangular-column', { 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq-3000\\,\\mathrm{kN}', 'V_{Ed.y}\\coloneq': 'V_{Ed.y}\\coloneq100\\,\\mathrm{kN}' }), COTMIN)).toBe(1);
     // Small compression chord (fck 60, φ16): σcp ≥ 3 MPa → 3.0; σcp = 0.75 MPa → 2.5 + 0.5 · 0.75 / 3.
     const base = { 'f_{ck}\\coloneq': 'f_{ck}\\coloneq60\\,\\mathrm{MPa}', '\\phi\\coloneq': '\\phi\\coloneq16\\,\\mathrm{mm}' };
     const hi = evaluate('rc-rectangular-column', { ...base, 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq1280\\,\\mathrm{kN}' });
@@ -107,6 +117,8 @@ describe('column templates', () => {
     expect(num(hi, COTMIN)).toBe(3);
     expect(num(evaluate('rc-rectangular-column', { ...base, 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq300\\,\\mathrm{kN}' }), COTMIN)).toBeCloseTo(2.625, 6);
     // Strut limits cotθ: τEd = 4.218 MPa, ν·fcd = 9.917 → cotθ = a/2 + √((a/2)² − 1) with a/2 = 1.1755.
+    // Class A links: cot θmin × 0.8.
+    expect(num(evaluate('rc-rectangular-column', { '\\delta_{A}\\coloneq': '\\delta_{A}\\coloneq1' }), COTMIN)).toBe(2);
     const s = evaluate('rc-rectangular-column', { 'V_{Ed.y}\\coloneq': 'V_{Ed.y}\\coloneq1400\\,\\mathrm{kN}' });
     const h = (0.5 * 19.8333) / (2 * num(s, '\\tau_{Ed.y}\\coloneq'));
     expect(num(s, COT)).toBeCloseTo(h + Math.sqrt(h * h - 1), 4);
