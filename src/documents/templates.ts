@@ -7,8 +7,8 @@ import { newShapeId } from '../canvas/model/canvasStore';
 import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, PARAGRAPH_STYLES, type MathProps, type Shape } from '../canvas/model/types';
 import type { DocumentMetadata, DocumentSettings, InputResultConfig } from './DocumentTypes';
 import { parseDocument } from './DocumentSerializer';
-import rcCircularColumn from '../../templates/RC_Circular_Column_Check.mCalcCanvas?raw';
-import rcRectangularColumn from '../../templates/RC_Rectangular_Column_Check.mCalcCanvas?raw';
+import rcCircularColumn from '../../templates/RC_Circular_Column_Check.mCCV?raw';
+import rcRectangularColumn from '../../templates/RC_Rectangular_Column_Check.mCCV?raw';
 import { escapeHtml } from '../canvas/sanitize';
 import { demoWorksheetShapes } from './demoWorksheet';
 import { A4, PAGE_GAP } from '../export/pageGeometry';
@@ -29,7 +29,7 @@ interface WorksheetTemplate {
   instantiate?(): { shapes: Shape[]; inputResult: InputResultConfig };
 }
 
-/** A template saved as a .mCalcCanvas file (repo folder templates/): fresh shape ids each time. */
+/** A template saved as a .mCCV file (repo folder templates/): fresh shape ids each time. */
 function fileTemplate(raw: string) {
   const doc = parseDocument(JSON.parse(raw));
   return {

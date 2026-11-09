@@ -19,6 +19,9 @@ import { canUndo, useCanvasStore } from '../../canvas/model/canvasStore';
 import { useAppStore } from '../../store/appStore';
 import { withShortcut } from '../../app/shortcuts';
 import { MenuButton, type MenuEntry } from '../common/MenuButton';
+import { openDocument } from '../../documents/documentController';
+import { SaveStatus } from './SaveStatus';
+import { useRecentDocuments } from './useRecentDocuments';
 import { RibbonPanel, RibbonTabs, type RibbonTabId } from '../ribbon/Ribbon';
 import { SmallButton, TB } from '../ribbon/parts';
 import { MOD } from '../ribbon/ribbonState';
@@ -29,13 +32,13 @@ import { MOD } from '../ribbon/ribbonState';
 export function DocsHeader() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const title = useAppStore((s) => s.title);
-  const saveState = useAppStore((s) => s.saveState);
-  const settings = useAppStore((s) => s.settings);
+  const documentId = useAppStore((s) => s.documentId);
+  const recent = useRecentDocuments(openMenu === 'File').filter((d) => d.id !== documentId);
   const panelOpen = useAppStore((s) => s.panelOpen);
   const paramsOpen = useAppStore((s) => s.paramsOpen);
   const leftTab = useAppStore((s) => s.leftTab);
   const workspace = useAppStore((s) => s.workspace);
-  const { updateTitle, updateSettings, togglePanel, showLeftTab, setWorkspace } = useAppStore.getState();
+  const { updateTitle, togglePanel, showLeftTab, setWorkspace } = useAppStore.getState();
   const undoable = useCanvasStore(canUndo);
   const [ribbonTab, setRibbonTab] = useState<RibbonTabId>('math');
   const redoable = useCanvasStore((s) => s.redoStack.length > 0);
@@ -45,14 +48,15 @@ export function DocsHeader() {
       { label: 'New worksheet', onSelect: () => void commands.newWorksheet(false) },
       { type: 'separator' },
       { label: 'Open…', shortcut: `${MOD}O`, onSelect: commands.open },
+      ...(recent.length
+        ? [{ type: 'heading', label: 'Recent' } as const, ...recent.map((d) => ({ label: d.fileName ?? d.title, onSelect: () => void openDocument(d.id) }))]
+        : []),
+      { type: 'separator' },
       { label: 'Save', shortcut: `${MOD}S`, onSelect: () => void commands.save() },
+      { label: 'Save As… (.mCCV)', shortcut: `${MOD}⇧S`, onSelect: () => void commands.saveAs() },
       { type: 'separator' },
-      { label: 'Open file (.mCalcCanvas / .json)…', shortcut: `${MOD}⇧O`, onSelect: () => void commands.importJson() },
-      { label: 'Save to file (.mCalcCanvas)…', shortcut: `${MOD}⇧S`, onSelect: () => void commands.saveToFile() },
-      { label: 'Download as JSON', onSelect: () => commands.exportJson() },
-      { label: 'Download PDF / Print…', shortcut: `${MOD}P`, onSelect: () => void commands.exportPdf() },
-      { type: 'separator' },
-      { label: 'Page setup: landscape', checked: settings.pageOrientation === 'landscape', onSelect: () => updateSettings({ pageOrientation: settings.pageOrientation === 'landscape' ? 'portrait' : 'landscape' }) },
+      { label: 'Export PDF / Print…', shortcut: `${MOD}P`, onSelect: () => void commands.exportPdf() },
+      { label: 'Page setup…', onSelect: () => useAppStore.getState().openDialog('page-setup') },
       { label: 'Worksheet details…', onSelect: () => togglePanel(true) },
     ],
     Templates: [
@@ -84,9 +88,7 @@ export function DocsHeader() {
               <TB icon={Undo2} label={withShortcut('Undo', 'undo')} disabled={!undoable} onClick={commands.undo} testId="quick-undo" />
               <TB icon={Redo2} label={withShortcut('Redo', 'redo')} disabled={!redoable} onClick={commands.redo} testId="quick-redo" />
             </div>
-            <span data-testid="save-state" aria-live="polite" className="whitespace-nowrap text-[12px] text-docs-muted">
-              {saveState === 'saved' ? 'Saved to this browser' : saveState === 'saving' ? 'Saving…' : saveState === 'error' ? 'Not saved (no storage)' : 'Unsaved changes'}
-            </span>
+            <SaveStatus />
           </div>
           <nav role="menubar" aria-label="Main menu" className="-ml-1 flex items-center [&_button[role=menuitem][aria-haspopup]]:h-6 [&_button[role=menuitem][aria-haspopup]]:px-2 [&_button[role=menuitem][aria-haspopup]]:text-[14px] [&_button[role=menuitem][aria-haspopup]]:text-docs-ink">
             {Object.entries(menus).map(([name, entries]) => (

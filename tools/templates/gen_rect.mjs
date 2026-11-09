@@ -1,4 +1,4 @@
-// RC rectangular column (EN 1992-1-1, shear EN 1992-1-1:2023): biaxial P–Mθ (fibres), UR checks, shear. Writes templates/RC_Rectangular_Column_Check.mCalcCanvas.
+// RC rectangular column (EN 1992-1-1, shear EN 1992-1-1:2023): biaxial P–Mθ (fibres), UR checks, shear. Writes templates/RC_Rectangular_Column_Check.mCCV.
 import { createLayout, R } from './layout.mjs';
 
 const { st, need, gap, LINK, KEEP, textAt, H, T, P, ROW, S, GRAPH, colTable, cv, M, mm, mm2, kN, kNm, MPa, deg, fr, fo, FU, finish } =
@@ -280,7 +280,7 @@ P('Shear along x', R`\mathrm{UR}_{V.x}=`, M({ precision: 3 }));
 // Input & Results tab: load cases (N, Mx, My, Vy, Vx) → utilisation ratios and checks.
 const lc = (id, name, n, mx, my, vy, vx) => ({ id, name, values: { n, mx, my, vy, vx } });
 finish({
-  id: 'doc_rc_rectangular_column', title: 'RC Rectangular Column Check', reference: 'CALC-COL-02', file: 'RC_Rectangular_Column_Check.mCalcCanvas',
+  id: 'doc_rc_rectangular_column', title: 'RC Rectangular Column Check', reference: 'CALC-COL-02', file: 'RC_Rectangular_Column_Check.mCCV',
   batch: {
     title: 'Load cases',
     inputs: [

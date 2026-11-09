@@ -17,8 +17,8 @@ const heading = (level: HeadingLevel): ShortcutAction => () => {
 export const SHORTCUT_ACTIONS: Record<string, ShortcutAction> = {
   save: () => void commands.save(),
   open: () => commands.open(),
-  'save-file': () => void commands.saveToFile(),
-  'open-file': () => void commands.importJson(),
+  'save-file': () => void commands.saveAs(),
+  'open-file': () => void commands.openFile(),
   print: () => void commands.exportPdf(),
   calculate: () => commands.calculateAll(),
   help: () => useAppStore.getState().openHelp(),

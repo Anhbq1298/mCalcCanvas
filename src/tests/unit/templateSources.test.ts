@@ -9,8 +9,8 @@ import { describe, expect, it } from 'vitest';
 describe('column templates are up to date with their generators', () => {
   const out = mkdtempSync(path.join(tmpdir(), 'tpl-'));
   for (const [gen, file] of [
-    ['gen_rect.mjs', 'RC_Rectangular_Column_Check.mCalcCanvas'],
-    ['gen_col.mjs', 'RC_Circular_Column_Check.mCalcCanvas'],
+    ['gen_rect.mjs', 'RC_Rectangular_Column_Check.mCCV'],
+    ['gen_col.mjs', 'RC_Circular_Column_Check.mCCV'],
   ]) {
     it(`${file} = node tools/templates/${gen}`, () => {
       execFileSync(process.execPath, [path.resolve('tools/templates', gen)], { env: { ...process.env, TEMPLATE_OUT: out }, stdio: 'pipe' });

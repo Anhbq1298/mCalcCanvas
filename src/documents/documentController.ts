@@ -1,5 +1,6 @@
 /**
- * Document lifecycle: new / open / save / autosave / JSON import & export.
+ * Document lifecycle: new / open / save / save as / autosave / recovery.
+ * Files are .mCCV (see FILE_EXT); browser storage is DocumentManager.
  */
 import { focusPage, separateRegion } from '../canvas/canvasActions';
 import { primeEngine, resyncAll } from '../canvas/engineBridge';
@@ -12,6 +13,7 @@ import { DocumentManager } from './DocumentManager';
 import { SaveCoordinator } from './SaveCoordinator';
 import { parseDocument, serializeDocument } from './DocumentSerializer';
 import { DEFAULT_SETTINGS, DOCUMENT_VERSION, type CalculationDocument } from './DocumentTypes';
+import type { LoadResult } from './DocumentRepository';
 
 let suppressAutosave = false;
 let storageWarningShown = false;
@@ -59,25 +61,24 @@ const saves = new SaveCoordinator({
   snapshot: () => currentDocument(),
   onState: (state) => useAppStore.getState().setSaveState(state),
   onSaved: (doc) => {
-    if (!useAppStore.getState().documentId) useAppStore.setState({ documentId: doc.id });
+    const app = useAppStore.getState();
+    if (!app.documentId) useAppStore.setState({ documentId: doc.id });
+    if (!app.documentId || app.documentId === doc.id) useAppStore.setState({ savedAt: doc.updatedAt });
   },
   onError: (e) => {
     console.warn('Save failed', e);
     if (!storageWarningShown) {
       storageWarningShown = true;
-      useAppStore.getState().showToast('info', 'This view can’t save to browser storage. Use File → Save to file to keep your work.');
+      useAppStore.getState().showToast('info', 'This view can’t save to browser storage. Use File → Save As to keep your work in a .mCCV file.');
     }
   },
 });
 
-/** Save now (Ctrl+S): writes the current revision after any save in progress. */
-export function saveDocument(): Promise<void> {
-  return saves.flush(true);
-}
-
 function scheduleSave() {
   if (suppressAutosave) return;
   saves.markDirty();
+  const { file } = useAppStore.getState();
+  if (file && !file.dirty) useAppStore.setState({ file: { ...file, dirty: true } });
 }
 
 /** Before switching documents: write pending edits of the current one. */
@@ -112,11 +113,22 @@ export function startAutosave(): () => void {
     e.preventDefault();
     e.returnValue = '';
   };
+  // Leaving or closing the tab: write pending edits now (more reliable than beforeunload alone).
+  const hidden = () => {
+    if (document.visibilityState === 'hidden' && saves.dirty) void saves.flush();
+  };
+  const pagehide = () => {
+    if (saves.dirty) void saves.flush();
+  };
   window.addEventListener('beforeunload', flush);
+  window.addEventListener('pagehide', pagehide);
+  document.addEventListener('visibilitychange', hidden);
   return () => {
     stopCanvas();
     stopApp();
     window.removeEventListener('beforeunload', flush);
+    window.removeEventListener('pagehide', pagehide);
+    document.removeEventListener('visibilitychange', hidden);
   };
 }
 
@@ -147,7 +159,18 @@ async function loadDocument(doc: CalculationDocument): Promise<void> {
     focusFirstPage();
   });
   saves.reset();
+  if (linkedFile?.docId !== doc.id) linkedFile = null;
+  useAppStore.setState({ file: linkedFile ? { name: linkedFile.handle.name, dirty: false } : null, savedAt: doc.updatedAt });
   void DocumentManager.setLastOpenedId(doc.id).catch(() => {});
+}
+
+/** Load a worksheet read from storage; a recovered one is saved again at once (replacing the unreadable record). */
+async function openLoaded(res: LoadResult): Promise<void> {
+  await loadDocument(res.doc);
+  if (res.recoveredFrom) {
+    await saves.flush(true);
+    useAppStore.getState().showToast('info', `“${res.doc.title}” could not be read; recovered the version of ${new Date(res.recoveredFrom.savedAt).toLocaleString()}.`);
+  }
 }
 
 export async function newDocument(opts: { demo?: boolean; template?: TemplateId } = {}): Promise<void> {
@@ -174,17 +197,25 @@ export async function newDocument(opts: { demo?: boolean; template?: TemplateId 
     focusFirstPage();
   });
   saves.reset();
-  await saveDocument();
+  linkedFile = null;
+  useAppStore.setState({ file: null });
+  await saves.flush(true);
 }
 
 export async function openDocument(id: string): Promise<void> {
   await flushBeforeSwitch();
-  const doc = await DocumentManager.get(id);
-  if (!doc) {
+  let res: LoadResult | null;
+  try {
+    res = await DocumentManager.load(id);
+  } catch (e) {
+    useAppStore.getState().showToast('error', `That worksheet can’t be opened: ${e instanceof Error ? e.message : 'unreadable'}`);
+    return;
+  }
+  if (!res) {
     useAppStore.getState().showToast('error', 'That worksheet no longer exists.');
     return;
   }
-  await loadDocument(doc);
+  await openLoaded(res);
 }
 
 export async function initDocuments(): Promise<void> {
@@ -210,12 +241,11 @@ export async function initDocuments(): Promise<void> {
   }
   try {
     const lastId = await DocumentManager.getLastOpenedId();
-    const doc = lastId ? await DocumentManager.get(lastId) : null;
-    if (doc) return loadDocument(doc);
-    const docs = await DocumentManager.list();
-    if (docs.length) {
-      const latest = await DocumentManager.get(docs[0].id);
-      if (latest) return loadDocument(latest);
+    const last = lastId ? await DocumentManager.load(lastId).catch(() => null) : null;
+    if (last) return openLoaded(last);
+    for (const d of await DocumentManager.list()) {
+      const res = await DocumentManager.load(d.id).catch(() => null);
+      if (res) return openLoaded(res);
     }
   } catch (e) {
     console.warn('Saved worksheets are unavailable here', e);
@@ -245,21 +275,47 @@ function firstRunTemplate(): TemplateId {
   return 'rc-beam';
 }
 
-/** CalcCanvas worksheet file: the JSON document, saved with its own extension. */
-const FILE_EXT = '.mCalcCanvas';
-export const FILE_ACCEPT = '.mCalcCanvas,.mcalccanvas,.json,application/json';
+/**
+ * mCalcCanvas worksheet file (.mCCV): the JSON document envelope of
+ * `serializeDocument`. Worksheets and templates use only this extension.
+ * Files from earlier versions (.mCalcCanvas, .json) contain the same
+ * envelope: they still open (drag & drop, or "All files" in the picker),
+ * are migrated by `parseDocument`, and are written back as .mCCV.
+ */
+export const FILE_EXT = '.mCCV';
+export const FILE_MIME = 'application/vnd.mccv+json';
+/** Small .mCCV document icon (public/icons, made by tools/icons/build-file-icon.mjs). */
+export const FILE_ICON = `${import.meta.env.BASE_URL}icons/mccv-file-small.svg`;
+/** File picker filter (.mCCV only). */
+export const FILE_ACCEPT = '.mccv';
+const LEGACY_FILE = /\.(mcalccanvas|json)$/i;
 
 export function isWorksheetFile(f: File): boolean {
-  return /\.(mcalccanvas|json)$/i.test(f.name) || f.type === 'application/json';
+  return /\.mccv$/i.test(f.name) || LEGACY_FILE.test(f.name) || f.type === 'application/json' || f.type === FILE_MIME;
 }
 
-function fileBaseName(title: string): string {
-  return title.trim().replace(/[\\/:*?"<>|]+/g, '-').replace(/\s+/g, ' ').slice(0, 120) || 'calculation';
+/** `Title.mCCV` with characters Windows does not allow in file names replaced. */
+export function worksheetFileName(title: string): string {
+  return (title.trim().replace(/[\\/:*?"<>|]+/g, '-').replace(/\s+/g, ' ').slice(0, 120) || 'calculation') + FILE_EXT;
 }
 
-type SavePicker = (o: { suggestedName: string; types: { description: string; accept: Record<string, string[]> }[] }) => Promise<{
+/** The .mCCV name for an opened file (a legacy extension is replaced). */
+function withExt(name: string): string {
+  return /\.mccv$/i.test(name) ? name : name.replace(LEGACY_FILE, '') + FILE_EXT;
+}
+
+interface WritableFileHandle {
+  name: string;
   createWritable(): Promise<{ write(d: Blob): Promise<void>; close(): Promise<void> }>;
-}>;
+}
+type SavePicker = (o: { suggestedName: string; types: { description: string; accept: Record<string, string[]> }[] }) => Promise<WritableFileHandle>;
+
+/** The .mCCV file chosen with Save As in this session (Chrome/Edge): Save writes it again. */
+let linkedFile: { docId: string; handle: WritableFileHandle } | null = null;
+
+function fileBlob(): Blob {
+  return new Blob([serializeDocument(currentDocument())], { type: FILE_MIME });
+}
 
 function downloadBlob(blob: Blob, name: string): void {
   const url = URL.createObjectURL(blob);
@@ -270,56 +326,101 @@ function downloadBlob(blob: Blob, name: string): void {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+async function writeHandle(handle: WritableFileHandle): Promise<void> {
+  const w = await handle.createWritable();
+  await w.write(fileBlob());
+  await w.close();
+}
+
+async function rememberFileName(name: string): Promise<void> {
+  const id = useAppStore.getState().documentId;
+  if (id) await DocumentManager.setFileName(id, name).catch(() => {});
+}
+
 /**
- * Save the worksheet to a .mCalcCanvas file on the user's computer. Uses the
- * browser's "Save as" dialog where available (Chrome/Edge), else a download.
- * Returns false if the user cancelled.
+ * Save (Ctrl+S): write the worksheet to browser storage now (with a version
+ * snapshot) and, if it was saved to a .mCCV file with Save As in this
+ * session, to that file too. Returns the file name written, if any.
  */
-export async function saveToFile(format: 'mcalc' | 'json' = 'mcalc'): Promise<boolean> {
-  const doc = currentDocument();
-  const blob = new Blob([serializeDocument(doc)], { type: 'application/json' });
-  const name = fileBaseName(doc.title) + (format === 'json' ? '.json' : FILE_EXT);
+export async function saveDocument(): Promise<string | null> {
+  await saves.flush(true);
+  const app = useAppStore.getState();
+  if (!linkedFile || linkedFile.docId !== app.documentId) return null;
+  try {
+    await writeHandle(linkedFile.handle);
+    useAppStore.setState({ file: { name: linkedFile.handle.name, dirty: false } });
+    return linkedFile.handle.name;
+  } catch (e) {
+    console.warn('Writing the .mCCV file failed', e);
+    app.showToast('error', `Could not write “${linkedFile.handle.name}”. Use File → Save As.`);
+    return null;
+  }
+}
+
+/**
+ * Save As: write the worksheet to a .mCCV file on the user's computer. Uses
+ * the browser's "Save as" dialog where available (Chrome/Edge; Save then
+ * keeps writing that file), else a download. Returns false if cancelled.
+ */
+export async function saveAsFile(): Promise<boolean> {
+  await saves.flush();
+  const app = useAppStore.getState();
+  const name = worksheetFileName(app.title);
   const picker = (window as unknown as { showSaveFilePicker?: SavePicker }).showSaveFilePicker;
   if (picker && window.self === window.top) {
     try {
-      const handle = await picker({
-        suggestedName: name,
-        types: [format === 'json' ? { description: 'JSON', accept: { 'application/json': ['.json'] } } : { description: 'CalcCanvas worksheet', accept: { 'application/json': [FILE_EXT] } }],
-      });
-      const w = await handle.createWritable();
-      await w.write(blob);
-      await w.close();
-      useAppStore.getState().showToast('info', `Saved “${name}”.`);
+      const handle = await picker({ suggestedName: name, types: [{ description: 'mCalcCanvas worksheet', accept: { [FILE_MIME]: [FILE_EXT] } }] });
+      await writeHandle(handle);
+      if (app.documentId) linkedFile = { docId: app.documentId, handle };
+      useAppStore.setState({ file: { name: handle.name, dirty: false } });
+      await rememberFileName(handle.name);
+      app.showToast('info', `Saved “${handle.name}”.`);
       return true;
     } catch (e) {
       if (e instanceof DOMException && e.name === 'AbortError') return false;
       /* picker unavailable (e.g. sandboxed): fall back to a download */
     }
   }
-  downloadBlob(blob, name);
+  downloadBlob(fileBlob(), name);
+  await rememberFileName(name);
   return true;
 }
 
-/** Kept for existing callers: JSON download. */
-export function exportJson(): void {
-  void saveToFile('json');
-}
-
-export async function importJson(file: File): Promise<void> {
+/** Open a .mCCV file (or a legacy .mCalcCanvas / .json one, which is migrated). */
+export async function openFile(file: File): Promise<void> {
+  const legacy = !/\.mccv$/i.test(file.name);
   try {
     const parsed = parseDocument(JSON.parse(await file.text()));
-    let existing = null;
+    let existing: unknown = null;
     try {
       existing = await DocumentManager.get(parsed.id);
     } catch {
-      /* storage unavailable */
+      existing = true; // unreadable record with that id: open as a new worksheet
     }
+    // Never overwrite a worksheet already in this browser: an opened file is a copy.
     const doc = existing ? { ...parsed, id: newId() } : parsed;
     await flushBeforeSwitch();
     await loadDocument(doc);
-    await saveDocument();
-    useAppStore.getState().showToast('info', `Imported “${doc.title}”.`);
+    await saves.flush(true);
+    await rememberFileName(withExt(file.name));
+    useAppStore
+      .getState()
+      .showToast('info', legacy ? `Converted “${file.name}” to the .mCCV format. Use File → Save As to write a .mCCV copy.` : `Opened “${file.name}”.`);
   } catch (e) {
-    useAppStore.getState().showToast('error', `Import failed: ${e instanceof Error ? e.message : 'invalid file'}`);
+    useAppStore.getState().showToast('error', `Could not open “${file.name}”: ${e instanceof Error ? e.message : 'not an mCalcCanvas worksheet'}`);
   }
+}
+
+/** Replace the open worksheet with one of its version snapshots (the current state is kept as a version first). */
+export async function restoreVersion(versionId: string): Promise<void> {
+  await saves.flush(true);
+  const doc = await DocumentManager.getVersion(versionId);
+  if (!doc) {
+    useAppStore.getState().showToast('error', 'That version no longer exists.');
+    return;
+  }
+  const when = new Date(doc.updatedAt).toLocaleString();
+  await loadDocument({ ...doc, updatedAt: new Date().toISOString() });
+  await saves.flush(true);
+  useAppStore.getState().showToast('info', `Restored the version of ${when}.`);
 }

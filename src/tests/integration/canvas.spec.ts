@@ -57,7 +57,7 @@ test.describe('own canvas engine', () => {
     expect((await shapesOf(page, 'math')).length).toBe(1);
     await expect(page.locator('math-field')).toHaveCount(1);
     await page.keyboard.press('Escape');
-    await expect(page.getByTestId('save-state')).toHaveText('Saved to this browser');
+    await expect(page.getByTestId('save-state')).toHaveText('Saved');
     await page.reload();
     await waitReady(page);
     await expect(page.getByTestId('text-region')).toHaveText('Maximum steel reinforcement');

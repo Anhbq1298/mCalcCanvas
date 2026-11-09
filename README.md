@@ -94,9 +94,12 @@ Scrolling stops a little above the first page and below the last, so the view ne
 - **Print reports** prints a summary page of all cases, then the full worksheet for each case with that case's values and results.
 
 **Files**:
-- **Autosave**: worksheets save automatically in the browser.
-- **Save and open files**: **File → Save to file** (`Ctrl+Shift+S`) writes a `.mCalcCanvas` file (plain JSON, schema-versioned). **File → Open file** (`Ctrl+Shift+O`) opens it again, and so does dropping the file onto the page. `.json` files also work.
-- **PDF**: **File → Download PDF / Print** (`Ctrl+P`) prints with the document's paper size, orientation and margins, without the grid, rulers or selection marks.
+- **One file format: `.mCCV`** (mCalcCanvas worksheet; JSON inside, schema-versioned). Worksheets and templates use only this extension. Icons for the file type (SVG, PNG, Windows ICO) are in `public/icons/` (`node tools/icons/build-file-icon.mjs`).
+- **Autosave**: worksheets save automatically in the browser (IndexedDB). The status next to the title shows *Saved*, *Saving…*, *Unsaved changes* or *Not saved*.
+- **Save** (`Ctrl+S`) saves now and keeps a version. **Save As** (`Ctrl+Shift+S`) writes a `.mCCV` file; in Chrome/Edge later Saves update that file too (its name shows next to the status, with a dot while it is behind).
+- **Open** (`Ctrl+O`): recent worksheets in this browser, each with its **version history** (Restore), or a `.mCCV` file from your computer (`Ctrl+Shift+O`, or drop it onto the page).
+- **Older files**: `.mCalcCanvas` and `.json` files from earlier versions still open (drop them, or pick "All files") and are converted; worksheets already in the browser are upgraded on first open, and the original is kept as a version.
+- **PDF**: **File → Export PDF / Print** (`Ctrl+P`) prints with the document's paper size, orientation and margins, without the grid, rulers or selection marks.
 
 ## Architecture
 

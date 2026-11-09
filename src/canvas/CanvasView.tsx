@@ -6,7 +6,7 @@
  * (screen = (page − camera) · zoom), so math regions stay real, editable
  * HTML at every zoom level.
  */
-import { importJson, isWorksheetFile } from '../documents/documentController';
+import { isWorksheetFile, openFile } from '../documents/documentController';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppStore } from '../store/appStore';
 import { createMathRegion, createTextRegion, insertImageFile, lastPointer, snapPoint, viewport, zoomAt } from './canvasActions';
@@ -480,7 +480,7 @@ export function CanvasView() {
     const sheet = [...e.dataTransfer.files].find(isWorksheetFile);
     if (sheet) {
       e.preventDefault();
-      void importJson(sheet);
+      void openFile(sheet);
       return;
     }
     const files = [...e.dataTransfer.files].filter((f) => f.type.startsWith('image/'));

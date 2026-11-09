@@ -29,7 +29,7 @@ import { resyncAll } from '../canvas/engineBridge';
 import { pasteShapes } from '../canvas/canvasActions';
 import { redo, selectAll, setCamera, setTool, stopEditing, undo, updateShapes, useCanvasStore } from '../canvas/model/canvasStore';
 import type { MathDisplayMode, ToolId } from '../canvas/model/types';
-import { exportJson, FILE_ACCEPT, importJson, newDocument, saveDocument, saveToFile } from '../documents/documentController';
+import { FILE_ACCEPT, newDocument, openFile, saveAsFile, saveDocument } from '../documents/documentController';
 import { exportPdf } from '../export/PdfExporter';
 import { useAppStore } from '../store/appStore';
 import type { TemplateId } from '../documents/templates';
@@ -158,8 +158,9 @@ export const commands = {
   },
 
   async save() {
-    await saveDocument();
-    useAppStore.getState().showToast('info', 'Worksheet saved.');
+    const file = await saveDocument();
+    const app = useAppStore.getState();
+    if (app.saveState !== 'error') app.showToast('info', file ? `Saved “${file}”.` : 'Worksheet saved in this browser.');
   },
   async newWorksheet(demo = false) {
     await newDocument({ demo });
@@ -168,11 +169,12 @@ export const commands = {
     await newDocument({ template });
   },
   open: () => useAppStore.getState().openDialog('open'),
-  exportJson,
-  saveToFile: () => saveToFile('mcalc'),
-  async importJson() {
+  /** Save As: write a .mCCV file. */
+  saveAs: () => saveAsFile(),
+  /** Open a .mCCV file from the computer. */
+  async openFile() {
     const file = await pickFile(FILE_ACCEPT);
-    if (file) await importJson(file);
+    if (file) await openFile(file);
   },
   exportPdf: () => exportPdf(),
 };

@@ -42,10 +42,10 @@ const MOD_LABEL = MAC ? '⌘' : 'Ctrl';
 
 export const SHORTCUTS: ShortcutDefinition[] = [
   // --- General -----------------------------------------------------------
-  { id: 'save', category: 'General', command: 'Save', description: 'Save the worksheet in this browser', keys: [MOD_LABEL, 'S'], scope: 'global', chords: [{ key: 's', mod: true }] },
-  { id: 'open', category: 'General', command: 'Open', description: 'Open a worksheet saved in this browser', keys: [MOD_LABEL, 'O'], scope: 'global', chords: [{ key: 'o', mod: true }] },
-  { id: 'save-file', category: 'General', command: 'Save to file', description: 'Download the worksheet as a .mCalcCanvas file', keys: [MOD_LABEL, 'Shift', 'S'], scope: 'global', chords: [{ key: 's', mod: true, shift: true }] },
-  { id: 'open-file', category: 'General', command: 'Open file', description: 'Open a .mCalcCanvas or .json file', keys: [MOD_LABEL, 'Shift', 'O'], scope: 'global', chords: [{ key: 'o', mod: true, shift: true }] },
+  { id: 'save', category: 'General', command: 'Save', description: 'Save the worksheet in this browser (and to its .mCCV file after Save As)', keys: [MOD_LABEL, 'S'], scope: 'global', chords: [{ key: 's', mod: true }] },
+  { id: 'open', category: 'General', command: 'Open', description: 'Open a recent worksheet or a .mCCV file', keys: [MOD_LABEL, 'O'], scope: 'global', chords: [{ key: 'o', mod: true }] },
+  { id: 'save-file', category: 'General', command: 'Save As', description: 'Save the worksheet as a .mCCV file', keys: [MOD_LABEL, 'Shift', 'S'], scope: 'global', chords: [{ key: 's', mod: true, shift: true }] },
+  { id: 'open-file', category: 'General', command: 'Open file', description: 'Open a .mCCV file from your computer', keys: [MOD_LABEL, 'Shift', 'O'], scope: 'global', chords: [{ key: 'o', mod: true, shift: true }] },
   { id: 'print', category: 'General', command: 'Print / PDF', description: 'Print or save as PDF with the page setup', keys: [MOD_LABEL, 'P'], scope: 'global', chords: [{ key: 'p', mod: true }] },
   { id: 'calculate', category: 'General', command: 'Calculate all', description: 'Recalculate the whole worksheet', keys: ['F9'], scope: 'global', chords: [{ key: 'F9' }] },
   { id: 'help', category: 'General', command: 'Help', description: 'Open the Help center', keys: ['F1'], scope: 'global', chords: [{ key: 'F1' }] },
