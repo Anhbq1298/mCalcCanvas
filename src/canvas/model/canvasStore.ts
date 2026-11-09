@@ -16,6 +16,7 @@ export interface CanvasState {
   order: string[];
   selection: string[];
   editingId: string | null;
+  activeGridCell: { shapeId: string; row: number; column: number } | null;
   tool: ToolId;
   camera: Camera;
   isGrid: boolean;
@@ -37,6 +38,7 @@ export const useCanvasStore = create<CanvasState>(() => ({
   order: [],
   selection: [],
   editingId: null,
+  activeGridCell: null,
   tool: 'select',
   camera: { x: -40, y: -24, z: 1 },
   isGrid: true,
@@ -103,7 +105,7 @@ export function markHistory(): void {
 
 function restore(snap: Snapshot) {
   const sel = get().selection.filter((id) => snap.shapes[id]);
-  set((s) => ({ shapes: snap.shapes, order: snap.order, selection: sel, editingId: null, docVersion: s.docVersion + 1 }));
+  set((s) => ({ shapes: snap.shapes, order: snap.order, selection: sel, editingId: null, activeGridCell: null, docVersion: s.docVersion + 1 }));
 }
 
 export function undo(): void {
@@ -197,6 +199,7 @@ export function deleteShapes(ids: string[], opts: ChangeOptions = {}): void {
       order: s.order.filter((id) => !gone.has(id)),
       selection: s.selection.filter((id) => !gone.has(id)),
       editingId: s.editingId && gone.has(s.editingId) ? null : s.editingId,
+      activeGridCell: s.activeGridCell && gone.has(s.activeGridCell.shapeId) ? null : s.activeGridCell,
       docVersion: s.docVersion + 1,
     };
   });
@@ -217,6 +220,7 @@ export function loadShapes(list: Shape[]): void {
     order: list.map((s) => s.id),
     selection: [],
     editingId: null,
+    activeGridCell: null,
     undoStack: [],
     redoStack: [],
     tool: 'select',
@@ -242,7 +246,8 @@ export function expandGroups(ids: string[]): string[] {
 }
 
 export function select(ids: string[]): void {
-  set({ selection: expandGroups(ids) });
+  const selection = expandGroups(ids);
+  set((s) => ({ selection, activeGridCell: s.activeGridCell && selection.includes(s.activeGridCell.shapeId) ? s.activeGridCell : null }));
 }
 
 export function selectAll(): void {
@@ -251,7 +256,7 @@ export function selectAll(): void {
 
 export function startEditing(id: string): void {
   const sh = get().shapes[id];
-  if (!sh || (sh.type !== 'math' && sh.type !== 'text')) return;
+  if (!sh || (sh.type !== 'math' && sh.type !== 'text' && sh.type !== 'table')) return;
   markHistory();
   set({ editingId: id, selection: [id], tool: 'select' });
 }
@@ -265,6 +270,11 @@ export function stopEditing(): void {
   if (sh && ((sh.type === 'math' && !sh.props.latex.trim()) || (sh.type === 'text' && !sh.props.html.replace(/<[^>]*>|&nbsp;/g, '').trim()))) {
     deleteShapes([editingId], { history: false });
   }
+}
+
+export function setActiveGridCell(shapeId: string, row: number, column: number): void {
+  if (!get().shapes[shapeId]) return;
+  set({ activeGridCell: { shapeId, row: Math.max(0, row), column: Math.max(0, column) }, selection: [shapeId] });
 }
 
 export function setTool(tool: ToolId): void {

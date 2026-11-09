@@ -86,6 +86,24 @@ test.describe('own canvas engine', () => {
     await expect(page.getByTestId('text-region')).toHaveText('φ = 30°');
   });
 
+  test('Matrices/Tables tab: insert a matrix and a table, add a table row', async ({ page }) => {
+    await page.getByTestId('format-tab-matrices').click();
+    await page.getByTestId('insert-matrix').click();
+    await page.getByRole('gridcell', { name: '2 by 3' }).click();
+    await expect(page.locator('[data-testid=math-region][data-latex*="bmatrix"]')).toHaveCount(1);
+    await page.keyboard.press('Escape');
+    await page.keyboard.press('Escape');
+    await page.mouse.click(700, 600);
+    await page.getByTestId('insert-table').click();
+    await page.getByRole('gridcell', { name: '2 by 2' }).click();
+    const cell = page.getByLabel('Table cell 1, 1');
+    await cell.fill('fck');
+    await page.getByTestId('grid-insert-below').click();
+    const [t] = await shapesOf(page, 'table');
+    expect(t.props.rows).toBe(3);
+    expect((t.props.cells as { value: string }[][])[0][0].value).toBe('fck');
+  });
+
   test('draw and resize a rectangle, draw a line', async ({ page }) => {
     await page.getByTestId('format-tab-insert').click();
     await page.getByTestId('tool-rect').click();

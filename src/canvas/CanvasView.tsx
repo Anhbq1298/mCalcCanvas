@@ -461,7 +461,7 @@ export function CanvasView() {
       followAnnex(sh.id);
       return;
     }
-    if (sh && (sh.type === 'math' || sh.type === 'text')) {
+    if (sh && (sh.type === 'math' || sh.type === 'text' || sh.type === 'table')) {
       startEditing(sh.id);
     } else if (!sh) {
       const p = toPage(e);

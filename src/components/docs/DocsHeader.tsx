@@ -27,6 +27,12 @@ import {
   SquareDashed,
   ArrowUpRight,
   Bold,
+  ArrowDownToLine,
+  ArrowLeftToLine,
+  ArrowRightToLine,
+  ArrowUpToLine,
+  Table2,
+  Trash2,
   BoxSelect,
   Group as Group_,
   Heading2,
@@ -90,6 +96,8 @@ import { CONSTANTS, OPERATORS, SYMBOLS, UNITS_PALETTE } from '../ribbon/palettes
 import { Popover, PalettePopover } from './Popover';
 import { CharacterMap } from './CharacterMap';
 import { ShapeGallery } from './ShapeGallery';
+import { DimensionPicker, FunctionsMenu, OperatorsMenu } from '../ribbon/MatricesTablesRibbon';
+import { applyGridCommand, type GridCommand } from '../../canvas/matrixTableCommands';
 
 const MOD = typeof navigator !== 'undefined' && /Mac/.test(navigator.platform) ? '⌘' : 'Ctrl+';
 
@@ -747,6 +755,59 @@ function InsertTab() {
   );
 }
 
+/** Matrices/Tables tab (Mathcad Prime): insert a matrix or table, operators, functions, rows and columns, result display. */
+function MatricesTab() {
+  const gridSelected = useCanvasStore((s) => {
+    if (s.selection.length !== 1) return false;
+    const shape = s.shapes[s.selection[0]];
+    return shape?.type === 'table' || (shape?.type === 'math' && /\\begin\{bmatrix\}/.test(shape.props.latex));
+  });
+  const settings = useAppStore((s) => s.settings);
+  const toggle = (key: 'showMatrixIndices' | 'collapseNestedMatrices') => useAppStore.getState().updateSettings({ [key]: !settings[key] });
+  const cmd = (icon: LucideIcon, label: string, c: GridCommand, testId: string) => <SmallButton icon={icon} label={label} disabled={!gridSelected} onClick={() => applyGridCommand(c)} testId={testId} />;
+  return (
+    <>
+      <Group label="Matrices and Tables">
+        <Popover title="Insert matrix" testId="insert-matrix" big="Matrix" width={248} trigger={<Grid3x3 size={24} strokeWidth={1.6} aria-hidden />}>
+          {(close) => <DimensionPicker kind="matrix" close={close} />}
+        </Popover>
+        <Popover title="Insert table" testId="insert-table" big="Table" width={248} trigger={<Table2 size={24} strokeWidth={1.6} aria-hidden />}>
+          {(close) => <DimensionPicker kind="table" close={close} />}
+        </Popover>
+      </Group>
+      <Group label="Operators and Functions">
+        <Popover title="Vector/matrix operators" testId="matrix-operators" big="Operators" width={310} trigger={<span className="font-math text-[22px] italic leading-none">Aᵀ</span>}>
+          {() => <OperatorsMenu />}
+        </Popover>
+        <Popover title="Vector/matrix functions" testId="matrix-functions" big="Functions" width={520} trigger={<span className="font-math text-[20px] italic leading-none">f(M)</span>}>
+          {() => <FunctionsMenu />}
+        </Popover>
+      </Group>
+      <Group label="Rows and Columns">
+        <Col>
+          {cmd(ArrowUpToLine, 'Insert above', 'above', 'grid-insert-above')}
+          {cmd(ArrowDownToLine, 'Insert below', 'below', 'grid-insert-below')}
+          {cmd(Trash2, 'Delete row', 'delete-row', 'grid-delete-row')}
+        </Col>
+        <Col>
+          {cmd(ArrowLeftToLine, 'Insert left', 'left', 'grid-insert-left')}
+          {cmd(ArrowRightToLine, 'Insert right', 'right', 'grid-insert-right')}
+          {cmd(Trash2, 'Delete column', 'delete-column', 'grid-delete-column')}
+        </Col>
+        <Col>
+          {cmd(Eraser, 'Clear cell', 'clear', 'grid-clear')}
+        </Col>
+      </Group>
+      <Group label="Result Format">
+        <Col>
+          <Check label="Show indices" testId="matrix-indices" checked={!!settings.showMatrixIndices} onChange={() => toggle('showMatrixIndices')} />
+          <Check label="Collapse nested" testId="matrix-collapse" checked={!!settings.collapseNestedMatrices} onChange={() => toggle('collapseNestedMatrices')} />
+        </Col>
+      </Group>
+    </>
+  );
+}
+
 /** Calculation tab: calculate, worksheet units and precision. */
 function CalculationTab() {
   const settings = useAppStore((s) => s.settings);
@@ -973,16 +1034,17 @@ function HelpTab() {
   );
 }
 
-type RibbonTabId = 'math' | 'insert' | 'calculation' | 'plots' | 'math-format' | 'text-format' | 'document' | 'help';
+type RibbonTabId = 'math' | 'insert' | 'matrices' | 'plots' | 'math-format' | 'text-format' | 'calculation' | 'document' | 'help';
 
 /** Mathcad Prime order. The tab stays where the user put it (no switching on selection). */
 const TAB_LABELS: [RibbonTabId, string][] = [
   ['math', 'Math'],
   ['insert', 'Insert'],
-  ['calculation', 'Calculation'],
+  ['matrices', 'Matrices/Tables'],
   ['plots', 'Plots'],
   ['math-format', 'Math Formatting'],
   ['text-format', 'Text Formatting'],
+  ['calculation', 'Calculation'],
   ['document', 'Document'],
   ['help', 'Help'],
 ];
@@ -1011,6 +1073,7 @@ function RibbonTabs({ tab, setTab, only, label = 'Ribbon' }: { tab: RibbonTabId;
 const TAB_CONTENT: Record<RibbonTabId, () => ReactNode> = {
   math: MathTab,
   insert: InsertTab,
+  matrices: MatricesTab,
   calculation: CalculationTab,
   plots: PlotsTab,
   'math-format': MathFormattingTab,

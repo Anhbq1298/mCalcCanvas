@@ -4,6 +4,7 @@ import { DrawView, ImageView, LineView, RectView } from './GeoViews';
 import { GraphView } from './GraphView';
 import { MathView } from './MathView';
 import { TextView } from './TextView';
+import { TableView } from './TableView';
 
 /**
  * Positions one shape in page coordinates. `isStatic` is used for print
@@ -11,7 +12,7 @@ import { TextView } from './TextView';
  */
 export const ShapeView = memo(function ShapeView({ shape, editing, selected = false, isStatic = false }: { shape: Shape; editing: boolean; selected?: boolean; isStatic?: boolean }) {
   // Box-like shapes take pointer events on their whole area; strokes only on the stroke.
-  const boxLike = shape.type === 'math' || shape.type === 'text' || shape.type === 'image' || shape.type === 'graph';
+  const boxLike = shape.type === 'math' || shape.type === 'text' || shape.type === 'image' || shape.type === 'graph' || shape.type === 'table';
   let body: React.ReactNode;
   switch (shape.type) {
     case 'math':
@@ -35,6 +36,7 @@ export const ShapeView = memo(function ShapeView({ shape, editing, selected = fa
     case 'graph':
       body = <GraphView shape={shape} />;
       break;
+    case 'table': body = <TableView shape={shape} editing={editing} isStatic={isStatic} />; break;
   }
   return (
     <div
@@ -52,7 +54,7 @@ export const ShapeView = memo(function ShapeView({ shape, editing, selected = fa
       }}
     >
       {body}
-      {!isStatic && (shape.type === 'math' || shape.type === 'text') && (
+      {!isStatic && (shape.type === 'math' || shape.type === 'text' || shape.type === 'table') && (
         <div className="cc-grip" data-grip={shape.id} data-testid="grip" title="Drag to move" aria-hidden>
           <svg width="8" height="14" viewBox="0 0 8 14">
             {[0, 1, 2].map((r) => [0, 1].map((c) => <circle key={`${r}${c}`} cx={2 + c * 4} cy={3 + r * 4} r="1.2" fill="currentColor" />))}

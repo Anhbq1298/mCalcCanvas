@@ -1,14 +1,8 @@
 import { ChevronDown } from 'lucide-react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { commands } from '../../app/commands';
-import { insertIntoActiveMath, templateToLatex } from '../../math/activeEditor';
+import { insertTemplate } from '../../math/insertTemplate';
 import type { PaletteSection } from '../ribbon/palettes';
-
-/** Insert a palette template into the open equation, or start a new region with it. */
-function insertTemplate(latex: string): void {
-  if (!insertIntoActiveMath(latex)) commands.insertMath(templateToLatex(latex));
-}
 
 /**
  * Toolbar dropdown rendered in a portal (never clipped). The trigger keeps

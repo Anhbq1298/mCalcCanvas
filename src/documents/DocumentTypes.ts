@@ -60,6 +60,8 @@ export interface DocumentSettings {
   baselineSnap?: 'major' | 'minor';
   /** Minimum number of pages (keeps inserted blank pages). */
   pages?: number;
+  showMatrixIndices?: boolean;
+  collapseNestedMatrices?: boolean;
   /** Arrays longer than this are shown as the first and last half (pandas style); 0 = show all. */
   vectorLimit?: number;
 }
@@ -120,6 +122,8 @@ export const DEFAULT_SETTINGS: DocumentSettings = {
   showHeaderFooter: true,
   textFont: 'Inter',
   vectorLimit: 10,
+  showMatrixIndices: false,
+  collapseNestedMatrices: false,
 };
 
 export interface DocumentSummary {
