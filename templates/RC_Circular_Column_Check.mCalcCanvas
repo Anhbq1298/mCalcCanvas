@@ -3942,7 +3942,7 @@
       "props": {
         "w": 630,
         "h": 24,
-        "html": "compression chord (centroid of the concrete compression at the bending resistance under NEd)",
+        "html": "compression chord (centroid of the concrete compression, §8.1) and the tension chord (d).",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#475569",
@@ -3957,7 +3957,7 @@
       "props": {
         "w": 630,
         "h": 24,
-        "html": "and the tension chord (depth d). Each spiral crosses the shear plane twice: Asw = 2·Aw.",
+        "html": "Each spiral crosses the shear plane twice: Asw = 2·Aw.",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#475569",
@@ -4990,6 +4990,6 @@
       }
     }
   ],
-  "createdAt": "2026-11-09T03:13:27.164Z",
-  "updatedAt": "2026-11-09T03:13:27.164Z"
+  "createdAt": "2026-11-09T03:21:38.482Z",
+  "updatedAt": "2026-11-09T03:21:38.482Z"
 }
