@@ -440,14 +440,6 @@ function MathFormattingTab() {
   const math = selected.filter((s): s is Extract<Shape, { type: 'math' }> => s.type === 'math');
   const first = math[0];
   const currentFontStyle = first?.props.fontStyle ?? 'normal';
-  const isMathBold = currentFontStyle === 'bold' || currentFontStyle === 'bold-italic';
-  const isMathItalic = currentFontStyle === 'italic' || currentFontStyle === 'bold-italic';
-  const toggleMathStyle = (kind: 'bold' | 'italic') => {
-    const bold = kind === 'bold' ? !isMathBold : isMathBold;
-    const italic = kind === 'italic' ? !isMathItalic : isMathItalic;
-    const style: MathFontStyle = bold ? (italic ? 'bold-italic' : 'bold') : italic ? 'italic' : 'normal';
-    patchSelected((sh) => (sh.type === 'math' ? { props: { fontStyle: style } } : null));
-  };
   const [unitDraft, setUnitDraft] = useState<string | null>(null);
   const [unitError, setUnitError] = useState<string | null>(null);
   const applyUnit = (raw: string) => {
@@ -590,10 +582,22 @@ function MathFormattingTab() {
               options={Object.keys(TEXT_FONTS).map((f) => [f, f])}
             />
           </Field>
-          <div className="rb-field" aria-label="Math font style">
-            <TB icon={Bold} label="Bold equation" active={isMathBold} disabled={!first} testId="math-font-bold" onClick={() => toggleMathStyle('bold')} />
-            <TB icon={Italic} label="Italic equation" active={isMathItalic} disabled={!first} testId="math-font-italic" onClick={() => toggleMathStyle('italic')} />
-          </div>
+          <Field label="Font style">
+            <TBSelect
+              label="Font style of the selected equations"
+              testId="math-font-style"
+              disabled={!first}
+              value={currentFontStyle}
+              width={132}
+              onChange={(v) => patchSelected((sh) => (sh.type === 'math' ? { props: { fontStyle: v as MathFontStyle } } : null))}
+              options={[
+                ['normal', 'Regular'],
+                ['bold', 'Bold'],
+                ['italic', 'Italic'],
+                ['bold-italic', 'Bold Italic'],
+              ]}
+            />
+          </Field>
           <div className="rb-field">
             <SizeControl kinds={['math']} label="Equation size" />
           </div>
