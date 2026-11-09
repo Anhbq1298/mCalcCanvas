@@ -27,6 +27,7 @@ import { clampDelta, clampPoint, clampShapesIntoPage, constrained, crossPoint, n
 import { PAGE_GAP, pageBox, pageCount, pageSize } from '../export/pageGeometry';
 import { globalLine, lineOccupied, lineRemovable, lineY, pageLines, planLineShift, planSeparation, type LayoutPlan } from './layout';
 import { useAppStore } from '../store/appStore';
+import { buildLibraryShape, SHAPE_LIBRARY } from './shapeLibrary';
 
 const get = () => useCanvasStore.getState();
 
@@ -237,6 +238,18 @@ export async function insertImageFile(file: Blob, at?: Point): Promise<void> {
   addShapes([{ id: imgId, type: 'image', x: p.x, y: p.y, props: { w, h, src } }], { select: true });
   clampShapesIntoPage([imgId]);
   useCanvasStore.setState({ tool: 'select' });
+}
+
+/** Insert a ready-made shape (Insert tab) at the insertion point, selected as one group. */
+export function insertLibraryShape(id: string): string[] {
+  const item = SHAPE_LIBRARY.find((i) => i.id === id);
+  if (!item) return [];
+  const p = snapPoint(insertionPoint());
+  const list = buildLibraryShape(item, p.x, p.y + 14, newShapeId);
+  addShapes(list, { select: true });
+  clampShapesIntoPage(list.map((sh) => sh.id));
+  useCanvasStore.setState({ tool: 'select', crosshair: null });
+  return list.map((sh) => sh.id);
 }
 
 /** A new X-Y graph at the insertion point (series are added in the Plots tab). */

@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { addRegion, newBlankWorksheet, openFresh, regions } from './helpers.ts';
 
-type State = { shapes: Record<string, { type: string; x: number; y: number; props: Record<string, unknown> }>; selection: string[]; camera: { z: number } };
+type State = { shapes: Record<string, { type: string; x: number; y: number; groupId?: string; props: Record<string, unknown> }>; selection: string[]; camera: { z: number } };
 const state = (page: Page) =>
   page.evaluate(() => (window as unknown as { __calccanvas: { store: { getState(): State } } }).__calccanvas.store.getState() as unknown as State);
 const shapesOf = async (page: Page, type: string) => Object.values((await state(page)).shapes).filter((s) => s.type === type);
@@ -65,7 +65,29 @@ test.describe('own canvas engine', () => {
     await expect.poll(async () => (await regions(page)).length).toBe(0);
   });
 
+  test('Insert tab: ready-made shapes go in as one group; the character map types into text', async ({ page }) => {
+    await page.getByTestId('format-tab-insert').click();
+    await page.getByTestId('insert-shapes').click();
+    await page.getByTestId('shape-roller-support').click();
+    const parts = [...(await shapesOf(page, 'draw')), ...(await shapesOf(page, 'line'))];
+    expect(parts).toHaveLength(4);
+    expect(new Set(parts.map((p) => p.groupId)).size).toBe(1);
+    expect(parts[0].groupId).toBeTruthy();
+    expect((await state(page)).selection).toHaveLength(4);
+    // Nothing being edited: a new text region holding the character.
+    await page.keyboard.press('Escape');
+    await page.getByTestId('insert-charmap').click();
+    await page.getByTestId('char-phi').click();
+    await expect(page.getByTestId('text-region')).toHaveText('φ');
+    // While editing, the character goes in at the caret.
+    await page.keyboard.type(' = 30', { delay: 10 });
+    await page.getByTestId('insert-charmap').click();
+    await page.getByTestId('char-degree').click();
+    await expect(page.getByTestId('text-region')).toHaveText('φ = 30°');
+  });
+
   test('draw and resize a rectangle, draw a line', async ({ page }) => {
+    await page.getByTestId('format-tab-insert').click();
     await page.getByTestId('tool-rect').click();
     await page.mouse.move(400, 300);
     await page.mouse.down();

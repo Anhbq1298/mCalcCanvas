@@ -88,6 +88,8 @@ import { parseDisplayUnit } from '../../engine/light';
 import { MenuButton, type MenuEntry } from '../common/MenuButton';
 import { CONSTANTS, OPERATORS, SYMBOLS, UNITS_PALETTE } from '../ribbon/palettes';
 import { Popover, PalettePopover } from './Popover';
+import { CharacterMap } from './CharacterMap';
+import { ShapeGallery } from './ShapeGallery';
 
 const MOD = typeof navigator !== 'undefined' && /Mac/.test(navigator.platform) ? '⌘' : 'Ctrl+';
 
@@ -672,10 +674,9 @@ function DisplayModeSelect() {
   );
 }
 
-/** Math tab: clipboard, regions, operators and symbols, drawing tools. */
+/** Math tab: clipboard, regions, operators and symbols, selection. */
 function MathTab() {
   const tool = useCanvasStore((s) => s.tool);
-  const t = (id: ToolId, icon: LucideIcon, label: string) => <SmallButton icon={icon} label={label} active={tool === id} onClick={() => commands.setTool(id)} testId={`tool-${id}`} />;
   return (
     <>
       <Group label="Clipboard">
@@ -690,12 +691,11 @@ function MathTab() {
         <BigButton icon={Sigma} label="Math" title="Math region (or just type on the page)" active={tool === 'math'} onClick={() => commands.setTool('math')} testId="tool-math" />
         <BigButton icon={Type} label="Text" title="Text region (or type &quot;)" active={tool === 'text'} onClick={() => commands.setTool('text')} testId="tool-text" />
         <Col>
-          <SmallButton icon={ImagePlus} label="Image" title="Insert image" onClick={() => void commands.insertImage()} />
           <SmallButton icon={CheckSquare} label="Check" title="Insert check (≤ 1)" onClick={() => commands.insertCheck()} testId="insert-check" />
           <SmallButton icon={Heading} label="Heading" title="Section heading (shown in the outline)" onClick={() => addHeading(1)} />
+          <SmallButton icon={Heading2} label="Sub-heading" title="Sub-section heading (shown in the outline)" onClick={() => addHeading(2)} />
         </Col>
         <Col>
-          <SmallButton icon={Heading2} label="Sub-heading" title="Sub-section heading (shown in the outline)" onClick={() => addHeading(2)} />
           <SmallButton icon={Link2} label="Annex link" title="Link to a new annex block on the ANNEX page" onClick={() => insertAnnexLink()} testId="insert-annex" />
         </Col>
       </Group>
@@ -712,7 +712,17 @@ function MathTab() {
           <SmallButton icon={Ungroup} label="Ungroup" title={`Ungroup (${MOD}⇧G)`} onClick={commands.ungroup} />
         </Col>
       </Group>
-      <Group label="Draw">
+    </>
+  );
+}
+
+/** Insert tab: free drawing tools, ready-made shapes, images and special characters. */
+function InsertTab() {
+  const tool = useCanvasStore((s) => s.tool);
+  const t = (id: ToolId, icon: LucideIcon, label: string) => <SmallButton icon={icon} label={label} active={tool === id} onClick={() => commands.setTool(id)} testId={`tool-${id}`} />;
+  return (
+    <>
+      <Group label="Free Shapes">
         <Col>
           {t('select', MousePointer2, 'Select')}
           {t('hand', Hand, 'Pan')}
@@ -723,6 +733,15 @@ function MathTab() {
           {t('arrow', ArrowUpRight, 'Arrow')}
           {t('rect', Square, 'Rectangle')}
         </Col>
+      </Group>
+      <Group label="Shapes">
+        <ShapeGallery />
+      </Group>
+      <Group label="Image">
+        <BigButton icon={ImagePlus} label="Image" title="Insert an image (PNG, JPG, SVG…)" onClick={() => void commands.insertImage()} testId="insert-image" />
+      </Group>
+      <Group label="Symbols">
+        <CharacterMap />
       </Group>
     </>
   );
@@ -954,11 +973,12 @@ function HelpTab() {
   );
 }
 
-type RibbonTabId = 'math' | 'calculation' | 'plots' | 'math-format' | 'text-format' | 'document' | 'help';
+type RibbonTabId = 'math' | 'insert' | 'calculation' | 'plots' | 'math-format' | 'text-format' | 'document' | 'help';
 
 /** Mathcad Prime order. The tab stays where the user put it (no switching on selection). */
 const TAB_LABELS: [RibbonTabId, string][] = [
   ['math', 'Math'],
+  ['insert', 'Insert'],
   ['calculation', 'Calculation'],
   ['plots', 'Plots'],
   ['math-format', 'Math Formatting'],
@@ -990,6 +1010,7 @@ function RibbonTabs({ tab, setTab, only, label = 'Ribbon' }: { tab: RibbonTabId;
 
 const TAB_CONTENT: Record<RibbonTabId, () => ReactNode> = {
   math: MathTab,
+  insert: InsertTab,
   calculation: CalculationTab,
   plots: PlotsTab,
   'math-format': MathFormattingTab,

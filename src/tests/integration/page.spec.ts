@@ -31,6 +31,7 @@ test.describe('Page layout keeps content inside the margins', () => {
     await page.mouse.click(Math.max(5, w.left - 120), w.top + 100);
     await expect(page.locator('math-field')).toHaveCount(0);
     // double-click on the margin
+    await page.getByTestId('format-tab-insert').click();
     await page.getByTestId('tool-select').click();
     await page.mouse.dblclick(w.left - 30, w.top + 200);
     await expect(page.locator('math-field')).toHaveCount(0);
