@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { step } from '../step';
 import type { MathShape } from '../../canvas/model/types';
-import { calculateBatch, unitToLatex, type AvailableField } from '../../components/inputResults/batchCalculation';
+import { calculateBatch, caseShapes, unitToLatex, withInputValue, type AvailableField } from '../../components/inputResults/batchCalculation';
 import type { InputResultConfig } from '../../documents/DocumentTypes';
 
 const math = (id: string, y: number, latex: string): MathShape => ({
@@ -28,6 +28,16 @@ describe('Input & Results batch calculation', () => {
       expect(unitToLatex('kN/m')).toBe('\\,\\mathrm{kN}/\\mathrm{m}');
       expect(unitToLatex('kN·m²')).toBe('\\,\\mathrm{kN}\\cdot \\mathrm{m}^{2}');
       expect(unitToLatex('')).toBe('');
+    });
+    step('a case report shows the case value in the input region, nothing else changes', () => {
+      expect(withInputValue('N_{Ed}\\coloneq3000\\,\\mathrm{kN}', 6000)).toBe('N_{Ed}\\coloneq6000\\,\\mathrm{kN}');
+      expect(withInputValue('M\\coloneq-12.5\\,\\mathrm{kN}\\cdot\\mathrm{m}', 0.25)).toBe('M\\coloneq0.25\\,\\mathrm{kN}\\cdot\\mathrm{m}');
+      const shapes = [math('a', 0, 'L\\coloneq6\\mathrm{m}'), math('b', 40, 'M\\coloneq L^2')];
+      const config: InputResultConfig = { title: '', inputs: [{ id: 'l', regionId: 'a', label: 'L' }], outputs: [], rows: [] };
+      const out = caseShapes(config, { id: 'r', name: 'R', values: { l: 9 } }, shapes);
+      expect((out[0] as MathShape).props.latex).toBe('L\\coloneq9\\mathrm{m}');
+      expect(out[1]).toBe(shapes[1]);
+      expect((shapes[0] as MathShape).props.latex).toBe('L\\coloneq6\\mathrm{m}');
     });
     await step('calculates every row from numeric overrides without mutating the worksheet shapes', async () => {
       const shapes = {

@@ -5,6 +5,7 @@ import {
   Columns3,
   ExternalLink,
   Plus,
+  Printer,
   Settings2,
   Trash2,
   X,
@@ -20,6 +21,7 @@ import { useAppStore } from '../../store/appStore';
 import { useCalculationStore } from '../../store/calculationStore';
 import { startBatch, type AvailableField, type BatchResults } from './batchCalculation';
 import { CancelledError, type BatchHandle } from '../../store/batchClient';
+import { printCaseReports } from '../../export/caseReports';
 
 type RunState = 'not-run' | 'current' | 'stale' | 'running';
 
@@ -275,6 +277,22 @@ export function InputResultsPage() {
     }
   };
 
+  // Reports: every region of the chosen cases is calculated now (detail), printed, then dropped.
+  const [printing, setPrinting] = useState(false);
+  const printReports = async (rowIds?: string[]) => {
+    const rows = rowIds ? config.rows.filter((row) => rowIds.includes(row.id)) : config.rows;
+    if (!rows.length) return;
+    setPrinting(true);
+    try {
+      const results = await startBatch(config, fieldsMap, shapes, settings, { detail: true, rowIds: rows.map((row) => row.id) }).done;
+      await printCaseReports(config, fieldsMap, rows, results);
+    } catch (e) {
+      useAppStore.getState().showToast('error', `Report failed: ${(e as Error).message}`);
+    } finally {
+      setPrinting(false);
+    }
+  };
+
   const openSource = (regionId: string) => {
     setWorkspace('calculation');
     requestAnimationFrame(() => revealShape(regionId));
@@ -304,6 +322,9 @@ export function InputResultsPage() {
             className="ir-secondary-button"
           >
             <Plus size={15} aria-hidden /> Add row
+          </button>
+          <button type="button" onClick={() => void printReports()} disabled={!canCalculate || printing} className="ir-secondary-button" data-testid="print-reports" title="Summary of all cases, then the full worksheet for each case (PDF / print)">
+            <Printer size={15} aria-hidden /> {printing ? 'Preparing…' : 'Print reports'}
           </button>
           <button type="button" onClick={() => void runAll()} disabled={!canCalculate || runState === 'running'} className="ir-primary-button" data-testid="calculate-all-batch">
             <Calculator size={16} aria-hidden /> {runState === 'running' ? `Calculating ${progress.done}/${progress.total}…` : 'Calculate All'}
@@ -383,7 +404,7 @@ export function InputResultsPage() {
                           ? <span className="ir-status ir-status--error"><X size={12} aria-hidden /> Error</span>
                           : <span className="ir-status ir-status--current"><Check size={12} aria-hidden /> Current</span>)}
                       </td>
-                      <td className="ir-action-cell"><button type="button" aria-label={`Delete ${row.name}`} onClick={() => changeConfig({ ...config, rows: config.rows.filter((item) => item.id !== row.id) })} className="docs-tb-btn"><Trash2 size={14} aria-hidden /></button></td>
+                      <td className="ir-action-cell"><button type="button" aria-label={`Report for ${row.name}`} title="Print the worksheet for this case" data-testid="print-case" disabled={!canCalculate || printing} onClick={() => void printReports([row.id])} className="docs-tb-btn"><Printer size={14} aria-hidden /></button><button type="button" aria-label={`Delete ${row.name}`} onClick={() => changeConfig({ ...config, rows: config.rows.filter((item) => item.id !== row.id) })} className="docs-tb-btn"><Trash2 size={14} aria-hidden /></button></td>
                     </tr>
                   );
                 })}

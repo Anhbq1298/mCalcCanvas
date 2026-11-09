@@ -1,12 +1,15 @@
-import { memo } from 'react';
+import { memo, useContext } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useCalculationStore } from '../../store/calculationStore';
+import { ReportResults } from '../../store/reportResults';
 import { buildGraphData, graphRegionId, dataRange, GRAPH_FIELDS, niceStep, tickLabel, type Range } from '../graphData';
 import { fontStack, type GraphShape } from '../model/types';
 
 export const GraphView = memo(function GraphView({ shape }: { shape: GraphShape }) {
   const ids = shape.props.series.flatMap((s) => GRAPH_FIELDS.map((f) => graphRegionId(shape.id, s.id, f)));
-  const results = useCalculationStore(useShallow((st) => ids.map((id) => st.results[id])));
+  const report = useContext(ReportResults);
+  const live = useCalculationStore(useShallow((st) => ids.map((id) => st.results[id])));
+  const results = report ? ids.map((id) => report[id]) : live;
   const byId = new Map(ids.map((id, i) => [id, results[i]]));
   const data = buildGraphData(shape, (id) => byId.get(id));
   const { w, h, title, xLabel, yLabel, equalAxes, grid, axesAtOrigin, background } = shape.props;

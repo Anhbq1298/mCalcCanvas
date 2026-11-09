@@ -17,3 +17,26 @@ test('rectangular column template: load cases in Input & Results calculate UR fo
   await expect(page.getByText('FAIL', { exact: true })).toHaveCount(0);
   await page.screenshot({ path: 'test-results/ui-snapshots/rect-column-load-cases.png' });
 });
+
+test('rectangular column: case reports print a summary and the full worksheet per case', async ({ page }) => {
+  test.setTimeout(120_000);
+  await openFresh(page, 'rc-rectangular-column');
+  await page.getByRole('tab', { name: 'Input & Results' }).click();
+  await page.getByTestId('print-reports').click();
+  const root = page.locator('#print-root');
+  await expect(root.getByTestId('report-summary')).toBeAttached({ timeout: 60_000 });
+  await expect(root.locator('[data-testid=report-summary] tbody tr')).toHaveCount(5);
+  const sheets = await root.locator('section.print-page').count();
+  const perCase = (sheets - 1) / 5;
+  expect(Number.isInteger(perCase) && perCase > 5).toBe(true);
+  // LC2's pages: its own N_Ed in the input region and its own utilisation.
+  const lc2 = root.locator('section[data-case="LC2 max N"]');
+  await expect(lc2).toHaveCount(perCase);
+  await expect(lc2.locator('[data-latex^="N_{Ed}\\\\coloneq"]')).toHaveAttribute('data-latex', /coloneq6000/);
+  await expect(lc2.locator('[data-latex^="\\\\mathrm{UR}_{M}="]')).toHaveAttribute('data-result', /0\.6366/);
+  await expect(root.locator('[data-status=error]')).toHaveCount(0);
+  // A single case.
+  await page.getByRole('button', { name: 'Report for LC4 max My' }).click();
+  await expect(root.locator('section[data-case="LC4 max My"]')).toHaveCount(perCase, { timeout: 60_000 });
+  await expect(root.locator('section[data-case="LC2 max N"]')).toHaveCount(0);
+});

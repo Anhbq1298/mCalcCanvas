@@ -125,6 +125,13 @@ function allRegions(shapes: Record<string, Shape>, editingId: string | null): Ma
 
 let registeredAnnex = '';
 
+/** Every engine region of a worksheet (math and graph series), as the canvas registers them. */
+export function worksheetRegions(shapes: Record<string, Shape>): { id: string; input: RegionInput }[] {
+  const out: { id: string; input: RegionInput }[] = [];
+  for (const regions of allRegions(shapes, null).values()) for (const [id, input] of regions) out.push({ id, input });
+  return out;
+}
+
 /**
  * Registers every region with the engine. Regions whose input is unchanged keep
  * their results (a document load must not clear and recalculate a sheet that is

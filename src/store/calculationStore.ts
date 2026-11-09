@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+import { ReportResults } from './reportResults';
 import { create } from 'zustand';
 import type { CalculationResult } from '../engine';
 import { createEngineClient } from './engineClient';
@@ -26,5 +28,7 @@ engine.subscribe((ids) => {
 });
 
 export function useRegionResult(id: string): CalculationResult | undefined {
-  return useCalculationStore((s) => s.results[id]);
+  const report = useContext(ReportResults);
+  const live = useCalculationStore((s) => s.results[id]);
+  return report ? report[id] : live;
 }

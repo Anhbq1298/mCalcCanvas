@@ -4,7 +4,7 @@ import { useAppStore } from '../store/appStore';
  * Title block shown at the top and bottom of every A4 page — on the canvas
  * (Page Layout mode) and in the PDF, so what you see is what prints.
  */
-export function PageChrome({ index, total }: { index: number; total: number }) {
+export function PageChrome({ index, total, caseLabel }: { index: number; total: number; caseLabel?: string }) {
   const title = useAppStore((s) => s.title);
   const metadata = useAppStore((s) => s.metadata);
   const show = useAppStore((s) => s.settings.showHeaderFooter);
@@ -22,6 +22,7 @@ export function PageChrome({ index, total }: { index: number; total: number }) {
       <header className="print-header" data-testid="page-header" data-page-chrome>
         <div>
           <strong>{title}</strong>
+          {caseLabel && <span className="print-case"> · {caseLabel}</span>}
         </div>
         <div>{right}</div>
       </header>

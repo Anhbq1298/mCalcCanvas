@@ -1,5 +1,5 @@
-import { calcKey } from '../../canvas/engineBridge';
-import type { MathShape, Shape } from '../../canvas/model/types';
+import { worksheetRegions } from '../../canvas/engineBridge';
+import type { Shape } from '../../canvas/model/types';
 import type { InputResultConfig } from '../../documents/DocumentTypes';
 import type { BatchJob, BatchResults } from '../../engine/batch';
 import { runBatch, type BatchHandle, type BatchOptions } from '../../store/batchClient';
@@ -30,21 +30,13 @@ export function unitToLatex(unit: string): string {
 }
 
 /** The worksheet regions and per-row overrides of a run (pure; the engine runs it in a worker). */
-export function buildBatchJob(config: InputResultConfig, fields: Map<string, AvailableField>, shapes: Record<string, Shape>): BatchJob {
-  const mathShapes = Object.values(shapes).filter((shape): shape is MathShape => shape.type === 'math');
+export function buildBatchJob(config: InputResultConfig, fields: Map<string, AvailableField>, shapes: Record<string, Shape>, rowIds?: string[]): BatchJob {
+  const rows = rowIds ? config.rows.filter((row) => rowIds.includes(row.id)) : config.rows;
   return {
-    regions: mathShapes.map((shape) => ({
-      id: shape.id,
-      input: {
-        latex: shape.props.latex,
-        displayUnit: shape.props.displayUnit || null,
-        precision: shape.props.precision >= 0 ? shape.props.precision : null,
-        // Same order as the worksheet (annex blocks are calculated at their link).
-        order: calcKey(shape, shapes),
-      },
-    })),
+    // Math regions and graph series, ordered as on the worksheet (annex blocks at their link).
+    regions: worksheetRegions(shapes),
     inputIds: config.inputs.filter((column) => fields.get(column.regionId)?.kind === 'input').map((column) => column.regionId),
-    rows: config.rows.map((row) => ({
+    rows: rows.map((row) => ({
       id: row.id,
       overrides: config.inputs.flatMap((column) => {
         const source = fields.get(column.regionId);
@@ -62,9 +54,9 @@ export function startBatch(
   fields: Map<string, AvailableField>,
   shapes: Record<string, Shape>,
   settings: { unitSystem: 'SI' | 'Imperial'; precision: number },
-  opts: BatchOptions = {},
+  opts: BatchOptions & { rowIds?: string[] } = {},
 ): BatchHandle {
-  return runBatch(buildBatchJob(config, fields, shapes), settings, opts);
+  return runBatch(buildBatchJob(config, fields, shapes, opts.rowIds), settings, opts);
 }
 
 /** startBatch, awaited. */
@@ -73,7 +65,18 @@ export function calculateBatch(
   fields: Map<string, AvailableField>,
   shapes: Record<string, Shape>,
   settings: { unitSystem: 'SI' | 'Imperial'; precision: number },
-  opts: BatchOptions = {},
+  opts: BatchOptions & { rowIds?: string[] } = {},
 ): Promise<BatchResults> {
   return startBatch(config, fields, shapes, settings, opts).done;
+}
+
+/** Input LaTeX shown with a case's value ("N_{Ed}\\coloneq3000\\,\\mathrm{kN}" → 6000): the number after := is replaced. */
+export function withInputValue(latex: string, value: number): string {
+  return latex.replace(/(\\coloneq\s*|:=\s*)-?\d+(?:\.\d+)?(?:\{,\}\d+)?(?:[eE][+-]?\d+)?/, (_, op: string) => `${op}${String(value)}`);
+}
+
+/** The worksheet as it reads for one case: bound inputs show the case's values. */
+export function caseShapes(config: InputResultConfig, row: InputResultConfig['rows'][number], shapes: Shape[]): Shape[] {
+  const values = new Map(config.inputs.flatMap((c) => (row.values[c.id] === null || row.values[c.id] === undefined ? [] : [[c.regionId, row.values[c.id]!] as const])));
+  return shapes.map((s) => (s.type === 'math' && values.has(s.id) ? { ...s, props: { ...s.props, latex: withInputValue(s.props.latex, values.get(s.id)!) } } : s));
 }

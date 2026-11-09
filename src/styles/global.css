@@ -224,7 +224,7 @@ body {
 .ir-action-column { background: var(--color-muted); color: var(--color-muted-foreground); }
 .ir-case-column { left: 0; z-index: 5 !important; width: 112px; min-width: 112px; max-width: 112px; text-align: left; }
 .ir-status-column { width: 104px; min-width: 104px; max-width: 104px; text-align: left; }
-.ir-action-column { width: 38px; min-width: 38px; }
+.ir-action-column { width: 68px; min-width: 68px; }
 .ir-data-column {
   width: 1%;
   min-width: 104px;
@@ -292,7 +292,7 @@ body {
 .ir-status--warning { color: var(--color-warning); }
 .ir-status--error { color: var(--color-destructive); }
 .ir-status--current { color: var(--color-success); }
-.ir-action-cell { width: 38px; min-width: 38px; padding: 0 4px !important; background: var(--color-card); text-align: center; }
+.ir-action-cell { width: 68px; min-width: 68px; padding: 0 4px !important; background: var(--color-card); text-align: center; white-space: nowrap; }
 
 @media (max-width: 640px) {
   .ir-data-column,
@@ -532,3 +532,17 @@ body {
   border-top: 0.4pt solid var(--color-border-strong);
   padding-top: 2mm;
 }
+
+/* Input & Results case reports: summary page (first printed page) */
+.print-case { font-weight: 400; }
+.print-free { position: absolute; left: 20mm; right: 20mm; top: 24mm; bottom: 20mm; overflow: hidden; }
+.report-summary h1 { font-size: 18px; font-weight: 600; color: #1e3a5f; margin: 0 0 4px; }
+.report-stamp { font-size: 10px; color: #64748b; margin: 0 0 12px; }
+.report-summary table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+.report-summary th, .report-summary td { border: 1px solid #cbd2da; padding: 3px 5px; text-align: left; }
+.report-summary th { background: #f1f5f9; font-weight: 600; vertical-align: bottom; }
+.report-summary th small { display: block; font-weight: 400; color: #64748b; }
+.report-summary td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.report-summary td.is-pass { color: #047857; font-weight: 600; }
+.report-summary td.is-fail { color: #b91c1c; font-weight: 600; }
+.report-note { font-size: 10px; color: #64748b; margin-top: 10px; }
