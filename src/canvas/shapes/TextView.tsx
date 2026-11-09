@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useContext, useLayoutEffect, useRef } from 'react';
+import { ReportShapes } from '../../store/reportResults';
 import { stopEditing, updateShape, useCanvasStore } from '../model/canvasStore';
 import { useSeparateAfterEditing } from './useSeparate';
 import { fontStack, PARAGRAPH_STYLES, TEXT_STYLES, type TextShape } from '../model/types';
@@ -137,18 +138,22 @@ function placeCaret(root: HTMLElement, offset: number): void {
 
 /** Rendered content of an annex link or annex heading (number, title, page); null for other text. */
 function useAnnexHtml(shape: TextShape): string | null {
+  const reportShapes = useContext(ReportShapes);
   const role = shape.props.annex;
   const { canvasMode, pageOrientation } = useAppStore((s) => s.settings);
   return useCanvasStore((st) => {
     if (!role || role.kind === 'start') return null;
+    const shapes = reportShapes ?? st.shapes;
+    // Numbering and block membership follow the editable reading order;
+    // only destination page references use the planned print geometry.
     const info = annexInfo(st.shapes);
-    const page = (id: string) => (canvasMode === 'page' && st.shapes[id] ? ` · page ${pageNumberOf(st.shapes[id], pageOrientation)}` : '');
+    const page = (id: string) => (canvasMode === 'page' && shapes[id] ? ` · page ${pageNumberOf(shapes[id], pageOrientation)}` : '');
     if (role.kind === 'link') {
       const ls = info.links.get(shape.id);
       if (!ls?.block) return `▸ Annex link <span class="annex-bad">${escapeHtml(ls?.problem ?? 'Annex missing.')}</span>`;
       const b = ls.block;
-      const where = canvasMode === 'page' ? `see page ${pageNumberOf(st.shapes[b.heading], pageOrientation)}` : 'see annex';
-      return `▸ <b>${annexNumber(b.number)}</b> ${escapeHtml(blockTitle(st.shapes, b))} <span class="annex-page">· ${where}</span>`;
+      const where = canvasMode === 'page' ? `see page ${pageNumberOf(shapes[b.heading], pageOrientation)}` : 'see annex';
+      return `▸ <b>${annexNumber(b.number)}</b> ${escapeHtml(blockTitle(shapes, b))} <span class="annex-page">· ${where}</span>`;
     }
     const b = info.byHeading.get(shape.id);
     const title = shape.props.html || 'Annex';

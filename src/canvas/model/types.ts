@@ -36,7 +36,7 @@ export interface MathProps {
   vectorExpanded?: boolean;
   /** A literal definition that is not a user input (a code constant such as ν = 0.5): no input highlight. */
   constant?: boolean;
-  /** Box follows the rendered equation until resized manually. */
+  /** Legacy field: math region dimensions always follow the rendered content. */
   autoSize: boolean;
   fontSize: number;
   color: string;

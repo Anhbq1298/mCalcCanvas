@@ -1,7 +1,7 @@
 // RC circular column (EN 1992-1-1, shear EN 1992-1-1:2023): N–M at the moment direction (strips), UR checks, shear. Writes templates/RC_Circular_Column_Check.mCalcCanvas.
 import { createLayout, R } from './layout.mjs';
 
-const { st, need, gap, LINK, textAt, H, T, P, ROW, S, GRAPH, colTable, cv, M, mm, mm2, kN, kN1, kNm, MPa, deg, fr, fo, finish } =
+const { st, need, gap, LINK, KEEP, textAt, H, T, P, ROW, S, GRAPH, colTable, cv, M, mm, mm2, kN, kN1, kNm, MPa, deg, fr, fo, finish } =
   createLayout({ idPrefix: 's_col', sizesFile: 'sizes_col.json' });
 
 const SET2 = R`\delta_{2}`;
@@ -93,11 +93,13 @@ P('Set-2 bar coordinates, x', R`x_{l2}\coloneq ` + cosT('r_{2}', 'i_{2}', 'n_{l2
 P('Set-2 bar coordinates, y', R`y_{l2}\coloneq ` + sinT('r_{2}', 'i_{2}', 'n_{l2}'), M(fo));
 // bar tables
 need(1 + colTable(22));
+KEEP(() => {
 textAt(st.page, st.row, 'Set 1 (outer)', { x: 96, w: 280, size: 13, color: '#dc2626' });
 textAt(st.page, st.row, 'Set 2 (inner, used when nset = 2)', { x: 416, w: 300, size: 13, color: '#ea580c' });
 st.row += 0.5;
 ROW([[96, 'i_{1}=', cv('', 0)], [176, 'x_{l1}=', cv('mm', 0)], [296, 'y_{l1}=', cv('mm', 0)],
      [416, 'i_{2}=', cv('', 0)], [496, 'x_{l2}=', cv('mm', 0)], [596, 'y_{l2}=', cv('mm', 0)]], colTable(22));
+});
 });
 GRAPH(300, {
   title: 'Section', xUnit: 'mm', yUnit: 'mm', equalAxes: true,
@@ -160,16 +162,17 @@ const NP = 55;
 need(1 + colTable(NP));
 textAt(st.page, st.row, 'Control points at θM (N compression +)', { x: 96, w: 400, size: 13, color: '#1e3a5f' });
 st.row += 0.5;
-// Five columns: 11 px so they fit side by side without touching (the app pushes overlapping regions down).
-const cv11 = (unit, prec) => ({ ...cv(unit, prec), fontSize: 11 });
-ROW([[76, 'c_{v}=', cv11('mm', 0)], [196, R`\varepsilon_{top}=`, cv11('', 4)], [316, R`\varepsilon_{bar}=`, cv11('', 4)],
-     [456, 'N_{v}=', cv11('kN', 0)], [576, 'M_{v}=', cv11('kN m', 0)]], colTable(NP));
+// Expanded columns flow into labelled continuation panels; the shared planner packs them.
+ROW([[76, 'c_{v}=', cv('mm', 0)], [196, R`\varepsilon_{top}=`, cv('', 4)], [316, R`\varepsilon_{bar}=`, cv('', 4)],
+     [456, 'N_{v}=', cv('kN', 0)], [576, 'M_{v}=', cv('kN m', 0)]], colTable(NP));
 P('Max. axial resistance (uniform εc2)', R`N_{Rd.max}\coloneq\max\left(N_{v}\right)`, M(kN1, fr));
 P('Maximum moment resistance on the curve', R`M_{Rd.max}\coloneq\max\left(M_{v}\right)`, M(kNm, fr));
+KEEP(() => {
 P('Normalised N of the control points', R`n_{v}\coloneq\frac{N_{v}}{N_{Rd.max}}`, M(fo));
 P('Normalised M of the control points', R`m_{v}\coloneq\frac{M_{v}}{M_{Rd.max}}`, M(fo));
 P('Distance of each control point from the origin', R`\rho_{v}\coloneq\sqrt{n_{v}^2+m_{v}^2}`, M(fo));
 P('Direction of each point (sine of angle)', R`s_{v}\coloneq\frac{n_{v}}{\rho_{v}}`, M(fo));
+});
 });
 P('Max. axial resistance (uniform εc2)', R`N_{Rd.max}=`, M(kN1));
 P('Maximum moment resistance on the curve', R`M_{Rd.max}=`, M(kNm));

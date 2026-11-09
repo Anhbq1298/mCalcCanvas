@@ -24,6 +24,21 @@ export interface DisplayParts {
   check?: { pass: boolean };
 }
 
+/** Expanded numeric column vectors flow into labelled continuation panels, with every entry retained. */
+export function flowColumnVectors(latex: string, rowsPerPanel = 28): string {
+  return latex.replace(/\\begin\{bmatrix\}([\s\S]*?)\\end\{bmatrix\}/g, (matrix, body: string) => {
+    if (body.includes('&') || body.includes('\\begin') || body.includes('\\vdots')) return matrix;
+    const rows = body.split('\\\\');
+    if (rows.length <= rowsPerPanel) return matrix;
+    const panels: string[] = [];
+    for (let start = 0; start < rows.length; start += rowsPerPanel) {
+      const part = rows.slice(start, start + rowsPerPanel);
+      panels.push(`\\begin{array}{c}\\scriptstyle\\mathrm{rows}\\ ${start + 1}:${start + part.length}\\\\\\begin{bmatrix}${part.join('\\\\')}\\end{bmatrix}\\end{array}`);
+    }
+    return panels.join('\\quad');
+  });
+}
+
 function resolvedMode(mode: MathDisplayMode, result: CalculationResult): Exclude<MathDisplayMode, 'auto'> {
   if (mode !== 'auto') return mode;
   if (result.kind === 'definition') {

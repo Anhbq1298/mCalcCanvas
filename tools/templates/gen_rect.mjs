@@ -1,7 +1,7 @@
 // RC rectangular column (EN 1992-1-1, shear EN 1992-1-1:2023): biaxial P–Mθ (fibres), UR checks, shear. Writes templates/RC_Rectangular_Column_Check.mCalcCanvas.
 import { createLayout, R } from './layout.mjs';
 
-const { st, need, gap, LINK, textAt, H, T, P, ROW, S, GRAPH, colTable, cv, M, mm, mm2, kN, kNm, MPa, deg, fr, fo, FU, finish } =
+const { st, need, gap, LINK, KEEP, textAt, H, T, P, ROW, S, GRAPH, colTable, cv, M, mm, mm2, kN, kNm, MPa, deg, fr, fo, FU, finish } =
   createLayout({ idPrefix: 's_rect', sizesFile: 'sizes_rect.json' });
 
 
@@ -69,9 +69,11 @@ P('Bar index', R`k_{s}\coloneq\mathrm{seq}\left(0,n_{bar}-1\right)`, M(fo));
 P('x of each bar', R`x_{s}\coloneq\begin{array}{||l}\mathrm{if}\ k_{s}<n_{b}\\\quad\left\Vert\displaystyle -a_{x}+k_{s}s_{x}\right.\\\mathrm{else}\ \mathrm{if}\ k_{s}<2n_{b}\\\quad\left\Vert\displaystyle -a_{x}+\left(k_{s}-n_{b}\right)s_{x}\right.\\\mathrm{else}\ \mathrm{if}\ k_{s}<2n_{b}+n_{h}-2\\\quad\left\Vert\displaystyle -a_{x}\right.\\\mathrm{else}\\\quad\left\Vert\displaystyle a_{x}\right.\end{array}`, M(fo));
 P('y of each bar', R`y_{s}\coloneq\begin{array}{||l}\mathrm{if}\ k_{s}<n_{b}\\\quad\left\Vert\displaystyle a_{y}\right.\\\mathrm{else}\ \mathrm{if}\ k_{s}<2n_{b}\\\quad\left\Vert\displaystyle -a_{y}\right.\\\mathrm{else}\ \mathrm{if}\ k_{s}<2n_{b}+n_{h}-2\\\quad\left\Vert\displaystyle -a_{y}+\left(k_{s}-2n_{b}+1\right)s_{y}\right.\\\mathrm{else}\\\quad\left\Vert\displaystyle -a_{y}+\left(k_{s}-2n_{b}-n_{h}+3\right)s_{y}\right.\end{array}`, M(fo));
 need(1 + colTable(16));
+KEEP(() => {
 textAt(st.page, st.row, 'Bar table', { x: 96, w: 280, size: 13, color: '#1e3a5f' });
 st.row += 0.5;
 ROW([[96, 'k_{s}=', cv('', 0)], [176, 'x_{s}=', cv('mm', 0)], [296, 'y_{s}=', cv('mm', 0)]], colTable(16));
+});
 });
 P('Bar spacing (centres) along b', R`s_{x}=`, M(mm));
 P('Bar spacing (centres) along h', R`s_{y}=`, M(mm));
@@ -202,9 +204,11 @@ P('P–Mθ curve', R`N_{\theta v}\coloneq\mathrm{stack}\left(N_{R}\left(-0.1H_{\
 P('', R`M_{\theta v}\coloneq\mathrm{stack}\left(0\,\mathrm{kN}\cdot\mathrm{m},\mathrm{map}\left(M_{\theta},u_{t}\right),0\,\mathrm{kN}\cdot\mathrm{m}\right)`, M(fo));
 P('u of every curve point', R`u_{c}\coloneq\mathrm{stack}\left(-0.1,u_{t},100\right)`, M(fo));
 need(1 + colTable(17));
+KEEP(() => {
 textAt(st.page, st.row, 'P–Mθ control points', { x: 96, w: 400, size: 13, color: '#1e3a5f' });
 st.row += 0.5;
 ROW([[96, R`N_{\theta v}=`, cv('kN', 0)], [276, R`M_{\theta v}=`, cv('kN m', 0)]], colTable(17));
+});
 });
 P('Curve scaled by its maxima (the ratio does not depend on the scale)', R`n_{v}\coloneq\frac{N_{\theta v}}{\max\left(N_{\theta v}\right)}`, M(fo));
 P('', R`m_{v}\coloneq\frac{M_{\theta v}}{\max\left(M_{\theta v}\right)}`, M(fo));

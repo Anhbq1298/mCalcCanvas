@@ -28,3 +28,5 @@ test-results
 playwright-report
 dist-single
 tools/templates/*.pdf
+output/templates/
+output/pdf/

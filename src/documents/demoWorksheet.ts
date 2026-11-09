@@ -19,13 +19,13 @@ export function demoWorksheetShapes(): Shape[] {
         ...DEFAULT_TEXT_PROPS,
         w: opts.w ?? 330,
         html: opts.bold ? `<b>${escapeHtml(t)}</b>` : escapeHtml(t),
-        fontSize: opts.size ?? 14,
+        fontSize: opts.size ?? 13,
         color: opts.color ?? '#0f172a',
         ...(opts.heading ? { heading: opts.heading } : {}),
       },
     });
   const math = (x: number, y: number, latex: string, extra: Partial<MathProps> = {}) =>
-    out.push({ id: newShapeId(), type: 'math', x, y, props: { ...DEFAULT_MATH_PROPS, latex, ...extra } });
+    out.push({ id: newShapeId(), type: 'math', x, y, props: { ...DEFAULT_MATH_PROPS, fontSize: 16, latex, ...extra } });
 
   // Baseline of each line on major grid line n (40 px apart); snapped on load.
   const ln = (n: number) => 60 + 40 * n - 20;
@@ -54,6 +54,7 @@ export function demoWorksheetShapes(): Shape[] {
   math(96, ln(22), '\\eta_{M}\\le1');
 
   // Beam sketch: support line, span and load arrows.
+  const sketchStart = out.length;
   const S = '#1e3a5f';
   out.push({ id: newShapeId(), type: 'line', x: 440, y: 460, props: { x2: 220, y2: 0, stroke: S, strokeWidth: 2.5, arrow: false } });
   for (let i = 0; i <= 5; i++) {
@@ -64,5 +65,7 @@ export function demoWorksheetShapes(): Shape[] {
   out.push({ id: newShapeId(), type: 'draw', x: 660, y: 462, props: { points: [[0, 0], [-9, 15], [9, 15], [0, 0]], stroke: S, strokeWidth: 1.5 } });
   out.push({ id: newShapeId(), type: 'text', x: 520, y: 482, props: { ...DEFAULT_TEXT_PROPS, w: 60, align: 'center', html: '<i>L</i>', fontSize: 14, color: '#475569' } });
   out.push({ id: newShapeId(), type: 'text', x: 520, y: 396, props: { ...DEFAULT_TEXT_PROPS, w: 60, align: 'center', html: '<i>w</i>', fontSize: 14, color: '#2563eb' } });
+  const sketchGroup = newShapeId();
+  for (const shape of out.slice(sketchStart)) shape.groupId = sketchGroup;
   return out;
 }

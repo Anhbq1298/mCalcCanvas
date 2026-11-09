@@ -1,6 +1,7 @@
 import { AlertCircle, AlertTriangle, CheckCircle2, CircleDashed, XCircle } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { buildDisplay } from '../../math/MathFormatter';
+import { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import { ReportShapes } from '../../store/reportResults';
+import { buildDisplay, flowColumnVectors } from '../../math/MathFormatter';
 import { MathEditor } from '../../math/MathEditor';
 import { MathRenderer } from '../../math/MathRenderer';
 import { useRegionResult } from '../../store/calculationStore';
@@ -13,16 +14,20 @@ import { useSeen } from './useSeen';
 import { annexInfo, annexNumber, pageNumberOf } from '../annex';
 import { useAppStore } from '../../store/appStore';
 
-const PAD_X = 6;
-const PAD_Y = 4;
+const PAD_X = 4;
+const PAD_Y = 2;
 
 /** A math region: MathLive editor while editing, rendered equation + result otherwise. */
 export function MathView({ shape, editing, isStatic }: { shape: MathShape; editing: boolean; isStatic: boolean }) {
   const result = useRegionResult(shape.id);
   const contentRef = useRef<HTMLDivElement>(null);
   const probeRef = useRef<HTMLSpanElement>(null);
+  const measurementFrame = useRef(0);
   const { latex, displayMode, fontSize, color, textFont, equationFont, fontStyle, w, h } = shape.props;
-  const display = useMemo(() => buildDisplay(latex, result, displayMode), [latex, result, displayMode]);
+  const display = useMemo(() => {
+    const parts = buildDisplay(latex, result, displayMode);
+    return shape.props.vectorExpanded && shape.props.vectorLayout === 'column' ? { ...parts, latex: flowColumnVectors(parts.latex) } : parts;
+  }, [latex, result, displayMode, shape.props.vectorExpanded, shape.props.vectorLayout]);
   const hasResult = !!result;
   // Off-screen regions with a measured size are typeset when they come near the view.
   const seen = useSeen(contentRef, editing || isStatic || shape.props.baseline === undefined);
@@ -36,6 +41,9 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     // formula would move it (and the regions below) and back again when the result arrives.
     if ((!hasResult || !seen) && shape.props.baseline !== undefined && !editing) return;
     const fit = () => {
+      // Browser print media hides the editable canvas. Its zero dimensions
+      // are not equation measurements and must never enter the document.
+      if (!el.isConnected || el.getClientRects().length === 0) return;
       const nw = Math.max(24, Math.ceil(el.offsetWidth));
       const nh = Math.max(20, Math.ceil(el.offsetHeight));
       const patch: { w?: number; h?: number; baseline?: number } = {};
@@ -56,9 +64,12 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
       }
     };
     fit();
-    const ro = new ResizeObserver(fit);
+    const ro = new ResizeObserver(() => {
+      cancelAnimationFrame(measurementFrame.current);
+      measurementFrame.current = requestAnimationFrame(fit);
+    });
     ro.observe(el);
-    return () => ro.disconnect();
+    return () => { ro.disconnect(); cancelAnimationFrame(measurementFrame.current); };
   }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, isStatic, editing, display.latex, textFont, equationFont, fontStyle, hasResult, seen]);
 
   useSeparateAfterEditing(shape.id, editing, isStatic);
@@ -186,13 +197,14 @@ function StatusIcon({ kind, message }: { kind: 'error' | 'warning' | 'draft'; me
 
 /** For a region in a linked annex block: where the block is calculated. */
 function useAnnexHint(id: string): string | null {
+  const printShapes = useContext(ReportShapes);
   const orientation = useAppStore((s) => s.settings.pageOrientation);
   return useCanvasStore((st) => {
     const info = annexInfo(st.shapes);
     const link = info.anchorOf.get(id);
     if (!link) return null;
     const block = info.links.get(link)?.block;
-    const at = st.shapes[link];
+    const at = (printShapes ?? st.shapes)[link];
     if (!block || !at) return null;
     return `${annexNumber(block.number)} is calculated at its link on page ${pageNumberOf(at, orientation)}: it can only use names defined above that link.`;
   });

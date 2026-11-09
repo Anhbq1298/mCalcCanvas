@@ -12,6 +12,7 @@ import rcRectangularColumn from '../../templates/RC_Rectangular_Column_Check.mCa
 import { escapeHtml } from '../canvas/sanitize';
 import { demoWorksheetShapes } from './demoWorksheet';
 import { A4, PAGE_GAP } from '../export/pageGeometry';
+import { compactTemplate } from './templatePresentation';
 
 export type TemplateId = 'blank' | 'steel-beam' | 'rc-beam' | 'rc-circular-column' | 'rc-rectangular-column';
 
@@ -34,7 +35,7 @@ function fileTemplate(raw: string) {
   return {
     title: doc.title,
     metadata: doc.metadata,
-    settings: doc.settings,
+    settings: { ...doc.settings, optimizePrintLayout: true },
     shapes: (): Shape[] => instantiate().shapes,
     instantiate,
   };
@@ -64,14 +65,14 @@ function builder() {
         ...DEFAULT_TEXT_PROPS,
         w: o.w ?? 600,
         html: o.italic ? `<i>${body}</i>` : body,
-        fontSize: o.size ?? (o.heading ? st.fontSize : 14),
+        fontSize: o.size ?? (o.heading ? st.fontSize : 13),
         color: o.color ?? (o.heading ? st.color : '#475569'),
         ...(o.heading ? { heading: o.heading } : {}),
       },
     });
   };
   const math = (x: number, y: number, latex: string, extra: Partial<MathProps> = {}) =>
-    out.push({ id: newShapeId(), type: 'math', x, y, props: { ...DEFAULT_MATH_PROPS, latex, ...extra } });
+    out.push({ id: newShapeId(), type: 'math', x, y, props: { ...DEFAULT_MATH_PROPS, fontSize: 16, latex, ...extra } });
   return { out, text, math };
 }
 
@@ -117,6 +118,7 @@ function rcBeamShapes(): Shape[] {
   text(370, ln(12) + 3, 'tension bars of diameter ϕ', { w: 200, size: 12.5, italic: true });
 
   // Section sketch (to scale 300 × 600 → 60 × 120).
+  const sketchStart = out.length;
   const SX = 590;
   const SY = 60 + 40 * 9 + 10;
   const ink = '#1e3a5f';
@@ -125,6 +127,8 @@ function rcBeamShapes(): Shape[] {
   for (const cx of [SX + 13, SX + 30, SX + 47]) out.push(circle(cx, SY + 106, 3.5, '#dc2626'));
   out.push({ id: newShapeId(), type: 'text', x: SX, y: SY + 124, props: { ...DEFAULT_TEXT_PROPS, w: 60, h: 20, align: 'center', html: '<i>b</i>', fontSize: 13, color: '#475569' } });
   out.push({ id: newShapeId(), type: 'text', x: SX + 66, y: SY + 50, props: { ...DEFAULT_TEXT_PROPS, w: 20, h: 20, html: '<i>h</i>', fontSize: 13, color: '#475569' } });
+  const sketchGroup = newShapeId();
+  for (const shape of out.slice(sketchStart)) shape.groupId = sketchGroup;
 
   text(80, ln(13), '2.3 Span and loads', { heading: 3 });
   math(96, ln(14), 'L\\coloneq7.2\\,\\mathrm{m}');
@@ -187,8 +191,8 @@ export const TEMPLATES: WorksheetTemplate[] = [
     description: 'Two-page report with sections, inputs, full calculations, checks and a section sketch.',
     title: 'RC Beam Bending Design',
     metadata: { project: 'Project name', calculationReference: 'CALC-002', preparedBy: '', checkedBy: '', revision: 'A' },
-    settings: { snapToGrid: true },
-    shapes: rcBeamShapes,
+    settings: { snapToGrid: false, optimizePrintLayout: true },
+    shapes: () => compactTemplate('rc-beam', rcBeamShapes()),
   },
   {
     id: 'steel-beam',
@@ -196,7 +200,8 @@ export const TEMPLATES: WorksheetTemplate[] = [
     description: 'One-page sample: loads, bending moment, shear and a capacity check.',
     title: 'Simply Supported Steel Beam Calculation',
     metadata: { project: 'Demonstration project', calculationReference: 'CALC-001', preparedBy: '', checkedBy: '', revision: 'A' },
-    shapes: demoWorksheetShapes,
+    settings: { optimizePrintLayout: true },
+    shapes: () => compactTemplate('steel-beam', demoWorksheetShapes()),
   },
 ];
 

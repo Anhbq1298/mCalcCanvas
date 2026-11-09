@@ -60,6 +60,8 @@ export interface DocumentSettings {
   baselineSnap?: 'major' | 'minor';
   /** Snap region anchors to the worksheet grid. Free positioning when absent. */
   snapToGrid?: boolean;
+  /** Reflow a copy of the worksheet for printing; the editable layout stays unchanged. */
+  optimizePrintLayout?: boolean;
   /** Minimum number of pages (keeps inserted blank pages). */
   pages?: number;
   showMatrixIndices?: boolean;

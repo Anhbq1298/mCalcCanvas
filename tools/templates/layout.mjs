@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { optimizeTemplateLayout } from '../../src/canvas/templateLayout.ts';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const TPL = path.resolve(HERE, '../../templates');
 export const R = String.raw;
@@ -21,6 +22,12 @@ const id = () => `${idPrefix}_${(uid++).toString(36)}`;
 const STYLES = { 1: { fontSize: 20, color: '#1e3a5f' }, 2: { fontSize: 16, color: '#0f172a' }, 3: { fontSize: 14, color: '#334155' } };
 const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const out = [];
+/** Keep a caption and its compact table/figure on the same page. */
+const KEEP = (fn) => {
+  const start = out.length;
+  fn();
+  for (const shape of out.slice(start)) shape.groupId = `${idPrefix}_group_${start.toString(36)}`;
+};
 
 // ---- cursor ----
 let page = 0, row = 1;
@@ -63,15 +70,19 @@ const estW = (latex, o) => {
   const res = /\\(le|ge)/.test(latex) ? 120 + t.length * 6 : (o.math?.displayMode === 'formulaResult' || latex.endsWith('=')) ? 110 : 0;
   return t.length * 10 + res;
 };
-const XM = 400;
+const XM = 296;
 const XM_WIDE = 96;
 const SIZES = fs.existsSync(path.join(HERE, sizesFile)) ? JSON.parse(fs.readFileSync(path.join(HERE, sizesFile), 'utf8')) : {};
+const CATALOG = JSON.parse(fs.readFileSync(path.resolve(HERE, '../../src/documents/templateMetrics.json'), 'utf8'));
+const METRICS = CATALOG[sizesFile.includes('rect') ? 'rc-rectangular-column' : 'rc-circular-column'];
 /** Parameter: description to the left and the region on the same row; long formulas get the description above. */
 const P = (desc, latex, o = {}) => {
   const size = SIZES[latex];
   const hpx = size ? size[1] : null;
   const h = o.h ?? (hpx ? Math.max(1, Math.ceil((hpx + 4) / 40)) : hOf(latex, o));
-  const wide = o.wide ?? (size ? size[0] : estW(latex, o)) > 714 - XM;
+  const labelW = METRICS[esc(desc)]?.[3] ?? desc.length * 6.2;
+  const mathX = Math.max(XM, 76 + Math.ceil((labelW + 16) / 20) * 20);
+  const wide = o.wide ?? (size ? size[0] : estW(latex, o)) > 714 - mathX;
   if (wide) {
     const top0 = ln(page, row);
     const mTop = alignTop(top0 + 22, baseOf(latex));
@@ -82,15 +93,15 @@ const P = (desc, latex, o = {}) => {
     row += span; syncRow();
   } else {
     // description vertically centred on the region; a two-line description takes two rows
-    const lines = desc.length * 6.2 > XM - 96 ? 2 : 1;
+    const lines = labelW > mathX - 92 ? 2 : 1;
     const top0 = ln(page, row);
     const mTop = alignTop(top0, baseOf(latex));
     const hh = q(Math.max(mTop - top0 + (hpx ?? h * 40 - 8) + 6, lines === 2 ? 40 : 30) / 40);
     need(hh);
     const th = lines === 2 ? 34 : 18;
     const dy = hpx ? Math.max(0, Math.round(mTop - top0 + hpx / 2 - th / 2 - (hpx > 40 ? 4 : 0))) : 4;
-    textAt(page, row, desc, { size: 12, color: '#475569', w: XM - 90, x: 76, dy, floor: false });
-    mathAt(page, row, XM, latex, o.math ?? {});
+    textAt(page, row, desc, { size: 12, color: '#475569', w: mathX - 92, x: 76, dy, floor: false });
+    mathAt(page, row, mathX, latex, o.math ?? {});
     row += hh; syncRow();
   }
 };
@@ -155,18 +166,26 @@ const finish = ({ id: docId, title, reference, file, batch }) => {
     row += 1.0;
     a.fn();
   }
-  const pages = page + 1;
+  const metrics = METRICS;
+  const measured = out.map(s => {
+    const key = s.type === 'math' ? s.props.latex : s.type === 'text' ? s.props.html : null;
+    const size = key === null ? null : metrics[key];
+    return size ? { ...s, props: { ...s.props, h: size[1], ...(s.type === 'math' ? { w: size[0], baseline: size[2] } : {}) } } : s;
+  });
+  const layout = optimizeTemplateLayout(measured);
+  if (layout.issues.length) throw new Error(layout.issues.join('\n'));
+  const pages = layout.pages;
   const date = '2026-01-01T00:00:00.000Z';
   const doc = {
     format: 'calccanvas', id: docId, version: 3, title,
     metadata: { project: 'Project name', calculationReference: reference, preparedBy: 'Mark', checkedBy: '', revision: 'A' },
-    settings: { unitSystem: 'SI', precision: 2, canvasMode: 'page', pageOrientation: 'portrait', showHeaderFooter: true, textFont: 'Inter', baselineSnap: 'minor', pages },
-    inputResult: batchConfig(batch), shapes: out, createdAt: date, updatedAt: date,
+    settings: { unitSystem: 'SI', precision: 2, canvasMode: 'page', pageOrientation: 'portrait', showHeaderFooter: true, textFont: 'Inter', baselineSnap: 'minor', snapToGrid: false, optimizePrintLayout: true, pages },
+    inputResult: batchConfig(batch), shapes: layout.shapes, createdAt: date, updatedAt: date,
   };
   fs.writeFileSync(path.join(process.env.TEMPLATE_OUT ?? TPL, file), JSON.stringify(doc, null, 2));
   console.log('ok', out.length, 'pages', pages);
 };
 
-return { st, out, id, ln, need, gap, q, newPage, LINK, textAt, mathAt, H, T, P, ROW, S, GRAPH, GRAPH2, colTable, cv, M,
+return { st, out, id, ln, need, gap, q, newPage, LINK, KEEP, textAt, mathAt, H, T, P, ROW, S, GRAPH, GRAPH2, colTable, cv, M,
   mm, mm2, kN, kN1, kNm, MPa, deg, fr, fo, FU, XM, XM_WIDE, finish };
 }

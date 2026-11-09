@@ -248,6 +248,7 @@ export function parseDocument(input: unknown): CalculationDocument {
   if (!TEXT_FONTS[settings.textFont]) settings.textFont = 'Inter';
   settings.baselineSnap = settings.baselineSnap === 'minor' ? 'minor' : 'major';
   if (typeof settings.snapToGrid !== 'boolean') delete settings.snapToGrid;
+  if (typeof settings.optimizePrintLayout !== 'boolean') delete settings.optimizePrintLayout;
   settings.pages = Math.min(200, Math.max(1, Math.round(num(settings.pages, 1))));
   settings.showMatrixIndices = settings.showMatrixIndices === true;
   settings.collapseNestedMatrices = settings.collapseNestedMatrices === true;

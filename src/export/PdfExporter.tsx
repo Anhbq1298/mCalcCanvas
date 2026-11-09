@@ -8,15 +8,20 @@ import { createRoot, type Root } from 'react-dom/client';
 import { orderedShapes } from '../canvas/model/canvasStore';
 import { useAppStore } from '../store/appStore';
 import { PrintSheets, PrintView, type PrintSheet } from './PrintView';
-import { pageCount, shapesOnPage, shapesOutsidePrintArea } from './pageGeometry';
+import { marginPx, pageCount, pageSize, shapesOnPage, shapesOutsidePrintArea } from './pageGeometry';
+import { optimizeTemplateLayout } from '../canvas/layout';
 
 let root: Root | null = null;
 
 /** Render the printable pages into #print-root. */
 async function buildPrintView(): Promise<{ pages: number; outside: number }> {
   const { settings } = useAppStore.getState();
-  const shapes = orderedShapes();
-  const n = pageCount(shapes, settings.pageOrientation, settings.pages);
+  const source = orderedShapes();
+  const size = pageSize(settings.pageOrientation);
+  const plan = settings.optimizePrintLayout ? optimizeTemplateLayout(source, { width: size.w, height: size.h, margins: marginPx(), mode: 'print' }) : null;
+  if (plan?.issues.length) throw new Error(`Print layout cannot fit: ${plan.issues.join(', ')}`);
+  const shapes = plan?.shapes ?? source;
+  const n = plan?.pages ?? pageCount(shapes, settings.pageOrientation, settings.pages);
   const pages = Array.from({ length: n }, (_, i) => ({ index: i, shapes: shapesOnPage(shapes, i, settings.pageOrientation) }));
   await renderPrint(<PrintView pages={pages} />);
   return { pages: n, outside: shapesOutsidePrintArea(shapes, settings.pageOrientation).length };
@@ -40,7 +45,12 @@ export async function printSheets(sheets: PrintSheet[], title: string): Promise<
 }
 
 export async function exportPdf(): Promise<void> {
-  const { outside } = await buildPrintView();
+  let outside: number;
+  try { ({ outside } = await buildPrintView()); }
+  catch (error) {
+    useAppStore.getState().showToast('error', error instanceof Error ? error.message : 'Unable to prepare the print layout.');
+    return;
+  }
   if (outside > 0) {
     useAppStore.getState().showToast('info', `${outside} object${outside > 1 ? 's are' : ' is'} outside the print area and may be cut off.`);
   }

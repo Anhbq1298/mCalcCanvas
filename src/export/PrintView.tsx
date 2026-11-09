@@ -3,7 +3,7 @@ import { ShapeView } from '../canvas/shapes/ShapeView';
 import type { Shape } from '../canvas/model/types';
 import type { CalculationResult } from '../engine/CalculationEngine';
 import { useAppStore } from '../store/appStore';
-import { ReportResults } from '../store/reportResults';
+import { ReportResults, ReportShapes } from '../store/reportResults';
 import { PageChrome } from './PageChrome';
 import { currentPageSetup, pageBox, paperMm } from './pageGeometry';
 
@@ -14,7 +14,8 @@ export type PrintSheet =
 
 /** The printable A4 pages: each page renders its shapes in static mode plus the header/footer. */
 export function PrintView({ pages }: { pages: { index: number; shapes: Shape[] }[] }) {
-  return <PrintSheets sheets={pages.map((p) => ({ key: String(p.index), kind: 'page', index: p.index, shapes: p.shapes }))} />;
+  const shapes = Object.fromEntries(pages.flatMap(p => p.shapes).map(s => [s.id, s]));
+  return <ReportShapes.Provider value={shapes}><PrintSheets sheets={pages.map((p) => ({ key: String(p.index), kind: 'page', index: p.index, shapes: p.shapes }))} /></ReportShapes.Provider>;
 }
 
 export function PrintSheets({ sheets }: { sheets: PrintSheet[] }) {

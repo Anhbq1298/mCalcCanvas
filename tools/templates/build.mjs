@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '../..');
 const node = (f, ...args) => execFileSync(process.execPath, [path.join(HERE, f), ...args], { stdio: ['ignore', 'pipe', 'inherit'], cwd: ROOT }).toString();
-const server = spawn('npx', ['vite', 'preview', '--port', '4173', '--strictPort'], { cwd: ROOT, stdio: 'ignore' });
+const server = process.env.APP_URL ? null : spawn(process.execPath, [path.resolve(ROOT, 'node_modules/vite/bin/vite.js'), 'preview', '--port', '4173', '--strictPort'], { cwd: ROOT, stdio: 'ignore' });
 try {
   await new Promise((r) => setTimeout(r, 4000));
   for (const k of ['rect', 'col']) {
@@ -18,5 +18,5 @@ try {
   }
   if (process.argv.includes('--pdf')) process.stdout.write(node('pdf.mjs', 'RC_Rectangular_Column_Check', 'RC_Circular_Column_Check'));
 } finally {
-  server.kill();
+  server?.kill();
 }

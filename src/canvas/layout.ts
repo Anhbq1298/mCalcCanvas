@@ -13,6 +13,7 @@ import type { Shape } from './model/types';
 import { baselineOf, constrained } from './pageConstraint';
 import { printableBox } from '../export/pageGeometry';
 import { useAppStore } from '../store/appStore';
+export { optimizeTemplateLayout } from './templateLayout';
 
 export interface LayoutPlan {
   /** New y for each moved shape. */

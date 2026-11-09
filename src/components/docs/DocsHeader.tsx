@@ -1057,6 +1057,7 @@ function DocumentTab() {
         <Col>
           <SmallButton icon={FilePlus2} label="Blank page" title={withShortcut('Insert blank page', 'blank-page')} onClick={commands.insertBlankPage} testId="insert-page" disabled={!paged} />
           <SmallButton icon={FileMinus2} label="Delete empty page" onClick={commands.deletePage} disabled={!paged} testId="doc-delete-page" />
+          <Check label="Optimize print layout" testId="doc-optimize-print" checked={!!settings.optimizePrintLayout} onChange={(value) => updateSettings({ optimizePrintLayout: value })} title="Reflow a copy for printing, preserving the worksheet arrangement" />
         </Col>
       </Group>
     </>
