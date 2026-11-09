@@ -121,6 +121,19 @@ describe('map, linterp, stack', () => {
     expect(num(e, 'out')).toBeCloseTo(2.5, 12);
   });
 
+  it('linterp on x data that turns back uses the first segment containing x', () => {
+    const e = setup({
+      x: 'x_{w}\\coloneq\\mathrm{stack}\\left(0,10,9,20\\right)',
+      y: 'y_{w}\\coloneq\\mathrm{stack}\\left(0,100,90,200\\right)',
+      a: '\\mathrm{linterp}\\left(x_{w},y_{w},5\\right)=',
+      b: '\\mathrm{linterp}\\left(x_{w},y_{w},15\\right)=',
+      c: '\\mathrm{linterp}\\left(x_{w},y_{w},30\\right)=',
+    });
+    expect(num(e, 'a')).toBeCloseTo(50, 12);
+    expect(num(e, 'b')).toBeCloseTo(150, 12);
+    expect(res(e, 'c').error?.message).toMatch(/not in increasing or decreasing order/);
+  });
+
   it('stack joins scalars and vectors', () => {
     const e = setup({ r: '\\mathrm{stack}\\left(\\mathrm{seq}\\left(1,2\\right),5,\\mathrm{seq}\\left(7,8\\right)\\right)=' });
     expect(items(e, 'r')).toEqual([1, 2, 5, 7, 8]);

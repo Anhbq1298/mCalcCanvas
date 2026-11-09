@@ -5,7 +5,7 @@ import { graphRegionId } from '../../canvas/graphData';
 import { templateById, type TemplateId } from '../../documents/templates';
 
 /** Registers every math region and graph series field the way the canvas does, then lists errors. */
-function evaluate(id: TemplateId, inputs: Record<string, string> = {}) {
+function evaluate(id: TemplateId, inputs: Record<string, string> = {}, unitSystem: 'SI' | 'Imperial' = 'SI') {
   const tpl = templateById(id)!;
   const shapes = tpl.shapes();
   for (const s of shapes) {
@@ -13,7 +13,7 @@ function evaluate(id: TemplateId, inputs: Record<string, string> = {}) {
     for (const [prefix, latex] of Object.entries(inputs)) if (s.props.latex.startsWith(prefix)) s.props = { ...s.props, latex };
   }
   const rec = Object.fromEntries(shapes.map((x) => [x.id, x]));
-  const e = new CalculationEngine();
+  const e = new CalculationEngine({ unitSystem });
   const ids: string[] = [];
   e.batch(() => {
     for (const s of shapes) {
@@ -81,33 +81,36 @@ describe('column templates', () => {
   }, 30000);
 
   it('rectangular column shear to EN 1992-1-1:2023 §8.2.3: τ form, cot θmin (8.41) branches', () => {
+    // Shear does not depend on the fibre grid except through x (compared with 0.25d): a 12 × 12 grid keeps this test fast.
+    const coarse = { 'n_{f}\\coloneq': 'n_{f}\\coloneq12' };
+    const ev = (inputs: Record<string, string> = {}) => evaluate('rc-rectangular-column', { ...coarse, ...inputs });
     const num = (r: ReturnType<typeof evaluate>, k: string) => r.result(k)!.value!.number!;
     const COTMIN = '\\mathrm{cot}_{\\theta min.y}\\coloneq';
     const COT = '\\mathrm{cot}_{\\theta.y}\\coloneq';
     // Defaults: τEd = 400 kN / (500 · 0.9 · 737.5) = 1.205 MPa, x = 390 mm ≥ 0.25d → 2.5; links govern (VRd,s 755.5 kN).
-    const d = evaluate('rc-rectangular-column');
+    const d = ev();
     expect(d.errors).toEqual([]);
     expect(num(d, '\\tau_{Ed.y}\\coloneq')).toBeCloseTo(1.2053, 4);
     expect(num(d, COTMIN)).toBe(2.5);
     expect(num(d, '\\mathrm{UR}_{V.y}\\coloneq')).toBeCloseTo(400 / 755.5, 3);
     // Tension: 2.5 − 0.1 · 500 / 400 = 2.375; large tension stops at 1.
-    const t = evaluate('rc-rectangular-column', { 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq-500\\,\\mathrm{kN}' });
+    const t = ev({ 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq-500\\,\\mathrm{kN}' });
     expect(t.errors).toEqual([]);
     expect(num(t, COTMIN)).toBeCloseTo(2.375, 6);
     expect(num(t, COT)).toBeCloseTo(2.375, 6);
     // 2.5 − 0.1 · 3000 / 100 < 1 → 1 (NEd within the pure-tension resistance of 3415 kN).
-    expect(num(evaluate('rc-rectangular-column', { 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq-3000\\,\\mathrm{kN}', 'V_{Ed.y}\\coloneq': 'V_{Ed.y}\\coloneq100\\,\\mathrm{kN}' }), COTMIN)).toBe(1);
+    expect(num(ev({ 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq-3000\\,\\mathrm{kN}', 'V_{Ed.y}\\coloneq': 'V_{Ed.y}\\coloneq100\\,\\mathrm{kN}' }), COTMIN)).toBe(1);
     // Small compression chord (fck 60, φ16): σcp ≥ 3 MPa → 3.0; σcp = 0.75 MPa → 2.5 + 0.5 · 0.75 / 3.
     const base = { 'f_{ck}\\coloneq': 'f_{ck}\\coloneq60\\,\\mathrm{MPa}', '\\phi\\coloneq': '\\phi\\coloneq16\\,\\mathrm{mm}' };
-    const hi = evaluate('rc-rectangular-column', { ...base, 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq1280\\,\\mathrm{kN}' });
+    const hi = ev({ ...base, 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq1280\\,\\mathrm{kN}' });
     expect(hi.errors).toEqual([]);
     expect(num(hi, 'x_{y}\\coloneq')).toBeLessThan(0.25 * num(hi, 'd_{y}\\coloneq'));
     expect(num(hi, COTMIN)).toBe(3);
-    expect(num(evaluate('rc-rectangular-column', { ...base, 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq300\\,\\mathrm{kN}' }), COTMIN)).toBeCloseTo(2.625, 6);
+    expect(num(ev({ ...base, 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq300\\,\\mathrm{kN}' }), COTMIN)).toBeCloseTo(2.625, 6);
     // Strut limits cotθ: τEd = 4.218 MPa, ν·fcd = 9.917 → cotθ = a/2 + √((a/2)² − 1) with a/2 = 1.1755.
     // Class A links: cot θmin × 0.8.
-    expect(num(evaluate('rc-rectangular-column', { '\\delta_{A}\\coloneq': '\\delta_{A}\\coloneq1' }), COTMIN)).toBe(2);
-    const s = evaluate('rc-rectangular-column', { 'V_{Ed.y}\\coloneq': 'V_{Ed.y}\\coloneq1400\\,\\mathrm{kN}' });
+    expect(num(ev({ '\\delta_{A}\\coloneq': '\\delta_{A}\\coloneq1' }), COTMIN)).toBe(2);
+    const s = ev({ 'V_{Ed.y}\\coloneq': 'V_{Ed.y}\\coloneq1400\\,\\mathrm{kN}' });
     const h = (0.5 * 19.8333) / (2 * num(s, '\\tau_{Ed.y}\\coloneq'));
     expect(num(s, COT)).toBeCloseTo(h + Math.sqrt(h * h - 1), 4);
     expect(num(s, '\\sigma_{cd.y}\\coloneq')).toBeCloseTo(0.5 * 19.8333, 3);
@@ -151,4 +154,11 @@ describe('column templates', () => {
       expect(gap).toBeGreaterThan(dw - 0.01);
     }
   }, 30000);
+
+  it('both column templates calculate without errors in US units', () => {
+    for (const id of ['rc-rectangular-column', 'rc-circular-column'] as const) {
+      const { errors } = evaluate(id, { 'n_{f}\\coloneq': 'n_{f}\\coloneq12' }, 'Imperial');
+      expect(errors, id).toEqual([]);
+    }
+  }, 60000);
 });

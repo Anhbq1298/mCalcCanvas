@@ -257,7 +257,10 @@ function callUserFunction(f: UserFunction, args: Value[]): Value {
   }
 }
 
-/** linterp(xs, ys, x): xs ascending or descending; outside the data it extrapolates the line through the first or last two points (as Mathcad). */
+/**
+ * linterp(xs, ys, x): xs ascending or descending; outside the data it extrapolates the line through the first or
+ * last two points (as Mathcad). xs that turn back use the first segment containing x (no extrapolation then).
+ */
 function linterp(xs: QVector, ys: QVector, x: Quantity): Quantity {
   if (xs.length !== ys.length || xs.length < 2) {
     throw new CalculationError('vector', 'linterp needs two vectors of the same length (at least 2 entries).');
@@ -270,8 +273,23 @@ function linterp(xs: QVector, ys: QVector, x: Quantity): Quantity {
   const asc = xv[xv.length - 1] >= xv[0];
   // Equal neighbours are allowed, and steps back within round-off.
   const tol = 1e-9 * Math.abs(xv[xv.length - 1] - xv[0]);
+  let monotonic = true;
   for (let k = 1; k < xv.length; k++) {
-    if (asc ? xv[k] < xv[k - 1] - tol : xv[k] > xv[k - 1] + tol) throw new CalculationError('domain', 'linterp: the x data must be in increasing or decreasing order.');
+    if (asc ? xv[k] < xv[k - 1] - tol : xv[k] > xv[k - 1] + tol) monotonic = false;
+  }
+  const at = (k: number) => {
+    const a = xv[k - 1];
+    const b = xv[k];
+    const w = b === a ? 0 : (t - a) / (b - a);
+    const y0 = ys.items[k - 1];
+    return addOrSubtract(y0, multiplyQ(addOrSubtract(ys.items[k], y0, '-'), w), '+');
+  };
+  if (!monotonic) {
+    // Data that turns back (e.g. a sweep with round-off wiggles): the first segment that brackets x.
+    for (let k = 1; k < xv.length; k++) {
+      if (Math.min(xv[k - 1], xv[k]) <= t && t <= Math.max(xv[k - 1], xv[k])) return at(k);
+    }
+    throw new CalculationError('domain', 'linterp: x is outside the x data, which is not in increasing or decreasing order (no extrapolation).');
   }
   for (let k = 1; k < xv.length; k++) {
     const a = xv[k - 1];
