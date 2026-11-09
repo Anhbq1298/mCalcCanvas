@@ -440,6 +440,7 @@ function MathFormattingTab() {
   const math = selected.filter((s): s is Extract<Shape, { type: 'math' }> => s.type === 'math');
   const first = math[0];
   const currentFontStyle = first?.props.fontStyle ?? 'normal';
+  const currentEquationFont = first?.props.equationFont ?? 'Math';
   const [unitDraft, setUnitDraft] = useState<string | null>(null);
   const [unitError, setUnitError] = useState<string | null>(null);
   const applyUnit = (raw: string) => {
@@ -483,7 +484,7 @@ function MathFormattingTab() {
     else patchSelected((sh) => (sh.type === 'math' ? { props: { resultFormat: undefined, trailingZeros: undefined, precision: -1, displayUnit: '', displayMode: 'auto' } } : null));
   };
   const resetFormatting = () =>
-    patchSelected((sh) => (sh.type === 'math' ? { props: { textFont: 'Inter', fontStyle: 'normal', fontSize: 16, color: '#0f172a', highlight: undefined } } : null));
+    patchSelected((sh) => (sh.type === 'math' ? { props: { textFont: 'Inter', equationFont: 'Math', fontStyle: 'normal', fontSize: 16, color: '#0f172a', highlight: undefined } } : null));
   const labels = settings.labelStyles ?? DEFAULT_LABEL_STYLES;
   const setLabel = (k: keyof typeof labels, c: string | null) => useAppStore.getState().updateSettings({ labelStyles: { ...labels, [k]: c ?? DEFAULT_LABEL_STYLES[k] } });
   const fmtNames: [string, string][] = [['general', 'General'], ['decimal', 'Decimal'], ['scientific', 'Scientific'], ['engineering', 'Engineering']];
@@ -570,42 +571,61 @@ function MathFormattingTab() {
       </Group>
       <Group label="Math Font">
         <Col>
-          <Field label="Text font">
-            <TBSelect
-              label="Text font of the selected equations"
-              testId="math-text-font"
-              disabled={!first}
-              value={first?.props.textFont ?? 'Inter'}
-              width={132}
-              style={{ fontFamily: fontStack(first?.props.textFont ?? 'Inter') }}
-              onChange={(v) => patchSelected((sh) => (sh.type === 'math' ? { props: { textFont: v } } : null))}
-              options={Object.keys(TEXT_FONTS).map((f) => [f, f])}
-            />
-          </Field>
-          <Field label="Font style">
-            <TBSelect
-              label="Font style of the selected equations"
-              testId="math-font-style"
-              disabled={!first}
-              value={currentFontStyle}
-              width={132}
-              onChange={(v) => patchSelected((sh) => (sh.type === 'math' ? { props: { fontStyle: v as MathFontStyle } } : null))}
-              options={[
-                ['normal', 'Regular'],
-                ['bold', 'Bold'],
-                ['italic', 'Italic'],
-                ['bold-italic', 'Bold Italic'],
-              ]}
-            />
-          </Field>
-          <div className="rb-field">
-            <SizeControl kinds={['math']} label="Equation size" />
-          </div>
-          <div className="rb-field">
+          <Row>
+            <Field label="Equation">
+              <TBSelect
+                label="Equation font family of the selected math regions"
+                testId="math-equation-font"
+                disabled={!first}
+                value={currentEquationFont}
+                width={112}
+                style={currentEquationFont === 'Math' ? undefined : { fontFamily: fontStack(currentEquationFont) }}
+                onChange={(v) => patchSelected((sh) => (sh.type === 'math' ? { props: { equationFont: v } } : null))}
+                options={[
+                  ['Math', 'Math default'],
+                  ...Object.keys(TEXT_FONTS).map((f) => [f, f] as [string, string]),
+                ]}
+              />
+            </Field>
+            <Field label="Text">
+              <TBSelect
+                label="Font for text embedded in the selected equations"
+                testId="math-text-font"
+                disabled={!first}
+                value={first?.props.textFont ?? 'Inter'}
+                width={112}
+                style={{ fontFamily: fontStack(first?.props.textFont ?? 'Inter') }}
+                onChange={(v) => patchSelected((sh) => (sh.type === 'math' ? { props: { textFont: v } } : null))}
+                options={Object.keys(TEXT_FONTS).map((f) => [f, f])}
+              />
+            </Field>
+          </Row>
+          <Row>
+            <Field label="Style">
+              <TBSelect
+                label="Font style of the selected equations"
+                testId="math-font-style"
+                disabled={!first}
+                value={currentFontStyle}
+                width={112}
+                onChange={(v) => patchSelected((sh) => (sh.type === 'math' ? { props: { fontStyle: v as MathFontStyle } } : null))}
+                options={[
+                  ['normal', 'Regular'],
+                  ['bold', 'Bold'],
+                  ['italic', 'Italic'],
+                  ['bold-italic', 'Bold Italic'],
+                ]}
+              />
+            </Field>
+            <div className="rb-field">
+              <SizeControl kinds={['math']} label="Equation size" />
+            </div>
+          </Row>
+          <Row>
             <ColorButton testId="math-color" title="Equation color" kinds={['math']} />
             <SwatchPicker testId="math-highlight" title="Highlight the selected equations" value={first?.props.highlight ?? null} allowNone onPick={(c) => patchSelected((sh) => (sh.type === 'math' ? { props: { highlight: c ?? undefined } } : null))} />
-          </div>
-          <SmallButton icon={Eraser} label="Clear format" title="Reset text font, size, colour and highlight of the selected equations" disabled={!first} onClick={resetFormatting} testId="math-reset-format" />
+            <SmallButton icon={Eraser} label="Clear format" title="Reset equation font, text font, style, size, colour and highlight" disabled={!first} onClick={resetFormatting} testId="math-reset-format" />
+          </Row>
         </Col>
       </Group>
       <Group label="Label Styles">

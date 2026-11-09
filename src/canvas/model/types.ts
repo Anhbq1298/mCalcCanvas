@@ -26,6 +26,8 @@ export interface MathProps {
   highlight?: string;
   /** Font used by text embedded in the equation (for example, \\text{...}). */
   textFont?: string;
+  /** Font family for mathematical symbols. "Math" keeps the built-in math fonts. */
+  equationFont?: string;
   /** Overall presentation style for the rendered equation. */
   fontStyle?: MathFontStyle;
   /** How a vector result is shown: a compact row (default) or a column with every entry. */
@@ -235,6 +237,7 @@ export const DEFAULT_MATH_PROPS: MathProps = {
   displayUnit: '',
   precision: -1,
   textFont: 'Inter',
+  equationFont: 'Math',
   fontStyle: 'normal',
   autoSize: true,
   fontSize: 18,

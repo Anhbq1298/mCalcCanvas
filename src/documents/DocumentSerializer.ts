@@ -100,6 +100,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           ...(typeof p.trailingZeros === 'boolean' ? { trailingZeros: p.trailingZeros } : {}),
           ...(typeof p.highlight === 'string' && /^#[0-9a-fA-F]{6}$/.test(p.highlight) ? { highlight: p.highlight } : {}),
           textFont: TEXT_FONTS[str(p.textFont)] ? str(p.textFont) : 'Inter',
+          equationFont: str(p.equationFont) === 'Math' || TEXT_FONTS[str(p.equationFont)] ? str(p.equationFont) : 'Math',
           fontStyle: ['normal', 'bold', 'italic', 'bold-italic'].includes(str(p.fontStyle)) ? str(p.fontStyle) as MathFontStyle : 'normal',
           // Math regions are intrinsically sized; keep the legacy field only
           // so older documents round-trip into the current behaviour.

@@ -21,7 +21,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   const result = useRegionResult(shape.id);
   const contentRef = useRef<HTMLDivElement>(null);
   const probeRef = useRef<HTMLSpanElement>(null);
-  const { latex, displayMode, fontSize, color, textFont, fontStyle, w, h } = shape.props;
+  const { latex, displayMode, fontSize, color, textFont, equationFont, fontStyle, w, h } = shape.props;
   const display = useMemo(() => buildDisplay(latex, result, displayMode), [latex, result, displayMode]);
   const hasResult = !!result;
   // Off-screen regions with a measured size are typeset when they come near the view.
@@ -59,7 +59,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     const ro = new ResizeObserver(fit);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, isStatic, editing, display.latex, textFont, fontStyle, hasResult, seen]);
+  }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, isStatic, editing, display.latex, textFont, equationFont, fontStyle, hasResult, seen]);
 
   useSeparateAfterEditing(shape.id, editing, isStatic);
 
@@ -103,6 +103,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
       data-redefines={result?.redefines ? result.redefines.name : undefined}
       data-input={isInput || undefined}
       data-font-style={fontStyle ?? 'normal'}
+      data-equation-font={equationFont ?? 'Math'}
       title={
         result?.redefines
           ? `Redefines ${result.redefines.name}: regions below this one use this value; regions above keep the earlier one.`
@@ -113,6 +114,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
           '--math-size': `${fontSize}px`,
           '--math-color': isInput ? INPUT_COLOR : color,
           '--text-font-family': fontStack(textFont ?? 'Inter'),
+          '--equation-font-family': fontStack(equationFont && equationFont !== 'Math' ? equationFont : 'Inter'),
           width: 'max-content',
           padding: `${PAD_Y}px ${PAD_X}px`,
           // Green outline: this region redefines a variable defined earlier.
