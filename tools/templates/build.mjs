@@ -13,7 +13,7 @@ try {
     for (let i = 0; i < 2; i++) { node(`gen_${k}.mjs`); node(`measure_${k}.mjs`); }
     process.stdout.write(node(`gen_${k}.mjs`));
     // Regions the app had to move (overlap or snapping): should be empty.
-    const moved = node(`measure_${k}.mjs`).split('\n').filter((l) => { const d = Number(l.split(' ')[1]); return Math.abs(d) > 20; });
+    const moved = node(`measure_${k}.mjs`).split('\n').filter((l) => l.trim() && Number(l.split(' ')[1]) !== 0);
     if (moved.length) console.warn(`${k}: ${moved.length} regions moved by the app, e.g.\n${moved.slice(0, 3).join('\n')}`);
   }
   if (process.argv.includes('--pdf')) process.stdout.write(node('pdf.mjs', 'RC_Rectangular_Column_Check', 'RC_Circular_Column_Check'));

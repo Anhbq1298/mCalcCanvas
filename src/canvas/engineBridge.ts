@@ -125,12 +125,19 @@ function allRegions(shapes: Record<string, Shape>, editingId: string | null): Ma
 
 let registeredAnnex = '';
 
-export function resyncAll(): void {
+/**
+ * Registers every region with the engine. Regions whose input is unchanged keep
+ * their results (a document load must not clear and recalculate a sheet that is
+ * already calculated); `force` (Calculate all) clears the engine first.
+ */
+export function resyncAll(opts: { force?: boolean } = {}): void {
   const { shapes, editingId } = useCanvasStore.getState();
+  const old = registered;
   registered = allRegions(shapes, editingId);
   registeredAnnex = annexSignature(shapes);
   engine.batch(() => {
-    engine.clear();
+    if (opts.force) engine.clear();
+    else for (const [shapeId, regions] of old) for (const id of regions.keys()) if (!registered.get(shapeId)?.has(id)) engine.removeRegion(id);
     for (const regions of registered.values()) for (const [id, input] of regions) engine.setRegion(id, input);
   });
 }

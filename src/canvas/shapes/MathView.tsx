@@ -22,12 +22,16 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   const probeRef = useRef<HTMLSpanElement>(null);
   const { latex, displayMode, autoSize, fontSize, color, w, h } = shape.props;
   const display = useMemo(() => buildDisplay(latex, result, displayMode), [latex, result, displayMode]);
+  const hasResult = !!result;
 
   // Auto-size: the box follows the rendered equation unless resized manually.
   useEffect(() => {
     if (isStatic || !autoSize) return;
     const el = contentRef.current;
     if (!el) return;
+    // A loaded region with a measured size waits for its first result: measuring the bare
+    // formula would move it (and the regions below) and back again when the result arrives.
+    if (!hasResult && shape.props.baseline !== undefined && !editing) return;
     const fit = () => {
       const nw = Math.max(24, Math.ceil(el.offsetWidth));
       const nh = Math.max(20, Math.ceil(el.offsetHeight));
@@ -52,7 +56,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     const ro = new ResizeObserver(fit);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, autoSize, isStatic, editing, display.latex]);
+  }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, autoSize, isStatic, editing, display.latex, hasResult]);
 
   useSeparateAfterEditing(shape.id, editing, isStatic);
 

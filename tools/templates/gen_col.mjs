@@ -160,8 +160,10 @@ const NP = 55;
 need(1 + colTable(NP));
 textAt(st.page, st.row, 'Control points at θM (N compression +)', { x: 96, w: 400, size: 13, color: '#1e3a5f' });
 st.row += 0.5;
-ROW([[96, 'c_{v}=', cv('mm', 0)], [216, R`\varepsilon_{top}=`, cv('', 4)], [340, R`\varepsilon_{bar}=`, cv('', 4)],
-     [476, 'N_{v}=', cv('kN', 0)], [596, 'M_{v}=', cv('kN m', 0)]], colTable(NP));
+// Five columns: 11 px so they fit side by side without touching (the app pushes overlapping regions down).
+const cv11 = (unit, prec) => ({ ...cv(unit, prec), fontSize: 11 });
+ROW([[76, 'c_{v}=', cv11('mm', 0)], [196, R`\varepsilon_{top}=`, cv11('', 4)], [316, R`\varepsilon_{bar}=`, cv11('', 4)],
+     [456, 'N_{v}=', cv11('kN', 0)], [576, 'M_{v}=', cv11('kN m', 0)]], colTable(NP));
 P('Max. axial resistance (uniform εc2)', R`N_{Rd.max}\coloneq\max\left(N_{v}\right)`, M(kN1, fr));
 P('Maximum moment resistance on the curve', R`M_{Rd.max}\coloneq\max\left(M_{v}\right)`, M(kNm, fr));
 P('Normalised N of the control points', R`n_{v}\coloneq\frac{N_{v}}{N_{Rd.max}}`, M(fo));

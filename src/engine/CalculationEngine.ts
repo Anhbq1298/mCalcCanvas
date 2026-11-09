@@ -151,6 +151,13 @@ export class CalculationEngine {
   private touchedNames = new Set<string>();
   private removedIds = new Set<string>();
   private createdCounter = 0;
+  /**
+   * When set, a long recalculation publishes the results finished so far every
+   * this many milliseconds (regions are calculated in reading order), so the
+   * worksheet fills in from the top instead of all at once. The worker sets it.
+   */
+  progressIntervalMs = 0;
+  private progress: { pass: Map<string, CalculationResult>; published: Set<string>; last: number } | null = null;
 
   constructor(settings: Partial<EngineSettings> = {}) {
     this.settings = { unitSystem: 'SI', precision: 2, ...settings };
@@ -215,7 +222,10 @@ export class CalculationEngine {
   }
 
   setSettings(settings: Partial<EngineSettings>): void {
-    this.settings = { ...this.settings, ...settings };
+    const next = { ...this.settings, ...settings };
+    // Unchanged settings (sent again on every document load) must not recalculate the sheet.
+    if ((Object.keys(next) as (keyof EngineSettings)[]).every((k) => next[k] === this.settings[k])) return;
+    this.settings = next;
     // Unit system and precision only change how values are displayed.
     for (const id of this.regions.keys()) this.pendingFormat.add(id);
     if (this.batchDepth === 0) this.flush();
@@ -414,7 +424,24 @@ export class CalculationEngine {
       this.values.delete(id);
       this.functions.delete(id);
     }
-    for (const id of dirty) {
+    // Reading order, so partial results fill the worksheet from the top.
+    const ordered = [...dirty].sort((a, b) => compareOrderKeys(this.regions.get(a)?.key ?? [], this.regions.get(b)?.key ?? []));
+    const published = new Set<string>();
+    this.progress = this.progressIntervalMs > 0 ? { pass, published, last: performance.now() } : null;
+    if (this.progress) {
+      // Inputs (no references) are instant: show them before any long calculation starts.
+      for (const id of ordered) {
+        if (this.graph.refsOf(id).size) continue;
+        try {
+          this.evaluateRegion(id, [], dirty, pass);
+        } catch {
+          // reported by the main loop below
+        }
+      }
+      this.progress.last = -Infinity;
+      this.publishProgress();
+    }
+    for (const id of ordered) {
       try {
         this.evaluateRegion(id, [], dirty, pass);
       } catch (e) {
@@ -429,8 +456,22 @@ export class CalculationEngine {
         });
       }
     }
+    this.progress = null;
     for (const [id, r] of pass) this.results.set(id, r);
-    this.emit([...new Set([...pass.keys(), ...removed])]);
+    this.emit([...new Set([...[...pass.keys()].filter((k) => !published.has(k)), ...removed])]);
+  }
+
+  /** Long recalculation: publish the results finished so far (they are final for this pass). */
+  private publishProgress(): void {
+    const p = this.progress;
+    if (!p || performance.now() - p.last < this.progressIntervalMs) return;
+    const fresh = [...p.pass.keys()].filter((k) => !p.published.has(k));
+    for (const k of fresh) {
+      this.results.set(k, p.pass.get(k)!);
+      p.published.add(k);
+    }
+    this.emit(fresh);
+    p.last = performance.now();
   }
 
   private emit(ids: string[]): void {
@@ -489,6 +530,7 @@ export class CalculationEngine {
       throw e;
     }
     pass.set(id, result);
+    this.publishProgress();
     return result;
   }
 

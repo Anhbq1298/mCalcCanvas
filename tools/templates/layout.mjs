@@ -48,7 +48,9 @@ const textAt = (pg, r, t, o = {}) => {
 const baseOf = (latex) => SIZES[latex]?.[2] ?? 20;
 const mathAt = (pg, r, x, latex, extra = {}, dyPx = 0) =>
   out.push({ id: id(), type: 'math', x, y: place(ln(pg, r) + dyPx, baseOf(latex), SIZES[latex]?.[1] ?? 32, true),
-    props: { w: 60, h: 32, latex, displayMode: 'auto', displayUnit: '', precision: -1, autoSize: true, fontSize: 16, color: '#0f172a', ...extra } });
+    // Measured size and baseline: the app then keeps the region where it is placed on load
+    // (an estimated baseline would be re-measured, move the region and recalculate the sheet).
+    props: { w: SIZES[latex]?.[0] ?? 60, h: SIZES[latex]?.[1] ?? 32, ...(SIZES[latex]?.[2] ? { baseline: SIZES[latex][2] } : {}), latex, displayMode: 'auto', displayUnit: '', precision: -1, autoSize: true, fontSize: 16, color: '#0f172a', ...extra } });
 
 const H = (level, t) => { need(level === 3 ? 2 : 2.5); if (level === 2 && row > 1) row += 0.5; textAt(page, row, t, { heading: level }); row += level === 1 ? 1.0 : 1.0; };
 const T = (t) => { need(0.5); textAt(page, row, t, { size: 13 }); row += 0.5; syncRow(); };

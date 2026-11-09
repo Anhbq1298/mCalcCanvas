@@ -97,7 +97,7 @@ export const commands = {
   },
 
   calculateAll() {
-    resyncAll();
+    resyncAll({ force: true });
     useAppStore.getState().showToast('info', 'All regions recalculated.');
   },
 

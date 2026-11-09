@@ -5,6 +5,8 @@ import type { CalculationResult } from '../CalculationEngine';
 import type { FromWorker, ToWorker } from './protocol';
 
 const engine = new CalculationEngine({ unitSystem: 'SI', precision: 2 });
+// Long recalculations (column templates take seconds) show results as they finish.
+engine.progressIntervalMs = 100;
 const post = (m: FromWorker) => (self as unknown as DedicatedWorkerGlobalScope).postMessage(m);
 
 engine.subscribe((ids) => {

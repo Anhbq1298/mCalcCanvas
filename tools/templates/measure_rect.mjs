@@ -14,7 +14,11 @@ await page.getByRole('menuitem', { name: 'File' }).click();
 const chooser = page.waitForEvent('filechooser');
 await page.getByRole('menuitem', { name: /Open file/ }).click();
 await (await chooser).setFiles({ name: 'x.mCalcCanvas', mimeType: '', buffer: d });
-await page.waitForTimeout(3000);
+// Wait for every result (result widths depend on them), then let the layout settle.
+await page.waitForFunction(() => { const r = [...document.querySelectorAll('[data-testid=math-region]')]; return r.length > 0 && r.every((e) => ['valid', 'error'].includes(e.getAttribute('data-status') ?? '')); }, null, { timeout: 120000 });
+// Then until the measured sizes stop changing.
+const sizesNow = () => page.evaluate(() => JSON.stringify(Object.values(window.__calccanvas.store.getState().shapes).map((s) => [s.y, s.props.w, s.props.h, s.props.baseline])));
+for (let prev = '', cur = await sizesNow(); cur !== prev; ) { await page.evaluate(() => window.__calccanvas.idle()); await page.waitForTimeout(500); prev = cur; cur = await sizesNow(); }
 const widths = await page.evaluate(() => Object.fromEntries(Object.values(window.__calccanvas.store.getState().shapes).filter(s => s.type === 'math').map(s => [s.props.latex, [Math.round(s.props.w), Math.round(s.props.h), Math.round(s.props.baseline ?? 20)]])));
 fs.writeFileSync(path.join(HERE, 'sizes_rect.json'), JSON.stringify(widths));
 const shapes = await page.evaluate(() => Object.values(window.__calccanvas.store.getState().shapes).map(s => [s.id, (s.props.latex ?? s.props.html ?? s.props.title).slice(0,30), Math.round(s.x), Math.round(s.y), Math.round(s.props.w), Math.round(s.props.h)]).sort((a,b)=>a[3]-b[3]));
