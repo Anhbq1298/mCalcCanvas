@@ -69,7 +69,8 @@ export class SaveCoordinator {
   /**
    * Save the latest revision (if needed) after any save already running.
    * Resolves when everything up to the revision current at call time is
-   * written, or the attempt failed. `force` writes even if nothing changed.
+   * written, or the attempt failed. `force` (an explicit Save) writes even
+   * if nothing changed and keeps a version snapshot.
    */
   flush(force = false): Promise<void> {
     if (this.timer) {
@@ -83,7 +84,7 @@ export class SaveCoordinator {
       this.running++;
       this.opts.onState('saving');
       try {
-        await this.opts.repository.put(doc);
+        await this.opts.repository.put(doc, { kind: force ? 'manual' : 'auto' });
         await this.opts.repository.setLastOpenedId(doc.id);
         this.savedRevision = Math.max(this.savedRevision, rev);
         this.opts.onSaved?.(doc);

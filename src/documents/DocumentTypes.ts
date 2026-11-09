@@ -135,4 +135,6 @@ export interface DocumentSummary {
   title: string;
   updatedAt: string;
   project?: string;
+  /** .mCCV file the worksheet was last opened from or saved to. */
+  fileName?: string;
 }

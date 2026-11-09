@@ -38,7 +38,7 @@ CI (`.github/workflows/ci.yml`) runs all of these; GitHub Pages deploys only aft
 - **Strict checks.** No tolerances on ≤ < ≥ > (`ComparisonPolicy`). Never compare or round displayed values.
 - **Untrusted input:** files, clipboard and pasted HTML go through `sanitizeShape` / `sanitizeHtml`. New shape props must be validated in `DocumentSerializer.sanitizeShape`.
 - **Layout changes:** plan them in `src/canvas/layout.ts` (pure), then apply them with one `updateShapes`. Wrap the user action and its consequences in `transaction()` so they form one undo step.
-- **Saving** goes through `SaveCoordinator`.
+- **Saving** goes through `SaveCoordinator`. Files are `.mCCV` only (`FILE_EXT` in `documentController.ts`); IndexedDB schema, versions and recovery are in `DocumentManager.ts` (see ARCHITECTURE.md → Persistence).
 - **Document format:** `DOCUMENT_VERSION` in `DocumentTypes.ts`. Optional new fields are fine; a breaking change needs a migration plus a test.
 - Small focused changes, strict TypeScript, no `any`.
 
@@ -57,9 +57,9 @@ Never weaken an assertion to make a test pass.
 
 ## 4. Calculation templates (column checks)
 
-The files are `templates/RC_Rectangular_Column_Check.mCalcCanvas` and `templates/RC_Circular_Column_Check.mCalcCanvas`.
+The files are `templates/RC_Rectangular_Column_Check.mCCV` and `templates/RC_Circular_Column_Check.mCCV` (`.mCCV` is the only worksheet/template extension; the content is the JSON document).
 
-**Never hand-edit the `.mCalcCanvas` JSON.** It is generated.
+**Never hand-edit the `.mCCV` JSON.** It is generated.
 
 To change a template:
 

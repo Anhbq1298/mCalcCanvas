@@ -1,4 +1,4 @@
-// RC circular column (EN 1992-1-1, shear EN 1992-1-1:2023): N–M at the moment direction (strips), UR checks, shear. Writes templates/RC_Circular_Column_Check.mCalcCanvas.
+// RC circular column (EN 1992-1-1, shear EN 1992-1-1:2023): N–M at the moment direction (strips), UR checks, shear. Writes templates/RC_Circular_Column_Check.mCCV.
 import { createLayout, R } from './layout.mjs';
 
 const { st, need, gap, LINK, KEEP, textAt, H, T, P, ROW, S, GRAPH, colTable, cv, M, mm, mm2, kN, kN1, kNm, MPa, deg, fr, fo, finish } =
@@ -239,4 +239,4 @@ H(2, '8. SUMMARY');
 P('Flexure utilisation ratio', R`\mathrm{UR}_{M}=`, M({ precision: 3 }));
 P('Shear utilisation ratio', R`\mathrm{UR}_{V}=`, M({ precision: 3 }));
 
-finish({ id: 'doc_rc_circular_column', title: 'RC Circular Column Check', reference: 'CALC-COL-01', file: 'RC_Circular_Column_Check.mCalcCanvas' });
+finish({ id: 'doc_rc_circular_column', title: 'RC Circular Column Check', reference: 'CALC-COL-01', file: 'RC_Circular_Column_Check.mCCV' });

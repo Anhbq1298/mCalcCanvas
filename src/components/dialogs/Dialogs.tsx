@@ -1,8 +1,9 @@
-import { FileText, FolderOpen, Trash2, X } from 'lucide-react';
+import { FolderOpen, History, Trash2, X } from 'lucide-react';
 import { commands } from '../../app/commands';
 import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
 import { DocumentManager } from '../../documents/DocumentManager';
-import { openDocument } from '../../documents/documentController';
+import { FILE_ICON, openDocument, restoreVersion } from '../../documents/documentController';
+import type { VersionSummary } from '../../documents/DocumentRepository';
 import type { DocumentSummary } from '../../documents/DocumentTypes';
 import { BUILTIN_CONSTANT_INFO, UNIT_SYMBOLS } from '../../engine/light';
 import { useAppStore } from '../../store/appStore';
@@ -36,10 +37,37 @@ export function Modal({ title, onClose, children, wide }: { title: string; onClo
   );
 }
 
+const VERSION_KIND: Record<VersionSummary['kind'], string> = { manual: 'Saved', auto: 'Autosave', migration: 'Before upgrade' };
+
+/** Version snapshots of one worksheet, each with Restore (the current state is kept as a version first). */
+function VersionList({ docId, onRestore }: { docId: string; onRestore(versionId: string): void }) {
+  const [versions, setVersions] = useState<VersionSummary[] | null>(null);
+  useEffect(() => {
+    void DocumentManager.listVersions(docId).then(setVersions, () => setVersions([]));
+  }, [docId]);
+  if (versions === null) return <p className="py-1 pl-8 text-[11px] text-muted-foreground">Loading…</p>;
+  if (!versions.length) return <p className="py-1 pl-8 text-[11px] text-muted-foreground">No earlier versions yet.</p>;
+  return (
+    <ul className="mb-1 space-y-0.5 pl-8" data-testid="version-list">
+      {versions.map((v) => (
+        <li key={v.id} className="flex items-center gap-2 text-[12px]">
+          <span className="min-w-0 flex-1 truncate">
+            {new Date(v.savedAt).toLocaleString()} <span className="text-muted-foreground">· {VERSION_KIND[v.kind]}</span>
+          </span>
+          <button type="button" onClick={() => onRestore(v.id)} className="cursor-pointer rounded px-2 py-0.5 text-[12px] font-medium text-[#0b57d0] hover:bg-muted">
+            Restore
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function OpenDialog({ onClose }: { onClose(): void }) {
   const currentId = useAppStore((s) => s.documentId);
   const [docs, setDocs] = useState<DocumentSummary[] | null>(null);
-  const reload = () => void DocumentManager.list().then(setDocs);
+  const [history, setHistory] = useState<string | null>(null);
+  const reload = () => void DocumentManager.list().then(setDocs, () => setDocs([]));
   useEffect(reload, []);
   return (
     <Modal title="Open worksheet" onClose={onClose}>
@@ -48,13 +76,13 @@ function OpenDialog({ onClose }: { onClose(): void }) {
         data-testid="open-file"
         onClick={async () => {
           onClose();
-          await commands.importJson();
+          await commands.openFile();
         }}
         className="mb-3 flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-border text-[13px] font-medium text-[#0b57d0] transition-colors duration-150 hover:bg-muted"
       >
-        <FolderOpen size={16} aria-hidden /> Open a file from your computer (.mCalcCanvas, .json)
+        <FolderOpen size={16} aria-hidden /> Open a .mCCV file from your computer
       </button>
-      <h3 className="mb-1 text-[12px] font-medium uppercase tracking-wide text-muted-foreground">Saved in this browser</h3>
+      <h3 className="mb-1 text-[12px] font-medium uppercase tracking-wide text-muted-foreground">Recent worksheets (saved in this browser)</h3>
       {docs === null ? (
         <p className="text-muted-foreground">Loading…</p>
       ) : docs.length === 0 ? (
@@ -62,39 +90,65 @@ function OpenDialog({ onClose }: { onClose(): void }) {
       ) : (
         <ul className="-mx-2 space-y-0.5" data-testid="document-list">
           {docs.map((d) => (
-            <li key={d.id} className="group flex items-center gap-2 rounded px-2 py-1.5 hover:bg-muted">
-              <FileText size={16} className="shrink-0 text-muted-foreground" aria-hidden />
-              <button
-                type="button"
-                className="min-w-0 flex-1 cursor-pointer text-left"
-                onClick={async () => {
-                  await openDocument(d.id);
-                  onClose();
-                }}
-              >
-                <div className="truncate font-medium">
-                  {d.title}
-                  {d.id === currentId && <span className="ml-2 text-[11px] font-normal text-accent">open</span>}
-                </div>
-                <div className="text-[11px] text-muted-foreground">
-                  {d.project ? `${d.project} · ` : ''}
-                  {new Date(d.updatedAt).toLocaleString()}
-                </div>
-              </button>
-              {d.id !== currentId && (
+            <li key={d.id} className="rounded hover:bg-muted/60">
+              <div className="group flex items-center gap-2 px-2 py-1.5">
+                <img src={FILE_ICON} width={16} height={16} alt="" className="shrink-0" />
                 <button
                   type="button"
-                  aria-label={`Delete ${d.title}`}
-                  className="flex h-7 w-7 cursor-pointer items-center justify-center rounded text-muted-foreground opacity-0 transition-opacity duration-150 hover:text-destructive focus:opacity-100 group-hover:opacity-100"
+                  className="min-w-0 flex-1 cursor-pointer text-left"
                   onClick={async () => {
-                    if (window.confirm(`Delete “${d.title}”? This cannot be undone.`)) {
-                      await DocumentManager.remove(d.id);
-                      reload();
-                    }
+                    await openDocument(d.id);
+                    onClose();
                   }}
                 >
-                  <Trash2 size={14} aria-hidden />
+                  <div className="truncate font-medium">
+                    {d.title}
+                    {d.id === currentId && <span className="ml-2 text-[11px] font-normal text-accent">open</span>}
+                  </div>
+                  <div className="truncate text-[11px] text-muted-foreground">
+                    {d.fileName ? `${d.fileName} · ` : ''}
+                    {d.project ? `${d.project} · ` : ''}
+                    {new Date(d.updatedAt).toLocaleString()}
+                  </div>
                 </button>
+                <button
+                  type="button"
+                  aria-label={`Version history of ${d.title}`}
+                  aria-expanded={history === d.id}
+                  title="Version history"
+                  className={
+                    'flex h-7 w-7 cursor-pointer items-center justify-center rounded text-muted-foreground transition-opacity duration-150 hover:text-foreground focus:opacity-100 group-hover:opacity-100 ' +
+                    (history === d.id ? 'opacity-100' : 'opacity-0')
+                  }
+                  onClick={() => setHistory(history === d.id ? null : d.id)}
+                >
+                  <History size={14} aria-hidden />
+                </button>
+                {d.id !== currentId && (
+                  <button
+                    type="button"
+                    aria-label={`Delete ${d.title}`}
+                    className="flex h-7 w-7 cursor-pointer items-center justify-center rounded text-muted-foreground opacity-0 transition-opacity duration-150 hover:text-destructive focus:opacity-100 group-hover:opacity-100"
+                    onClick={async () => {
+                      if (window.confirm(`Delete “${d.title}” and its version history? This cannot be undone.`)) {
+                        await DocumentManager.remove(d.id);
+                        reload();
+                      }
+                    }}
+                  >
+                    <Trash2 size={14} aria-hidden />
+                  </button>
+                )}
+              </div>
+              {history === d.id && (
+                <VersionList
+                  docId={d.id}
+                  onRestore={async (versionId) => {
+                    if (d.id !== currentId) await openDocument(d.id);
+                    await restoreVersion(versionId);
+                    onClose();
+                  }}
+                />
               )}
             </li>
           ))}
@@ -161,7 +215,7 @@ function AboutDialog({ onClose }: { onClose(): void }) {
     <Modal title="About CalcCanvas" onClose={onClose}>
       <p>An engineering calculation workspace: math regions with units, automatic recalculation and A4 report export.</p>
       <p className="mt-2 text-muted-foreground">
-        Built with its own canvas engine, MathLive and mathjs. Worksheets are stored locally in this browser (IndexedDB); use File → Save to file (.mCalcCanvas) to keep a copy or share it.
+        Built with its own canvas engine, MathLive and mathjs. Worksheets are stored locally in this browser (IndexedDB); use File → Save As to keep a copy as a .mCCV file or share it.
       </p>
     </Modal>
   );

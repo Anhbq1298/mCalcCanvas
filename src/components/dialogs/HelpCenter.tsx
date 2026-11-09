@@ -86,7 +86,7 @@ const HELP_SECTIONS: { id: string; title: string; body: ReactNode; text: string 
     text: 'pdf print export header footer page size reports',
     body: (
       <>
-        <p>File → Download PDF / Print (<Kbd k="Ctrl" />+<Kbd k="P" />) prints every page with the document's paper size, orientation and margins, without grid, rulers or selection marks. Choose “Save as PDF” in the print dialog.</p>
+        <p>File → Export PDF / Print (<Kbd k="Ctrl" />+<Kbd k="P" />) prints every page with the document's paper size, orientation and margins, without grid, rulers or selection marks. Choose “Save as PDF” in the print dialog.</p>
         <p>Table In&amp;Out → Print reports prints a summary of all cases and the full worksheet for each case.</p>
       </>
     ),

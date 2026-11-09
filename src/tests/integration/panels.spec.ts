@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
-import { newBlankWorksheet, openFresh, region, resultOf } from './helpers.ts';
+import { readFile } from 'node:fs/promises';
+import { editRegion, newBlankWorksheet, openFresh, region, resultOf, waitReady } from './helpers.ts';
 
 const pageCount = (page: Page) => page.locator('[data-testid=page-sheet]').count();
 
@@ -76,25 +77,97 @@ test.describe('Parameters panel', () => {
   });
 });
 
-test.describe('.mCalcCanvas files', () => {
-  test('save to a .mCalcCanvas file and open it again', async ({ page }) => {
+test.describe('.mCCV files', () => {
+  test.beforeEach(async ({ page }) => {
+    // Headless runs take the download path of Save As.
     await page.addInitScript(() => {
       delete (window as unknown as { showSaveFilePicker?: unknown }).showSaveFilePicker;
     });
     await openFresh(page);
+  });
+
+  const saveAs = async (page: Page) => {
     const dl = page.waitForEvent('download');
     await page.keyboard.press('Control+Shift+S');
     const download = await dl;
-    expect(download.suggestedFilename()).toBe('Simply Supported Steel Beam Calculation.mCalcCanvas');
-    const path = await download.path();
+    return { name: download.suggestedFilename(), text: await readFile((await download.path())!, 'utf8') };
+  };
+  const openFileNamed = async (page: Page, name: string, text: string) => {
+    await page.keyboard.press('Control+o');
+    const chooser = page.waitForEvent('filechooser');
+    await page.getByTestId('open-file').click();
+    const fc = await chooser;
+    expect(await fc.element().getAttribute('accept')).toBe('.mccv');
+    await fc.setFiles({ name, mimeType: '', buffer: Buffer.from(text) });
+  };
+
+  test('File menu offers only .mCCV; open → edit → save → reopen keeps the edit', async ({ page }) => {
+    await page.getByRole('menuitem', { name: 'File' }).click();
+    const items = await page.getByRole('menu').getByRole('menuitem').allTextContents();
+    expect(items.some((t) => t.startsWith('Save As… (.mCCV)'))).toBe(true);
+    expect(items.filter((t) => /json|mcalccanvas/i.test(t))).toEqual([]);
+    await page.keyboard.press('Escape');
+
+    const first = await saveAs(page);
+    expect(first.name).toBe('Simply Supported Steel Beam Calculation.mCCV');
+    expect(JSON.parse(first.text)).toMatchObject({ format: 'calccanvas', title: 'Simply Supported Steel Beam Calculation' });
 
     await newBlankWorksheet(page, 'page');
-    await page.getByRole('menuitem', { name: 'File' }).click();
-    const chooser = page.waitForEvent('filechooser');
-    await page.getByRole('menuitem', { name: /Open file/ }).click();
-    await (await chooser).setFiles({ name: 'beam.mCalcCanvas', mimeType: '', buffer: await (await import('node:fs/promises')).readFile(path!) });
+    await openFileNamed(page, 'beam.mCCV', first.text);
     await resultOf(page, 'M_{Ed}').toContain('257.39');
     expect((await region(page, 'L\\coloneq'))?.latex).toBe('L\\coloneq8.5\\,\\mathrm{m}');
+
+    await editRegion(page, (await region(page, 'L\\coloneq'))!.id, ['L:=10m']);
+    await resultOf(page, 'M_{Ed}').toBe('356.25 kN·m');
+    await page.keyboard.press('Control+s');
+    await expect(page.getByTestId('save-state')).toHaveText('Saved');
+    const second = await saveAs(page);
+    expect(second.name).toBe('Simply Supported Steel Beam Calculation.mCCV');
+    expect(second.text).toContain('L\\\\coloneq10');
+
+    // Reopen: the autosaved worksheet comes back after a reload, and the file opens again.
+    await page.reload();
+    await waitReady(page);
+    await resultOf(page, 'M_{Ed}').toBe('356.25 kN·m');
+    await newBlankWorksheet(page, 'page');
+    await openFileNamed(page, 'beam.mCCV', second.text);
+    await resultOf(page, 'M_{Ed}').toBe('356.25 kN·m');
+    // Recent documents show the .mCCV name.
+    await page.getByRole('menuitem', { name: 'File' }).click();
+    await expect(page.getByRole('menu').getByRole('menuitem', { name: 'Simply Supported Steel Beam Calculation.mCCV' }).first()).toBeVisible();
+  });
+
+  test('a legacy .mCalcCanvas (v2) file is migrated on open', async ({ page }) => {
+    const { text } = await saveAs(page);
+    const legacy = JSON.parse(text);
+    legacy.version = 2;
+    delete legacy.inputResult;
+    await newBlankWorksheet(page, 'page');
+    await openFileNamed(page, 'old beam.mCalcCanvas', JSON.stringify(legacy));
+    await expect(page.getByRole('status')).toContainText('Converted “old beam.mCalcCanvas” to the .mCCV format');
+    await resultOf(page, 'M_{Ed}').toContain('257.39');
+    const again = await saveAs(page);
+    expect(again.name).toMatch(/\.mCCV$/);
+    expect(JSON.parse(again.text).version).toBe(3);
+  });
+
+  test('version history restores an earlier state', async ({ page }) => {
+    await page.keyboard.press('Control+s');
+    await expect(page.getByTestId('save-state')).toHaveText('Saved');
+    await editRegion(page, (await region(page, 'L\\coloneq'))!.id, ['L:=10m']);
+    await resultOf(page, 'M_{Ed}').toBe('356.25 kN·m');
+    await expect(page.getByTestId('save-state')).toHaveText('Saved', { timeout: 10_000 });
+
+    await page.keyboard.press('Control+o');
+    const dlg = page.getByRole('dialog', { name: 'Open worksheet' });
+    await dlg.getByRole('button', { name: 'Version history of Simply Supported Steel Beam Calculation' }).click();
+    await expect(dlg.getByTestId('version-list').getByRole('listitem')).toHaveCount(2); // created + Ctrl+S
+    await dlg.getByTestId('version-list').getByRole('button', { name: 'Restore' }).first().click();
+    await resultOf(page, 'M_{Ed}').toBe('257.39 kN·m');
+    // The edited state was kept as a version before restoring.
+    await page.keyboard.press('Control+o');
+    await dlg.getByRole('button', { name: 'Version history of Simply Supported Steel Beam Calculation' }).click();
+    await expect(dlg.getByTestId('version-list').getByRole('listitem')).toHaveCount(4);
   });
 });
 

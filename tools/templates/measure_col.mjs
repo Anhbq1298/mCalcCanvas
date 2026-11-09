@@ -8,12 +8,12 @@ const browser = await chromium.launch({ ...(process.env.CHROME_PATH ? { executab
 const page = await browser.newPage({ viewport: { width: 1500, height: 1000 } });
 await page.goto(`${process.env.APP_URL ?? 'http://localhost:4173'}/?template=blank`);
 await page.waitForFunction(() => !!window.__calccanvas);
-const d = fs.readFileSync(path.join(TPL, 'RC_Circular_Column_Check.mCalcCanvas'));
+const d = fs.readFileSync(path.join(TPL, 'RC_Circular_Column_Check.mCCV'));
 const gen = Object.fromEntries(JSON.parse(d).shapes.map(s => [s.id, s.y]));
 await page.getByRole('menuitem', { name: 'File' }).click();
 const chooser = page.waitForEvent('filechooser');
-await page.getByRole('menuitem', { name: /Open file/ }).click();
-await (await chooser).setFiles({ name: 'x.mCalcCanvas', mimeType: '', buffer: d });
+await page.getByRole('menuitem', { name: /^Open…/ }).click(); await page.getByTestId('open-file').click();
+await (await chooser).setFiles({ name: 'x.mCCV', mimeType: '', buffer: d });
 // Wait for every result (result widths depend on them), then let the layout settle.
 await page.waitForFunction(() => { const r = [...document.querySelectorAll('[data-testid=math-region]')]; return r.length > 0 && r.every((e) => ['valid', 'error'].includes(e.getAttribute('data-status') ?? '')); }, null, { timeout: 120000 });
 // Then until the measured sizes stop changing.

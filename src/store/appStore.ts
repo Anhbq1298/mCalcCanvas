@@ -35,6 +35,10 @@ interface AppState {
   inputResult: InputResultConfig;
   createdAt: string;
   saveState: SaveState;
+  /** When the worksheet was last written to browser storage (ISO time). */
+  savedAt: string | null;
+  /** The .mCCV file linked with Save As in this session; `dirty` = edited since it was written. */
+  file: { name: string; dirty: boolean } | null;
   panelOpen: boolean;
   /** Left side panel (Outline / Parameters). */
   paramsOpen: boolean;
@@ -78,6 +82,8 @@ export const useAppStore = create<AppState>((set) => ({
   inputResult: EMPTY_INPUT_RESULT_CONFIG,
   createdAt: new Date().toISOString(),
   saveState: 'saved',
+  savedAt: null,
+  file: null,
   panelOpen: false,
   paramsOpen: true,
   leftTab: 'outline',

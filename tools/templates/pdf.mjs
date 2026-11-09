@@ -12,8 +12,8 @@ for (const f of process.argv.slice(2)) {
   await page.evaluate(() => { window.print = () => {}; });
   await page.getByRole('menuitem', { name: 'File' }).click();
   const chooser = page.waitForEvent('filechooser');
-  await page.getByRole('menuitem', { name: /Open file/ }).click();
-  await (await chooser).setFiles({ name: 'x.mCalcCanvas', mimeType: '', buffer: fs.readFileSync(path.join(TPL, `${f}.mCalcCanvas`)) });
+  await page.getByRole('menuitem', { name: /^Open…/ }).click(); await page.getByTestId('open-file').click();
+  await (await chooser).setFiles({ name: 'x.mCCV', mimeType: '', buffer: fs.readFileSync(path.join(TPL, `${f}.mCCV`)) });
   await page.waitForTimeout(6000);
   await page.getByTestId('export-pdf').click();
   await page.waitForTimeout(3000);

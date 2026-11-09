@@ -25,8 +25,8 @@ try {
       const doc = { format: 'calccanvas', version: 3, id, title: id, metadata: {}, settings: { unitSystem: 'SI', precision: 2, canvasMode: 'page', pageOrientation: 'portrait', showHeaderFooter: true, textFont: 'Inter', pages: original.pages, snapToGrid: false }, shapes: original.shapes };
       await page.getByRole('menuitem', { name: 'File' }).click();
       const chooser = page.waitForEvent('filechooser');
-      await page.getByRole('menuitem', { name: /Open file/ }).click();
-      await (await chooser).setFiles({ name: 'original.mCalcCanvas', mimeType: '', buffer: Buffer.from(JSON.stringify(doc)) });
+      await page.getByRole('menuitem', { name: /^Open…/ }).click(); await page.getByTestId('open-file').click();
+      await (await chooser).setFiles({ name: 'original.mCCV', mimeType: '', buffer: Buffer.from(JSON.stringify(doc)) });
     }
     await page.evaluate(() => window.__calccanvas.idle());
     if (paper || orientation) {
