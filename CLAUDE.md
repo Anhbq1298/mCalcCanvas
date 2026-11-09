@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Follow **AGENTS.md** (commands, ground rules, tests). Background:
+Follow **AGENTS.md** (working agreement, commands, rules, template workflow, engine gotchas). Background:
 
 - `docs/ARCHITECTURE.md` — modules and data flow
 - `docs/ENGINE_DESIGN.md` — parser, evaluation order, dependencies, units, numerics

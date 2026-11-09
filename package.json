@@ -12,7 +12,8 @@
     "lint": "oxlint src",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "templates:columns": "node tools/templates/build.mjs"
   },
   "dependencies": {
     "idb": "^8.0.4",

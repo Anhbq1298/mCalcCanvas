@@ -1,0 +1,22 @@
+import { chromium } from '@playwright/test';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+const TPL = path.resolve(HERE, '../../templates');
+const browser = await chromium.launch({ ...(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {}), args: ['--no-sandbox'] });
+const page = await browser.newPage({ viewport: { width: 1500, height: 1000 } });
+await page.goto(`${process.env.APP_URL ?? 'http://localhost:4173'}/?template=blank`);
+await page.waitForFunction(() => !!window.__calccanvas);
+const d = fs.readFileSync(path.join(TPL, 'RC_Rectangular_Column_Check.mCalcCanvas'));
+const gen = Object.fromEntries(JSON.parse(d).shapes.map(s => [s.id, s.y]));
+await page.getByRole('menuitem', { name: 'File' }).click();
+const chooser = page.waitForEvent('filechooser');
+await page.getByRole('menuitem', { name: /Open file/ }).click();
+await (await chooser).setFiles({ name: 'x.mCalcCanvas', mimeType: '', buffer: d });
+await page.waitForTimeout(3000);
+const widths = await page.evaluate(() => Object.fromEntries(Object.values(window.__calccanvas.store.getState().shapes).filter(s => s.type === 'math').map(s => [s.props.latex, [Math.round(s.props.w), Math.round(s.props.h), Math.round(s.props.baseline ?? 20)]])));
+fs.writeFileSync(path.join(HERE, 'sizes_rect.json'), JSON.stringify(widths));
+const shapes = await page.evaluate(() => Object.values(window.__calccanvas.store.getState().shapes).map(s => [s.id, (s.props.latex ?? s.props.html ?? s.props.title).slice(0,30), Math.round(s.x), Math.round(s.y), Math.round(s.props.w), Math.round(s.props.h)]).sort((a,b)=>a[3]-b[3]));
+for (const s of shapes) { const g = gen[s[0]]; const pg = Math.floor(g/1171); console.log(pg+1, s[3]-g, JSON.stringify(s.slice(1))); }
+await browser.close();
