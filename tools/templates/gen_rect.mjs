@@ -1,131 +1,10 @@
 // RC rectangular column (EN 1992-1-1, shear EN 1992-1-1:2023): biaxial P–Mθ (fibres), UR checks, shear. Writes templates/RC_Rectangular_Column_Check.mCalcCanvas.
-// Flow layout: every parameter has a description line above it; items flow down and break to new pages.
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-const HERE = path.dirname(fileURLToPath(import.meta.url));
-const TPL = path.resolve(HERE, '../../templates');
+import { createLayout, R } from './layout.mjs';
 
-const R = String.raw;
-const A4H = 1123, GAP = 48, LAST = 24;
-const ln = (page, n) => page * (A4H + GAP) + 80 + Math.round((40 * n - 40) / 20) * 20;
-const PG = A4H + GAP;
-/** Top of a region whose first baseline (b px below its top) sits on the first grid line at or below y + b. */
-const alignTop = (y, b) => { const o = Math.floor(y / PG) * PG + 60; return o + Math.ceil((y + b - o) / 20 - 1e-9) * 20 - b; };
-let floorY = 0;
-const place = (y, b, h, math, setFloor = true) => { const t = alignTop(math ? Math.max(y, floorY - 6) : y, b); if (setFloor) floorY = Math.max(floorY, t + (math ? h : 18)); return t; };
-const syncRow = () => { const r = (floorY + 2 - (page * PG + 80)) / 40 + 1; if (r > row) row = Math.ceil(r * 2 - 1e-9) / 2; };
-let uid = 0;
-const id = () => `s_rect_${(uid++).toString(36)}`;
-const STYLES = { 1: { fontSize: 20, color: '#1e3a5f' }, 2: { fontSize: 16, color: '#0f172a' }, 3: { fontSize: 14, color: '#334155' } };
-const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-const out = [];
+const { st, need, gap, LINK, textAt, H, T, P, ROW, S, GRAPH, colTable, cv, M, mm, mm2, kN, kNm, MPa, deg, fr, fo, FU, finish } =
+  createLayout({ idPrefix: 's_rect', sizesFile: 'sizes_rect.json' });
 
-// ---- cursor ----
-let page = 0, row = 1;
-const need = (rows) => { if (row + rows > LAST + 1) { page++; row = 1; } };
-const q = (r) => Math.ceil(r * 2 - 1e-9) / 2;
-const gap = (n = 1) => { row += q(n); };
 
-const ANNEX = [];
-const newPage = () => { page++; row = 1; };
-/** Annex link here; the block (fn) is written in the annex and calculated at this line. */
-const LINK = (aid, title, fn) => {
-  need(1);
-  out.push({ id: id(), type: 'text', x: 76, y: alignTop(ln(page, row), 15), props: { w: 630, h: 24, html: '', fontFamily: 'Inter', fontSize: 14, color: '#2563eb', align: 'left', annex: { kind: 'link', target: aid } } });
-  row += 1;
-  ANNEX.push({ aid, title, fn });
-};
-const textAt = (pg, r, t, o = {}) => {
-  const st = STYLES[o.heading] ?? { fontSize: 14, color: '#475569' };
-  out.push({
-    id: id(), type: 'text', x: o.x ?? 76, y: place(ln(pg, r) + (o.dy ?? 0), Math.round((o.size ?? st.fontSize) * 1.09), 0, false, o.floor !== false),
-    props: { w: o.w ?? 630, h: Math.ceil((o.size ?? st.fontSize) * 1.45), html: o.italic ? `<i>${esc(t)}</i>` : esc(t), fontFamily: 'Inter',
-      fontSize: o.size ?? st.fontSize, color: o.color ?? st.color, align: 'left', ...(o.heading ? { heading: o.heading } : {}), ...(o.annex ? { annex: o.annex } : {}) },
-  });
-};
-const baseOf = (latex) => SIZES[latex]?.[2] ?? 20;
-const mathAt = (pg, r, x, latex, extra = {}, dyPx = 0) =>
-  out.push({ id: id(), type: 'math', x, y: place(ln(pg, r) + dyPx, baseOf(latex), SIZES[latex]?.[1] ?? 32, true),
-    props: { w: 60, h: 32, latex, displayMode: 'auto', displayUnit: '', precision: -1, autoSize: true, fontSize: 16, color: '#0f172a', ...extra } });
-
-const H = (level, t) => { need(level === 3 ? 2 : 2.5); if (level === 2 && row > 1) row += 0.5; textAt(page, row, t, { heading: level }); row += level === 1 ? 1.0 : 1.0; };
-const T = (t) => { need(0.5); textAt(page, row, t, { size: 13 }); row += 0.5; syncRow(); };
-const hOf = (latex, o) => o.h ?? (o.displayMode === 'full' ? (latex.includes('\\frac') ? 4 : 2) : (latex.includes('\\frac') || /\\sqrt\{[^}]*\^/.test(latex) ? 2 : 1));
-/** Rough rendered width of a math region (px) – decides inline vs stacked. */
-const estW = (latex, o) => {
-  let t = latex.replace(/\\frac\{([^{}]*)\}\{([^{}]*)\}/g, (_, a, b) => (a.length > b.length ? a : b));
-  t = t.replace(/\\(left|right|mathrm|coloneq|cdot|,|\s)/g, (m) => (m === '\\coloneq' ? 'XX' : ''));
-  t = t.replace(/\\[a-zA-Z]+/g, 'X').replace(/[{}^]/g, '').replace(/_[^ ]?/g, '');
-  const res = /\\(le|ge)/.test(latex) ? 120 + t.length * 6 : (o.math?.displayMode === 'formulaResult' || latex.endsWith('=')) ? 110 : 0;
-  return t.length * 10 + res;
-};
-const XM = 400;
-const XM_WIDE = 96;
-const SIZES = fs.existsSync(path.join(HERE, 'sizes_rect.json')) ? JSON.parse(fs.readFileSync(path.join(HERE, 'sizes_rect.json'), 'utf8')) : {};
-/** Parameter: description to the left and the region on the same row; long formulas get the description above. */
-const P = (desc, latex, o = {}) => {
-  const size = SIZES[latex];
-  const hpx = size ? size[1] : null;
-  const h = o.h ?? (hpx ? Math.max(1, Math.ceil((hpx + 4) / 40)) : hOf(latex, o));
-  const wide = o.wide ?? (size ? size[0] : estW(latex, o)) > 714 - XM;
-  if (wide) {
-    const top0 = ln(page, row);
-    const mTop = alignTop(top0 + 22, baseOf(latex));
-    const span = q((mTop - top0 + (hpx ?? h * 40 - 8) + 6) / 40);
-    need(span);
-    textAt(page, row, desc, { size: 12, color: '#475569', dy: 0 });
-    mathAt(page, row, XM_WIDE, latex, o.math ?? {}, 22);
-    row += span; syncRow();
-  } else {
-    // description vertically centred on the region; a two-line description takes two rows
-    const lines = desc.length * 6.2 > XM - 96 ? 2 : 1;
-    const top0 = ln(page, row);
-    const mTop = alignTop(top0, baseOf(latex));
-    const hh = q(Math.max(mTop - top0 + (hpx ?? h * 40 - 8) + 6, lines === 2 ? 40 : 30) / 40);
-    need(hh);
-    const th = lines === 2 ? 34 : 18;
-    const dy = hpx ? Math.max(0, Math.round(mTop - top0 + hpx / 2 - th / 2 - (hpx > 40 ? 4 : 0))) : 4;
-    textAt(page, row, desc, { size: 12, color: '#475569', w: XM - 90, x: 76, dy, floor: false });
-    mathAt(page, row, XM, latex, o.math ?? {});
-    row += hh; syncRow();
-  }
-};
-
-/** Several regions side by side on one row (tables). */
-const ROW = (items, h) => { need(h); const f0 = floorY; let f1 = f0; for (const [x, latex, extra] of items) { floorY = f0; mathAt(page, row, x, latex, extra); f1 = Math.max(f1, floorY); } floorY = f1; row += q(h); syncRow(); };
-
-const mm = { displayUnit: 'mm', precision: 0 };
-const mm2 = { displayUnit: 'mm^2', precision: 0 };
-const kN = { displayUnit: 'kN', precision: 0 };
-const kN1 = { displayUnit: 'kN', precision: 1 };
-const kNm = { displayUnit: 'kN m', precision: 1 };
-const MPa = { displayUnit: 'MPa', precision: 1 };
-const deg = { displayUnit: 'deg', precision: 1 };
-const fr = { displayMode: 'formulaResult' };
-const fo = { displayMode: 'formula' };
-const FU = { displayMode: 'full' };
-const M = (...xs) => ({ math: Object.assign({}, ...xs) });
-const SET2 = R`\delta_{2}`;
-const COT = R`C_{\theta}`;
-
-const S = (sid, label, [x, y], style, color, width, extra = {}) => ({ id: sid, label, x, y, style, r: '', color, width, show: '', ...extra });
-const GBASE = { xLabel: '', yLabel: '', grid: false, axesAtOrigin: true, font: 'Roboto', background: '#fff9c4' };
-const GRAPH = (size, props) => {
-  const rows = (size + 16) / 40;
-  need(rows);
-  out.push({ id: id(), type: 'graph', x: Math.round((80 + 714) / 2 - size / 2), y: ln(page, row) - 8, props: { w: size, h: size, ...GBASE, ...props } });
-  row += q(rows);
-};
-const GRAPH2 = (size, a, b) => {
-  const rows = (size + 16) / 40;
-  need(rows);
-  out.push({ id: id(), type: 'graph', x: 80, y: ln(page, row) - 8, props: { w: size, h: size, ...GBASE, ...a } });
-  out.push({ id: id(), type: 'graph', x: 714 - size, y: ln(page, row) - 8, props: { w: size, h: size, ...GBASE, ...b } });
-  row += q(rows);
-};
-const colTable = (n) => (n * 14.6 + 30) / 40;
-const cv = (unit, prec) => ({ ...(unit ? { displayUnit: unit } : {}), precision: prec, vectorLayout: 'column', vectorExpanded: true, fontSize: 12 });
 
 // ================= 1. Basis =================
 H(1, 'RC RECTANGULAR COLUMN CHECK (EC2)');
@@ -190,8 +69,8 @@ P('Bar index', R`k_{s}\coloneq\mathrm{seq}\left(0,n_{bar}-1\right)`, M(fo));
 P('x of each bar', R`x_{s}\coloneq\begin{array}{||l}\mathrm{if}\ k_{s}<n_{b}\\\quad\left\Vert\displaystyle -a_{x}+k_{s}s_{x}\right.\\\mathrm{else}\ \mathrm{if}\ k_{s}<2n_{b}\\\quad\left\Vert\displaystyle -a_{x}+\left(k_{s}-n_{b}\right)s_{x}\right.\\\mathrm{else}\ \mathrm{if}\ k_{s}<2n_{b}+n_{h}-2\\\quad\left\Vert\displaystyle -a_{x}\right.\\\mathrm{else}\\\quad\left\Vert\displaystyle a_{x}\right.\end{array}`, M(fo));
 P('y of each bar', R`y_{s}\coloneq\begin{array}{||l}\mathrm{if}\ k_{s}<n_{b}\\\quad\left\Vert\displaystyle a_{y}\right.\\\mathrm{else}\ \mathrm{if}\ k_{s}<2n_{b}\\\quad\left\Vert\displaystyle -a_{y}\right.\\\mathrm{else}\ \mathrm{if}\ k_{s}<2n_{b}+n_{h}-2\\\quad\left\Vert\displaystyle -a_{y}+\left(k_{s}-2n_{b}+1\right)s_{y}\right.\\\mathrm{else}\\\quad\left\Vert\displaystyle -a_{y}+\left(k_{s}-2n_{b}-n_{h}+3\right)s_{y}\right.\end{array}`, M(fo));
 need(1 + colTable(16));
-textAt(page, row, 'Bar table', { x: 96, w: 280, size: 13, color: '#1e3a5f' });
-row += 0.5;
+textAt(st.page, st.row, 'Bar table', { x: 96, w: 280, size: 13, color: '#1e3a5f' });
+st.row += 0.5;
 ROW([[96, 'k_{s}=', cv('', 0)], [176, 'x_{s}=', cv('mm', 0)], [296, 'y_{s}=', cv('mm', 0)]], colTable(16));
 });
 P('Bar spacing (centres) along b', R`s_{x}=`, M(mm));
@@ -323,8 +202,8 @@ P('P–Mθ curve', R`N_{\theta v}\coloneq\mathrm{stack}\left(N_{R}\left(-0.1H_{\
 P('', R`M_{\theta v}\coloneq\mathrm{stack}\left(0\,\mathrm{kN}\cdot\mathrm{m},\mathrm{map}\left(M_{\theta},u_{t}\right),0\,\mathrm{kN}\cdot\mathrm{m}\right)`, M(fo));
 P('u of every curve point', R`u_{c}\coloneq\mathrm{stack}\left(-0.1,u_{t},100\right)`, M(fo));
 need(1 + colTable(17));
-textAt(page, row, 'P–Mθ control points', { x: 96, w: 400, size: 13, color: '#1e3a5f' });
-row += 0.5;
+textAt(st.page, st.row, 'P–Mθ control points', { x: 96, w: 400, size: 13, color: '#1e3a5f' });
+st.row += 0.5;
 ROW([[96, R`N_{\theta v}=`, cv('kN', 0)], [276, R`M_{\theta v}=`, cv('kN m', 0)]], colTable(17));
 });
 P('Curve scaled by its maxima (the ratio does not depend on the scale)', R`n_{v}\coloneq\frac{N_{\theta v}}{\max\left(N_{\theta v}\right)}`, M(fo));
@@ -394,26 +273,4 @@ P('Radial utilisation on P–Mθ (governs)', R`\mathrm{UR}_{M}=`, M({ precision:
 P('Shear along y', R`\mathrm{UR}_{V.y}=`, M({ precision: 3 }));
 P('Shear along x', R`\mathrm{UR}_{V.x}=`, M({ precision: 3 }));
 
-// ================= Annex =================
-// Compact: the ANNEX title and the blocks flow on from one page; a block starts a new page only when needed.
-newPage();
-textAt(page, row, 'ANNEX', { heading: 1, annex: { kind: 'start' } });
-row += 1.0;
-for (const a of ANNEX) {
-  need(3);
-  if (row > 2.2) row += 0.5;
-  textAt(page, row, a.title, { heading: 2, annex: { kind: 'heading', id: a.aid } });
-  row += 1.0;
-  a.fn();
-}
-
-const pages = page + 1;
-const now = new Date().toISOString();
-const doc = {
-  format: 'calccanvas', id: 'doc_rc_rectangular_column', version: 2, title: 'RC Rectangular Column Check',
-  metadata: { project: 'Project name', calculationReference: 'CALC-COL-02', preparedBy: 'Mark', checkedBy: '', revision: 'A' },
-  settings: { unitSystem: 'SI', precision: 2, canvasMode: 'page', pageOrientation: 'portrait', showHeaderFooter: true, textFont: 'Inter', baselineSnap: 'minor', pages },
-  shapes: out, createdAt: now, updatedAt: now,
-};
-fs.writeFileSync(path.join(TPL, 'RC_Rectangular_Column_Check.mCalcCanvas'), JSON.stringify(doc, null, 2));
-console.log('ok', out.length, 'pages', pages);
+finish({ id: 'doc_rc_rectangular_column', title: 'RC Rectangular Column Check', reference: 'CALC-COL-02', file: 'RC_Rectangular_Column_Check.mCalcCanvas' });

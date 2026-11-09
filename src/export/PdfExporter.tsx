@@ -6,39 +6,14 @@
 import { flushSync } from 'react-dom';
 import { createRoot, type Root } from 'react-dom/client';
 import { orderedShapes } from '../canvas/model/canvasStore';
-import { ShapeView } from '../canvas/shapes/ShapeView';
-import type { Shape } from '../canvas/model/types';
 import { useAppStore } from '../store/appStore';
-import { PageChrome } from './PageChrome';
-import { pageBox, pageCount, shapesOnPage, shapesOutsidePrintArea } from './pageGeometry';
+import { PrintView } from './PrintView';
+import { pageCount, shapesOnPage, shapesOutsidePrintArea } from './pageGeometry';
 
 let root: Root | null = null;
 
-function PrintView({ pages }: { pages: { index: number; shapes: Shape[] }[] }) {
-  const { settings } = useAppStore.getState();
-  const landscape = settings.pageOrientation === 'landscape';
-  const total = pages.length;
-  return (
-    <>
-      {pages.map(({ index, shapes }) => {
-        const box = pageBox(index, settings.pageOrientation);
-        return (
-          <section key={index} className={`print-page${landscape ? ' landscape' : ''}`} data-page={index + 1}>
-            <div className="print-content" style={{ position: 'absolute', left: -box.x, top: -box.y, width: 0, height: 0 }}>
-              {shapes.map((s) => (
-                <ShapeView key={s.id} shape={s} editing={false} isStatic />
-              ))}
-            </div>
-            <PageChrome index={index} total={total} />
-          </section>
-        );
-      })}
-    </>
-  );
-}
-
 /** Render the printable pages into #print-root. */
-export async function buildPrintView(): Promise<{ pages: number; outside: number }> {
+async function buildPrintView(): Promise<{ pages: number; outside: number }> {
   const el = document.getElementById('print-root');
   if (!el) throw new Error('#print-root missing');
   const { settings } = useAppStore.getState();

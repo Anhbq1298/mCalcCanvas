@@ -6,7 +6,7 @@ import { insertIntoActiveMath, templateToLatex } from '../../math/activeEditor';
 import type { PaletteSection } from '../ribbon/palettes';
 
 /** Insert a palette template into the open equation, or start a new region with it. */
-export function insertTemplate(latex: string): void {
+function insertTemplate(latex: string): void {
   if (!insertIntoActiveMath(latex)) commands.insertMath(templateToLatex(latex));
 }
 

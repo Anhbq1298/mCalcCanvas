@@ -45,7 +45,7 @@ export function LineView({ shape }: { shape: LineShape }) {
   );
 }
 
-export function drawPath(points: [number, number][]): string {
+function drawPath(points: [number, number][]): string {
   if (!points.length) return '';
   if (points.length === 1) return `M${points[0][0]},${points[0][1]} l0.01,0`;
   // Few points = a deliberate polygon (e.g. a support symbol): keep corners sharp.

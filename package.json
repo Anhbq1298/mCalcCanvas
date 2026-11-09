@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "build:single": "vite build -c vite.singlefile.config.ts",
     "typecheck": "tsc -b",
-    "lint": "oxlint src",
+    "lint": "oxlint src tools",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
