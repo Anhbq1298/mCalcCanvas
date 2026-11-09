@@ -35,6 +35,7 @@ export function errorOf(page: Page, latexPrefix: string) {
 
 export async function waitReady(page: Page) {
   await page.waitForFunction(() => !!(window as unknown as { __calccanvas?: unknown }).__calccanvas);
+  await page.evaluate(() => (window as unknown as { __calccanvas: { loaded: Promise<void> } }).__calccanvas.loaded);
   await expect(page.getByTestId('save-state')).toHaveText('Saved to this browser', { timeout: 10_000 });
 }
 

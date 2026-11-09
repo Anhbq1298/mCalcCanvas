@@ -2,7 +2,7 @@
  * Document lifecycle: new / open / save / autosave / JSON import & export.
  */
 import { focusPage, separateRegion } from '../canvas/canvasActions';
-import { resyncAll } from '../canvas/engineBridge';
+import { primeEngine, resyncAll } from '../canvas/engineBridge';
 import { loadShapes, orderedShapes, updateShapes, useCanvasStore } from '../canvas/model/canvasStore';
 import { pageSize } from '../export/pageGeometry';
 import { useAppStore } from '../store/appStore';
@@ -124,13 +124,20 @@ function withoutAutosave(fn: () => void) {
   }
 }
 
-export function loadDocument(doc: CalculationDocument): void {
+/** Lets a message just posted to the calculation worker reach it (see primeEngine). */
+const nextTask = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
+
+export async function loadDocument(doc: CalculationDocument): Promise<void> {
   withoutAutosave(() => {
     // Settings first: grid snapping depends on page layout and orientation.
     useAppStore.getState().setDocument(doc);
-    loadShapes(doc.shapes);
     applySettings();
-    // Results are never trusted from storage: recompute everything.
+  });
+  // Results are never trusted from storage: the worker recalculates while the canvas renders.
+  const placed = primeEngine(doc.shapes);
+  await nextTask();
+  withoutAutosave(() => {
+    loadShapes(placed);
     resyncAll();
     focusFirstPage();
   });
@@ -142,6 +149,7 @@ export async function newDocument(opts: { demo?: boolean; template?: TemplateId 
   const tpl = templateById(opts.template ?? (opts.demo ? 'steel-beam' : 'blank'));
   await flushBeforeSwitch();
   const made = tpl?.instantiate?.();
+  const shapes = made ? made.shapes : tpl ? tpl.shapes() : [];
   withoutAutosave(() => {
     useAppStore.getState().setDocument({
       id: newId(),
@@ -152,7 +160,11 @@ export async function newDocument(opts: { demo?: boolean; template?: TemplateId 
       createdAt: new Date().toISOString(),
     });
     applySettings();
-    loadShapes(made ? made.shapes : tpl ? tpl.shapes() : []);
+  });
+  const placed = primeEngine(shapes);
+  await nextTask();
+  withoutAutosave(() => {
+    loadShapes(placed);
     resyncAll();
     focusFirstPage();
   });
@@ -167,10 +179,14 @@ export async function openDocument(id: string): Promise<void> {
     useAppStore.getState().showToast('error', 'That worksheet no longer exists.');
     return;
   }
-  loadDocument(doc);
+  await loadDocument(doc);
 }
 
 export async function initDocuments(): Promise<void> {
+  // Let the calculation worker finish starting first: messages posted while it is
+  // still loading are only handed over when the UI thread is free, i.e. after the
+  // (long) first render of the worksheet. Posted now, they are calculated during it.
+  await engine.ready();
   // ?template=<id> always starts a new worksheet from that template (link-friendly);
   // the parameter is removed so a reload reopens the worksheet instead of creating another.
   const asked = new URLSearchParams(window.location.search).get('template');
@@ -295,7 +311,7 @@ export async function importJson(file: File): Promise<void> {
     }
     const doc = existing ? { ...parsed, id: newId() } : parsed;
     await flushBeforeSwitch();
-    loadDocument(doc);
+    await loadDocument(doc);
     await saveDocument();
     useAppStore.getState().showToast('info', `Imported “${doc.title}”.`);
   } catch (e) {

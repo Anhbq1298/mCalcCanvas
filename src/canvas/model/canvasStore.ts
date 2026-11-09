@@ -203,8 +203,13 @@ export function deleteShapes(ids: string[], opts: ChangeOptions = {}): void {
 }
 
 /** Replace the whole document (load / new). Clears undo history. */
+/** Shapes as loadShapes will place them (grid and page alignment). */
+export function placeShapes(list: Shape[]): Shape[] {
+  return list.map(normalizePosition);
+}
+
 export function loadShapes(list: Shape[]): void {
-  list = list.map(normalizePosition);
+  list = placeShapes(list);
   const shapes: Record<string, Shape> = {};
   for (const s of list) shapes[s.id] = s;
   set({

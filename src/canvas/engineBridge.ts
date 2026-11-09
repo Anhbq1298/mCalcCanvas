@@ -12,7 +12,7 @@ import { useAppStore } from '../store/appStore';
 import { PAGE_GAP, pageSize } from '../export/pageGeometry';
 import { orderKeysEqual, type OrderKey } from '../engine/light';
 import type { RegionInput } from '../engine';
-import { useCanvasStore, type CanvasState } from './model/canvasStore';
+import { placeShapes, useCanvasStore, type CanvasState } from './model/canvasStore';
 import type { GraphShape, Shape } from './model/types';
 import { graphRegionId, isDefinitionLatex, type GraphField } from './graphData';
 import { annexInfo } from './annex';
@@ -140,6 +140,22 @@ export function resyncAll(opts: { force?: boolean } = {}): void {
     else for (const [shapeId, regions] of old) for (const id of regions.keys()) if (!registered.get(shapeId)?.has(id)) engine.removeRegion(id);
     for (const regions of registered.values()) for (const [id, input] of regions) engine.setRegion(id, input);
   });
+}
+
+/**
+ * Sends a worksheet's regions to the engine before its shapes are put on the
+ * canvas, so the worker calculates while the UI thread renders. A message
+ * posted from the UI thread reaches the worker only when the posting task ends,
+ * so callers yield (setTimeout) before the render. Returns the shapes placed
+ * on the grid (pass these to loadShapes: the regions then match and nothing
+ * is sent again).
+ */
+export function primeEngine(list: Shape[]): Shape[] {
+  const placed = placeShapes(list);
+  const rec = Object.fromEntries(placed.map((s) => [s.id, s]));
+  registeredAnnex = annexSignature(rec);
+  applyDiff(allRegions(rec, null));
+  return placed;
 }
 
 /** Sends only the regions that changed since the last sync. */

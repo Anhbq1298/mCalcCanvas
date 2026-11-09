@@ -31,6 +31,7 @@ export function createFallbackEngine(): EngineClient {
       await ready;
       return e!.inputInUnit(id, unit);
     },
+    ready: () => ready,
     idle: () => ready,
   };
 }

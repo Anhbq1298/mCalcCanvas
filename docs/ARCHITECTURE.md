@@ -35,12 +35,8 @@ documentController ── SaveCoordinator ── DocumentRepository (IndexedDB: 
 | `src/math/` | MathLive editor and Mathcad-style keys, static rendering (`MathRenderer`), display composition (`MathFormatter`), unit styling (`unitStyle`). |
 | `src/documents/` | Types and version, serializer with migrations and validation, IndexedDB repository, `SaveCoordinator`, templates, controller (new/open/import/export/autosave). |
 | `src/export/` | A4 geometry, header/footer, PDF via `window.print` of statically rendered pages. Each shape prints on one page. |
-<<<<<<< HEAD
 | `src/components/` | Google-Docs-style chrome: menus, a toolbar with Math/Text formatting and Graph tabs, Outline/Parameters panel, Properties panel, dialogs, help guide. |
-=======
-| `src/components/` | Google-Docs-style chrome: menus, a toolbar with Math/Text formatting tabs, Outline/Parameters panel, Properties panel, dialogs, help guide. |
-| `src/components/inputResults/` | Input/Output binding form and compact batch grid. Each row uses an isolated `CalculationEngine` with native definition overrides, so source LaTeX and the canvas remain unchanged. A run retains every region result for transparent detailed reports, while the grid exposes only the selected outputs. Editing draft inputs never triggers calculation. |
->>>>>>> 299d4bba0e48bc657fc892aca95c0aaae3aa53d2
+| `src/components/inputResults/` | Input/Output binding form and compact batch grid. `buildBatchJob` → `store/batchClient.runBatch`: a pool of up to 3 calculation workers (kept between runs, separate from the worksheet worker); each registers the worksheet once and runs its cases with definition overrides (bound inputs set or cleared every case), so only dependants recalculate. Results stream per case; only the selected outputs are returned unless `detail` is asked. Each run is tied to a revision (document, worksheet version, settings, table): a later change shows the results as outdated. A new run or leaving the page cancels the old one (workers terminated). |
 
 ## Data flow rules
 

@@ -2,7 +2,7 @@ import { calcKey } from '../../canvas/engineBridge';
 import type { MathShape, Shape } from '../../canvas/model/types';
 import type { InputResultConfig } from '../../documents/DocumentTypes';
 import type { BatchJob, BatchResults } from '../../engine/batch';
-import { runBatch } from '../../store/batchClient';
+import { runBatch, type BatchHandle, type BatchOptions } from '../../store/batchClient';
 
 export type { BatchResults, BatchRowResult } from '../../engine/batch';
 
@@ -43,6 +43,7 @@ export function buildBatchJob(config: InputResultConfig, fields: Map<string, Ava
         order: calcKey(shape, shapes),
       },
     })),
+    inputIds: config.inputs.filter((column) => fields.get(column.regionId)?.kind === 'input').map((column) => column.regionId),
     rows: config.rows.map((row) => ({
       id: row.id,
       overrides: config.inputs.flatMap((column) => {
@@ -55,12 +56,24 @@ export function buildBatchJob(config: InputResultConfig, fields: Map<string, Ava
   };
 }
 
-/** Every row calculated in isolation (off the UI thread in the browser). */
+/** Every case calculated off the UI thread (one worksheet set-up per worker). */
+export function startBatch(
+  config: InputResultConfig,
+  fields: Map<string, AvailableField>,
+  shapes: Record<string, Shape>,
+  settings: { unitSystem: 'SI' | 'Imperial'; precision: number },
+  opts: BatchOptions = {},
+): BatchHandle {
+  return runBatch(buildBatchJob(config, fields, shapes), settings, opts);
+}
+
+/** startBatch, awaited. */
 export function calculateBatch(
   config: InputResultConfig,
   fields: Map<string, AvailableField>,
   shapes: Record<string, Shape>,
   settings: { unitSystem: 'SI' | 'Imperial'; precision: number },
+  opts: BatchOptions = {},
 ): Promise<BatchResults> {
-  return runBatch(buildBatchJob(config, fields, shapes), settings);
+  return startBatch(config, fields, shapes, settings, opts).done;
 }

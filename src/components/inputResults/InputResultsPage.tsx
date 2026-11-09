@@ -9,7 +9,7 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { revealShape } from '../../canvas/canvasActions';
 import { readingKey } from '../../canvas/engineBridge';
 import { useCanvasStore } from '../../canvas/model/canvasStore';
@@ -18,7 +18,8 @@ import type { CalculationResult } from '../../engine';
 import type { InputResultColumn, InputResultConfig, InputResultRow } from '../../documents/DocumentTypes';
 import { useAppStore } from '../../store/appStore';
 import { useCalculationStore } from '../../store/calculationStore';
-import { calculateBatch, type AvailableField, type BatchResults } from './batchCalculation';
+import { startBatch, type AvailableField, type BatchResults } from './batchCalculation';
+import { CancelledError, type BatchHandle } from '../../store/batchClient';
 
 type RunState = 'not-run' | 'current' | 'stale' | 'running';
 
@@ -217,13 +218,23 @@ export function InputResultsPage() {
   const fields = useAvailableFields();
   const fieldsMap = useMemo(() => fieldByRegion(fields), [fields]);
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [runState, setRunState] = useState<RunState>('not-run');
   const [batchResults, setBatchResults] = useState<BatchResults>({});
+  const [running, setRunning] = useState(false);
+  const [progress, setProgress] = useState({ done: 0, total: 0 });
+  // Results belong to the exact worksheet and table they were calculated from:
+  // any later change (inputs, columns, formulas, settings) makes them outdated.
+  const documentId = useAppStore((s) => s.documentId);
+  const docVersion = useCanvasStore((s) => s.docVersion);
+  const revision = useMemo(
+    () => JSON.stringify([documentId, docVersion, settings.unitSystem, settings.precision, config.inputs, config.outputs, config.rows.map((r) => [r.id, r.values])]),
+    [documentId, docVersion, settings.unitSystem, settings.precision, config.inputs, config.outputs, config.rows],
+  );
+  const [resultRevision, setResultRevision] = useState<string | null>(null);
+  const runState: RunState = running ? 'running' : resultRevision === null ? 'not-run' : resultRevision === revision ? 'current' : 'stale';
+  const job = useRef<BatchHandle | null>(null);
+  useEffect(() => () => job.current?.cancel(), []);
 
-  const changeConfig = (next: InputResultConfig) => {
-    updateConfig(next);
-    setRunState((state) => state === 'not-run' ? state : 'stale');
-  };
+  const changeConfig = (next: InputResultConfig) => updateConfig(next);
 
   const setInput = (rowId: string, columnId: string, value: number | null) => {
     changeConfig({
@@ -233,13 +244,34 @@ export function InputResultsPage() {
   };
 
   const runAll = async () => {
-    setRunState('running');
+    job.current?.cancel();
+    const startedFrom = revision;
+    setRunning(true);
+    setBatchResults({});
+    setProgress({ done: 0, total: config.rows.length });
+    const handle = startBatch(config, fieldsMap, shapes, settings, {
+      onRow: (rowId, result) => {
+        if (job.current !== handle) return;
+        setBatchResults((prev) => ({ ...prev, [rowId]: result }));
+        setProgress((p) => ({ ...p, done: p.done + 1 }));
+      },
+    });
+    job.current = handle;
     try {
-      setBatchResults(await calculateBatch(config, fieldsMap, shapes, settings));
-      setRunState('current');
+      const all = await handle.done;
+      if (job.current !== handle) return;
+      setBatchResults(all);
+      // Marked for the inputs it was started with: edits made meanwhile show as outdated.
+      setResultRevision(startedFrom);
     } catch (e) {
+      if (e instanceof CancelledError || job.current !== handle) return;
       useAppStore.getState().showToast('error', `Batch calculation failed: ${(e as Error).message}`);
-      setRunState('stale');
+      setResultRevision(null);
+    } finally {
+      if (job.current === handle) {
+        job.current = null;
+        setRunning(false);
+      }
     }
   };
 
@@ -274,7 +306,7 @@ export function InputResultsPage() {
             <Plus size={15} aria-hidden /> Add row
           </button>
           <button type="button" onClick={() => void runAll()} disabled={!canCalculate || runState === 'running'} className="ir-primary-button" data-testid="calculate-all-batch">
-            <Calculator size={16} aria-hidden /> {runState === 'running' ? 'Calculating…' : 'Calculate All'}
+            <Calculator size={16} aria-hidden /> {runState === 'running' ? `Calculating ${progress.done}/${progress.total}…` : 'Calculate All'}
           </button>
         </div>
       </div>
@@ -325,7 +357,8 @@ export function InputResultsPage() {
                   <tr><td colSpan={config.inputs.length + config.outputs.length + 3} className="px-4 py-12 text-center text-[13px] text-muted-foreground">Add a row to enter the first case.</td></tr>
                 ) : config.rows.map((row) => {
                   const rowResults = batchResults[row.id]?.outputs ?? {};
-                  const hasError = runState === 'current' && config.outputs.some((column) => rowResults[column.id]?.status === 'error');
+                  const rowDone = runState === 'running' && !!batchResults[row.id];
+                  const hasError = (runState === 'current' || rowDone) && config.outputs.some((column) => rowResults[column.id]?.status === 'error');
                   return (
                     <tr key={row.id}>
                       <td className="ir-case-cell">
@@ -345,8 +378,8 @@ export function InputResultsPage() {
                       <td className="ir-status-cell">
                         {runState === 'not-run' && <span className="ir-status">Not calculated</span>}
                         {runState === 'stale' && <span className="ir-status ir-status--warning"><AlertTriangle size={12} aria-hidden /> Outdated</span>}
-                        {runState === 'running' && <span className="ir-status">Queued</span>}
-                        {runState === 'current' && (hasError
+                        {runState === 'running' && !rowDone && <span className="ir-status">Queued</span>}
+                        {(runState === 'current' || rowDone) && (hasError
                           ? <span className="ir-status ir-status--error"><X size={12} aria-hidden /> Error</span>
                           : <span className="ir-status ir-status--current"><Check size={12} aria-hidden /> Current</span>)}
                       </td>

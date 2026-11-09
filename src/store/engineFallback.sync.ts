@@ -13,6 +13,7 @@ export function createFallbackEngine(): EngineClient {
     getResult: (id) => e.getResult(id),
     subscribe: (fn) => e.subscribe(fn),
     inputInUnit: async (id, unit) => e.inputInUnit(id, unit),
+    ready: async () => {},
     idle: async () => {},
   };
 }

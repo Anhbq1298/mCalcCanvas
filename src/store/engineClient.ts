@@ -21,6 +21,8 @@ export interface EngineClient {
   subscribe(fn: Listener): () => void;
   /** See CalculationEngine.inputInUnit; rejects with the error message for a bad unit. */
   inputInUnit(id: string, unit: string): Promise<string | null>;
+  /** Resolves once the engine has started (worker loaded; at most ~2 s). */
+  ready(): Promise<void>;
   /** Resolves once every change sent so far has been calculated. */
   idle(): Promise<void>;
 }
@@ -34,6 +36,12 @@ function inWorker(worker: Worker): EngineClient {
   let req = 0;
   let calculating = 0;
   let idleWaiters: (() => void)[] = [];
+  let markReady: () => void = () => {};
+  const started = new Promise<void>((resolve) => {
+    markReady = resolve;
+    // Never wait forever (a worker that fails to load reports nothing).
+    setTimeout(resolve, 2000);
+  });
   const flush = () => {
     if (depth > 0 || !ops.length) return;
     worker.postMessage({ type: 'ops', ops } satisfies ToWorker);
@@ -56,9 +64,21 @@ function inWorker(worker: Worker): EngineClient {
     ops.push(o);
     flush();
   };
+  // A worker that fails (load error, crash) must not leave callers waiting forever.
+  worker.onerror = (ev) => {
+    console.error('Calculation worker failed', ev.message);
+    markReady();
+    calculating = 0;
+    idleWaiters.forEach((w) => w());
+    idleWaiters = [];
+    for (const [, p] of pending) p.reject(new Error('The calculation worker stopped.'));
+    pending.clear();
+  };
   worker.onmessage = (ev: MessageEvent<FromWorker>) => {
     const m = ev.data;
-    if (m.type === 'results') {
+    if (m.type === 'ready') {
+      markReady();
+    } else if (m.type === 'results') {
       const ids = Object.keys(m.results);
       for (const id of ids) {
         const r = m.results[id];
@@ -99,6 +119,7 @@ function inWorker(worker: Worker): EngineClient {
         pending.set(r, { resolve, reject });
         worker.postMessage({ type: 'inputInUnit', req: r, id, unit } satisfies ToWorker);
       }),
+    ready: () => started,
     idle: () => (calculating === 0 ? Promise.resolve() : new Promise((r) => idleWaiters.push(r))),
   };
 }

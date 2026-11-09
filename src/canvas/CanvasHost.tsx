@@ -12,9 +12,9 @@ export function CanvasHost() {
   useEffect(() => {
     const disconnect = connectEngine();
     const stopAutosave = startAutosave();
-    void initDocuments();
-    // Read-only hook for automated browser tests (engine.idle(): calculation finished).
-    (window as unknown as { __calccanvas?: unknown }).__calccanvas = { store: useCanvasStore, idle: () => engine.idle() };
+    const loaded = initDocuments();
+    // Read-only hook for automated browser tests (loaded: first worksheet on the canvas; idle(): calculation finished).
+    (window as unknown as { __calccanvas?: unknown }).__calccanvas = { store: useCanvasStore, idle: () => engine.idle(), loaded };
     return () => {
       disconnect();
       stopAutosave();

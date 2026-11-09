@@ -29,9 +29,10 @@ self.onmessage = (ev: MessageEvent<ToWorker>) => {
     });
   } else if (m.type === 'batch') {
     try {
-      post({ type: 'batchResult', ok: true, results: runBatchJob(m.job, m.settings) });
+      runBatchJob(m.job, m.settings, { detail: m.detail, onRow: (rowId, result) => post({ type: 'batchRow', jobId: m.jobId, rowId, result }) });
+      post({ type: 'batchDone', jobId: m.jobId });
     } catch (e) {
-      post({ type: 'batchResult', ok: false, error: (e as Error).message });
+      post({ type: 'batchError', jobId: m.jobId, error: (e as Error).message });
     }
   } else if (m.type === 'ping') {
     post({ type: 'reply', req: m.req, ok: true });
@@ -43,3 +44,5 @@ self.onmessage = (ev: MessageEvent<ToWorker>) => {
     }
   }
 };
+
+post({ type: 'ready' });

@@ -54,12 +54,12 @@ describe('Input & Results batch calculation', () => {
         ],
       };
 
-      const results = await calculateBatch(config, fields, shapes, { unitSystem: 'SI', precision: 2 });
+      const results = await calculateBatch(config, fields, shapes, { unitSystem: 'SI', precision: 2 }, { detail: true });
 
       expect(results.b1?.outputs['moment-result']?.value?.number).toBe(62.5);
       expect(results.b1?.outputs['moment-result']?.value?.unitText).toBe('kN·m');
       expect(results.b2?.outputs['moment-result']?.value?.number).toBe(112.5);
-      expect(results.b1?.regions.moment?.value?.number).toBe(62.5);
+      expect(results.b1?.regions?.moment?.value?.number).toBe(62.5);
       expect(JSON.stringify(shapes)).toBe(original);
     });
     await step('varies only selected load-case inputs and keeps all other template values unchanged', async () => {
@@ -96,46 +96,49 @@ describe('Input & Results batch calculation', () => {
         ],
       };
 
-      const results = await calculateBatch(config, fields, shapes, { unitSystem: 'SI', precision: 3 });
+      const results = await calculateBatch(config, fields, shapes, { unitSystem: 'SI', precision: 3 }, { detail: true });
 
       expect(results.lc1?.outputs.ratio?.value?.number).toBeCloseTo(0.55, 9);
       expect(results.lc1?.outputs.status?.check?.pass).toBe(true);
       expect(results.lc2?.outputs.ratio?.value?.number).toBeCloseTo(0.9, 9);
       expect(results.lc2?.outputs.status?.check?.pass).toBe(true);
-      expect(results.lc2?.regions.width?.value?.number).toBeCloseTo(0.6, 9);
-      expect(results.lc2?.regions.width?.value?.unitText).toBe('m');
-      expect(results.lc2?.regions.width?.overridden).toBeUndefined();
-      expect(results.lc2?.regions.axial?.overridden).toBe(true);
+      expect(results.lc2?.regions?.width?.value?.number).toBeCloseTo(0.6, 9);
+      expect(results.lc2?.regions?.width?.value?.unitText).toBe('m');
+      expect(results.lc2?.regions?.width?.overridden).toBeUndefined();
+      expect(results.lc2?.regions?.axial?.overridden).toBe(true);
     });
   });
 });
 
 describe('Input & Results on a column template', () => {
-  it('calculates annex blocks at their link (same order as the worksheet)', async () => {
+  it('one engine per run gives exactly the results of a fresh engine per case, in any order', async () => {
     const { templateById } = await import('../../documents/templates');
-    const shapes = Object.fromEntries(templateById('rc-circular-column')!.shapes().map((s) => [s.id, s]));
-    const find = (start: string) => Object.values(shapes).find((s) => s.type === 'math' && s.props.latex.startsWith(start))!;
-    const ned = find('N_{Ed}\\coloneq');
-    const ur = find('\\mathrm{UR}_{M}\\coloneq');
-    const fields = new Map<string, AvailableField>([
-      [ned.id, { regionId: ned.id, label: 'NEd', definitionLatex: 'N_{Ed}', unit: 'kN', kind: 'input', inputValue: 8000 }],
-      [ur.id, { regionId: ur.id, label: 'UR_M', definitionLatex: 'UR_M', unit: '', kind: 'result', inputValue: null }],
-    ]);
-    const config: InputResultConfig = {
-      title: 'Columns',
-      inputs: [{ id: 'n', regionId: ned.id, label: 'NEd' }],
-      outputs: [{ id: 'ur', regionId: ur.id, label: 'UR_M' }],
-      rows: [
-        { id: 'a', name: 'A', values: { n: 8000 } },
-        { id: 'b', name: 'B', values: { n: 4000 } },
-      ],
-    };
-    const results = await calculateBatch(config, fields, shapes, { unitSystem: 'SI', precision: 2 });
-    const errors = Object.entries(results.a!.regions).filter(([, r]) => r.status === 'error');
-    expect(errors).toEqual([]);
-    const a = results.a!.outputs.ur!.value!.number;
-    const b = results.b!.outputs.ur!.value!.number;
-    expect(a).toBeGreaterThan(0);
-    expect(b).not.toBeCloseTo(a, 3);
-  }, 60000);
+    const { CalculationEngine } = await import('../../engine');
+    const { buildBatchJob } = await import('../../components/inputResults/batchCalculation');
+    const { shapes: list, inputResult } = templateById('rc-rectangular-column')!.instantiate!();
+    const shapes = Object.fromEntries(list.map((s) => [s.id, s]));
+    const units: Record<string, string> = { n: 'kN', mx: 'kN·m', my: 'kN·m', vy: 'kN', vx: 'kN' };
+    const fields = new Map<string, AvailableField>();
+    for (const c of inputResult.inputs) fields.set(c.regionId, { regionId: c.regionId, label: c.label, definitionLatex: '', unit: units[c.id]!, kind: 'input', inputValue: null });
+    for (const c of inputResult.outputs) fields.set(c.regionId, { regionId: c.regionId, label: c.label, definitionLatex: '', unit: '', kind: c.id.startsWith('c') ? 'check' : 'result', inputValue: null });
+    const settings = { unitSystem: 'SI' as const, precision: 2 };
+    // A case without a value for N_Ed must use the worksheet's N_Ed, not the previous case's.
+    const config = { ...inputResult, rows: [...inputResult.rows, { id: 'gap', name: 'no N', values: { ...inputResult.rows[1]!.values, n: null } }] };
+    const forward = await calculateBatch(config, fields, shapes, settings, { detail: true });
+    const backward = await calculateBatch({ ...config, rows: [...config.rows].reverse() }, fields, shapes, settings, { detail: true });
+    const job = buildBatchJob(config, fields, shapes);
+    for (const row of job.rows) {
+      const fresh = new CalculationEngine(settings);
+      fresh.batch(() => {
+        for (const r of job.regions) fresh.setRegion(r.id, r.input);
+        for (const o of row.overrides) fresh.setDefinitionOverride(o.regionId, { value: o.value, unit: o.unit });
+      });
+      const expected = JSON.stringify(fresh.getResultsSnapshot());
+      expect(JSON.stringify(forward[row.id]!.regions)).toBe(expected);
+      expect(JSON.stringify(backward[row.id]!.regions)).toBe(expected);
+      expect(Object.values(forward[row.id]!.regions!).filter((r) => r.status === 'error')).toEqual([]);
+    }
+    // LC1 is the worksheet's own design case.
+    expect(forward.lc1!.outputs.urm!.value!.number).toBeCloseTo(0.6421, 4);
+  }, 120000);
 });
