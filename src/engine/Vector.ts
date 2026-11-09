@@ -4,6 +4,9 @@
  */
 import { CalculationError } from './CalculationErrors';
 import {
+  isAbsoluteTemperature,
+  isDimensionless,
+  isUnit,
   sameDimension,
   formatNumber,
   formatQuantity,
@@ -12,21 +15,88 @@ import {
   type Quantity,
   type UnitSystemName,
 } from './UnitSystem';
+import type { Unit } from 'mathjs';
 
 /** Largest vector a worksheet may create (protects the UI and graphs). */
 export const MAX_VECTOR_LENGTH = 10_000;
 
 export class QVector {
-  readonly items: readonly Quantity[];
+  private _items: readonly Quantity[] | null;
+  /**
+   * Packed form (fast path for long vectors): SI values plus one shared unit
+   * (its own value is ignored; null = plain numbers). Every entry then has the
+   * same dimension. `undefined` = not worked out yet.
+   */
+  private _packed: Packed | null | undefined;
   constructor(items: readonly Quantity[]) {
     if (items.length > MAX_VECTOR_LENGTH) {
       throw new CalculationError('limit-exceeded', `A vector may have at most ${MAX_VECTOR_LENGTH} entries (got ${items.length}).`);
     }
-    this.items = items;
+    this._items = items;
+    this._packed = undefined;
+  }
+  /** A vector from SI values sharing one unit (null: plain numbers). */
+  static packed(si: Float64Array, unit: Unit | null): QVector {
+    if (si.length > MAX_VECTOR_LENGTH) {
+      throw new CalculationError('limit-exceeded', `A vector may have at most ${MAX_VECTOR_LENGTH} entries (got ${si.length}).`);
+    }
+    const v = Object.create(QVector.prototype) as QVector;
+    v._items = null;
+    v._packed = { si, unit: unit && isDimensionless(unit) ? null : unit };
+    return v;
+  }
+  get items(): readonly Quantity[] {
+    if (!this._items) {
+      const { si, unit } = this._packed!;
+      const out: Quantity[] = new Array(si.length);
+      for (let i = 0; i < si.length; i++) out[i] = unit ? withSi(unit, si[i]) : si[i];
+      this._items = out;
+    }
+    return this._items;
   }
   get length(): number {
-    return this.items.length;
+    return this._items ? this._items.length : this._packed!.si.length;
   }
+  /** Packed form when every entry has the same dimension (no °C), else null. */
+  pack(): Packed | null {
+    if (this._packed === undefined) this._packed = packItems(this._items!);
+    return this._packed;
+  }
+}
+
+export interface Packed {
+  si: Float64Array;
+  unit: Unit | null;
+}
+
+/** A copy of unit u holding the SI value v (mathjs stores SI values; the units only display). */
+export function withSi(u: Unit, v: number): Unit {
+  const r = u.clone();
+  r.value = v;
+  r.fixPrefix = false;
+  return r;
+}
+
+function packItems(items: readonly Quantity[]): Packed | null {
+  const n = items.length;
+  const si = new Float64Array(n);
+  const first = items[0];
+  if (n === 0) return { si, unit: null };
+  if (typeof first === 'number') {
+    for (let i = 0; i < n; i++) {
+      const q = items[i];
+      if (typeof q !== 'number') return null;
+      si[i] = q;
+    }
+    return { si, unit: null };
+  }
+  if (!isUnit(first) || first.value === null || isAbsoluteTemperature(first)) return null;
+  for (let i = 0; i < n; i++) {
+    const q = items[i];
+    if (typeof q === 'number' || !isUnit(q) || q.value === null || (i > 0 && !sameDimension(q, first)) || (i > 0 && isAbsoluteTemperature(q))) return null;
+    si[i] = q.value;
+  }
+  return { si, unit: isDimensionless(first) ? null : first };
 }
 
 /** A scalar quantity or a vector. */

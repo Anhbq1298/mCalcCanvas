@@ -8,7 +8,8 @@
  */
 import { CalculationError } from './CalculationErrors';
 export { isAbsoluteTemperature } from './UnitSystem';
-import { QVector, broadcast1, broadcast2, broadcastN, flatten, isVector, requireScalar, type Value } from './Vector';
+import { QVector, broadcast1, broadcast2, broadcastN, flatten, isVector, requireScalar, withSi, type Value } from './Vector';
+import type { Unit } from 'mathjs';
 export { QVector, isVector, type Value } from './Vector';
 import type { Condition, Expr } from './ExpressionTypes';
 import { walkExpr, walkScoped } from './ExpressionTypes';
@@ -213,6 +214,8 @@ function evalCondition(c: Condition, ctx: EvalContext): boolean | boolean[] {
   const lv = evalNode(c.left, ctx);
   const rv = evalNode(c.right, ctx);
   if (!isVector(lv) && !isVector(rv)) return compareQuantities(lv, rv, c.op);
+  const fast = fastCompare(lv, rv, c.op);
+  if (fast) return fast;
   const r = broadcastN([lv, rv], ([x, y]) => (compareQuantities(x, y, c.op) ? 1 : 0));
   return (r as QVector).items.map((q) => q === 1);
 }
@@ -305,9 +308,184 @@ function linterp(xs: QVector, ys: QVector, x: Quantity): Quantity {
   return ys.items[ys.length - 1];
 }
 
+
+// ---------------------------------------------------------------------------
+// Fast path for vectors whose entries share one dimension (fibre grids, bar
+// lists): SI values in a Float64Array and one unit, no per-entry Unit objects.
+// Anything unusual (mixed units, °C, a zero divisor, a negative base) returns
+// null and takes the general per-entry path, which also produces the errors.
+// ---------------------------------------------------------------------------
+
+interface Pk {
+  si: Float64Array | number;
+  unit: Unit | null;
+  /** Vector length, or -1 for a scalar. */
+  n: number;
+}
+
+function pk(v: Value): Pk | null {
+  if (isVector(v)) {
+    const p = v.pack();
+    return p && { si: p.si, unit: p.unit, n: p.si.length };
+  }
+  if (typeof v === 'number') return { si: v, unit: null, n: -1 };
+  if (isUnit(v) && v.value !== null && !isAbsoluteTemperature(v)) return { si: v.value, unit: isDimensionless(v) ? null : v, n: -1 };
+  return null;
+}
+
+const pkAt = (p: Pk, i: number): number => (typeof p.si === 'number' ? p.si : p.si[i]);
+const sameUnitDim = (a: Unit | null, b: Unit | null): boolean => (!a || !b ? a === b : sameDimension(a, b));
+
+/** Unit of a product or quotient of two packed operands (value ignored); null when dimensionless. */
+function productUnit(a: Unit | null, b: Unit | null, divide: boolean): Unit | null {
+  let r: Quantity | null;
+  if (!divide) r = !a ? b : !b ? a : (math.multiply(withSi(a, 1), withSi(b, 1)) as unknown as Quantity);
+  else r = !b ? a : (math.divide(a ? withSi(a, 1) : 1, withSi(b, 1)) as unknown as Quantity);
+  return r !== null && isUnit(r) && !isDimensionless(r) ? r : null;
+}
+
+function packedPair(a: Value, b: Value): [Pk, Pk, number] | null {
+  if (!isVector(a) && !isVector(b)) return null;
+  const pa = pk(a);
+  const pb = pk(b);
+  if (!pa || !pb) return null;
+  if (pa.n >= 0 && pb.n >= 0 && pa.n !== pb.n) return null;
+  return [pa, pb, pa.n >= 0 ? pa.n : pb.n];
+}
+
+function fastBinary(op: string, a: Value, b: Value): Value | null {
+  const pair = packedPair(a, b);
+  if (!pair) return null;
+  const [pa, pb, n] = pair;
+  const out = new Float64Array(n);
+  switch (op) {
+    case '+':
+    case '-': {
+      if (!sameUnitDim(pa.unit, pb.unit)) return null;
+      const sign = op === '+' ? 1 : -1;
+      for (let i = 0; i < n; i++) out[i] = pkAt(pa, i) + sign * pkAt(pb, i);
+      return QVector.packed(out, pa.unit ?? pb.unit);
+    }
+    case '*':
+      for (let i = 0; i < n; i++) out[i] = pkAt(pa, i) * pkAt(pb, i);
+      return QVector.packed(out, productUnit(pa.unit, pb.unit, false));
+    case '/':
+      for (let i = 0; i < n; i++) {
+        const d = pkAt(pb, i);
+        if (d === 0) return null;
+        out[i] = pkAt(pa, i) / d;
+      }
+      return QVector.packed(out, productUnit(pa.unit, pb.unit, true));
+  }
+  return null;
+}
+
+/** Packed vector raised to a dimensionless scalar power. */
+function fastPow(a: Value, b: Value): Value | null {
+  if (!isVector(a) || isVector(b) || !isDimensionless(b)) return null;
+  const p = siValue(b);
+  const pa = pk(a);
+  if (!pa || Math.abs(p) > 1000 || !Number.isFinite(p)) return null;
+  const si = pa.si as Float64Array;
+  const out = new Float64Array(si.length);
+  for (let i = 0; i < si.length; i++) {
+    const x = si[i];
+    if ((x < 0 && !Number.isInteger(p)) || (x === 0 && p < 0)) return null;
+    out[i] = Math.pow(x, p);
+  }
+  const unit = pa.unit ? (math.pow(withSi(pa.unit, 1), p) as unknown as Quantity) : null;
+  return QVector.packed(out, unit && isUnit(unit) && !isDimensionless(unit) ? unit : null);
+}
+
+/** Element-wise comparison of packed operands. */
+function fastCompare(a: Value, b: Value, op: string): boolean[] | null {
+  const pair = packedPair(a, b);
+  if (!pair) return null;
+  const [pa, pb, n] = pair;
+  if (!sameUnitDim(pa.unit, pb.unit)) return null;
+  const out: boolean[] = new Array(n);
+  for (let i = 0; i < n; i++) out[i] = compareSi(pkAt(pa, i), pkAt(pb, i), op);
+  return out;
+}
+
+/** if with a vector condition: pick entries from packed branches. */
+function fastSelect(c: boolean[], t: Value, f: Value): Value | null {
+  const pt = pk(t);
+  const pf = pk(f);
+  const n = c.length;
+  if (!pt || !pf || (pt.n >= 0 && pt.n !== n) || (pf.n >= 0 && pf.n !== n) || !sameUnitDim(pt.unit, pf.unit)) return null;
+  const out = new Float64Array(n);
+  for (let i = 0; i < n; i++) out[i] = c[i] ? pkAt(pt, i) : pkAt(pf, i);
+  return QVector.packed(out, pt.unit ?? pf.unit);
+}
+
+/** sum / min / max of one packed vector. */
+function fastAggregate(fn: string, args: Value[]): Quantity | null {
+  if (args.length !== 1 || !isVector(args[0]) || args[0].length === 0) return null;
+  const p = args[0].pack();
+  if (!p) return null;
+  let r = fn === 'sum' ? 0 : p.si[0];
+  for (let i = fn === 'sum' ? 0 : 1; i < p.si.length; i++) {
+    const x = p.si[i];
+    if (fn === 'sum') r += x;
+    else if (fn === 'min' ? x < r : x > r) r = x;
+  }
+  return p.unit ? withSi(p.unit, r) : r;
+}
+
+/** Element-wise built-ins on one packed vector. */
+function fastCall(fn: string, args: Value[]): Value | null {
+  if (args.length !== 1 || !isVector(args[0])) return null;
+  const p = args[0].pack();
+  if (!p) return null;
+  const si = p.si;
+  const out = new Float64Array(si.length);
+  switch (fn) {
+    case 'abs':
+      for (let i = 0; i < si.length; i++) out[i] = Math.abs(si[i]);
+      return QVector.packed(out, p.unit);
+    case 'sin':
+    case 'cos':
+    case 'tan': {
+      // Radians: a plain number, or an angle unit (SI value in rad).
+      if (p.unit && dimensionName(p.unit) !== 'Angle') return null;
+      const f = fn === 'sin' ? Math.sin : fn === 'cos' ? Math.cos : Math.tan;
+      for (let i = 0; i < si.length; i++) out[i] = f(si[i]);
+      return QVector.packed(out, null);
+    }
+    case 'sqrt': {
+      for (let i = 0; i < si.length; i++) {
+        if (si[i] < 0) return null;
+        out[i] = Math.sqrt(si[i]);
+      }
+      const unit = p.unit ? (math.sqrt(withSi(p.unit, 1) as never) as unknown as Quantity) : null;
+      return QVector.packed(out, unit && isUnit(unit) && !isDimensionless(unit) ? unit : null);
+    }
+  }
+  return null;
+}
+
+/** normalize() for a whole value: a packed vector is already normalised. */
+function normalizeValue(v: Value): Value {
+  if (isVector(v)) {
+    const p = v.pack();
+    if (p) return v;
+  }
+  return broadcast1(v, normalize);
+}
+
 /** Reject complex, NaN and infinite intermediate results with a clear message. */
 function ensureFinite(v: Value): Value {
   if (isVector(v)) {
+    const p = v.pack();
+    if (p) {
+      for (let i = 0; i < p.si.length; i++) {
+        const x = p.si[i];
+        if (Number.isNaN(x)) throw new CalculationError('domain', 'The result is not a real number (undefined operation such as 0·∞).');
+        if (!Number.isFinite(x)) throw new CalculationError('not-finite', 'The result is too large to represent (numeric overflow).');
+      }
+      return v;
+    }
     for (const q of v.items) ensureFiniteQ(q);
     return v;
   }
@@ -401,7 +579,7 @@ function addOrSubtract(a: Quantity, b: Quantity, op: '+' | '-'): Quantity {
 }
 
 export function evaluateExpr(expr: Expr, ctx: EvalContext): Value {
-  return ensureFinite(broadcast1(evalNode(expr, ctx), normalize));
+  return ensureFinite(normalizeValue(evalNode(expr, ctx)));
 }
 
 /** Every intermediate value is checked, so NaN/∞/complex never propagate. */
@@ -409,7 +587,8 @@ function evalNode(expr: Expr, ctx: EvalContext): Value {
   return ensureFinite(evalNodeRaw(expr, ctx));
 }
 
-const hasAbsoluteTemperature = (v: Value): boolean => (isVector(v) ? v.items.some(isAbsoluteTemperature) : isAbsoluteTemperature(v));
+// A packed vector never holds °C (see Vector.pack).
+const hasAbsoluteTemperature = (v: Value): boolean => (isVector(v) ? !v.pack() && v.items.some(isAbsoluteTemperature) : isAbsoluteTemperature(v));
 const multiplyQ = (x: Quantity, y: Quantity): Quantity => {
   if (typeof x === 'number' && typeof y === 'number') return x * y;
   // Fast path: a number scales a unit value (as math.multiply does).
@@ -439,9 +618,9 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
         const v: Value =
           p.kind === 'var' ? ctx.getValue(p.name) : p.kind === 'unit' ? unitValue(p.symbol) : p.value;
         if (r.parts.length > 1 && hasAbsoluteTemperature(v)) throw temperatureError('An absolute temperature (°C) cannot be multiplied.');
-        acc = acc === null ? v : broadcast2(acc, v, multiplyQ);
+        acc = acc === null ? v : (fastBinary('*', acc, v) ?? broadcast2(acc, v, multiplyQ));
       }
-      return broadcast1(acc as Value, normalize);
+      return normalizeValue(acc as Value);
     }
 
     case 'group':
@@ -451,6 +630,10 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
       const v = evalNode(expr.arg, ctx);
       if (expr.op === '-' && hasAbsoluteTemperature(v) && !isTemperatureLiteral(expr.arg)) {
         throw temperatureError('An absolute temperature (°C) cannot be negated.');
+      }
+      if (expr.op === '-' && isVector(v)) {
+        const neg = fastBinary('*', -1, v);
+        if (neg) return neg;
       }
       return expr.op === '-' ? broadcast1(v, (q) => (typeof q === 'number' ? -q : isAbsoluteTemperature(q) ? (math.unaryMinus(q as never) as Quantity) : multiplyQ(-1, q))) : v;
     }
@@ -464,6 +647,10 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
           const verb = expr.op === '*' ? 'multiplied' : expr.op === '/' ? 'divided' : 'raised to a power';
           throw temperatureError(`An absolute temperature (°C) cannot be ${verb}.`);
         }
+      }
+      if (expr.op !== '^') {
+        const fast = fastBinary(expr.op, a, b);
+        if (fast) return fast;
       }
       switch (expr.op) {
         case '+':
@@ -502,7 +689,7 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
               return acc;
             }
           }
-          return broadcast2(a, b, (x, y) => powQ(x, exponent(y)));
+          return fastPow(a, b) ?? broadcast2(a, b, (x, y) => powQ(x, exponent(y)));
         }
       }
       break;
@@ -538,6 +725,10 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
         return broadcast1(x, (q) => linterp(xs, ys, q));
       }
       // Aggregates take every entry of every argument.
+      if (fn === 'min' || fn === 'max' || fn === 'sum') {
+        const fast = fastAggregate(fn, args);
+        if (fast !== null) return fast;
+      }
       if (fn === 'min' || fn === 'max') return evalCall(fn, flatten(args));
       if (fn === 'sum') return sumOf(flatten(args));
       if (fn === 'seq') {
@@ -549,7 +740,7 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
         if (args.length !== 1) throw new CalculationError('syntax', 'len takes exactly one argument.');
         return isVector(args[0]) ? args[0].length : 1;
       }
-      return broadcastN(args, (xs) => evalCall(fn, xs));
+      return fastCall(fn, args) ?? broadcastN(args, (xs) => evalCall(fn, xs));
     }
 
     case 'if': {
@@ -572,6 +763,8 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
       const t = attempt(expr.then);
       const f = attempt(expr.else);
       if (t !== null && f !== null) {
+        const fast = fastSelect(c, t, f);
+        if (fast) return fast;
         const mask = new QVector(c.map((b) => (b ? 1 : 0)));
         return broadcastN([mask, t, f], ([m, x, y]) => (m ? x : y));
       }
@@ -798,8 +991,10 @@ export function compareQuantities(
     );
   }
   // Full precision, SI base units; see ComparisonPolicy.
-  const x = siValue(a);
-  const y = siValue(b);
+  return compareSi(siValue(a), siValue(b), op, policies);
+}
+
+function compareSi(x: number, y: number, op: string, policies: { check?: ComparisonPolicy; equality?: ComparisonPolicy } = {}): boolean {
   const check = policies.check ?? CHECK_POLICY;
   const equality = policies.equality ?? EQUALITY_POLICY;
   // A check is only relaxed if a caller explicitly passes an approximate policy.
