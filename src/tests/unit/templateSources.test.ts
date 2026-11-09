@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';

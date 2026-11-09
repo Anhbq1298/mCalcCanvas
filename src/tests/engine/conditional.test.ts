@@ -139,4 +139,14 @@ describe('if(condition, value if true, value if false)', () => {
   it('treats "if" without parentheses as an ordinary letter run', () => {
     expect(parseLatex('x\\coloneq if')).toMatchObject({ kind: 'definition', expr: { type: 'ident', name: 'if', splittable: true } });
   });
+
+  it('a vector if evaluates a failing branch only for the entries that choose it (√ of negatives)', () => {
+    const e = setup({
+      x: 'x\\coloneq\\mathrm{stack}\\left(-4,9,16\\right)',
+      r: 'r\\coloneq\\begin{array}{||l}\\mathrm{if}\\ x\\ge0\\\\\\quad\\left\\Vert\\displaystyle \\sqrt{x}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}',
+      o: 'r=',
+    });
+    expect(res(e, 'o').status).toBe('valid');
+    expect(res(e, 'o').value?.items).toEqual([0, 3, 4]);
+  });
 });

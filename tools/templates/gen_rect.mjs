@@ -233,7 +233,7 @@ T('Truss in stresses: τEd = VEd/(bw·z) (8.18), links τRd,sy = ρw·fywd·cot�
 T('σcd = τEd·(cotθ + tanθ) ≤ ν·fcd (8.44), ν = 0.5. cotθ: the largest value ≤ cot θmin (8.41)');
 T('that keeps σcd ≤ ν·fcd; cotθ < 1 (8.2.3(11)) never adds resistance and is not used.');
 gap(0.35);
-P('Strength reduction for cracked concrete, 8.2.3(6)', R`\nu\coloneq0.5`);
+P('Strength reduction for cracked concrete, 8.2.3(6)', R`\nu\coloneq0.5`, M({ constant: true }));
 P('Factor on cot θmin: 0.8 for class A links, 8.2.3(4)', R`k_{A}\coloneq1-0.2\delta_{A}`, M({ precision: 2 }, fr));
 P('Average axial stress, compression positive', R`\sigma_{cp}\coloneq\frac{N_{Ed}}{A_{g}}`, M(MPa, { precision: 2 }, fr));
 P('Area of one link leg', R`A_{sw1}\coloneq\frac{\pi\phi_{w}^2}{4}`, M(mm2, fr));

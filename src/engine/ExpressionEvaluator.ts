@@ -539,11 +539,43 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
       // evaluated, so the other may be undefined for these inputs (e.g. √ of a negative).
       const c = evalCondition(expr.cond, ctx);
       if (typeof c === 'boolean') return evalNode(c ? expr.then : expr.else, ctx);
-      // Vector condition: decided entry by entry (both branches are evaluated; scalars repeat).
-      const t = evalNode(expr.then, ctx);
-      const f = evalNode(expr.else, ctx);
-      const mask = new QVector(c.map((b) => (b ? 1 : 0)));
-      return broadcastN([mask, t, f], ([m, x, y]) => (m ? x : y));
+      // Vector condition: decided entry by entry. Both branches are evaluated as
+      // vectors; a branch that fails as a whole (e.g. √ of a negative entry) is
+      // evaluated again only for the entries that choose it.
+      const n = c.length;
+      const attempt = (e: Expr): Value | null => {
+        try {
+          return evalNode(e, ctx);
+        } catch (err) {
+          if (err instanceof CalculationError && (err.code === 'undefined-variable' || err.code === 'syntax')) throw err;
+          return null;
+        }
+      };
+      const t = attempt(expr.then);
+      const f = attempt(expr.else);
+      if (t !== null && f !== null) {
+        const mask = new QVector(c.map((b) => (b ? 1 : 0)));
+        return broadcastN([mask, t, f], ([m, x, y]) => (m ? x : y));
+      }
+      const entryCtx = (i: number): EvalContext => {
+        const sub = Object.create(ctx) as EvalContext;
+        sub.getValue = (name: string) => {
+          const v = ctx.getValue(name);
+          return isVector(v) && v.length === n ? v.items[i] : v;
+        };
+        return sub;
+      };
+      const items: Quantity[] = [];
+      for (let i = 0; i < n; i++) {
+        const whole = c[i] ? t : f;
+        if (whole !== null) {
+          if (isVector(whole) && whole.length !== n) throw new CalculationError('vector', `Vectors of different lengths in if (${n} and ${whole.length} entries).`);
+          items.push(isVector(whole) ? whole.items[i] : whole);
+        } else {
+          items.push(requireScalar(evalNode(c[i] ? expr.then : expr.else, entryCtx(i)), 'Each entry of if'));
+        }
+      }
+      return new QVector(items);
     }
 
     case 'range':

@@ -2809,7 +2809,8 @@
         "precision": -1,
         "autoSize": true,
         "fontSize": 16,
-        "color": "#0f172a"
+        "color": "#0f172a",
+        "constant": true
       }
     },
     {

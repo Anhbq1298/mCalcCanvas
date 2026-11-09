@@ -88,6 +88,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           precision: Math.round(bounded(p.precision, -1, -1, 8)),
           ...(p.vectorLayout === 'column' ? { vectorLayout: 'column' as const } : {}),
           ...(p.vectorExpanded === true ? { vectorExpanded: true } : {}),
+          ...(p.constant === true ? { constant: true } : {}),
           autoSize: p.autoSize !== false,
           fontSize: Math.min(64, Math.max(8, num(p.fontSize, 18))),
           color: color(p.color, '#0f172a'),

@@ -76,7 +76,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   const error = result?.error;
   const empty = latex.trim() === '';
   // Inputs (a definition from literals only, e.g. fck := 35 MPa): light-yellow highlight, blue text.
-  const isInput = !!result && result.status === 'valid' && result.kind === 'definition' && result.references.length === 0 && !!result.value;
+  const isInput = !shape.props.constant && !!result && result.status === 'valid' && result.kind === 'definition' && result.references.length === 0 && !!result.value;
   const errorMessage = error && annexHint && /defined (below|above) this equation/.test(error.message) ? `${error.message} ${annexHint}` : error?.message;
 
   return (

@@ -211,7 +211,7 @@ P('Neutral-axis depth at the bending resistance under NEd (§8.1)', R`x\coloneq\
 P('Depth of the compression chord centroid (concrete compression at x)', R`y_{cc}\coloneq\begin{array}{||l}\mathrm{if}\ x\le0\,\mathrm{mm}\\\quad\left\Vert\displaystyle 0\,\mathrm{mm}\right.\\\mathrm{else}\\\quad\left\Vert\displaystyle R-\frac{\mathrm{sum}\left(\sigma_{c}\left(\varepsilon\left(x,x_{c}\right)\right)A_{c}x_{c}\right)}{\mathrm{sum}\left(\sigma_{c}\left(\varepsilon\left(x,x_{c}\right)\right)A_{c}\right)}\right.\end{array}`, M(mm, fr));
 P('Web width: least chord width between the chords (only the tension chord if x ≤ 0)', R`b_{w}\coloneq\begin{array}{||l}\mathrm{if}\ x\le0\,\mathrm{mm}\\\quad\left\Vert\displaystyle 2\sqrt{R^2-\left(d-R\right)^2}\right.\\\mathrm{else}\\\quad\left\Vert\displaystyle \min\left(2\sqrt{R^2-\left(R-y_{cc}\right)^2},2\sqrt{R^2-\left(d-R\right)^2}\right)\right.\end{array}`, M(mm, fr));
 P('Average shear stress (8.18)', R`\tau_{Ed}\coloneq\frac{V_{Ed}}{b_{w}z}`, M(MPa, { precision: 2 }, fr));
-P('Strength reduction for cracked concrete, 8.2.3(6)', R`\nu\coloneq0.5`);
+P('Strength reduction for cracked concrete, 8.2.3(6)', R`\nu\coloneq0.5`, M({ constant: true }));
 H(3, '7.2 Strut angle');
 T('1 ≤ cotθ ≤ cot θmin (8.41): 2.5; 3.0 if σcp ≥ 3 MPa and x < 0.25d (linear between); 2.5 if');
 T('x ≥ 0.25d; 2.5 − 0.1·|NEd|/VEd ≥ 1 in tension; × kA = 0.8 for class A spirals. cotθ < 1');

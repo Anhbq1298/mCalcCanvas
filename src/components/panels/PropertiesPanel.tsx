@@ -145,6 +145,18 @@ function MathProperties({ shape }: { shape: MathShape }) {
             </select>
           )}
         </Field>
+        {result?.kind === 'definition' && result.references.length === 0 && (
+          <label className="flex cursor-pointer items-center gap-2 text-[12px] text-muted-foreground">
+            <input
+              type="checkbox"
+              data-testid="math-constant"
+              className="h-4 w-4 cursor-pointer accent-accent"
+              checked={!!shape.props.constant}
+              onChange={(e) => update({ constant: e.target.checked || undefined })}
+            />
+            Code constant (not an input: no yellow highlight)
+          </label>
+        )}
         {result?.value?.length !== undefined && (
           <Field label="Vector display">
             {(id) => (

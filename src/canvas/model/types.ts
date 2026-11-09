@@ -21,6 +21,8 @@ export interface MathProps {
   vectorLayout?: VectorLayout;
   /** Show every entry of a long vector result instead of the shortened first … last view. */
   vectorExpanded?: boolean;
+  /** A literal definition that is not a user input (a code constant such as ν = 0.5): no input highlight. */
+  constant?: boolean;
   /** Box follows the rendered equation until resized manually. */
   autoSize: boolean;
   fontSize: number;

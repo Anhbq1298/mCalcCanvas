@@ -32,6 +32,11 @@ test.describe('ranges and graphs', () => {
     await expect(input).toHaveAttribute('data-input', 'true');
     await expect(input).toHaveCSS('background-color', 'rgb(255, 246, 191)');
     await expect(page.locator('[data-testid=math-region][data-latex^="M"]')).not.toHaveAttribute('data-input', 'true');
+    // A code constant (Properties → "Code constant") is not shown as an input.
+    await input.click();
+    await page.getByTestId('toggle-properties').click();
+    await page.getByTestId('math-constant').check();
+    await expect(input).not.toHaveAttribute('data-input', 'true');
   });
 
   test('";" types a range and the result is a vector', async ({ page }) => {
