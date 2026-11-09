@@ -311,7 +311,7 @@ function MathFormattingTab() {
       <Sep />
       <span className="px-1 text-[12px] text-docs-muted">Worksheet</span>
       <TBSelect
-        label="Equations and text snap their baseline to major lines (every 4 squares) or to every grid line"
+        label="Equations and text snap their baseline to major lines (every 2 squares) or to every grid line"
         testId="baseline-snap"
         value={settings.baselineSnap ?? 'major'}
         width={110}

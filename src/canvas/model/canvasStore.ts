@@ -62,9 +62,9 @@ let normalizePosition: (s: Shape) => Shape = (s) => s;
 export function setPositionNormalizer(fn: (s: Shape) => Shape): void {
   normalizePosition = fn;
 }
-export const GRID_SIZE = 10;
-/** Major grid lines every 4 minor squares (40 px). Math and text sit with their baseline on a major line. */
-export const GRID_MAJOR_EVERY = 4;
+export const GRID_SIZE = 20;
+/** Major lines every 2 squares (40 px), drawn like the minor ones. Math and text sit with their baseline on a grid line. */
+export const GRID_MAJOR_EVERY = 2;
 export const GRID_MAJOR = GRID_SIZE * GRID_MAJOR_EVERY;
 
 export function newShapeId(): string {

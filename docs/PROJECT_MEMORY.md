@@ -8,7 +8,7 @@
   - `:` defines, `=` evaluates.
   - Mathcad keyboard shortcuts.
   - The red + insertion cross: Enter inserts a line and pushes content down; Backspace removes a blank line.
-- **Ruled-paper grid.** 10 px squares, a major line every 4 (40 px). Math and text snap their *first baseline* onto a major line by default; View → "Snap equations to minor grid lines" changes this to 10 px. The math baseline is measured from the DOM (`props.baseline`, not persisted as authoritative).
+- **Ruled-paper grid.** 20 px squares in light grey (no blue); major lines every 2 squares (40 px), drawn the same as the others. Math and text snap their *first baseline* onto a major line by default; View → "Snap equations to minor grid lines" changes this to 20 px. The math baseline is measured from the DOM (`props.baseline`, not persisted as authoritative).
 - **No overlaps.** When a region would overlap an equation, the later region in reading order, and everything after it, moves down by whole lines (`layout.planSeparation`).
 - **Inputs.** A definition from literals only (`fck := 35 MPa`, no variables) is an input: light-yellow highlight and blue text, on screen and in the PDF.
 - **Units display.** Light blue (`UNIT_COLOR`), with a `·` between number and unit (display only, `unitStyle.ts`). Temperatures keep `20 °C`.

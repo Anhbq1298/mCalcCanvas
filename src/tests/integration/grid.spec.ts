@@ -6,9 +6,9 @@ const shapes = (page: Page): Promise<S[]> =>
   page.evaluate(() =>
     Object.values((window as unknown as { __calccanvas: { store: { getState(): { shapes: Record<string, S> } } } }).__calccanvas.store.getState().shapes),
   );
-/** Ruled paper: x on the 10 px grid, first baseline on a 40 px major line (4 × 4 squares). */
+/** Ruled paper: x on the 20 px grid, first baseline on a 40 px major line (2 × 2 squares). */
 const baseline = (s: S) => (s.type === 'math' ? (s.props.baseline ?? 4 + s.props.fontSize) : Math.round(s.props.fontSize * 1.09));
-const onGrid = (s: S) => Math.abs((s.x - 76) % 10) === 0 && (s.y + baseline(s) - 60) % 40 === 0;
+const onGrid = (s: S) => Math.abs((s.x - 76) % 20) === 0 && (s.y + baseline(s) - 60) % 40 === 0;
 
 async function pageToScreen(page: Page, x: number, y: number) {
   return page.evaluate(([px, py]) => {
@@ -48,7 +48,7 @@ test.describe('math and text regions snap strictly to the grid', () => {
     // arrow keys: one grid square sideways, one major line down
     await page.keyboard.press('ArrowRight');
     const after = (await shapes(page)).find((s) => s.type === 'math')!;
-    expect(after.x - math.x).toBe(10);
+    expect(after.x - math.x).toBe(20);
     expect(onGrid(after)).toBe(true);
     await page.keyboard.press('ArrowDown');
     const down = (await shapes(page)).find((s) => s.type === 'math')!;
@@ -60,7 +60,7 @@ test.describe('math and text regions snap strictly to the grid', () => {
     const p = await pageToScreen(page, 76 + 54, 60 + 71);
     await page.mouse.click(p.x, p.y);
     const cross = await page.evaluate(() => (window as unknown as { __calccanvas: { store: { getState(): { crosshair: { x: number; y: number } } } } }).__calccanvas.store.getState().crosshair);
-    expect((cross.x - 76) % 10).toBe(0);
+    expect((cross.x - 76) % 20).toBe(0);
     expect((cross.y - 60) % 40).toBe(0); // on a major line
   });
 
@@ -76,7 +76,7 @@ test.describe('math and text regions snap strictly to the grid', () => {
     await page.keyboard.press('Enter');
     await page.keyboard.press('ArrowUp');
     await page.keyboard.press('ArrowRight');
-    expect(await cross()).toEqual({ x: c0.x + 10, y: c0.y + 40 });
+    expect(await cross()).toEqual({ x: c0.x + 20, y: c0.y + 40 });
     // Typing starts an equation whose baseline sits on the cross's line.
     await page.keyboard.type('k:2', { delay: 15 });
     await page.keyboard.press('Enter');

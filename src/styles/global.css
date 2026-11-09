@@ -42,8 +42,8 @@
   --color-docs-share-hover: #b3dcf5;
 
   /* Engineering pad (grid on the page) */
-  --grid-minor: rgb(66 133 244 / 0.10);
-  --grid-major: rgb(66 133 244 / 0.20);
+  --grid-minor: rgb(0 0 0 / 0.08);
+  --grid-major: rgb(0 0 0 / 0.08);
   --color-paper: #ffffff;
   --color-desk: #f9fbfd;
   --color-crosshair: #1f6fd1;

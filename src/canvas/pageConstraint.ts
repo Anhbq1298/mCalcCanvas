@@ -93,7 +93,7 @@ export function gridPoint(p: Point): Point {
   return { x: o.x + Math.round((p.x - o.x) / GRID_SIZE) * GRID_SIZE, y: o.y + Math.round((p.y - o.y) / GRID_SIZE) * GRID_SIZE };
 }
 
-/** Vertical snap step for baselines: a major line (40 px) or, if chosen, every minor line (10 px). */
+/** Vertical snap step for baselines: a major line (40 px) or, if chosen, every grid line (20 px). */
 export function baselineStep(): number {
   return useAppStore.getState().settings.baselineSnap === 'minor' ? GRID_SIZE : GRID_MAJOR;
 }

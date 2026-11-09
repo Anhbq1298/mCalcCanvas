@@ -18,17 +18,17 @@
     "showHeaderFooter": true,
     "textFont": "Inter",
     "baselineSnap": "minor",
-    "pages": 12
+    "pages": 14
   },
   "shapes": [
     {
       "id": "s_col_0",
       "type": "text",
-      "x": 80,
-      "y": 80,
+      "x": 76,
+      "y": 98,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 29,
         "html": "RC CIRCULAR COLUMN CHECK – FLEXURE AND SHEAR (EC2)",
         "fontFamily": "Inter",
         "fontSize": 20,
@@ -40,8 +40,8 @@
     {
       "id": "s_col_1",
       "type": "text",
-      "x": 80,
-      "y": 130,
+      "x": 76,
+      "y": 143,
       "props": {
         "w": 630,
         "h": 24,
@@ -56,11 +56,11 @@
     {
       "id": "s_col_2",
       "type": "text",
-      "x": 80,
-      "y": 160,
+      "x": 76,
+      "y": 186,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "EN 1992-1-1. Strips and bars, strain pivots A/B/C, P–M curve in the MEd direction.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -71,11 +71,11 @@
     {
       "id": "s_col_3",
       "type": "text",
-      "x": 80,
-      "y": 190,
+      "x": 76,
+      "y": 226,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "Flexure: ray from 0 through (MEd, NEd) to the P–M curve (UR_M). fcd and shear (spirals):",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -86,11 +86,11 @@
     {
       "id": "s_col_4",
       "type": "text",
-      "x": 80,
-      "y": 220,
+      "x": 76,
+      "y": 266,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "EN 1992-1-1:2023 (5.3), §8.2.3.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -101,11 +101,11 @@
     {
       "id": "s_col_5",
       "type": "text",
-      "x": 80,
-      "y": 250,
+      "x": 76,
+      "y": 306,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "N positive in compression. Annex A.n is calculated at its link ▸.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -116,8 +116,8 @@
     {
       "id": "s_col_6",
       "type": "text",
-      "x": 80,
-      "y": 290,
+      "x": 76,
+      "y": 363,
       "props": {
         "w": 630,
         "h": 24,
@@ -132,11 +132,11 @@
     {
       "id": "s_col_7",
       "type": "text",
-      "x": 80,
-      "y": 320,
+      "x": 76,
+      "y": 405,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "2.1 Materials",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -148,11 +148,11 @@
     {
       "id": "s_col_8",
       "type": "text",
-      "x": 80,
-      "y": 356,
+      "x": 76,
+      "y": 447,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Characteristic concrete cylinder strength",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -164,7 +164,7 @@
       "id": "s_col_9",
       "type": "math",
       "x": 400,
-      "y": 350,
+      "y": 440,
       "props": {
         "w": 60,
         "h": 32,
@@ -180,11 +180,11 @@
     {
       "id": "s_col_a",
       "type": "text",
-      "x": 80,
-      "y": 396,
+      "x": 76,
+      "y": 487,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Partial factor for concrete",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -196,7 +196,7 @@
       "id": "s_col_b",
       "type": "math",
       "x": 400,
-      "y": 390,
+      "y": 480,
       "props": {
         "w": 60,
         "h": 32,
@@ -212,11 +212,11 @@
     {
       "id": "s_col_c",
       "type": "text",
-      "x": 80,
-      "y": 430,
+      "x": 76,
+      "y": 527,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Sustained-load factor (5.3): 0.85, or 1.0 if loaded after 90 days",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -228,7 +228,7 @@
       "id": "s_col_d",
       "type": "math",
       "x": 400,
-      "y": 430,
+      "y": 520,
       "props": {
         "w": 60,
         "h": 32,
@@ -244,11 +244,11 @@
     {
       "id": "s_col_e",
       "type": "text",
-      "x": 80,
-      "y": 476,
+      "x": 76,
+      "y": 567,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Yield strength of longitudinal bars",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -260,7 +260,7 @@
       "id": "s_col_f",
       "type": "math",
       "x": 400,
-      "y": 470,
+      "y": 560,
       "props": {
         "w": 60,
         "h": 32,
@@ -276,11 +276,11 @@
     {
       "id": "s_col_g",
       "type": "text",
-      "x": 80,
-      "y": 516,
+      "x": 76,
+      "y": 607,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Yield strength of spirals",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -292,7 +292,7 @@
       "id": "s_col_h",
       "type": "math",
       "x": 400,
-      "y": 510,
+      "y": 600,
       "props": {
         "w": 60,
         "h": 32,
@@ -308,11 +308,11 @@
     {
       "id": "s_col_i",
       "type": "text",
-      "x": 80,
-      "y": 550,
+      "x": 76,
+      "y": 647,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Ductility class of the spirals: 1 = class A, 0 = class B or C",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -324,7 +324,7 @@
       "id": "s_col_j",
       "type": "math",
       "x": 400,
-      "y": 550,
+      "y": 640,
       "props": {
         "w": 60,
         "h": 32,
@@ -340,11 +340,11 @@
     {
       "id": "s_col_k",
       "type": "text",
-      "x": 80,
-      "y": 596,
+      "x": 76,
+      "y": 687,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Partial factor for reinforcement",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -356,7 +356,7 @@
       "id": "s_col_l",
       "type": "math",
       "x": 400,
-      "y": 590,
+      "y": 680,
       "props": {
         "w": 60,
         "h": 32,
@@ -372,11 +372,11 @@
     {
       "id": "s_col_m",
       "type": "text",
-      "x": 80,
-      "y": 636,
+      "x": 76,
+      "y": 727,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Elastic modulus of reinforcement",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -388,7 +388,7 @@
       "id": "s_col_n",
       "type": "math",
       "x": 400,
-      "y": 630,
+      "y": 720,
       "props": {
         "w": 60,
         "h": 32,
@@ -404,11 +404,11 @@
     {
       "id": "s_col_o",
       "type": "text",
-      "x": 80,
-      "y": 676,
+      "x": 76,
+      "y": 767,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Ultimate concrete strain (Table 3.1)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -420,7 +420,7 @@
       "id": "s_col_p",
       "type": "math",
       "x": 400,
-      "y": 670,
+      "y": 760,
       "props": {
         "w": 60,
         "h": 32,
@@ -436,11 +436,11 @@
     {
       "id": "s_col_q",
       "type": "text",
-      "x": 80,
-      "y": 716,
+      "x": 76,
+      "y": 807,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Concrete strain at peak stress",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -452,7 +452,7 @@
       "id": "s_col_r",
       "type": "math",
       "x": 400,
-      "y": 710,
+      "y": 800,
       "props": {
         "w": 60,
         "h": 32,
@@ -468,11 +468,11 @@
     {
       "id": "s_col_s",
       "type": "text",
-      "x": 80,
-      "y": 756,
+      "x": 76,
+      "y": 847,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Design limit of steel strain, 0.9·εuk",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -484,7 +484,7 @@
       "id": "s_col_t",
       "type": "math",
       "x": 400,
-      "y": 750,
+      "y": 840,
       "props": {
         "w": 60,
         "h": 32,
@@ -500,11 +500,11 @@
     {
       "id": "s_col_u",
       "type": "text",
-      "x": 80,
-      "y": 790,
+      "x": 76,
+      "y": 885,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "2.2 Section and reinforcement sets",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -516,11 +516,11 @@
     {
       "id": "s_col_v",
       "type": "text",
-      "x": 80,
-      "y": 826,
+      "x": 76,
+      "y": 927,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Column diameter",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -532,7 +532,7 @@
       "id": "s_col_w",
       "type": "math",
       "x": 400,
-      "y": 820,
+      "y": 920,
       "props": {
         "w": 60,
         "h": 32,
@@ -548,11 +548,11 @@
     {
       "id": "s_col_x",
       "type": "text",
-      "x": 80,
-      "y": 866,
+      "x": 76,
+      "y": 967,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Nominal cover to the set-1 spiral",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -564,7 +564,7 @@
       "id": "s_col_y",
       "type": "math",
       "x": 400,
-      "y": 860,
+      "y": 960,
       "props": {
         "w": 60,
         "h": 32,
@@ -580,11 +580,11 @@
     {
       "id": "s_col_z",
       "type": "text",
-      "x": 80,
-      "y": 906,
+      "x": 76,
+      "y": 1007,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Reinforcement sets: 1 = outer, 2 = outer + inner",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -596,7 +596,7 @@
       "id": "s_col_10",
       "type": "math",
       "x": 400,
-      "y": 900,
+      "y": 1000,
       "props": {
         "w": 60,
         "h": 32,
@@ -612,11 +612,11 @@
     {
       "id": "s_col_11",
       "type": "text",
-      "x": 80,
-      "y": 946,
+      "x": 76,
+      "y": 1258,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Set 1 (outer): longitudinal bar diameter",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -628,7 +628,7 @@
       "id": "s_col_12",
       "type": "math",
       "x": 400,
-      "y": 940,
+      "y": 1251,
       "props": {
         "w": 60,
         "h": 32,
@@ -644,11 +644,11 @@
     {
       "id": "s_col_13",
       "type": "text",
-      "x": 80,
-      "y": 986,
+      "x": 76,
+      "y": 1298,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Set 1: number of bars (evenly spaced)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -660,7 +660,7 @@
       "id": "s_col_14",
       "type": "math",
       "x": 400,
-      "y": 980,
+      "y": 1291,
       "props": {
         "w": 60,
         "h": 32,
@@ -676,11 +676,11 @@
     {
       "id": "s_col_15",
       "type": "text",
-      "x": 80,
-      "y": 1257,
+      "x": 76,
+      "y": 1338,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Set 1: spiral bar diameter",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -692,7 +692,7 @@
       "id": "s_col_16",
       "type": "math",
       "x": 400,
-      "y": 1251,
+      "y": 1331,
       "props": {
         "w": 60,
         "h": 32,
@@ -708,11 +708,11 @@
     {
       "id": "s_col_17",
       "type": "text",
-      "x": 80,
-      "y": 1297,
+      "x": 76,
+      "y": 1378,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Set 1: spiral pitch",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -724,7 +724,7 @@
       "id": "s_col_18",
       "type": "math",
       "x": 400,
-      "y": 1291,
+      "y": 1371,
       "props": {
         "w": 60,
         "h": 32,
@@ -740,11 +740,11 @@
     {
       "id": "s_col_19",
       "type": "text",
-      "x": 80,
-      "y": 1337,
+      "x": 76,
+      "y": 1418,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Set 2 (inner): longitudinal bar diameter",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -756,7 +756,7 @@
       "id": "s_col_1a",
       "type": "math",
       "x": 400,
-      "y": 1331,
+      "y": 1411,
       "props": {
         "w": 60,
         "h": 32,
@@ -772,11 +772,11 @@
     {
       "id": "s_col_1b",
       "type": "text",
-      "x": 80,
-      "y": 1377,
+      "x": 76,
+      "y": 1458,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Set 2: number of longitudinal bars",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -788,7 +788,7 @@
       "id": "s_col_1c",
       "type": "math",
       "x": 400,
-      "y": 1371,
+      "y": 1451,
       "props": {
         "w": 60,
         "h": 32,
@@ -804,11 +804,11 @@
     {
       "id": "s_col_1d",
       "type": "text",
-      "x": 80,
-      "y": 1417,
+      "x": 76,
+      "y": 1498,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Set 2: spiral bar diameter",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -820,7 +820,7 @@
       "id": "s_col_1e",
       "type": "math",
       "x": 400,
-      "y": 1411,
+      "y": 1491,
       "props": {
         "w": 60,
         "h": 32,
@@ -836,11 +836,11 @@
     {
       "id": "s_col_1f",
       "type": "text",
-      "x": 80,
-      "y": 1457,
+      "x": 76,
+      "y": 1538,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Set 2: spiral pitch",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -852,7 +852,7 @@
       "id": "s_col_1g",
       "type": "math",
       "x": 400,
-      "y": 1451,
+      "y": 1531,
       "props": {
         "w": 60,
         "h": 32,
@@ -868,11 +868,11 @@
     {
       "id": "s_col_1h",
       "type": "text",
-      "x": 80,
-      "y": 1491,
+      "x": 76,
+      "y": 1576,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "2.3 Integration",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -884,11 +884,11 @@
     {
       "id": "s_col_1i",
       "type": "text",
-      "x": 80,
-      "y": 1527,
+      "x": 76,
+      "y": 1618,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Number of concrete strips across D",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -900,7 +900,7 @@
       "id": "s_col_1j",
       "type": "math",
       "x": 400,
-      "y": 1521,
+      "y": 1611,
       "props": {
         "w": 60,
         "h": 32,
@@ -916,11 +916,11 @@
     {
       "id": "s_col_1k",
       "type": "text",
-      "x": 80,
-      "y": 1561,
+      "x": 76,
+      "y": 1656,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "2.4 Design actions (ULS)",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -932,11 +932,11 @@
     {
       "id": "s_col_1l",
       "type": "text",
-      "x": 80,
-      "y": 1597,
+      "x": 76,
+      "y": 1698,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Axial force, compression positive",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -948,7 +948,7 @@
       "id": "s_col_1m",
       "type": "math",
       "x": 400,
-      "y": 1591,
+      "y": 1691,
       "props": {
         "w": 60,
         "h": 32,
@@ -964,11 +964,11 @@
     {
       "id": "s_col_1n",
       "type": "text",
-      "x": 80,
-      "y": 1637,
+      "x": 76,
+      "y": 1738,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Bending moment about x",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -980,7 +980,7 @@
       "id": "s_col_1o",
       "type": "math",
       "x": 400,
-      "y": 1631,
+      "y": 1731,
       "props": {
         "w": 60,
         "h": 32,
@@ -996,11 +996,11 @@
     {
       "id": "s_col_1p",
       "type": "text",
-      "x": 80,
-      "y": 1677,
+      "x": 76,
+      "y": 1778,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Bending moment about y",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1012,7 +1012,7 @@
       "id": "s_col_1q",
       "type": "math",
       "x": 400,
-      "y": 1671,
+      "y": 1771,
       "props": {
         "w": 60,
         "h": 32,
@@ -1028,11 +1028,11 @@
     {
       "id": "s_col_1r",
       "type": "text",
-      "x": 80,
-      "y": 1717,
+      "x": 76,
+      "y": 1818,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Shear force",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1044,7 +1044,7 @@
       "id": "s_col_1s",
       "type": "math",
       "x": 400,
-      "y": 1711,
+      "y": 1811,
       "props": {
         "w": 60,
         "h": 32,
@@ -1060,8 +1060,8 @@
     {
       "id": "s_col_1t",
       "type": "text",
-      "x": 80,
-      "y": 1761,
+      "x": 76,
+      "y": 1874,
       "props": {
         "w": 630,
         "h": 24,
@@ -1076,11 +1076,11 @@
     {
       "id": "s_col_1u",
       "type": "text",
-      "x": 80,
-      "y": 1807,
+      "x": 76,
+      "y": 1938,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Effective strength factor (5.4), fck,ref = 40 MPa",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1092,7 +1092,7 @@
       "id": "s_col_1v",
       "type": "math",
       "x": 400,
-      "y": 1791,
+      "y": 1917,
       "props": {
         "w": 60,
         "h": 32,
@@ -1108,11 +1108,11 @@
     {
       "id": "s_col_1w",
       "type": "text",
-      "x": 80,
-      "y": 1870,
+      "x": 76,
+      "y": 2018,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Design compressive strength (5.3)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1124,7 +1124,7 @@
       "id": "s_col_1x",
       "type": "math",
       "x": 400,
-      "y": 1861,
+      "y": 2006,
       "props": {
         "w": 60,
         "h": 32,
@@ -1140,11 +1140,11 @@
     {
       "id": "s_col_1y",
       "type": "text",
-      "x": 80,
-      "y": 1920,
+      "x": 76,
+      "y": 2098,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Design yield strength of longitudinal bars",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1156,7 +1156,7 @@
       "id": "s_col_1z",
       "type": "math",
       "x": 400,
-      "y": 1911,
+      "y": 2085,
       "props": {
         "w": 60,
         "h": 32,
@@ -1172,11 +1172,11 @@
     {
       "id": "s_col_20",
       "type": "text",
-      "x": 80,
-      "y": 1970,
+      "x": 76,
+      "y": 2449,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Design yield strength of spirals",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1188,7 +1188,7 @@
       "id": "s_col_21",
       "type": "math",
       "x": 400,
-      "y": 1961,
+      "y": 2436,
       "props": {
         "w": 60,
         "h": 32,
@@ -1204,11 +1204,11 @@
     {
       "id": "s_col_22",
       "type": "text",
-      "x": 80,
-      "y": 2020,
+      "x": 76,
+      "y": 2529,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Design yield strain of longitudinal bars",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1220,7 +1220,7 @@
       "id": "s_col_23",
       "type": "math",
       "x": 400,
-      "y": 2011,
+      "y": 2516,
       "props": {
         "w": 60,
         "h": 32,
@@ -1236,11 +1236,11 @@
     {
       "id": "s_col_24",
       "type": "text",
-      "x": 80,
-      "y": 2092,
+      "x": 76,
+      "y": 2629,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Set-2 switch: 1 = included, 0 = ignored",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1252,7 +1252,7 @@
       "id": "s_col_25",
       "type": "math",
       "x": 400,
-      "y": 2061,
+      "y": 2582,
       "props": {
         "w": 60,
         "h": 32,
@@ -1268,8 +1268,8 @@
     {
       "id": "s_col_26",
       "type": "text",
-      "x": 80,
-      "y": 2422,
+      "x": 76,
+      "y": 2705,
       "props": {
         "w": 630,
         "h": 24,
@@ -1284,11 +1284,11 @@
     {
       "id": "s_col_27",
       "type": "text",
-      "x": 80,
-      "y": 2452,
+      "x": 76,
+      "y": 2747,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "4.1 Rings, bars and spirals",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -1300,11 +1300,11 @@
     {
       "id": "s_col_28",
       "type": "text",
-      "x": 80,
-      "y": 2492,
+      "x": 76,
+      "y": 2809,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Section radius R (centroid to the outer face)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1316,7 +1316,7 @@
       "id": "s_col_29",
       "type": "math",
       "x": 400,
-      "y": 2482,
+      "y": 2799,
       "props": {
         "w": 60,
         "h": 32,
@@ -1332,11 +1332,11 @@
     {
       "id": "s_col_2a",
       "type": "text",
-      "x": 80,
-      "y": 2538,
+      "x": 76,
+      "y": 2869,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Cover to set-2 spiral (inside set-1 bars)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1348,7 +1348,7 @@
       "id": "s_col_2b",
       "type": "math",
       "x": 400,
-      "y": 2532,
+      "y": 2862,
       "props": {
         "w": 60,
         "h": 32,
@@ -1364,11 +1364,11 @@
     {
       "id": "s_col_2c",
       "type": "text",
-      "x": 80,
-      "y": 2583,
+      "x": 76,
+      "y": 2929,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Radius to set-1 bar centres",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1380,7 +1380,7 @@
       "id": "s_col_2d",
       "type": "math",
       "x": 400,
-      "y": 2572,
+      "y": 2917,
       "props": {
         "w": 60,
         "h": 32,
@@ -1396,11 +1396,11 @@
     {
       "id": "s_col_2e",
       "type": "text",
-      "x": 80,
-      "y": 2633,
+      "x": 76,
+      "y": 3009,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Radius to set-2 bar centres",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1412,7 +1412,7 @@
       "id": "s_col_2f",
       "type": "math",
       "x": 400,
-      "y": 2622,
+      "y": 2997,
       "props": {
         "w": 60,
         "h": 32,
@@ -1428,11 +1428,11 @@
     {
       "id": "s_col_2g",
       "type": "text",
-      "x": 80,
-      "y": 2674,
+      "x": 76,
+      "y": 3069,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Set 2 must sit inside set 1",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1444,7 +1444,7 @@
       "id": "s_col_2h",
       "type": "math",
       "x": 96,
-      "y": 2702,
+      "y": 3097,
       "props": {
         "w": 60,
         "h": 32,
@@ -1460,11 +1460,11 @@
     {
       "id": "s_col_2i",
       "type": "text",
-      "x": 80,
-      "y": 2758,
+      "x": 76,
+      "y": 3169,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Area of one set-1 longitudinal bar",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1476,7 +1476,7 @@
       "id": "s_col_2j",
       "type": "math",
       "x": 400,
-      "y": 2752,
+      "y": 3162,
       "props": {
         "w": 60,
         "h": 32,
@@ -1492,11 +1492,11 @@
     {
       "id": "s_col_2k",
       "type": "text",
-      "x": 80,
-      "y": 2798,
+      "x": 76,
+      "y": 3209,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Area of one set-2 longitudinal bar",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1508,7 +1508,7 @@
       "id": "s_col_2l",
       "type": "math",
       "x": 400,
-      "y": 2792,
+      "y": 3202,
       "props": {
         "w": 60,
         "h": 32,
@@ -1524,11 +1524,11 @@
     {
       "id": "s_col_2m",
       "type": "text",
-      "x": 80,
-      "y": 2838,
+      "x": 76,
+      "y": 3249,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Gross section area",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1540,7 +1540,7 @@
       "id": "s_col_2n",
       "type": "math",
       "x": 400,
-      "y": 2832,
+      "y": 3242,
       "props": {
         "w": 60,
         "h": 32,
@@ -1556,11 +1556,11 @@
     {
       "id": "s_col_2o",
       "type": "text",
-      "x": 80,
-      "y": 2878,
+      "x": 76,
+      "y": 3289,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Total longitudinal steel area",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1572,7 +1572,7 @@
       "id": "s_col_2p",
       "type": "math",
       "x": 400,
-      "y": 2872,
+      "y": 3282,
       "props": {
         "w": 60,
         "h": 32,
@@ -1588,11 +1588,11 @@
     {
       "id": "s_col_2q",
       "type": "text",
-      "x": 80,
-      "y": 2918,
+      "x": 76,
+      "y": 3329,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Spiral centreline diameter, set 1",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1604,7 +1604,7 @@
       "id": "s_col_2r",
       "type": "math",
       "x": 400,
-      "y": 2912,
+      "y": 3322,
       "props": {
         "w": 60,
         "h": 32,
@@ -1620,11 +1620,11 @@
     {
       "id": "s_col_2s",
       "type": "text",
-      "x": 80,
-      "y": 2958,
+      "x": 76,
+      "y": 3600,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Spiral centreline diameter, set 2",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1636,7 +1636,7 @@
       "id": "s_col_2t",
       "type": "math",
       "x": 400,
-      "y": 2952,
+      "y": 3593,
       "props": {
         "w": 60,
         "h": 32,
@@ -1652,11 +1652,11 @@
     {
       "id": "s_col_2u",
       "type": "text",
-      "x": 80,
-      "y": 2998,
+      "x": 76,
+      "y": 3640,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Area of one set-1 spiral bar",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1668,7 +1668,7 @@
       "id": "s_col_2v",
       "type": "math",
       "x": 400,
-      "y": 2992,
+      "y": 3633,
       "props": {
         "w": 60,
         "h": 32,
@@ -1684,11 +1684,11 @@
     {
       "id": "s_col_2w",
       "type": "text",
-      "x": 80,
-      "y": 3038,
+      "x": 76,
+      "y": 3680,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Area of one set-2 spiral bar",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1700,7 +1700,7 @@
       "id": "s_col_2x",
       "type": "math",
       "x": 400,
-      "y": 3032,
+      "y": 3673,
       "props": {
         "w": 60,
         "h": 32,
@@ -1716,11 +1716,11 @@
     {
       "id": "s_col_2y",
       "type": "text",
-      "x": 80,
-      "y": 3080,
+      "x": 76,
+      "y": 3740,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Clear spacing of set-1 bars on the ring",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1732,7 +1732,7 @@
       "id": "s_col_2z",
       "type": "math",
       "x": 400,
-      "y": 3072,
+      "y": 3730,
       "props": {
         "w": 60,
         "h": 32,
@@ -1748,11 +1748,11 @@
     {
       "id": "s_col_30",
       "type": "text",
-      "x": 80,
-      "y": 3128,
+      "x": 76,
+      "y": 3800,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Minimum clear spacing, EN 1536 bored piles",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1764,7 +1764,7 @@
       "id": "s_col_31",
       "type": "math",
       "x": 400,
-      "y": 3122,
+      "y": 3793,
       "props": {
         "w": 60,
         "h": 32,
@@ -1780,11 +1780,11 @@
     {
       "id": "s_col_32",
       "type": "text",
-      "x": 80,
-      "y": 3162,
+      "x": 76,
+      "y": 3838,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "4.2 Bars and section",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -1796,8 +1796,8 @@
     {
       "id": "s_col_33",
       "type": "text",
-      "x": 80,
-      "y": 3192,
+      "x": 76,
+      "y": 3878,
       "props": {
         "w": 630,
         "h": 24,
@@ -1816,7 +1816,7 @@
       "id": "s_col_34",
       "type": "graph",
       "x": 247,
-      "y": 3585,
+      "y": 3905,
       "props": {
         "w": 300,
         "h": 300,
@@ -1892,11 +1892,11 @@
     {
       "id": "s_col_35",
       "type": "text",
-      "x": 80,
-      "y": 3913,
+      "x": 76,
+      "y": 4238,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "4.3 Concrete strips",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -1908,8 +1908,8 @@
     {
       "id": "s_col_36",
       "type": "text",
-      "x": 80,
-      "y": 3943,
+      "x": 76,
+      "y": 4278,
       "props": {
         "w": 630,
         "h": 24,
@@ -1927,8 +1927,8 @@
     {
       "id": "s_col_37",
       "type": "text",
-      "x": 80,
-      "y": 3993,
+      "x": 76,
+      "y": 4336,
       "props": {
         "w": 630,
         "h": 24,
@@ -1943,11 +1943,11 @@
     {
       "id": "s_col_38",
       "type": "text",
-      "x": 80,
-      "y": 4023,
+      "x": 76,
+      "y": 4378,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "5.1 Bending direction",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -1959,11 +1959,11 @@
     {
       "id": "s_col_39",
       "type": "text",
-      "x": 80,
-      "y": 4063,
+      "x": 76,
+      "y": 4440,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Resultant design moment",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1975,7 +1975,7 @@
       "id": "s_col_3a",
       "type": "math",
       "x": 400,
-      "y": 4053,
+      "y": 4430,
       "props": {
         "w": 60,
         "h": 32,
@@ -1991,11 +1991,11 @@
     {
       "id": "s_col_3b",
       "type": "text",
-      "x": 80,
-      "y": 4109,
+      "x": 76,
+      "y": 4480,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Direction of MEd, signs kept (0 … 360°)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2007,7 +2007,7 @@
       "id": "s_col_3c",
       "type": "math",
       "x": 400,
-      "y": 4103,
+      "y": 4473,
       "props": {
         "w": 60,
         "h": 32,
@@ -2023,8 +2023,8 @@
     {
       "id": "s_col_3d",
       "type": "text",
-      "x": 80,
-      "y": 4143,
+      "x": 76,
+      "y": 4518,
       "props": {
         "w": 630,
         "h": 24,
@@ -2042,11 +2042,11 @@
     {
       "id": "s_col_3e",
       "type": "text",
-      "x": 80,
-      "y": 4183,
+      "x": 76,
+      "y": 4769,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "5.2 Control points of the curve",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -2058,11 +2058,11 @@
     {
       "id": "s_col_3f",
       "type": "text",
-      "x": 80,
-      "y": 4213,
+      "x": 76,
+      "y": 4810,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "The curve is evaluated at 55 neutral-axis depths from pure tension to uniform compression.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -2073,8 +2073,8 @@
     {
       "id": "s_col_3g",
       "type": "text",
-      "x": 80,
-      "y": 4243,
+      "x": 76,
+      "y": 4849,
       "props": {
         "w": 630,
         "h": 24,
@@ -2092,11 +2092,11 @@
     {
       "id": "s_col_3h",
       "type": "text",
-      "x": 80,
-      "y": 4289,
+      "x": 76,
+      "y": 4891,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Max. axial resistance (uniform εc2)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2108,7 +2108,7 @@
       "id": "s_col_3i",
       "type": "math",
       "x": 400,
-      "y": 4283,
+      "y": 4884,
       "props": {
         "w": 60,
         "h": 32,
@@ -2124,11 +2124,11 @@
     {
       "id": "s_col_3j",
       "type": "text",
-      "x": 80,
-      "y": 4329,
+      "x": 76,
+      "y": 4931,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Maximum moment resistance on the curve",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2140,7 +2140,7 @@
       "id": "s_col_3k",
       "type": "math",
       "x": 400,
-      "y": 4323,
+      "y": 4924,
       "props": {
         "w": 60,
         "h": 32,
@@ -2156,8 +2156,8 @@
     {
       "id": "s_col_3l",
       "type": "text",
-      "x": 80,
-      "y": 4373,
+      "x": 76,
+      "y": 4987,
       "props": {
         "w": 630,
         "h": 24,
@@ -2172,11 +2172,11 @@
     {
       "id": "s_col_3m",
       "type": "text",
-      "x": 80,
-      "y": 4403,
+      "x": 76,
+      "y": 5030,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "Ray from the origin through the design point (MEd, NEd) to the P–M curve, as MBColumn.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -2187,11 +2187,11 @@
     {
       "id": "s_col_3n",
       "type": "text",
-      "x": 80,
-      "y": 4433,
+      "x": 76,
+      "y": 5069,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "6.1 Radial ratio",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -2203,11 +2203,11 @@
     {
       "id": "s_col_3o",
       "type": "text",
-      "x": 80,
-      "y": 4471,
+      "x": 76,
+      "y": 5131,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Normalised design axial force",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2219,7 +2219,7 @@
       "id": "s_col_3p",
       "type": "math",
       "x": 400,
-      "y": 4463,
+      "y": 5120,
       "props": {
         "w": 60,
         "h": 32,
@@ -2235,11 +2235,11 @@
     {
       "id": "s_col_3q",
       "type": "text",
-      "x": 80,
-      "y": 4772,
+      "x": 76,
+      "y": 5211,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Normalised design moment",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2251,7 +2251,7 @@
       "id": "s_col_3r",
       "type": "math",
       "x": 400,
-      "y": 4764,
+      "y": 5200,
       "props": {
         "w": 60,
         "h": 32,
@@ -2267,11 +2267,11 @@
     {
       "id": "s_col_3s",
       "type": "text",
-      "x": 80,
-      "y": 4824,
+      "x": 76,
+      "y": 5291,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Distance of the design point from the origin",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2283,7 +2283,7 @@
       "id": "s_col_3t",
       "type": "math",
       "x": 400,
-      "y": 4814,
+      "y": 5280,
       "props": {
         "w": 60,
         "h": 32,
@@ -2299,11 +2299,11 @@
     {
       "id": "s_col_3u",
       "type": "text",
-      "x": 80,
-      "y": 4875,
+      "x": 76,
+      "y": 5351,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Curve distance along the design ray",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2315,7 +2315,7 @@
       "id": "s_col_3v",
       "type": "math",
       "x": 400,
-      "y": 4864,
+      "y": 5336,
       "props": {
         "w": 60,
         "h": 32,
@@ -2331,11 +2331,11 @@
     {
       "id": "s_col_3w",
       "type": "text",
-      "x": 80,
-      "y": 4935,
+      "x": 76,
+      "y": 5451,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Radial ratio (scale-independent)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2347,7 +2347,7 @@
       "id": "s_col_3x",
       "type": "math",
       "x": 400,
-      "y": 4924,
+      "y": 5423,
       "props": {
         "w": 60,
         "h": 32,
@@ -2363,11 +2363,11 @@
     {
       "id": "s_col_3y",
       "type": "text",
-      "x": 80,
-      "y": 4980,
+      "x": 76,
+      "y": 5491,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Check",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2379,7 +2379,7 @@
       "id": "s_col_3z",
       "type": "math",
       "x": 400,
-      "y": 4974,
+      "y": 5484,
       "props": {
         "w": 60,
         "h": 32,
@@ -2395,11 +2395,11 @@
     {
       "id": "s_col_40",
       "type": "text",
-      "x": 80,
-      "y": 5014,
+      "x": 76,
+      "y": 5940,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "6.2 P–M diagram at θM",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -2412,7 +2412,7 @@
       "id": "s_col_41",
       "type": "graph",
       "x": 187,
-      "y": 5036,
+      "y": 5967,
       "props": {
         "w": 420,
         "h": 420,
@@ -2499,8 +2499,8 @@
     {
       "id": "s_col_42",
       "type": "text",
-      "x": 80,
-      "y": 5494,
+      "x": 76,
+      "y": 6438,
       "props": {
         "w": 630,
         "h": 24,
@@ -2515,11 +2515,11 @@
     {
       "id": "s_col_43",
       "type": "text",
-      "x": 80,
-      "y": 5524,
+      "x": 76,
+      "y": 6480,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "7.1 Chords, web width and stresses",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -2531,11 +2531,11 @@
     {
       "id": "s_col_44",
       "type": "text",
-      "x": 80,
-      "y": 5554,
+      "x": 76,
+      "y": 6521,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "Truss in stresses: τEd = VEd/(bw·z) (8.18); spirals τRd,sy = ρw·fywd·cotθ (8.42); strut",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -2546,11 +2546,11 @@
     {
       "id": "s_col_45",
       "type": "text",
-      "x": 80,
-      "y": 5584,
+      "x": 76,
+      "y": 6561,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "σcd = τEd·(cotθ + tanθ) ≤ ν·fcd (8.44), ν = 0.5 (8.2.3(6)). bw: least width between the",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -2561,11 +2561,11 @@
     {
       "id": "s_col_46",
       "type": "text",
-      "x": 80,
-      "y": 5614,
+      "x": 76,
+      "y": 6601,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "compression chord (centroid of the concrete compression, §8.1) and the tension chord (d).",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -2576,11 +2576,11 @@
     {
       "id": "s_col_47",
       "type": "text",
-      "x": 80,
-      "y": 5644,
+      "x": 76,
+      "y": 6641,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "Each spiral crosses the shear plane twice: Asw = 2·Aw.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -2591,11 +2591,11 @@
     {
       "id": "s_col_48",
       "type": "text",
-      "x": 80,
-      "y": 5937,
+      "x": 76,
+      "y": 6702,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Effective depth: D/2 + half-ring centroid 2r/π, weighted by bar area",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2607,7 +2607,7 @@
       "id": "s_col_49",
       "type": "math",
       "x": 96,
-      "y": 5965,
+      "y": 6731,
       "props": {
         "w": 60,
         "h": 32,
@@ -2623,11 +2623,11 @@
     {
       "id": "s_col_4a",
       "type": "text",
-      "x": 80,
-      "y": 6021,
+      "x": 76,
+      "y": 6802,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Lever arm, 8.2.1(3)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2639,7 +2639,7 @@
       "id": "s_col_4b",
       "type": "math",
       "x": 400,
-      "y": 6015,
+      "y": 6795,
       "props": {
         "w": 60,
         "h": 32,
@@ -2655,11 +2655,11 @@
     {
       "id": "s_col_4c",
       "type": "text",
-      "x": 80,
-      "y": 6055,
+      "x": 76,
+      "y": 6842,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Neutral-axis depth at the bending resistance under NEd (§8.1)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2671,7 +2671,7 @@
       "id": "s_col_4d",
       "type": "math",
       "x": 400,
-      "y": 6055,
+      "y": 6835,
       "props": {
         "w": 60,
         "h": 32,
@@ -2687,11 +2687,11 @@
     {
       "id": "s_col_4e",
       "type": "text",
-      "x": 80,
-      "y": 6097,
+      "x": 76,
+      "y": 7113,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Depth of the compression chord centroid (concrete compression at x)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2703,7 +2703,7 @@
       "id": "s_col_4f",
       "type": "math",
       "x": 96,
-      "y": 6125,
+      "y": 7146,
       "props": {
         "w": 60,
         "h": 32,
@@ -2719,11 +2719,11 @@
     {
       "id": "s_col_4g",
       "type": "text",
-      "x": 80,
-      "y": 6247,
+      "x": 76,
+      "y": 7273,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Web width: least chord width between the chords (only the tension chord if x ≤ 0)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2735,7 +2735,7 @@
       "id": "s_col_4h",
       "type": "math",
       "x": 96,
-      "y": 6275,
+      "y": 7306,
       "props": {
         "w": 60,
         "h": 32,
@@ -2751,11 +2751,11 @@
     {
       "id": "s_col_4i",
       "type": "text",
-      "x": 80,
-      "y": 6423,
+      "x": 76,
+      "y": 7473,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Average shear stress (8.18)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2767,7 +2767,7 @@
       "id": "s_col_4j",
       "type": "math",
       "x": 400,
-      "y": 6415,
+      "y": 7462,
       "props": {
         "w": 60,
         "h": 32,
@@ -2783,11 +2783,11 @@
     {
       "id": "s_col_4k",
       "type": "text",
-      "x": 80,
-      "y": 6471,
+      "x": 76,
+      "y": 7533,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Strength reduction for cracked concrete, 8.2.3(6)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2799,7 +2799,7 @@
       "id": "s_col_4l",
       "type": "math",
       "x": 400,
-      "y": 6465,
+      "y": 7526,
       "props": {
         "w": 60,
         "h": 32,
@@ -2815,11 +2815,11 @@
     {
       "id": "s_col_4m",
       "type": "text",
-      "x": 80,
-      "y": 6505,
+      "x": 76,
+      "y": 7571,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "7.2 Strut angle",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -2831,11 +2831,11 @@
     {
       "id": "s_col_4n",
       "type": "text",
-      "x": 80,
-      "y": 6535,
+      "x": 76,
+      "y": 7612,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "1 ≤ cotθ ≤ cot θmin (8.41): 2.5; 3.0 if σcp ≥ 3 MPa and x &lt; 0.25d (linear between); 2.5 if",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -2846,11 +2846,11 @@
     {
       "id": "s_col_4o",
       "type": "text",
-      "x": 80,
-      "y": 6565,
+      "x": 76,
+      "y": 7652,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "x ≥ 0.25d; 2.5 − 0.1·|NEd|/VEd ≥ 1 in tension; × kA = 0.8 for class A spirals. cotθ &lt; 1",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -2861,11 +2861,11 @@
     {
       "id": "s_col_4p",
       "type": "text",
-      "x": 80,
-      "y": 6595,
+      "x": 76,
+      "y": 7692,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "(8.2.3(11)) is not used: σcd is least at θ = 45° and τRd,sy falls with cotθ.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -2876,11 +2876,11 @@
     {
       "id": "s_col_4q",
       "type": "text",
-      "x": 80,
-      "y": 6625,
+      "x": 76,
+      "y": 7732,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "Design cotθ: the largest value ≤ cot θmin that keeps σcd ≤ ν·fcd.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -2891,11 +2891,11 @@
     {
       "id": "s_col_4r",
       "type": "text",
-      "x": 80,
-      "y": 6675,
+      "x": 76,
+      "y": 7793,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Factor on cot θmin: 0.8 for class A spirals, 8.2.3(4)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2907,7 +2907,7 @@
       "id": "s_col_4s",
       "type": "math",
       "x": 400,
-      "y": 6675,
+      "y": 7786,
       "props": {
         "w": 60,
         "h": 32,
@@ -2923,11 +2923,11 @@
     {
       "id": "s_col_4t",
       "type": "text",
-      "x": 80,
-      "y": 6724,
+      "x": 76,
+      "y": 7853,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Average axial stress, compression positive",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2939,7 +2939,7 @@
       "id": "s_col_4u",
       "type": "math",
       "x": 400,
-      "y": 6715,
+      "y": 7843,
       "props": {
         "w": 60,
         "h": 32,
@@ -2955,11 +2955,11 @@
     {
       "id": "s_col_4v",
       "type": "text",
-      "x": 80,
-      "y": 7108,
+      "x": 76,
+      "y": 8284,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Flattest strut allowed (8.41)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2971,7 +2971,7 @@
       "id": "s_col_4w",
       "type": "math",
       "x": 96,
-      "y": 7136,
+      "y": 8317,
       "props": {
         "w": 60,
         "h": 32,
@@ -2987,11 +2987,11 @@
     {
       "id": "s_col_4x",
       "type": "text",
-      "x": 80,
-      "y": 7338,
+      "x": 76,
+      "y": 8524,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Design cotθ: cot θmin if the strut holds, else the root of τEd(cotθ + tanθ) = ν·fcd; 1: strut fails",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3003,7 +3003,7 @@
       "id": "s_col_4y",
       "type": "math",
       "x": 96,
-      "y": 7366,
+      "y": 8554,
       "props": {
         "w": 60,
         "h": 32,
@@ -3019,11 +3019,11 @@
     {
       "id": "s_col_4z",
       "type": "text",
-      "x": 80,
-      "y": 7536,
+      "x": 76,
+      "y": 8742,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "7.3 Resistance",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -3035,11 +3035,11 @@
     {
       "id": "s_col_50",
       "type": "text",
-      "x": 80,
-      "y": 7569,
+      "x": 76,
+      "y": 8804,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Shear reinforcement ratio (8.43), set 2 when δ2 = 1",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3051,7 +3051,7 @@
       "id": "s_col_51",
       "type": "math",
       "x": 400,
-      "y": 7566,
+      "y": 8789,
       "props": {
         "w": 60,
         "h": 32,
@@ -3067,11 +3067,11 @@
     {
       "id": "s_col_52",
       "type": "text",
-      "x": 80,
-      "y": 7632,
+      "x": 76,
+      "y": 8864,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Spiral resistance (8.42)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3083,7 +3083,7 @@
       "id": "s_col_53",
       "type": "math",
       "x": 400,
-      "y": 7626,
+      "y": 8857,
       "props": {
         "w": 60,
         "h": 32,
@@ -3099,11 +3099,11 @@
     {
       "id": "s_col_54",
       "type": "text",
-      "x": 80,
-      "y": 7677,
+      "x": 76,
+      "y": 8924,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Strut stress (8.44)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3115,7 +3115,7 @@
       "id": "s_col_55",
       "type": "math",
       "x": 400,
-      "y": 7666,
+      "y": 8909,
       "props": {
         "w": 60,
         "h": 32,
@@ -3131,11 +3131,11 @@
     {
       "id": "s_col_56",
       "type": "text",
-      "x": 80,
-      "y": 7737,
+      "x": 76,
+      "y": 9004,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Shear utilisation ratio",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3147,7 +3147,7 @@
       "id": "s_col_57",
       "type": "math",
       "x": 400,
-      "y": 7726,
+      "y": 8990,
       "props": {
         "w": 60,
         "h": 32,
@@ -3163,11 +3163,11 @@
     {
       "id": "s_col_58",
       "type": "text",
-      "x": 80,
-      "y": 7792,
+      "x": 76,
+      "y": 9064,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Check",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3179,7 +3179,7 @@
       "id": "s_col_59",
       "type": "math",
       "x": 400,
-      "y": 7786,
+      "y": 9057,
       "props": {
         "w": 60,
         "h": 32,
@@ -3195,8 +3195,8 @@
     {
       "id": "s_col_5a",
       "type": "text",
-      "x": 80,
-      "y": 7836,
+      "x": 76,
+      "y": 9120,
       "props": {
         "w": 630,
         "h": 24,
@@ -3211,11 +3211,11 @@
     {
       "id": "s_col_5b",
       "type": "text",
-      "x": 80,
-      "y": 7872,
+      "x": 76,
+      "y": 9164,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Flexure utilisation ratio",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3227,7 +3227,7 @@
       "id": "s_col_5c",
       "type": "math",
       "x": 400,
-      "y": 7866,
+      "y": 9157,
       "props": {
         "w": 60,
         "h": 32,
@@ -3243,11 +3243,11 @@
     {
       "id": "s_col_5d",
       "type": "text",
-      "x": 80,
-      "y": 7912,
+      "x": 76,
+      "y": 9204,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Shear utilisation ratio",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3259,7 +3259,7 @@
       "id": "s_col_5e",
       "type": "math",
       "x": 400,
-      "y": 7906,
+      "y": 9197,
       "props": {
         "w": 60,
         "h": 32,
@@ -3275,11 +3275,11 @@
     {
       "id": "s_col_5f",
       "type": "text",
-      "x": 80,
-      "y": 8277,
+      "x": 76,
+      "y": 9466,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 29,
         "html": "ANNEX",
         "fontFamily": "Inter",
         "fontSize": 20,
@@ -3294,8 +3294,8 @@
     {
       "id": "s_col_5g",
       "type": "text",
-      "x": 80,
-      "y": 8317,
+      "x": 76,
+      "y": 9491,
       "props": {
         "w": 630,
         "h": 24,
@@ -3314,11 +3314,11 @@
     {
       "id": "s_col_5h",
       "type": "text",
-      "x": 80,
-      "y": 8353,
+      "x": 76,
+      "y": 9535,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Bar index, set 1 (edit seq to renumber)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3330,7 +3330,7 @@
       "id": "s_col_5i",
       "type": "math",
       "x": 400,
-      "y": 8347,
+      "y": 9528,
       "props": {
         "w": 60,
         "h": 32,
@@ -3346,11 +3346,11 @@
     {
       "id": "s_col_5j",
       "type": "text",
-      "x": 80,
-      "y": 8393,
+      "x": 76,
+      "y": 9575,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Bar index, set 2",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3362,7 +3362,7 @@
       "id": "s_col_5k",
       "type": "math",
       "x": 400,
-      "y": 8387,
+      "y": 9568,
       "props": {
         "w": 60,
         "h": 32,
@@ -3378,11 +3378,11 @@
     {
       "id": "s_col_5l",
       "type": "text",
-      "x": 80,
-      "y": 8437,
+      "x": 76,
+      "y": 9655,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Angles for drawing circles",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3394,7 +3394,7 @@
       "id": "s_col_5m",
       "type": "math",
       "x": 400,
-      "y": 8427,
+      "y": 9626,
       "props": {
         "w": 60,
         "h": 32,
@@ -3410,11 +3410,11 @@
     {
       "id": "s_col_5n",
       "type": "text",
-      "x": 80,
-      "y": 8488,
+      "x": 76,
+      "y": 9715,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Set-1 bar coordinates, x",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3426,7 +3426,7 @@
       "id": "s_col_5o",
       "type": "math",
       "x": 400,
-      "y": 8477,
+      "y": 9700,
       "props": {
         "w": 60,
         "h": 32,
@@ -3442,11 +3442,11 @@
     {
       "id": "s_col_5p",
       "type": "text",
-      "x": 80,
-      "y": 8548,
+      "x": 76,
+      "y": 9795,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Set-1 bar coordinates, y",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3458,7 +3458,7 @@
       "id": "s_col_5q",
       "type": "math",
       "x": 400,
-      "y": 8537,
+      "y": 9780,
       "props": {
         "w": 60,
         "h": 32,
@@ -3474,11 +3474,11 @@
     {
       "id": "s_col_5r",
       "type": "text",
-      "x": 80,
-      "y": 8608,
+      "x": 76,
+      "y": 9875,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Set-2 bar coordinates, x",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3490,7 +3490,7 @@
       "id": "s_col_5s",
       "type": "math",
       "x": 400,
-      "y": 8597,
+      "y": 9860,
       "props": {
         "w": 60,
         "h": 32,
@@ -3506,11 +3506,11 @@
     {
       "id": "s_col_5t",
       "type": "text",
-      "x": 80,
-      "y": 8668,
+      "x": 76,
+      "y": 9955,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Set-2 bar coordinates, y",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3522,7 +3522,7 @@
       "id": "s_col_5u",
       "type": "math",
       "x": 400,
-      "y": 8657,
+      "y": 9940,
       "props": {
         "w": 60,
         "h": 32,
@@ -3539,10 +3539,10 @@
       "id": "s_col_5v",
       "type": "text",
       "x": 96,
-      "y": 8717,
+      "y": 10014,
       "props": {
         "w": 280,
-        "h": 24,
+        "h": 19,
         "html": "Set 1 (outer)",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -3553,11 +3553,11 @@
     {
       "id": "s_col_5w",
       "type": "text",
-      "x": 400,
-      "y": 8717,
+      "x": 416,
+      "y": 10014,
       "props": {
         "w": 300,
-        "h": 24,
+        "h": 19,
         "html": "Set 2 (inner, used when nset = 2)",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -3569,7 +3569,7 @@
       "id": "s_col_5x",
       "type": "math",
       "x": 96,
-      "y": 8747,
+      "y": 10043,
       "props": {
         "w": 60,
         "h": 32,
@@ -3587,8 +3587,8 @@
     {
       "id": "s_col_5y",
       "type": "math",
-      "x": 168,
-      "y": 8747,
+      "x": 176,
+      "y": 10043,
       "props": {
         "w": 60,
         "h": 32,
@@ -3606,8 +3606,8 @@
     {
       "id": "s_col_5z",
       "type": "math",
-      "x": 283,
-      "y": 8747,
+      "x": 296,
+      "y": 10043,
       "props": {
         "w": 60,
         "h": 32,
@@ -3625,8 +3625,8 @@
     {
       "id": "s_col_60",
       "type": "math",
-      "x": 396,
-      "y": 8747,
+      "x": 416,
+      "y": 10045,
       "props": {
         "w": 60,
         "h": 32,
@@ -3644,8 +3644,8 @@
     {
       "id": "s_col_61",
       "type": "math",
-      "x": 468,
-      "y": 8747,
+      "x": 496,
+      "y": 10045,
       "props": {
         "w": 60,
         "h": 32,
@@ -3663,8 +3663,8 @@
     {
       "id": "s_col_62",
       "type": "math",
-      "x": 583,
-      "y": 8747,
+      "x": 596,
+      "y": 10045,
       "props": {
         "w": 60,
         "h": 32,
@@ -3682,8 +3682,8 @@
     {
       "id": "s_col_63",
       "type": "text",
-      "x": 80,
-      "y": 9127,
+      "x": 76,
+      "y": 10622,
       "props": {
         "w": 630,
         "h": 24,
@@ -3702,11 +3702,11 @@
     {
       "id": "s_col_64",
       "type": "text",
-      "x": 80,
-      "y": 9157,
+      "x": 76,
+      "y": 10665,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "The concrete is cut into nc thin strips parallel to the neutral axis. Each strip carries the",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -3717,11 +3717,11 @@
     {
       "id": "s_col_65",
       "type": "text",
-      "x": 80,
-      "y": 9187,
+      "x": 76,
+      "y": 10705,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "stress at its centre strain; summing strip forces (× lever arm) gives the concrete N and M.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -3732,11 +3732,11 @@
     {
       "id": "s_col_66",
       "type": "text",
-      "x": 80,
-      "y": 9454,
+      "x": 76,
+      "y": 10746,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Strip index",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3748,7 +3748,7 @@
       "id": "s_col_67",
       "type": "math",
       "x": 400,
-      "y": 9448,
+      "y": 10739,
       "props": {
         "w": 60,
         "h": 32,
@@ -3764,11 +3764,11 @@
     {
       "id": "s_col_68",
       "type": "text",
-      "x": 80,
-      "y": 9499,
+      "x": 76,
+      "y": 10826,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Strip width",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3780,7 +3780,7 @@
       "id": "s_col_69",
       "type": "math",
       "x": 400,
-      "y": 9488,
+      "y": 10796,
       "props": {
         "w": 60,
         "h": 32,
@@ -3796,11 +3796,11 @@
     {
       "id": "s_col_6a",
       "type": "text",
-      "x": 80,
-      "y": 9544,
+      "x": 76,
+      "y": 10866,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Strip centre coordinate, from the centroid",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3812,7 +3812,7 @@
       "id": "s_col_6b",
       "type": "math",
       "x": 400,
-      "y": 9538,
+      "y": 10859,
       "props": {
         "w": 60,
         "h": 32,
@@ -3828,11 +3828,11 @@
     {
       "id": "s_col_6c",
       "type": "text",
-      "x": 80,
-      "y": 9588,
+      "x": 76,
+      "y": 10926,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Strip area (chord length × width)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3844,7 +3844,7 @@
       "id": "s_col_6d",
       "type": "math",
       "x": 400,
-      "y": 9578,
+      "y": 10915,
       "props": {
         "w": 60,
         "h": 32,
@@ -3860,11 +3860,11 @@
     {
       "id": "s_col_6e",
       "type": "text",
-      "x": 80,
-      "y": 9638,
+      "x": 76,
+      "y": 10986,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Strip area / gross area (check of nc)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3876,7 +3876,7 @@
       "id": "s_col_6f",
       "type": "math",
       "x": 400,
-      "y": 9628,
+      "y": 10973,
       "props": {
         "w": 60,
         "h": 32,
@@ -3892,8 +3892,8 @@
     {
       "id": "s_col_6g",
       "type": "text",
-      "x": 80,
-      "y": 9708,
+      "x": 76,
+      "y": 11062,
       "props": {
         "w": 630,
         "h": 24,
@@ -3912,11 +3912,11 @@
     {
       "id": "s_col_6h",
       "type": "text",
-      "x": 80,
-      "y": 9749,
+      "x": 76,
+      "y": 11126,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Set-1 bar coordinate p along θM (from centroid)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3928,7 +3928,7 @@
       "id": "s_col_6i",
       "type": "math",
       "x": 400,
-      "y": 9738,
+      "y": 11111,
       "props": {
         "w": 60,
         "h": 32,
@@ -3944,11 +3944,11 @@
     {
       "id": "s_col_6j",
       "type": "text",
-      "x": 80,
-      "y": 9809,
+      "x": 76,
+      "y": 11206,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Set-2 bar coordinate p along θM",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3960,7 +3960,7 @@
       "id": "s_col_6k",
       "type": "math",
       "x": 400,
-      "y": 9798,
+      "y": 11191,
       "props": {
         "w": 60,
         "h": 32,
@@ -3976,11 +3976,11 @@
     {
       "id": "s_col_6l",
       "type": "text",
-      "x": 80,
-      "y": 9889,
+      "x": 76,
+      "y": 11306,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Depth dθ: compression edge to extreme bar",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3992,7 +3992,7 @@
       "id": "s_col_6m",
       "type": "math",
       "x": 400,
-      "y": 9858,
+      "y": 11259,
       "props": {
         "w": 60,
         "h": 32,
@@ -4008,11 +4008,11 @@
     {
       "id": "s_col_6n",
       "type": "text",
-      "x": 80,
-      "y": 9966,
+      "x": 76,
+      "y": 11386,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Depth cA at pivot A/B boundary",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4024,7 +4024,7 @@
       "id": "s_col_6o",
       "type": "math",
       "x": 400,
-      "y": 9958,
+      "y": 11375,
       "props": {
         "w": 60,
         "h": 32,
@@ -4040,11 +4040,11 @@
     {
       "id": "s_col_6p",
       "type": "text",
-      "x": 80,
-      "y": 10019,
+      "x": 76,
+      "y": 11466,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Depth yC of pivot C (εc2 in full compression)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4056,7 +4056,7 @@
       "id": "s_col_6q",
       "type": "math",
       "x": 400,
-      "y": 10008,
+      "y": 11451,
       "props": {
         "w": 60,
         "h": 32,
@@ -4072,11 +4072,11 @@
     {
       "id": "s_col_6r",
       "type": "text",
-      "x": 80,
-      "y": 10068,
+      "x": 76,
+      "y": 11795,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "Strain plane (+ compression)",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -4088,11 +4088,11 @@
     {
       "id": "s_col_6s",
       "type": "text",
-      "x": 80,
-      "y": 10098,
+      "x": 76,
+      "y": 11836,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "c = neutral-axis depth below the compression edge; p = fibre coordinate from the centroid along",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -4103,11 +4103,11 @@
     {
       "id": "s_col_6t",
       "type": "text",
-      "x": 80,
-      "y": 10128,
+      "x": 76,
+      "y": 11876,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "θM, so R − p = fibre depth. The plane pivots about A (extreme bar at −εud, c &lt; cA), B (edge at",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -4118,11 +4118,11 @@
     {
       "id": "s_col_6u",
       "type": "text",
-      "x": 80,
-      "y": 10158,
+      "x": 76,
+      "y": 11916,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "εcu2, c ≤ D) or C (εc2 at depth yC, c &gt; D), EC2 Fig. 6.1.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -4133,11 +4133,11 @@
     {
       "id": "s_col_6v",
       "type": "text",
-      "x": 80,
-      "y": 10267,
+      "x": 76,
+      "y": 12037,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Strain at fibre p for depth c",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4149,7 +4149,7 @@
       "id": "s_col_6w",
       "type": "math",
       "x": 400,
-      "y": 10188,
+      "y": 11950,
       "props": {
         "w": 60,
         "h": 32,
@@ -4165,11 +4165,11 @@
     {
       "id": "s_col_6x",
       "type": "text",
-      "x": 80,
-      "y": 10619,
+      "x": 76,
+      "y": 12155,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "Stress laws",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -4181,11 +4181,11 @@
     {
       "id": "s_col_6y",
       "type": "text",
-      "x": 80,
-      "y": 10706,
+      "x": 76,
+      "y": 12257,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Concrete stress, parabola-rectangle (EC2 3.17), no tension",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4197,7 +4197,7 @@
       "id": "s_col_6z",
       "type": "math",
       "x": 400,
-      "y": 10649,
+      "y": 12190,
       "props": {
         "w": 60,
         "h": 32,
@@ -4213,11 +4213,11 @@
     {
       "id": "s_col_70",
       "type": "text",
-      "x": 80,
-      "y": 10869,
+      "x": 76,
+      "y": 12437,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Steel stress, elastic-plastic within ±fyd",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4229,7 +4229,7 @@
       "id": "s_col_71",
       "type": "math",
       "x": 400,
-      "y": 10819,
+      "y": 12370,
       "props": {
         "w": 60,
         "h": 32,
@@ -4245,11 +4245,11 @@
     {
       "id": "s_col_72",
       "type": "text",
-      "x": 80,
-      "y": 10965,
+      "x": 76,
+      "y": 12517,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Net bar stress (concrete it displaces subtracted)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4261,7 +4261,7 @@
       "id": "s_col_73",
       "type": "math",
       "x": 400,
-      "y": 10959,
+      "y": 12510,
       "props": {
         "w": 60,
         "h": 32,
@@ -4277,11 +4277,11 @@
     {
       "id": "s_col_74",
       "type": "text",
-      "x": 80,
-      "y": 10999,
+      "x": 76,
+      "y": 12555,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "Section resultants",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -4293,11 +4293,11 @@
     {
       "id": "s_col_75",
       "type": "text",
-      "x": 80,
-      "y": 11029,
+      "x": 76,
+      "y": 12596,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "Concrete strips (xc, Ac) plus bars of set 1 and, when δ2 = 1, set 2:",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -4308,11 +4308,11 @@
     {
       "id": "s_col_76",
       "type": "text",
-      "x": 80,
-      "y": 11061,
+      "x": 76,
+      "y": 12637,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Axial resistance for depth c",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4324,7 +4324,7 @@
       "id": "s_col_77",
       "type": "math",
       "x": 96,
-      "y": 11089,
+      "y": 12670,
       "props": {
         "w": 60,
         "h": 32,
@@ -4340,11 +4340,11 @@
     {
       "id": "s_col_78",
       "type": "text",
-      "x": 80,
-      "y": 11131,
+      "x": 76,
+      "y": 12968,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Moment resistance for depth c (about the centroid)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4356,7 +4356,7 @@
       "id": "s_col_79",
       "type": "math",
       "x": 96,
-      "y": 11159,
+      "y": 13001,
       "props": {
         "w": 60,
         "h": 32,
@@ -4372,8 +4372,8 @@
     {
       "id": "s_col_7a",
       "type": "text",
-      "x": 80,
-      "y": 11219,
+      "x": 76,
+      "y": 13064,
       "props": {
         "w": 630,
         "h": 24,
@@ -4392,11 +4392,11 @@
     {
       "id": "s_col_7b",
       "type": "text",
-      "x": 80,
-      "y": 11251,
+      "x": 76,
+      "y": 13108,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Neutral-axis depths: −0.1D (all bars yielded in tension) … 100D (uniform εc2)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4408,7 +4408,7 @@
       "id": "s_col_7c",
       "type": "math",
       "x": 96,
-      "y": 11279,
+      "y": 13133,
       "props": {
         "w": 60,
         "h": 32,
@@ -4424,11 +4424,11 @@
     {
       "id": "s_col_7d",
       "type": "text",
-      "x": 80,
-      "y": 11345,
+      "x": 76,
+      "y": 13208,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Number of control points",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4440,7 +4440,7 @@
       "id": "s_col_7e",
       "type": "math",
       "x": 400,
-      "y": 11339,
+      "y": 13201,
       "props": {
         "w": 60,
         "h": 32,
@@ -4456,11 +4456,11 @@
     {
       "id": "s_col_7f",
       "type": "text",
-      "x": 80,
-      "y": 11385,
+      "x": 76,
+      "y": 13248,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Strain at the compression edge for each point",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4472,7 +4472,7 @@
       "id": "s_col_7g",
       "type": "math",
       "x": 400,
-      "y": 11379,
+      "y": 13241,
       "props": {
         "w": 60,
         "h": 32,
@@ -4488,11 +4488,11 @@
     {
       "id": "s_col_7h",
       "type": "text",
-      "x": 80,
-      "y": 11425,
+      "x": 76,
+      "y": 13288,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Strain at the extreme tension bar for each point",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4504,7 +4504,7 @@
       "id": "s_col_7i",
       "type": "math",
       "x": 400,
-      "y": 11419,
+      "y": 13281,
       "props": {
         "w": 60,
         "h": 32,
@@ -4520,11 +4520,11 @@
     {
       "id": "s_col_7j",
       "type": "text",
-      "x": 80,
-      "y": 11465,
+      "x": 76,
+      "y": 13328,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Axial resistance at each point",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4536,7 +4536,7 @@
       "id": "s_col_7k",
       "type": "math",
       "x": 400,
-      "y": 11459,
+      "y": 13321,
       "props": {
         "w": 60,
         "h": 32,
@@ -4552,11 +4552,11 @@
     {
       "id": "s_col_7l",
       "type": "text",
-      "x": 80,
-      "y": 11505,
+      "x": 76,
+      "y": 13368,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Moment resistance at each point",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4568,7 +4568,7 @@
       "id": "s_col_7m",
       "type": "math",
       "x": 400,
-      "y": 11499,
+      "y": 13361,
       "props": {
         "w": 60,
         "h": 32,
@@ -4585,10 +4585,10 @@
       "id": "s_col_7n",
       "type": "text",
       "x": 96,
-      "y": 11790,
+      "y": 14138,
       "props": {
         "w": 400,
-        "h": 24,
+        "h": 19,
         "html": "Control points at θM (N compression +)",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -4600,7 +4600,7 @@
       "id": "s_col_7o",
       "type": "math",
       "x": 96,
-      "y": 11820,
+      "y": 14169,
       "props": {
         "w": 60,
         "h": 32,
@@ -4618,8 +4618,8 @@
     {
       "id": "s_col_7p",
       "type": "math",
-      "x": 214,
-      "y": 11820,
+      "x": 216,
+      "y": 14169,
       "props": {
         "w": 60,
         "h": 32,
@@ -4638,7 +4638,7 @@
       "id": "s_col_7q",
       "type": "math",
       "x": 340,
-      "y": 11820,
+      "y": 14169,
       "props": {
         "w": 60,
         "h": 32,
@@ -4656,8 +4656,8 @@
     {
       "id": "s_col_7r",
       "type": "math",
-      "x": 480,
-      "y": 11820,
+      "x": 476,
+      "y": 14169,
       "props": {
         "w": 60,
         "h": 32,
@@ -4676,7 +4676,7 @@
       "id": "s_col_7s",
       "type": "math",
       "x": 596,
-      "y": 11820,
+      "y": 14169,
       "props": {
         "w": 60,
         "h": 32,
@@ -4694,11 +4694,11 @@
     {
       "id": "s_col_7t",
       "type": "text",
-      "x": 80,
-      "y": 12666,
+      "x": 76,
+      "y": 14999,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Max. axial resistance (uniform εc2)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4710,7 +4710,7 @@
       "id": "s_col_7u",
       "type": "math",
       "x": 400,
-      "y": 12660,
+      "y": 14992,
       "props": {
         "w": 60,
         "h": 32,
@@ -4726,11 +4726,11 @@
     {
       "id": "s_col_7v",
       "type": "text",
-      "x": 80,
-      "y": 12706,
+      "x": 76,
+      "y": 15039,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Maximum moment resistance on the curve",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4742,7 +4742,7 @@
       "id": "s_col_7w",
       "type": "math",
       "x": 400,
-      "y": 12700,
+      "y": 15032,
       "props": {
         "w": 60,
         "h": 32,
@@ -4758,11 +4758,11 @@
     {
       "id": "s_col_7x",
       "type": "text",
-      "x": 80,
-      "y": 12969,
+      "x": 76,
+      "y": 15330,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Normalised N of the control points",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4774,7 +4774,7 @@
       "id": "s_col_7y",
       "type": "math",
       "x": 400,
-      "y": 12961,
+      "y": 15319,
       "props": {
         "w": 60,
         "h": 32,
@@ -4790,11 +4790,11 @@
     {
       "id": "s_col_7z",
       "type": "text",
-      "x": 80,
-      "y": 13019,
+      "x": 76,
+      "y": 15410,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Normalised M of the control points",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4806,7 +4806,7 @@
       "id": "s_col_80",
       "type": "math",
       "x": 400,
-      "y": 13011,
+      "y": 15399,
       "props": {
         "w": 60,
         "h": 32,
@@ -4822,11 +4822,11 @@
     {
       "id": "s_col_81",
       "type": "text",
-      "x": 80,
-      "y": 13071,
+      "x": 76,
+      "y": 15490,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Distance of each control point from the origin",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4838,7 +4838,7 @@
       "id": "s_col_82",
       "type": "math",
       "x": 400,
-      "y": 13061,
+      "y": 15479,
       "props": {
         "w": 60,
         "h": 32,
@@ -4854,11 +4854,11 @@
     {
       "id": "s_col_83",
       "type": "text",
-      "x": 80,
-      "y": 13121,
+      "x": 76,
+      "y": 15550,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Direction of each point (sine of angle)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4870,7 +4870,7 @@
       "id": "s_col_84",
       "type": "math",
       "x": 400,
-      "y": 13111,
+      "y": 15523,
       "props": {
         "w": 60,
         "h": 32,
@@ -4884,6 +4884,6 @@
       }
     }
   ],
-  "createdAt": "2026-11-09T04:00:07.592Z",
-  "updatedAt": "2026-11-09T04:00:07.592Z"
+  "createdAt": "2026-11-09T05:34:24.188Z",
+  "updatedAt": "2026-11-09T05:34:24.188Z"
 }

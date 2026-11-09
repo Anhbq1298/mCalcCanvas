@@ -18,17 +18,17 @@
     "showHeaderFooter": true,
     "textFont": "Inter",
     "baselineSnap": "minor",
-    "pages": 17
+    "pages": 19
   },
   "shapes": [
     {
       "id": "s_rect_0",
       "type": "text",
-      "x": 80,
-      "y": 80,
+      "x": 76,
+      "y": 98,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 29,
         "html": "RC RECTANGULAR COLUMN CHECK (EC2)",
         "fontFamily": "Inter",
         "fontSize": 20,
@@ -40,8 +40,8 @@
     {
       "id": "s_rect_1",
       "type": "text",
-      "x": 80,
-      "y": 130,
+      "x": 76,
+      "y": 143,
       "props": {
         "w": 630,
         "h": 24,
@@ -56,11 +56,11 @@
     {
       "id": "s_rect_2",
       "type": "text",
-      "x": 80,
-      "y": 160,
+      "x": 76,
+      "y": 186,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "EN 1992-1-1. Fibres, strain pivots A/B/C; neutral axis rotated to the MEd direction (P–Mθ).",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -71,11 +71,11 @@
     {
       "id": "s_rect_3",
       "type": "text",
-      "x": 80,
-      "y": 190,
+      "x": 76,
+      "y": 226,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "Flexure: ray from 0 through (MEd, NEd) to the P–Mθ curve (UR_M). fcd and shear (links):",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -86,11 +86,11 @@
     {
       "id": "s_rect_4",
       "type": "text",
-      "x": 80,
-      "y": 220,
+      "x": 76,
+      "y": 266,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "EN 1992-1-1:2023 (5.3), §8.2.3.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -101,11 +101,11 @@
     {
       "id": "s_rect_5",
       "type": "text",
-      "x": 80,
-      "y": 250,
+      "x": 76,
+      "y": 306,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "x along b, y along h; N positive in compression. Annex A.n is calculated at its link ▸.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -116,8 +116,8 @@
     {
       "id": "s_rect_6",
       "type": "text",
-      "x": 80,
-      "y": 290,
+      "x": 76,
+      "y": 363,
       "props": {
         "w": 630,
         "h": 24,
@@ -132,11 +132,11 @@
     {
       "id": "s_rect_7",
       "type": "text",
-      "x": 80,
-      "y": 320,
+      "x": 76,
+      "y": 405,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "2.1 Materials",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -148,11 +148,11 @@
     {
       "id": "s_rect_8",
       "type": "text",
-      "x": 80,
-      "y": 356,
+      "x": 76,
+      "y": 447,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Characteristic concrete cylinder strength",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -164,7 +164,7 @@
       "id": "s_rect_9",
       "type": "math",
       "x": 400,
-      "y": 350,
+      "y": 440,
       "props": {
         "w": 60,
         "h": 32,
@@ -180,11 +180,11 @@
     {
       "id": "s_rect_a",
       "type": "text",
-      "x": 80,
-      "y": 396,
+      "x": 76,
+      "y": 487,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Partial factor for concrete",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -196,7 +196,7 @@
       "id": "s_rect_b",
       "type": "math",
       "x": 400,
-      "y": 390,
+      "y": 480,
       "props": {
         "w": 60,
         "h": 32,
@@ -212,11 +212,11 @@
     {
       "id": "s_rect_c",
       "type": "text",
-      "x": 80,
-      "y": 430,
+      "x": 76,
+      "y": 527,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Sustained-load factor (5.3): 0.85, or 1.0 if loaded after 90 days",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -228,7 +228,7 @@
       "id": "s_rect_d",
       "type": "math",
       "x": 400,
-      "y": 430,
+      "y": 520,
       "props": {
         "w": 60,
         "h": 32,
@@ -244,11 +244,11 @@
     {
       "id": "s_rect_e",
       "type": "text",
-      "x": 80,
-      "y": 476,
+      "x": 76,
+      "y": 567,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Yield strength of longitudinal bars",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -260,7 +260,7 @@
       "id": "s_rect_f",
       "type": "math",
       "x": 400,
-      "y": 470,
+      "y": 560,
       "props": {
         "w": 60,
         "h": 32,
@@ -276,11 +276,11 @@
     {
       "id": "s_rect_g",
       "type": "text",
-      "x": 80,
-      "y": 516,
+      "x": 76,
+      "y": 607,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Yield strength of links",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -292,7 +292,7 @@
       "id": "s_rect_h",
       "type": "math",
       "x": 400,
-      "y": 510,
+      "y": 600,
       "props": {
         "w": 60,
         "h": 32,
@@ -308,11 +308,11 @@
     {
       "id": "s_rect_i",
       "type": "text",
-      "x": 80,
-      "y": 550,
+      "x": 76,
+      "y": 647,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Ductility class of the links: 1 = class A, 0 = class B or C",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -324,7 +324,7 @@
       "id": "s_rect_j",
       "type": "math",
       "x": 400,
-      "y": 550,
+      "y": 640,
       "props": {
         "w": 60,
         "h": 32,
@@ -340,11 +340,11 @@
     {
       "id": "s_rect_k",
       "type": "text",
-      "x": 80,
-      "y": 596,
+      "x": 76,
+      "y": 687,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Partial factor for reinforcement",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -356,7 +356,7 @@
       "id": "s_rect_l",
       "type": "math",
       "x": 400,
-      "y": 590,
+      "y": 680,
       "props": {
         "w": 60,
         "h": 32,
@@ -372,11 +372,11 @@
     {
       "id": "s_rect_m",
       "type": "text",
-      "x": 80,
-      "y": 636,
+      "x": 76,
+      "y": 727,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Elastic modulus of reinforcement",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -388,7 +388,7 @@
       "id": "s_rect_n",
       "type": "math",
       "x": 400,
-      "y": 630,
+      "y": 720,
       "props": {
         "w": 60,
         "h": 32,
@@ -404,11 +404,11 @@
     {
       "id": "s_rect_o",
       "type": "text",
-      "x": 80,
-      "y": 676,
+      "x": 76,
+      "y": 767,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Ultimate concrete strain (Table 3.1)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -420,7 +420,7 @@
       "id": "s_rect_p",
       "type": "math",
       "x": 400,
-      "y": 670,
+      "y": 760,
       "props": {
         "w": 60,
         "h": 32,
@@ -436,11 +436,11 @@
     {
       "id": "s_rect_q",
       "type": "text",
-      "x": 80,
-      "y": 716,
+      "x": 76,
+      "y": 807,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Concrete strain at peak stress",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -452,7 +452,7 @@
       "id": "s_rect_r",
       "type": "math",
       "x": 400,
-      "y": 710,
+      "y": 800,
       "props": {
         "w": 60,
         "h": 32,
@@ -468,11 +468,11 @@
     {
       "id": "s_rect_s",
       "type": "text",
-      "x": 80,
-      "y": 756,
+      "x": 76,
+      "y": 847,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Design limit of steel strain, 0.9·εuk",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -484,7 +484,7 @@
       "id": "s_rect_t",
       "type": "math",
       "x": 400,
-      "y": 750,
+      "y": 840,
       "props": {
         "w": 60,
         "h": 32,
@@ -500,11 +500,11 @@
     {
       "id": "s_rect_u",
       "type": "text",
-      "x": 80,
-      "y": 790,
+      "x": 76,
+      "y": 885,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "2.2 Section and reinforcement",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -516,11 +516,11 @@
     {
       "id": "s_rect_v",
       "type": "text",
-      "x": 80,
-      "y": 826,
+      "x": 76,
+      "y": 927,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Section width (along x)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -532,7 +532,7 @@
       "id": "s_rect_w",
       "type": "math",
       "x": 400,
-      "y": 820,
+      "y": 920,
       "props": {
         "w": 60,
         "h": 32,
@@ -548,11 +548,11 @@
     {
       "id": "s_rect_x",
       "type": "text",
-      "x": 80,
-      "y": 866,
+      "x": 76,
+      "y": 967,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Section depth (along y)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -564,7 +564,7 @@
       "id": "s_rect_y",
       "type": "math",
       "x": 400,
-      "y": 860,
+      "y": 960,
       "props": {
         "w": 60,
         "h": 32,
@@ -580,11 +580,11 @@
     {
       "id": "s_rect_z",
       "type": "text",
-      "x": 80,
-      "y": 906,
+      "x": 76,
+      "y": 1007,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Nominal cover to the links",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -596,7 +596,7 @@
       "id": "s_rect_10",
       "type": "math",
       "x": 400,
-      "y": 900,
+      "y": 1000,
       "props": {
         "w": 60,
         "h": 32,
@@ -612,11 +612,11 @@
     {
       "id": "s_rect_11",
       "type": "text",
-      "x": 80,
-      "y": 946,
+      "x": 76,
+      "y": 1258,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Longitudinal bar diameter",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -628,7 +628,7 @@
       "id": "s_rect_12",
       "type": "math",
       "x": 400,
-      "y": 940,
+      "y": 1251,
       "props": {
         "w": 60,
         "h": 32,
@@ -644,11 +644,11 @@
     {
       "id": "s_rect_13",
       "type": "text",
-      "x": 80,
-      "y": 986,
+      "x": 76,
+      "y": 1298,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Bars along each b face, corners included (≥ 2)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -660,7 +660,7 @@
       "id": "s_rect_14",
       "type": "math",
       "x": 400,
-      "y": 980,
+      "y": 1291,
       "props": {
         "w": 60,
         "h": 32,
@@ -676,11 +676,11 @@
     {
       "id": "s_rect_15",
       "type": "text",
-      "x": 80,
-      "y": 1257,
+      "x": 76,
+      "y": 1338,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Bars along each h face, corners included (≥ 2)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -692,7 +692,7 @@
       "id": "s_rect_16",
       "type": "math",
       "x": 400,
-      "y": 1251,
+      "y": 1331,
       "props": {
         "w": 60,
         "h": 32,
@@ -708,11 +708,11 @@
     {
       "id": "s_rect_17",
       "type": "text",
-      "x": 80,
-      "y": 1297,
+      "x": 76,
+      "y": 1378,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Tie (link) diameter",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -724,7 +724,7 @@
       "id": "s_rect_18",
       "type": "math",
       "x": 400,
-      "y": 1291,
+      "y": 1371,
       "props": {
         "w": 60,
         "h": 32,
@@ -740,11 +740,11 @@
     {
       "id": "s_rect_19",
       "type": "text",
-      "x": 80,
-      "y": 1337,
+      "x": 76,
+      "y": 1418,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Tie spacing along the column",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -756,7 +756,7 @@
       "id": "s_rect_1a",
       "type": "math",
       "x": 400,
-      "y": 1331,
+      "y": 1411,
       "props": {
         "w": 60,
         "h": 32,
@@ -772,11 +772,11 @@
     {
       "id": "s_rect_1b",
       "type": "text",
-      "x": 80,
-      "y": 1371,
+      "x": 76,
+      "y": 1457,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "Tie legs are arranged automatically (EC2 9.5.3(6): bars ≤ 150 mm from a restrained bar).",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -787,11 +787,11 @@
     {
       "id": "s_rect_1c",
       "type": "text",
-      "x": 80,
-      "y": 1401,
+      "x": 76,
+      "y": 1496,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "2.3 Integration",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -803,11 +803,11 @@
     {
       "id": "s_rect_1d",
       "type": "text",
-      "x": 80,
-      "y": 1437,
+      "x": 76,
+      "y": 1538,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Concrete fibres along each side (nf × nf grid)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -819,7 +819,7 @@
       "id": "s_rect_1e",
       "type": "math",
       "x": 400,
-      "y": 1431,
+      "y": 1531,
       "props": {
         "w": 60,
         "h": 32,
@@ -835,11 +835,11 @@
     {
       "id": "s_rect_1f",
       "type": "text",
-      "x": 80,
-      "y": 1471,
+      "x": 76,
+      "y": 1576,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "2.4 Design actions (ULS)",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -851,11 +851,11 @@
     {
       "id": "s_rect_1g",
       "type": "text",
-      "x": 80,
-      "y": 1507,
+      "x": 76,
+      "y": 1618,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Axial force, compression positive",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -867,7 +867,7 @@
       "id": "s_rect_1h",
       "type": "math",
       "x": 400,
-      "y": 1501,
+      "y": 1611,
       "props": {
         "w": 60,
         "h": 32,
@@ -883,11 +883,11 @@
     {
       "id": "s_rect_1i",
       "type": "text",
-      "x": 80,
-      "y": 1541,
+      "x": 76,
+      "y": 1658,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Moment about x (compression on +y face when positive)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -899,7 +899,7 @@
       "id": "s_rect_1j",
       "type": "math",
       "x": 400,
-      "y": 1541,
+      "y": 1651,
       "props": {
         "w": 60,
         "h": 32,
@@ -915,11 +915,11 @@
     {
       "id": "s_rect_1k",
       "type": "text",
-      "x": 80,
-      "y": 1581,
+      "x": 76,
+      "y": 1698,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Moment about y (compression on +x face when positive)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -931,7 +931,7 @@
       "id": "s_rect_1l",
       "type": "math",
       "x": 400,
-      "y": 1581,
+      "y": 1691,
       "props": {
         "w": 60,
         "h": 32,
@@ -947,11 +947,11 @@
     {
       "id": "s_rect_1m",
       "type": "text",
-      "x": 80,
-      "y": 1627,
+      "x": 76,
+      "y": 1738,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Shear force along y",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -963,7 +963,7 @@
       "id": "s_rect_1n",
       "type": "math",
       "x": 400,
-      "y": 1621,
+      "y": 1731,
       "props": {
         "w": 60,
         "h": 32,
@@ -979,11 +979,11 @@
     {
       "id": "s_rect_1o",
       "type": "text",
-      "x": 80,
-      "y": 1667,
+      "x": 76,
+      "y": 1778,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Shear force along x",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -995,7 +995,7 @@
       "id": "s_rect_1p",
       "type": "math",
       "x": 400,
-      "y": 1661,
+      "y": 1771,
       "props": {
         "w": 60,
         "h": 32,
@@ -1011,8 +1011,8 @@
     {
       "id": "s_rect_1q",
       "type": "text",
-      "x": 80,
-      "y": 1711,
+      "x": 76,
+      "y": 1834,
       "props": {
         "w": 630,
         "h": 24,
@@ -1027,11 +1027,11 @@
     {
       "id": "s_rect_1r",
       "type": "text",
-      "x": 80,
-      "y": 1757,
+      "x": 76,
+      "y": 1898,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Effective strength factor (5.4), fck,ref = 40 MPa",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1043,7 +1043,7 @@
       "id": "s_rect_1s",
       "type": "math",
       "x": 400,
-      "y": 1741,
+      "y": 1877,
       "props": {
         "w": 60,
         "h": 32,
@@ -1059,11 +1059,11 @@
     {
       "id": "s_rect_1t",
       "type": "text",
-      "x": 80,
-      "y": 1820,
+      "x": 76,
+      "y": 1978,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Design compressive strength (5.3)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1075,7 +1075,7 @@
       "id": "s_rect_1u",
       "type": "math",
       "x": 400,
-      "y": 1811,
+      "y": 1966,
       "props": {
         "w": 60,
         "h": 32,
@@ -1091,11 +1091,11 @@
     {
       "id": "s_rect_1v",
       "type": "text",
-      "x": 80,
-      "y": 1870,
+      "x": 76,
+      "y": 2058,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Design yield strength of longitudinal bars",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1107,7 +1107,7 @@
       "id": "s_rect_1w",
       "type": "math",
       "x": 400,
-      "y": 1861,
+      "y": 2045,
       "props": {
         "w": 60,
         "h": 32,
@@ -1123,11 +1123,11 @@
     {
       "id": "s_rect_1x",
       "type": "text",
-      "x": 80,
-      "y": 1920,
+      "x": 76,
+      "y": 2138,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Design yield strength of links",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1139,7 +1139,7 @@
       "id": "s_rect_1y",
       "type": "math",
       "x": 400,
-      "y": 1911,
+      "y": 2125,
       "props": {
         "w": 60,
         "h": 32,
@@ -1155,11 +1155,11 @@
     {
       "id": "s_rect_1z",
       "type": "text",
-      "x": 80,
-      "y": 1970,
+      "x": 76,
+      "y": 2449,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Design yield strain of longitudinal bars",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1171,7 +1171,7 @@
       "id": "s_rect_20",
       "type": "math",
       "x": 400,
-      "y": 1961,
+      "y": 2436,
       "props": {
         "w": 60,
         "h": 32,
@@ -1187,8 +1187,8 @@
     {
       "id": "s_rect_21",
       "type": "text",
-      "x": 80,
-      "y": 2021,
+      "x": 76,
+      "y": 2525,
       "props": {
         "w": 630,
         "h": 24,
@@ -1203,11 +1203,11 @@
     {
       "id": "s_rect_22",
       "type": "text",
-      "x": 80,
-      "y": 2051,
+      "x": 76,
+      "y": 2567,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "4.1 Bars",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -1219,8 +1219,8 @@
     {
       "id": "s_rect_23",
       "type": "text",
-      "x": 80,
-      "y": 2081,
+      "x": 76,
+      "y": 2607,
       "props": {
         "w": 630,
         "h": 24,
@@ -1238,11 +1238,11 @@
     {
       "id": "s_rect_24",
       "type": "text",
-      "x": 80,
-      "y": 2127,
+      "x": 76,
+      "y": 2649,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Bar spacing (centres) along b",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1254,7 +1254,7 @@
       "id": "s_rect_25",
       "type": "math",
       "x": 400,
-      "y": 2121,
+      "y": 2642,
       "props": {
         "w": 60,
         "h": 32,
@@ -1270,11 +1270,11 @@
     {
       "id": "s_rect_26",
       "type": "text",
-      "x": 80,
-      "y": 2167,
+      "x": 76,
+      "y": 2689,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Bar spacing (centres) along h",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1286,7 +1286,7 @@
       "id": "s_rect_27",
       "type": "math",
       "x": 400,
-      "y": 2161,
+      "y": 2682,
       "props": {
         "w": 60,
         "h": 32,
@@ -1302,11 +1302,11 @@
     {
       "id": "s_rect_28",
       "type": "text",
-      "x": 80,
-      "y": 2424,
+      "x": 76,
+      "y": 2729,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Clear spacing along b, ≥ max(φ, 20 mm) (8.2)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1318,7 +1318,7 @@
       "id": "s_rect_29",
       "type": "math",
       "x": 96,
-      "y": 2452,
+      "y": 2762,
       "props": {
         "w": 60,
         "h": 32,
@@ -1334,11 +1334,11 @@
     {
       "id": "s_rect_2a",
       "type": "text",
-      "x": 80,
-      "y": 2494,
+      "x": 76,
+      "y": 2809,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Clear spacing along h",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1350,7 +1350,7 @@
       "id": "s_rect_2b",
       "type": "math",
       "x": 96,
-      "y": 2522,
+      "y": 2842,
       "props": {
         "w": 60,
         "h": 32,
@@ -1366,11 +1366,11 @@
     {
       "id": "s_rect_2c",
       "type": "text",
-      "x": 80,
-      "y": 2568,
+      "x": 76,
+      "y": 2889,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Total number of bars",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1382,7 +1382,7 @@
       "id": "s_rect_2d",
       "type": "math",
       "x": 400,
-      "y": 2562,
+      "y": 2882,
       "props": {
         "w": 60,
         "h": 32,
@@ -1398,11 +1398,11 @@
     {
       "id": "s_rect_2e",
       "type": "text",
-      "x": 80,
-      "y": 2602,
+      "x": 76,
+      "y": 2927,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "4.2 Ties (EC2 9.5.3)",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -1414,11 +1414,11 @@
     {
       "id": "s_rect_2f",
       "type": "text",
-      "x": 80,
-      "y": 2634,
+      "x": 76,
+      "y": 2969,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Tie diameter ≥ max(6 mm, φ/4), 9.5.3(1)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1430,7 +1430,7 @@
       "id": "s_rect_2g",
       "type": "math",
       "x": 96,
-      "y": 2662,
+      "y": 2994,
       "props": {
         "w": 60,
         "h": 32,
@@ -1446,11 +1446,11 @@
     {
       "id": "s_rect_2h",
       "type": "text",
-      "x": 80,
-      "y": 2724,
+      "x": 76,
+      "y": 3069,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Max. tie spacing min(20φ, b, h, 400 mm), 9.5.3(3)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1462,7 +1462,7 @@
       "id": "s_rect_2i",
       "type": "math",
       "x": 96,
-      "y": 2752,
+      "y": 3102,
       "props": {
         "w": 60,
         "h": 32,
@@ -1478,11 +1478,11 @@
     {
       "id": "s_rect_2j",
       "type": "text",
-      "x": 80,
-      "y": 2798,
+      "x": 76,
+      "y": 3149,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Bar spacing on a b face, 9.5.3(6)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1494,7 +1494,7 @@
       "id": "s_rect_2k",
       "type": "math",
       "x": 400,
-      "y": 2792,
+      "y": 3142,
       "props": {
         "w": 60,
         "h": 32,
@@ -1510,11 +1510,11 @@
     {
       "id": "s_rect_2l",
       "type": "text",
-      "x": 80,
-      "y": 2838,
+      "x": 76,
+      "y": 3189,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Bar spacing on an h face",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1526,7 +1526,7 @@
       "id": "s_rect_2m",
       "type": "math",
       "x": 400,
-      "y": 2832,
+      "y": 3182,
       "props": {
         "w": 60,
         "h": 32,
@@ -1542,8 +1542,8 @@
     {
       "id": "s_rect_2n",
       "type": "text",
-      "x": 80,
-      "y": 2872,
+      "x": 76,
+      "y": 3227,
       "props": {
         "w": 630,
         "h": 24,
@@ -1561,11 +1561,11 @@
     {
       "id": "s_rect_2o",
       "type": "text",
-      "x": 80,
-      "y": 2918,
+      "x": 76,
+      "y": 3269,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Full-depth tie legs parallel to y (resist VEd,y)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1577,7 +1577,7 @@
       "id": "s_rect_2p",
       "type": "math",
       "x": 400,
-      "y": 2912,
+      "y": 3262,
       "props": {
         "w": 60,
         "h": 32,
@@ -1593,11 +1593,11 @@
     {
       "id": "s_rect_2q",
       "type": "text",
-      "x": 80,
-      "y": 2958,
+      "x": 76,
+      "y": 3309,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Full-width tie legs parallel to x (resist VEd,x)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1609,7 +1609,7 @@
       "id": "s_rect_2r",
       "type": "math",
       "x": 400,
-      "y": 2952,
+      "y": 3302,
       "props": {
         "w": 60,
         "h": 32,
@@ -1625,11 +1625,11 @@
     {
       "id": "s_rect_2s",
       "type": "text",
-      "x": 80,
-      "y": 2992,
+      "x": 76,
+      "y": 3598,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "4.3 Concrete fibres and section",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -1641,8 +1641,8 @@
     {
       "id": "s_rect_2t",
       "type": "text",
-      "x": 80,
-      "y": 3022,
+      "x": 76,
+      "y": 3638,
       "props": {
         "w": 630,
         "h": 24,
@@ -1660,8 +1660,8 @@
     {
       "id": "s_rect_2u",
       "type": "text",
-      "x": 80,
-      "y": 3062,
+      "x": 76,
+      "y": 3678,
       "props": {
         "w": 630,
         "h": 24,
@@ -1680,7 +1680,7 @@
       "id": "s_rect_2v",
       "type": "graph",
       "x": 247,
-      "y": 3585,
+      "y": 3705,
       "props": {
         "w": 300,
         "h": 300,
@@ -1745,11 +1745,11 @@
     {
       "id": "s_rect_2w",
       "type": "text",
-      "x": 80,
-      "y": 3913,
+      "x": 76,
+      "y": 4038,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "4.4 Steel areas",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -1761,11 +1761,11 @@
     {
       "id": "s_rect_2x",
       "type": "text",
-      "x": 80,
-      "y": 3949,
+      "x": 76,
+      "y": 4080,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Area of one bar",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1777,7 +1777,7 @@
       "id": "s_rect_2y",
       "type": "math",
       "x": 400,
-      "y": 3943,
+      "y": 4073,
       "props": {
         "w": 60,
         "h": 32,
@@ -1793,11 +1793,11 @@
     {
       "id": "s_rect_2z",
       "type": "text",
-      "x": 80,
-      "y": 3989,
+      "x": 76,
+      "y": 4120,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Gross concrete area",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1809,7 +1809,7 @@
       "id": "s_rect_30",
       "type": "math",
       "x": 400,
-      "y": 3983,
+      "y": 4113,
       "props": {
         "w": 60,
         "h": 32,
@@ -1825,11 +1825,11 @@
     {
       "id": "s_rect_31",
       "type": "text",
-      "x": 80,
-      "y": 4029,
+      "x": 76,
+      "y": 4160,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Total longitudinal steel area",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1841,7 +1841,7 @@
       "id": "s_rect_32",
       "type": "math",
       "x": 400,
-      "y": 4023,
+      "y": 4153,
       "props": {
         "w": 60,
         "h": 32,
@@ -1857,11 +1857,11 @@
     {
       "id": "s_rect_33",
       "type": "text",
-      "x": 80,
-      "y": 4065,
+      "x": 76,
+      "y": 4200,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Minimum steel, EC2 (9.12N)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1873,7 +1873,7 @@
       "id": "s_rect_34",
       "type": "math",
       "x": 96,
-      "y": 4093,
+      "y": 4226,
       "props": {
         "w": 60,
         "h": 32,
@@ -1889,11 +1889,11 @@
     {
       "id": "s_rect_35",
       "type": "text",
-      "x": 80,
-      "y": 4155,
+      "x": 76,
+      "y": 4300,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Maximum steel, EC2 9.5.2(3)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -1905,7 +1905,7 @@
       "id": "s_rect_36",
       "type": "math",
       "x": 96,
-      "y": 4183,
+      "y": 4333,
       "props": {
         "w": 60,
         "h": 32,
@@ -1921,8 +1921,8 @@
     {
       "id": "s_rect_37",
       "type": "text",
-      "x": 80,
-      "y": 4233,
+      "x": 76,
+      "y": 4396,
       "props": {
         "w": 630,
         "h": 24,
@@ -1937,11 +1937,11 @@
     {
       "id": "s_rect_38",
       "type": "text",
-      "x": 80,
-      "y": 4263,
+      "x": 76,
+      "y": 4438,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "5.1 Biaxial resistance: P–Mθ at the moment direction θ",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -1953,11 +1953,11 @@
     {
       "id": "s_rect_39",
       "type": "text",
-      "x": 80,
-      "y": 4293,
+      "x": 76,
+      "y": 4479,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "The neutral axis is turned (angle β of its normal) until the resisting moment points along θ;",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -1968,11 +1968,11 @@
     {
       "id": "s_rect_3a",
       "type": "text",
-      "x": 80,
-      "y": 4323,
+      "x": 76,
+      "y": 4519,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "this gives the P–Mθ curve at θ. No reduction to the principal axes.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -1983,8 +1983,8 @@
     {
       "id": "s_rect_3b",
       "type": "text",
-      "x": 80,
-      "y": 4353,
+      "x": 76,
+      "y": 4769,
       "props": {
         "w": 630,
         "h": 24,
@@ -2002,11 +2002,11 @@
     {
       "id": "s_rect_3c",
       "type": "text",
-      "x": 80,
-      "y": 4403,
+      "x": 76,
+      "y": 4831,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Resultant design moment",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2018,7 +2018,7 @@
       "id": "s_rect_3d",
       "type": "math",
       "x": 400,
-      "y": 4393,
+      "y": 4821,
       "props": {
         "w": 60,
         "h": 32,
@@ -2034,11 +2034,11 @@
     {
       "id": "s_rect_3e",
       "type": "text",
-      "x": 80,
-      "y": 4443,
+      "x": 76,
+      "y": 4871,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Direction of the compression face (MEd,y → +x, MEd,x → +y)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2050,7 +2050,7 @@
       "id": "s_rect_3f",
       "type": "math",
       "x": 400,
-      "y": 4443,
+      "y": 4864,
       "props": {
         "w": 60,
         "h": 32,
@@ -2066,8 +2066,8 @@
     {
       "id": "s_rect_3g",
       "type": "text",
-      "x": 80,
-      "y": 4483,
+      "x": 76,
+      "y": 4909,
       "props": {
         "w": 630,
         "h": 24,
@@ -2085,11 +2085,11 @@
     {
       "id": "s_rect_3h",
       "type": "text",
-      "x": 80,
-      "y": 4765,
+      "x": 76,
+      "y": 4971,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Curve scaled by its maxima (the ratio does not depend on the scale)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2101,7 +2101,7 @@
       "id": "s_rect_3i",
       "type": "math",
       "x": 400,
-      "y": 4764,
+      "y": 4960,
       "props": {
         "w": 60,
         "h": 32,
@@ -2117,11 +2117,11 @@
     {
       "id": "s_rect_3j",
       "type": "text",
-      "x": 80,
-      "y": 4823,
+      "x": 76,
+      "y": 5051,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2133,7 +2133,7 @@
       "id": "s_rect_3k",
       "type": "math",
       "x": 400,
-      "y": 4814,
+      "y": 5040,
       "props": {
         "w": 60,
         "h": 32,
@@ -2149,11 +2149,11 @@
     {
       "id": "s_rect_3l",
       "type": "text",
-      "x": 80,
-      "y": 4864,
+      "x": 76,
+      "y": 5110,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "Utilisation (as MBColumn): ray from the origin through (MEd, NEd) to the P–Mθ curve.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -2164,11 +2164,11 @@
     {
       "id": "s_rect_3m",
       "type": "text",
-      "x": 80,
-      "y": 4903,
+      "x": 76,
+      "y": 5171,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Design point scaled the same way",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2180,7 +2180,7 @@
       "id": "s_rect_3n",
       "type": "math",
       "x": 400,
-      "y": 4894,
+      "y": 5160,
       "props": {
         "w": 60,
         "h": 32,
@@ -2196,11 +2196,11 @@
     {
       "id": "s_rect_3o",
       "type": "text",
-      "x": 80,
-      "y": 4953,
+      "x": 76,
+      "y": 5251,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2212,7 +2212,7 @@
       "id": "s_rect_3p",
       "type": "math",
       "x": 400,
-      "y": 4944,
+      "y": 5240,
       "props": {
         "w": 60,
         "h": 32,
@@ -2228,11 +2228,11 @@
     {
       "id": "s_rect_3q",
       "type": "text",
-      "x": 80,
-      "y": 4996,
+      "x": 76,
+      "y": 5311,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Distance to the curve along the ray (interpolated by direction)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2244,7 +2244,7 @@
       "id": "s_rect_3r",
       "type": "math",
       "x": 96,
-      "y": 5024,
+      "y": 5332,
       "props": {
         "w": 60,
         "h": 32,
@@ -2260,11 +2260,11 @@
     {
       "id": "s_rect_3s",
       "type": "text",
-      "x": 80,
-      "y": 5105,
+      "x": 76,
+      "y": 5431,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Radial utilisation (governs)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2276,7 +2276,7 @@
       "id": "s_rect_3t",
       "type": "math",
       "x": 400,
-      "y": 5094,
+      "y": 5414,
       "props": {
         "w": 60,
         "h": 32,
@@ -2292,11 +2292,11 @@
     {
       "id": "s_rect_3u",
       "type": "text",
-      "x": 80,
-      "y": 5160,
+      "x": 76,
+      "y": 5491,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Check",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2308,7 +2308,7 @@
       "id": "s_rect_3v",
       "type": "math",
       "x": 400,
-      "y": 5154,
+      "y": 5484,
       "props": {
         "w": 60,
         "h": 32,
@@ -2324,11 +2324,11 @@
     {
       "id": "s_rect_3w",
       "type": "text",
-      "x": 80,
-      "y": 5194,
+      "x": 76,
+      "y": 5940,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "5.2 P–Mθ diagram",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -2341,7 +2341,7 @@
       "id": "s_rect_3x",
       "type": "graph",
       "x": 187,
-      "y": 5216,
+      "y": 5967,
       "props": {
         "w": 420,
         "h": 420,
@@ -2417,8 +2417,8 @@
     {
       "id": "s_rect_3y",
       "type": "text",
-      "x": 80,
-      "y": 5935,
+      "x": 76,
+      "y": 6438,
       "props": {
         "w": 630,
         "h": 24,
@@ -2433,11 +2433,11 @@
     {
       "id": "s_rect_3z",
       "type": "text",
-      "x": 80,
-      "y": 5965,
+      "x": 76,
+      "y": 6481,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "Truss in stresses: τEd = VEd/(bw·z) (8.18), links τRd,sy = ρw·fywd·cotθ (8.42), strut",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -2448,11 +2448,11 @@
     {
       "id": "s_rect_40",
       "type": "text",
-      "x": 80,
-      "y": 5995,
+      "x": 76,
+      "y": 6521,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "σcd = τEd·(cotθ + tanθ) ≤ ν·fcd (8.44), ν = 0.5. cotθ: the largest value ≤ cot θmin (8.41)",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -2463,11 +2463,11 @@
     {
       "id": "s_rect_41",
       "type": "text",
-      "x": 80,
-      "y": 6025,
+      "x": 76,
+      "y": 6561,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "that keeps σcd ≤ ν·fcd; cotθ &lt; 1 (8.2.3(11)) never adds resistance and is not used.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -2478,11 +2478,11 @@
     {
       "id": "s_rect_42",
       "type": "text",
-      "x": 80,
-      "y": 6081,
+      "x": 76,
+      "y": 6622,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Strength reduction for cracked concrete, 8.2.3(6)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2494,7 +2494,7 @@
       "id": "s_rect_43",
       "type": "math",
       "x": 400,
-      "y": 6075,
+      "y": 6615,
       "props": {
         "w": 60,
         "h": 32,
@@ -2510,11 +2510,11 @@
     {
       "id": "s_rect_44",
       "type": "text",
-      "x": 80,
-      "y": 6115,
+      "x": 76,
+      "y": 6662,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Factor on cot θmin: 0.8 for class A links, 8.2.3(4)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2526,7 +2526,7 @@
       "id": "s_rect_45",
       "type": "math",
       "x": 400,
-      "y": 6115,
+      "y": 6655,
       "props": {
         "w": 60,
         "h": 32,
@@ -2542,11 +2542,11 @@
     {
       "id": "s_rect_46",
       "type": "text",
-      "x": 80,
-      "y": 6164,
+      "x": 76,
+      "y": 6722,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Average axial stress, compression positive",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2558,7 +2558,7 @@
       "id": "s_rect_47",
       "type": "math",
       "x": 400,
-      "y": 6155,
+      "y": 6712,
       "props": {
         "w": 60,
         "h": 32,
@@ -2574,11 +2574,11 @@
     {
       "id": "s_rect_48",
       "type": "text",
-      "x": 80,
-      "y": 6213,
+      "x": 76,
+      "y": 6802,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Area of one link leg",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2590,7 +2590,7 @@
       "id": "s_rect_49",
       "type": "math",
       "x": 400,
-      "y": 6205,
+      "y": 6788,
       "props": {
         "w": 60,
         "h": 32,
@@ -2606,11 +2606,11 @@
     {
       "id": "s_rect_4a",
       "type": "text",
-      "x": 80,
-      "y": 6255,
+      "x": 76,
+      "y": 6862,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Neutral-axis depth ratios for the compression chord search",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2622,7 +2622,7 @@
       "id": "s_rect_4b",
       "type": "math",
       "x": 400,
-      "y": 6255,
+      "y": 6855,
       "props": {
         "w": 60,
         "h": 32,
@@ -2638,11 +2638,11 @@
     {
       "id": "s_rect_4c",
       "type": "text",
-      "x": 80,
-      "y": 6295,
+      "x": 76,
+      "y": 7111,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "6.1 Shear along y (web b, depth h; bending about x)",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -2654,11 +2654,11 @@
     {
       "id": "s_rect_4d",
       "type": "text",
-      "x": 80,
-      "y": 6336,
+      "x": 76,
+      "y": 7173,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Effective depth",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2670,7 +2670,7 @@
       "id": "s_rect_4e",
       "type": "math",
       "x": 400,
-      "y": 6325,
+      "y": 7161,
       "props": {
         "w": 60,
         "h": 32,
@@ -2686,11 +2686,11 @@
     {
       "id": "s_rect_4f",
       "type": "text",
-      "x": 80,
-      "y": 6381,
+      "x": 76,
+      "y": 7233,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Lever arm, 8.2.1(3)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2702,7 +2702,7 @@
       "id": "s_rect_4g",
       "type": "math",
       "x": 400,
-      "y": 6375,
+      "y": 7226,
       "props": {
         "w": 60,
         "h": 32,
@@ -2718,11 +2718,11 @@
     {
       "id": "s_rect_4h",
       "type": "text",
-      "x": 80,
-      "y": 6421,
+      "x": 76,
+      "y": 7273,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Web width",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2734,7 +2734,7 @@
       "id": "s_rect_4i",
       "type": "math",
       "x": 400,
-      "y": 6415,
+      "y": 7266,
       "props": {
         "w": 60,
         "h": 32,
@@ -2750,11 +2750,11 @@
     {
       "id": "s_rect_4j",
       "type": "text",
-      "x": 80,
-      "y": 6496,
+      "x": 76,
+      "y": 7353,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Average shear stress (8.18)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2766,7 +2766,7 @@
       "id": "s_rect_4k",
       "type": "math",
       "x": 400,
-      "y": 6455,
+      "y": 7308,
       "props": {
         "w": 60,
         "h": 32,
@@ -2782,11 +2782,11 @@
     {
       "id": "s_rect_4l",
       "type": "text",
-      "x": 80,
-      "y": 6577,
+      "x": 76,
+      "y": 7433,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Compression chord depth x: neutral axis at the bending resistance under NEd (§8.1)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2798,7 +2798,7 @@
       "id": "s_rect_4m",
       "type": "math",
       "x": 96,
-      "y": 6605,
+      "y": 7463,
       "props": {
         "w": 60,
         "h": 32,
@@ -2814,11 +2814,11 @@
     {
       "id": "s_rect_4n",
       "type": "text",
-      "x": 80,
-      "y": 6657,
+      "x": 76,
+      "y": 7533,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Flattest strut allowed (8.41)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2830,7 +2830,7 @@
       "id": "s_rect_4o",
       "type": "math",
       "x": 96,
-      "y": 6685,
+      "y": 7566,
       "props": {
         "w": 60,
         "h": 32,
@@ -2846,11 +2846,11 @@
     {
       "id": "s_rect_4p",
       "type": "text",
-      "x": 80,
-      "y": 7108,
+      "x": 76,
+      "y": 7773,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Design cotθ: cot θmin if the strut holds, else the root of τEd(cotθ + tanθ) = ν·fcd; 1: strut fails",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2862,7 +2862,7 @@
       "id": "s_rect_4q",
       "type": "math",
       "x": 96,
-      "y": 7136,
+      "y": 7803,
       "props": {
         "w": 60,
         "h": 32,
@@ -2878,11 +2878,11 @@
     {
       "id": "s_rect_4r",
       "type": "text",
-      "x": 80,
-      "y": 7312,
+      "x": 76,
+      "y": 7993,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Area of links within s",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2894,7 +2894,7 @@
       "id": "s_rect_4s",
       "type": "math",
       "x": 400,
-      "y": 7306,
+      "y": 7986,
       "props": {
         "w": 60,
         "h": 32,
@@ -2910,11 +2910,11 @@
     {
       "id": "s_rect_4t",
       "type": "text",
-      "x": 80,
-      "y": 7356,
+      "x": 76,
+      "y": 8304,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Shear reinforcement ratio (8.43)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2926,7 +2926,7 @@
       "id": "s_rect_4u",
       "type": "math",
       "x": 400,
-      "y": 7346,
+      "y": 8291,
       "props": {
         "w": 60,
         "h": 32,
@@ -2942,11 +2942,11 @@
     {
       "id": "s_rect_4v",
       "type": "text",
-      "x": 80,
-      "y": 7431,
+      "x": 76,
+      "y": 8404,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Link resistance (8.42)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2958,7 +2958,7 @@
       "id": "s_rect_4w",
       "type": "math",
       "x": 400,
-      "y": 7406,
+      "y": 8375,
       "props": {
         "w": 60,
         "h": 32,
@@ -2974,11 +2974,11 @@
     {
       "id": "s_rect_4x",
       "type": "text",
-      "x": 80,
-      "y": 7536,
+      "x": 76,
+      "y": 8504,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Strut stress (8.44)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -2990,7 +2990,7 @@
       "id": "s_rect_4y",
       "type": "math",
       "x": 400,
-      "y": 7496,
+      "y": 8460,
       "props": {
         "w": 60,
         "h": 32,
@@ -3006,11 +3006,11 @@
     {
       "id": "s_rect_4z",
       "type": "text",
-      "x": 80,
-      "y": 7627,
+      "x": 76,
+      "y": 8604,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Shear utilisation ratio",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3022,7 +3022,7 @@
       "id": "s_rect_50",
       "type": "math",
       "x": 400,
-      "y": 7616,
+      "y": 8590,
       "props": {
         "w": 60,
         "h": 32,
@@ -3038,11 +3038,11 @@
     {
       "id": "s_rect_51",
       "type": "text",
-      "x": 80,
-      "y": 7682,
+      "x": 76,
+      "y": 8664,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Check",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3054,7 +3054,7 @@
       "id": "s_rect_52",
       "type": "math",
       "x": 400,
-      "y": 7676,
+      "y": 8657,
       "props": {
         "w": 60,
         "h": 32,
@@ -3070,11 +3070,11 @@
     {
       "id": "s_rect_53",
       "type": "text",
-      "x": 80,
-      "y": 7716,
+      "x": 76,
+      "y": 8702,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "6.2 Shear along x (web h, depth b; bending about y)",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -3086,11 +3086,11 @@
     {
       "id": "s_rect_54",
       "type": "text",
-      "x": 80,
-      "y": 7757,
+      "x": 76,
+      "y": 8764,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Effective depth",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3102,7 +3102,7 @@
       "id": "s_rect_55",
       "type": "math",
       "x": 400,
-      "y": 7746,
+      "y": 8752,
       "props": {
         "w": 60,
         "h": 32,
@@ -3118,11 +3118,11 @@
     {
       "id": "s_rect_56",
       "type": "text",
-      "x": 80,
-      "y": 7802,
+      "x": 76,
+      "y": 8824,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Lever arm, 8.2.1(3)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3134,7 +3134,7 @@
       "id": "s_rect_57",
       "type": "math",
       "x": 400,
-      "y": 7796,
+      "y": 8817,
       "props": {
         "w": 60,
         "h": 32,
@@ -3150,11 +3150,11 @@
     {
       "id": "s_rect_58",
       "type": "text",
-      "x": 80,
-      "y": 7842,
+      "x": 76,
+      "y": 8864,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Web width",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3166,7 +3166,7 @@
       "id": "s_rect_59",
       "type": "math",
       "x": 400,
-      "y": 7836,
+      "y": 8857,
       "props": {
         "w": 60,
         "h": 32,
@@ -3182,11 +3182,11 @@
     {
       "id": "s_rect_5a",
       "type": "text",
-      "x": 80,
-      "y": 7915,
+      "x": 76,
+      "y": 8944,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Average shear stress (8.18)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3198,7 +3198,7 @@
       "id": "s_rect_5b",
       "type": "math",
       "x": 400,
-      "y": 7876,
+      "y": 8901,
       "props": {
         "w": 60,
         "h": 32,
@@ -3214,11 +3214,11 @@
     {
       "id": "s_rect_5c",
       "type": "text",
-      "x": 80,
-      "y": 7988,
+      "x": 76,
+      "y": 9024,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Compression chord depth x: neutral axis at the bending resistance under NEd (§8.1)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3230,7 +3230,7 @@
       "id": "s_rect_5d",
       "type": "math",
       "x": 96,
-      "y": 8016,
+      "y": 9057,
       "props": {
         "w": 60,
         "h": 32,
@@ -3246,11 +3246,11 @@
     {
       "id": "s_rect_5e",
       "type": "text",
-      "x": 80,
-      "y": 8279,
+      "x": 76,
+      "y": 9455,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Flattest strut allowed (8.41)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3262,7 +3262,7 @@
       "id": "s_rect_5f",
       "type": "math",
       "x": 96,
-      "y": 8307,
+      "y": 9488,
       "props": {
         "w": 60,
         "h": 32,
@@ -3278,11 +3278,11 @@
     {
       "id": "s_rect_5g",
       "type": "text",
-      "x": 80,
-      "y": 8509,
+      "x": 76,
+      "y": 9695,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Design cotθ: cot θmin if the strut holds, else the root of τEd(cotθ + tanθ) = ν·fcd; 1: strut fails",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3294,7 +3294,7 @@
       "id": "s_rect_5h",
       "type": "math",
       "x": 96,
-      "y": 8537,
+      "y": 9725,
       "props": {
         "w": 60,
         "h": 32,
@@ -3310,11 +3310,11 @@
     {
       "id": "s_rect_5i",
       "type": "text",
-      "x": 80,
-      "y": 8713,
+      "x": 76,
+      "y": 9915,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Area of links within s",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3326,7 +3326,7 @@
       "id": "s_rect_5j",
       "type": "math",
       "x": 400,
-      "y": 8707,
+      "y": 9908,
       "props": {
         "w": 60,
         "h": 32,
@@ -3342,11 +3342,11 @@
     {
       "id": "s_rect_5k",
       "type": "text",
-      "x": 80,
-      "y": 8755,
+      "x": 76,
+      "y": 9975,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Shear reinforcement ratio (8.43)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3358,7 +3358,7 @@
       "id": "s_rect_5l",
       "type": "math",
       "x": 400,
-      "y": 8747,
+      "y": 9964,
       "props": {
         "w": 60,
         "h": 32,
@@ -3374,11 +3374,11 @@
     {
       "id": "s_rect_5m",
       "type": "text",
-      "x": 80,
-      "y": 8822,
+      "x": 76,
+      "y": 10075,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Link resistance (8.42)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3390,7 +3390,7 @@
       "id": "s_rect_5n",
       "type": "math",
       "x": 400,
-      "y": 8797,
+      "y": 10046,
       "props": {
         "w": 60,
         "h": 32,
@@ -3406,11 +3406,11 @@
     {
       "id": "s_rect_5o",
       "type": "text",
-      "x": 80,
-      "y": 8927,
+      "x": 76,
+      "y": 10175,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Strut stress (8.44)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3422,7 +3422,7 @@
       "id": "s_rect_5p",
       "type": "math",
       "x": 400,
-      "y": 8887,
+      "y": 10131,
       "props": {
         "w": 60,
         "h": 32,
@@ -3438,11 +3438,11 @@
     {
       "id": "s_rect_5q",
       "type": "text",
-      "x": 80,
-      "y": 9018,
+      "x": 76,
+      "y": 10275,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Shear utilisation ratio",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3454,7 +3454,7 @@
       "id": "s_rect_5r",
       "type": "math",
       "x": 400,
-      "y": 9007,
+      "y": 10261,
       "props": {
         "w": 60,
         "h": 32,
@@ -3470,11 +3470,11 @@
     {
       "id": "s_rect_5s",
       "type": "text",
-      "x": 80,
-      "y": 9073,
+      "x": 76,
+      "y": 10335,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Check",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3486,7 +3486,7 @@
       "id": "s_rect_5t",
       "type": "math",
       "x": 400,
-      "y": 9067,
+      "y": 10328,
       "props": {
         "w": 60,
         "h": 32,
@@ -3502,8 +3502,8 @@
     {
       "id": "s_rect_5u",
       "type": "text",
-      "x": 80,
-      "y": 9117,
+      "x": 76,
+      "y": 10622,
       "props": {
         "w": 630,
         "h": 24,
@@ -3518,11 +3518,11 @@
     {
       "id": "s_rect_5v",
       "type": "text",
-      "x": 80,
-      "y": 9153,
+      "x": 76,
+      "y": 10666,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Radial utilisation on P–Mθ (governs)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3534,7 +3534,7 @@
       "id": "s_rect_5w",
       "type": "math",
       "x": 400,
-      "y": 9147,
+      "y": 10659,
       "props": {
         "w": 60,
         "h": 32,
@@ -3550,11 +3550,11 @@
     {
       "id": "s_rect_5x",
       "type": "text",
-      "x": 80,
-      "y": 9193,
+      "x": 76,
+      "y": 10706,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Shear along y",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3566,7 +3566,7 @@
       "id": "s_rect_5y",
       "type": "math",
       "x": 400,
-      "y": 9187,
+      "y": 10699,
       "props": {
         "w": 60,
         "h": 32,
@@ -3582,11 +3582,11 @@
     {
       "id": "s_rect_5z",
       "type": "text",
-      "x": 80,
-      "y": 9454,
+      "x": 76,
+      "y": 10746,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Shear along x",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3598,7 +3598,7 @@
       "id": "s_rect_60",
       "type": "math",
       "x": 400,
-      "y": 9448,
+      "y": 10739,
       "props": {
         "w": 60,
         "h": 32,
@@ -3614,11 +3614,11 @@
     {
       "id": "s_rect_61",
       "type": "text",
-      "x": 80,
-      "y": 10619,
+      "x": 76,
+      "y": 11808,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 29,
         "html": "ANNEX",
         "fontFamily": "Inter",
         "fontSize": 20,
@@ -3633,8 +3633,8 @@
     {
       "id": "s_rect_62",
       "type": "text",
-      "x": 80,
-      "y": 10659,
+      "x": 76,
+      "y": 11833,
       "props": {
         "w": 630,
         "h": 24,
@@ -3653,11 +3653,11 @@
     {
       "id": "s_rect_63",
       "type": "text",
-      "x": 80,
-      "y": 10700,
+      "x": 76,
+      "y": 11897,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Half-distance between corner bar centres along x",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3669,7 +3669,7 @@
       "id": "s_rect_64",
       "type": "math",
       "x": 400,
-      "y": 10689,
+      "y": 11885,
       "props": {
         "w": 60,
         "h": 32,
@@ -3685,11 +3685,11 @@
     {
       "id": "s_rect_65",
       "type": "text",
-      "x": 80,
-      "y": 10750,
+      "x": 76,
+      "y": 11977,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Half-distance between corner bar centres along y",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3701,7 +3701,7 @@
       "id": "s_rect_66",
       "type": "math",
       "x": 400,
-      "y": 10739,
+      "y": 11965,
       "props": {
         "w": 60,
         "h": 32,
@@ -3717,11 +3717,11 @@
     {
       "id": "s_rect_67",
       "type": "text",
-      "x": 80,
-      "y": 10797,
+      "x": 76,
+      "y": 12057,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Bar spacing (centres) along b",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3733,7 +3733,7 @@
       "id": "s_rect_68",
       "type": "math",
       "x": 400,
-      "y": 10789,
+      "y": 12047,
       "props": {
         "w": 60,
         "h": 32,
@@ -3749,11 +3749,11 @@
     {
       "id": "s_rect_69",
       "type": "text",
-      "x": 80,
-      "y": 10848,
+      "x": 76,
+      "y": 12137,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Bar spacing (centres) along h",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3765,7 +3765,7 @@
       "id": "s_rect_6a",
       "type": "math",
       "x": 400,
-      "y": 10839,
+      "y": 12125,
       "props": {
         "w": 60,
         "h": 32,
@@ -3781,11 +3781,11 @@
     {
       "id": "s_rect_6b",
       "type": "text",
-      "x": 80,
-      "y": 10895,
+      "x": 76,
+      "y": 12197,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Total number of bars",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3797,7 +3797,7 @@
       "id": "s_rect_6c",
       "type": "math",
       "x": 400,
-      "y": 10889,
+      "y": 12190,
       "props": {
         "w": 60,
         "h": 32,
@@ -3813,11 +3813,11 @@
     {
       "id": "s_rect_6d",
       "type": "text",
-      "x": 80,
-      "y": 10929,
+      "x": 76,
+      "y": 12236,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "Bars are numbered: top row (left to right), bottom row, left side, right side (corners once).",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -3828,11 +3828,11 @@
     {
       "id": "s_rect_6e",
       "type": "text",
-      "x": 80,
-      "y": 10965,
+      "x": 76,
+      "y": 12277,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Bar index",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3844,7 +3844,7 @@
       "id": "s_rect_6f",
       "type": "math",
       "x": 400,
-      "y": 10959,
+      "y": 12270,
       "props": {
         "w": 60,
         "h": 32,
@@ -3860,11 +3860,11 @@
     {
       "id": "s_rect_6g",
       "type": "text",
-      "x": 80,
-      "y": 11068,
+      "x": 76,
+      "y": 12397,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "x of each bar",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3876,7 +3876,7 @@
       "id": "s_rect_6h",
       "type": "math",
       "x": 400,
-      "y": 10999,
+      "y": 12310,
       "props": {
         "w": 60,
         "h": 32,
@@ -3892,11 +3892,11 @@
     {
       "id": "s_rect_6i",
       "type": "text",
-      "x": 80,
-      "y": 11238,
+      "x": 76,
+      "y": 12577,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "y of each bar",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -3908,7 +3908,7 @@
       "id": "s_rect_6j",
       "type": "math",
       "x": 400,
-      "y": 11169,
+      "y": 12490,
       "props": {
         "w": 60,
         "h": 32,
@@ -3925,10 +3925,10 @@
       "id": "s_rect_6k",
       "type": "text",
       "x": 96,
-      "y": 11790,
+      "y": 12967,
       "props": {
         "w": 280,
-        "h": 24,
+        "h": 19,
         "html": "Bar table",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -3940,7 +3940,7 @@
       "id": "s_rect_6l",
       "type": "math",
       "x": 96,
-      "y": 11820,
+      "y": 12998,
       "props": {
         "w": 60,
         "h": 32,
@@ -3958,8 +3958,8 @@
     {
       "id": "s_rect_6m",
       "type": "math",
-      "x": 168,
-      "y": 11820,
+      "x": 176,
+      "y": 12998,
       "props": {
         "w": 60,
         "h": 32,
@@ -3977,8 +3977,8 @@
     {
       "id": "s_rect_6n",
       "type": "math",
-      "x": 283,
-      "y": 11820,
+      "x": 296,
+      "y": 12998,
       "props": {
         "w": 60,
         "h": 32,
@@ -3996,8 +3996,8 @@
     {
       "id": "s_rect_6o",
       "type": "text",
-      "x": 80,
-      "y": 12110,
+      "x": 76,
+      "y": 13284,
       "props": {
         "w": 630,
         "h": 24,
@@ -4016,11 +4016,11 @@
     {
       "id": "s_rect_6p",
       "type": "text",
-      "x": 80,
-      "y": 12140,
+      "x": 76,
+      "y": 13327,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "No inner ties when every bar is within 150 mm of a corner bar. Otherwise corners and every",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -4031,11 +4031,11 @@
     {
       "id": "s_rect_6q",
       "type": "text",
-      "x": 80,
-      "y": 12170,
+      "x": 76,
+      "y": 13367,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "other bar are restrained, symmetric about the face centre.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -4046,11 +4046,11 @@
     {
       "id": "s_rect_6r",
       "type": "text",
-      "x": 80,
-      "y": 12200,
+      "x": 76,
+      "y": 13407,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "Each mirrored pair is held by one inner closed tie; a single middle bar gets a cross-tie.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -4061,11 +4061,11 @@
     {
       "id": "s_rect_6s",
       "type": "text",
-      "x": 80,
-      "y": 12230,
+      "x": 76,
+      "y": 13447,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "Every unrestrained bar is next to a restrained one, so a bar spacing ≤ 150 mm suffices.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -4076,11 +4076,11 @@
     {
       "id": "s_rect_6t",
       "type": "text",
-      "x": 80,
-      "y": 12270,
+      "x": 76,
+      "y": 13508,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Farthest bar from a corner on a b face",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4092,7 +4092,7 @@
       "id": "s_rect_6u",
       "type": "math",
       "x": 400,
-      "y": 12260,
+      "y": 13498,
       "props": {
         "w": 60,
         "h": 32,
@@ -4108,11 +4108,11 @@
     {
       "id": "s_rect_6v",
       "type": "text",
-      "x": 80,
-      "y": 12320,
+      "x": 76,
+      "y": 13588,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Farthest bar from a corner on an h face",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4124,7 +4124,7 @@
       "id": "s_rect_6w",
       "type": "math",
       "x": 400,
-      "y": 12310,
+      "y": 13578,
       "props": {
         "w": 60,
         "h": 32,
@@ -4140,11 +4140,11 @@
     {
       "id": "s_rect_6x",
       "type": "text",
-      "x": 80,
-      "y": 12388,
+      "x": 76,
+      "y": 13688,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Inner ties across the depth (pairs 2i and nb − 1 − 2i on the b faces)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4156,7 +4156,7 @@
       "id": "s_rect_6y",
       "type": "math",
       "x": 400,
-      "y": 12360,
+      "y": 13641,
       "props": {
         "w": 60,
         "h": 32,
@@ -4172,11 +4172,11 @@
     {
       "id": "s_rect_6z",
       "type": "text",
-      "x": 80,
-      "y": 12498,
+      "x": 76,
+      "y": 13808,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Inner ties across the width (pairs on the h faces)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4188,7 +4188,7 @@
       "id": "s_rect_70",
       "type": "math",
       "x": 400,
-      "y": 12470,
+      "y": 13761,
       "props": {
         "w": 60,
         "h": 32,
@@ -4204,11 +4204,11 @@
     {
       "id": "s_rect_71",
       "type": "text",
-      "x": 80,
-      "y": 12603,
+      "x": 76,
+      "y": 14159,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Last pair is a single middle bar (cross-tie, one leg): 1, else 0",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4220,7 +4220,7 @@
       "id": "s_rect_72",
       "type": "math",
       "x": 400,
-      "y": 12580,
+      "y": 14132,
       "props": {
         "w": 60,
         "h": 32,
@@ -4236,11 +4236,11 @@
     {
       "id": "s_rect_73",
       "type": "text",
-      "x": 80,
-      "y": 12992,
+      "x": 76,
+      "y": 14279,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4252,7 +4252,7 @@
       "id": "s_rect_74",
       "type": "math",
       "x": 400,
-      "y": 12961,
+      "y": 14232,
       "props": {
         "w": 60,
         "h": 32,
@@ -4268,11 +4268,11 @@
     {
       "id": "s_rect_75",
       "type": "text",
-      "x": 80,
-      "y": 13067,
+      "x": 76,
+      "y": 14339,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Full-depth tie legs parallel to y (resist VEd,y)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4284,7 +4284,7 @@
       "id": "s_rect_76",
       "type": "math",
       "x": 400,
-      "y": 13061,
+      "y": 14332,
       "props": {
         "w": 60,
         "h": 32,
@@ -4300,11 +4300,11 @@
     {
       "id": "s_rect_77",
       "type": "text",
-      "x": 80,
-      "y": 13107,
+      "x": 76,
+      "y": 14379,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Full-width tie legs parallel to x (resist VEd,x)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4316,7 +4316,7 @@
       "id": "s_rect_78",
       "type": "math",
       "x": 400,
-      "y": 13101,
+      "y": 14372,
       "props": {
         "w": 60,
         "h": 32,
@@ -4332,8 +4332,8 @@
     {
       "id": "s_rect_79",
       "type": "text",
-      "x": 80,
-      "y": 13161,
+      "x": 76,
+      "y": 14435,
       "props": {
         "w": 630,
         "h": 24,
@@ -4352,11 +4352,11 @@
     {
       "id": "s_rect_7a",
       "type": "text",
-      "x": 80,
-      "y": 13191,
+      "x": 76,
+      "y": 14478,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "The concrete is cut into an nf × nf grid of fibres; each carries the stress at its centre strain.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -4367,11 +4367,11 @@
     {
       "id": "s_rect_7b",
       "type": "text",
-      "x": 80,
-      "y": 13227,
+      "x": 76,
+      "y": 14519,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Fibre index (row by row)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4383,7 +4383,7 @@
       "id": "s_rect_7c",
       "type": "math",
       "x": 400,
-      "y": 13221,
+      "y": 14512,
       "props": {
         "w": 60,
         "h": 32,
@@ -4399,11 +4399,11 @@
     {
       "id": "s_rect_7d",
       "type": "text",
-      "x": 80,
-      "y": 13276,
+      "x": 76,
+      "y": 14599,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Fibre centres",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4415,7 +4415,7 @@
       "id": "s_rect_7e",
       "type": "math",
       "x": 400,
-      "y": 13261,
+      "y": 14565,
       "props": {
         "w": 60,
         "h": 32,
@@ -4431,11 +4431,11 @@
     {
       "id": "s_rect_7f",
       "type": "text",
-      "x": 80,
-      "y": 13346,
+      "x": 76,
+      "y": 14679,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4447,7 +4447,7 @@
       "id": "s_rect_7g",
       "type": "math",
       "x": 400,
-      "y": 13331,
+      "y": 14645,
       "props": {
         "w": 60,
         "h": 32,
@@ -4463,11 +4463,11 @@
     {
       "id": "s_rect_7h",
       "type": "text",
-      "x": 80,
-      "y": 13411,
+      "x": 76,
+      "y": 14739,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Area of one fibre",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4479,7 +4479,7 @@
       "id": "s_rect_7i",
       "type": "math",
       "x": 400,
-      "y": 13401,
+      "y": 14729,
       "props": {
         "w": 60,
         "h": 32,
@@ -4495,8 +4495,8 @@
     {
       "id": "s_rect_7j",
       "type": "text",
-      "x": 80,
-      "y": 13481,
+      "x": 76,
+      "y": 14815,
       "props": {
         "w": 630,
         "h": 24,
@@ -4515,11 +4515,11 @@
     {
       "id": "s_rect_7k",
       "type": "text",
-      "x": 80,
-      "y": 13511,
+      "x": 76,
+      "y": 14858,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "Ties wrap the bars: each corner is an arc centred on the bar. Closed ties end in two 135°",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -4530,11 +4530,11 @@
     {
       "id": "s_rect_7l",
       "type": "text",
-      "x": 80,
-      "y": 13541,
+      "x": 76,
+      "y": 14898,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "hooks at the top-left bar; cross-ties (legs) have a 135° hook at both ends.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -4545,11 +4545,11 @@
     {
       "id": "s_rect_7m",
       "type": "text",
-      "x": 80,
-      "y": 13582,
+      "x": 76,
+      "y": 14959,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Tie centreline radius round a bar",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4561,7 +4561,7 @@
       "id": "s_rect_7n",
       "type": "math",
       "x": 400,
-      "y": 13571,
+      "y": 14947,
       "props": {
         "w": 60,
         "h": 32,
@@ -4577,11 +4577,11 @@
     {
       "id": "s_rect_7o",
       "type": "text",
-      "x": 80,
-      "y": 13627,
+      "x": 76,
+      "y": 15019,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Hook extension past the bend, EC2 Fig. 8.5",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4593,7 +4593,7 @@
       "id": "s_rect_7p",
       "type": "math",
       "x": 400,
-      "y": 13621,
+      "y": 15012,
       "props": {
         "w": 60,
         "h": 32,
@@ -4609,11 +4609,11 @@
     {
       "id": "s_rect_7q",
       "type": "text",
-      "x": 80,
-      "y": 13667,
+      "x": 76,
+      "y": 15059,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Points drawn per arc",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4625,7 +4625,7 @@
       "id": "s_rect_7r",
       "type": "math",
       "x": 400,
-      "y": 13661,
+      "y": 15052,
       "props": {
         "w": 60,
         "h": 32,
@@ -4641,11 +4641,11 @@
     {
       "id": "s_rect_7s",
       "type": "text",
-      "x": 80,
-      "y": 13701,
+      "x": 76,
+      "y": 15310,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Inner closed ties across the depth (a middle bar is a leg)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4657,7 +4657,7 @@
       "id": "s_rect_7t",
       "type": "math",
       "x": 400,
-      "y": 13701,
+      "y": 15303,
       "props": {
         "w": 60,
         "h": 32,
@@ -4673,11 +4673,11 @@
     {
       "id": "s_rect_7u",
       "type": "text",
-      "x": 80,
-      "y": 13747,
+      "x": 76,
+      "y": 15350,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Inner closed ties across the width",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4689,7 +4689,7 @@
       "id": "s_rect_7v",
       "type": "math",
       "x": 400,
-      "y": 13741,
+      "y": 15343,
       "props": {
         "w": 60,
         "h": 32,
@@ -4705,11 +4705,11 @@
     {
       "id": "s_rect_7w",
       "type": "text",
-      "x": 80,
-      "y": 13787,
+      "x": 76,
+      "y": 15390,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Closed ties: the outer tie and the inner ties",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4721,7 +4721,7 @@
       "id": "s_rect_7x",
       "type": "math",
       "x": 400,
-      "y": 13781,
+      "y": 15383,
       "props": {
         "w": 60,
         "h": 32,
@@ -4737,11 +4737,11 @@
     {
       "id": "s_rect_7y",
       "type": "text",
-      "x": 80,
-      "y": 13827,
+      "x": 76,
+      "y": 15430,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Points per closed tie: 5 arcs and 2 hook ends",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4753,7 +4753,7 @@
       "id": "s_rect_7z",
       "type": "math",
       "x": 400,
-      "y": 13821,
+      "y": 15423,
       "props": {
         "w": 60,
         "h": 32,
@@ -4769,11 +4769,11 @@
     {
       "id": "s_rect_80",
       "type": "text",
-      "x": 80,
-      "y": 14155,
+      "x": 76,
+      "y": 15490,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Tie t (0 = outer): half-distance between its corner bars along x",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4785,7 +4785,7 @@
       "id": "s_rect_81",
       "type": "math",
       "x": 400,
-      "y": 14132,
+      "y": 15463,
       "props": {
         "w": 60,
         "h": 32,
@@ -4801,11 +4801,11 @@
     {
       "id": "s_rect_82",
       "type": "text",
-      "x": 80,
-      "y": 14263,
+      "x": 76,
+      "y": 15610,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Same along y",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4817,7 +4817,7 @@
       "id": "s_rect_83",
       "type": "math",
       "x": 400,
-      "y": 14232,
+      "y": 15563,
       "props": {
         "w": 60,
         "h": 32,
@@ -4833,11 +4833,11 @@
     {
       "id": "s_rect_84",
       "type": "text",
-      "x": 80,
-      "y": 14343,
+      "x": 76,
+      "y": 15690,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Point j: its tie and its index within the tie",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4849,7 +4849,7 @@
       "id": "s_rect_85",
       "type": "math",
       "x": 400,
-      "y": 14332,
+      "y": 15675,
       "props": {
         "w": 60,
         "h": 32,
@@ -4865,11 +4865,11 @@
     {
       "id": "s_rect_86",
       "type": "text",
-      "x": 80,
-      "y": 14398,
+      "x": 76,
+      "y": 15750,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4881,7 +4881,7 @@
       "id": "s_rect_87",
       "type": "math",
       "x": 400,
-      "y": 14392,
+      "y": 15743,
       "props": {
         "w": 60,
         "h": 32,
@@ -4897,11 +4897,11 @@
     {
       "id": "s_rect_88",
       "type": "text",
-      "x": 80,
-      "y": 14434,
+      "x": 76,
+      "y": 15790,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Arc of point j: 0 top-left hook, 1 TR, 2 BR, 3 BL, 4 top-left hook",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4913,7 +4913,7 @@
       "id": "s_rect_89",
       "type": "math",
       "x": 96,
-      "y": 14462,
+      "y": 15816,
       "props": {
         "w": 60,
         "h": 32,
@@ -4929,11 +4929,11 @@
     {
       "id": "s_rect_8a",
       "type": "text",
-      "x": 80,
-      "y": 14534,
+      "x": 76,
+      "y": 15890,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Fraction along the arc",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4945,7 +4945,7 @@
       "id": "s_rect_8b",
       "type": "math",
       "x": 96,
-      "y": 14562,
+      "y": 15916,
       "props": {
         "w": 60,
         "h": 32,
@@ -4961,11 +4961,11 @@
     {
       "id": "s_rect_8c",
       "type": "text",
-      "x": 80,
-      "y": 14662,
+      "x": 76,
+      "y": 16050,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Angle round the bar in degrees (clockwise)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -4977,7 +4977,7 @@
       "id": "s_rect_8d",
       "type": "math",
       "x": 400,
-      "y": 14612,
+      "y": 15983,
       "props": {
         "w": 60,
         "h": 32,
@@ -4993,11 +4993,11 @@
     {
       "id": "s_rect_8e",
       "type": "text",
-      "x": 80,
-      "y": 14783,
+      "x": 76,
+      "y": 16170,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "1 at the two hook ends",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5009,7 +5009,7 @@
       "id": "s_rect_8f",
       "type": "math",
       "x": 400,
-      "y": 14752,
+      "y": 16123,
       "props": {
         "w": 60,
         "h": 32,
@@ -5025,11 +5025,11 @@
     {
       "id": "s_rect_8g",
       "type": "text",
-      "x": 80,
-      "y": 14883,
+      "x": 76,
+      "y": 16521,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Centre of the bar the point wraps",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5041,7 +5041,7 @@
       "id": "s_rect_8h",
       "type": "math",
       "x": 400,
-      "y": 14852,
+      "y": 16474,
       "props": {
         "w": 60,
         "h": 32,
@@ -5057,11 +5057,11 @@
     {
       "id": "s_rect_8i",
       "type": "text",
-      "x": 80,
-      "y": 14983,
+      "x": 76,
+      "y": 16621,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5073,7 +5073,7 @@
       "id": "s_rect_8j",
       "type": "math",
       "x": 400,
-      "y": 14952,
+      "y": 16574,
       "props": {
         "w": 60,
         "h": 32,
@@ -5089,11 +5089,11 @@
     {
       "id": "s_rect_8k",
       "type": "text",
-      "x": 80,
-      "y": 15305,
+      "x": 76,
+      "y": 16681,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Tie points; hook ends point at 315° into the core",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5105,7 +5105,7 @@
       "id": "s_rect_8l",
       "type": "math",
       "x": 96,
-      "y": 15333,
+      "y": 16706,
       "props": {
         "w": 60,
         "h": 32,
@@ -5121,11 +5121,11 @@
     {
       "id": "s_rect_8m",
       "type": "text",
-      "x": 80,
-      "y": 15395,
+      "x": 76,
+      "y": 16781,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5137,7 +5137,7 @@
       "id": "s_rect_8n",
       "type": "math",
       "x": 96,
-      "y": 15423,
+      "y": 16806,
       "props": {
         "w": 60,
         "h": 32,
@@ -5153,11 +5153,11 @@
     {
       "id": "s_rect_8o",
       "type": "text",
-      "x": 80,
-      "y": 15489,
+      "x": 76,
+      "y": 16881,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Points of all closed ties",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5169,7 +5169,7 @@
       "id": "s_rect_8p",
       "type": "math",
       "x": 400,
-      "y": 15483,
+      "y": 16874,
       "props": {
         "w": 60,
         "h": 32,
@@ -5185,11 +5185,11 @@
     {
       "id": "s_rect_8q",
       "type": "text",
-      "x": 80,
-      "y": 15529,
+      "x": 76,
+      "y": 16921,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Legs (cross-ties to a single middle bar)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5201,7 +5201,7 @@
       "id": "s_rect_8r",
       "type": "math",
       "x": 400,
-      "y": 15523,
+      "y": 16914,
       "props": {
         "w": 60,
         "h": 32,
@@ -5217,11 +5217,11 @@
     {
       "id": "s_rect_8s",
       "type": "text",
-      "x": 80,
-      "y": 15569,
+      "x": 76,
+      "y": 16961,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Points per leg: 2 hook arcs and 2 hook ends",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5233,7 +5233,7 @@
       "id": "s_rect_8t",
       "type": "math",
       "x": 400,
-      "y": 15563,
+      "y": 16954,
       "props": {
         "w": 60,
         "h": 32,
@@ -5249,11 +5249,11 @@
     {
       "id": "s_rect_8u",
       "type": "text",
-      "x": 80,
-      "y": 15614,
+      "x": 76,
+      "y": 17021,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Point j: its leg and its index within the leg",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5265,7 +5265,7 @@
       "id": "s_rect_8v",
       "type": "math",
       "x": 400,
-      "y": 15603,
+      "y": 17006,
       "props": {
         "w": 60,
         "h": 32,
@@ -5281,11 +5281,11 @@
     {
       "id": "s_rect_8w",
       "type": "text",
-      "x": 80,
-      "y": 15669,
+      "x": 76,
+      "y": 17081,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5297,7 +5297,7 @@
       "id": "s_rect_8x",
       "type": "math",
       "x": 400,
-      "y": 15663,
+      "y": 17074,
       "props": {
         "w": 60,
         "h": 32,
@@ -5313,11 +5313,11 @@
     {
       "id": "s_rect_8y",
       "type": "text",
-      "x": 80,
-      "y": 15703,
+      "x": 76,
+      "y": 17121,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Leg direction: 0 parallel to y at x = 0, 1 parallel to x at y = 0",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5329,7 +5329,7 @@
       "id": "s_rect_8z",
       "type": "math",
       "x": 400,
-      "y": 15703,
+      "y": 17114,
       "props": {
         "w": 60,
         "h": 32,
@@ -5345,11 +5345,11 @@
     {
       "id": "s_rect_90",
       "type": "text",
-      "x": 80,
-      "y": 15745,
+      "x": 76,
+      "y": 17161,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Arc of point j (0 first bar, 1 second bar), fraction along it",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5361,7 +5361,7 @@
       "id": "s_rect_91",
       "type": "math",
       "x": 96,
-      "y": 15773,
+      "y": 17187,
       "props": {
         "w": 60,
         "h": 32,
@@ -5377,11 +5377,11 @@
     {
       "id": "s_rect_92",
       "type": "text",
-      "x": 80,
-      "y": 15845,
+      "x": 76,
+      "y": 17261,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5393,7 +5393,7 @@
       "id": "s_rect_93",
       "type": "math",
       "x": 96,
-      "y": 15873,
+      "y": 17287,
       "props": {
         "w": 60,
         "h": 32,
@@ -5409,11 +5409,11 @@
     {
       "id": "s_rect_94",
       "type": "text",
-      "x": 80,
-      "y": 15925,
+      "x": 76,
+      "y": 17361,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Angle round the bar in degrees (two 135° arcs)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5425,7 +5425,7 @@
       "id": "s_rect_95",
       "type": "math",
       "x": 96,
-      "y": 15953,
+      "y": 17394,
       "props": {
         "w": 60,
         "h": 32,
@@ -5441,11 +5441,11 @@
     {
       "id": "s_rect_96",
       "type": "text",
-      "x": 80,
-      "y": 16024,
+      "x": 76,
+      "y": 17692,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "1 at the first / last hook end",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5457,7 +5457,7 @@
       "id": "s_rect_97",
       "type": "math",
       "x": 400,
-      "y": 15993,
+      "y": 17645,
       "props": {
         "w": 60,
         "h": 32,
@@ -5473,11 +5473,11 @@
     {
       "id": "s_rect_98",
       "type": "text",
-      "x": 80,
-      "y": 16124,
+      "x": 76,
+      "y": 17792,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5489,7 +5489,7 @@
       "id": "s_rect_99",
       "type": "math",
       "x": 400,
-      "y": 16093,
+      "y": 17745,
       "props": {
         "w": 60,
         "h": 32,
@@ -5505,11 +5505,11 @@
     {
       "id": "s_rect_9a",
       "type": "text",
-      "x": 80,
-      "y": 16199,
+      "x": 76,
+      "y": 17852,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Hook end directions (into the core)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5521,7 +5521,7 @@
       "id": "s_rect_9b",
       "type": "math",
       "x": 400,
-      "y": 16193,
+      "y": 17845,
       "props": {
         "w": 60,
         "h": 32,
@@ -5537,11 +5537,11 @@
     {
       "id": "s_rect_9c",
       "type": "text",
-      "x": 80,
-      "y": 16480,
+      "x": 76,
+      "y": 17892,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5553,7 +5553,7 @@
       "id": "s_rect_9d",
       "type": "math",
       "x": 400,
-      "y": 16474,
+      "y": 17885,
       "props": {
         "w": 60,
         "h": 32,
@@ -5569,11 +5569,11 @@
     {
       "id": "s_rect_9e",
       "type": "text",
-      "x": 80,
-      "y": 16516,
+      "x": 76,
+      "y": 17932,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Leg points",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5585,7 +5585,7 @@
       "id": "s_rect_9f",
       "type": "math",
       "x": 96,
-      "y": 16544,
+      "y": 17957,
       "props": {
         "w": 60,
         "h": 32,
@@ -5601,11 +5601,11 @@
     {
       "id": "s_rect_9g",
       "type": "text",
-      "x": 80,
-      "y": 16606,
+      "x": 76,
+      "y": 18032,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5617,7 +5617,7 @@
       "id": "s_rect_9h",
       "type": "math",
       "x": 96,
-      "y": 16634,
+      "y": 18057,
       "props": {
         "w": 60,
         "h": 32,
@@ -5633,11 +5633,11 @@
     {
       "id": "s_rect_9i",
       "type": "text",
-      "x": 80,
-      "y": 16700,
+      "x": 76,
+      "y": 18132,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Points of all legs",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5649,7 +5649,7 @@
       "id": "s_rect_9j",
       "type": "math",
       "x": 400,
-      "y": 16694,
+      "y": 18125,
       "props": {
         "w": 60,
         "h": 32,
@@ -5665,8 +5665,8 @@
     {
       "id": "s_rect_9k",
       "type": "text",
-      "x": 80,
-      "y": 16754,
+      "x": 76,
+      "y": 18188,
       "props": {
         "w": 630,
         "h": 24,
@@ -5685,11 +5685,11 @@
     {
       "id": "s_rect_9l",
       "type": "text",
-      "x": 80,
-      "y": 16784,
+      "x": 76,
+      "y": 18231,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "c = neutral-axis depth below the compression face; p = fibre coordinate from the centroid,",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -5700,11 +5700,11 @@
     {
       "id": "s_rect_9m",
       "type": "text",
-      "x": 80,
-      "y": 16814,
+      "x": 76,
+      "y": 18271,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "positive towards the compression face; H = section depth in that direction; dt = depth of the",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -5715,11 +5715,11 @@
     {
       "id": "s_rect_9n",
       "type": "text",
-      "x": 80,
-      "y": 16844,
+      "x": 76,
+      "y": 18311,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "extreme bar. The strain plane pivots about A (bar at −εud), B (face at εcu2) or C (εc2 at",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -5730,11 +5730,11 @@
     {
       "id": "s_rect_9o",
       "type": "text",
-      "x": 80,
-      "y": 16874,
+      "x": 76,
+      "y": 18351,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "(1 − εc2/εcu2)·H), whichever governs for the depth c (EC2 Fig. 6.1). Compression positive.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -5745,11 +5745,11 @@
     {
       "id": "s_rect_9p",
       "type": "text",
-      "x": 80,
-      "y": 17004,
+      "x": 76,
+      "y": 18923,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Strain at fibre p",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5761,7 +5761,7 @@
       "id": "s_rect_9q",
       "type": "math",
       "x": 400,
-      "y": 16904,
+      "y": 18816,
       "props": {
         "w": 60,
         "h": 32,
@@ -5777,11 +5777,11 @@
     {
       "id": "s_rect_9r",
       "type": "text",
-      "x": 80,
-      "y": 17201,
+      "x": 76,
+      "y": 19123,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Concrete stress, parabola-rectangle (EC2 3.17), no tension",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5793,7 +5793,7 @@
       "id": "s_rect_9s",
       "type": "math",
       "x": 400,
-      "y": 17144,
+      "y": 19056,
       "props": {
         "w": 60,
         "h": 32,
@@ -5809,11 +5809,11 @@
     {
       "id": "s_rect_9t",
       "type": "text",
-      "x": 80,
-      "y": 17695,
+      "x": 76,
+      "y": 19303,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Steel stress, elastic-plastic within ±fyd",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5825,7 +5825,7 @@
       "id": "s_rect_9u",
       "type": "math",
       "x": 400,
-      "y": 17645,
+      "y": 19236,
       "props": {
         "w": 60,
         "h": 32,
@@ -5841,11 +5841,11 @@
     {
       "id": "s_rect_9v",
       "type": "text",
-      "x": 80,
-      "y": 17785,
+      "x": 76,
+      "y": 19382,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "For a neutral-axis direction β (normal of the axis, towards the compression face):",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -5856,11 +5856,11 @@
     {
       "id": "s_rect_9w",
       "type": "text",
-      "x": 80,
-      "y": 17821,
+      "x": 76,
+      "y": 19423,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Section depth along β",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5872,7 +5872,7 @@
       "id": "s_rect_9x",
       "type": "math",
       "x": 400,
-      "y": 17815,
+      "y": 19416,
       "props": {
         "w": 60,
         "h": 32,
@@ -5888,11 +5888,11 @@
     {
       "id": "s_rect_9y",
       "type": "text",
-      "x": 80,
-      "y": 17857,
+      "x": 76,
+      "y": 19463,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Depth of the extreme bar",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5904,7 +5904,7 @@
       "id": "s_rect_9z",
       "type": "math",
       "x": 96,
-      "y": 17885,
+      "y": 19489,
       "props": {
         "w": 60,
         "h": 32,
@@ -5920,11 +5920,11 @@
     {
       "id": "s_rect_a0",
       "type": "text",
-      "x": 80,
-      "y": 17937,
+      "x": 76,
+      "y": 19563,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Stress in every concrete fibre at depth c",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5936,7 +5936,7 @@
       "id": "s_rect_a1",
       "type": "math",
       "x": 96,
-      "y": 17965,
+      "y": 19596,
       "props": {
         "w": 60,
         "h": 32,
@@ -5952,11 +5952,11 @@
     {
       "id": "s_rect_a2",
       "type": "text",
-      "x": 80,
-      "y": 18007,
+      "x": 76,
+      "y": 19643,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Strain in every bar",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -5968,7 +5968,7 @@
       "id": "s_rect_a3",
       "type": "math",
       "x": 96,
-      "y": 18035,
+      "y": 19676,
       "props": {
         "w": 60,
         "h": 32,
@@ -5984,11 +5984,11 @@
     {
       "id": "s_rect_a4",
       "type": "text",
-      "x": 80,
-      "y": 18081,
+      "x": 76,
+      "y": 19723,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Net bar stress (concrete it displaces subtracted)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -6000,7 +6000,7 @@
       "id": "s_rect_a5",
       "type": "math",
       "x": 400,
-      "y": 18075,
+      "y": 19716,
       "props": {
         "w": 60,
         "h": 32,
@@ -6016,11 +6016,11 @@
     {
       "id": "s_rect_a6",
       "type": "text",
-      "x": 80,
-      "y": 18117,
+      "x": 76,
+      "y": 19994,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Axial resistance",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -6032,7 +6032,7 @@
       "id": "s_rect_a7",
       "type": "math",
       "x": 96,
-      "y": 18145,
+      "y": 20027,
       "props": {
         "w": 60,
         "h": 32,
@@ -6048,11 +6048,11 @@
     {
       "id": "s_rect_a8",
       "type": "text",
-      "x": 80,
-      "y": 18187,
+      "x": 76,
+      "y": 20074,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Moment about x (lever arm y)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -6064,7 +6064,7 @@
       "id": "s_rect_a9",
       "type": "math",
       "x": 96,
-      "y": 18215,
+      "y": 20107,
       "props": {
         "w": 60,
         "h": 32,
@@ -6080,11 +6080,11 @@
     {
       "id": "s_rect_aa",
       "type": "text",
-      "x": 80,
-      "y": 18257,
+      "x": 76,
+      "y": 20154,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Moment about y (lever arm x)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -6096,7 +6096,7 @@
       "id": "s_rect_ab",
       "type": "math",
       "x": 96,
-      "y": 18285,
+      "y": 20187,
       "props": {
         "w": 60,
         "h": 32,
@@ -6112,8 +6112,8 @@
     {
       "id": "s_rect_ac",
       "type": "text",
-      "x": 80,
-      "y": 18345,
+      "x": 76,
+      "y": 20250,
       "props": {
         "w": 630,
         "h": 24,
@@ -6132,11 +6132,11 @@
     {
       "id": "s_rect_ad",
       "type": "text",
-      "x": 80,
-      "y": 18384,
+      "x": 76,
+      "y": 20314,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "Angles β swept over the quadrant of θ (10° steps)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -6148,7 +6148,7 @@
       "id": "s_rect_ae",
       "type": "math",
       "x": 400,
-      "y": 18375,
+      "y": 20303,
       "props": {
         "w": 60,
         "h": 32,
@@ -6164,11 +6164,11 @@
     {
       "id": "s_rect_af",
       "type": "text",
-      "x": 80,
-      "y": 18425,
+      "x": 76,
+      "y": 20372,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 21,
         "html": "P–Mθ curve",
         "fontFamily": "Inter",
         "fontSize": 14,
@@ -6180,11 +6180,11 @@
     {
       "id": "s_rect_ag",
       "type": "text",
-      "x": 80,
-      "y": 18455,
+      "x": 76,
+      "y": 20413,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "For each depth c = u·H(β) the moment direction ψ is found for every β of the sweep; the point",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -6195,11 +6195,11 @@
     {
       "id": "s_rect_ah",
       "type": "text",
-      "x": 80,
-      "y": 18485,
+      "x": 76,
+      "y": 20453,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 19,
         "html": "with ψ = θM (interpolated between the β steps) is the point of the P–Mθ curve.",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -6210,11 +6210,11 @@
     {
       "id": "s_rect_ai",
       "type": "text",
-      "x": 80,
-      "y": 18541,
+      "x": 76,
+      "y": 20514,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "At c = u·H(β): N, M and direction ψ",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -6226,7 +6226,7 @@
       "id": "s_rect_aj",
       "type": "math",
       "x": 400,
-      "y": 18535,
+      "y": 20507,
       "props": {
         "w": 60,
         "h": 32,
@@ -6242,11 +6242,11 @@
     {
       "id": "s_rect_ak",
       "type": "text",
-      "x": 80,
-      "y": 18818,
+      "x": 76,
+      "y": 20554,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -6258,7 +6258,7 @@
       "id": "s_rect_al",
       "type": "math",
       "x": 96,
-      "y": 18846,
+      "y": 20582,
       "props": {
         "w": 60,
         "h": 32,
@@ -6274,11 +6274,11 @@
     {
       "id": "s_rect_am",
       "type": "text",
-      "x": 80,
-      "y": 18898,
+      "x": 76,
+      "y": 20634,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Moment direction, measured from β (no 0/360° jump)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -6290,7 +6290,7 @@
       "id": "s_rect_an",
       "type": "math",
       "x": 96,
-      "y": 18926,
+      "y": 20660,
       "props": {
         "w": 60,
         "h": 32,
@@ -6306,11 +6306,11 @@
     {
       "id": "s_rect_ao",
       "type": "text",
-      "x": 80,
-      "y": 18988,
+      "x": 76,
+      "y": 20734,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Curve point for u (ψ = θM)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -6322,7 +6322,7 @@
       "id": "s_rect_ap",
       "type": "math",
       "x": 96,
-      "y": 19016,
+      "y": 20767,
       "props": {
         "w": 60,
         "h": 32,
@@ -6338,11 +6338,11 @@
     {
       "id": "s_rect_aq",
       "type": "text",
-      "x": 80,
-      "y": 19058,
+      "x": 76,
+      "y": 20814,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -6354,7 +6354,7 @@
       "id": "s_rect_ar",
       "type": "math",
       "x": 96,
-      "y": 19086,
+      "y": 20847,
       "props": {
         "w": 60,
         "h": 32,
@@ -6370,11 +6370,11 @@
     {
       "id": "s_rect_as",
       "type": "text",
-      "x": 80,
-      "y": 19132,
+      "x": 76,
+      "y": 20894,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -6386,7 +6386,7 @@
       "id": "s_rect_at",
       "type": "math",
       "x": 400,
-      "y": 19126,
+      "y": 20887,
       "props": {
         "w": 60,
         "h": 32,
@@ -6402,11 +6402,11 @@
     {
       "id": "s_rect_au",
       "type": "text",
-      "x": 80,
-      "y": 19168,
+      "x": 76,
+      "y": 21165,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "Control points u = c/H (the ends, pure tension and uniform εc2, have M = 0)",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -6418,7 +6418,7 @@
       "id": "s_rect_av",
       "type": "math",
       "x": 96,
-      "y": 19196,
+      "y": 21198,
       "props": {
         "w": 60,
         "h": 32,
@@ -6434,11 +6434,11 @@
     {
       "id": "s_rect_aw",
       "type": "text",
-      "x": 80,
-      "y": 19238,
+      "x": 76,
+      "y": 21245,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "P–Mθ curve",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -6450,7 +6450,7 @@
       "id": "s_rect_ax",
       "type": "math",
       "x": 96,
-      "y": 19266,
+      "y": 21278,
       "props": {
         "w": 60,
         "h": 32,
@@ -6466,11 +6466,11 @@
     {
       "id": "s_rect_ay",
       "type": "text",
-      "x": 80,
-      "y": 19308,
+      "x": 76,
+      "y": 21325,
       "props": {
         "w": 630,
-        "h": 24,
+        "h": 18,
         "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -6482,7 +6482,7 @@
       "id": "s_rect_az",
       "type": "math",
       "x": 96,
-      "y": 19336,
+      "y": 21358,
       "props": {
         "w": 60,
         "h": 32,
@@ -6498,11 +6498,11 @@
     {
       "id": "s_rect_b0",
       "type": "text",
-      "x": 80,
-      "y": 19382,
+      "x": 76,
+      "y": 21405,
       "props": {
         "w": 310,
-        "h": 24,
+        "h": 18,
         "html": "u of every curve point",
         "fontFamily": "Inter",
         "fontSize": 12,
@@ -6514,7 +6514,7 @@
       "id": "s_rect_b1",
       "type": "math",
       "x": 400,
-      "y": 19376,
+      "y": 21398,
       "props": {
         "w": 60,
         "h": 32,
@@ -6531,10 +6531,10 @@
       "id": "s_rect_b2",
       "type": "text",
       "x": 96,
-      "y": 19416,
+      "y": 21444,
       "props": {
         "w": 400,
-        "h": 24,
+        "h": 19,
         "html": "P–Mθ control points",
         "fontFamily": "Inter",
         "fontSize": 13,
@@ -6546,7 +6546,7 @@
       "id": "s_rect_b3",
       "type": "math",
       "x": 96,
-      "y": 19446,
+      "y": 21469,
       "props": {
         "w": 60,
         "h": 32,
@@ -6565,7 +6565,7 @@
       "id": "s_rect_b4",
       "type": "math",
       "x": 276,
-      "y": 19446,
+      "y": 21469,
       "props": {
         "w": 60,
         "h": 32,
@@ -6581,6 +6581,6 @@
       }
     }
   ],
-  "createdAt": "2026-11-09T04:00:02.278Z",
-  "updatedAt": "2026-11-09T04:00:02.278Z"
+  "createdAt": "2026-11-09T05:34:24.127Z",
+  "updatedAt": "2026-11-09T05:34:24.127Z"
 }
