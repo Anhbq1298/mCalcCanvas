@@ -34,7 +34,7 @@ documentController ── SaveCoordinator ── DocumentRepository (IndexedDB: 
 | `src/documents/` | Types and version, serializer with migrations and validation, IndexedDB repository, `SaveCoordinator`, templates, controller (new/open/import/export/autosave). |
 | `src/export/` | A4 geometry, header/footer, PDF via `window.print` of statically rendered pages. Each shape prints on one page. |
 | `src/components/` | Google-Docs-style chrome: menus, a toolbar with Math/Text formatting tabs, Outline/Parameters panel, Properties panel, dialogs, help guide. |
-| `src/components/inputResults/` | Input/Output binding form and compact batch grid. Each run uses an isolated `CalculationEngine`; editing draft inputs never mutates the canvas or triggers calculation. |
+| `src/components/inputResults/` | Input/Output binding form and compact batch grid. Each row uses an isolated `CalculationEngine` with native definition overrides, so source LaTeX and the canvas remain unchanged. A run retains every region result for transparent detailed reports, while the grid exposes only the selected outputs. Editing draft inputs never triggers calculation. |
 
 ## Data flow rules
 
