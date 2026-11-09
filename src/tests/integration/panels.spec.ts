@@ -131,6 +131,7 @@ test.describe('Outline (navigation pane)', () => {
     const desc = page.getByTestId('text-region').filter({ hasText: 'Span, tributary width' });
     await items.nth(1).click(); // scroll back to section 1
     await desc.click();
+    await page.getByTestId('format-tab-text-format').click();
     await page.getByTestId('paragraph-style').selectOption('3');
     await expect(items).toHaveCount(8);
     await expect(outline.locator('[data-level="3"]')).toHaveCount(1);
@@ -174,12 +175,14 @@ test.describe('Templates', () => {
 });
 
 test.describe('Formatting tabs', () => {
-  test('math and text formatting tabs follow the selection and format regions', async ({ page }) => {
+  test('Math Formatting and Text Formatting tabs format the selected regions; tabs stay where they are put', async ({ page }) => {
     await openFresh(page);
     // Select the L definition → Math formatting tab.
     const L = page.locator('.math-region[data-latex^="L\\\\coloneq"]');
     await L.click();
+    // Mathcad Prime: selecting a region does not switch the ribbon tab.
     await expect(page.getByTestId('format-tab-math')).toHaveAttribute('aria-selected', 'true');
+    await page.getByTestId('format-tab-math-format').click();
     const unit = page.getByTestId('math-result-unit');
     await unit.fill('furlong');
     await unit.press('Enter');
@@ -191,20 +194,20 @@ test.describe('Formatting tabs', () => {
     await expect(L).toHaveAttribute('data-latex', 'L\\coloneq8500\\,\\mathrm{mm}');
     await resultOf(page, 'M_{Ed}').not.toContain('NaN');
     await page.getByTestId('math-decimals').selectOption('0');
+    await page.getByTestId('format-tab-calculation').click();
     await page.getByTestId('worksheet-units').selectOption('Imperial');
     await resultOf(page, 'M_{Ed}').toContain('kip');
     await page.getByTestId('worksheet-units').selectOption('SI');
-    // Operators gallery: unsupported operators are shown but disabled.
+    // Operators gallery (Math tab): unsupported operators are shown but disabled.
+    await page.getByTestId('format-tab-math').click();
     await page.getByTestId('palette-operators').click();
     await expect(page.getByRole('button', { name: /Summation – Not supported/ })).toBeDisabled();
     await expect(page.getByRole('button', { name: 'Square root  ( \\ )' })).toBeEnabled();
     await page.keyboard.press('Escape');
-    // Select a text region → Text formatting tab.
+    // Select a text region: the tab stays on Math until Text Formatting is chosen.
     await page.getByTestId('text-region').filter({ hasText: 'Span, tributary width' }).click();
-    await expect(page.getByTestId('format-tab-text')).toHaveAttribute('aria-selected', 'true');
-    await expect(page.getByTestId('paragraph-style')).toBeVisible();
-    // Tabs can also be switched by hand.
-    await page.getByTestId('format-tab-math').click();
     await expect(page.getByTestId('format-panel-math')).toBeVisible();
+    await page.getByTestId('format-tab-text-format').click();
+    await expect(page.getByTestId('paragraph-style')).toBeAttached();
   });
 });

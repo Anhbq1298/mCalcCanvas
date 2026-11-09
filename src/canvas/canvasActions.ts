@@ -239,7 +239,7 @@ export async function insertImageFile(file: Blob, at?: Point): Promise<void> {
   useCanvasStore.setState({ tool: 'select' });
 }
 
-/** A new X-Y graph at the insertion point (series are added in the Graph tab). */
+/** A new X-Y graph at the insertion point (series are added in the Plots tab). */
 export function insertGraph(at?: Point, props: Partial<GraphProps> = {}): string {
   const p = snapPoint(at ?? insertionPoint());
   const id = newShapeId();

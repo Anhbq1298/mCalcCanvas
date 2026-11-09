@@ -27,6 +27,14 @@ import {
   SquareDashed,
   ArrowUpRight,
   Bold,
+  ClipboardPaste,
+  Copy,
+  CopyPlus,
+  FileMinus2,
+  Heading,
+  Scale,
+  Scissors,
+  Search,
   Calculator,
   CheckSquare,
   FileDown,
@@ -46,7 +54,6 @@ import {
   Minus,
   MousePointer2,
   PanelRight,
-  PanelTop,
   Pencil,
   Plus,
   Redo2,
@@ -130,8 +137,6 @@ function TB({ icon: Icon, label, onClick, active, disabled, testId, children }: 
   );
 }
 
-const Sep = () => <div className="mx-1 h-5 w-px shrink-0 bg-docs-sep" aria-hidden />;
-
 /** A ribbon group: controls (one or two rows) with its name underneath, like Mathcad Prime. */
 function Group({ label, children, testId }: { label: string; children: ReactNode; testId?: string }) {
   return (
@@ -163,15 +168,38 @@ function Check({ label, checked, onChange, testId, title, disabled, mixed }: { l
   );
 }
 
-/** Ribbon button with a small icon above a label (used for the main commands of a group). */
+/** Large ribbon button: icon above the label (the main commands of a group, as in Mathcad Prime). */
 function BigButton({ icon: Icon, label, onClick, testId, title, disabled, active }: { icon: LucideIcon; label: string; onClick(): void; testId?: string; title?: string; disabled?: boolean; active?: boolean }) {
   return (
     <button type="button" className={'rb-big ' + (active ? 'is-active' : '')} title={title ?? label} aria-label={title ?? label} aria-pressed={active} data-testid={testId} disabled={disabled} onMouseDown={(e) => e.preventDefault()} onClick={onClick}>
-      <Icon size={18} strokeWidth={1.8} aria-hidden />
+      <span className="rb-big-icon">
+        <Icon size={24} strokeWidth={1.6} aria-hidden />
+      </span>
+      <span className="rb-big-text">{label}</span>
+    </button>
+  );
+}
+
+/** Small ribbon button: icon with its label to the right, stacked three per column. */
+function SmallButton({ icon: Icon, label, onClick, testId, title, disabled, active }: { icon: LucideIcon; label: string; onClick(): void; testId?: string; title?: string; disabled?: boolean; active?: boolean }) {
+  return (
+    <button type="button" className={'rb-small ' + (active ? 'is-active' : '')} title={title ?? label} aria-label={title ?? label} aria-pressed={active} data-testid={testId} disabled={disabled} onMouseDown={(e) => e.preventDefault()} onClick={onClick}>
+      <Icon size={15} strokeWidth={1.8} aria-hidden />
       <span>{label}</span>
     </button>
   );
 }
+
+/** A column of up to three small controls. */
+const Col = ({ children }: { children: ReactNode }) => <div className="rb-col">{children}</div>;
+
+/** A labelled field row inside a column: "Unit [____]". */
+const Field = ({ label, children }: { label: string; children: ReactNode }) => (
+  <div className="rb-field">
+    <span className="rb-mini">{label}</span>
+    {children}
+  </div>
+);
 
 /** Swatch colour picker (no text), for label styles and highlights. */
 function SwatchPicker({ testId, title, value, onPick, allowNone }: { testId: string; title: string; value: string | null; onPick(c: string | null): void; allowNone?: boolean }) {
@@ -315,7 +343,7 @@ function TextFormattingTab() {
             label={text ? 'Font' : 'Font for new text'}
             testId="text-font"
             value={font}
-            width={128}
+            width={132}
             style={{ fontFamily: fontStack(font) }}
             onChange={setFont}
             options={Object.keys(TEXT_FONTS).map((f) => [f, f])}
@@ -328,6 +356,8 @@ function TextFormattingTab() {
           {fmt(Underline, `Underline (${MOD}U)`, 'underline')}
           {fmt(Subscript, 'Subscript', 'subscript')}
           {fmt(Superscript, 'Superscript', 'superscript')}
+        </Row>
+        <Row>
           <ColorButton testId="text-color" title="Text color" kinds={['text']} />
           <SwatchPicker testId="text-highlight" title="Text highlight colour (select text while editing)" value={null} onPick={(c) => formatEditingText('hiliteColor', c ?? 'transparent')} allowNone />
           {fmt(Eraser, 'Clear formatting of the selected text', 'removeFormat', 'text-clear')}
@@ -340,6 +370,8 @@ function TextFormattingTab() {
         <Row>
           {fmt(List, 'Bulleted list', 'insertUnorderedList')}
           {fmt(ListOrdered, 'Numbered list', 'insertOrderedList')}
+        </Row>
+        <Row>
           {fmt(IndentDecrease, 'Decrease indent', 'outdent', 'text-outdent')}
           {fmt(IndentIncrease, 'Increase indent', 'indent', 'text-indent')}
         </Row>
@@ -374,12 +406,10 @@ function TextFormattingTab() {
         />
       </Group>
       <Group label="Links">
-        <Row>
-          <TB icon={Link2} label="Insert or edit a link on the selected text (http, https, mailto)" disabled={!editingText} onClick={link} testId="text-link" />
-        </Row>
-        <Row>
-          <TB icon={Unlink} label="Remove the link" disabled={!editingText} onClick={() => formatEditingText('unlink')} testId="text-unlink" />
-        </Row>
+        <Col>
+          <SmallButton icon={Link2} label="Link" title="Insert or edit a link on the selected text (http, https, mailto)" disabled={!editingText} onClick={link} testId="text-link" />
+          <SmallButton icon={Unlink} label="Remove link" disabled={!editingText} onClick={() => formatEditingText('unlink')} testId="text-unlink" />
+        </Col>
       </Group>
     </>
   );
@@ -443,140 +473,108 @@ function MathFormattingTab() {
   const fmtNames: [string, string][] = [['general', 'General'], ['decimal', 'Decimal'], ['scientific', 'Scientific'], ['engineering', 'Engineering']];
   return (
     <>
-      <Group label="Operators & Symbols">
-        <Row>
-          <PalettePopover label="Operators" glyph="√" sections={OPERATORS} testId="palette-operators" columns={5} />
-          <PalettePopover label="Symbols" glyph="β" sections={SYMBOLS} testId="palette-symbols" />
-        </Row>
-        <Row>
-          <PalettePopover label="Constants" glyph="π" sections={CONSTANTS} testId="palette-constants" />
-          <PalettePopover label="Units" glyph="m" sections={UNITS_PALETTE} testId="palette-units" />
-        </Row>
-      </Group>
       <Group label="Display">
-        <Row>
-          <DisplayModeSelect />
-        </Row>
-        <Row>
-          <input
-            aria-label="Result unit"
-            title={unitError ?? 'Result unit for the selected equations (e.g. kN·m, MPa). Empty = automatic.'}
-            data-testid="math-result-unit"
-            list="cc-result-units"
-            disabled={!first}
-            placeholder="Unit"
-            value={unitDraft ?? first?.props.displayUnit ?? ''}
-            onChange={(e) => {
-              setUnitDraft(e.target.value);
-              setUnitError(null);
-            }}
-            onBlur={() => {
-              if (unitDraft !== null) applyUnit(unitDraft);
-              setUnitDraft(null);
-            }}
-            onKeyDown={(e) => e.key === 'Enter' && (e.currentTarget as HTMLInputElement).blur()}
-            className={'h-7 w-[64px] rounded border bg-white px-1.5 text-[13px] disabled:opacity-40 ' + (unitError ? 'border-destructive' : 'border-docs-border')}
-          />
+        <Col>
+          <Field label="Show">
+            <DisplayModeSelect />
+          </Field>
+          <Field label="Unit">
+            <input
+              aria-label="Result unit"
+              title={unitError ?? 'Result unit for the selected equations (e.g. kN·m, MPa). Empty = automatic.'}
+              data-testid="math-result-unit"
+              list="cc-result-units"
+              disabled={!first}
+              placeholder="automatic"
+              value={unitDraft ?? first?.props.displayUnit ?? ''}
+              onChange={(e) => {
+                setUnitDraft(e.target.value);
+                setUnitError(null);
+              }}
+              onBlur={() => {
+                if (unitDraft !== null) applyUnit(unitDraft);
+                setUnitDraft(null);
+              }}
+              onKeyDown={(e) => e.key === 'Enter' && (e.currentTarget as HTMLInputElement).blur()}
+              className={'rb-input w-[132px] ' + (unitError ? 'border-destructive' : '')}
+            />
+          </Field>
           <datalist id="cc-result-units">
             {RESULT_UNITS.map((u) => (
               <option key={u} value={u} />
             ))}
           </datalist>
-          <TBSelect
-            label="Array results of the selected equations: row or column, shortened (first … last) or every entry"
-            testId="math-array"
-            value={first ? `${first.props.vectorLayout ?? 'row'}-${first.props.vectorExpanded ? 'all' : 'short'}` : 'row-short'}
-            width={136}
-            onChange={(v) => {
-              const [layout, entries] = v.split('-');
-              patchSelected((sh) =>
-                sh.type === 'math' ? { props: { vectorLayout: layout === 'column' ? 'column' : undefined, vectorExpanded: entries === 'all' ? true : undefined } } : null,
-              );
-            }}
-            options={[
-              ['row-short', 'Array: row, short'],
-              ['row-all', 'Array: row, all'],
-              ['column-short', 'Array: column, short'],
-              ['column-all', 'Array: column, all'],
-            ]}
-          />
-        </Row>
+          <Field label="Array">
+            <TBSelect
+              label="Array results of the selected equations: row or column, shortened (first … last) or every entry"
+              testId="math-array"
+              value={first ? `${first.props.vectorLayout ?? 'row'}-${first.props.vectorExpanded ? 'all' : 'short'}` : 'row-short'}
+              width={132}
+              onChange={(v) => {
+                const [layout, entries] = v.split('-');
+                patchSelected((sh) =>
+                  sh.type === 'math' ? { props: { vectorLayout: layout === 'column' ? 'column' : undefined, vectorExpanded: entries === 'all' ? true : undefined } } : null,
+                );
+              }}
+              options={[
+                ['row-short', 'Row, shortened'],
+                ['row-all', 'Row, all entries'],
+                ['column-short', 'Column, shortened'],
+                ['column-all', 'Column, all entries'],
+              ]}
+            />
+          </Field>
+        </Col>
       </Group>
       <Group label={first ? 'Results' : 'Results (worksheet default)'}>
-        <Row>
-          <TBSelect
-            label={first ? 'Number format of the selected results (presentation only)' : 'Default number format of results'}
-            testId="math-result-format"
-            value={formatValue}
-            width={112}
-            onChange={setFormat}
-            options={[...(formatValue === 'mixed' ? [['mixed', 'Mixed'] as [string, string]] : []), ...(first ? [['inherit', `Default (${settings.resultFormat ?? 'general'})`] as [string, string]] : []), ...fmtNames]}
-          />
-          <TBSelect
-            label="Decimal places of the selected equations"
-            testId="math-decimals"
-            value={first ? String(first.props.precision) : '-1'}
-            width={84}
-            onChange={(v) => patchSelected((sh) => (sh.type === 'math' ? { props: { precision: Number(v) } } : null))}
-            options={[['-1', `Auto (${settings.precision})`], ...[0, 1, 2, 3, 4, 5, 6].map((d) => [String(d), `${d} dp`] as [string, string])]}
-          />
-        </Row>
-        <Row>
-          <Check label="Trailing zeros" testId="math-trailing-zeros" checked={zerosOn} mixed={zeros.size > 1} onChange={setZeros} title="Show trailing zeros (2.50 instead of 2.5); the value is not rounded" />
-          <TB icon={RotateCcw} label={first ? 'Reset result formatting of the selected equations' : 'Reset the worksheet result defaults'} onClick={resetResults} testId="math-reset-results" />
-        </Row>
+        <Col>
+          <Field label="Format">
+            <TBSelect
+              label={first ? 'Number format of the selected results (presentation only)' : 'Default number format of results'}
+              testId="math-result-format"
+              value={formatValue}
+              width={124}
+              onChange={setFormat}
+              options={[...(formatValue === 'mixed' ? [['mixed', 'Mixed'] as [string, string]] : []), ...(first ? [['inherit', `Default (${settings.resultFormat ?? 'general'})`] as [string, string]] : []), ...fmtNames]}
+            />
+          </Field>
+          <Field label="Decimals">
+            <TBSelect
+              label="Decimal places of the selected equations"
+              testId="math-decimals"
+              value={first ? String(first.props.precision) : '-1'}
+              width={124}
+              onChange={(v) => patchSelected((sh) => (sh.type === 'math' ? { props: { precision: Number(v) } } : null))}
+              options={[['-1', `Auto (${settings.precision})`], ...[0, 1, 2, 3, 4, 5, 6].map((d) => [String(d), `${d}`] as [string, string])]}
+            />
+          </Field>
+          <Check label="Show trailing zeros" testId="math-trailing-zeros" checked={zerosOn} mixed={zeros.size > 1} onChange={setZeros} title="Show trailing zeros (2.50 instead of 2.5); the value is not rounded" />
+        </Col>
+        <BigButton icon={RotateCcw} label="Reset" title={first ? 'Reset result formatting of the selected equations' : 'Reset the worksheet result defaults'} onClick={resetResults} testId="math-reset-results" />
       </Group>
       <Group label="Math Font">
-        <Row>
-          <SizeControl kinds={['math']} label="Equation size" />
-        </Row>
-        <Row>
-          <ColorButton testId="math-color" title="Equation color" kinds={['math']} />
-          <SwatchPicker testId="math-highlight" title="Highlight the selected equations" value={first?.props.highlight ?? null} allowNone onPick={(c) => patchSelected((sh) => (sh.type === 'math' ? { props: { highlight: c ?? undefined } } : null))} />
-          <TB icon={Eraser} label="Reset size, colour and highlight of the selected equations" disabled={!first} onClick={resetFormatting} testId="math-reset-format" />
-        </Row>
+        <Col>
+          <div className="rb-field">
+            <SizeControl kinds={['math']} label="Equation size" />
+          </div>
+          <div className="rb-field">
+            <ColorButton testId="math-color" title="Equation color" kinds={['math']} />
+            <SwatchPicker testId="math-highlight" title="Highlight the selected equations" value={first?.props.highlight ?? null} allowNone onPick={(c) => patchSelected((sh) => (sh.type === 'math' ? { props: { highlight: c ?? undefined } } : null))} />
+          </div>
+          <SmallButton icon={Eraser} label="Clear format" title="Reset size, colour and highlight of the selected equations" disabled={!first} onClick={resetFormatting} testId="math-reset-format" />
+        </Col>
       </Group>
       <Group label="Label Styles">
-        <Row>
-          <span className="rb-mini">Unit</span>
-          <SwatchPicker testId="label-unit-color" title="Colour of units (whole worksheet)" value={labels.unitColor} onPick={(c) => setLabel('unitColor', c)} />
-          <span className="rb-mini">Input</span>
-          <SwatchPicker testId="label-input-color" title="Text colour of inputs (literal definitions)" value={labels.inputColor} onPick={(c) => setLabel('inputColor', c)} />
-          <SwatchPicker testId="label-input-bg" title="Background of inputs" value={labels.inputBackground} onPick={(c) => setLabel('inputBackground', c)} />
-        </Row>
-        <Row>
-          <TB icon={RotateCcw} label="Default label styles" onClick={() => useAppStore.getState().updateSettings({ labelStyles: undefined })} testId="label-reset" />
-        </Row>
-      </Group>
-      <Group label="Worksheet">
-        <Row>
-          <TBSelect
-            label="Unit system for results (whole worksheet)"
-            testId="worksheet-units"
-            value={settings.unitSystem}
-            width={70}
-            onChange={(v) => useAppStore.getState().updateSettings({ unitSystem: v as 'SI' | 'Imperial' })}
-            options={[['SI', 'SI'], ['Imperial', 'USCS']]}
-          />
-          <TBSelect
-            label="Default decimal places (whole worksheet)"
-            testId="worksheet-decimals"
-            value={settings.precision}
-            width={64}
-            onChange={(v) => useAppStore.getState().updateSettings({ precision: Number(v) })}
-            options={[0, 1, 2, 3, 4, 5, 6].map((d) => [d, `${d} dp`])}
-          />
-        </Row>
-        <Row>
-          <TBSelect
-            label="Equations and text snap their baseline to major lines (every 2 squares) or to every grid line"
-            testId="baseline-snap"
-            value={settings.baselineSnap ?? 'major'}
-            width={110}
-            onChange={(v) => useAppStore.getState().updateSettings({ baselineSnap: v as 'major' | 'minor' })}
-            options={[['major', 'Snap: lines'], ['minor', 'Snap: squares']]}
-          />
-        </Row>
+        <Col>
+          <Field label="Units">
+            <SwatchPicker testId="label-unit-color" title="Colour of units (whole worksheet)" value={labels.unitColor} onPick={(c) => setLabel('unitColor', c)} />
+          </Field>
+          <Field label="Inputs">
+            <SwatchPicker testId="label-input-color" title="Text colour of inputs (literal definitions)" value={labels.inputColor} onPick={(c) => setLabel('inputColor', c)} />
+            <SwatchPicker testId="label-input-bg" title="Background of inputs" value={labels.inputBackground} onPick={(c) => setLabel('inputBackground', c)} />
+          </Field>
+          <SmallButton icon={RotateCcw} label="Default styles" onClick={() => useAppStore.getState().updateSettings({ labelStyles: undefined })} testId="label-reset" />
+        </Col>
       </Group>
     </>
   );
@@ -670,32 +668,112 @@ function DisplayModeSelect() {
   );
 }
 
-function ToolButtons({ first }: { first: boolean }) {
+/** Math tab: clipboard, regions, operators and symbols, drawing tools. */
+function MathTab() {
   const tool = useCanvasStore((s) => s.tool);
-  const t = (id: ToolId, icon: LucideIcon, label: string) => <TB key={id} icon={icon} label={label} active={tool === id} onClick={() => commands.setTool(id)} testId={`tool-${id}`} />;
-  return first ? (
+  const t = (id: ToolId, icon: LucideIcon, label: string) => <SmallButton icon={icon} label={label} active={tool === id} onClick={() => commands.setTool(id)} testId={`tool-${id}`} />;
+  return (
     <>
-      {t('select', MousePointer2, 'Select')}
-      {t('hand', Hand, 'Pan (Space+drag)')}
-      {t('draw', Pencil, 'Freehand')}
-    </>
-  ) : (
-    <>
-      {t('line', Minus, 'Line')}
-      {t('arrow', ArrowUpRight, 'Arrow')}
-      {t('rect', Square, 'Rectangle')}
+      <Group label="Clipboard">
+        <BigButton icon={ClipboardPaste} label="Paste" title={`Paste (${MOD}V)`} onClick={() => void commands.paste()} />
+        <Col>
+          <SmallButton icon={Scissors} label="Cut" title={`Cut (${MOD}X)`} onClick={commands.cut} />
+          <SmallButton icon={Copy} label="Copy" title={`Copy (${MOD}C)`} onClick={commands.copy} />
+          <SmallButton icon={CopyPlus} label="Duplicate" title={`Duplicate (${MOD}D)`} onClick={commands.duplicate} />
+        </Col>
+      </Group>
+      <Group label="Regions">
+        <BigButton icon={Sigma} label="Math" title="Math region (or just type on the page)" active={tool === 'math'} onClick={() => commands.setTool('math')} testId="tool-math" />
+        <BigButton icon={Type} label="Text" title="Text region (or type &quot;)" active={tool === 'text'} onClick={() => commands.setTool('text')} testId="tool-text" />
+        <Col>
+          <SmallButton icon={ImagePlus} label="Image" title="Insert image" onClick={() => void commands.insertImage()} />
+          <SmallButton icon={CheckSquare} label="Check" title="Insert check (≤ 1)" onClick={() => commands.insertCheck()} testId="insert-check" />
+          <SmallButton icon={Heading} label="Heading" title="Section heading (shown in the outline)" onClick={() => addHeading(1)} />
+        </Col>
+      </Group>
+      <Group label="Operators and Symbols">
+        <PalettePopover big label="Operators" glyph="√" sections={OPERATORS} testId="palette-operators" columns={5} />
+        <PalettePopover big label="Symbols" glyph="β" sections={SYMBOLS} testId="palette-symbols" />
+        <PalettePopover big label="Constants" glyph="π" sections={CONSTANTS} testId="palette-constants" />
+        <PalettePopover big label="Units" glyph="m" sections={UNITS_PALETTE} testId="palette-units" />
+      </Group>
+      <Group label="Draw">
+        <Col>
+          {t('select', MousePointer2, 'Select')}
+          {t('hand', Hand, 'Pan')}
+          {t('draw', Pencil, 'Freehand')}
+        </Col>
+        <Col>
+          {t('line', Minus, 'Line')}
+          {t('arrow', ArrowUpRight, 'Arrow')}
+          {t('rect', Square, 'Rectangle')}
+        </Col>
+      </Group>
     </>
   );
 }
 
-/** Graph tab: insert an X-Y graph; axes and series of the selected graph. */
-function GraphTab() {
+/** Calculation tab: calculate, worksheet units and precision. */
+function CalculationTab() {
+  const settings = useAppStore((s) => s.settings);
+  const { updateSettings } = useAppStore.getState();
+  return (
+    <>
+      <Group label="Worksheet Calculation">
+        <BigButton icon={Calculator} label="Calculate" title={withShortcut('Calculate all', 'calculate')} onClick={commands.calculateAll} testId="rb-calculate" />
+      </Group>
+      <Group label="Worksheet Settings">
+        <Col>
+          <Field label="Unit system">
+            <TBSelect
+              label="Unit system for results (whole worksheet)"
+              testId="worksheet-units"
+              value={settings.unitSystem}
+              width={96}
+              onChange={(v) => updateSettings({ unitSystem: v as 'SI' | 'Imperial' })}
+              options={[['SI', 'SI'], ['Imperial', 'USCS']]}
+            />
+          </Field>
+          <Field label="Decimals">
+            <TBSelect
+              label="Default decimal places (whole worksheet)"
+              testId="worksheet-decimals"
+              value={settings.precision}
+              width={96}
+              onChange={(v) => updateSettings({ precision: Number(v) })}
+              options={[0, 1, 2, 3, 4, 5, 6].map((d) => [d, `${d}`])}
+            />
+          </Field>
+          <Field label="Snap">
+            <TBSelect
+              label="Equations and text snap their baseline to major lines (every 2 squares) or to every grid line"
+              testId="baseline-snap"
+              value={settings.baselineSnap ?? 'major'}
+              width={96}
+              onChange={(v) => updateSettings({ baselineSnap: v as 'major' | 'minor' })}
+              options={[['major', 'Lines'], ['minor', 'Squares']]}
+            />
+          </Field>
+        </Col>
+      </Group>
+      <Group label="Annex">
+        <Col>
+          <SmallButton icon={Link2} label="Annex link" title="Insert a link to an annex" onClick={() => insertAnnexLink()} />
+          <SmallButton icon={ListOrdered} label="Sort annex" title="Sort annex by link order" onClick={() => sortAnnexByLinkOrder()} />
+        </Col>
+      </Group>
+    </>
+  );
+}
+
+/** Plots tab: insert an X-Y plot; axes, options and series of the selected plot. */
+function PlotsTab() {
   const selected = useSelectedShapes();
   const graph = selected.find((s): s is GraphShape => s.type === 'graph');
   const [draft, setDraft] = useState<{ field: 'xUnit' | 'yUnit' | 'title'; value: string } | null>(null);
   const [unitError, setUnitError] = useState<string | null>(null);
   const patch = (props: Partial<GraphShape['props']>) => graph && updateShapes({ [graph.id]: { props } as ShapePatch });
-  const field = (f: 'xUnit' | 'yUnit' | 'title', label: string, width: number, placeholder: string) => (
+  const field = (f: 'xUnit' | 'yUnit' | 'title', label: string, placeholder: string) => (
     <input
       aria-label={label}
       title={f === 'title' ? label : unitError ?? `${label} (e.g. mm, kN). Empty = automatic.`}
@@ -722,39 +800,47 @@ function GraphTab() {
         patch({ [f]: v });
       }}
       onKeyDown={(e) => e.key === 'Enter' && (e.currentTarget as HTMLInputElement).blur()}
-      style={{ width }}
-      className={'h-7 rounded border bg-white px-1.5 text-[13px] disabled:opacity-40 ' + (unitError && f !== 'title' ? 'border-destructive' : 'border-docs-border')}
+      className={'rb-input w-[120px] ' + (unitError && f !== 'title' ? 'border-destructive' : '')}
     />
   );
   return (
-    <Group label="X-Y Graph">
-      <TB icon={LineChart} label="Insert X-Y graph" onClick={() => commands.insertGraph()} testId="graph-insert" />
-      <Sep />
-      {field('title', 'Graph title', 120, 'Title')}
-      {field('xUnit', 'X axis unit', 56, 'X unit')}
-      {field('yUnit', 'Y axis unit', 56, 'Y unit')}
-      <TB label="Equal axes (same scale on X and Y, for sections and plans)" disabled={!graph} active={!!graph?.props.equalAxes} onClick={() => patch({ equalAxes: !graph!.props.equalAxes })} testId="graph-equal">
-        <span className="text-[13px]">1:1</span>
-      </TB>
-      <TB icon={Grid3x3} label="Grid lines" disabled={!graph} active={!!graph?.props.grid} onClick={() => patch({ grid: !graph!.props.grid })} testId="graph-grid" />
-      <TB icon={Crosshair} label="Axes through origin (values on bottom/left)" disabled={!graph} active={!!graph?.props.axesAtOrigin} onClick={() => patch({ axesAtOrigin: !graph!.props.axesAtOrigin })} testId="graph-origin" />
-      <Sep />
-      <TB
-        icon={Plus}
-        label="Add a series (edit x, y and style in the Properties panel)"
-        disabled={!graph}
-        onClick={() => {
-          patch({ series: [...graph!.props.series, newGraphSeries(graph!.props.series)] });
-          useAppStore.getState().togglePanel(true);
-        }}
-        testId="graph-add-series"
-      />
-      <span className="px-1 text-[12px] text-docs-muted">{graph ? `${graph.props.series.length} series` : 'Select a graph'}</span>
-    </Group>
+    <>
+      <Group label="Insert">
+        <BigButton icon={LineChart} label="X-Y Plot" title="Insert X-Y plot" onClick={() => commands.insertGraph()} testId="graph-insert" />
+      </Group>
+      <Group label="Axes">
+        <Col>
+          <Field label="Title">{field('title', 'Graph title', 'Title')}</Field>
+          <Field label="X unit">{field('xUnit', 'X axis unit', 'automatic')}</Field>
+          <Field label="Y unit">{field('yUnit', 'Y axis unit', 'automatic')}</Field>
+        </Col>
+      </Group>
+      <Group label="Options">
+        <Col>
+          <SmallButton icon={Scale} label="Equal axes" title="Equal axes (same scale on X and Y, for sections and plans)" disabled={!graph} active={!!graph?.props.equalAxes} onClick={() => patch({ equalAxes: !graph!.props.equalAxes })} testId="graph-equal" />
+          <SmallButton icon={Grid3x3} label="Grid lines" disabled={!graph} active={!!graph?.props.grid} onClick={() => patch({ grid: !graph!.props.grid })} testId="graph-grid" />
+          <SmallButton icon={Crosshair} label="Axes at origin" title="Axes through origin (values on bottom/left)" disabled={!graph} active={!!graph?.props.axesAtOrigin} onClick={() => patch({ axesAtOrigin: !graph!.props.axesAtOrigin })} testId="graph-origin" />
+        </Col>
+      </Group>
+      <Group label="Series">
+        <BigButton
+          icon={Plus}
+          label="Add series"
+          title="Add a series (edit x, y and style in the Properties panel)"
+          disabled={!graph}
+          onClick={() => {
+            patch({ series: [...graph!.props.series, newGraphSeries(graph!.props.series)] });
+            useAppStore.getState().togglePanel(true);
+          }}
+          testId="graph-add-series"
+        />
+        <span className="self-center px-1 text-[12px] text-docs-muted">{graph ? `${graph.props.series.length} series` : 'Select a plot'}</span>
+      </Group>
+    </>
   );
 }
 
-/** Document tab: page setup, page view, zoom and insert (pages, regions). */
+/** Document tab: page setup, show, zoom and page spacing. */
 function DocumentTab() {
   const settings = useAppStore((s) => s.settings);
   const view = useAppStore((s) => s.view);
@@ -765,67 +851,67 @@ function DocumentTab() {
   const margins = settings.margins ?? DEFAULT_MARGINS;
   const preset = presetOf(margins);
   const zoomPct = Math.round(zoom * 100);
+  const steps = [50, 75, 90, 100, 125, 150, 200];
   return (
     <>
       <Group label="Page Setup" testId="group-page-setup">
-        <Row>
-          <TBSelect label="Paper size" testId="doc-paper" value={settings.paper ?? 'A4'} width={62} onChange={(v) => updateSettings({ paper: v as 'A4' | 'A3' })} options={[['A4', 'A4'], ['A3', 'A3']]} />
-          <TB icon={RectangleVertical} label="Portrait" active={settings.pageOrientation === 'portrait'} onClick={() => updateSettings({ pageOrientation: 'portrait' })} testId="doc-portrait" />
-          <TB icon={RectangleHorizontal} label="Landscape" active={settings.pageOrientation === 'landscape'} onClick={() => updateSettings({ pageOrientation: 'landscape' })} testId="doc-landscape" />
-        </Row>
-        <Row>
-          <TBSelect
-            label="Margins"
-            testId="doc-margins"
-            value={preset}
-            width={150}
-            onChange={(v) => (v === 'custom' ? openDialog('page-setup') : updateSettings({ margins: MARGIN_PRESETS.find((p) => p.id === v)!.margins }))}
-            options={[...MARGIN_PRESETS.map((p) => [p.id, `Margins: ${p.label.split(' (')[0]}`] as [string, string]), ['custom', preset === 'custom' ? `Custom (${margins.left}/${margins.top} mm)` : 'Custom…']]}
-          />
-          <TB icon={FileText} label="Page setup… (paper, orientation, margins, preview)" onClick={() => openDialog('page-setup')} testId="doc-page-setup" />
-        </Row>
+        <Col>
+          <Field label="Size">
+            <TBSelect label="Paper size" testId="doc-paper" value={settings.paper ?? 'A4'} width={112} onChange={(v) => updateSettings({ paper: v as 'A4' | 'A3' })} options={[['A4', 'A4'], ['A3', 'A3']]} />
+          </Field>
+          <Field label="Orientation">
+            <TB icon={RectangleVertical} label="Portrait" active={settings.pageOrientation === 'portrait'} onClick={() => updateSettings({ pageOrientation: 'portrait' })} testId="doc-portrait" />
+            <TB icon={RectangleHorizontal} label="Landscape" active={settings.pageOrientation === 'landscape'} onClick={() => updateSettings({ pageOrientation: 'landscape' })} testId="doc-landscape" />
+          </Field>
+          <Field label="Margins">
+            <TBSelect
+              label="Margins"
+              testId="doc-margins"
+              value={preset}
+              width={112}
+              onChange={(v) => (v === 'custom' ? openDialog('page-setup') : updateSettings({ margins: MARGIN_PRESETS.find((p) => p.id === v)!.margins }))}
+              options={[...MARGIN_PRESETS.map((p) => [p.id, p.label.split(' (')[0]] as [string, string]), ['custom', preset === 'custom' ? `Custom (${margins.left}/${margins.top})` : 'Custom…']]}
+            />
+          </Field>
+        </Col>
+        <BigButton icon={FileText} label="Page Setup" title="Page setup… (paper, orientation, margins, preview)" onClick={() => openDialog('page-setup')} testId="doc-page-setup" />
       </Group>
-      <Group label="Page View">
-        <Row>
+      <Group label="Show">
+        <Col>
           <Check label="Page boundaries" testId="doc-boundaries" checked={view.boundaries} disabled={!paged} onChange={(v) => setView({ boundaries: v })} title="Show the paper edge and the printable area (dashed) of every page" />
+          <Check label="Grid" testId="toggle-grid" checked={isGrid} onChange={() => commands.toggleGrid()} />
           <Check label="Ruler" testId="doc-ruler" checked={view.ruler} onChange={(v) => setView({ ruler: v })} title="Millimetre rulers along the top and left (follow zoom and scrolling)" />
-        </Row>
-        <Row>
-          <Check label="Grid" testId="doc-grid" checked={isGrid} onChange={() => commands.toggleGrid()} />
-          <Check label="Header & footer" testId="doc-header" checked={settings.showHeaderFooter} onChange={(v) => updateSettings({ showHeaderFooter: v })} />
+        </Col>
+        <Col>
+          <Check label="Header & footer" testId="toggle-chrome" checked={settings.showHeaderFooter} onChange={(v) => updateSettings({ showHeaderFooter: v })} />
           <Check label="Pages" testId="doc-pages" checked={paged} onChange={(v) => updateSettings({ canvasMode: v ? 'page' : 'free' })} title="Page layout (checked) or a free canvas without pages" />
-        </Row>
+        </Col>
       </Group>
       <Group label="Zoom">
-        <Row>
+        <Col>
           <TBSelect
             label="Zoom"
-            value={[50, 75, 90, 100, 125, 150, 200].includes(zoomPct) ? zoomPct : 'cur'}
-            width={70}
+            value={steps.includes(zoomPct) ? zoomPct : 'cur'}
+            width={96}
             onChange={(v) => {
               if (v === 'fit') commands.zoomToFit();
               else if (v !== 'cur') zoomAt({ x: viewport.w / 2, y: viewport.h / 2 }, Number(v) / 100 / useCanvasStore.getState().camera.z);
             }}
-            options={[...(![50, 75, 90, 100, 125, 150, 200].includes(zoomPct) ? [['cur', `${zoomPct}%`] as [string, string]] : []), ...[50, 75, 90, 100, 125, 150, 200].map((z) => [z, `${z}%`] as [number, string]), ['fit', 'Fit content']]}
+            options={[...(!steps.includes(zoomPct) ? [['cur', `${zoomPct}%`] as [string, string]] : []), ...steps.map((z) => [z, `${z}%`] as [number, string]), ['fit', 'Fit content']]}
           />
-          <TB label="Actual size (100 %)" onClick={commands.zoomActualSize} testId="doc-zoom-100">
-            <span className="text-[11px] font-semibold">1:1</span>
-          </TB>
-        </Row>
-        <Row>
-          <TB icon={Maximize} label="Fit page" onClick={commands.zoomFitPage} testId="doc-fit-page" disabled={!paged} />
-          <TB icon={MoveHorizontal} label="Fit width" onClick={commands.zoomFitWidth} testId="doc-fit-width" disabled={!paged} />
-        </Row>
+          <SmallButton icon={Search} label="100 %" title="Actual size (100 %)" onClick={commands.zoomActualSize} testId="doc-zoom-100" />
+        </Col>
+        <Col>
+          <SmallButton icon={Maximize} label="Fit page" onClick={commands.zoomFitPage} testId="doc-fit-page" disabled={!paged} />
+          <SmallButton icon={MoveHorizontal} label="Fit width" onClick={commands.zoomFitWidth} testId="doc-fit-width" disabled={!paged} />
+        </Col>
       </Group>
-      <Group label="Insert">
-        <Row>
-          <TB icon={Sigma} label="Math region (or just type on the page)" onClick={() => commands.setTool('math')} testId="doc-insert-math" />
-          <TB icon={Type} label="Text region (or type &quot;)" onClick={() => commands.setTool('text')} testId="doc-insert-text" />
-        </Row>
-        <Row>
-          <TB icon={ScissorsLineDashed} label={withShortcut('Page break at the + cross', 'page-break')} onClick={commands.pageBreak} testId="doc-page-break" disabled={!paged} />
-          <TB icon={FilePlus2} label={withShortcut('Insert blank page', 'blank-page')} onClick={commands.insertBlankPage} testId="insert-page" disabled={!paged} />
-        </Row>
+      <Group label="Pages">
+        <BigButton icon={ScissorsLineDashed} label="Page Break" title={withShortcut('Page break at the + cross', 'page-break')} onClick={commands.pageBreak} testId="doc-page-break" disabled={!paged} />
+        <Col>
+          <SmallButton icon={FilePlus2} label="Blank page" title={withShortcut('Insert blank page', 'blank-page')} onClick={commands.insertBlankPage} testId="insert-page" disabled={!paged} />
+          <SmallButton icon={FileMinus2} label="Delete empty page" onClick={commands.deletePage} disabled={!paged} />
+        </Col>
       </Group>
     </>
   );
@@ -837,7 +923,7 @@ function HelpTab() {
   return (
     <>
       <Group label="Help">
-        <BigButton icon={BookOpen} label="Help center" onClick={() => openHelp('getting-started')} testId="help-open" title={withShortcut('Help center', 'help')} />
+        <BigButton icon={BookOpen} label="Help Center" onClick={() => openHelp('getting-started')} testId="help-open" title={withShortcut('Help center', 'help')} />
         <BigButton icon={Keyboard} label="Shortcuts" onClick={() => openHelp('shortcuts')} testId="help-shortcuts" title="Keyboard shortcuts (searchable)" />
       </Group>
       <Group label="Guides">
@@ -852,37 +938,20 @@ function HelpTab() {
   );
 }
 
-type FormatTab = 'document' | 'math' | 'text' | 'graph' | 'help';
+type RibbonTabId = 'math' | 'calculation' | 'plots' | 'math-format' | 'text-format' | 'document' | 'help';
 
-const TAB_LABELS: [FormatTab, string][] = [
+/** Mathcad Prime order. The tab stays where the user put it (no switching on selection). */
+const TAB_LABELS: [RibbonTabId, string][] = [
+  ['math', 'Math'],
+  ['calculation', 'Calculation'],
+  ['plots', 'Plots'],
+  ['math-format', 'Math Formatting'],
+  ['text-format', 'Text Formatting'],
   ['document', 'Document'],
-  ['math', 'Math Formatting'],
-  ['text', 'Text Formatting'],
-  ['graph', 'Graph'],
   ['help', 'Help'],
 ];
 
-/**
- * The ribbon (Mathcad Prime style): tabs on top, groups with their names
- * underneath. Selecting or editing an equation shows Math Formatting, a text
- * region Text Formatting, a graph Graph; any tab can also be chosen.
- */
-function useRibbonTab(): [FormatTab, (t: FormatTab) => void] {
-  const [tab, setTab] = useState<FormatTab>('math');
-  const focusKind = useCanvasStore((s) => {
-    const id = s.editingId ?? (s.selection.length ? s.selection[0] : null);
-    const t = id ? s.shapes[id]?.type : undefined;
-    return t === 'math' || t === 'text' || t === 'graph' ? t : null;
-  });
-  const [lastKind, setLastKind] = useState<FormatTab | null>(null);
-  if (focusKind !== lastKind) {
-    setLastKind(focusKind);
-    if (focusKind) setTab(focusKind);
-  }
-  return [tab, setTab];
-}
-
-function RibbonTabs({ tab, setTab }: { tab: FormatTab; setTab(t: FormatTab): void }) {
+function RibbonTabs({ tab, setTab }: { tab: RibbonTabId; setTab(t: RibbonTabId): void }) {
   return (
     <div role="tablist" aria-label="Ribbon" className="rb-tabs">
       {TAB_LABELS.map(([id, label]) => (
@@ -903,11 +972,22 @@ function RibbonTabs({ tab, setTab }: { tab: FormatTab; setTab(t: FormatTab): voi
   );
 }
 
-function RibbonPanel({ tab }: { tab: FormatTab }) {
+const TAB_CONTENT: Record<RibbonTabId, () => ReactNode> = {
+  math: MathTab,
+  calculation: CalculationTab,
+  plots: PlotsTab,
+  'math-format': MathFormattingTab,
+  'text-format': TextFormattingTab,
+  document: DocumentTab,
+  help: HelpTab,
+};
+
+function RibbonPanel({ tab }: { tab: RibbonTabId }) {
   const label = TAB_LABELS.find(([id]) => id === tab)![1];
+  const Content = TAB_CONTENT[tab];
   return (
     <div role="tabpanel" aria-label={label} className="rb-panel" data-testid={`format-panel-${tab}`}>
-      {tab === 'document' ? <DocumentTab /> : tab === 'math' ? <MathFormattingTab /> : tab === 'text' ? <TextFormattingTab /> : tab === 'graph' ? <GraphTab /> : <HelpTab />}
+      <Content />
     </div>
   );
 }
@@ -927,11 +1007,10 @@ export function DocsHeader() {
   const workspace = useAppStore((s) => s.workspace);
   const view = useAppStore((s) => s.view);
   const { updateTitle, updateSettings, togglePanel, showLeftTab, openDialog, setWorkspace } = useAppStore.getState();
-  const tool = useCanvasStore((s) => s.tool);
   const isGrid = useCanvasStore((s) => s.isGrid);
   const isSnap = useCanvasStore((s) => s.isSnap);
   const undoable = useCanvasStore(canUndo);
-  const [ribbonTab, setRibbonTab] = useRibbonTab();
+  const [ribbonTab, setRibbonTab] = useState<RibbonTabId>('math');
   const redoable = useCanvasStore((s) => s.redoStack.length > 0);
 
   const menus: Record<string, MenuEntry[]> = {
@@ -1045,6 +1124,10 @@ export function DocsHeader() {
               className="h-7 min-w-0 max-w-[480px] rounded border border-transparent bg-transparent px-1.5 text-[18px] text-docs-ink hover:border-docs-border focus:border-docs-blue focus:outline-none"
               style={{ width: `${Math.max(8, title.length + 2)}ch` }}
             />
+            <div className="rb-quick" role="toolbar" aria-label="Quick access">
+              <TB icon={Undo2} label={withShortcut('Undo', 'undo')} disabled={!undoable} onClick={commands.undo} testId="quick-undo" />
+              <TB icon={Redo2} label={withShortcut('Redo', 'redo')} disabled={!redoable} onClick={commands.redo} testId="quick-redo" />
+            </div>
             <span data-testid="save-state" aria-live="polite" className="whitespace-nowrap text-[12px] text-docs-muted">
               {saveState === 'saved' ? 'Saved to this browser' : saveState === 'saving' ? 'Saving…' : saveState === 'error' ? 'Not saved (no storage)' : 'Unsaved changes'}
             </span>
@@ -1111,41 +1194,13 @@ export function DocsHeader() {
 
       {/* Ribbon */}
       {workspace === 'calculation' && (
-        <div role="toolbar" aria-label="Formatting" className="rb" data-testid="ribbon">
+        <div role="toolbar" aria-label="Ribbon" className="rb" data-testid="ribbon">
           <div className="rb-body">
-            <Group label="Edit">
-              <Row>
-                <TB icon={Undo2} label={withShortcut('Undo', 'undo')} disabled={!undoable} onClick={commands.undo} />
-                <TB icon={Redo2} label={withShortcut('Redo', 'redo')} disabled={!redoable} onClick={commands.redo} />
-                <TB icon={Calculator} label={withShortcut('Calculate all', 'calculate')} onClick={commands.calculateAll} testId="rb-calculate" />
-              </Row>
-              <Row>
-                <ToolButtons first />
-              </Row>
-            </Group>
-            <Group label="Regions">
-              <Row>
-                <TB icon={Sigma} label="Insert equation (or just type on the page)" active={tool === 'math'} onClick={() => commands.setTool('math')} testId="tool-math" />
-                <TB icon={Type} label="Text (or type &quot;)" active={tool === 'text'} onClick={() => commands.setTool('text')} testId="tool-text" />
-                <TB icon={CheckSquare} label="Insert check (≤ 1)" onClick={() => commands.insertCheck()} testId="insert-check" />
-              </Row>
-              <Row>
-                <TB icon={ImagePlus} label="Insert image" onClick={() => void commands.insertImage()} />
-                <TB icon={LineChart} label="Insert X-Y graph" onClick={() => commands.insertGraph()} testId="insert-graph" />
-                <ToolButtons first={false} />
-              </Row>
-            </Group>
             <RibbonPanel tab={ribbonTab} />
-            <div className="rb-side" aria-label="Panels and view">
-              <Row>
-                <TB icon={ListTree} label="Outline" active={paramsOpen && leftTab === 'outline'} onClick={() => showLeftTab('outline')} testId="toggle-outline" />
-                <TB icon={Variable} label="Parameters" active={paramsOpen && leftTab === 'params'} onClick={() => showLeftTab('params')} testId="toggle-params" />
-                <TB icon={PanelRight} label="Properties panel" active={panelOpen} onClick={() => togglePanel()} testId="toggle-properties" />
-              </Row>
-              <Row>
-                <TB icon={Grid3x3} label="Grid" active={isGrid} onClick={commands.toggleGrid} testId="toggle-grid" />
-                <TB icon={PanelTop} label="Header & footer" active={settings.showHeaderFooter} onClick={() => updateSettings({ showHeaderFooter: !settings.showHeaderFooter })} testId="toggle-chrome" />
-              </Row>
+            <div className="rb-side" role="group" aria-label="Panels">
+              <SmallButton icon={ListTree} label="Outline" active={paramsOpen && leftTab === 'outline'} onClick={() => showLeftTab('outline')} testId="toggle-outline" />
+              <SmallButton icon={Variable} label="Parameters" active={paramsOpen && leftTab === 'params'} onClick={() => showLeftTab('params')} testId="toggle-params" />
+              <SmallButton icon={PanelRight} label="Properties" active={panelOpen} onClick={() => togglePanel()} testId="toggle-properties" />
             </div>
           </div>
         </div>

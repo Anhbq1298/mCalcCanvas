@@ -184,7 +184,7 @@ export const GraphView = memo(function GraphView({ shape }: { shape: GraphShape 
       )}
       {!range && data.errors.length === 0 && (
         <text x={m.l + pw / 2} y={m.t + ph / 2} textAnchor="middle" fontSize={12} fill="#64748b" fontFamily={FONT}>
-          {shape.props.series.length ? 'No data to plot yet' : 'Add a series in the Graph tab'}
+          {shape.props.series.length ? 'No data to plot yet' : 'Add a series in the Plots tab'}
         </text>
       )}
       {data.errors.length > 0 && (

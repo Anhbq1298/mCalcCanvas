@@ -33,9 +33,9 @@ Playwright needs a Chromium. Run `npx playwright install chromium`, or point it 
 
 ## Using it
 
-**Layout.** The menu row holds File, Templates, Edit, View, Insert, Tools and Help. Next to it are the workspaces (**Calculation**, **Input & Results**) and the ribbon tabs (**Document**, **Math Formatting**, **Text Formatting**, **Graph**, **Help**).
+**Layout.** The menu row holds File, Templates, Edit, View, Insert, Tools and Help. Next to it are the workspaces (**Calculation**, **Input & Results**) and the ribbon tabs, in Mathcad Prime order: **Math**, **Calculation**, **Plots**, **Math Formatting**, **Text Formatting**, **Document**, **Help**. Undo and redo sit next to the title.
 
-The ribbon shows its groups with their names underneath, like Mathcad Prime. Two groups are always shown: Edit (undo, redo, calculate, drawing tools) and Regions (equation, text, check, image, graph). The tab follows what you select: an equation shows Math Formatting, text shows Text Formatting, a graph shows Graph.
+The ribbon follows Mathcad Prime: each group has large buttons (icon above the label) for its main commands and small labelled buttons stacked three high, with the group name underneath. Math holds Clipboard, Regions, Operators and Symbols, and Draw; Calculation holds Calculate and the worksheet unit system, decimals and snap; Document holds Page Setup, Show (page boundaries, grid, ruler, header & footer), Zoom and Pages. The tab stays where you put it; selecting a region does not switch it. The Outline, Parameters and Properties toggles sit at the right end of the ribbon.
 
 The left side panel has the **Outline** (headings, click to jump) and **Parameters**. The right side panel holds the properties.
 

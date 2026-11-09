@@ -59,6 +59,7 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
     await expect(page.getByTestId('page-header').first()).toBeVisible();
     await expect(page.getByTestId('page-footer').first()).toContainText('Page 1 of 1');
     await expect(page.getByTestId('page-grid').first()).toBeVisible();
+    await page.getByTestId('format-tab-document').click();
     await page.getByTestId('toggle-chrome').click();
     await expect(page.getByTestId('page-header')).toHaveCount(0);
     await page.getByTestId('toggle-grid').click();
@@ -71,6 +72,7 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
     await page.keyboard.type('Load case 1', { delay: 10 });
     await page.keyboard.press('Escape');
     await page.getByTestId('text-region').click();
+    await page.getByTestId('format-tab-text-format').click();
     await page.getByTestId('text-font').selectOption('Times New Roman');
     await page.getByTestId('toggle-properties').click();
     await page.getByLabel('Text color hex code').fill('#c2410c');

@@ -55,21 +55,22 @@ test.describe('ranges and graphs', () => {
     await resultOf(page, 'a=').toBe('[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]');
     await expect(page.locator('[data-editing]')).toHaveCount(0);
     // Shorten again from Math formatting (the region is selected after the double-click).
+    await page.getByTestId('format-tab-math-format').click();
     await expect(page.getByTestId('math-array')).toHaveValue('row-all');
     await page.getByTestId('math-array').selectOption('row-short');
     await resultOf(page, 'a=').toBe('[0, 1, 2, 3, 4, …, 17, 18, 19, 20, 21] (22)');
   });
 
-  test('a graph from the Graph tab plots a series and redraws when an input changes; it prints', async ({ page }) => {
+  test('a graph from the Plots tab plots a series and redraws when an input changes; it prints', async ({ page }) => {
     await addRegion(page, 300, 200, ['n:4']);
     await addRegion(page, 300, 260, ['i:0;n-1']);
     await addRegion(page, 300, 320, ['y:i^2']);
 
-    await page.getByTestId('format-tab-graph').click();
+    await page.getByTestId('format-tab-plots').click();
     await page.getByTestId('graph-insert').click();
     const graph = page.locator('[data-shape-type=graph] [data-testid=graph]');
     await expect(graph).toHaveCount(1);
-    await expect(page.getByTestId('format-panel-graph')).toBeVisible();
+    await expect(page.getByTestId('format-panel-plots')).toBeVisible();
     // House style: lemon background, axes through the origin, no grid.
     await expect(graph).toHaveAttribute('data-axes', 'origin');
     await expect(page.getByTestId('graph-background')).toHaveAttribute('fill', '#fff9c4');
@@ -97,7 +98,7 @@ test.describe('ranges and graphs', () => {
 
     // Select the graph again (editing the equation selected it).
     await page.locator('[data-shape-type=graph]').click({ position: { x: 150, y: 120 } });
-    await expect(page.getByTestId('format-panel-graph')).toBeVisible();
+    await expect(page.getByTestId('format-panel-plots')).toBeVisible();
     // Markers, an axis unit that does not fit (error box), then fixed.
     await page.getByTestId('series-0-style').selectOption('marker');
     await expect(series.locator('circle')).toHaveCount(6);

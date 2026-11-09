@@ -52,7 +52,7 @@ const HELP_SECTIONS: { id: string; title: string; body: ReactNode; text: string 
     text: 'operators palette subscript greek units display format decimals scientific engineering trailing zeros if function vector range',
     body: (
       <>
-        <p>Use the palettes (Math Formatting tab) or the keys below. A dot after a name makes a literal subscript (<code>M.Ed</code> → M<sub>Ed</sub>). Units are typed after the number (<code>35 MPa</code>); results can be shown in another unit (Result unit box).</p>
+        <p>Use the palettes (Math tab → Operators and Symbols) or the keys below. A dot after a name makes a literal subscript (<code>M.Ed</code> → M<sub>Ed</sub>). Units are typed after the number (<code>35 MPa</code>); results can be shown in another unit (Result unit box).</p>
         <p>Results: display (formula, result, full calculation), number format (general, decimal, scientific, engineering), decimal places and trailing zeros. These change only how a number is written: the value used in later regions keeps full precision.</p>
         <p>Functions <code>f(x):…</code>, ranges <code>i:0;n-1</code>, if blocks and checks (<code>UR≤1</code> shows PASS / FAIL) are supported.</p>
       </>

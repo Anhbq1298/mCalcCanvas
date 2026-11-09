@@ -19,12 +19,15 @@ export function Popover({
   title,
   testId,
   width = 332,
+  big,
   children,
 }: {
   trigger: ReactNode;
   title: string;
   testId?: string;
   width?: number;
+  /** Ribbon label: renders a large button (icon above the label, Mathcad Prime style). */
+  big?: string;
   children: (close: () => void) => ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -58,10 +61,22 @@ export function Popover({
         data-testid={testId}
         onMouseDown={(e) => e.preventDefault()}
         onClick={toggle}
-        className={'docs-tb-btn gap-0.5 px-1.5 ' + (open ? 'is-active' : '')}
+        className={(big ? 'rb-big ' : 'docs-tb-btn gap-0.5 px-1.5 ') + (open ? 'is-active' : '')}
       >
-        {trigger}
-        <ChevronDown size={12} aria-hidden className="text-docs-muted" />
+        {big ? (
+          <>
+            <span className="rb-big-icon">{trigger}</span>
+            <span className="rb-big-text">
+              {big}
+              <ChevronDown size={10} aria-hidden className="text-docs-muted" />
+            </span>
+          </>
+        ) : (
+          <>
+            {trigger}
+            <ChevronDown size={12} aria-hidden className="text-docs-muted" />
+          </>
+        )}
       </button>
       {open &&
         createPortal(
@@ -80,9 +95,9 @@ export function Popover({
   );
 }
 
-export function PalettePopover({ label, glyph, sections, testId, columns }: { label: string; glyph: string; sections: PaletteSection[]; testId: string; columns?: number }) {
+export function PalettePopover({ label, glyph, sections, testId, columns, big }: { label: string; glyph: string; sections: PaletteSection[]; testId: string; columns?: number; big?: boolean }) {
   return (
-    <Popover title={label} testId={testId} width={columns ? columns * 70 + 24 : undefined} trigger={<span className="font-math text-[17px] italic leading-none text-docs-ink">{glyph}</span>}>
+    <Popover title={label} testId={testId} big={big ? label : undefined} width={columns ? columns * 70 + 24 : undefined} trigger={<span className={'font-math italic leading-none text-docs-ink ' + (big ? 'text-[22px]' : 'text-[17px]')}>{glyph}</span>}>
       {() => (
         <>
           {sections.map((sec) => (
