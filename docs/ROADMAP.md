@@ -16,6 +16,7 @@
 | P2 | If blocks (Mathcad Prime layout), ∧ / ∨ conditions, element-wise `if` on vectors | Done |
 | P2 | Annex blocks calculated at their link | Done |
 | P2 | Changing an input's unit converts its value | Done |
+| P2 | Input & Results batch workspace: persisted bindings/rows, inherited units, explicit Calculate All | Done |
 | P2 | Matrices and vectors with per-entry units | Planned |
 | P2 | Units tests: stiffness (kN/mm), rotational stiffness (kN·m/rad), thermal expansion | Planned |
 | P3 | Ranges, `sum`/`len`, X-Y graphs (lines, markers, segments) | Done |

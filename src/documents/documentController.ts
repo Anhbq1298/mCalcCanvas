@@ -39,6 +39,7 @@ export function currentDocument(): CalculationDocument {
     title: s.title,
     metadata: s.metadata,
     settings: s.settings,
+    inputResult: s.inputResult,
     shapes: orderedShapes(),
     createdAt: s.createdAt,
     updatedAt: new Date().toISOString(),
@@ -97,7 +98,7 @@ export function startAutosave(): () => void {
       // Re-aligning can bring regions onto the same line: separate them.
       separateRegion(...Object.values(useCanvasStore.getState().shapes).filter((sh) => sh.type === 'math').map((sh) => sh.id));
     }
-    if (s.title !== prev.title || s.metadata !== prev.metadata || s.settings !== prev.settings) scheduleSave();
+    if (s.title !== prev.title || s.metadata !== prev.metadata || s.settings !== prev.settings || s.inputResult !== prev.inputResult) scheduleSave();
   });
   const flush = (e: BeforeUnloadEvent) => {
     if (!saves.dirty) return;
@@ -146,6 +147,7 @@ export async function newDocument(opts: { demo?: boolean; template?: TemplateId 
       title: tpl?.title ?? 'Untitled calculation',
       metadata: tpl ? { ...tpl.metadata } : {},
       settings: { ...DEFAULT_SETTINGS, ...(tpl?.settings ?? {}) },
+      inputResult: undefined,
       createdAt: new Date().toISOString(),
     });
     applySettings();

@@ -164,6 +164,7 @@ To change a template:
 - **Names:** subscripts are part of the name. Watch for clashes (`a_{y}` geometry vs `a_{V.y}`).
 - **Performance:** keep the 30×30 fibre grid and 10° β steps. A 20×20 grid made ψ(β) non-monotonic, and the curve broke.
 - **Load speed:** the worker publishes results while it calculates (`progressIntervalMs`; inputs first, then reading order). A region whose order key changes is recalculated, so anything that moves regions on load (an estimated baseline being re-measured, overlap pushes) costs a recalculation of the sheet. Templates therefore store each math region's measured `w`, `h` and `baseline` (from `sizes_*.json`), `build.mjs` must report no moved regions, and `MathView` does not re-measure a region with a stored baseline until its first result arrives. `resyncAll()` keeps unchanged regions; only Calculate (`force`) clears the engine. Unchanged `setSettings` is a no-op.
+- **Input & Results (batch):** `buildBatchJob` (UI, pure, uses `calcKey` so annex blocks run at their link) → `store/batchClient.runBatch` → a fresh calculation worker runs `engine/batch.runBatchJob` (one isolated engine per row, `setDefinitionOverride`). Never import `CalculationEngine` into UI code.
 - **Annex:** text props `annex: {kind: 'start' | 'heading' | 'link'}`. Numbers and page references are computed; Tools → *Sort annex by link order* reorders pages.
 
 ## 6. Where things are

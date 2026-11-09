@@ -66,7 +66,7 @@ function inWorker(worker: Worker): EngineClient {
         else results.delete(id);
       }
       listeners.forEach((fn) => fn(ids));
-    } else {
+    } else if (m.type === 'reply') {
       const p = pending.get(m.req);
       pending.delete(m.req);
       if (!p) return;

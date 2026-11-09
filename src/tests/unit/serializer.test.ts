@@ -53,6 +53,12 @@ describe('document serializer', () => {
     expect(doc.shapes[1]).toMatchObject({ type: 'text', props: { html: '<div>Hi &lt;you&gt;</div>' } });
   });
 
+  it('migrates a v2 worksheet with an empty Input & Results configuration', () => {
+    const doc = parseDocument({ ...base, version: 2 });
+    expect(doc.version).toBe(DOCUMENT_VERSION);
+    expect(doc.inputResult).toEqual({ title: 'Batch calculation', inputs: [], outputs: [], rows: [] });
+  });
+
   it('rejects foreign or newer files', () => {
     expect(() => parseDocument({ format: 'other' })).toThrow();
     expect(() => parseDocument({ ...base, version: DOCUMENT_VERSION + 1 })).toThrow(/newer/);
@@ -64,6 +70,41 @@ describe('document serializer', () => {
     expect(doc.settings.precision).toBe(8);
     expect(doc.settings.unitSystem).toBe('SI');
     expect(doc.metadata).toEqual({ preparedBy: 'MB' });
+  });
+
+  it('persists Input & Results bindings and numeric batch inputs without calculated outputs', () => {
+    const doc = parseDocument({
+      ...base,
+      version: DOCUMENT_VERSION,
+      inputResult: {
+        title: 'Beam batch',
+        inputs: [{ id: 'span', regionId: 'a', label: 'Span' }],
+        outputs: [{ id: 'moment', regionId: 'a', label: 'Moment' }],
+        rows: [{ id: 'b1', name: 'B1', values: { span: 6.5, ignored: 99 }, calculated: { moment: 42 } }],
+      },
+    });
+    expect(doc.inputResult).toEqual({
+      title: 'Beam batch',
+      inputs: [{ id: 'span', regionId: 'a', label: 'Span' }],
+      outputs: [{ id: 'moment', regionId: 'a', label: 'Moment' }],
+      rows: [{ id: 'b1', name: 'B1', values: { span: 6.5 } }],
+    });
+    expect(serializeDocument(doc)).not.toContain('"calculated"');
+  });
+
+  it('drops Input & Results bindings to missing or non-math regions', () => {
+    const doc = parseDocument({
+      ...base,
+      version: DOCUMENT_VERSION,
+      inputResult: {
+        inputs: [{ id: 'ok', regionId: 'a', label: 'OK' }, { id: 'missing', regionId: 'nope', label: 'Missing' }],
+        outputs: [{ id: 'text', regionId: 'b', label: 'Text' }],
+        rows: [{ id: 'case', values: { ok: 1, missing: 2 } }],
+      },
+    });
+    expect(doc.inputResult.inputs).toEqual([{ id: 'ok', regionId: 'a', label: 'OK' }]);
+    expect(doc.inputResult.outputs).toEqual([]);
+    expect(doc.inputResult.rows[0]?.values).toEqual({ ok: 1 });
   });
 });
 

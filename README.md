@@ -42,6 +42,7 @@ The interface follows Google Docs: menus and one toolbar, white A4 pages with an
 - Drag, resize, marquee select, copy/paste (incl. screenshots), drag-and-drop images, duplicate (`Ctrl+D`), group (`Ctrl+G` on regions), undo/redo, arrow-key nudge, `Ctrl+wheel` zoom, wheel or `Space`+drag pan.
 - **Templates**: File → New from template → *RC beam – bending (EN 1992-1-1)* (two pages: headings/outline, inputs, full calculations, result units, PASS/FAIL checks, section sketch, summary) or *Steel beam – simply supported*. A first visit opens the RC beam template; a link with `?template=rc-beam` or `?template=steel-beam` always starts a new worksheet from that template.
 - **Files**: worksheets auto-save in the browser (IndexedDB). **File → Save to file** (`Ctrl+Shift+S`) writes a `.mCalcCanvas` file (plain JSON, schema-versioned) to share or back up; **File → Open file** (`Ctrl+Shift+O`), the Open dialog, or dragging the file onto the page loads it again. `.json` works too.
+- **Input & Results**: map existing worksheet definitions, calculated results and checks into a compact batch table. Units come from the bound regions, cells accept numbers only, and results remain unchanged until **Calculate All**. The table definition and draft input rows are stored in the `.mCalcCanvas` file; calculated outputs are recomputed on demand.
 - **Document** tab: page/free canvas, grid, header & footer, orientation, zoom, export PDF. Double-click the header to edit the worksheet details.
 
 ## Architecture
@@ -126,7 +127,7 @@ See **AGENTS.md** and `docs/` (ARCHITECTURE, ENGINE_DESIGN, PROJECT_MEMORY, ROAD
 - Variables are document-scoped; no local scopes, user-defined functions, matrices, ranges or iteration yet.
 - Text formatting uses the browser's contentEditable commands (bold, italic, underline, heading, lists); pasted HTML is reduced to a safe whitelist.
 - No rotation or z-order controls yet; multi-selection moves but doesn't resize.
-- Table regions are not implemented.
+- Free-positioned table regions on the calculation canvas are not implemented; batch Input & Results uses its own document workspace.
 - Evaluation runs on the main thread (bounded per the safety notes above).
 
 ## Single-file build

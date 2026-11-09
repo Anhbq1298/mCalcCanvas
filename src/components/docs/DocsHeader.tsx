@@ -33,6 +33,7 @@ import {
   Redo2,
   Sigma,
   Square,
+  TableProperties,
   Type,
   Underline,
   Undo2,
@@ -577,7 +578,8 @@ export function DocsHeader() {
   const panelOpen = useAppStore((s) => s.panelOpen);
   const paramsOpen = useAppStore((s) => s.paramsOpen);
   const leftTab = useAppStore((s) => s.leftTab);
-  const { updateTitle, updateSettings, togglePanel, showLeftTab, openDialog } = useAppStore.getState();
+  const workspace = useAppStore((s) => s.workspace);
+  const { updateTitle, updateSettings, togglePanel, showLeftTab, openDialog, setWorkspace } = useAppStore.getState();
   const tool = useCanvasStore((s) => s.tool);
   const zoom = useCanvasStore((s) => s.camera.z);
   const isGrid = useCanvasStore((s) => s.isGrid);
@@ -720,28 +722,50 @@ export function DocsHeader() {
                 highlight={name === 'Templates'}
               />
             ))}
+            <span className="mx-1 h-4 w-px bg-docs-border" aria-hidden />
+            <div role="tablist" aria-label="Workspace" className="flex items-center gap-0.5">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={workspace === 'calculation'}
+                onClick={() => setWorkspace('calculation')}
+                className={'docs-workspace-tab ' + (workspace === 'calculation' ? 'is-active' : '')}
+              >
+                <Sigma size={13} aria-hidden /> Calculation
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={workspace === 'input-results'}
+                onClick={() => setWorkspace('input-results')}
+                className={'docs-workspace-tab ' + (workspace === 'input-results' ? 'is-active' : '')}
+                data-testid="workspace-input-results"
+              >
+                <TableProperties size={13} aria-hidden /> Input &amp; Results
+              </button>
+            </div>
           </nav>
         </div>
-        <button
+        {workspace === 'calculation' && <button
           type="button"
           onClick={commands.calculateAll}
           title="Calculate all (F9)"
           className="flex h-9 cursor-pointer items-center gap-1.5 rounded-full px-3 text-[14px] text-docs-ink transition-colors duration-150 hover:bg-docs-hover"
         >
           <Calculator size={17} aria-hidden /> Calculate
-        </button>
-        <button
+        </button>}
+        {workspace === 'calculation' && <button
           type="button"
           data-testid="export-pdf"
           onClick={() => void commands.exportPdf()}
           className="flex h-10 cursor-pointer items-center gap-2 rounded-full bg-docs-share px-5 text-[14px] font-medium text-docs-ink transition-colors duration-150 hover:bg-docs-share-hover"
         >
           <FileDown size={17} aria-hidden /> Export PDF
-        </button>
+        </button>}
       </div>
 
       {/* Toolbar */}
-      <div role="toolbar" aria-label="Formatting" className="mx-2 mb-1.5 mt-1.5 flex min-h-10 flex-wrap items-center gap-x-0.5 gap-y-0.5 rounded-[20px] bg-docs-toolbar px-3 py-1">
+      {workspace === 'calculation' && <div role="toolbar" aria-label="Formatting" className="mx-2 mb-1.5 mt-1.5 flex min-h-10 flex-wrap items-center gap-x-0.5 gap-y-0.5 rounded-[20px] bg-docs-toolbar px-3 py-1">
         <TB icon={Undo2} label={`Undo (${MOD}Z)`} disabled={!undoable} onClick={commands.undo} />
         <TB icon={Redo2} label={`Redo (${MOD}Y)`} disabled={!redoable} onClick={commands.redo} />
         <TBSelect
@@ -772,7 +796,7 @@ export function DocsHeader() {
           <TB icon={PanelTop} label="Header & footer" active={settings.showHeaderFooter} onClick={() => updateSettings({ showHeaderFooter: !settings.showHeaderFooter })} testId="toggle-chrome" />
           <TB icon={PanelRight} label="Properties panel" active={panelOpen} onClick={() => togglePanel()} testId="toggle-properties" />
         </div>
-      </div>
+      </div>}
     </header>
   );
 }

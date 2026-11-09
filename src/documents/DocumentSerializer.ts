@@ -3,7 +3,9 @@ import { escapeHtml, sanitizeHtml } from '../canvas/sanitize';
 import {
   DEFAULT_SETTINGS,
   DOCUMENT_VERSION,
+  EMPTY_INPUT_RESULT_CONFIG,
   type CalculationDocument,
+  type InputResultConfig,
   type DocumentSettings,
 } from './DocumentTypes';
 
@@ -48,6 +50,8 @@ const MIGRATIONS: Record<number, (doc: Raw) => Raw> = {
     }
     return { ...doc, version: 2, shapes };
   },
+  // 2 → 3: Input & Results table definition and batch rows.
+  2: (doc) => ({ ...doc, version: 3, inputResult: EMPTY_INPUT_RESULT_CONFIG }),
 };
 
 export class DocumentFormatError extends Error {}
@@ -234,9 +238,51 @@ export function parseDocument(input: unknown): CalculationDocument {
     title: typeof doc.title === 'string' && doc.title ? doc.title.slice(0, 200) : 'Untitled calculation',
     metadata: sanitizeMetadata(doc.metadata),
     settings,
+    inputResult: sanitizeInputResult(doc.inputResult, new Set(shapes.filter((s) => s.type === 'math').map((s) => s.id))),
     shapes,
     createdAt: typeof doc.createdAt === 'string' ? doc.createdAt : now,
     updatedAt: typeof doc.updatedAt === 'string' ? doc.updatedAt : now,
+  };
+}
+
+function sanitizeInputResult(value: unknown, mathRegionIds: Set<string>): InputResultConfig {
+  const src = value && typeof value === 'object' ? (value as Raw) : {};
+  const columns = (raw: unknown) => {
+    if (!Array.isArray(raw)) return [];
+    const seen = new Set<string>();
+    return raw.slice(0, 200).flatMap((item) => {
+      if (!item || typeof item !== 'object') return [];
+      const r = item as Raw;
+      const id = str(r.id).slice(0, 100);
+      const regionId = str(r.regionId).slice(0, 100);
+      if (!id || seen.has(id) || !mathRegionIds.has(regionId)) return [];
+      seen.add(id);
+      return [{ id, regionId, label: (str(r.label).trim() || id).slice(0, 120) }];
+    });
+  };
+  const inputs = columns(src.inputs);
+  const outputs = columns(src.outputs);
+  const inputIds = new Set(inputs.map((c) => c.id));
+  const rowIds = new Set<string>();
+  const rows = (Array.isArray(src.rows) ? src.rows : []).slice(0, 5000).flatMap((item, index) => {
+    if (!item || typeof item !== 'object') return [];
+    const r = item as Raw;
+    let id = str(r.id).slice(0, 100) || `case-${index + 1}`;
+    while (rowIds.has(id)) id = `${id}-${index + 1}`;
+    rowIds.add(id);
+    const rawValues = r.values && typeof r.values === 'object' ? (r.values as Raw) : {};
+    const values: Record<string, number | null> = {};
+    for (const inputId of inputIds) {
+      const v = rawValues[inputId];
+      values[inputId] = typeof v === 'number' && Number.isFinite(v) ? v : null;
+    }
+    return [{ id, name: (str(r.name).trim() || `Case ${index + 1}`).slice(0, 120), values }];
+  });
+  return {
+    title: (str(src.title).trim() || EMPTY_INPUT_RESULT_CONFIG.title).slice(0, 160),
+    inputs,
+    outputs,
+    rows,
   };
 }
 

@@ -1,7 +1,7 @@
 import type { Shape } from '../canvas/model/types';
 import type { UnitSystemName } from '../engine/light';
 
-export const DOCUMENT_VERSION = 2;
+export const DOCUMENT_VERSION = 3;
 
 export type CanvasMode = 'free' | 'page';
 export type PageOrientation = 'portrait' | 'landscape';
@@ -31,6 +31,36 @@ export interface DocumentSettings {
   vectorLimit?: number;
 }
 
+/** A worksheet region exposed as a column in the Input & Results workspace. */
+export interface InputResultColumn {
+  /** Stable id used by batch rows even if the display label changes. */
+  id: string;
+  /** Exact math region that owns the definition or result. */
+  regionId: string;
+  label: string;
+}
+
+export interface InputResultRow {
+  id: string;
+  name: string;
+  /** Numeric input values only. Units come from the bound worksheet regions. */
+  values: Record<string, number | null>;
+}
+
+export interface InputResultConfig {
+  title: string;
+  inputs: InputResultColumn[];
+  outputs: InputResultColumn[];
+  rows: InputResultRow[];
+}
+
+export const EMPTY_INPUT_RESULT_CONFIG: InputResultConfig = {
+  title: 'Batch calculation',
+  inputs: [],
+  outputs: [],
+  rows: [],
+};
+
 /**
  * Persisted worksheet. `shapes` is the ordered list of canvas shapes (images
  * embedded as data URLs). Calculation results are never stored: they are
@@ -42,6 +72,8 @@ export interface CalculationDocument {
   title: string;
   metadata: DocumentMetadata;
   settings: DocumentSettings;
+  /** Persisted table definition and draft batch inputs. Calculated outputs are recomputed on demand. */
+  inputResult: InputResultConfig;
   shapes: Shape[];
   createdAt: string;
   updatedAt: string;

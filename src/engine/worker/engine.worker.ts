@@ -2,6 +2,7 @@
 /** Runs the calculation engine off the UI thread (see engineClient.ts). */
 import { CalculationEngine } from '../CalculationEngine';
 import type { CalculationResult } from '../CalculationEngine';
+import { runBatchJob } from '../batch';
 import type { FromWorker, ToWorker } from './protocol';
 
 const engine = new CalculationEngine({ unitSystem: 'SI', precision: 2 });
@@ -26,6 +27,12 @@ self.onmessage = (ev: MessageEvent<ToWorker>) => {
         else engine.setSettings(o.settings);
       }
     });
+  } else if (m.type === 'batch') {
+    try {
+      post({ type: 'batchResult', ok: true, results: runBatchJob(m.job, m.settings) });
+    } catch (e) {
+      post({ type: 'batchResult', ok: false, error: (e as Error).message });
+    }
   } else if (m.type === 'ping') {
     post({ type: 'reply', req: m.req, ok: true });
   } else {
