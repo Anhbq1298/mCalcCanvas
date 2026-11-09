@@ -32,6 +32,12 @@ describe('document serializer', () => {
       const text = doc.shapes.find((s) => s.type === 'text');
       expect(text?.type === 'text' && text.props.html).toBe('<b>Title</b>');
     });
+    step('keeps only supported math text fonts', () => {
+      const valid = parseDocument({ ...base, version: DOCUMENT_VERSION, shapes: [{ ...base.shapes[0], props: { ...base.shapes[0].props, textFont: 'Georgia' } }] });
+      const invalid = parseDocument({ ...base, version: DOCUMENT_VERSION, shapes: [{ ...base.shapes[0], props: { ...base.shapes[0].props, textFont: 'url(evil)' } }] });
+      expect(valid.shapes[0]?.type === 'math' && valid.shapes[0].props.textFont).toBe('Georgia');
+      expect(invalid.shapes[0]?.type === 'math' && invalid.shapes[0].props.textFont).toBe('Inter');
+    });
     step('migrates a v1 (tldraw) worksheet', () => {
       const v1 = {
         ...base,

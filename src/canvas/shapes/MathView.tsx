@@ -5,7 +5,7 @@ import { MathEditor } from '../../math/MathEditor';
 import { MathRenderer } from '../../math/MathRenderer';
 import { useRegionResult } from '../../store/calculationStore';
 import { select, stopEditing, updateShape, useCanvasStore } from '../model/canvasStore';
-import type { MathShape } from '../model/types';
+import { fontStack, type MathShape } from '../model/types';
 import { majorLineAtOrBelow } from '../pageConstraint';
 import { separateRegion } from '../canvasActions';
 import { useSeparateAfterEditing } from './useSeparate';
@@ -21,7 +21,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   const result = useRegionResult(shape.id);
   const contentRef = useRef<HTMLDivElement>(null);
   const probeRef = useRef<HTMLSpanElement>(null);
-  const { latex, displayMode, autoSize, fontSize, color, w, h } = shape.props;
+  const { latex, displayMode, autoSize, fontSize, color, textFont, w, h } = shape.props;
   const display = useMemo(() => buildDisplay(latex, result, displayMode), [latex, result, displayMode]);
   const hasResult = !!result;
   // Off-screen regions with a measured size are typeset when they come near the view.
@@ -110,6 +110,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         {
           '--math-size': `${fontSize}px`,
           '--math-color': isInput ? INPUT_COLOR : color,
+          '--text-font-family': fontStack(textFont ?? 'Inter'),
           width: autoSize ? 'max-content' : w,
           minHeight: autoSize ? undefined : h,
           padding: `${PAD_Y}px ${PAD_X}px`,

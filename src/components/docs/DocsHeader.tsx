@@ -252,12 +252,13 @@ function SwatchPicker({ testId, title, value, onPick, allowNone }: { testId: str
 
 const HIGHLIGHTS = ['#fff59d', '#fff6bf', '#c8e6c9', '#b3e5fc', '#f8bbd0', '#ffe0b2'];
 
-function TBSelect({ value, onChange, options, label, width, testId, style }: { value: string | number; onChange(v: string): void; options: [string | number, string][]; label: string; width: number; testId?: string; style?: React.CSSProperties }) {
+function TBSelect({ value, onChange, options, label, width, testId, style, disabled }: { value: string | number; onChange(v: string): void; options: [string | number, string][]; label: string; width: number; testId?: string; style?: React.CSSProperties; disabled?: boolean }) {
   return (
     <select
       aria-label={label}
       title={label}
       data-testid={testId}
+      disabled={disabled}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       style={{ width, ...style }}
@@ -481,7 +482,7 @@ function MathFormattingTab() {
     else patchSelected((sh) => (sh.type === 'math' ? { props: { resultFormat: undefined, trailingZeros: undefined, precision: -1, displayUnit: '', displayMode: 'auto' } } : null));
   };
   const resetFormatting = () =>
-    patchSelected((sh) => (sh.type === 'math' ? { props: { fontSize: 16, color: '#0f172a', highlight: undefined } } : null));
+    patchSelected((sh) => (sh.type === 'math' ? { props: { textFont: 'Inter', fontSize: 16, color: '#0f172a', highlight: undefined } } : null));
   const labels = settings.labelStyles ?? DEFAULT_LABEL_STYLES;
   const setLabel = (k: keyof typeof labels, c: string | null) => useAppStore.getState().updateSettings({ labelStyles: { ...labels, [k]: c ?? DEFAULT_LABEL_STYLES[k] } });
   const fmtNames: [string, string][] = [['general', 'General'], ['decimal', 'Decimal'], ['scientific', 'Scientific'], ['engineering', 'Engineering']];
@@ -568,6 +569,18 @@ function MathFormattingTab() {
       </Group>
       <Group label="Math Font">
         <Col>
+          <Field label="Text font">
+            <TBSelect
+              label="Text font of the selected equations"
+              testId="math-text-font"
+              disabled={!first}
+              value={first?.props.textFont ?? 'Inter'}
+              width={132}
+              style={{ fontFamily: fontStack(first?.props.textFont ?? 'Inter') }}
+              onChange={(v) => patchSelected((sh) => (sh.type === 'math' ? { props: { textFont: v } } : null))}
+              options={Object.keys(TEXT_FONTS).map((f) => [f, f])}
+            />
+          </Field>
           <div className="rb-field">
             <SizeControl kinds={['math']} label="Equation size" />
           </div>
@@ -575,7 +588,7 @@ function MathFormattingTab() {
             <ColorButton testId="math-color" title="Equation color" kinds={['math']} />
             <SwatchPicker testId="math-highlight" title="Highlight the selected equations" value={first?.props.highlight ?? null} allowNone onPick={(c) => patchSelected((sh) => (sh.type === 'math' ? { props: { highlight: c ?? undefined } } : null))} />
           </div>
-          <SmallButton icon={Eraser} label="Clear format" title="Reset size, colour and highlight of the selected equations" disabled={!first} onClick={resetFormatting} testId="math-reset-format" />
+          <SmallButton icon={Eraser} label="Clear format" title="Reset text font, size, colour and highlight of the selected equations" disabled={!first} onClick={resetFormatting} testId="math-reset-format" />
         </Col>
       </Group>
       <Group label="Label Styles">

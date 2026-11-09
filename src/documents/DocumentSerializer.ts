@@ -99,6 +99,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           ...(['general', 'decimal', 'scientific', 'engineering'].includes(p.resultFormat as string) ? { resultFormat: p.resultFormat as never } : {}),
           ...(typeof p.trailingZeros === 'boolean' ? { trailingZeros: p.trailingZeros } : {}),
           ...(typeof p.highlight === 'string' && /^#[0-9a-fA-F]{6}$/.test(p.highlight) ? { highlight: p.highlight } : {}),
+          textFont: TEXT_FONTS[str(p.textFont)] ? str(p.textFont) : 'Inter',
           autoSize: p.autoSize !== false,
           fontSize: Math.min(64, Math.max(8, num(p.fontSize, 18))),
           color: color(p.color, '#0f172a'),

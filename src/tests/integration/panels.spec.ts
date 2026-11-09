@@ -193,6 +193,8 @@ test.describe('Formatting tabs', () => {
     // L is an input: the literal itself is rewritten with the same value (8.5 m → 8500 mm).
     await expect(L).toHaveAttribute('data-latex', 'L\\coloneq8500\\,\\mathrm{mm}');
     await resultOf(page, 'M_{Ed}').not.toContain('NaN');
+    await page.getByTestId('math-text-font').selectOption('Georgia');
+    await expect(L).toHaveCSS('--text-font-family', /Georgia/);
     await page.getByTestId('math-decimals').selectOption('0');
     await page.getByTestId('format-tab-calculation').click();
     await page.getByTestId('worksheet-units').selectOption('Imperial');
