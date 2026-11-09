@@ -18,7 +18,7 @@ export function SelectionOverlay() {
   if (!selection.length || dragging) return null;
 
   const px = 1 / z;
-  const hs = 9 / z;
+  const hs = 7 / z;
   const single = selection.length === 1 ? shapes[selection[0]] : null;
 
   return (
@@ -38,13 +38,13 @@ export function SelectionOverlay() {
               top: b.y - 2 * px,
               width: b.w + 4 * px,
               height: b.h + 4 * px,
-              border: `${1.25 * px}px solid var(--color-accent)`,
+              border: `${1 * px}px ${s.type === 'math' ? 'dashed' : 'solid'} var(--color-accent)`,
               pointerEvents: 'none',
             }}
           />
         );
       })}
-      {single && single.id !== editingId && single.type !== 'draw' && (() => {
+      {single && single.id !== editingId && single.type !== 'draw' && single.type !== 'math' && (() => {
         let handles: { id: HandleId; x: number; y: number }[];
         if (single.type === 'line') {
           handles = [
@@ -56,7 +56,7 @@ export function SelectionOverlay() {
           const pos: Record<string, [number, number]> = {
             nw: [0, 0], n: [0.5, 0], ne: [1, 0], e: [1, 0.5], se: [1, 1], s: [0.5, 1], sw: [0, 1], w: [0, 0.5],
           };
-          const ids = single.type === 'text' ? (['e', 'w'] as HandleId[]) : BOX_HANDLES;
+          const ids = BOX_HANDLES;
           handles = ids.map((h) => ({ id: h, x: b.x + pos[h][0] * b.w, y: b.y + pos[h][1] * b.h }));
         }
         return handles.map((h) => (

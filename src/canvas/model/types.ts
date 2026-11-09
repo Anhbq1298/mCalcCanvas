@@ -23,6 +23,8 @@ export interface MathProps {
   trailingZeros?: boolean;
   /** Background highlight of the region (absent = none; inputs keep their input colour). */
   highlight?: string;
+  /** Font used by text embedded in the equation (for example, \\text{...}). */
+  textFont?: string;
   /** How a vector result is shown: a compact row (default) or a column with every entry. */
   vectorLayout?: VectorLayout;
   /** Show every entry of a long vector result instead of the shortened first … last view. */
@@ -229,6 +231,7 @@ export const DEFAULT_MATH_PROPS: MathProps = {
   displayMode: 'auto',
   displayUnit: '',
   precision: -1,
+  textFont: 'Inter',
   autoSize: true,
   fontSize: 18,
   color: MATH_COLORS[0],

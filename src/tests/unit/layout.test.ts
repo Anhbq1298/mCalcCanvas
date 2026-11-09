@@ -142,6 +142,7 @@ describe('applying layout', () => {
 
 describe('baseline snapping', () => {
   it('snaps baselines to major lines by default and to every grid line when chosen', () => {
+    useCanvasStore.setState({ isSnap: true });
     addShapes([{ ...region('m', 2), y: 60 + 40 * 3 - 22 + 13 }], { history: false }); // 13 px below a major line
     const base = () => {
       const s = useCanvasStore.getState().shapes.m;

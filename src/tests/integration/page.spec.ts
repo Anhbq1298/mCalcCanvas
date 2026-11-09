@@ -56,16 +56,19 @@ test.describe('Page layout keeps content inside the margins', () => {
     await page.mouse.click(w.left + 100, w.top + 100);
     await page.keyboard.type('y:3', { delay: 15 });
     await page.keyboard.press('Enter');
-    const box = await page.locator('.math-region').first().boundingBox();
-    await page.mouse.move(box!.x + 8, box!.y + box!.height / 2);
+    await expect(page.locator('math-field')).toHaveCount(0);
+    const region = page.locator('.math-region').first();
+    await expect(region).toHaveAttribute('data-status', 'valid');
+    await region.click();
+    const grip = await page.getByTestId('grip').boundingBox();
+    await page.mouse.move(grip!.x + grip!.width / 2, grip!.y + grip!.height / 2);
     await page.mouse.down();
     await page.mouse.move(w.left - 300, w.top - 150, { steps: 10 });
     await page.mouse.up();
     const [s] = await shapes(page);
     expect(s.x).toBeCloseTo(76, 0);
-    // Its baseline sits on the first major line inside the top margin (60 + 40).
-    const b = (s as unknown as { props: { baseline: number } }).props.baseline;
-    expect(s.y + b).toBe(100);
+    // Free positioning clamps the region itself to the top margin without snapping its baseline.
+    expect(s.y).toBe(60);
   });
 
   test('Check button inserts an editable "□ ≤ 1" with the caret in the slot', async ({ page }) => {

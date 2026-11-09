@@ -32,6 +32,12 @@ describe('document serializer', () => {
       const text = doc.shapes.find((s) => s.type === 'text');
       expect(text?.type === 'text' && text.props.html).toBe('<b>Title</b>');
     });
+    step('keeps only supported math text fonts', () => {
+      const valid = parseDocument({ ...base, version: DOCUMENT_VERSION, shapes: [{ ...base.shapes[0], props: { ...base.shapes[0].props, textFont: 'Georgia' } }] });
+      const invalid = parseDocument({ ...base, version: DOCUMENT_VERSION, shapes: [{ ...base.shapes[0], props: { ...base.shapes[0].props, textFont: 'url(evil)' } }] });
+      expect(valid.shapes[0]?.type === 'math' && valid.shapes[0].props.textFont).toBe('Georgia');
+      expect(invalid.shapes[0]?.type === 'math' && invalid.shapes[0].props.textFont).toBe('Inter');
+    });
     step('migrates a v1 (tldraw) worksheet', () => {
       const v1 = {
         ...base,
@@ -122,7 +128,7 @@ describe('serializer robustness', () => {
     step('normalises invalid numbers and ignores unknown fields and types', () => {
       const d = parseDocument(
         doc([
-          { id: 'm', type: 'math', x: 1e300, y: Number.NaN, extra: { evil: true }, props: { latex: 'a\\coloneq1', precision: 900, w: -5, fontSize: 1e9 } },
+          { id: 'm', type: 'math', x: 1e300, y: Number.NaN, extra: { evil: true }, props: { latex: 'a\\coloneq1', precision: 900, w: -5, fontSize: 1e9, autoSize: false } },
           { id: 'z', type: 'video', x: 0, y: 0, props: {} },
           { id: 'r', type: 'rect', x: 0, y: 0, props: { w: 'big', strokeWidth: 1e6 } },
           null,
@@ -136,6 +142,7 @@ describe('serializer robustness', () => {
       expect(m.type === 'math' && m.props.precision).toBe(8);
       expect(m.type === 'math' && m.props.w).toBe(1);
       expect(m.type === 'math' && m.props.fontSize).toBe(64);
+      expect(m.type === 'math' && m.props.autoSize).toBe(true);
       expect('extra' in m).toBe(false);
       const r = d.shapes[1];
       expect(r.type === 'rect' && r.props.strokeWidth).toBe(20);

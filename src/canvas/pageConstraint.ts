@@ -77,7 +77,7 @@ export function nextWritingPoint(viewCenter: Point): Point {
 }
 
 // ---------------------------------------------------------------------------
-// Strict grid for math and text regions
+// Optional grid alignment for math and text regions
 // ---------------------------------------------------------------------------
 
 /** Grid origin for a point: the corner of the page's writable area (or 0,0 on the free canvas). */
@@ -141,6 +141,7 @@ export function baselineOf(s: Shape): number {
  */
 export function gridAlign(s: Shape): Shape {
   if (s.type !== 'math' && s.type !== 'text') return s;
+  if (!useCanvasStore.getState().isSnap) return s;
   const b = baselineOf(s);
   const o = gridOrigin(s);
   let x = gridPoint(s).x;

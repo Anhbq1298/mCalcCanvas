@@ -48,8 +48,8 @@
   --color-ir-output-cell: #f8f9fb;
 
   /* Engineering pad (grid on the page) */
-  --grid-minor: rgb(0 0 0 / 0.08);
-  --grid-major: rgb(0 0 0 / 0.08);
+  --grid-minor: rgb(102 160 196 / 0.16);
+  --grid-major: rgb(78 142 181 / 0.22);
   --color-paper: #ffffff;
   --color-desk: #f9fbfd;
   --color-crosshair: #1f6fd1;

@@ -5,9 +5,9 @@ import { MathEditor } from '../../math/MathEditor';
 import { MathRenderer } from '../../math/MathRenderer';
 import { useRegionResult } from '../../store/calculationStore';
 import { select, stopEditing, updateShape, useCanvasStore } from '../model/canvasStore';
-import type { MathShape } from '../model/types';
+import { fontStack, type MathShape } from '../model/types';
 import { majorLineAtOrBelow } from '../pageConstraint';
-import { separateRegion } from '../canvasActions';
+import { convertMathRegionToText, separateRegion } from '../canvasActions';
 import { useSeparateAfterEditing } from './useSeparate';
 import { useSeen } from './useSeen';
 import { annexInfo, annexNumber, pageNumberOf } from '../annex';
@@ -21,15 +21,15 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   const result = useRegionResult(shape.id);
   const contentRef = useRef<HTMLDivElement>(null);
   const probeRef = useRef<HTMLSpanElement>(null);
-  const { latex, displayMode, autoSize, fontSize, color, w, h } = shape.props;
+  const { latex, displayMode, fontSize, color, textFont, w, h } = shape.props;
   const display = useMemo(() => buildDisplay(latex, result, displayMode), [latex, result, displayMode]);
   const hasResult = !!result;
   // Off-screen regions with a measured size are typeset when they come near the view.
-  const seen = useSeen(contentRef, editing || isStatic || !autoSize || shape.props.baseline === undefined);
+  const seen = useSeen(contentRef, editing || isStatic || shape.props.baseline === undefined);
 
   // Auto-size: the box follows the rendered equation unless resized manually.
   useEffect(() => {
-    if (isStatic || !autoSize) return;
+    if (isStatic) return;
     const el = contentRef.current;
     if (!el) return;
     // A loaded region with a measured size waits for its first result: measuring the bare
@@ -59,11 +59,12 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     const ro = new ResizeObserver(fit);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, autoSize, isStatic, editing, display.latex, hasResult, seen]);
+  }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, isStatic, editing, display.latex, textFont, hasResult, seen]);
 
   useSeparateAfterEditing(shape.id, editing, isStatic);
 
   const onChange = useCallback((next: string) => updateShape(shape.id, { props: { latex: next } }, { history: false }), [shape.id]);
+  const onConvertToText = useCallback((text: string, caretOffset: number) => convertMathRegionToText(shape.id, text, caretOffset), [shape.id]);
   const onExit = useCallback(
     (reason: 'enter' | 'escape') => {
       stopEditing();
@@ -110,8 +111,8 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         {
           '--math-size': `${fontSize}px`,
           '--math-color': isInput ? INPUT_COLOR : color,
-          width: autoSize ? 'max-content' : w,
-          minHeight: autoSize ? undefined : h,
+          '--text-font-family': fontStack(textFont ?? 'Inter'),
+          width: 'max-content',
           padding: `${PAD_Y}px ${PAD_X}px`,
           // Green outline: this region redefines a variable defined earlier.
           ...(shape.props.highlight && !editing ? { background: shape.props.highlight, borderRadius: 3 } : {}),
@@ -122,7 +123,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     >
       <div className="flex items-center gap-1.5">
         {editing ? (
-          <MathEditor latex={latex} onChange={onChange} onExit={onExit} ariaLabel="Math region editor" />
+          <MathEditor latex={latex} onChange={onChange} onExit={onExit} onConvertToText={onConvertToText} ariaLabel="Math region editor" />
         ) : empty ? (
           <span className="math-placeholder">Empty region</span>
         ) : (

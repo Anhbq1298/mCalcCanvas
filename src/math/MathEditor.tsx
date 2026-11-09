@@ -2,12 +2,14 @@ import { useEffect, useLayoutEffect, useRef } from 'react';
 import { flushPendingKeys, setActiveMathEditor, setKeyReplayer } from './activeEditor';
 import { handleMathcadKey } from './mathcadKeys';
 import { configureMathfield, MathfieldElement } from './mathliveSetup';
+import { convertibleMathWord } from './mathToText';
 
 interface MathEditorProps {
   latex: string;
   onChange(latex: string): void;
   /** Enter / Escape: finish editing. */
   onExit(reason: 'enter' | 'escape'): void;
+  onConvertToText(text: string, caretOffset: number): void;
   /** Report the rendered size so the region can grow while typing. */
   ariaLabel?: string;
 }
@@ -19,11 +21,11 @@ interface MathEditorProps {
  * Keyboard and pointer events are stopped at the mathfield boundary so
  * canvas shortcuts (tool letters, Delete, Ctrl+D…) never steal input.
  */
-export function MathEditor({ latex, onChange, onExit, ariaLabel }: MathEditorProps) {
+export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel }: MathEditorProps) {
   const hostRef = useRef<HTMLDivElement>(null);
-  const callbacks = useRef({ onChange, onExit });
+  const callbacks = useRef({ onChange, onExit, onConvertToText });
   useLayoutEffect(() => {
-    callbacks.current = { onChange, onExit };
+    callbacks.current = { onChange, onExit, onConvertToText };
   });
   const initialLatex = useRef(latex);
 
@@ -62,6 +64,16 @@ export function MathEditor({ latex, onChange, onExit, ariaLabel }: MathEditorPro
     // Mathcad keystrokes (":" → ≔, "\\" → √, Ctrl+G Greek, "=" evaluates the
     // whole region…). Capture phase, i.e. before MathLive handles the key.
     const onKeyDownCapture = (e: KeyboardEvent) => {
+      if (e.key === ' ' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        const word = convertibleMathWord(mf.value);
+        if (word) {
+          e.preventDefault();
+          e.stopPropagation();
+          const prefixLength = Math.min(word.length, mf.getValue(0, mf.position, 'plain-text').length);
+          callbacks.current.onConvertToText(`${word.slice(0, prefixLength)} ${word.slice(prefixLength)}`, prefixLength + 1);
+          return;
+        }
+      }
       if (handleMathcadKey(e, mf, () => callbacks.current.onChange(mf.value))) {
         e.preventDefault();
         e.stopPropagation();

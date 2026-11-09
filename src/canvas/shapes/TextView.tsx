@@ -1,6 +1,5 @@
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { stopEditing, updateShape, useCanvasStore } from '../model/canvasStore';
-import { separateRegion } from '../canvasActions';
 import { useSeparateAfterEditing } from './useSeparate';
 import { fontStack, PARAGRAPH_STYLES, TEXT_STYLES, type TextShape } from '../model/types';
 import { escapeHtml, plainTextToHtml, sanitizeHtml } from '../sanitize';
@@ -16,24 +15,6 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
   const { html, w, fontSize, color, align, fontFamily, heading, textStyle } = shape.props;
   const annexHtml = useAnnexHtml(shape);
 
-  // Keep stored height equal to the rendered height (no undo entries).
-  useEffect(() => {
-    if (isStatic) return;
-    const el = ref.current;
-    if (!el) return;
-    const fit = () => {
-      const nh = Math.ceil(el.offsetHeight);
-      if (Math.abs(nh - shape.props.h) > 1) {
-        updateShape(shape.id, { props: { h: nh } }, { history: false });
-        if (!editing && !useCanvasStore.getState().dragging) separateRegion(shape.id);
-      }
-    };
-    fit();
-    const ro = new ResizeObserver(fit);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [shape.id, shape.props.h, isStatic, editing]);
-
   useSeparateAfterEditing(shape.id, editing, isStatic);
 
   // Initialise the editable content once per editing session (not on every keystroke).
@@ -41,17 +22,16 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
     const el = ref.current;
     if (!el || !editing) return;
     el.innerHTML = html;
+    const pending = useCanvasStore.getState().pendingTextCaret;
+    const converted = pending?.id === shape.id;
     // Focus now (so no keystroke is lost) and again after the pointer event's
     // default focus handling has run.
     el.focus();
+    placeCaret(el, converted ? pending.offset : Number.POSITIVE_INFINITY);
+    if (converted) useCanvasStore.setState({ pendingTextCaret: null });
     const raf = requestAnimationFrame(() => {
       el.focus();
-      const range = document.createRange();
-      range.selectNodeContents(el);
-      range.collapse(false);
-      const sel = window.getSelection();
-      sel?.removeAllRanges();
-      sel?.addRange(range);
+      if (!converted) placeCaret(el, Number.POSITIVE_INFINITY);
     });
     return () => cancelAnimationFrame(raf);
     // Only on entering edit mode; later html changes come from the user typing.
@@ -60,6 +40,7 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
 
   const style: React.CSSProperties = {
     width: w,
+    height: shape.props.h,
     fontFamily: fontStack(fontFamily),
     fontSize,
     color,
@@ -68,6 +49,7 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
     fontStyle: textStyle && TEXT_STYLES[textStyle].italic ? 'italic' : undefined,
     lineHeight: 1.45,
     minHeight: fontSize * 1.45,
+    overflow: editing ? 'auto' : 'hidden',
     outline: 'none',
     whiteSpace: 'pre-wrap',
     overflowWrap: 'anywhere',
@@ -82,7 +64,10 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
         contentEditable
         suppressContentEditableWarning
         style={style}
-        onInput={(e) => updateShape(shape.id, { props: { html: sanitizeHtml(e.currentTarget.innerHTML) } }, { history: false })}
+        onInput={(e) => {
+          const nextHeight = Math.max(shape.props.h, Math.ceil(e.currentTarget.scrollHeight));
+          updateShape(shape.id, { props: { html: sanitizeHtml(e.currentTarget.innerHTML), h: nextHeight } }, { history: false });
+        }}
         onPaste={(e) => {
           // Insert sanitised content ourselves so foreign markup never enters the live DOM.
           const html = e.clipboardData.getData('text/html');
@@ -121,6 +106,33 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
       dangerouslySetInnerHTML={{ __html: annexHtml || html || '&nbsp;' }}
     />
   );
+}
+
+/** Put the caret at a plain-text offset without assuming a particular HTML shape. */
+function placeCaret(root: HTMLElement, offset: number): void {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  let remaining = offset;
+  let node = walker.nextNode();
+  while (node) {
+    const length = node.textContent?.length ?? 0;
+    if (remaining <= length) {
+      const range = document.createRange();
+      range.setStart(node, Math.max(0, remaining));
+      range.collapse(true);
+      const selection = window.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+      return;
+    }
+    remaining -= length;
+    node = walker.nextNode();
+  }
+  const range = document.createRange();
+  range.selectNodeContents(root);
+  range.collapse(false);
+  const selection = window.getSelection();
+  selection?.removeAllRanges();
+  selection?.addRange(range);
 }
 
 /** Rendered content of an annex link or annex heading (number, title, page); null for other text. */
