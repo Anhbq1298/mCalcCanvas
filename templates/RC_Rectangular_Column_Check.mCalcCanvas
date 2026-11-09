@@ -1220,71 +1220,26 @@
       "id": "s_rect_23",
       "type": "text",
       "x": 80,
-      "y": 2092,
+      "y": 2081,
       "props": {
-        "w": 310,
+        "w": 630,
         "h": 24,
-        "html": "Half-distance between corner bar centres along x",
+        "html": "",
         "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
+        "fontSize": 14,
+        "color": "#2563eb",
+        "align": "left",
+        "annex": {
+          "kind": "link",
+          "target": "ax_bars"
+        }
       }
     },
     {
       "id": "s_rect_24",
-      "type": "math",
-      "x": 400,
-      "y": 2081,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "a_{x}\\coloneq\\frac{b}{2}-c_{nom}-\\phi_{w}-\\frac{\\phi}{2}",
-        "displayMode": "formulaResult",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_25",
       "type": "text",
       "x": 80,
-      "y": 2142,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Half-distance between corner bar centres along y",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_26",
-      "type": "math",
-      "x": 400,
-      "y": 2131,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "a_{y}\\coloneq\\frac{h}{2}-c_{nom}-\\phi_{w}-\\frac{\\phi}{2}",
-        "displayMode": "formulaResult",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_27",
-      "type": "text",
-      "x": 80,
-      "y": 2430,
+      "y": 2127,
       "props": {
         "w": 310,
         "h": 24,
@@ -1296,15 +1251,15 @@
       }
     },
     {
-      "id": "s_rect_28",
+      "id": "s_rect_25",
       "type": "math",
       "x": 400,
-      "y": 2422,
+      "y": 2121,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "s_{x}\\coloneq\\frac{2a_{x}}{n_{b}-1}",
-        "displayMode": "formulaResult",
+        "latex": "s_{x}=",
+        "displayMode": "auto",
         "displayUnit": "mm",
         "precision": 0,
         "autoSize": true,
@@ -1313,10 +1268,10 @@
       }
     },
     {
-      "id": "s_rect_29",
+      "id": "s_rect_26",
       "type": "text",
       "x": 80,
-      "y": 2481,
+      "y": 2167,
       "props": {
         "w": 310,
         "h": 24,
@@ -1328,15 +1283,15 @@
       }
     },
     {
-      "id": "s_rect_2a",
+      "id": "s_rect_27",
       "type": "math",
       "x": 400,
-      "y": 2472,
+      "y": 2161,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "s_{y}\\coloneq\\frac{2a_{y}}{n_{h}-1}",
-        "displayMode": "formulaResult",
+        "latex": "s_{y}=",
+        "displayMode": "auto",
         "displayUnit": "mm",
         "precision": 0,
         "autoSize": true,
@@ -1345,10 +1300,10 @@
       }
     },
     {
-      "id": "s_rect_2b",
+      "id": "s_rect_28",
       "type": "text",
       "x": 80,
-      "y": 2524,
+      "y": 2424,
       "props": {
         "w": 630,
         "h": 24,
@@ -1360,10 +1315,10 @@
       }
     },
     {
-      "id": "s_rect_2c",
+      "id": "s_rect_29",
       "type": "math",
       "x": 96,
-      "y": 2552,
+      "y": 2452,
       "props": {
         "w": 60,
         "h": 32,
@@ -1377,10 +1332,10 @@
       }
     },
     {
-      "id": "s_rect_2d",
+      "id": "s_rect_2a",
       "type": "text",
       "x": 80,
-      "y": 2594,
+      "y": 2494,
       "props": {
         "w": 630,
         "h": 24,
@@ -1392,10 +1347,10 @@
       }
     },
     {
-      "id": "s_rect_2e",
+      "id": "s_rect_2b",
       "type": "math",
       "x": 96,
-      "y": 2622,
+      "y": 2522,
       "props": {
         "w": 60,
         "h": 32,
@@ -1409,10 +1364,10 @@
       }
     },
     {
-      "id": "s_rect_2f",
+      "id": "s_rect_2c",
       "type": "text",
       "x": 80,
-      "y": 2668,
+      "y": 2568,
       "props": {
         "w": 310,
         "h": 24,
@@ -1424,14 +1379,14 @@
       }
     },
     {
-      "id": "s_rect_2g",
+      "id": "s_rect_2d",
       "type": "math",
       "x": 400,
-      "y": 2662,
+      "y": 2562,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "n_{bar}\\coloneq2n_{b}+2\\left(n_{h}-2\\right)",
+        "latex": "n_{bar}=",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": -1,
@@ -1441,10 +1396,10 @@
       }
     },
     {
-      "id": "s_rect_2h",
+      "id": "s_rect_2e",
       "type": "text",
       "x": 80,
-      "y": 2702,
+      "y": 2602,
       "props": {
         "w": 630,
         "h": 24,
@@ -1457,10 +1412,10 @@
       }
     },
     {
-      "id": "s_rect_2i",
+      "id": "s_rect_2f",
       "type": "text",
       "x": 80,
-      "y": 2734,
+      "y": 2634,
       "props": {
         "w": 630,
         "h": 24,
@@ -1472,10 +1427,10 @@
       }
     },
     {
-      "id": "s_rect_2j",
+      "id": "s_rect_2g",
       "type": "math",
       "x": 96,
-      "y": 2762,
+      "y": 2662,
       "props": {
         "w": 60,
         "h": 32,
@@ -1489,10 +1444,10 @@
       }
     },
     {
-      "id": "s_rect_2k",
+      "id": "s_rect_2h",
       "type": "text",
       "x": 80,
-      "y": 2824,
+      "y": 2724,
       "props": {
         "w": 630,
         "h": 24,
@@ -1504,10 +1459,10 @@
       }
     },
     {
-      "id": "s_rect_2l",
+      "id": "s_rect_2i",
       "type": "math",
       "x": 96,
-      "y": 2852,
+      "y": 2752,
       "props": {
         "w": 60,
         "h": 32,
@@ -1521,70 +1476,10 @@
       }
     },
     {
-      "id": "s_rect_2m",
+      "id": "s_rect_2j",
       "type": "text",
       "x": 80,
-      "y": 2892,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "No inner ties when every bar is within 150 mm of a corner bar. Otherwise corners and every",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_2n",
-      "type": "text",
-      "x": 80,
-      "y": 2922,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "other bar are restrained, symmetric about the face centre.",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_2o",
-      "type": "text",
-      "x": 80,
-      "y": 2952,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Each mirrored pair is held by one inner closed tie; a single middle bar gets a cross-tie.",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_2p",
-      "type": "text",
-      "x": 80,
-      "y": 2982,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Every unrestrained bar is next to a restrained one, so a bar spacing ≤ 150 mm suffices.",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_2q",
-      "type": "text",
-      "x": 80,
-      "y": 3018,
+      "y": 2798,
       "props": {
         "w": 310,
         "h": 24,
@@ -1596,10 +1491,10 @@
       }
     },
     {
-      "id": "s_rect_2r",
+      "id": "s_rect_2k",
       "type": "math",
       "x": 400,
-      "y": 3012,
+      "y": 2792,
       "props": {
         "w": 60,
         "h": 32,
@@ -1613,10 +1508,10 @@
       }
     },
     {
-      "id": "s_rect_2s",
+      "id": "s_rect_2l",
       "type": "text",
       "x": 80,
-      "y": 3058,
+      "y": 2838,
       "props": {
         "w": 310,
         "h": 24,
@@ -1628,10 +1523,10 @@
       }
     },
     {
-      "id": "s_rect_2t",
+      "id": "s_rect_2m",
       "type": "math",
       "x": 400,
-      "y": 3052,
+      "y": 2832,
       "props": {
         "w": 60,
         "h": 32,
@@ -1645,202 +1540,29 @@
       }
     },
     {
-      "id": "s_rect_2u",
+      "id": "s_rect_2n",
       "type": "text",
       "x": 80,
-      "y": 3102,
+      "y": 2872,
       "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Farthest bar from a corner on a b face",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_2v",
-      "type": "math",
-      "x": 400,
-      "y": 3092,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "l_{b}\\coloneq\\mathrm{floor}\\left(\\frac{n_{b}-1}{2}\\right)s_{x}",
-        "displayMode": "formulaResult",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_2w",
-      "type": "text",
-      "x": 80,
-      "y": 3152,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Farthest bar from a corner on an h face",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_2x",
-      "type": "math",
-      "x": 400,
-      "y": 3142,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "l_{h}\\coloneq\\mathrm{floor}\\left(\\frac{n_{h}-1}{2}\\right)s_{y}",
-        "displayMode": "formulaResult",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_2y",
-      "type": "text",
-      "x": 80,
-      "y": 3220,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Inner ties across the depth (pairs 2i and nb − 1 − 2i on the b faces)",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_2z",
-      "type": "math",
-      "x": 400,
-      "y": 3192,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "q_{b}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ l_{b}>150\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{floor}\\left(\\frac{n_{b}-1}{4}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_30",
-      "type": "text",
-      "x": 80,
-      "y": 3621,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Inner ties across the width (pairs on the h faces)",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_31",
-      "type": "math",
-      "x": 400,
-      "y": 3593,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "q_{h}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ l_{h}>150\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{floor}\\left(\\frac{n_{h}-1}{4}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_32",
-      "type": "text",
-      "x": 80,
-      "y": 3726,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Last pair is a single middle bar (cross-tie, one leg): 1, else 0",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_33",
-      "type": "math",
-      "x": 400,
-      "y": 3703,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "m_{b}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ q_{b}\\ge1\\land4q_{b}=n_{b}-1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_34",
-      "type": "text",
-      "x": 80,
-      "y": 3834,
-      "props": {
-        "w": 310,
+        "w": 630,
         "h": 24,
         "html": "",
         "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
+        "fontSize": 14,
+        "color": "#2563eb",
+        "align": "left",
+        "annex": {
+          "kind": "link",
+          "target": "ax_tielegs"
+        }
       }
     },
     {
-      "id": "s_rect_35",
-      "type": "math",
-      "x": 400,
-      "y": 3803,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "m_{h}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ q_{h}\\ge1\\land4q_{h}=n_{h}-1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_36",
+      "id": "s_rect_2o",
       "type": "text",
       "x": 80,
-      "y": 3909,
+      "y": 2918,
       "props": {
         "w": 310,
         "h": 24,
@@ -1852,14 +1574,14 @@
       }
     },
     {
-      "id": "s_rect_37",
+      "id": "s_rect_2p",
       "type": "math",
       "x": 400,
-      "y": 3903,
+      "y": 2912,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "n_{w.y}\\coloneq2+2q_{b}-m_{b}",
+        "latex": "n_{w.y}=",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": -1,
@@ -1869,10 +1591,10 @@
       }
     },
     {
-      "id": "s_rect_38",
+      "id": "s_rect_2q",
       "type": "text",
       "x": 80,
-      "y": 3949,
+      "y": 2958,
       "props": {
         "w": 310,
         "h": 24,
@@ -1884,14 +1606,14 @@
       }
     },
     {
-      "id": "s_rect_39",
+      "id": "s_rect_2r",
       "type": "math",
       "x": 400,
-      "y": 3943,
+      "y": 2952,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "n_{w.x}\\coloneq2+2q_{h}-m_{h}",
+        "latex": "n_{w.x}=",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": -1,
@@ -1901,14 +1623,14 @@
       }
     },
     {
-      "id": "s_rect_3a",
+      "id": "s_rect_2s",
       "type": "text",
       "x": 80,
-      "y": 3983,
+      "y": 2992,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "4.3 Bar coordinates",
+        "html": "4.3 Concrete fibres and section",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#334155",
@@ -1917,367 +1639,29 @@
       }
     },
     {
-      "id": "s_rect_3b",
+      "id": "s_rect_2t",
       "type": "text",
       "x": 80,
-      "y": 4013,
+      "y": 3022,
       "props": {
         "w": 630,
-        "h": 24,
-        "html": "Bars are numbered: top row (left to right), bottom row, left side, right side (corners once).",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_3c",
-      "type": "text",
-      "x": 80,
-      "y": 4049,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Bar index",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_3d",
-      "type": "math",
-      "x": 400,
-      "y": 4043,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "k_{s}\\coloneq\\mathrm{seq}\\left(0,n_{bar}-1\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_3e",
-      "type": "text",
-      "x": 80,
-      "y": 4152,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "x of each bar",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_3f",
-      "type": "math",
-      "x": 400,
-      "y": 4083,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "x_{s}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ k_{s}<n_{b}\\\\\\quad\\left\\Vert\\displaystyle -a_{x}+k_{s}s_{x}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ k_{s}<2n_{b}\\\\\\quad\\left\\Vert\\displaystyle -a_{x}+\\left(k_{s}-n_{b}\\right)s_{x}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ k_{s}<2n_{b}+n_{h}-2\\\\\\quad\\left\\Vert\\displaystyle -a_{x}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle a_{x}\\right.\\end{array}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_3g",
-      "type": "text",
-      "x": 80,
-      "y": 4322,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "y of each bar",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_3h",
-      "type": "math",
-      "x": 400,
-      "y": 4253,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "y_{s}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ k_{s}<n_{b}\\\\\\quad\\left\\Vert\\displaystyle a_{y}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ k_{s}<2n_{b}\\\\\\quad\\left\\Vert\\displaystyle -a_{y}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ k_{s}<2n_{b}+n_{h}-2\\\\\\quad\\left\\Vert\\displaystyle -a_{y}+\\left(k_{s}-2n_{b}+1\\right)s_{y}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle -a_{y}+\\left(k_{s}-2n_{b}-n_{h}+3\\right)s_{y}\\right.\\end{array}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_3i",
-      "type": "text",
-      "x": 96,
-      "y": 4764,
-      "props": {
-        "w": 280,
-        "h": 24,
-        "html": "Bar table",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#1e3a5f",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_3j",
-      "type": "math",
-      "x": 96,
-      "y": 4794,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "k_{s}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "vectorLayout": "column",
-        "vectorExpanded": true
-      }
-    },
-    {
-      "id": "s_rect_3k",
-      "type": "math",
-      "x": 168,
-      "y": 4794,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "x_{s}=",
-        "displayMode": "auto",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "vectorLayout": "column",
-        "vectorExpanded": true
-      }
-    },
-    {
-      "id": "s_rect_3l",
-      "type": "math",
-      "x": 283,
-      "y": 4794,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "y_{s}=",
-        "displayMode": "auto",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "vectorLayout": "column",
-        "vectorExpanded": true
-      }
-    },
-    {
-      "id": "s_rect_3m",
-      "type": "text",
-      "x": 80,
-      "y": 5064,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "4.4 Concrete fibres",
-        "fontFamily": "Inter",
-        "fontSize": 14,
-        "color": "#334155",
-        "align": "left",
-        "heading": 3
-      }
-    },
-    {
-      "id": "s_rect_3n",
-      "type": "text",
-      "x": 80,
-      "y": 5094,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "The concrete is cut into an nf × nf grid of fibres; each carries the stress at its centre strain.",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_3o",
-      "type": "text",
-      "x": 80,
-      "y": 5130,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Fibre index (row by row)",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_3p",
-      "type": "math",
-      "x": 400,
-      "y": 5124,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "f\\coloneq\\mathrm{seq}\\left(0,n_{f}^2-1\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_3q",
-      "type": "text",
-      "x": 80,
-      "y": 5179,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Fibre centres",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_3r",
-      "type": "math",
-      "x": 400,
-      "y": 5164,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "x_{f}\\coloneq\\left(f-n_{f}\\mathrm{floor}\\left(\\frac{f}{n_{f}}\\right)+0.5\\right)\\frac{b}{n_{f}}-\\frac{b}{2}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_3s",
-      "type": "text",
-      "x": 80,
-      "y": 5249,
-      "props": {
-        "w": 310,
         "h": 24,
         "html": "",
         "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
+        "fontSize": 14,
+        "color": "#2563eb",
+        "align": "left",
+        "annex": {
+          "kind": "link",
+          "target": "ax_fibres"
+        }
       }
     },
     {
-      "id": "s_rect_3t",
-      "type": "math",
-      "x": 400,
-      "y": 5234,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "y_{f}\\coloneq\\left(\\mathrm{floor}\\left(\\frac{f}{n_{f}}\\right)+0.5\\right)\\frac{h}{n_{f}}-\\frac{h}{2}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_3u",
+      "id": "s_rect_2u",
       "type": "text",
       "x": 80,
-      "y": 5314,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Area of one fibre",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_3v",
-      "type": "math",
-      "x": 400,
-      "y": 5304,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "A_{f}\\coloneq\\frac{bh}{n_{f}^2}",
-        "displayMode": "formulaResult",
-        "displayUnit": "mm^2",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_3w",
-      "type": "text",
-      "x": 80,
-      "y": 5364,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "The drawing data of the ties (arcs, hooks, legs) is in the annex.",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_3x",
-      "type": "text",
-      "x": 80,
-      "y": 5394,
+      "y": 3062,
       "props": {
         "w": 630,
         "h": 24,
@@ -2293,10 +1677,10 @@
       }
     },
     {
-      "id": "s_rect_3y",
+      "id": "s_rect_2v",
       "type": "graph",
       "x": 247,
-      "y": 5927,
+      "y": 3585,
       "props": {
         "w": 300,
         "h": 300,
@@ -2359,14 +1743,14 @@
       }
     },
     {
-      "id": "s_rect_3z",
+      "id": "s_rect_2w",
       "type": "text",
       "x": 80,
-      "y": 6255,
+      "y": 3913,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "4.5 Steel areas",
+        "html": "4.4 Steel areas",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#334155",
@@ -2375,10 +1759,10 @@
       }
     },
     {
-      "id": "s_rect_40",
+      "id": "s_rect_2x",
       "type": "text",
       "x": 80,
-      "y": 6291,
+      "y": 3949,
       "props": {
         "w": 310,
         "h": 24,
@@ -2390,10 +1774,10 @@
       }
     },
     {
-      "id": "s_rect_41",
+      "id": "s_rect_2y",
       "type": "math",
       "x": 400,
-      "y": 6285,
+      "y": 3943,
       "props": {
         "w": 60,
         "h": 32,
@@ -2407,10 +1791,10 @@
       }
     },
     {
-      "id": "s_rect_42",
+      "id": "s_rect_2z",
       "type": "text",
       "x": 80,
-      "y": 6331,
+      "y": 3989,
       "props": {
         "w": 310,
         "h": 24,
@@ -2422,10 +1806,10 @@
       }
     },
     {
-      "id": "s_rect_43",
+      "id": "s_rect_30",
       "type": "math",
       "x": 400,
-      "y": 6325,
+      "y": 3983,
       "props": {
         "w": 60,
         "h": 32,
@@ -2439,10 +1823,10 @@
       }
     },
     {
-      "id": "s_rect_44",
+      "id": "s_rect_31",
       "type": "text",
       "x": 80,
-      "y": 6371,
+      "y": 4029,
       "props": {
         "w": 310,
         "h": 24,
@@ -2454,10 +1838,10 @@
       }
     },
     {
-      "id": "s_rect_45",
+      "id": "s_rect_32",
       "type": "math",
       "x": 400,
-      "y": 6365,
+      "y": 4023,
       "props": {
         "w": 60,
         "h": 32,
@@ -2471,10 +1855,10 @@
       }
     },
     {
-      "id": "s_rect_46",
+      "id": "s_rect_33",
       "type": "text",
       "x": 80,
-      "y": 6407,
+      "y": 4065,
       "props": {
         "w": 630,
         "h": 24,
@@ -2486,10 +1870,10 @@
       }
     },
     {
-      "id": "s_rect_47",
+      "id": "s_rect_34",
       "type": "math",
       "x": 96,
-      "y": 6435,
+      "y": 4093,
       "props": {
         "w": 60,
         "h": 32,
@@ -2503,10 +1887,10 @@
       }
     },
     {
-      "id": "s_rect_48",
+      "id": "s_rect_35",
       "type": "text",
       "x": 80,
-      "y": 6497,
+      "y": 4155,
       "props": {
         "w": 630,
         "h": 24,
@@ -2518,10 +1902,10 @@
       }
     },
     {
-      "id": "s_rect_49",
+      "id": "s_rect_36",
       "type": "math",
       "x": 96,
-      "y": 6525,
+      "y": 4183,
       "props": {
         "w": 60,
         "h": 32,
@@ -2535,14 +1919,14 @@
       }
     },
     {
-      "id": "s_rect_4a",
+      "id": "s_rect_37",
       "type": "text",
       "x": 80,
-      "y": 6575,
+      "y": 4233,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "5. STRAIN PLANE AND STRESS LAWS",
+        "html": "5. FLEXURAL CHECK",
         "fontFamily": "Inter",
         "fontSize": 16,
         "color": "#0f172a",
@@ -2551,186 +1935,14 @@
       }
     },
     {
-      "id": "s_rect_4b",
+      "id": "s_rect_38",
       "type": "text",
       "x": 80,
-      "y": 6605,
+      "y": 4263,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "c = neutral-axis depth below the compression face; p = fibre coordinate from the centroid,",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4c",
-      "type": "text",
-      "x": 80,
-      "y": 6635,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "positive towards the compression face; H = section depth in that direction; dt = depth of the",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4d",
-      "type": "text",
-      "x": 80,
-      "y": 6665,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "extreme bar. The strain plane pivots about A (bar at −εud), B (face at εcu2) or C (εc2 at",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4e",
-      "type": "text",
-      "x": 80,
-      "y": 6695,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "(1 − εc2/εcu2)·H), whichever governs for the depth c (EC2 Fig. 6.1). Compression positive.",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4f",
-      "type": "text",
-      "x": 80,
-      "y": 7206,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Strain at fibre p",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4g",
-      "type": "math",
-      "x": 400,
-      "y": 7106,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\varepsilon\\left(c,p,H,d_{t}\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ c<\\frac{\\varepsilon_{cu2}d_{t}}{\\varepsilon_{cu2}+\\varepsilon_{ud}}\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{ud}\\frac{c-\\frac{H}{2}+p}{d_{t}-c}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ c\\le H\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{cu2}\\frac{c-\\frac{H}{2}+p}{c}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{c2}\\frac{c-\\frac{H}{2}+p}{c-\\left(1-\\frac{\\varepsilon_{c2}}{\\varepsilon_{cu2}}\\right)H}\\right.\\end{array}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_4h",
-      "type": "text",
-      "x": 80,
-      "y": 7403,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Concrete stress, parabola-rectangle (EC2 3.17), no tension",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4i",
-      "type": "math",
-      "x": 400,
-      "y": 7346,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\sigma_{c}\\left(\\varepsilon\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\varepsilon\\le0\\\\\\quad\\left\\Vert\\displaystyle 0\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\varepsilon<\\varepsilon_{c2}\\\\\\quad\\left\\Vert\\displaystyle f_{cd}\\left(1-\\left(1-\\frac{\\varepsilon}{\\varepsilon_{c2}}\\right)^2\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{cd}\\right.\\end{array}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_4j",
-      "type": "text",
-      "x": 80,
-      "y": 7566,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Steel stress, elastic-plastic within ±fyd",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4k",
-      "type": "math",
-      "x": 400,
-      "y": 7516,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\sigma_{s}\\left(\\varepsilon\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ E_{s}\\varepsilon<-f_{yd}\\\\\\quad\\left\\Vert\\displaystyle -f_{yd}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ E_{s}\\varepsilon>f_{yd}\\\\\\quad\\left\\Vert\\displaystyle f_{yd}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle E_{s}\\varepsilon\\right.\\end{array}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_4l",
-      "type": "text",
-      "x": 80,
-      "y": 7666,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "7. FLEXURAL CHECK",
-        "fontFamily": "Inter",
-        "fontSize": 16,
-        "color": "#0f172a",
-        "align": "left",
-        "heading": 2
-      }
-    },
-    {
-      "id": "s_rect_4m",
-      "type": "text",
-      "x": 80,
-      "y": 7696,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "7.1 Biaxial resistance: P–Mθ at the moment direction θ",
+        "html": "5.1 Biaxial resistance: P–Mθ at the moment direction θ",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#334155",
@@ -2739,10 +1951,10 @@
       }
     },
     {
-      "id": "s_rect_4n",
+      "id": "s_rect_39",
       "type": "text",
       "x": 80,
-      "y": 7726,
+      "y": 4293,
       "props": {
         "w": 630,
         "h": 24,
@@ -2754,10 +1966,10 @@
       }
     },
     {
-      "id": "s_rect_4o",
+      "id": "s_rect_3a",
       "type": "text",
       "x": 80,
-      "y": 7756,
+      "y": 4323,
       "props": {
         "w": 630,
         "h": 24,
@@ -2769,10 +1981,29 @@
       }
     },
     {
-      "id": "s_rect_4p",
+      "id": "s_rect_3b",
       "type": "text",
       "x": 80,
-      "y": 7796,
+      "y": 4353,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#2563eb",
+        "align": "left",
+        "annex": {
+          "kind": "link",
+          "target": "ax_resultants"
+        }
+      }
+    },
+    {
+      "id": "s_rect_3c",
+      "type": "text",
+      "x": 80,
+      "y": 4403,
       "props": {
         "w": 310,
         "h": 24,
@@ -2784,10 +2015,10 @@
       }
     },
     {
-      "id": "s_rect_4q",
+      "id": "s_rect_3d",
       "type": "math",
       "x": 400,
-      "y": 7786,
+      "y": 4393,
       "props": {
         "w": 60,
         "h": 32,
@@ -2801,10 +2032,10 @@
       }
     },
     {
-      "id": "s_rect_4r",
+      "id": "s_rect_3e",
       "type": "text",
       "x": 80,
-      "y": 7836,
+      "y": 4443,
       "props": {
         "w": 310,
         "h": 24,
@@ -2816,10 +2047,10 @@
       }
     },
     {
-      "id": "s_rect_4s",
+      "id": "s_rect_3f",
       "type": "math",
       "x": 400,
-      "y": 7836,
+      "y": 4443,
       "props": {
         "w": 60,
         "h": 32,
@@ -2833,281 +2064,10 @@
       }
     },
     {
-      "id": "s_rect_4t",
+      "id": "s_rect_3g",
       "type": "text",
       "x": 80,
-      "y": 7876,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "For a neutral-axis direction β (normal of the axis, towards the compression face):",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4u",
-      "type": "text",
-      "x": 80,
-      "y": 7912,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Section depth along β",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4v",
-      "type": "math",
-      "x": 400,
-      "y": 7906,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "H_{\\beta}\\left(\\beta\\right)\\coloneq b\\left|\\cos\\left(\\beta\\right)\\right|+h\\left|\\sin\\left(\\beta\\right)\\right|",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_4w",
-      "type": "text",
-      "x": 80,
-      "y": 7948,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Depth of the extreme bar",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4x",
-      "type": "math",
-      "x": 96,
-      "y": 7976,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "d_{\\beta}\\left(\\beta\\right)\\coloneq\\frac{H_{\\beta}\\left(\\beta\\right)}{2}-\\min\\left(x_{s}\\cos\\left(\\beta\\right)+y_{s}\\sin\\left(\\beta\\right)\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_4y",
-      "type": "text",
-      "x": 80,
-      "y": 8279,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Stress in every concrete fibre at depth c",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_4z",
-      "type": "math",
-      "x": 96,
-      "y": 8307,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\sigma_{f}\\left(c,\\beta\\right)\\coloneq\\sigma_{c}\\left(\\varepsilon\\left(c,x_{f}\\cos\\left(\\beta\\right)+y_{f}\\sin\\left(\\beta\\right),H_{\\beta}\\left(\\beta\\right),d_{\\beta}\\left(\\beta\\right)\\right)\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_50",
-      "type": "text",
-      "x": 80,
-      "y": 8349,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Strain in every bar",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_51",
-      "type": "math",
-      "x": 96,
-      "y": 8377,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\varepsilon_{b}\\left(c,\\beta\\right)\\coloneq\\varepsilon\\left(c,x_{s}\\cos\\left(\\beta\\right)+y_{s}\\sin\\left(\\beta\\right),H_{\\beta}\\left(\\beta\\right),d_{\\beta}\\left(\\beta\\right)\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_52",
-      "type": "text",
-      "x": 80,
-      "y": 8423,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Net bar stress (concrete it displaces subtracted)",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_53",
-      "type": "math",
-      "x": 400,
-      "y": 8417,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\sigma_{b}\\left(c,\\beta\\right)\\coloneq\\sigma_{s}\\left(\\varepsilon_{b}\\left(c,\\beta\\right)\\right)-\\sigma_{c}\\left(\\varepsilon_{b}\\left(c,\\beta\\right)\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_54",
-      "type": "text",
-      "x": 80,
-      "y": 8459,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Axial resistance",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_55",
-      "type": "math",
-      "x": 96,
-      "y": 8487,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "N_{R}\\left(c,\\beta\\right)\\coloneq A_{f}\\mathrm{sum}\\left(\\sigma_{f}\\left(c,\\beta\\right)\\right)+A_{b}\\mathrm{sum}\\left(\\sigma_{b}\\left(c,\\beta\\right)\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_56",
-      "type": "text",
-      "x": 80,
-      "y": 8529,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Moment about x (lever arm y)",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_57",
-      "type": "math",
-      "x": 96,
-      "y": 8557,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "M_{Rx}\\left(c,\\beta\\right)\\coloneq A_{f}\\mathrm{sum}\\left(\\sigma_{f}\\left(c,\\beta\\right)y_{f}\\right)+A_{b}\\mathrm{sum}\\left(\\sigma_{b}\\left(c,\\beta\\right)y_{s}\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_58",
-      "type": "text",
-      "x": 80,
-      "y": 8599,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Moment about y (lever arm x)",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_59",
-      "type": "math",
-      "x": 96,
-      "y": 8627,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "M_{Ry}\\left(c,\\beta\\right)\\coloneq A_{f}\\mathrm{sum}\\left(\\sigma_{f}\\left(c,\\beta\\right)x_{f}\\right)+A_{b}\\mathrm{sum}\\left(\\sigma_{b}\\left(c,\\beta\\right)x_{s}\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_5a",
-      "type": "text",
-      "x": 80,
-      "y": 8667,
+      "y": 4483,
       "props": {
         "w": 630,
         "h": 24,
@@ -3123,29 +2083,14 @@
       }
     },
     {
-      "id": "s_rect_5b",
+      "id": "s_rect_3h",
       "type": "text",
       "x": 80,
-      "y": 8707,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Utilisation (as MBColumn): ray from the origin through (MEd, NEd) to the P–Mθ curve.",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_5c",
-      "type": "text",
-      "x": 80,
-      "y": 8738,
+      "y": 4765,
       "props": {
         "w": 310,
         "h": 24,
-        "html": "Curve and design point scaled by the curve maxima (the ratio does not depend on the scale)",
+        "html": "Curve scaled by its maxima (the ratio does not depend on the scale)",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -3153,10 +2098,10 @@
       }
     },
     {
-      "id": "s_rect_5d",
+      "id": "s_rect_3i",
       "type": "math",
       "x": 400,
-      "y": 8737,
+      "y": 4764,
       "props": {
         "w": 60,
         "h": 32,
@@ -3170,10 +2115,10 @@
       }
     },
     {
-      "id": "s_rect_5e",
+      "id": "s_rect_3j",
       "type": "text",
       "x": 80,
-      "y": 8796,
+      "y": 4823,
       "props": {
         "w": 310,
         "h": 24,
@@ -3185,10 +2130,10 @@
       }
     },
     {
-      "id": "s_rect_5f",
+      "id": "s_rect_3k",
       "type": "math",
       "x": 400,
-      "y": 8787,
+      "y": 4814,
       "props": {
         "w": 60,
         "h": 32,
@@ -3202,14 +2147,29 @@
       }
     },
     {
-      "id": "s_rect_5g",
+      "id": "s_rect_3l",
       "type": "text",
       "x": 80,
-      "y": 8846,
+      "y": 4864,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Utilisation (as MBColumn): ray from the origin through (MEd, NEd) to the P–Mθ curve.",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_3m",
+      "type": "text",
+      "x": 80,
+      "y": 4903,
       "props": {
         "w": 310,
         "h": 24,
-        "html": "",
+        "html": "Design point scaled the same way",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -3217,10 +2177,10 @@
       }
     },
     {
-      "id": "s_rect_5h",
+      "id": "s_rect_3n",
       "type": "math",
       "x": 400,
-      "y": 8837,
+      "y": 4894,
       "props": {
         "w": 60,
         "h": 32,
@@ -3234,10 +2194,10 @@
       }
     },
     {
-      "id": "s_rect_5i",
+      "id": "s_rect_3o",
       "type": "text",
       "x": 80,
-      "y": 8896,
+      "y": 4953,
       "props": {
         "w": 310,
         "h": 24,
@@ -3249,10 +2209,10 @@
       }
     },
     {
-      "id": "s_rect_5j",
+      "id": "s_rect_3p",
       "type": "math",
       "x": 400,
-      "y": 8887,
+      "y": 4944,
       "props": {
         "w": 60,
         "h": 32,
@@ -3266,10 +2226,10 @@
       }
     },
     {
-      "id": "s_rect_5k",
+      "id": "s_rect_3q",
       "type": "text",
       "x": 80,
-      "y": 8939,
+      "y": 4996,
       "props": {
         "w": 630,
         "h": 24,
@@ -3281,10 +2241,10 @@
       }
     },
     {
-      "id": "s_rect_5l",
+      "id": "s_rect_3r",
       "type": "math",
       "x": 96,
-      "y": 8967,
+      "y": 5024,
       "props": {
         "w": 60,
         "h": 32,
@@ -3298,10 +2258,10 @@
       }
     },
     {
-      "id": "s_rect_5m",
+      "id": "s_rect_3s",
       "type": "text",
       "x": 80,
-      "y": 9048,
+      "y": 5105,
       "props": {
         "w": 310,
         "h": 24,
@@ -3313,10 +2273,10 @@
       }
     },
     {
-      "id": "s_rect_5n",
+      "id": "s_rect_3t",
       "type": "math",
       "x": 400,
-      "y": 9037,
+      "y": 5094,
       "props": {
         "w": 60,
         "h": 32,
@@ -3330,10 +2290,10 @@
       }
     },
     {
-      "id": "s_rect_5o",
+      "id": "s_rect_3u",
       "type": "text",
       "x": 80,
-      "y": 9103,
+      "y": 5160,
       "props": {
         "w": 310,
         "h": 24,
@@ -3345,10 +2305,10 @@
       }
     },
     {
-      "id": "s_rect_5p",
+      "id": "s_rect_3v",
       "type": "math",
       "x": 400,
-      "y": 9097,
+      "y": 5154,
       "props": {
         "w": 60,
         "h": 32,
@@ -3362,14 +2322,14 @@
       }
     },
     {
-      "id": "s_rect_5q",
+      "id": "s_rect_3w",
       "type": "text",
       "x": 80,
-      "y": 9137,
+      "y": 5194,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "7.2 Hand check at the capacity point on the ray",
+        "html": "5.2 Hand check at the capacity point on the ray",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#334155",
@@ -3378,10 +2338,10 @@
       }
     },
     {
-      "id": "s_rect_5r",
+      "id": "s_rect_3x",
       "type": "text",
       "x": 80,
-      "y": 9167,
+      "y": 5224,
       "props": {
         "w": 630,
         "h": 24,
@@ -3393,10 +2353,10 @@
       }
     },
     {
-      "id": "s_rect_5s",
+      "id": "s_rect_3y",
       "type": "text",
       "x": 80,
-      "y": 9450,
+      "y": 5256,
       "props": {
         "w": 630,
         "h": 24,
@@ -3408,10 +2368,10 @@
       }
     },
     {
-      "id": "s_rect_5t",
+      "id": "s_rect_3z",
       "type": "math",
       "x": 96,
-      "y": 9478,
+      "y": 5284,
       "props": {
         "w": 60,
         "h": 32,
@@ -3425,10 +2385,10 @@
       }
     },
     {
-      "id": "s_rect_5u",
+      "id": "s_rect_40",
       "type": "text",
       "x": 80,
-      "y": 9554,
+      "y": 5360,
       "props": {
         "w": 310,
         "h": 24,
@@ -3440,10 +2400,10 @@
       }
     },
     {
-      "id": "s_rect_5v",
+      "id": "s_rect_41",
       "type": "math",
       "x": 400,
-      "y": 9548,
+      "y": 5354,
       "props": {
         "w": 60,
         "h": 32,
@@ -3457,10 +2417,10 @@
       }
     },
     {
-      "id": "s_rect_5w",
+      "id": "s_rect_42",
       "type": "text",
       "x": 80,
-      "y": 9613,
+      "y": 5400,
       "props": {
         "w": 310,
         "h": 24,
@@ -3472,10 +2432,10 @@
       }
     },
     {
-      "id": "s_rect_5x",
+      "id": "s_rect_43",
       "type": "math",
       "x": 400,
-      "y": 9588,
+      "y": 5394,
       "props": {
         "w": 60,
         "h": 32,
@@ -3489,10 +2449,10 @@
       }
     },
     {
-      "id": "s_rect_5y",
+      "id": "s_rect_44",
       "type": "text",
       "x": 80,
-      "y": 9680,
+      "y": 5436,
       "props": {
         "w": 630,
         "h": 24,
@@ -3504,10 +2464,10 @@
       }
     },
     {
-      "id": "s_rect_5z",
+      "id": "s_rect_45",
       "type": "math",
       "x": 96,
-      "y": 9708,
+      "y": 5464,
       "props": {
         "w": 60,
         "h": 32,
@@ -3521,10 +2481,10 @@
       }
     },
     {
-      "id": "s_rect_60",
+      "id": "s_rect_46",
       "type": "text",
       "x": 80,
-      "y": 9774,
+      "y": 5530,
       "props": {
         "w": 310,
         "h": 24,
@@ -3536,10 +2496,10 @@
       }
     },
     {
-      "id": "s_rect_61",
+      "id": "s_rect_47",
       "type": "math",
       "x": 400,
-      "y": 9768,
+      "y": 5524,
       "props": {
         "w": 60,
         "h": 32,
@@ -3553,10 +2513,10 @@
       }
     },
     {
-      "id": "s_rect_62",
+      "id": "s_rect_48",
       "type": "text",
       "x": 80,
-      "y": 9814,
+      "y": 5570,
       "props": {
         "w": 310,
         "h": 24,
@@ -3568,10 +2528,10 @@
       }
     },
     {
-      "id": "s_rect_63",
+      "id": "s_rect_49",
       "type": "math",
       "x": 400,
-      "y": 9808,
+      "y": 5564,
       "props": {
         "w": 60,
         "h": 32,
@@ -3585,10 +2545,10 @@
       }
     },
     {
-      "id": "s_rect_64",
+      "id": "s_rect_4a",
       "type": "text",
       "x": 80,
-      "y": 9854,
+      "y": 5610,
       "props": {
         "w": 310,
         "h": 24,
@@ -3600,10 +2560,10 @@
       }
     },
     {
-      "id": "s_rect_65",
+      "id": "s_rect_4b",
       "type": "math",
       "x": 400,
-      "y": 9848,
+      "y": 5604,
       "props": {
         "w": 60,
         "h": 32,
@@ -3617,10 +2577,10 @@
       }
     },
     {
-      "id": "s_rect_66",
+      "id": "s_rect_4c",
       "type": "text",
       "x": 80,
-      "y": 9896,
+      "y": 5652,
       "props": {
         "w": 310,
         "h": 24,
@@ -3632,10 +2592,10 @@
       }
     },
     {
-      "id": "s_rect_67",
+      "id": "s_rect_4d",
       "type": "math",
       "x": 400,
-      "y": 9888,
+      "y": 5644,
       "props": {
         "w": 60,
         "h": 32,
@@ -3649,10 +2609,10 @@
       }
     },
     {
-      "id": "s_rect_68",
+      "id": "s_rect_4e",
       "type": "text",
       "x": 80,
-      "y": 9940,
+      "y": 5937,
       "props": {
         "w": 630,
         "h": 24,
@@ -3664,10 +2624,10 @@
       }
     },
     {
-      "id": "s_rect_69",
+      "id": "s_rect_4f",
       "type": "math",
       "x": 96,
-      "y": 9968,
+      "y": 5965,
       "props": {
         "w": 60,
         "h": 32,
@@ -3681,10 +2641,10 @@
       }
     },
     {
-      "id": "s_rect_6a",
+      "id": "s_rect_4g",
       "type": "text",
       "x": 80,
-      "y": 10026,
+      "y": 6023,
       "props": {
         "w": 310,
         "h": 24,
@@ -3696,10 +2656,10 @@
       }
     },
     {
-      "id": "s_rect_6b",
+      "id": "s_rect_4h",
       "type": "math",
       "x": 400,
-      "y": 10018,
+      "y": 6015,
       "props": {
         "w": 60,
         "h": 32,
@@ -3713,14 +2673,14 @@
       }
     },
     {
-      "id": "s_rect_6c",
+      "id": "s_rect_4i",
       "type": "text",
       "x": 80,
-      "y": 10619,
+      "y": 6065,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "7.3 P–Mθ diagram",
+        "html": "5.3 P–Mθ diagram",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#334155",
@@ -3729,10 +2689,10 @@
       }
     },
     {
-      "id": "s_rect_6d",
+      "id": "s_rect_4j",
       "type": "graph",
       "x": 187,
-      "y": 10641,
+      "y": 6087,
       "props": {
         "w": 420,
         "h": 420,
@@ -3806,14 +2766,14 @@
       }
     },
     {
-      "id": "s_rect_6e",
+      "id": "s_rect_4k",
       "type": "text",
       "x": 80,
-      "y": 11099,
+      "y": 6545,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "8. SHEAR CHECK (EN 1992-1-1:2023 §8.2.3, LINKS)",
+        "html": "6. SHEAR CHECK (EN 1992-1-1:2023 §8.2.3, LINKS)",
         "fontFamily": "Inter",
         "fontSize": 16,
         "color": "#0f172a",
@@ -3822,10 +2782,10 @@
       }
     },
     {
-      "id": "s_rect_6f",
+      "id": "s_rect_4l",
       "type": "text",
       "x": 80,
-      "y": 11129,
+      "y": 6575,
       "props": {
         "w": 630,
         "h": 24,
@@ -3837,14 +2797,14 @@
       }
     },
     {
-      "id": "s_rect_6g",
+      "id": "s_rect_4m",
       "type": "text",
       "x": 80,
-      "y": 11159,
+      "y": 6605,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "σcd = τEd·(cotθ + tanθ) ≤ ν·fcd (8.44) with ν = 0.5 (8.2.3(6)). 1 ≤ cotθ ≤ cot θmin (8.41):",
+        "html": "σcd = τEd·(cotθ + tanθ) ≤ ν·fcd (8.44), ν = 0.5. cotθ: the largest value ≤ cot θmin (8.41)",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -3852,14 +2812,14 @@
       }
     },
     {
-      "id": "s_rect_6h",
+      "id": "s_rect_4n",
       "type": "text",
       "x": 80,
-      "y": 11189,
+      "y": 6635,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "2.5 without axial force; 3.0 if σcp ≥ 3 MPa and x &lt; 0.25d (linear between); 2.5 if x ≥ 0.25d;",
+        "html": "that keeps σcd ≤ ν·fcd; cotθ &lt; 1 (8.2.3(11)) never adds resistance and is not used.",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -3867,55 +2827,10 @@
       }
     },
     {
-      "id": "s_rect_6i",
+      "id": "s_rect_4o",
       "type": "text",
       "x": 80,
-      "y": 11219,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "2.5 − 0.1·|NEd|/VEd ≥ 1 in tension; × kA = 0.8 for class A links. cotθ &lt; 1 (8.2.3(11)) is not",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_6j",
-      "type": "text",
-      "x": 80,
-      "y": 11249,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "used: σcd is least at θ = 45° and τRd,sy falls with cotθ, so it never adds resistance.",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_6k",
-      "type": "text",
-      "x": 80,
-      "y": 11279,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Design cotθ: the largest value ≤ cot θmin that keeps σcd ≤ ν·fcd (flatter strut, fewer links).",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_6l",
-      "type": "text",
-      "x": 80,
-      "y": 11335,
+      "y": 6691,
       "props": {
         "w": 310,
         "h": 24,
@@ -3927,10 +2842,10 @@
       }
     },
     {
-      "id": "s_rect_6m",
+      "id": "s_rect_4p",
       "type": "math",
       "x": 400,
-      "y": 11329,
+      "y": 6685,
       "props": {
         "w": 60,
         "h": 32,
@@ -3944,10 +2859,10 @@
       }
     },
     {
-      "id": "s_rect_6n",
+      "id": "s_rect_4q",
       "type": "text",
       "x": 80,
-      "y": 11369,
+      "y": 6725,
       "props": {
         "w": 310,
         "h": 24,
@@ -3959,10 +2874,10 @@
       }
     },
     {
-      "id": "s_rect_6o",
+      "id": "s_rect_4r",
       "type": "math",
       "x": 400,
-      "y": 11369,
+      "y": 6725,
       "props": {
         "w": 60,
         "h": 32,
@@ -3976,10 +2891,10 @@
       }
     },
     {
-      "id": "s_rect_6p",
+      "id": "s_rect_4s",
       "type": "text",
       "x": 80,
-      "y": 11418,
+      "y": 6774,
       "props": {
         "w": 310,
         "h": 24,
@@ -3991,10 +2906,10 @@
       }
     },
     {
-      "id": "s_rect_6q",
+      "id": "s_rect_4t",
       "type": "math",
       "x": 400,
-      "y": 11409,
+      "y": 6765,
       "props": {
         "w": 60,
         "h": 32,
@@ -4008,10 +2923,10 @@
       }
     },
     {
-      "id": "s_rect_6r",
+      "id": "s_rect_4u",
       "type": "text",
       "x": 80,
-      "y": 11467,
+      "y": 6823,
       "props": {
         "w": 310,
         "h": 24,
@@ -4023,10 +2938,10 @@
       }
     },
     {
-      "id": "s_rect_6s",
+      "id": "s_rect_4v",
       "type": "math",
       "x": 400,
-      "y": 11459,
+      "y": 6815,
       "props": {
         "w": 60,
         "h": 32,
@@ -4040,10 +2955,10 @@
       }
     },
     {
-      "id": "s_rect_6t",
+      "id": "s_rect_4w",
       "type": "text",
       "x": 80,
-      "y": 11509,
+      "y": 7106,
       "props": {
         "w": 310,
         "h": 24,
@@ -4055,10 +2970,10 @@
       }
     },
     {
-      "id": "s_rect_6u",
+      "id": "s_rect_4x",
       "type": "math",
       "x": 400,
-      "y": 11509,
+      "y": 7106,
       "props": {
         "w": 60,
         "h": 32,
@@ -4072,14 +2987,14 @@
       }
     },
     {
-      "id": "s_rect_6v",
+      "id": "s_rect_4y",
       "type": "text",
       "x": 80,
-      "y": 11790,
+      "y": 7146,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "8.1 Shear along y (web b, depth h; bending about x)",
+        "html": "6.1 Shear along y (web b, depth h; bending about x)",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#334155",
@@ -4088,10 +3003,10 @@
       }
     },
     {
-      "id": "s_rect_6w",
+      "id": "s_rect_4z",
       "type": "text",
       "x": 80,
-      "y": 11831,
+      "y": 7187,
       "props": {
         "w": 310,
         "h": 24,
@@ -4103,10 +3018,10 @@
       }
     },
     {
-      "id": "s_rect_6x",
+      "id": "s_rect_50",
       "type": "math",
       "x": 400,
-      "y": 11820,
+      "y": 7176,
       "props": {
         "w": 60,
         "h": 32,
@@ -4120,10 +3035,10 @@
       }
     },
     {
-      "id": "s_rect_6y",
+      "id": "s_rect_51",
       "type": "text",
       "x": 80,
-      "y": 11876,
+      "y": 7232,
       "props": {
         "w": 310,
         "h": 24,
@@ -4135,10 +3050,10 @@
       }
     },
     {
-      "id": "s_rect_6z",
+      "id": "s_rect_52",
       "type": "math",
       "x": 400,
-      "y": 11870,
+      "y": 7226,
       "props": {
         "w": 60,
         "h": 32,
@@ -4152,10 +3067,10 @@
       }
     },
     {
-      "id": "s_rect_70",
+      "id": "s_rect_53",
       "type": "text",
       "x": 80,
-      "y": 11916,
+      "y": 7272,
       "props": {
         "w": 310,
         "h": 24,
@@ -4167,10 +3082,10 @@
       }
     },
     {
-      "id": "s_rect_71",
+      "id": "s_rect_54",
       "type": "math",
       "x": 400,
-      "y": 11910,
+      "y": 7266,
       "props": {
         "w": 60,
         "h": 32,
@@ -4184,10 +3099,10 @@
       }
     },
     {
-      "id": "s_rect_72",
+      "id": "s_rect_55",
       "type": "text",
       "x": 80,
-      "y": 11991,
+      "y": 7347,
       "props": {
         "w": 310,
         "h": 24,
@@ -4199,10 +3114,10 @@
       }
     },
     {
-      "id": "s_rect_73",
+      "id": "s_rect_56",
       "type": "math",
       "x": 400,
-      "y": 11950,
+      "y": 7306,
       "props": {
         "w": 60,
         "h": 32,
@@ -4216,10 +3131,10 @@
       }
     },
     {
-      "id": "s_rect_74",
+      "id": "s_rect_57",
       "type": "text",
       "x": 80,
-      "y": 12072,
+      "y": 7428,
       "props": {
         "w": 630,
         "h": 24,
@@ -4231,10 +3146,10 @@
       }
     },
     {
-      "id": "s_rect_75",
+      "id": "s_rect_58",
       "type": "math",
       "x": 96,
-      "y": 12100,
+      "y": 7456,
       "props": {
         "w": 60,
         "h": 32,
@@ -4248,10 +3163,10 @@
       }
     },
     {
-      "id": "s_rect_76",
+      "id": "s_rect_59",
       "type": "text",
       "x": 80,
-      "y": 12152,
+      "y": 7508,
       "props": {
         "w": 630,
         "h": 24,
@@ -4263,10 +3178,10 @@
       }
     },
     {
-      "id": "s_rect_77",
+      "id": "s_rect_5a",
       "type": "math",
       "x": 96,
-      "y": 12180,
+      "y": 7536,
       "props": {
         "w": 60,
         "h": 32,
@@ -4280,10 +3195,10 @@
       }
     },
     {
-      "id": "s_rect_78",
+      "id": "s_rect_5b",
       "type": "text",
       "x": 80,
-      "y": 12382,
+      "y": 7738,
       "props": {
         "w": 630,
         "h": 24,
@@ -4295,10 +3210,10 @@
       }
     },
     {
-      "id": "s_rect_79",
+      "id": "s_rect_5c",
       "type": "math",
       "x": 96,
-      "y": 12410,
+      "y": 7766,
       "props": {
         "w": 60,
         "h": 32,
@@ -4312,10 +3227,10 @@
       }
     },
     {
-      "id": "s_rect_7a",
+      "id": "s_rect_5d",
       "type": "text",
       "x": 80,
-      "y": 12586,
+      "y": 7942,
       "props": {
         "w": 310,
         "h": 24,
@@ -4327,10 +3242,10 @@
       }
     },
     {
-      "id": "s_rect_7b",
+      "id": "s_rect_5e",
       "type": "math",
       "x": 400,
-      "y": 12580,
+      "y": 7936,
       "props": {
         "w": 60,
         "h": 32,
@@ -4344,10 +3259,10 @@
       }
     },
     {
-      "id": "s_rect_7c",
+      "id": "s_rect_5f",
       "type": "text",
       "x": 80,
-      "y": 12630,
+      "y": 7986,
       "props": {
         "w": 310,
         "h": 24,
@@ -4359,10 +3274,10 @@
       }
     },
     {
-      "id": "s_rect_7d",
+      "id": "s_rect_5g",
       "type": "math",
       "x": 400,
-      "y": 12620,
+      "y": 7976,
       "props": {
         "w": 60,
         "h": 32,
@@ -4376,10 +3291,10 @@
       }
     },
     {
-      "id": "s_rect_7e",
+      "id": "s_rect_5h",
       "type": "text",
       "x": 80,
-      "y": 12986,
+      "y": 8302,
       "props": {
         "w": 310,
         "h": 24,
@@ -4391,10 +3306,10 @@
       }
     },
     {
-      "id": "s_rect_7f",
+      "id": "s_rect_5i",
       "type": "math",
       "x": 400,
-      "y": 12961,
+      "y": 8277,
       "props": {
         "w": 60,
         "h": 32,
@@ -4408,10 +3323,10 @@
       }
     },
     {
-      "id": "s_rect_7g",
+      "id": "s_rect_5j",
       "type": "text",
       "x": 80,
-      "y": 13091,
+      "y": 8407,
       "props": {
         "w": 310,
         "h": 24,
@@ -4423,10 +3338,10 @@
       }
     },
     {
-      "id": "s_rect_7h",
+      "id": "s_rect_5k",
       "type": "math",
       "x": 400,
-      "y": 13051,
+      "y": 8367,
       "props": {
         "w": 60,
         "h": 32,
@@ -4440,10 +3355,10 @@
       }
     },
     {
-      "id": "s_rect_7i",
+      "id": "s_rect_5l",
       "type": "text",
       "x": 80,
-      "y": 13182,
+      "y": 8498,
       "props": {
         "w": 310,
         "h": 24,
@@ -4455,10 +3370,10 @@
       }
     },
     {
-      "id": "s_rect_7j",
+      "id": "s_rect_5m",
       "type": "math",
       "x": 400,
-      "y": 13171,
+      "y": 8487,
       "props": {
         "w": 60,
         "h": 32,
@@ -4472,10 +3387,10 @@
       }
     },
     {
-      "id": "s_rect_7k",
+      "id": "s_rect_5n",
       "type": "text",
       "x": 80,
-      "y": 13237,
+      "y": 8553,
       "props": {
         "w": 310,
         "h": 24,
@@ -4487,10 +3402,10 @@
       }
     },
     {
-      "id": "s_rect_7l",
+      "id": "s_rect_5o",
       "type": "math",
       "x": 400,
-      "y": 13231,
+      "y": 8547,
       "props": {
         "w": 60,
         "h": 32,
@@ -4504,14 +3419,14 @@
       }
     },
     {
-      "id": "s_rect_7m",
+      "id": "s_rect_5p",
       "type": "text",
       "x": 80,
-      "y": 13271,
+      "y": 8587,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "8.2 Shear along x (web h, depth b; bending about y)",
+        "html": "6.2 Shear along x (web h, depth b; bending about y)",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#334155",
@@ -4520,10 +3435,10 @@
       }
     },
     {
-      "id": "s_rect_7n",
+      "id": "s_rect_5q",
       "type": "text",
       "x": 80,
-      "y": 13312,
+      "y": 8628,
       "props": {
         "w": 310,
         "h": 24,
@@ -4535,10 +3450,10 @@
       }
     },
     {
-      "id": "s_rect_7o",
+      "id": "s_rect_5r",
       "type": "math",
       "x": 400,
-      "y": 13301,
+      "y": 8617,
       "props": {
         "w": 60,
         "h": 32,
@@ -4552,10 +3467,10 @@
       }
     },
     {
-      "id": "s_rect_7p",
+      "id": "s_rect_5s",
       "type": "text",
       "x": 80,
-      "y": 13357,
+      "y": 8673,
       "props": {
         "w": 310,
         "h": 24,
@@ -4567,10 +3482,10 @@
       }
     },
     {
-      "id": "s_rect_7q",
+      "id": "s_rect_5t",
       "type": "math",
       "x": 400,
-      "y": 13351,
+      "y": 8667,
       "props": {
         "w": 60,
         "h": 32,
@@ -4584,10 +3499,10 @@
       }
     },
     {
-      "id": "s_rect_7r",
+      "id": "s_rect_5u",
       "type": "text",
       "x": 80,
-      "y": 13397,
+      "y": 8713,
       "props": {
         "w": 310,
         "h": 24,
@@ -4599,10 +3514,10 @@
       }
     },
     {
-      "id": "s_rect_7s",
+      "id": "s_rect_5v",
       "type": "math",
       "x": 400,
-      "y": 13391,
+      "y": 8707,
       "props": {
         "w": 60,
         "h": 32,
@@ -4616,10 +3531,10 @@
       }
     },
     {
-      "id": "s_rect_7t",
+      "id": "s_rect_5w",
       "type": "text",
       "x": 80,
-      "y": 13470,
+      "y": 8786,
       "props": {
         "w": 310,
         "h": 24,
@@ -4631,10 +3546,10 @@
       }
     },
     {
-      "id": "s_rect_7u",
+      "id": "s_rect_5x",
       "type": "math",
       "x": 400,
-      "y": 13431,
+      "y": 8747,
       "props": {
         "w": 60,
         "h": 32,
@@ -4648,10 +3563,10 @@
       }
     },
     {
-      "id": "s_rect_7v",
+      "id": "s_rect_5y",
       "type": "text",
       "x": 80,
-      "y": 13543,
+      "y": 8859,
       "props": {
         "w": 630,
         "h": 24,
@@ -4663,10 +3578,10 @@
       }
     },
     {
-      "id": "s_rect_7w",
+      "id": "s_rect_5z",
       "type": "math",
       "x": 96,
-      "y": 13571,
+      "y": 8887,
       "props": {
         "w": 60,
         "h": 32,
@@ -4680,10 +3595,10 @@
       }
     },
     {
-      "id": "s_rect_7x",
+      "id": "s_rect_60",
       "type": "text",
       "x": 80,
-      "y": 13613,
+      "y": 8929,
       "props": {
         "w": 630,
         "h": 24,
@@ -4695,10 +3610,10 @@
       }
     },
     {
-      "id": "s_rect_7y",
+      "id": "s_rect_61",
       "type": "math",
       "x": 96,
-      "y": 13641,
+      "y": 8957,
       "props": {
         "w": 60,
         "h": 32,
@@ -4712,10 +3627,10 @@
       }
     },
     {
-      "id": "s_rect_7z",
+      "id": "s_rect_62",
       "type": "text",
       "x": 80,
-      "y": 14134,
+      "y": 9450,
       "props": {
         "w": 630,
         "h": 24,
@@ -4727,10 +3642,10 @@
       }
     },
     {
-      "id": "s_rect_80",
+      "id": "s_rect_63",
       "type": "math",
       "x": 96,
-      "y": 14162,
+      "y": 9478,
       "props": {
         "w": 60,
         "h": 32,
@@ -4744,10 +3659,10 @@
       }
     },
     {
-      "id": "s_rect_81",
+      "id": "s_rect_64",
       "type": "text",
       "x": 80,
-      "y": 14338,
+      "y": 9654,
       "props": {
         "w": 310,
         "h": 24,
@@ -4759,10 +3674,10 @@
       }
     },
     {
-      "id": "s_rect_82",
+      "id": "s_rect_65",
       "type": "math",
       "x": 400,
-      "y": 14332,
+      "y": 9648,
       "props": {
         "w": 60,
         "h": 32,
@@ -4776,10 +3691,10 @@
       }
     },
     {
-      "id": "s_rect_83",
+      "id": "s_rect_66",
       "type": "text",
       "x": 80,
-      "y": 14380,
+      "y": 9696,
       "props": {
         "w": 310,
         "h": 24,
@@ -4791,10 +3706,10 @@
       }
     },
     {
-      "id": "s_rect_84",
+      "id": "s_rect_67",
       "type": "math",
       "x": 400,
-      "y": 14372,
+      "y": 9688,
       "props": {
         "w": 60,
         "h": 32,
@@ -4808,10 +3723,10 @@
       }
     },
     {
-      "id": "s_rect_85",
+      "id": "s_rect_68",
       "type": "text",
       "x": 80,
-      "y": 14447,
+      "y": 9763,
       "props": {
         "w": 310,
         "h": 24,
@@ -4823,10 +3738,10 @@
       }
     },
     {
-      "id": "s_rect_86",
+      "id": "s_rect_69",
       "type": "math",
       "x": 400,
-      "y": 14422,
+      "y": 9738,
       "props": {
         "w": 60,
         "h": 32,
@@ -4840,10 +3755,10 @@
       }
     },
     {
-      "id": "s_rect_87",
+      "id": "s_rect_6a",
       "type": "text",
       "x": 80,
-      "y": 14552,
+      "y": 9868,
       "props": {
         "w": 310,
         "h": 24,
@@ -4855,10 +3770,10 @@
       }
     },
     {
-      "id": "s_rect_88",
+      "id": "s_rect_6b",
       "type": "math",
       "x": 400,
-      "y": 14512,
+      "y": 9828,
       "props": {
         "w": 60,
         "h": 32,
@@ -4872,10 +3787,10 @@
       }
     },
     {
-      "id": "s_rect_89",
+      "id": "s_rect_6c",
       "type": "text",
       "x": 80,
-      "y": 14643,
+      "y": 9959,
       "props": {
         "w": 310,
         "h": 24,
@@ -4887,10 +3802,10 @@
       }
     },
     {
-      "id": "s_rect_8a",
+      "id": "s_rect_6d",
       "type": "math",
       "x": 400,
-      "y": 14632,
+      "y": 9948,
       "props": {
         "w": 60,
         "h": 32,
@@ -4904,10 +3819,10 @@
       }
     },
     {
-      "id": "s_rect_8b",
+      "id": "s_rect_6e",
       "type": "text",
       "x": 80,
-      "y": 14698,
+      "y": 10014,
       "props": {
         "w": 310,
         "h": 24,
@@ -4919,10 +3834,10 @@
       }
     },
     {
-      "id": "s_rect_8c",
+      "id": "s_rect_6f",
       "type": "math",
       "x": 400,
-      "y": 14692,
+      "y": 10008,
       "props": {
         "w": 60,
         "h": 32,
@@ -4936,14 +3851,14 @@
       }
     },
     {
-      "id": "s_rect_8d",
+      "id": "s_rect_6g",
       "type": "text",
       "x": 80,
-      "y": 14742,
+      "y": 10058,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "9. SUMMARY",
+        "html": "7. SUMMARY",
         "fontFamily": "Inter",
         "fontSize": 16,
         "color": "#0f172a",
@@ -4952,10 +3867,10 @@
       }
     },
     {
-      "id": "s_rect_8e",
+      "id": "s_rect_6h",
       "type": "text",
       "x": 80,
-      "y": 14778,
+      "y": 10094,
       "props": {
         "w": 310,
         "h": 24,
@@ -4967,10 +3882,10 @@
       }
     },
     {
-      "id": "s_rect_8f",
+      "id": "s_rect_6i",
       "type": "math",
       "x": 400,
-      "y": 14772,
+      "y": 10088,
       "props": {
         "w": 60,
         "h": 32,
@@ -4984,10 +3899,10 @@
       }
     },
     {
-      "id": "s_rect_8g",
+      "id": "s_rect_6j",
       "type": "text",
       "x": 80,
-      "y": 14818,
+      "y": 10134,
       "props": {
         "w": 310,
         "h": 24,
@@ -4999,10 +3914,10 @@
       }
     },
     {
-      "id": "s_rect_8h",
+      "id": "s_rect_6k",
       "type": "math",
       "x": 400,
-      "y": 14812,
+      "y": 10128,
       "props": {
         "w": 60,
         "h": 32,
@@ -5016,10 +3931,10 @@
       }
     },
     {
-      "id": "s_rect_8i",
+      "id": "s_rect_6l",
       "type": "text",
       "x": 80,
-      "y": 14858,
+      "y": 10174,
       "props": {
         "w": 310,
         "h": 24,
@@ -5031,10 +3946,10 @@
       }
     },
     {
-      "id": "s_rect_8j",
+      "id": "s_rect_6m",
       "type": "math",
       "x": 400,
-      "y": 14852,
+      "y": 10168,
       "props": {
         "w": 60,
         "h": 32,
@@ -5048,10 +3963,10 @@
       }
     },
     {
-      "id": "s_rect_8k",
+      "id": "s_rect_6n",
       "type": "text",
       "x": 80,
-      "y": 15303,
+      "y": 10619,
       "props": {
         "w": 630,
         "h": 24,
@@ -5067,10 +3982,872 @@
       }
     },
     {
-      "id": "s_rect_8l",
+      "id": "s_rect_6o",
       "type": "text",
       "x": 80,
-      "y": 15343,
+      "y": 10659,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Bar layout and coordinates",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2,
+        "annex": {
+          "kind": "heading",
+          "id": "ax_bars"
+        }
+      }
+    },
+    {
+      "id": "s_rect_6p",
+      "type": "text",
+      "x": 80,
+      "y": 10700,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Half-distance between corner bar centres along x",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_6q",
+      "type": "math",
+      "x": 400,
+      "y": 10689,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "a_{x}\\coloneq\\frac{b}{2}-c_{nom}-\\phi_{w}-\\frac{\\phi}{2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_6r",
+      "type": "text",
+      "x": 80,
+      "y": 10750,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Half-distance between corner bar centres along y",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_6s",
+      "type": "math",
+      "x": 400,
+      "y": 10739,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "a_{y}\\coloneq\\frac{h}{2}-c_{nom}-\\phi_{w}-\\frac{\\phi}{2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_6t",
+      "type": "text",
+      "x": 80,
+      "y": 10797,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Bar spacing (centres) along b",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_6u",
+      "type": "math",
+      "x": 400,
+      "y": 10789,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "s_{x}\\coloneq\\frac{2a_{x}}{n_{b}-1}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_6v",
+      "type": "text",
+      "x": 80,
+      "y": 10848,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Bar spacing (centres) along h",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_6w",
+      "type": "math",
+      "x": 400,
+      "y": 10839,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "s_{y}\\coloneq\\frac{2a_{y}}{n_{h}-1}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_6x",
+      "type": "text",
+      "x": 80,
+      "y": 10895,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Total number of bars",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_6y",
+      "type": "math",
+      "x": 400,
+      "y": 10889,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "n_{bar}\\coloneq2n_{b}+2\\left(n_{h}-2\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_6z",
+      "type": "text",
+      "x": 80,
+      "y": 10929,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Bars are numbered: top row (left to right), bottom row, left side, right side (corners once).",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_70",
+      "type": "text",
+      "x": 80,
+      "y": 10965,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Bar index",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_71",
+      "type": "math",
+      "x": 400,
+      "y": 10959,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "k_{s}\\coloneq\\mathrm{seq}\\left(0,n_{bar}-1\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_72",
+      "type": "text",
+      "x": 80,
+      "y": 11068,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "x of each bar",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_73",
+      "type": "math",
+      "x": 400,
+      "y": 10999,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "x_{s}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ k_{s}<n_{b}\\\\\\quad\\left\\Vert\\displaystyle -a_{x}+k_{s}s_{x}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ k_{s}<2n_{b}\\\\\\quad\\left\\Vert\\displaystyle -a_{x}+\\left(k_{s}-n_{b}\\right)s_{x}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ k_{s}<2n_{b}+n_{h}-2\\\\\\quad\\left\\Vert\\displaystyle -a_{x}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle a_{x}\\right.\\end{array}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_74",
+      "type": "text",
+      "x": 80,
+      "y": 11238,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "y of each bar",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_75",
+      "type": "math",
+      "x": 400,
+      "y": 11169,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "y_{s}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ k_{s}<n_{b}\\\\\\quad\\left\\Vert\\displaystyle a_{y}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ k_{s}<2n_{b}\\\\\\quad\\left\\Vert\\displaystyle -a_{y}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ k_{s}<2n_{b}+n_{h}-2\\\\\\quad\\left\\Vert\\displaystyle -a_{y}+\\left(k_{s}-2n_{b}+1\\right)s_{y}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle -a_{y}+\\left(k_{s}-2n_{b}-n_{h}+3\\right)s_{y}\\right.\\end{array}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_76",
+      "type": "text",
+      "x": 96,
+      "y": 11790,
+      "props": {
+        "w": 280,
+        "h": 24,
+        "html": "Bar table",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#1e3a5f",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_77",
+      "type": "math",
+      "x": 96,
+      "y": 11820,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "k_{s}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_rect_78",
+      "type": "math",
+      "x": 168,
+      "y": 11820,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "x_{s}=",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_rect_79",
+      "type": "math",
+      "x": 283,
+      "y": 11820,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "y_{s}=",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_rect_7a",
+      "type": "text",
+      "x": 80,
+      "y": 12110,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Tie leg arrangement (EC2 9.5.3(6))",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2,
+        "annex": {
+          "kind": "heading",
+          "id": "ax_tielegs"
+        }
+      }
+    },
+    {
+      "id": "s_rect_7b",
+      "type": "text",
+      "x": 80,
+      "y": 12140,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "No inner ties when every bar is within 150 mm of a corner bar. Otherwise corners and every",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_7c",
+      "type": "text",
+      "x": 80,
+      "y": 12170,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "other bar are restrained, symmetric about the face centre.",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_7d",
+      "type": "text",
+      "x": 80,
+      "y": 12200,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Each mirrored pair is held by one inner closed tie; a single middle bar gets a cross-tie.",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_7e",
+      "type": "text",
+      "x": 80,
+      "y": 12230,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Every unrestrained bar is next to a restrained one, so a bar spacing ≤ 150 mm suffices.",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_7f",
+      "type": "text",
+      "x": 80,
+      "y": 12270,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Farthest bar from a corner on a b face",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_7g",
+      "type": "math",
+      "x": 400,
+      "y": 12260,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "l_{b}\\coloneq\\mathrm{floor}\\left(\\frac{n_{b}-1}{2}\\right)s_{x}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_7h",
+      "type": "text",
+      "x": 80,
+      "y": 12320,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Farthest bar from a corner on an h face",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_7i",
+      "type": "math",
+      "x": 400,
+      "y": 12310,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "l_{h}\\coloneq\\mathrm{floor}\\left(\\frac{n_{h}-1}{2}\\right)s_{y}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_7j",
+      "type": "text",
+      "x": 80,
+      "y": 12388,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Inner ties across the depth (pairs 2i and nb − 1 − 2i on the b faces)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_7k",
+      "type": "math",
+      "x": 400,
+      "y": 12360,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "q_{b}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ l_{b}>150\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{floor}\\left(\\frac{n_{b}-1}{4}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_7l",
+      "type": "text",
+      "x": 80,
+      "y": 12498,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Inner ties across the width (pairs on the h faces)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_7m",
+      "type": "math",
+      "x": 400,
+      "y": 12470,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "q_{h}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ l_{h}>150\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{floor}\\left(\\frac{n_{h}-1}{4}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_7n",
+      "type": "text",
+      "x": 80,
+      "y": 12603,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Last pair is a single middle bar (cross-tie, one leg): 1, else 0",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_7o",
+      "type": "math",
+      "x": 400,
+      "y": 12580,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "m_{b}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ q_{b}\\ge1\\land4q_{b}=n_{b}-1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_7p",
+      "type": "text",
+      "x": 80,
+      "y": 12992,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_7q",
+      "type": "math",
+      "x": 400,
+      "y": 12961,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "m_{h}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ q_{h}\\ge1\\land4q_{h}=n_{h}-1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_7r",
+      "type": "text",
+      "x": 80,
+      "y": 13067,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Full-depth tie legs parallel to y (resist VEd,y)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_7s",
+      "type": "math",
+      "x": 400,
+      "y": 13061,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "n_{w.y}\\coloneq2+2q_{b}-m_{b}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_7t",
+      "type": "text",
+      "x": 80,
+      "y": 13107,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Full-width tie legs parallel to x (resist VEd,x)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_7u",
+      "type": "math",
+      "x": 400,
+      "y": 13101,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "n_{w.x}\\coloneq2+2q_{h}-m_{h}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_7v",
+      "type": "text",
+      "x": 80,
+      "y": 13161,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Concrete fibres",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2,
+        "annex": {
+          "kind": "heading",
+          "id": "ax_fibres"
+        }
+      }
+    },
+    {
+      "id": "s_rect_7w",
+      "type": "text",
+      "x": 80,
+      "y": 13191,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "The concrete is cut into an nf × nf grid of fibres; each carries the stress at its centre strain.",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_7x",
+      "type": "text",
+      "x": 80,
+      "y": 13227,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Fibre index (row by row)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_7y",
+      "type": "math",
+      "x": 400,
+      "y": 13221,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "f\\coloneq\\mathrm{seq}\\left(0,n_{f}^2-1\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_7z",
+      "type": "text",
+      "x": 80,
+      "y": 13276,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Fibre centres",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_80",
+      "type": "math",
+      "x": 400,
+      "y": 13261,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "x_{f}\\coloneq\\left(f-n_{f}\\mathrm{floor}\\left(\\frac{f}{n_{f}}\\right)+0.5\\right)\\frac{b}{n_{f}}-\\frac{b}{2}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_81",
+      "type": "text",
+      "x": 80,
+      "y": 13346,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_82",
+      "type": "math",
+      "x": 400,
+      "y": 13331,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "y_{f}\\coloneq\\left(\\mathrm{floor}\\left(\\frac{f}{n_{f}}\\right)+0.5\\right)\\frac{h}{n_{f}}-\\frac{h}{2}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_83",
+      "type": "text",
+      "x": 80,
+      "y": 13411,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Area of one fibre",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_84",
+      "type": "math",
+      "x": 400,
+      "y": 13401,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "A_{f}\\coloneq\\frac{bh}{n_{f}^2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm^2",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_85",
+      "type": "text",
+      "x": 80,
+      "y": 13481,
       "props": {
         "w": 630,
         "h": 24,
@@ -5087,10 +4864,10 @@
       }
     },
     {
-      "id": "s_rect_8m",
+      "id": "s_rect_86",
       "type": "text",
       "x": 80,
-      "y": 15373,
+      "y": 13511,
       "props": {
         "w": 630,
         "h": 24,
@@ -5102,10 +4879,10 @@
       }
     },
     {
-      "id": "s_rect_8n",
+      "id": "s_rect_87",
       "type": "text",
       "x": 80,
-      "y": 15403,
+      "y": 13541,
       "props": {
         "w": 630,
         "h": 24,
@@ -5117,10 +4894,10 @@
       }
     },
     {
-      "id": "s_rect_8o",
+      "id": "s_rect_88",
       "type": "text",
       "x": 80,
-      "y": 15444,
+      "y": 13582,
       "props": {
         "w": 310,
         "h": 24,
@@ -5132,10 +4909,10 @@
       }
     },
     {
-      "id": "s_rect_8p",
+      "id": "s_rect_89",
       "type": "math",
       "x": 400,
-      "y": 15433,
+      "y": 13571,
       "props": {
         "w": 60,
         "h": 32,
@@ -5149,10 +4926,10 @@
       }
     },
     {
-      "id": "s_rect_8q",
+      "id": "s_rect_8a",
       "type": "text",
       "x": 80,
-      "y": 15489,
+      "y": 13627,
       "props": {
         "w": 310,
         "h": 24,
@@ -5164,10 +4941,10 @@
       }
     },
     {
-      "id": "s_rect_8r",
+      "id": "s_rect_8b",
       "type": "math",
       "x": 400,
-      "y": 15483,
+      "y": 13621,
       "props": {
         "w": 60,
         "h": 32,
@@ -5181,10 +4958,10 @@
       }
     },
     {
-      "id": "s_rect_8s",
+      "id": "s_rect_8c",
       "type": "text",
       "x": 80,
-      "y": 15529,
+      "y": 13667,
       "props": {
         "w": 310,
         "h": 24,
@@ -5196,10 +4973,10 @@
       }
     },
     {
-      "id": "s_rect_8t",
+      "id": "s_rect_8d",
       "type": "math",
       "x": 400,
-      "y": 15523,
+      "y": 13661,
       "props": {
         "w": 60,
         "h": 32,
@@ -5213,10 +4990,10 @@
       }
     },
     {
-      "id": "s_rect_8u",
+      "id": "s_rect_8e",
       "type": "text",
       "x": 80,
-      "y": 15563,
+      "y": 13701,
       "props": {
         "w": 310,
         "h": 24,
@@ -5228,10 +5005,10 @@
       }
     },
     {
-      "id": "s_rect_8v",
+      "id": "s_rect_8f",
       "type": "math",
       "x": 400,
-      "y": 15563,
+      "y": 13701,
       "props": {
         "w": 60,
         "h": 32,
@@ -5245,10 +5022,10 @@
       }
     },
     {
-      "id": "s_rect_8w",
+      "id": "s_rect_8g",
       "type": "text",
       "x": 80,
-      "y": 15609,
+      "y": 13747,
       "props": {
         "w": 310,
         "h": 24,
@@ -5260,10 +5037,10 @@
       }
     },
     {
-      "id": "s_rect_8x",
+      "id": "s_rect_8h",
       "type": "math",
       "x": 400,
-      "y": 15603,
+      "y": 13741,
       "props": {
         "w": 60,
         "h": 32,
@@ -5277,10 +5054,10 @@
       }
     },
     {
-      "id": "s_rect_8y",
+      "id": "s_rect_8i",
       "type": "text",
       "x": 80,
-      "y": 15649,
+      "y": 13787,
       "props": {
         "w": 310,
         "h": 24,
@@ -5292,10 +5069,10 @@
       }
     },
     {
-      "id": "s_rect_8z",
+      "id": "s_rect_8j",
       "type": "math",
       "x": 400,
-      "y": 15643,
+      "y": 13781,
       "props": {
         "w": 60,
         "h": 32,
@@ -5309,10 +5086,10 @@
       }
     },
     {
-      "id": "s_rect_90",
+      "id": "s_rect_8k",
       "type": "text",
       "x": 80,
-      "y": 15689,
+      "y": 13827,
       "props": {
         "w": 310,
         "h": 24,
@@ -5324,10 +5101,10 @@
       }
     },
     {
-      "id": "s_rect_91",
+      "id": "s_rect_8l",
       "type": "math",
       "x": 400,
-      "y": 15683,
+      "y": 13821,
       "props": {
         "w": 60,
         "h": 32,
@@ -5341,10 +5118,10 @@
       }
     },
     {
-      "id": "s_rect_92",
+      "id": "s_rect_8m",
       "type": "text",
       "x": 80,
-      "y": 15746,
+      "y": 14155,
       "props": {
         "w": 310,
         "h": 24,
@@ -5356,10 +5133,10 @@
       }
     },
     {
-      "id": "s_rect_93",
+      "id": "s_rect_8n",
       "type": "math",
       "x": 400,
-      "y": 15723,
+      "y": 14132,
       "props": {
         "w": 60,
         "h": 32,
@@ -5373,10 +5150,10 @@
       }
     },
     {
-      "id": "s_rect_94",
+      "id": "s_rect_8o",
       "type": "text",
       "x": 80,
-      "y": 15854,
+      "y": 14263,
       "props": {
         "w": 310,
         "h": 24,
@@ -5388,10 +5165,10 @@
       }
     },
     {
-      "id": "s_rect_95",
+      "id": "s_rect_8p",
       "type": "math",
       "x": 400,
-      "y": 15823,
+      "y": 14232,
       "props": {
         "w": 60,
         "h": 32,
@@ -5405,10 +5182,10 @@
       }
     },
     {
-      "id": "s_rect_96",
+      "id": "s_rect_8q",
       "type": "text",
       "x": 80,
-      "y": 15934,
+      "y": 14343,
       "props": {
         "w": 310,
         "h": 24,
@@ -5420,10 +5197,10 @@
       }
     },
     {
-      "id": "s_rect_97",
+      "id": "s_rect_8r",
       "type": "math",
       "x": 400,
-      "y": 15923,
+      "y": 14332,
       "props": {
         "w": 60,
         "h": 32,
@@ -5437,10 +5214,10 @@
       }
     },
     {
-      "id": "s_rect_98",
+      "id": "s_rect_8s",
       "type": "text",
       "x": 80,
-      "y": 15989,
+      "y": 14398,
       "props": {
         "w": 310,
         "h": 24,
@@ -5452,10 +5229,10 @@
       }
     },
     {
-      "id": "s_rect_99",
+      "id": "s_rect_8t",
       "type": "math",
       "x": 400,
-      "y": 15983,
+      "y": 14392,
       "props": {
         "w": 60,
         "h": 32,
@@ -5469,10 +5246,10 @@
       }
     },
     {
-      "id": "s_rect_9a",
+      "id": "s_rect_8u",
       "type": "text",
       "x": 80,
-      "y": 16025,
+      "y": 14434,
       "props": {
         "w": 630,
         "h": 24,
@@ -5484,10 +5261,10 @@
       }
     },
     {
-      "id": "s_rect_9b",
+      "id": "s_rect_8v",
       "type": "math",
       "x": 96,
-      "y": 16053,
+      "y": 14462,
       "props": {
         "w": 60,
         "h": 32,
@@ -5501,10 +5278,10 @@
       }
     },
     {
-      "id": "s_rect_9c",
+      "id": "s_rect_8w",
       "type": "text",
       "x": 80,
-      "y": 16125,
+      "y": 14534,
       "props": {
         "w": 630,
         "h": 24,
@@ -5516,10 +5293,10 @@
       }
     },
     {
-      "id": "s_rect_9d",
+      "id": "s_rect_8x",
       "type": "math",
       "x": 96,
-      "y": 16153,
+      "y": 14562,
       "props": {
         "w": 60,
         "h": 32,
@@ -5533,10 +5310,10 @@
       }
     },
     {
-      "id": "s_rect_9e",
+      "id": "s_rect_8y",
       "type": "text",
       "x": 80,
-      "y": 16524,
+      "y": 14662,
       "props": {
         "w": 310,
         "h": 24,
@@ -5548,10 +5325,10 @@
       }
     },
     {
-      "id": "s_rect_9f",
+      "id": "s_rect_8z",
       "type": "math",
       "x": 400,
-      "y": 16474,
+      "y": 14612,
       "props": {
         "w": 60,
         "h": 32,
@@ -5565,10 +5342,10 @@
       }
     },
     {
-      "id": "s_rect_9g",
+      "id": "s_rect_90",
       "type": "text",
       "x": 80,
-      "y": 16645,
+      "y": 14783,
       "props": {
         "w": 310,
         "h": 24,
@@ -5580,10 +5357,10 @@
       }
     },
     {
-      "id": "s_rect_9h",
+      "id": "s_rect_91",
       "type": "math",
       "x": 400,
-      "y": 16614,
+      "y": 14752,
       "props": {
         "w": 60,
         "h": 32,
@@ -5597,10 +5374,10 @@
       }
     },
     {
-      "id": "s_rect_9i",
+      "id": "s_rect_92",
       "type": "text",
       "x": 80,
-      "y": 16745,
+      "y": 14883,
       "props": {
         "w": 310,
         "h": 24,
@@ -5612,10 +5389,10 @@
       }
     },
     {
-      "id": "s_rect_9j",
+      "id": "s_rect_93",
       "type": "math",
       "x": 400,
-      "y": 16714,
+      "y": 14852,
       "props": {
         "w": 60,
         "h": 32,
@@ -5629,10 +5406,10 @@
       }
     },
     {
-      "id": "s_rect_9k",
+      "id": "s_rect_94",
       "type": "text",
       "x": 80,
-      "y": 16845,
+      "y": 14983,
       "props": {
         "w": 310,
         "h": 24,
@@ -5644,10 +5421,10 @@
       }
     },
     {
-      "id": "s_rect_9l",
+      "id": "s_rect_95",
       "type": "math",
       "x": 400,
-      "y": 16814,
+      "y": 14952,
       "props": {
         "w": 60,
         "h": 32,
@@ -5661,10 +5438,10 @@
       }
     },
     {
-      "id": "s_rect_9m",
+      "id": "s_rect_96",
       "type": "text",
       "x": 80,
-      "y": 16916,
+      "y": 15305,
       "props": {
         "w": 630,
         "h": 24,
@@ -5676,10 +5453,10 @@
       }
     },
     {
-      "id": "s_rect_9n",
+      "id": "s_rect_97",
       "type": "math",
       "x": 96,
-      "y": 16944,
+      "y": 15333,
       "props": {
         "w": 60,
         "h": 32,
@@ -5693,10 +5470,266 @@
       }
     },
     {
+      "id": "s_rect_98",
+      "type": "text",
+      "x": 80,
+      "y": 15395,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_99",
+      "type": "math",
+      "x": 96,
+      "y": 15423,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "Y_{T}\\left(j\\right)\\coloneq Y_{c}\\left(j\\right)+\\delta_{w}\\sin\\left(\\frac{\\pi\\alpha_{T}\\left(j\\right)}{180}\\right)-\\frac{\\sqrt{2}}{2}L_{w}o_{T}\\left(j\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_9a",
+      "type": "text",
+      "x": 80,
+      "y": 15489,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Points of all closed ties",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_9b",
+      "type": "math",
+      "x": 400,
+      "y": 15483,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "j_{T}\\coloneq\\mathrm{seq}\\left(0,n_{T}M_{T}-1\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_9c",
+      "type": "text",
+      "x": 80,
+      "y": 15529,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Legs (cross-ties to a single middle bar)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_9d",
+      "type": "math",
+      "x": 400,
+      "y": 15523,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "n_{L}\\coloneq m_{b}+m_{h}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_9e",
+      "type": "text",
+      "x": 80,
+      "y": 15569,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Points per leg: 2 hook arcs and 2 hook ends",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_9f",
+      "type": "math",
+      "x": 400,
+      "y": 15563,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{L}\\coloneq2n_{a}+2",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_9g",
+      "type": "text",
+      "x": 80,
+      "y": 15614,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Point j: its leg and its index within the leg",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_9h",
+      "type": "math",
+      "x": 400,
+      "y": 15603,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "i_{L}\\left(j\\right)\\coloneq\\mathrm{floor}\\left(\\frac{j}{M_{L}}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_9i",
+      "type": "text",
+      "x": 80,
+      "y": 15669,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_9j",
+      "type": "math",
+      "x": 400,
+      "y": 15663,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "u_{L}\\left(j\\right)\\coloneq j-M_{L}i_{L}\\left(j\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_9k",
+      "type": "text",
+      "x": 80,
+      "y": 15703,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Leg direction: 0 parallel to y at x = 0, 1 parallel to x at y = 0",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_9l",
+      "type": "math",
+      "x": 400,
+      "y": 15703,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "k_{L}\\left(j\\right)\\coloneq i_{L}\\left(j\\right)+1-m_{b}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_9m",
+      "type": "text",
+      "x": 80,
+      "y": 15745,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Arc of point j (0 first bar, 1 second bar), fraction along it",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_9n",
+      "type": "math",
+      "x": 96,
+      "y": 15773,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "a_{L}\\left(j\\right)\\coloneq\\min\\left(\\max\\left(\\mathrm{floor}\\left(\\frac{u_{L}\\left(j\\right)-1}{n_{a}}\\right),0\\right),1\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
       "id": "s_rect_9o",
       "type": "text",
       "x": 80,
-      "y": 17006,
+      "y": 15845,
       "props": {
         "w": 630,
         "h": 24,
@@ -5711,11 +5744,11 @@
       "id": "s_rect_9p",
       "type": "math",
       "x": 96,
-      "y": 17034,
+      "y": 15873,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "Y_{T}\\left(j\\right)\\coloneq Y_{c}\\left(j\\right)+\\delta_{w}\\sin\\left(\\frac{\\pi\\alpha_{T}\\left(j\\right)}{180}\\right)-\\frac{\\sqrt{2}}{2}L_{w}o_{T}\\left(j\\right)",
+        "latex": "w_{L}\\left(j\\right)\\coloneq\\frac{\\min\\left(\\max\\left(u_{L}\\left(j\\right)-1-n_{a}a_{L}\\left(j\\right),0\\right),n_{a}-1\\right)}{n_{a}-1}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -5728,11 +5761,11 @@
       "id": "s_rect_9q",
       "type": "text",
       "x": 80,
-      "y": 17100,
+      "y": 15925,
       "props": {
-        "w": 310,
+        "w": 630,
         "h": 24,
-        "html": "Points of all closed ties",
+        "html": "Angle round the bar in degrees (two 135° arcs)",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -5742,12 +5775,12 @@
     {
       "id": "s_rect_9r",
       "type": "math",
-      "x": 400,
-      "y": 17094,
+      "x": 96,
+      "y": 15953,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "j_{T}\\coloneq\\mathrm{seq}\\left(0,n_{T}M_{T}-1\\right)",
+        "latex": "\\alpha_{L}\\left(j\\right)\\coloneq90k_{L}\\left(j\\right)+135-135a_{L}\\left(j\\right)-135w_{L}\\left(j\\right)",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -5760,11 +5793,11 @@
       "id": "s_rect_9s",
       "type": "text",
       "x": 80,
-      "y": 17140,
+      "y": 16024,
       "props": {
         "w": 310,
         "h": 24,
-        "html": "Legs (cross-ties to a single middle bar)",
+        "html": "1 at the first / last hook end",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -5775,12 +5808,12 @@
       "id": "s_rect_9t",
       "type": "math",
       "x": 400,
-      "y": 17134,
+      "y": 15993,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "n_{L}\\coloneq m_{b}+m_{h}",
-        "displayMode": "formulaResult",
+        "latex": "o_{s}\\left(j\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ u_{L}\\left(j\\right)=0\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "autoSize": true,
@@ -5792,11 +5825,11 @@
       "id": "s_rect_9u",
       "type": "text",
       "x": 80,
-      "y": 17180,
+      "y": 16124,
       "props": {
         "w": 310,
         "h": 24,
-        "html": "Points per leg: 2 hook arcs and 2 hook ends",
+        "html": "",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -5807,12 +5840,12 @@
       "id": "s_rect_9v",
       "type": "math",
       "x": 400,
-      "y": 17174,
+      "y": 16093,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "M_{L}\\coloneq2n_{a}+2",
-        "displayMode": "formulaResult",
+        "latex": "o_{e}\\left(j\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ u_{L}\\left(j\\right)=M_{L}-1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "autoSize": true,
@@ -5824,11 +5857,11 @@
       "id": "s_rect_9w",
       "type": "text",
       "x": 80,
-      "y": 17225,
+      "y": 16199,
       "props": {
         "w": 310,
         "h": 24,
-        "html": "Point j: its leg and its index within the leg",
+        "html": "Hook end directions (into the core)",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -5839,11 +5872,11 @@
       "id": "s_rect_9x",
       "type": "math",
       "x": 400,
-      "y": 17214,
+      "y": 16193,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "i_{L}\\left(j\\right)\\coloneq\\mathrm{floor}\\left(\\frac{j}{M_{L}}\\right)",
+        "latex": "p_{x}\\left(j\\right)\\coloneq\\left(2k_{L}\\left(j\\right)-1\\right)o_{s}\\left(j\\right)-o_{e}\\left(j\\right)",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -5856,7 +5889,7 @@
       "id": "s_rect_9y",
       "type": "text",
       "x": 80,
-      "y": 17280,
+      "y": 16480,
       "props": {
         "w": 310,
         "h": 24,
@@ -5871,263 +5904,7 @@
       "id": "s_rect_9z",
       "type": "math",
       "x": 400,
-      "y": 17274,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "u_{L}\\left(j\\right)\\coloneq j-M_{L}i_{L}\\left(j\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_a0",
-      "type": "text",
-      "x": 80,
-      "y": 17314,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Leg direction: 0 parallel to y at x = 0, 1 parallel to x at y = 0",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_a1",
-      "type": "math",
-      "x": 400,
-      "y": 17314,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "k_{L}\\left(j\\right)\\coloneq i_{L}\\left(j\\right)+1-m_{b}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_a2",
-      "type": "text",
-      "x": 80,
-      "y": 17647,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Arc of point j (0 first bar, 1 second bar), fraction along it",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_a3",
-      "type": "math",
-      "x": 96,
-      "y": 17675,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "a_{L}\\left(j\\right)\\coloneq\\min\\left(\\max\\left(\\mathrm{floor}\\left(\\frac{u_{L}\\left(j\\right)-1}{n_{a}}\\right),0\\right),1\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_a4",
-      "type": "text",
-      "x": 80,
-      "y": 17747,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_a5",
-      "type": "math",
-      "x": 96,
-      "y": 17775,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "w_{L}\\left(j\\right)\\coloneq\\frac{\\min\\left(\\max\\left(u_{L}\\left(j\\right)-1-n_{a}a_{L}\\left(j\\right),0\\right),n_{a}-1\\right)}{n_{a}-1}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_a6",
-      "type": "text",
-      "x": 80,
-      "y": 17827,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Angle round the bar in degrees (two 135° arcs)",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_a7",
-      "type": "math",
-      "x": 96,
-      "y": 17855,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\alpha_{L}\\left(j\\right)\\coloneq90k_{L}\\left(j\\right)+135-135a_{L}\\left(j\\right)-135w_{L}\\left(j\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_a8",
-      "type": "text",
-      "x": 80,
-      "y": 17926,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "1 at the first / last hook end",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_a9",
-      "type": "math",
-      "x": 400,
-      "y": 17895,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "o_{s}\\left(j\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ u_{L}\\left(j\\right)=0\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_aa",
-      "type": "text",
-      "x": 80,
-      "y": 18026,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_ab",
-      "type": "math",
-      "x": 400,
-      "y": 17995,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "o_{e}\\left(j\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ u_{L}\\left(j\\right)=M_{L}-1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_ac",
-      "type": "text",
-      "x": 80,
-      "y": 18101,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Hook end directions (into the core)",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_ad",
-      "type": "math",
-      "x": 400,
-      "y": 18095,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "p_{x}\\left(j\\right)\\coloneq\\left(2k_{L}\\left(j\\right)-1\\right)o_{s}\\left(j\\right)-o_{e}\\left(j\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_rect_ae",
-      "type": "text",
-      "x": 80,
-      "y": 18141,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_rect_af",
-      "type": "math",
-      "x": 400,
-      "y": 18135,
+      "y": 16474,
       "props": {
         "w": 60,
         "h": 32,
@@ -6141,10 +5918,10 @@
       }
     },
     {
-      "id": "s_rect_ag",
+      "id": "s_rect_a0",
       "type": "text",
       "x": 80,
-      "y": 18177,
+      "y": 16516,
       "props": {
         "w": 630,
         "h": 24,
@@ -6156,10 +5933,10 @@
       }
     },
     {
-      "id": "s_rect_ah",
+      "id": "s_rect_a1",
       "type": "math",
       "x": 96,
-      "y": 18205,
+      "y": 16544,
       "props": {
         "w": 60,
         "h": 32,
@@ -6173,10 +5950,10 @@
       }
     },
     {
-      "id": "s_rect_ai",
+      "id": "s_rect_a2",
       "type": "text",
       "x": 80,
-      "y": 18267,
+      "y": 16606,
       "props": {
         "w": 630,
         "h": 24,
@@ -6188,10 +5965,10 @@
       }
     },
     {
-      "id": "s_rect_aj",
+      "id": "s_rect_a3",
       "type": "math",
       "x": 96,
-      "y": 18295,
+      "y": 16634,
       "props": {
         "w": 60,
         "h": 32,
@@ -6205,10 +5982,10 @@
       }
     },
     {
-      "id": "s_rect_ak",
+      "id": "s_rect_a4",
       "type": "text",
       "x": 80,
-      "y": 18361,
+      "y": 16700,
       "props": {
         "w": 310,
         "h": 24,
@@ -6220,10 +5997,10 @@
       }
     },
     {
-      "id": "s_rect_al",
+      "id": "s_rect_a5",
       "type": "math",
       "x": 400,
-      "y": 18355,
+      "y": 16694,
       "props": {
         "w": 60,
         "h": 32,
@@ -6237,10 +6014,457 @@
       }
     },
     {
+      "id": "s_rect_a6",
+      "type": "text",
+      "x": 80,
+      "y": 16754,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Strain plane, stress laws and section resultants",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2,
+        "annex": {
+          "kind": "heading",
+          "id": "ax_resultants"
+        }
+      }
+    },
+    {
+      "id": "s_rect_a7",
+      "type": "text",
+      "x": 80,
+      "y": 16784,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "c = neutral-axis depth below the compression face; p = fibre coordinate from the centroid,",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_a8",
+      "type": "text",
+      "x": 80,
+      "y": 16814,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "positive towards the compression face; H = section depth in that direction; dt = depth of the",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_a9",
+      "type": "text",
+      "x": 80,
+      "y": 16844,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "extreme bar. The strain plane pivots about A (bar at −εud), B (face at εcu2) or C (εc2 at",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_aa",
+      "type": "text",
+      "x": 80,
+      "y": 16874,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "(1 − εc2/εcu2)·H), whichever governs for the depth c (EC2 Fig. 6.1). Compression positive.",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_ab",
+      "type": "text",
+      "x": 80,
+      "y": 17004,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strain at fibre p",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_ac",
+      "type": "math",
+      "x": 400,
+      "y": 16904,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon\\left(c,p,H,d_{t}\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ c<\\frac{\\varepsilon_{cu2}d_{t}}{\\varepsilon_{cu2}+\\varepsilon_{ud}}\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{ud}\\frac{c-\\frac{H}{2}+p}{d_{t}-c}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ c\\le H\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{cu2}\\frac{c-\\frac{H}{2}+p}{c}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{c2}\\frac{c-\\frac{H}{2}+p}{c-\\left(1-\\frac{\\varepsilon_{c2}}{\\varepsilon_{cu2}}\\right)H}\\right.\\end{array}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_ad",
+      "type": "text",
+      "x": 80,
+      "y": 17201,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Concrete stress, parabola-rectangle (EC2 3.17), no tension",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_ae",
+      "type": "math",
+      "x": 400,
+      "y": 17144,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\sigma_{c}\\left(\\varepsilon\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\varepsilon\\le0\\\\\\quad\\left\\Vert\\displaystyle 0\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\varepsilon<\\varepsilon_{c2}\\\\\\quad\\left\\Vert\\displaystyle f_{cd}\\left(1-\\left(1-\\frac{\\varepsilon}{\\varepsilon_{c2}}\\right)^2\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{cd}\\right.\\end{array}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_af",
+      "type": "text",
+      "x": 80,
+      "y": 17695,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Steel stress, elastic-plastic within ±fyd",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_ag",
+      "type": "math",
+      "x": 400,
+      "y": 17645,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\sigma_{s}\\left(\\varepsilon\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ E_{s}\\varepsilon<-f_{yd}\\\\\\quad\\left\\Vert\\displaystyle -f_{yd}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ E_{s}\\varepsilon>f_{yd}\\\\\\quad\\left\\Vert\\displaystyle f_{yd}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle E_{s}\\varepsilon\\right.\\end{array}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_ah",
+      "type": "text",
+      "x": 80,
+      "y": 17785,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "For a neutral-axis direction β (normal of the axis, towards the compression face):",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_ai",
+      "type": "text",
+      "x": 80,
+      "y": 17821,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Section depth along β",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_aj",
+      "type": "math",
+      "x": 400,
+      "y": 17815,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "H_{\\beta}\\left(\\beta\\right)\\coloneq b\\left|\\cos\\left(\\beta\\right)\\right|+h\\left|\\sin\\left(\\beta\\right)\\right|",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_ak",
+      "type": "text",
+      "x": 80,
+      "y": 17857,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Depth of the extreme bar",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_al",
+      "type": "math",
+      "x": 96,
+      "y": 17885,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "d_{\\beta}\\left(\\beta\\right)\\coloneq\\frac{H_{\\beta}\\left(\\beta\\right)}{2}-\\min\\left(x_{s}\\cos\\left(\\beta\\right)+y_{s}\\sin\\left(\\beta\\right)\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
       "id": "s_rect_am",
       "type": "text",
       "x": 80,
-      "y": 18415,
+      "y": 17937,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Stress in every concrete fibre at depth c",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_an",
+      "type": "math",
+      "x": 96,
+      "y": 17965,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\sigma_{f}\\left(c,\\beta\\right)\\coloneq\\sigma_{c}\\left(\\varepsilon\\left(c,x_{f}\\cos\\left(\\beta\\right)+y_{f}\\sin\\left(\\beta\\right),H_{\\beta}\\left(\\beta\\right),d_{\\beta}\\left(\\beta\\right)\\right)\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_ao",
+      "type": "text",
+      "x": 80,
+      "y": 18007,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Strain in every bar",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_ap",
+      "type": "math",
+      "x": 96,
+      "y": 18035,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon_{b}\\left(c,\\beta\\right)\\coloneq\\varepsilon\\left(c,x_{s}\\cos\\left(\\beta\\right)+y_{s}\\sin\\left(\\beta\\right),H_{\\beta}\\left(\\beta\\right),d_{\\beta}\\left(\\beta\\right)\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_aq",
+      "type": "text",
+      "x": 80,
+      "y": 18081,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Net bar stress (concrete it displaces subtracted)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_ar",
+      "type": "math",
+      "x": 400,
+      "y": 18075,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\sigma_{b}\\left(c,\\beta\\right)\\coloneq\\sigma_{s}\\left(\\varepsilon_{b}\\left(c,\\beta\\right)\\right)-\\sigma_{c}\\left(\\varepsilon_{b}\\left(c,\\beta\\right)\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_as",
+      "type": "text",
+      "x": 80,
+      "y": 18117,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Axial resistance",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_at",
+      "type": "math",
+      "x": 96,
+      "y": 18145,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{R}\\left(c,\\beta\\right)\\coloneq A_{f}\\mathrm{sum}\\left(\\sigma_{f}\\left(c,\\beta\\right)\\right)+A_{b}\\mathrm{sum}\\left(\\sigma_{b}\\left(c,\\beta\\right)\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_au",
+      "type": "text",
+      "x": 80,
+      "y": 18187,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Moment about x (lever arm y)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_av",
+      "type": "math",
+      "x": 96,
+      "y": 18215,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{Rx}\\left(c,\\beta\\right)\\coloneq A_{f}\\mathrm{sum}\\left(\\sigma_{f}\\left(c,\\beta\\right)y_{f}\\right)+A_{b}\\mathrm{sum}\\left(\\sigma_{b}\\left(c,\\beta\\right)y_{s}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_aw",
+      "type": "text",
+      "x": 80,
+      "y": 18257,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Moment about y (lever arm x)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_rect_ax",
+      "type": "math",
+      "x": 96,
+      "y": 18285,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{Ry}\\left(c,\\beta\\right)\\coloneq A_{f}\\mathrm{sum}\\left(\\sigma_{f}\\left(c,\\beta\\right)x_{f}\\right)+A_{b}\\mathrm{sum}\\left(\\sigma_{b}\\left(c,\\beta\\right)x_{s}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_rect_ay",
+      "type": "text",
+      "x": 80,
+      "y": 18345,
       "props": {
         "w": 630,
         "h": 24,
@@ -6257,10 +6481,10 @@
       }
     },
     {
-      "id": "s_rect_an",
+      "id": "s_rect_az",
       "type": "text",
       "x": 80,
-      "y": 18454,
+      "y": 18384,
       "props": {
         "w": 310,
         "h": 24,
@@ -6272,10 +6496,10 @@
       }
     },
     {
-      "id": "s_rect_ao",
+      "id": "s_rect_b0",
       "type": "math",
       "x": 400,
-      "y": 18445,
+      "y": 18375,
       "props": {
         "w": 60,
         "h": 32,
@@ -6289,10 +6513,10 @@
       }
     },
     {
-      "id": "s_rect_ap",
+      "id": "s_rect_b1",
       "type": "text",
       "x": 80,
-      "y": 18495,
+      "y": 18425,
       "props": {
         "w": 630,
         "h": 24,
@@ -6305,10 +6529,10 @@
       }
     },
     {
-      "id": "s_rect_aq",
+      "id": "s_rect_b2",
       "type": "text",
       "x": 80,
-      "y": 18525,
+      "y": 18455,
       "props": {
         "w": 630,
         "h": 24,
@@ -6320,10 +6544,10 @@
       }
     },
     {
-      "id": "s_rect_ar",
+      "id": "s_rect_b3",
       "type": "text",
       "x": 80,
-      "y": 18555,
+      "y": 18485,
       "props": {
         "w": 630,
         "h": 24,
@@ -6335,10 +6559,10 @@
       }
     },
     {
-      "id": "s_rect_as",
+      "id": "s_rect_b4",
       "type": "text",
       "x": 80,
-      "y": 18822,
+      "y": 18541,
       "props": {
         "w": 310,
         "h": 24,
@@ -6350,10 +6574,10 @@
       }
     },
     {
-      "id": "s_rect_at",
+      "id": "s_rect_b5",
       "type": "math",
       "x": 400,
-      "y": 18816,
+      "y": 18535,
       "props": {
         "w": 60,
         "h": 32,
@@ -6367,10 +6591,10 @@
       }
     },
     {
-      "id": "s_rect_au",
+      "id": "s_rect_b6",
       "type": "text",
       "x": 80,
-      "y": 18858,
+      "y": 18818,
       "props": {
         "w": 630,
         "h": 24,
@@ -6382,10 +6606,10 @@
       }
     },
     {
-      "id": "s_rect_av",
+      "id": "s_rect_b7",
       "type": "math",
       "x": 96,
-      "y": 18886,
+      "y": 18846,
       "props": {
         "w": 60,
         "h": 32,
@@ -6399,10 +6623,10 @@
       }
     },
     {
-      "id": "s_rect_aw",
+      "id": "s_rect_b8",
       "type": "text",
       "x": 80,
-      "y": 18938,
+      "y": 18898,
       "props": {
         "w": 630,
         "h": 24,
@@ -6414,10 +6638,10 @@
       }
     },
     {
-      "id": "s_rect_ax",
+      "id": "s_rect_b9",
       "type": "math",
       "x": 96,
-      "y": 18966,
+      "y": 18926,
       "props": {
         "w": 60,
         "h": 32,
@@ -6431,10 +6655,10 @@
       }
     },
     {
-      "id": "s_rect_ay",
+      "id": "s_rect_ba",
       "type": "text",
       "x": 80,
-      "y": 19028,
+      "y": 18988,
       "props": {
         "w": 630,
         "h": 24,
@@ -6446,10 +6670,10 @@
       }
     },
     {
-      "id": "s_rect_az",
+      "id": "s_rect_bb",
       "type": "math",
       "x": 96,
-      "y": 19056,
+      "y": 19016,
       "props": {
         "w": 60,
         "h": 32,
@@ -6463,10 +6687,10 @@
       }
     },
     {
-      "id": "s_rect_b0",
+      "id": "s_rect_bc",
       "type": "text",
       "x": 80,
-      "y": 19098,
+      "y": 19058,
       "props": {
         "w": 630,
         "h": 24,
@@ -6478,10 +6702,10 @@
       }
     },
     {
-      "id": "s_rect_b1",
+      "id": "s_rect_bd",
       "type": "math",
       "x": 96,
-      "y": 19126,
+      "y": 19086,
       "props": {
         "w": 60,
         "h": 32,
@@ -6495,10 +6719,10 @@
       }
     },
     {
-      "id": "s_rect_b2",
+      "id": "s_rect_be",
       "type": "text",
       "x": 80,
-      "y": 19172,
+      "y": 19132,
       "props": {
         "w": 310,
         "h": 24,
@@ -6510,10 +6734,10 @@
       }
     },
     {
-      "id": "s_rect_b3",
+      "id": "s_rect_bf",
       "type": "math",
       "x": 400,
-      "y": 19166,
+      "y": 19126,
       "props": {
         "w": 60,
         "h": 32,
@@ -6527,10 +6751,10 @@
       }
     },
     {
-      "id": "s_rect_b4",
+      "id": "s_rect_bg",
       "type": "text",
       "x": 80,
-      "y": 19208,
+      "y": 19168,
       "props": {
         "w": 630,
         "h": 24,
@@ -6542,10 +6766,10 @@
       }
     },
     {
-      "id": "s_rect_b5",
+      "id": "s_rect_bh",
       "type": "math",
       "x": 96,
-      "y": 19236,
+      "y": 19196,
       "props": {
         "w": 60,
         "h": 32,
@@ -6559,10 +6783,10 @@
       }
     },
     {
-      "id": "s_rect_b6",
+      "id": "s_rect_bi",
       "type": "text",
       "x": 80,
-      "y": 19278,
+      "y": 19238,
       "props": {
         "w": 630,
         "h": 24,
@@ -6574,10 +6798,10 @@
       }
     },
     {
-      "id": "s_rect_b7",
+      "id": "s_rect_bj",
       "type": "math",
       "x": 96,
-      "y": 19306,
+      "y": 19266,
       "props": {
         "w": 60,
         "h": 32,
@@ -6591,10 +6815,10 @@
       }
     },
     {
-      "id": "s_rect_b8",
+      "id": "s_rect_bk",
       "type": "text",
       "x": 80,
-      "y": 19348,
+      "y": 19308,
       "props": {
         "w": 630,
         "h": 24,
@@ -6606,10 +6830,10 @@
       }
     },
     {
-      "id": "s_rect_b9",
+      "id": "s_rect_bl",
       "type": "math",
       "x": 96,
-      "y": 19376,
+      "y": 19336,
       "props": {
         "w": 60,
         "h": 32,
@@ -6623,10 +6847,10 @@
       }
     },
     {
-      "id": "s_rect_ba",
+      "id": "s_rect_bm",
       "type": "text",
       "x": 80,
-      "y": 19422,
+      "y": 19382,
       "props": {
         "w": 310,
         "h": 24,
@@ -6638,10 +6862,10 @@
       }
     },
     {
-      "id": "s_rect_bb",
+      "id": "s_rect_bn",
       "type": "math",
       "x": 400,
-      "y": 19416,
+      "y": 19376,
       "props": {
         "w": 60,
         "h": 32,
@@ -6655,10 +6879,10 @@
       }
     },
     {
-      "id": "s_rect_bc",
+      "id": "s_rect_bo",
       "type": "text",
       "x": 96,
-      "y": 19456,
+      "y": 19416,
       "props": {
         "w": 400,
         "h": 24,
@@ -6670,10 +6894,10 @@
       }
     },
     {
-      "id": "s_rect_bd",
+      "id": "s_rect_bp",
       "type": "math",
       "x": 96,
-      "y": 19486,
+      "y": 19446,
       "props": {
         "w": 60,
         "h": 32,
@@ -6689,10 +6913,10 @@
       }
     },
     {
-      "id": "s_rect_be",
+      "id": "s_rect_bq",
       "type": "math",
       "x": 276,
-      "y": 19486,
+      "y": 19446,
       "props": {
         "w": 60,
         "h": 32,
@@ -6708,6 +6932,6 @@
       }
     }
   ],
-  "createdAt": "2026-11-09T03:30:14.385Z",
-  "updatedAt": "2026-11-09T03:30:14.385Z"
+  "createdAt": "2026-11-09T03:45:15.556Z",
+  "updatedAt": "2026-11-09T03:45:15.556Z"
 }

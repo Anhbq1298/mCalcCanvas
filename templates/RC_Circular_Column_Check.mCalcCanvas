@@ -18,7 +18,7 @@
     "showHeaderFooter": true,
     "textFont": "Inter",
     "baselineSnap": "minor",
-    "pages": 12
+    "pages": 13
   },
   "shapes": [
     {
@@ -1785,7 +1785,7 @@
       "props": {
         "w": 630,
         "h": 24,
-        "html": "4.2 Bar coordinates and section",
+        "html": "4.2 Bars and section",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#334155",
@@ -1797,375 +1797,26 @@
       "id": "s_col_33",
       "type": "text",
       "x": 80,
-      "y": 3198,
+      "y": 3192,
       "props": {
-        "w": 310,
+        "w": 630,
         "h": 24,
-        "html": "Bar index, set 1 (edit seq to renumber)",
+        "html": "",
         "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
+        "fontSize": 14,
+        "color": "#2563eb",
+        "align": "left",
+        "annex": {
+          "kind": "link",
+          "target": "ax_bars"
+        }
       }
     },
     {
       "id": "s_col_34",
-      "type": "math",
-      "x": 400,
-      "y": 3192,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "i_{1}\\coloneq\\mathrm{seq}\\left(0,n_{l1}-1\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_35",
-      "type": "text",
-      "x": 80,
-      "y": 3238,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Bar index, set 2",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_36",
-      "type": "math",
-      "x": 400,
-      "y": 3232,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "i_{2}\\coloneq\\mathrm{seq}\\left(0,n_{l2}-1\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_37",
-      "type": "text",
-      "x": 80,
-      "y": 3282,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Angles for drawing circles",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_38",
-      "type": "math",
-      "x": 400,
-      "y": 3272,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\varphi_{t}\\coloneq\\mathrm{seq}\\left(0,2\\pi,\\frac{\\pi}{36}\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_39",
-      "type": "text",
-      "x": 80,
-      "y": 3333,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Set-1 bar coordinates, x",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_3a",
-      "type": "math",
-      "x": 400,
-      "y": 3322,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "x_{l1}\\coloneq r_{1}\\cos\\left(\\frac{2\\pi i_{1}}{n_{l1}}\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_3b",
-      "type": "text",
-      "x": 80,
-      "y": 3604,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Set-1 bar coordinates, y",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_3c",
-      "type": "math",
-      "x": 400,
-      "y": 3593,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "y_{l1}\\coloneq r_{1}\\sin\\left(\\frac{2\\pi i_{1}}{n_{l1}}\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_3d",
-      "type": "text",
-      "x": 80,
-      "y": 3664,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Set-2 bar coordinates, x",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_3e",
-      "type": "math",
-      "x": 400,
-      "y": 3653,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "x_{l2}\\coloneq r_{2}\\cos\\left(\\frac{2\\pi i_{2}}{n_{l2}}\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_3f",
-      "type": "text",
-      "x": 80,
-      "y": 3724,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Set-2 bar coordinates, y",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_3g",
-      "type": "math",
-      "x": 400,
-      "y": 3713,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "y_{l2}\\coloneq r_{2}\\sin\\left(\\frac{2\\pi i_{2}}{n_{l2}}\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_3h",
-      "type": "text",
-      "x": 96,
-      "y": 3773,
-      "props": {
-        "w": 280,
-        "h": 24,
-        "html": "Set 1 (outer)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#dc2626",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_3i",
-      "type": "text",
-      "x": 400,
-      "y": 3773,
-      "props": {
-        "w": 300,
-        "h": 24,
-        "html": "Set 2 (inner, used when nset = 2)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#ea580c",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_3j",
-      "type": "math",
-      "x": 96,
-      "y": 3803,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "i_{1}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "vectorLayout": "column",
-        "vectorExpanded": true
-      }
-    },
-    {
-      "id": "s_col_3k",
-      "type": "math",
-      "x": 168,
-      "y": 3803,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "x_{l1}=",
-        "displayMode": "auto",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "vectorLayout": "column",
-        "vectorExpanded": true
-      }
-    },
-    {
-      "id": "s_col_3l",
-      "type": "math",
-      "x": 283,
-      "y": 3803,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "y_{l1}=",
-        "displayMode": "auto",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "vectorLayout": "column",
-        "vectorExpanded": true
-      }
-    },
-    {
-      "id": "s_col_3m",
-      "type": "math",
-      "x": 396,
-      "y": 3803,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "i_{2}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "vectorLayout": "column",
-        "vectorExpanded": true
-      }
-    },
-    {
-      "id": "s_col_3n",
-      "type": "math",
-      "x": 468,
-      "y": 3803,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "x_{l2}=",
-        "displayMode": "auto",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "vectorLayout": "column",
-        "vectorExpanded": true
-      }
-    },
-    {
-      "id": "s_col_3o",
-      "type": "math",
-      "x": 583,
-      "y": 3803,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "y_{l2}=",
-        "displayMode": "auto",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "vectorLayout": "column",
-        "vectorExpanded": true
-      }
-    },
-    {
-      "id": "s_col_3p",
       "type": "graph",
       "x": 247,
-      "y": 4155,
+      "y": 3585,
       "props": {
         "w": 300,
         "h": 300,
@@ -2239,14 +1890,14 @@
       }
     },
     {
-      "id": "s_col_3q",
+      "id": "s_col_35",
       "type": "text",
       "x": 80,
-      "y": 4764,
+      "y": 3913,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "4.3 Concrete strips (perpendicular to the bending direction)",
+        "html": "4.3 Concrete strips",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#334155",
@@ -2255,200 +1906,29 @@
       }
     },
     {
-      "id": "s_col_3r",
+      "id": "s_col_36",
       "type": "text",
       "x": 80,
-      "y": 4794,
+      "y": 3943,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "The concrete is cut into nc thin strips parallel to the neutral axis. Each strip carries the",
+        "html": "",
         "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
+        "fontSize": 14,
+        "color": "#2563eb",
+        "align": "left",
+        "annex": {
+          "kind": "link",
+          "target": "ax_strips"
+        }
       }
     },
     {
-      "id": "s_col_3s",
+      "id": "s_col_37",
       "type": "text",
       "x": 80,
-      "y": 4824,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "stress at its centre strain; summing strip forces (× lever arm) gives the concrete N and M.",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_3t",
-      "type": "text",
-      "x": 80,
-      "y": 4860,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Strip index",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_3u",
-      "type": "math",
-      "x": 400,
-      "y": 4854,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "j\\coloneq\\mathrm{seq}\\left(0,n_{c}-1\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_3v",
-      "type": "text",
-      "x": 80,
-      "y": 4905,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Strip width",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_3w",
-      "type": "math",
-      "x": 400,
-      "y": 4894,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\Delta\\coloneq\\frac{D}{n_{c}}",
-        "displayMode": "formulaResult",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_3x",
-      "type": "text",
-      "x": 80,
-      "y": 4950,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Strip centre coordinate, from the centroid",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_3y",
-      "type": "math",
-      "x": 400,
-      "y": 4944,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "x_{c}\\coloneq R-\\left(j+0.5\\right)\\Delta",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_3z",
-      "type": "text",
-      "x": 80,
-      "y": 4994,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Strip area (chord length × width)",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_40",
-      "type": "math",
-      "x": 400,
-      "y": 4984,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "A_{c}\\coloneq2\\sqrt{R^2-x_{c}^2}\\cdot\\Delta",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_41",
-      "type": "text",
-      "x": 80,
-      "y": 5044,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Strip area / gross area (check of nc)",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_42",
-      "type": "math",
-      "x": 400,
-      "y": 5034,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\frac{\\mathrm{sum}\\left(A_{c}\\right)}{A_{g}}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 4,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_43",
-      "type": "text",
-      "x": 80,
-      "y": 5104,
+      "y": 3993,
       "props": {
         "w": 630,
         "h": 24,
@@ -2461,10 +1941,10 @@
       }
     },
     {
-      "id": "s_col_44",
+      "id": "s_col_38",
       "type": "text",
       "x": 80,
-      "y": 5134,
+      "y": 4023,
       "props": {
         "w": 630,
         "h": 24,
@@ -2477,10 +1957,10 @@
       }
     },
     {
-      "id": "s_col_45",
+      "id": "s_col_39",
       "type": "text",
       "x": 80,
-      "y": 5174,
+      "y": 4063,
       "props": {
         "w": 310,
         "h": 24,
@@ -2492,10 +1972,10 @@
       }
     },
     {
-      "id": "s_col_46",
+      "id": "s_col_3a",
       "type": "math",
       "x": 400,
-      "y": 5164,
+      "y": 4053,
       "props": {
         "w": 60,
         "h": 32,
@@ -2509,10 +1989,10 @@
       }
     },
     {
-      "id": "s_col_47",
+      "id": "s_col_3b",
       "type": "text",
       "x": 80,
-      "y": 5220,
+      "y": 4109,
       "props": {
         "w": 310,
         "h": 24,
@@ -2524,10 +2004,10 @@
       }
     },
     {
-      "id": "s_col_48",
+      "id": "s_col_3c",
       "type": "math",
       "x": 400,
-      "y": 5214,
+      "y": 4103,
       "props": {
         "w": 60,
         "h": 32,
@@ -2541,174 +2021,33 @@
       }
     },
     {
-      "id": "s_col_49",
+      "id": "s_col_3d",
       "type": "text",
       "x": 80,
-      "y": 5265,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Set-1 bar coordinate p along θM (from centroid)",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_4a",
-      "type": "math",
-      "x": 400,
-      "y": 5254,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "p_{l1}\\coloneq r_{1}\\cos\\left(\\frac{2\\pi i_{1}}{n_{l1}}\\mathrm{rad}-\\theta_{M}\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_4b",
-      "type": "text",
-      "x": 80,
-      "y": 5325,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Set-2 bar coordinate p along θM",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_4c",
-      "type": "math",
-      "x": 400,
-      "y": 5314,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "p_{l2}\\coloneq r_{2}\\cos\\left(\\frac{2\\pi i_{2}}{n_{l2}}\\mathrm{rad}-\\theta_{M}\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_4d",
-      "type": "text",
-      "x": 80,
-      "y": 5405,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Depth dθ: compression edge to extreme bar",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_4e",
-      "type": "math",
-      "x": 400,
-      "y": 5374,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "d_{\\theta}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ n_{set}\\ge2\\\\\\quad\\left\\Vert\\displaystyle R-\\min\\left(p_{l1},p_{l2}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle R-\\min\\left(p_{l1}\\right)\\right.\\end{array}",
-        "displayMode": "formulaResult",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_4f",
-      "type": "text",
-      "x": 80,
-      "y": 5482,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Depth cA at pivot A/B boundary",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_4g",
-      "type": "math",
-      "x": 400,
-      "y": 5474,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "c_{A}\\coloneq\\frac{\\varepsilon_{cu2}d_{\\theta}}{\\varepsilon_{cu2}+\\varepsilon_{ud}}",
-        "displayMode": "formulaResult",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_4h",
-      "type": "text",
-      "x": 80,
-      "y": 5535,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Depth yC of pivot C (εc2 in full compression)",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_4i",
-      "type": "math",
-      "x": 400,
-      "y": 5524,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "y_{C}\\coloneq\\left(1-\\frac{\\varepsilon_{c2}}{\\varepsilon_{cu2}}\\right)D",
-        "displayMode": "formulaResult",
-        "displayUnit": "mm",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_4j",
-      "type": "text",
-      "x": 80,
-      "y": 5584,
+      "y": 4143,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "5.2 Strain plane (+ compression)",
+        "html": "",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#2563eb",
+        "align": "left",
+        "annex": {
+          "kind": "link",
+          "target": "ax_resultants"
+        }
+      }
+    },
+    {
+      "id": "s_col_3e",
+      "type": "text",
+      "x": 80,
+      "y": 4183,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "5.2 Control points of the curve",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#334155",
@@ -2717,310 +2056,10 @@
       }
     },
     {
-      "id": "s_col_4k",
+      "id": "s_col_3f",
       "type": "text",
       "x": 80,
-      "y": 5614,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "c = neutral-axis depth below the compression edge; p = fibre coordinate from the centroid along",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_4l",
-      "type": "text",
-      "x": 80,
-      "y": 5644,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "θM, so R − p = fibre depth. The plane pivots about A (extreme bar at −εud, c &lt; cA), B (edge at",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_4m",
-      "type": "text",
-      "x": 80,
-      "y": 5674,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "εcu2, c ≤ D) or C (εc2 at depth yC, c &gt; D), EC2 Fig. 6.1.",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_4n",
-      "type": "text",
-      "x": 80,
-      "y": 6014,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Strain at fibre p for depth c",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_4o",
-      "type": "math",
-      "x": 400,
-      "y": 5935,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\varepsilon\\left(c,p\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ c<c_{A}\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{ud}\\frac{c-R+p}{d_{\\theta}-c}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ c\\le D\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{cu2}\\frac{c-R+p}{c}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{c2}\\frac{c-R+p}{c-y_{C}}\\right.\\end{array}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_4p",
-      "type": "text",
-      "x": 80,
-      "y": 6125,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "5.3 Stress laws",
-        "fontFamily": "Inter",
-        "fontSize": 14,
-        "color": "#334155",
-        "align": "left",
-        "heading": 3
-      }
-    },
-    {
-      "id": "s_col_4q",
-      "type": "text",
-      "x": 80,
-      "y": 6212,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Concrete stress, parabola-rectangle (EC2 3.17), no tension",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_4r",
-      "type": "math",
-      "x": 400,
-      "y": 6155,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\sigma_{c}\\left(\\varepsilon\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\varepsilon\\le0\\\\\\quad\\left\\Vert\\displaystyle 0\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\varepsilon<\\varepsilon_{c2}\\\\\\quad\\left\\Vert\\displaystyle f_{cd}\\left(1-\\left(1-\\frac{\\varepsilon}{\\varepsilon_{c2}}\\right)^2\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{cd}\\right.\\end{array}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_4s",
-      "type": "text",
-      "x": 80,
-      "y": 6375,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Steel stress, elastic-plastic within ±fyd",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_4t",
-      "type": "math",
-      "x": 400,
-      "y": 6325,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\sigma_{s}\\left(\\varepsilon\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ E_{s}\\varepsilon<-f_{yd}\\\\\\quad\\left\\Vert\\displaystyle -f_{yd}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ E_{s}\\varepsilon>f_{yd}\\\\\\quad\\left\\Vert\\displaystyle f_{yd}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle E_{s}\\varepsilon\\right.\\end{array}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_4u",
-      "type": "text",
-      "x": 80,
-      "y": 6471,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Net bar stress (concrete it displaces subtracted)",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_4v",
-      "type": "math",
-      "x": 400,
-      "y": 6465,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\sigma_{b}\\left(\\varepsilon\\right)\\coloneq\\sigma_{s}\\left(\\varepsilon\\right)-\\sigma_{c}\\left(\\varepsilon\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_4w",
-      "type": "text",
-      "x": 80,
-      "y": 6505,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "5.4 Section resultants",
-        "fontFamily": "Inter",
-        "fontSize": 14,
-        "color": "#334155",
-        "align": "left",
-        "heading": 3
-      }
-    },
-    {
-      "id": "s_col_4x",
-      "type": "text",
-      "x": 80,
-      "y": 6535,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Concrete strips (xc, Ac) plus bars of set 1 and, when δ2 = 1, set 2:",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_4y",
-      "type": "text",
-      "x": 80,
-      "y": 6567,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Axial resistance for depth c",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_4z",
-      "type": "math",
-      "x": 96,
-      "y": 6595,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "N_{R}\\left(c\\right)\\coloneq\\mathrm{sum}\\left(\\sigma_{c}\\left(\\varepsilon\\left(c,x_{c}\\right)\\right)A_{c}\\right)+A_{b1}\\mathrm{sum}\\left(\\sigma_{b}\\left(\\varepsilon\\left(c,p_{l1}\\right)\\right)\\right)+\\delta_{2}A_{b2}\\mathrm{sum}\\left(\\sigma_{b}\\left(\\varepsilon\\left(c,p_{l2}\\right)\\right)\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_50",
-      "type": "text",
-      "x": 80,
-      "y": 6637,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Moment resistance for depth c (about the centroid)",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_51",
-      "type": "math",
-      "x": 96,
-      "y": 6665,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "M_{R}\\left(c\\right)\\coloneq\\mathrm{sum}\\left(\\sigma_{c}\\left(\\varepsilon\\left(c,x_{c}\\right)\\right)A_{c}x_{c}\\right)+A_{b1}\\mathrm{sum}\\left(\\sigma_{b}\\left(\\varepsilon\\left(c,p_{l1}\\right)\\right)p_{l1}\\right)+\\delta_{2}A_{b2}\\mathrm{sum}\\left(\\sigma_{b}\\left(\\varepsilon\\left(c,p_{l2}\\right)\\right)p_{l2}\\right)",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_52",
-      "type": "text",
-      "x": 80,
-      "y": 6705,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "5.5 Control points of the curve",
-        "fontFamily": "Inter",
-        "fontSize": 14,
-        "color": "#334155",
-        "align": "left",
-        "heading": 3
-      }
-    },
-    {
-      "id": "s_col_53",
-      "type": "text",
-      "x": 80,
-      "y": 6735,
+      "y": 4213,
       "props": {
         "w": 630,
         "h": 24,
@@ -3032,10 +2071,10 @@
       }
     },
     {
-      "id": "s_col_54",
+      "id": "s_col_3g",
       "type": "text",
       "x": 80,
-      "y": 6765,
+      "y": 4243,
       "props": {
         "w": 630,
         "h": 24,
@@ -3051,10 +2090,10 @@
       }
     },
     {
-      "id": "s_col_55",
+      "id": "s_col_3h",
       "type": "text",
       "x": 80,
-      "y": 6811,
+      "y": 4289,
       "props": {
         "w": 310,
         "h": 24,
@@ -3066,15 +2105,15 @@
       }
     },
     {
-      "id": "s_col_56",
+      "id": "s_col_3i",
       "type": "math",
       "x": 400,
-      "y": 6805,
+      "y": 4283,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "N_{Rd.max}\\coloneq\\max\\left(N_{v}\\right)",
-        "displayMode": "formulaResult",
+        "latex": "N_{Rd.max}=",
+        "displayMode": "auto",
         "displayUnit": "kN",
         "precision": 1,
         "autoSize": true,
@@ -3083,10 +2122,10 @@
       }
     },
     {
-      "id": "s_col_57",
+      "id": "s_col_3j",
       "type": "text",
       "x": 80,
-      "y": 6851,
+      "y": 4329,
       "props": {
         "w": 310,
         "h": 24,
@@ -3098,15 +2137,15 @@
       }
     },
     {
-      "id": "s_col_58",
+      "id": "s_col_3k",
       "type": "math",
       "x": 400,
-      "y": 6845,
+      "y": 4323,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "M_{Rd.max}\\coloneq\\max\\left(M_{v}\\right)",
-        "displayMode": "formulaResult",
+        "latex": "M_{Rd.max}=",
+        "displayMode": "auto",
         "displayUnit": "kN m",
         "precision": 1,
         "autoSize": true,
@@ -3115,10 +2154,10 @@
       }
     },
     {
-      "id": "s_col_59",
+      "id": "s_col_3l",
       "type": "text",
       "x": 80,
-      "y": 7106,
+      "y": 4373,
       "props": {
         "w": 630,
         "h": 24,
@@ -3131,10 +2170,10 @@
       }
     },
     {
-      "id": "s_col_5a",
+      "id": "s_col_3m",
       "type": "text",
       "x": 80,
-      "y": 7136,
+      "y": 4403,
       "props": {
         "w": 630,
         "h": 24,
@@ -3146,10 +2185,10 @@
       }
     },
     {
-      "id": "s_col_5b",
+      "id": "s_col_3n",
       "type": "text",
       "x": 80,
-      "y": 7166,
+      "y": 4433,
       "props": {
         "w": 630,
         "h": 24,
@@ -3162,138 +2201,10 @@
       }
     },
     {
-      "id": "s_col_5c",
+      "id": "s_col_3o",
       "type": "text",
       "x": 80,
-      "y": 7204,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Normalised N of the control points",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_5d",
-      "type": "math",
-      "x": 400,
-      "y": 7196,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "n_{v}\\coloneq\\frac{N_{v}}{N_{Rd.max}}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_5e",
-      "type": "text",
-      "x": 80,
-      "y": 7254,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Normalised M of the control points",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_5f",
-      "type": "math",
-      "x": 400,
-      "y": 7246,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "m_{v}\\coloneq\\frac{M_{v}}{M_{Rd.max}}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_5g",
-      "type": "text",
-      "x": 80,
-      "y": 7306,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Distance of each control point from the origin",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_5h",
-      "type": "math",
-      "x": 400,
-      "y": 7296,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\rho_{v}\\coloneq\\sqrt{n_{v}^2+m_{v}^2}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_5i",
-      "type": "text",
-      "x": 80,
-      "y": 7356,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Direction of each point (sine of angle)",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_5j",
-      "type": "math",
-      "x": 400,
-      "y": 7346,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "s_{v}\\coloneq\\frac{n_{v}}{\\rho_{v}}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_5k",
-      "type": "text",
-      "x": 80,
-      "y": 7404,
+      "y": 4471,
       "props": {
         "w": 310,
         "h": 24,
@@ -3305,10 +2216,10 @@
       }
     },
     {
-      "id": "s_col_5l",
+      "id": "s_col_3p",
       "type": "math",
       "x": 400,
-      "y": 7396,
+      "y": 4463,
       "props": {
         "w": 60,
         "h": 32,
@@ -3322,10 +2233,10 @@
       }
     },
     {
-      "id": "s_col_5m",
+      "id": "s_col_3q",
       "type": "text",
       "x": 80,
-      "y": 7454,
+      "y": 4772,
       "props": {
         "w": 310,
         "h": 24,
@@ -3337,10 +2248,10 @@
       }
     },
     {
-      "id": "s_col_5n",
+      "id": "s_col_3r",
       "type": "math",
       "x": 400,
-      "y": 7446,
+      "y": 4764,
       "props": {
         "w": 60,
         "h": 32,
@@ -3354,10 +2265,10 @@
       }
     },
     {
-      "id": "s_col_5o",
+      "id": "s_col_3s",
       "type": "text",
       "x": 80,
-      "y": 7506,
+      "y": 4824,
       "props": {
         "w": 310,
         "h": 24,
@@ -3369,10 +2280,10 @@
       }
     },
     {
-      "id": "s_col_5p",
+      "id": "s_col_3t",
       "type": "math",
       "x": 400,
-      "y": 7496,
+      "y": 4814,
       "props": {
         "w": 60,
         "h": 32,
@@ -3386,10 +2297,10 @@
       }
     },
     {
-      "id": "s_col_5q",
+      "id": "s_col_3u",
       "type": "text",
       "x": 80,
-      "y": 7557,
+      "y": 4875,
       "props": {
         "w": 310,
         "h": 24,
@@ -3401,10 +2312,10 @@
       }
     },
     {
-      "id": "s_col_5r",
+      "id": "s_col_3v",
       "type": "math",
       "x": 400,
-      "y": 7546,
+      "y": 4864,
       "props": {
         "w": 60,
         "h": 32,
@@ -3418,10 +2329,10 @@
       }
     },
     {
-      "id": "s_col_5s",
+      "id": "s_col_3w",
       "type": "text",
       "x": 80,
-      "y": 7617,
+      "y": 4935,
       "props": {
         "w": 310,
         "h": 24,
@@ -3433,10 +2344,10 @@
       }
     },
     {
-      "id": "s_col_5t",
+      "id": "s_col_3x",
       "type": "math",
       "x": 400,
-      "y": 7606,
+      "y": 4924,
       "props": {
         "w": 60,
         "h": 32,
@@ -3450,10 +2361,10 @@
       }
     },
     {
-      "id": "s_col_5u",
+      "id": "s_col_3y",
       "type": "text",
       "x": 80,
-      "y": 7662,
+      "y": 4980,
       "props": {
         "w": 310,
         "h": 24,
@@ -3465,10 +2376,10 @@
       }
     },
     {
-      "id": "s_col_5v",
+      "id": "s_col_3z",
       "type": "math",
       "x": 400,
-      "y": 7656,
+      "y": 4974,
       "props": {
         "w": 60,
         "h": 32,
@@ -3482,10 +2393,10 @@
       }
     },
     {
-      "id": "s_col_5w",
+      "id": "s_col_40",
       "type": "text",
       "x": 80,
-      "y": 7696,
+      "y": 5014,
       "props": {
         "w": 630,
         "h": 24,
@@ -3498,10 +2409,10 @@
       }
     },
     {
-      "id": "s_col_5x",
+      "id": "s_col_41",
       "type": "text",
       "x": 80,
-      "y": 7726,
+      "y": 5044,
       "props": {
         "w": 630,
         "h": 24,
@@ -3513,10 +2424,10 @@
       }
     },
     {
-      "id": "s_col_5y",
+      "id": "s_col_42",
       "type": "text",
       "x": 80,
-      "y": 7759,
+      "y": 5077,
       "props": {
         "w": 310,
         "h": 24,
@@ -3528,10 +2439,10 @@
       }
     },
     {
-      "id": "s_col_5z",
+      "id": "s_col_43",
       "type": "math",
       "x": 400,
-      "y": 7756,
+      "y": 5074,
       "props": {
         "w": 60,
         "h": 32,
@@ -3545,10 +2456,10 @@
       }
     },
     {
-      "id": "s_col_60",
+      "id": "s_col_44",
       "type": "text",
       "x": 80,
-      "y": 7822,
+      "y": 5140,
       "props": {
         "w": 310,
         "h": 24,
@@ -3560,10 +2471,10 @@
       }
     },
     {
-      "id": "s_col_61",
+      "id": "s_col_45",
       "type": "math",
       "x": 400,
-      "y": 7816,
+      "y": 5134,
       "props": {
         "w": 60,
         "h": 32,
@@ -3577,10 +2488,10 @@
       }
     },
     {
-      "id": "s_col_62",
+      "id": "s_col_46",
       "type": "text",
       "x": 80,
-      "y": 7862,
+      "y": 5180,
       "props": {
         "w": 310,
         "h": 24,
@@ -3592,10 +2503,10 @@
       }
     },
     {
-      "id": "s_col_63",
+      "id": "s_col_47",
       "type": "math",
       "x": 400,
-      "y": 7856,
+      "y": 5174,
       "props": {
         "w": 60,
         "h": 32,
@@ -3609,10 +2520,10 @@
       }
     },
     {
-      "id": "s_col_64",
+      "id": "s_col_48",
       "type": "text",
       "x": 80,
-      "y": 7902,
+      "y": 5220,
       "props": {
         "w": 310,
         "h": 24,
@@ -3624,10 +2535,10 @@
       }
     },
     {
-      "id": "s_col_65",
+      "id": "s_col_49",
       "type": "math",
       "x": 400,
-      "y": 7896,
+      "y": 5214,
       "props": {
         "w": 60,
         "h": 32,
@@ -3641,10 +2552,10 @@
       }
     },
     {
-      "id": "s_col_66",
+      "id": "s_col_4a",
       "type": "text",
       "x": 80,
-      "y": 7942,
+      "y": 5260,
       "props": {
         "w": 310,
         "h": 24,
@@ -3656,10 +2567,10 @@
       }
     },
     {
-      "id": "s_col_67",
+      "id": "s_col_4b",
       "type": "math",
       "x": 400,
-      "y": 7936,
+      "y": 5254,
       "props": {
         "w": 60,
         "h": 32,
@@ -3673,10 +2584,10 @@
       }
     },
     {
-      "id": "s_col_68",
+      "id": "s_col_4c",
       "type": "text",
       "x": 80,
-      "y": 7984,
+      "y": 5302,
       "props": {
         "w": 310,
         "h": 24,
@@ -3688,10 +2599,10 @@
       }
     },
     {
-      "id": "s_col_69",
+      "id": "s_col_4d",
       "type": "math",
       "x": 400,
-      "y": 7976,
+      "y": 5294,
       "props": {
         "w": 60,
         "h": 32,
@@ -3705,10 +2616,10 @@
       }
     },
     {
-      "id": "s_col_6a",
+      "id": "s_col_4e",
       "type": "text",
       "x": 80,
-      "y": 8032,
+      "y": 5350,
       "props": {
         "w": 310,
         "h": 24,
@@ -3720,10 +2631,10 @@
       }
     },
     {
-      "id": "s_col_6b",
+      "id": "s_col_4f",
       "type": "math",
       "x": 400,
-      "y": 8026,
+      "y": 5344,
       "props": {
         "w": 60,
         "h": 32,
@@ -3737,10 +2648,10 @@
       }
     },
     {
-      "id": "s_col_6c",
+      "id": "s_col_4g",
       "type": "text",
       "x": 80,
-      "y": 8285,
+      "y": 5392,
       "props": {
         "w": 310,
         "h": 24,
@@ -3752,10 +2663,10 @@
       }
     },
     {
-      "id": "s_col_6d",
+      "id": "s_col_4h",
       "type": "math",
       "x": 400,
-      "y": 8277,
+      "y": 5384,
       "props": {
         "w": 60,
         "h": 32,
@@ -3769,10 +2680,10 @@
       }
     },
     {
-      "id": "s_col_6e",
+      "id": "s_col_4i",
       "type": "text",
       "x": 80,
-      "y": 8327,
+      "y": 5935,
       "props": {
         "w": 630,
         "h": 24,
@@ -3785,10 +2696,10 @@
       }
     },
     {
-      "id": "s_col_6f",
+      "id": "s_col_4j",
       "type": "graph",
       "x": 187,
-      "y": 8349,
+      "y": 5957,
       "props": {
         "w": 420,
         "h": 420,
@@ -3873,10 +2784,10 @@
       }
     },
     {
-      "id": "s_col_6g",
+      "id": "s_col_4k",
       "type": "text",
       "x": 80,
-      "y": 8807,
+      "y": 6415,
       "props": {
         "w": 630,
         "h": 24,
@@ -3889,10 +2800,10 @@
       }
     },
     {
-      "id": "s_col_6h",
+      "id": "s_col_4l",
       "type": "text",
       "x": 80,
-      "y": 8837,
+      "y": 6445,
       "props": {
         "w": 630,
         "h": 24,
@@ -3905,10 +2816,10 @@
       }
     },
     {
-      "id": "s_col_6i",
+      "id": "s_col_4m",
       "type": "text",
       "x": 80,
-      "y": 8867,
+      "y": 6475,
       "props": {
         "w": 630,
         "h": 24,
@@ -3920,10 +2831,10 @@
       }
     },
     {
-      "id": "s_col_6j",
+      "id": "s_col_4n",
       "type": "text",
       "x": 80,
-      "y": 8897,
+      "y": 6505,
       "props": {
         "w": 630,
         "h": 24,
@@ -3935,10 +2846,10 @@
       }
     },
     {
-      "id": "s_col_6k",
+      "id": "s_col_4o",
       "type": "text",
       "x": 80,
-      "y": 8927,
+      "y": 6535,
       "props": {
         "w": 630,
         "h": 24,
@@ -3950,10 +2861,10 @@
       }
     },
     {
-      "id": "s_col_6l",
+      "id": "s_col_4p",
       "type": "text",
       "x": 80,
-      "y": 8957,
+      "y": 6565,
       "props": {
         "w": 630,
         "h": 24,
@@ -3965,10 +2876,10 @@
       }
     },
     {
-      "id": "s_col_6m",
+      "id": "s_col_4q",
       "type": "text",
       "x": 80,
-      "y": 9009,
+      "y": 6617,
       "props": {
         "w": 630,
         "h": 24,
@@ -3980,10 +2891,10 @@
       }
     },
     {
-      "id": "s_col_6n",
+      "id": "s_col_4r",
       "type": "math",
       "x": 96,
-      "y": 9037,
+      "y": 6645,
       "props": {
         "w": 60,
         "h": 32,
@@ -3997,10 +2908,10 @@
       }
     },
     {
-      "id": "s_col_6o",
+      "id": "s_col_4s",
       "type": "text",
       "x": 80,
-      "y": 9093,
+      "y": 6701,
       "props": {
         "w": 310,
         "h": 24,
@@ -4012,10 +2923,10 @@
       }
     },
     {
-      "id": "s_col_6p",
+      "id": "s_col_4t",
       "type": "math",
       "x": 400,
-      "y": 9087,
+      "y": 6695,
       "props": {
         "w": 60,
         "h": 32,
@@ -4029,10 +2940,10 @@
       }
     },
     {
-      "id": "s_col_6q",
+      "id": "s_col_4u",
       "type": "text",
       "x": 80,
-      "y": 9127,
+      "y": 6735,
       "props": {
         "w": 310,
         "h": 24,
@@ -4044,10 +2955,10 @@
       }
     },
     {
-      "id": "s_col_6r",
+      "id": "s_col_4v",
       "type": "math",
       "x": 400,
-      "y": 9127,
+      "y": 6735,
       "props": {
         "w": 60,
         "h": 32,
@@ -4061,10 +2972,10 @@
       }
     },
     {
-      "id": "s_col_6s",
+      "id": "s_col_4w",
       "type": "text",
       "x": 80,
-      "y": 9450,
+      "y": 7108,
       "props": {
         "w": 630,
         "h": 24,
@@ -4076,10 +2987,10 @@
       }
     },
     {
-      "id": "s_col_6t",
+      "id": "s_col_4x",
       "type": "math",
       "x": 96,
-      "y": 9478,
+      "y": 7136,
       "props": {
         "w": 60,
         "h": 32,
@@ -4093,10 +3004,10 @@
       }
     },
     {
-      "id": "s_col_6u",
+      "id": "s_col_4y",
       "type": "text",
       "x": 80,
-      "y": 9600,
+      "y": 7258,
       "props": {
         "w": 630,
         "h": 24,
@@ -4108,10 +3019,10 @@
       }
     },
     {
-      "id": "s_col_6v",
+      "id": "s_col_4z",
       "type": "math",
       "x": 96,
-      "y": 9628,
+      "y": 7286,
       "props": {
         "w": 60,
         "h": 32,
@@ -4125,10 +3036,10 @@
       }
     },
     {
-      "id": "s_col_6w",
+      "id": "s_col_50",
       "type": "text",
       "x": 80,
-      "y": 9776,
+      "y": 7434,
       "props": {
         "w": 310,
         "h": 24,
@@ -4140,10 +3051,10 @@
       }
     },
     {
-      "id": "s_col_6x",
+      "id": "s_col_51",
       "type": "math",
       "x": 400,
-      "y": 9768,
+      "y": 7426,
       "props": {
         "w": 60,
         "h": 32,
@@ -4157,10 +3068,10 @@
       }
     },
     {
-      "id": "s_col_6y",
+      "id": "s_col_52",
       "type": "text",
       "x": 80,
-      "y": 9824,
+      "y": 7482,
       "props": {
         "w": 310,
         "h": 24,
@@ -4172,10 +3083,10 @@
       }
     },
     {
-      "id": "s_col_6z",
+      "id": "s_col_53",
       "type": "math",
       "x": 400,
-      "y": 9818,
+      "y": 7476,
       "props": {
         "w": 60,
         "h": 32,
@@ -4189,10 +3100,10 @@
       }
     },
     {
-      "id": "s_col_70",
+      "id": "s_col_54",
       "type": "text",
       "x": 80,
-      "y": 9858,
+      "y": 7516,
       "props": {
         "w": 630,
         "h": 24,
@@ -4205,10 +3116,10 @@
       }
     },
     {
-      "id": "s_col_71",
+      "id": "s_col_55",
       "type": "text",
       "x": 80,
-      "y": 9888,
+      "y": 7546,
       "props": {
         "w": 630,
         "h": 24,
@@ -4220,10 +3131,10 @@
       }
     },
     {
-      "id": "s_col_72",
+      "id": "s_col_56",
       "type": "text",
       "x": 80,
-      "y": 9918,
+      "y": 7576,
       "props": {
         "w": 630,
         "h": 24,
@@ -4235,10 +3146,10 @@
       }
     },
     {
-      "id": "s_col_73",
+      "id": "s_col_57",
       "type": "text",
       "x": 80,
-      "y": 9948,
+      "y": 7606,
       "props": {
         "w": 630,
         "h": 24,
@@ -4250,10 +3161,10 @@
       }
     },
     {
-      "id": "s_col_74",
+      "id": "s_col_58",
       "type": "text",
       "x": 80,
-      "y": 9978,
+      "y": 7636,
       "props": {
         "w": 630,
         "h": 24,
@@ -4265,10 +3176,10 @@
       }
     },
     {
-      "id": "s_col_75",
+      "id": "s_col_59",
       "type": "text",
       "x": 80,
-      "y": 10028,
+      "y": 7686,
       "props": {
         "w": 310,
         "h": 24,
@@ -4280,10 +3191,10 @@
       }
     },
     {
-      "id": "s_col_76",
+      "id": "s_col_5a",
       "type": "math",
       "x": 400,
-      "y": 10028,
+      "y": 7686,
       "props": {
         "w": 60,
         "h": 32,
@@ -4297,10 +3208,10 @@
       }
     },
     {
-      "id": "s_col_77",
+      "id": "s_col_5b",
       "type": "text",
       "x": 80,
-      "y": 10077,
+      "y": 7735,
       "props": {
         "w": 310,
         "h": 24,
@@ -4312,10 +3223,10 @@
       }
     },
     {
-      "id": "s_col_78",
+      "id": "s_col_5c",
       "type": "math",
       "x": 400,
-      "y": 10068,
+      "y": 7726,
       "props": {
         "w": 60,
         "h": 32,
@@ -4329,10 +3240,10 @@
       }
     },
     {
-      "id": "s_col_79",
+      "id": "s_col_5d",
       "type": "text",
       "x": 80,
-      "y": 10120,
+      "y": 7778,
       "props": {
         "w": 630,
         "h": 24,
@@ -4344,10 +3255,10 @@
       }
     },
     {
-      "id": "s_col_7a",
+      "id": "s_col_5e",
       "type": "math",
       "x": 96,
-      "y": 10148,
+      "y": 7806,
       "props": {
         "w": 60,
         "h": 32,
@@ -4361,10 +3272,10 @@
       }
     },
     {
-      "id": "s_col_7b",
+      "id": "s_col_5f",
       "type": "text",
       "x": 80,
-      "y": 10621,
+      "y": 8279,
       "props": {
         "w": 630,
         "h": 24,
@@ -4376,10 +3287,10 @@
       }
     },
     {
-      "id": "s_col_7c",
+      "id": "s_col_5g",
       "type": "math",
       "x": 96,
-      "y": 10649,
+      "y": 8307,
       "props": {
         "w": 60,
         "h": 32,
@@ -4393,10 +3304,10 @@
       }
     },
     {
-      "id": "s_col_7d",
+      "id": "s_col_5h",
       "type": "text",
       "x": 80,
-      "y": 10819,
+      "y": 8477,
       "props": {
         "w": 630,
         "h": 24,
@@ -4409,10 +3320,10 @@
       }
     },
     {
-      "id": "s_col_7e",
+      "id": "s_col_5i",
       "type": "text",
       "x": 80,
-      "y": 10852,
+      "y": 8510,
       "props": {
         "w": 310,
         "h": 24,
@@ -4424,10 +3335,10 @@
       }
     },
     {
-      "id": "s_col_7f",
+      "id": "s_col_5j",
       "type": "math",
       "x": 400,
-      "y": 10849,
+      "y": 8507,
       "props": {
         "w": 60,
         "h": 32,
@@ -4441,10 +3352,10 @@
       }
     },
     {
-      "id": "s_col_7g",
+      "id": "s_col_5k",
       "type": "text",
       "x": 80,
-      "y": 10915,
+      "y": 8573,
       "props": {
         "w": 310,
         "h": 24,
@@ -4456,10 +3367,10 @@
       }
     },
     {
-      "id": "s_col_7h",
+      "id": "s_col_5l",
       "type": "math",
       "x": 400,
-      "y": 10909,
+      "y": 8567,
       "props": {
         "w": 60,
         "h": 32,
@@ -4473,10 +3384,10 @@
       }
     },
     {
-      "id": "s_col_7i",
+      "id": "s_col_5m",
       "type": "text",
       "x": 80,
-      "y": 10960,
+      "y": 8618,
       "props": {
         "w": 310,
         "h": 24,
@@ -4488,10 +3399,10 @@
       }
     },
     {
-      "id": "s_col_7j",
+      "id": "s_col_5n",
       "type": "math",
       "x": 400,
-      "y": 10949,
+      "y": 8607,
       "props": {
         "w": 60,
         "h": 32,
@@ -4505,10 +3416,10 @@
       }
     },
     {
-      "id": "s_col_7k",
+      "id": "s_col_5o",
       "type": "text",
       "x": 80,
-      "y": 11020,
+      "y": 8678,
       "props": {
         "w": 310,
         "h": 24,
@@ -4520,10 +3431,10 @@
       }
     },
     {
-      "id": "s_col_7l",
+      "id": "s_col_5p",
       "type": "math",
       "x": 400,
-      "y": 11009,
+      "y": 8667,
       "props": {
         "w": 60,
         "h": 32,
@@ -4537,10 +3448,10 @@
       }
     },
     {
-      "id": "s_col_7m",
+      "id": "s_col_5q",
       "type": "text",
       "x": 80,
-      "y": 11075,
+      "y": 8733,
       "props": {
         "w": 310,
         "h": 24,
@@ -4552,10 +3463,10 @@
       }
     },
     {
-      "id": "s_col_7n",
+      "id": "s_col_5r",
       "type": "math",
       "x": 400,
-      "y": 11069,
+      "y": 8727,
       "props": {
         "w": 60,
         "h": 32,
@@ -4569,10 +3480,10 @@
       }
     },
     {
-      "id": "s_col_7o",
+      "id": "s_col_5s",
       "type": "text",
       "x": 80,
-      "y": 11119,
+      "y": 8777,
       "props": {
         "w": 630,
         "h": 24,
@@ -4585,10 +3496,10 @@
       }
     },
     {
-      "id": "s_col_7p",
+      "id": "s_col_5t",
       "type": "text",
       "x": 80,
-      "y": 11155,
+      "y": 8813,
       "props": {
         "w": 310,
         "h": 24,
@@ -4600,10 +3511,10 @@
       }
     },
     {
-      "id": "s_col_7q",
+      "id": "s_col_5u",
       "type": "math",
       "x": 400,
-      "y": 11149,
+      "y": 8807,
       "props": {
         "w": 60,
         "h": 32,
@@ -4617,10 +3528,10 @@
       }
     },
     {
-      "id": "s_col_7r",
+      "id": "s_col_5v",
       "type": "text",
       "x": 80,
-      "y": 11195,
+      "y": 8853,
       "props": {
         "w": 310,
         "h": 24,
@@ -4632,10 +3543,10 @@
       }
     },
     {
-      "id": "s_col_7s",
+      "id": "s_col_5w",
       "type": "math",
       "x": 400,
-      "y": 11189,
+      "y": 8847,
       "props": {
         "w": 60,
         "h": 32,
@@ -4649,10 +3560,10 @@
       }
     },
     {
-      "id": "s_col_7t",
+      "id": "s_col_5x",
       "type": "text",
       "x": 80,
-      "y": 11790,
+      "y": 9448,
       "props": {
         "w": 630,
         "h": 24,
@@ -4668,10 +3579,1088 @@
       }
     },
     {
-      "id": "s_col_7u",
+      "id": "s_col_5y",
       "type": "text",
       "x": 80,
-      "y": 11830,
+      "y": 9488,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Bar coordinates",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2,
+        "annex": {
+          "kind": "heading",
+          "id": "ax_bars"
+        }
+      }
+    },
+    {
+      "id": "s_col_5z",
+      "type": "text",
+      "x": 80,
+      "y": 9524,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Bar index, set 1 (edit seq to renumber)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_60",
+      "type": "math",
+      "x": 400,
+      "y": 9518,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "i_{1}\\coloneq\\mathrm{seq}\\left(0,n_{l1}-1\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_61",
+      "type": "text",
+      "x": 80,
+      "y": 9564,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Bar index, set 2",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_62",
+      "type": "math",
+      "x": 400,
+      "y": 9558,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "i_{2}\\coloneq\\mathrm{seq}\\left(0,n_{l2}-1\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_63",
+      "type": "text",
+      "x": 80,
+      "y": 9608,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Angles for drawing circles",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_64",
+      "type": "math",
+      "x": 400,
+      "y": 9598,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varphi_{t}\\coloneq\\mathrm{seq}\\left(0,2\\pi,\\frac{\\pi}{36}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_65",
+      "type": "text",
+      "x": 80,
+      "y": 9659,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set-1 bar coordinates, x",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_66",
+      "type": "math",
+      "x": 400,
+      "y": 9648,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "x_{l1}\\coloneq r_{1}\\cos\\left(\\frac{2\\pi i_{1}}{n_{l1}}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_67",
+      "type": "text",
+      "x": 80,
+      "y": 9719,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set-1 bar coordinates, y",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_68",
+      "type": "math",
+      "x": 400,
+      "y": 9708,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "y_{l1}\\coloneq r_{1}\\sin\\left(\\frac{2\\pi i_{1}}{n_{l1}}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_69",
+      "type": "text",
+      "x": 80,
+      "y": 9779,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set-2 bar coordinates, x",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6a",
+      "type": "math",
+      "x": 400,
+      "y": 9768,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "x_{l2}\\coloneq r_{2}\\cos\\left(\\frac{2\\pi i_{2}}{n_{l2}}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6b",
+      "type": "text",
+      "x": 80,
+      "y": 9839,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set-2 bar coordinates, y",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6c",
+      "type": "math",
+      "x": 400,
+      "y": 9828,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "y_{l2}\\coloneq r_{2}\\sin\\left(\\frac{2\\pi i_{2}}{n_{l2}}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6d",
+      "type": "text",
+      "x": 96,
+      "y": 9888,
+      "props": {
+        "w": 280,
+        "h": 24,
+        "html": "Set 1 (outer)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#dc2626",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6e",
+      "type": "text",
+      "x": 400,
+      "y": 9888,
+      "props": {
+        "w": 300,
+        "h": 24,
+        "html": "Set 2 (inner, used when nset = 2)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#ea580c",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6f",
+      "type": "math",
+      "x": 96,
+      "y": 9918,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "i_{1}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_6g",
+      "type": "math",
+      "x": 168,
+      "y": 9918,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "x_{l1}=",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_6h",
+      "type": "math",
+      "x": 283,
+      "y": 9918,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "y_{l1}=",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_6i",
+      "type": "math",
+      "x": 396,
+      "y": 9918,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "i_{2}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_6j",
+      "type": "math",
+      "x": 468,
+      "y": 9918,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "x_{l2}=",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_6k",
+      "type": "math",
+      "x": 583,
+      "y": 9918,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "y_{l2}=",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "vectorLayout": "column",
+        "vectorExpanded": true
+      }
+    },
+    {
+      "id": "s_col_6l",
+      "type": "text",
+      "x": 80,
+      "y": 10298,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Concrete strips",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2,
+        "annex": {
+          "kind": "heading",
+          "id": "ax_strips"
+        }
+      }
+    },
+    {
+      "id": "s_col_6m",
+      "type": "text",
+      "x": 80,
+      "y": 10328,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "The concrete is cut into nc thin strips parallel to the neutral axis. Each strip carries the",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6n",
+      "type": "text",
+      "x": 80,
+      "y": 10358,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "stress at its centre strain; summing strip forces (× lever arm) gives the concrete N and M.",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6o",
+      "type": "text",
+      "x": 80,
+      "y": 10625,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strip index",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6p",
+      "type": "math",
+      "x": 400,
+      "y": 10619,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "j\\coloneq\\mathrm{seq}\\left(0,n_{c}-1\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6q",
+      "type": "text",
+      "x": 80,
+      "y": 10670,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strip width",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6r",
+      "type": "math",
+      "x": 400,
+      "y": 10659,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\Delta\\coloneq\\frac{D}{n_{c}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6s",
+      "type": "text",
+      "x": 80,
+      "y": 10715,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strip centre coordinate, from the centroid",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6t",
+      "type": "math",
+      "x": 400,
+      "y": 10709,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "x_{c}\\coloneq R-\\left(j+0.5\\right)\\Delta",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6u",
+      "type": "text",
+      "x": 80,
+      "y": 10759,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strip area (chord length × width)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6v",
+      "type": "math",
+      "x": 400,
+      "y": 10749,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "A_{c}\\coloneq2\\sqrt{R^2-x_{c}^2}\\cdot\\Delta",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6w",
+      "type": "text",
+      "x": 80,
+      "y": 10809,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strip area / gross area (check of nc)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6x",
+      "type": "math",
+      "x": 400,
+      "y": 10799,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\frac{\\mathrm{sum}\\left(A_{c}\\right)}{A_{g}}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 4,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6y",
+      "type": "text",
+      "x": 80,
+      "y": 10879,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Strain plane, stress laws and section resultants",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2,
+        "annex": {
+          "kind": "heading",
+          "id": "ax_resultants"
+        }
+      }
+    },
+    {
+      "id": "s_col_6z",
+      "type": "text",
+      "x": 80,
+      "y": 10920,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set-1 bar coordinate p along θM (from centroid)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_70",
+      "type": "math",
+      "x": 400,
+      "y": 10909,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "p_{l1}\\coloneq r_{1}\\cos\\left(\\frac{2\\pi i_{1}}{n_{l1}}\\mathrm{rad}-\\theta_{M}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_71",
+      "type": "text",
+      "x": 80,
+      "y": 10980,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Set-2 bar coordinate p along θM",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_72",
+      "type": "math",
+      "x": 400,
+      "y": 10969,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "p_{l2}\\coloneq r_{2}\\cos\\left(\\frac{2\\pi i_{2}}{n_{l2}}\\mathrm{rad}-\\theta_{M}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_73",
+      "type": "text",
+      "x": 80,
+      "y": 11060,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Depth dθ: compression edge to extreme bar",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_74",
+      "type": "math",
+      "x": 400,
+      "y": 11029,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "d_{\\theta}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ n_{set}\\ge2\\\\\\quad\\left\\Vert\\displaystyle R-\\min\\left(p_{l1},p_{l2}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle R-\\min\\left(p_{l1}\\right)\\right.\\end{array}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_75",
+      "type": "text",
+      "x": 80,
+      "y": 11137,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Depth cA at pivot A/B boundary",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_76",
+      "type": "math",
+      "x": 400,
+      "y": 11129,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "c_{A}\\coloneq\\frac{\\varepsilon_{cu2}d_{\\theta}}{\\varepsilon_{cu2}+\\varepsilon_{ud}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_77",
+      "type": "text",
+      "x": 80,
+      "y": 11190,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Depth yC of pivot C (εc2 in full compression)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_78",
+      "type": "math",
+      "x": 400,
+      "y": 11179,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "y_{C}\\coloneq\\left(1-\\frac{\\varepsilon_{c2}}{\\varepsilon_{cu2}}\\right)D",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_79",
+      "type": "text",
+      "x": 80,
+      "y": 11239,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Strain plane (+ compression)",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_7a",
+      "type": "text",
+      "x": 80,
+      "y": 11269,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "c = neutral-axis depth below the compression edge; p = fibre coordinate from the centroid along",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7b",
+      "type": "text",
+      "x": 80,
+      "y": 11299,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "θM, so R − p = fibre depth. The plane pivots about A (extreme bar at −εud, c &lt; cA), B (edge at",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7c",
+      "type": "text",
+      "x": 80,
+      "y": 11329,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "εcu2, c ≤ D) or C (εc2 at depth yC, c &gt; D), EC2 Fig. 6.1.",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7d",
+      "type": "text",
+      "x": 80,
+      "y": 11438,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strain at fibre p for depth c",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7e",
+      "type": "math",
+      "x": 400,
+      "y": 11359,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\varepsilon\\left(c,p\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ c<c_{A}\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{ud}\\frac{c-R+p}{d_{\\theta}-c}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ c\\le D\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{cu2}\\frac{c-R+p}{c}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\varepsilon_{c2}\\frac{c-R+p}{c-y_{C}}\\right.\\end{array}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7f",
+      "type": "text",
+      "x": 80,
+      "y": 11790,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Stress laws",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_7g",
+      "type": "text",
+      "x": 80,
+      "y": 11877,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Concrete stress, parabola-rectangle (EC2 3.17), no tension",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7h",
+      "type": "math",
+      "x": 400,
+      "y": 11820,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\sigma_{c}\\left(\\varepsilon\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\varepsilon\\le0\\\\\\quad\\left\\Vert\\displaystyle 0\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\varepsilon<\\varepsilon_{c2}\\\\\\quad\\left\\Vert\\displaystyle f_{cd}\\left(1-\\left(1-\\frac{\\varepsilon}{\\varepsilon_{c2}}\\right)^2\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{cd}\\right.\\end{array}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7i",
+      "type": "text",
+      "x": 80,
+      "y": 12040,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Steel stress, elastic-plastic within ±fyd",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7j",
+      "type": "math",
+      "x": 400,
+      "y": 11990,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\sigma_{s}\\left(\\varepsilon\\right)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ E_{s}\\varepsilon<-f_{yd}\\\\\\quad\\left\\Vert\\displaystyle -f_{yd}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ E_{s}\\varepsilon>f_{yd}\\\\\\quad\\left\\Vert\\displaystyle f_{yd}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle E_{s}\\varepsilon\\right.\\end{array}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7k",
+      "type": "text",
+      "x": 80,
+      "y": 12136,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Net bar stress (concrete it displaces subtracted)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7l",
+      "type": "math",
+      "x": 400,
+      "y": 12130,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\sigma_{b}\\left(\\varepsilon\\right)\\coloneq\\sigma_{s}\\left(\\varepsilon\\right)-\\sigma_{c}\\left(\\varepsilon\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7m",
+      "type": "text",
+      "x": 80,
+      "y": 12170,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Section resultants",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_col_7n",
+      "type": "text",
+      "x": 80,
+      "y": 12200,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Concrete strips (xc, Ac) plus bars of set 1 and, when δ2 = 1, set 2:",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7o",
+      "type": "text",
+      "x": 80,
+      "y": 12232,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Axial resistance for depth c",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7p",
+      "type": "math",
+      "x": 96,
+      "y": 12260,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{R}\\left(c\\right)\\coloneq\\mathrm{sum}\\left(\\sigma_{c}\\left(\\varepsilon\\left(c,x_{c}\\right)\\right)A_{c}\\right)+A_{b1}\\mathrm{sum}\\left(\\sigma_{b}\\left(\\varepsilon\\left(c,p_{l1}\\right)\\right)\\right)+\\delta_{2}A_{b2}\\mathrm{sum}\\left(\\sigma_{b}\\left(\\varepsilon\\left(c,p_{l2}\\right)\\right)\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7q",
+      "type": "text",
+      "x": 80,
+      "y": 12302,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Moment resistance for depth c (about the centroid)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7r",
+      "type": "math",
+      "x": 96,
+      "y": 12330,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{R}\\left(c\\right)\\coloneq\\mathrm{sum}\\left(\\sigma_{c}\\left(\\varepsilon\\left(c,x_{c}\\right)\\right)A_{c}x_{c}\\right)+A_{b1}\\mathrm{sum}\\left(\\sigma_{b}\\left(\\varepsilon\\left(c,p_{l1}\\right)\\right)p_{l1}\\right)+\\delta_{2}A_{b2}\\mathrm{sum}\\left(\\sigma_{b}\\left(\\varepsilon\\left(c,p_{l2}\\right)\\right)p_{l2}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7s",
+      "type": "text",
+      "x": 80,
+      "y": 12390,
       "props": {
         "w": 630,
         "h": 24,
@@ -4688,10 +4677,10 @@
       }
     },
     {
-      "id": "s_col_7v",
+      "id": "s_col_7t",
       "type": "text",
       "x": 80,
-      "y": 11862,
+      "y": 12422,
       "props": {
         "w": 630,
         "h": 24,
@@ -4703,10 +4692,10 @@
       }
     },
     {
-      "id": "s_col_7w",
+      "id": "s_col_7u",
       "type": "math",
       "x": 96,
-      "y": 11890,
+      "y": 12450,
       "props": {
         "w": 60,
         "h": 32,
@@ -4720,10 +4709,10 @@
       }
     },
     {
-      "id": "s_col_7x",
+      "id": "s_col_7v",
       "type": "text",
       "x": 80,
-      "y": 11956,
+      "y": 12516,
       "props": {
         "w": 310,
         "h": 24,
@@ -4735,10 +4724,10 @@
       }
     },
     {
-      "id": "s_col_7y",
+      "id": "s_col_7w",
       "type": "math",
       "x": 400,
-      "y": 11950,
+      "y": 12510,
       "props": {
         "w": 60,
         "h": 32,
@@ -4752,10 +4741,10 @@
       }
     },
     {
-      "id": "s_col_7z",
+      "id": "s_col_7x",
       "type": "text",
       "x": 80,
-      "y": 11996,
+      "y": 12556,
       "props": {
         "w": 310,
         "h": 24,
@@ -4767,10 +4756,10 @@
       }
     },
     {
-      "id": "s_col_80",
+      "id": "s_col_7y",
       "type": "math",
       "x": 400,
-      "y": 11990,
+      "y": 12550,
       "props": {
         "w": 60,
         "h": 32,
@@ -4784,10 +4773,10 @@
       }
     },
     {
-      "id": "s_col_81",
+      "id": "s_col_7z",
       "type": "text",
       "x": 80,
-      "y": 12036,
+      "y": 12596,
       "props": {
         "w": 310,
         "h": 24,
@@ -4799,10 +4788,10 @@
       }
     },
     {
-      "id": "s_col_82",
+      "id": "s_col_80",
       "type": "math",
       "x": 400,
-      "y": 12030,
+      "y": 12590,
       "props": {
         "w": 60,
         "h": 32,
@@ -4816,10 +4805,10 @@
       }
     },
     {
-      "id": "s_col_83",
+      "id": "s_col_81",
       "type": "text",
       "x": 80,
-      "y": 12076,
+      "y": 12636,
       "props": {
         "w": 310,
         "h": 24,
@@ -4831,10 +4820,10 @@
       }
     },
     {
-      "id": "s_col_84",
+      "id": "s_col_82",
       "type": "math",
       "x": 400,
-      "y": 12070,
+      "y": 12630,
       "props": {
         "w": 60,
         "h": 32,
@@ -4848,10 +4837,10 @@
       }
     },
     {
-      "id": "s_col_85",
+      "id": "s_col_83",
       "type": "text",
       "x": 80,
-      "y": 12116,
+      "y": 12676,
       "props": {
         "w": 310,
         "h": 24,
@@ -4863,10 +4852,10 @@
       }
     },
     {
-      "id": "s_col_86",
+      "id": "s_col_84",
       "type": "math",
       "x": 400,
-      "y": 12110,
+      "y": 12670,
       "props": {
         "w": 60,
         "h": 32,
@@ -4880,7 +4869,7 @@
       }
     },
     {
-      "id": "s_col_87",
+      "id": "s_col_85",
       "type": "text",
       "x": 96,
       "y": 12961,
@@ -4895,7 +4884,7 @@
       }
     },
     {
-      "id": "s_col_88",
+      "id": "s_col_86",
       "type": "math",
       "x": 96,
       "y": 12991,
@@ -4914,7 +4903,7 @@
       }
     },
     {
-      "id": "s_col_89",
+      "id": "s_col_87",
       "type": "math",
       "x": 214,
       "y": 12991,
@@ -4933,7 +4922,7 @@
       }
     },
     {
-      "id": "s_col_8a",
+      "id": "s_col_88",
       "type": "math",
       "x": 340,
       "y": 12991,
@@ -4952,7 +4941,7 @@
       }
     },
     {
-      "id": "s_col_8b",
+      "id": "s_col_89",
       "type": "math",
       "x": 480,
       "y": 12991,
@@ -4971,7 +4960,7 @@
       }
     },
     {
-      "id": "s_col_8c",
+      "id": "s_col_8a",
       "type": "math",
       "x": 596,
       "y": 12991,
@@ -4988,8 +4977,200 @@
         "vectorLayout": "column",
         "vectorExpanded": true
       }
+    },
+    {
+      "id": "s_col_8b",
+      "type": "text",
+      "x": 80,
+      "y": 13837,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Max. axial resistance (uniform εc2)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8c",
+      "type": "math",
+      "x": 400,
+      "y": 13831,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "N_{Rd.max}\\coloneq\\max\\left(N_{v}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_8d",
+      "type": "text",
+      "x": 80,
+      "y": 13877,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Maximum moment resistance on the curve",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8e",
+      "type": "math",
+      "x": 400,
+      "y": 13871,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "M_{Rd.max}\\coloneq\\max\\left(M_{v}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_8f",
+      "type": "text",
+      "x": 80,
+      "y": 14140,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Normalised N of the control points",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8g",
+      "type": "math",
+      "x": 400,
+      "y": 14132,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "n_{v}\\coloneq\\frac{N_{v}}{N_{Rd.max}}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_8h",
+      "type": "text",
+      "x": 80,
+      "y": 14190,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Normalised M of the control points",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8i",
+      "type": "math",
+      "x": 400,
+      "y": 14182,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "m_{v}\\coloneq\\frac{M_{v}}{M_{Rd.max}}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_8j",
+      "type": "text",
+      "x": 80,
+      "y": 14242,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Distance of each control point from the origin",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8k",
+      "type": "math",
+      "x": 400,
+      "y": 14232,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\rho_{v}\\coloneq\\sqrt{n_{v}^2+m_{v}^2}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_8l",
+      "type": "text",
+      "x": 80,
+      "y": 14292,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Direction of each point (sine of angle)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_8m",
+      "type": "math",
+      "x": 400,
+      "y": 14282,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "s_{v}\\coloneq\\frac{n_{v}}{\\rho_{v}}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
     }
   ],
-  "createdAt": "2026-11-09T03:29:47.078Z",
-  "updatedAt": "2026-11-09T03:29:47.078Z"
+  "createdAt": "2026-11-09T03:43:33.894Z",
+  "updatedAt": "2026-11-09T03:43:33.894Z"
 }
