@@ -117,7 +117,8 @@ describe('map, linterp, stack', () => {
     }, { r: { displayUnit: 'kN m' } });
     expect(num(e, 'r')).toBeCloseTo(50, 10);
     expect(num(e, 's')).toBeCloseTo(0.5, 12);
-    expect(res(e, 'out').error?.message).toMatch(/outside/);
+    // Outside the data: the line through the last two points is extended (as Mathcad): 25 → 2.5.
+    expect(num(e, 'out')).toBeCloseTo(2.5, 12);
   });
 
   it('stack joins scalars and vectors', () => {
@@ -155,5 +156,51 @@ describe('map, linterp, stack', () => {
     expect(num(e, 'c')).toBe(3);
     expect(num(e, 'd')).toBe(1);
     expect(res(e, 'u').error?.message).toMatch(/dimensionless/);
+  });
+});
+
+describe('engine fixes: upright functions, f(x)^n, ΔT names', () => {
+  it('reads built-in functions written upright (\\mathrm{atan}(x), \\operatorname{asin}(x))', () => {
+    const e = setup({
+      a: '\\mathrm{atan}\\left(1\\right)=',
+      b: '\\operatorname{asin}\\left(0.5\\right)=',
+      c: '\\mathrm{max}\\left(2,7,3\\right)=',
+    });
+    // angles are shown in degrees
+    expect(num(e, 'a')).toBeCloseTo(45, 10);
+    expect(num(e, 'b')).toBeCloseTo(30, 10);
+    expect(num(e, 'c')).toBe(7);
+  });
+
+  it('f(x)^n is the power of the call; for a plain variable it stays a·(x)^n', () => {
+    const e = setup({
+      f: 'f\\left(x\\right)\\coloneq2x',
+      p: 'f\\left(3\\right)^2=',
+      q: 'f\\left(3\\right)^{2}+1=',
+      a: 'a\\coloneq2',
+      r: 'a\\left(3\\right)^2=',
+      u: 'L\\left(x\\right)\\coloneq x\\cdot1\\,\\mathrm{m}',
+      v: 'L\\left(3\\right)^2=',
+    });
+    expect(num(e, 'p')).toBe(36);
+    expect(num(e, 'q')).toBe(37);
+    expect(num(e, 'r')).toBe(18);
+    expect(res(e, 'v').status).toBe('valid');
+    expect(num(e, 'v')).toBeCloseTo(9, 12);
+  });
+
+  it('Δ or δ followed by letters is one name; Δ alone still works', () => {
+    const e = setup({
+      t: '\\Delta T\\coloneq5',
+      r: '\\Delta T\\cdot2=',
+      d: '\\Delta\\coloneq3',
+      s: '2\\Delta=',
+      x: '\\delta x\\coloneq0.5',
+      y: '\\delta x+1=',
+    });
+    expect(num(e, 'r')).toBe(10);
+    expect(num(e, 's')).toBe(6);
+    expect(num(e, 'y')).toBe(1.5);
+    expect(res(e, 't').status).toBe('valid');
   });
 });

@@ -53,8 +53,10 @@ export type Expr =
   /**
    * `name(args)` written with the parenthesis right after a name. A call when
    * the name is a user function; otherwise the old reading, name × (arg).
+   * `pow` is an exponent written right after the bracket, name(x)^2: (f(x))² for a
+   * function, name × (x)² otherwise.
    */
-  | { type: 'apply'; head: IdentNode; args: Expr[] };
+  | { type: 'apply'; head: IdentNode; args: Expr[]; pow?: Expr };
 
 export type IdentNode = { type: 'ident'; name: string; splittable: boolean; roman: boolean };
 
@@ -119,6 +121,7 @@ export function walkExpr(expr: Expr, visit: (e: Expr) => void): void {
     case 'apply':
       walkExpr(expr.head, visit);
       expr.args.forEach((a) => walkExpr(a, visit));
+      if (expr.pow) walkExpr(expr.pow, visit);
       break;
   }
 }
@@ -163,6 +166,7 @@ export function walkScoped(expr: Expr, visit: (e: Expr, locals: ReadonlySet<stri
     case 'apply':
       w(expr.head);
       expr.args.forEach(w);
+      if (expr.pow) w(expr.pow);
       break;
   }
 }

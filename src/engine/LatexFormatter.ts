@@ -183,12 +183,13 @@ function print(expr: Expr, opts: PrintOptions): Printed {
 
     case 'apply': {
       const isFn = !expr.head.roman && !!(opts.ctx as Partial<EvalContext>).getFunction?.(expr.head.name);
+      const powTex = expr.pow ? `^{${print(expr.pow, opts).latex}}` : '';
       if (isFn) {
         const args = expr.args.map((a) => print(a, opts).latex);
-        return { latex: `${nameToLatex(expr.head.name)}\\left(${args.join(',')}\\right)`, prec: PREC.atom };
+        return { latex: `${nameToLatex(expr.head.name)}\\left(${args.join(',')}\\right)${powTex}`, prec: expr.pow ? PREC.pow : PREC.atom };
       }
       if (expr.args.length !== 1) {
-        return { latex: `${nameToLatex(expr.head.name)}\\left(${expr.args.map((a) => print(a, opts).latex).join(',')}\\right)`, prec: PREC.atom };
+        return { latex: `${nameToLatex(expr.head.name)}\\left(${expr.args.map((a) => print(a, opts).latex).join(',')}\\right)${powTex}`, prec: PREC.atom };
       }
       // name·(arg): one factor followed by a bracket, so it binds like an atom.
       return { ...print(applyAsProduct(expr), opts), prec: PREC.atom };

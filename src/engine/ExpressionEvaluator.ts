@@ -257,7 +257,7 @@ function callUserFunction(f: UserFunction, args: Value[]): Value {
   }
 }
 
-/** linterp(xs, ys, x): xs ascending or descending; x outside the data is an error. */
+/** linterp(xs, ys, x): xs ascending or descending; outside the data it extrapolates the line through the first or last two points (as Mathcad). */
 function linterp(xs: QVector, ys: QVector, x: Quantity): Quantity {
   if (xs.length !== ys.length || xs.length < 2) {
     throw new CalculationError('vector', 'linterp needs two vectors of the same length (at least 2 entries).');
@@ -273,14 +273,10 @@ function linterp(xs: QVector, ys: QVector, x: Quantity): Quantity {
   for (let k = 1; k < xv.length; k++) {
     if (asc ? xv[k] < xv[k - 1] - tol : xv[k] > xv[k - 1] + tol) throw new CalculationError('domain', 'linterp: the x data must be in increasing or decreasing order.');
   }
-  const lo = Math.min(xv[0], xv[xv.length - 1]);
-  const hi = Math.max(xv[0], xv[xv.length - 1]);
-  if (t < lo - 1e-12 * Math.abs(hi - lo) || t > hi + 1e-12 * Math.abs(hi - lo)) {
-    throw new CalculationError('domain', 'linterp: x is outside the range of the x data.');
-  }
   for (let k = 1; k < xv.length; k++) {
     const a = xv[k - 1];
     const b = xv[k];
+    // The first segment also covers x before the data, the last one x after it.
     if ((asc && t <= b) || (!asc && t >= b) || k === xv.length - 1) {
       const w = b === a ? 0 : (t - a) / (b - a);
       const y0 = ys.items[k - 1];
@@ -496,7 +492,14 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
 
     case 'apply': {
       const f = expr.head.roman ? undefined : ctx.getFunction?.(expr.head.name);
-      if (f) return callUserFunction(f, expr.args.map((a) => evalNode(a, ctx)));
+      if (f) {
+        const r = callUserFunction(f, expr.args.map((a) => evalNode(a, ctx)));
+        if (!expr.pow) return r;
+        return broadcast2(r, evalNode(expr.pow, ctx), (x, y) => {
+          if (!isDimensionless(y)) throw new CalculationError('unit-mismatch', `An exponent must be a dimensionless number (got ${describeQuantity(y)}).`);
+          return powQ(x, requireDimensionless(y, 'An exponent'));
+        });
+      }
       if (expr.args.length !== 1) {
         throw new CalculationError('undefined-variable', `"${expr.head.name}" is not a function (define it as ${expr.head.name}(x) := …).`);
       }
@@ -561,7 +564,9 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
 
 /** The non-function reading of name(arg): name × (arg), exactly as before calls existed. */
 export function applyAsProduct(expr: Extract<Expr, { type: 'apply' }>): Expr {
-  return { type: 'binary', op: '*', implicit: true, left: expr.head, right: { type: 'group', body: expr.args[0], visible: true } };
+  const bracket: Expr = { type: 'group', body: expr.args[0], visible: true };
+  const right: Expr = expr.pow ? { type: 'binary', op: '^', left: bracket, right: expr.pow } : bracket;
+  return { type: 'binary', op: '*', implicit: true, left: expr.head, right };
 }
 
 /** map(f, v…): f called once per entry; scalar arguments repeat, vectors must share a length. */

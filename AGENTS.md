@@ -154,10 +154,9 @@ To change a template:
 
 ## 5. Engine gotchas (save yourself the debugging)
 
-- **Functions:** use `\arctan`, not `\mathrm{atan}`. `name(x)^2` is not a function call; write `\left(f(x)\right)^2`.
+- **Functions:** `\arctan`, `\mathrm{atan}` and `\operatorname{atan}` all work; `f(x)^2` is the power of the call (for a plain variable `a(x)^2` = a·(x)²). `\Delta T` / `\delta x` are single names.
 - **Angles:** an angle that should be dimensionless needs `\mathrm{rad}`, e.g. `β_v` is built `(…)\mathrm{rad}`; `90^{\circ}` and `\frac{\pi}{2}\,\mathrm{rad}` both work.
-- **`stack`** cannot mix plain numbers and quantities. Write `\mathrm{stack}(0,1)\cdot\max(…)`, not `\mathrm{stack}(0, M)`.
-- **`linterp(xs, ys, x)`** throws outside the data range, and xs must be monotonic. Guard with an if block or extend the data (e.g. add the pure-tension and uniform-compression ends).
+- **`linterp(xs, ys, x)`** extrapolates outside the data (first/last two points, like Mathcad). xs must be monotonic. Extrapolation is silent, so guard x when it matters.
 - **`map(f, v, s)`** maps over every vector argument; scalar arguments are broadcast.
 - **Calls with scalar arguments are cached** (max 20 000 entries). Sweeps rely on this for speed.
 - **`if` with a vector condition works element-wise:** both branches are evaluated, so both must be valid for every element.

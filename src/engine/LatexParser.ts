@@ -57,8 +57,6 @@ const FUNCTION_WORDS: Record<string, FunctionName> = {
   sum: 'sum', len: 'len', seq: 'seq', angle: 'angle', map: 'map', floor: 'floor', ceil: 'ceil', linterp: 'linterp', stack: 'stack',
 };
 
-/** Functions written upright (\mathrm{sum}) that would otherwise read as a variable. */
-const ROMAN_FUNCTION_WORDS = new Set<FunctionName>(['sum', 'len', 'seq', 'angle', 'map', 'linterp', 'stack', 'floor', 'ceil']);
 
 const ROMAN_COMMANDS = new Set([
   'mathrm', 'text', 'textrm', 'operatorname', 'mathit', 'mathbf', 'mathsf',
@@ -555,14 +553,14 @@ class Parser {
     const e = this.parsePrimaryAtom();
     if (e.type !== 'ident' || !(this.isSym('(') || this.isCmd('lparen'))) return e;
     // name(args): a user-function call when "name" is one (decided at evaluation).
-    // name(x)^2 keeps the old reading name·(x)², so leave it to the caller.
-    const save = this.pos;
+    // name(x)^2 is (name(x))² for a function, else the old reading name·(x)².
     const parts = this.readArgumentTokens();
-    if (this.isSym('^')) {
-      this.pos = save;
-      return e;
-    }
     const args = parts.map((p) => this.subParse(p));
+    if (this.isSym('^') && !(this.isSym('{', 1) && this.isCmd('circ', 2)) && !this.isCmd('circ', 1)) {
+      this.next();
+      const pow = this.parseScriptArg();
+      return this.node({ type: 'apply', head: e, args, pow });
+    }
     return this.node({ type: 'apply', head: e, args });
   }
 
@@ -689,6 +687,15 @@ class Parser {
     }
     this.next();
     if (GREEK[v]) {
+      // ΔT, δx: a Δ/δ directly followed by letters is one name (as in Mathcad), e.g. \Delta T_{max}.
+      if ((v === 'Delta' || v === 'delta') && this.peek().t === 'letter' && !this.roman) {
+        const save = this.pos;
+        const rest = this.parseLetterRun();
+        if (rest.type === 'ident') {
+          return this.node({ type: 'ident', name: GREEK[v] + rest.name, splittable: false, roman: false });
+        }
+        this.pos = save;
+      }
       return this.withOptionalSubscript(this.node({ type: 'ident', name: GREEK[v], splittable: false, roman: false }));
     }
     if (v === 'pi') return this.node({ type: 'ident', name: 'π', splittable: false, roman: false });
@@ -732,7 +739,8 @@ class Parser {
       if (v === 'operatorname' && word && FUNCTION_WORDS[word]) {
         return this.parseFunctionArgs(FUNCTION_WORDS[word]);
       }
-      if (word && ROMAN_FUNCTION_WORDS.has(FUNCTION_WORDS[word]) && (this.isSym('(') || this.isCmd('lparen'))) {
+      // \mathrm{atan}(x), \mathrm{sum}(v): a built-in function written upright and followed by a bracket.
+      if (word && FUNCTION_WORDS[word] && (this.isSym('(') || this.isCmd('lparen'))) {
         return this.parseFunctionArgs(FUNCTION_WORDS[word]);
       }
       if (word === IF_WORD && (this.isSym('(') || this.isCmd('lparen'))) {

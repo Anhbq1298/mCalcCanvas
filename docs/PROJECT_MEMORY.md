@@ -32,6 +32,5 @@
 
 ## Known limitations
 - Kelvin values are linear; only °C is affine.
-- `\Delta T` (a Greek letter followed by a letter) is not joined into one variable name.
 - A shape that crosses a page edge is clipped on its page when printed (a warning is shown first).
 - There are no matrices or solvers yet (vectors, user functions, if blocks, graphs and annexes exist).

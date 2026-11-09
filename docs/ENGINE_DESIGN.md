@@ -83,9 +83,10 @@ Messages name the variable or quantity involved, e.g. `Unit mismatch: Force (kN)
 ## User functions, map, linterp, stack
 
 - **`f(a, b) := body`** defines a function. Parameters are locals (no dependency edge); every other name in the body resolves at the definition's position, so the definition depends on them and callers depend on `f`. Functions are stored apart from values (`functions` map in the engine); using `f` without arguments is an error. Call depth is limited (200).
-- **`name(args)`** parses as an `apply` node when the parenthesis follows a name directly. It is a call when `name` is a user function at that position; otherwise it keeps the old reading `name·(arg)` (so `x(a+b)` is unchanged). `name(x)^2` is not an apply (it stays `name·(x)²`).
+- **`name(args)`** parses as an `apply` node when the parenthesis follows a name directly. It is a call when `name` is a user function at that position; otherwise it keeps the old reading `name·(arg)` (so `x(a+b)` is unchanged). `name(args)^n` (exponent right after the bracket) is `(name(args))^n` for a function and `name·(args)^n` otherwise.
+- **Names.** `\Delta`/`\delta` followed directly by letters is one name (`\Delta T` → ΔT, as in Mathcad); `\Delta` alone is still Δ. Built-in functions written upright are calls when a bracket follows (`\mathrm{atan}(x)`, `\operatorname{asin}(x)`).
 - **`map(f, v…)`** calls `f` once per entry (scalars repeat, vectors share a length); each call must return a scalar. Use it when the body aggregates (`sum`) over another vector, e.g. a P–M curve `N_v := map(N_R, c_v)`.
-- **`linterp(xs, ys, x)`**: xs monotonic (steps back within 1e-9 of the span are accepted as round-off); x outside the data is an error. Broadcasts over a vector x.
+- **`linterp(xs, ys, x)`**: xs monotonic (steps back within 1e-9 of the span are accepted as round-off); outside the data it extrapolates the line through the first or last two points (as Mathcad Prime). Broadcasts over a vector x.
 - **`floor(x)`, `ceil(x)`**: plain numbers only; values within 1e-9 of an integer are taken as that integer.
 - **`angle(x, y)`** (Mathcad): direction of the vector (x, y), 0 … 2π; x and y must share a unit.
 - **`stack(a, b, …)`** joins scalars and vectors into one vector.
