@@ -164,6 +164,8 @@ test.describe('.mCCV files', () => {
     await expect(dlg.getByTestId('version-list').getByRole('listitem')).toHaveCount(2); // created + Ctrl+S
     await dlg.getByTestId('version-list').getByRole('button', { name: 'Restore' }).first().click();
     await resultOf(page, 'M_{Ed}').toBe('257.39 kN·m');
+    // The dialog closes once the restore has finished; Ctrl+O before that is a no-op.
+    await expect(dlg).toBeHidden();
     // The edited state was kept as a version before restoring.
     await page.keyboard.press('Control+o');
     await dlg.getByRole('button', { name: 'Version history of Simply Supported Steel Beam Calculation' }).click();
