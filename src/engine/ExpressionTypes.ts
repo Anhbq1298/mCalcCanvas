@@ -73,7 +73,7 @@ export interface Comparison {
 export type Condition = Comparison | { logic: 'and' | 'or'; a: Condition; b: Condition };
 
 /** Every expression inside a condition (for walkers). */
-export function conditionExprs(c: Condition): Expr[] {
+function conditionExprs(c: Condition): Expr[] {
   return 'logic' in c ? [...conditionExprs(c.a), ...conditionExprs(c.b)] : [c.left, c.right];
 }
 

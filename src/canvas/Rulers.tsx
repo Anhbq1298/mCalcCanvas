@@ -9,7 +9,7 @@ import { MM, PAGE_GAP, marginPx, pageSize } from '../export/pageGeometry';
 import { useAppStore } from '../store/appStore';
 import { useCanvasStore } from './model/canvasStore';
 
-export const RULER = 18;
+const RULER = 18;
 
 /** Tick spacing in mm so that minor ticks are at least ~5 screen px apart. */
 function steps(pxPerMm: number): { minor: number; major: number } {

@@ -94,7 +94,7 @@ function isLetter(c: string | undefined): boolean {
   return c !== undefined && /[A-Za-z]/.test(c);
 }
 
-export function tokenize(latex: string): Token[] {
+function tokenize(latex: string): Token[] {
   if (latex.length > MAX_LATEX_LENGTH) {
     throw new CalculationError('limit-exceeded', `Expression is too long (max ${MAX_LATEX_LENGTH} characters).`);
   }

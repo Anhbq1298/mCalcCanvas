@@ -21,6 +21,7 @@ npm ci                     # install (Node 22)
 npm run dev                # Vite dev server
 npm run typecheck          # tsc -b (strict)
 npm run lint               # oxlint src tools — 0 errors, 0 warnings
+npm run deadcode           # knip: no unused files, exports or dependencies (run after refactors)
 npm test                   # Vitest: engine + unit tests
 npm run build              # typecheck + production build (needed before e2e / template tools)
 npm run test:e2e           # Playwright (serves the build on :4173; CHROME_PATH=… for a system Chrome)

@@ -2,7 +2,7 @@ import { ChevronDown } from 'lucide-react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { insertTemplate } from '../../math/insertTemplate';
-import type { PaletteSection } from '../ribbon/palettes';
+import type { PaletteSection } from './palettes';
 
 /**
  * Toolbar dropdown rendered in a portal (never clipped). The trigger keeps

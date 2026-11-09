@@ -43,7 +43,7 @@ import {
   type UnitSystemName,
 } from './UnitSystem';
 
-export { compareOrderKeys, orderKeysEqual, type OrderKey } from './orderKey';
+export { compareOrderKeys, type OrderKey } from './orderKey';
 import { compareOrderKeys, orderKeysEqual, type OrderKey } from './orderKey';
 
 export interface RegionInput {
@@ -87,7 +87,7 @@ export interface EngineSettings {
 }
 
 /** Numeric scenario value applied to one existing definition region. */
-export interface DefinitionOverride {
+interface DefinitionOverride {
   value: number;
   /** Unit label inherited from the source definition, e.g. "kN" or "kN·m". */
   unit?: string | null;

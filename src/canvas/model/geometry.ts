@@ -51,14 +51,7 @@ export function screenToPage(p: Point, cam: Camera): Point {
   return { x: p.x / cam.z + cam.x, y: p.y / cam.z + cam.y };
 }
 
-export function pageToScreen(p: Point, cam: Camera): Point {
-  return { x: (p.x - cam.x) * cam.z, y: (p.y - cam.y) * cam.z };
-}
-
 export function snap(v: number, grid: number, enabled: boolean): number {
   return enabled ? Math.round(v / grid) * grid : v;
 }
 
-export function clamp(v: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, v));
-}

@@ -14,7 +14,7 @@
 import type { MathfieldElement } from 'mathlive';
 
 /** Mathcad's Symbol-font mapping (Ctrl+G). */
-export const GREEK_FROM_LATIN: Record<string, string> = {
+const GREEK_FROM_LATIN: Record<string, string> = {
   a: '\\alpha', b: '\\beta', g: '\\gamma', d: '\\delta', e: '\\epsilon', z: '\\zeta', h: '\\eta', q: '\\theta',
   i: '\\iota', k: '\\kappa', l: '\\lambda', m: '\\mu', n: '\\nu', x: '\\xi', p: '\\pi', r: '\\rho', s: '\\sigma',
   t: '\\tau', u: '\\upsilon', f: '\\phi', j: '\\varphi', c: '\\chi', y: '\\psi', w: '\\omega', v: '\\varpi',

@@ -38,7 +38,7 @@ export interface ShortcutDefinition {
 export type ShortcutAction = (e: KeyboardEvent) => boolean | void;
 
 const MAC = typeof navigator !== 'undefined' && /Mac/.test(navigator.platform);
-export const MOD_LABEL = MAC ? '⌘' : 'Ctrl';
+const MOD_LABEL = MAC ? '⌘' : 'Ctrl';
 
 export const SHORTCUTS: ShortcutDefinition[] = [
   // --- General -----------------------------------------------------------

@@ -120,8 +120,3 @@ export function applyGridCommand(command: GridCommand): void {
   });
 }
 
-export function hasGridSelection(): boolean {
-  const state = useCanvasStore.getState();
-  const shape = state.selection.length === 1 ? state.shapes[state.selection[0]] : null;
-  return shape?.type === 'table' || (shape?.type === 'math' && /\\begin\{bmatrix\}/.test(shape.props.latex));
-}

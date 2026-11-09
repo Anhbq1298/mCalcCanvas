@@ -4,10 +4,8 @@
 import {
   addShapes,
   deleteShapes,
-  expandGroups,
   GRID_MAJOR,
   GRID_SIZE,
-  markHistory,
   newShapeId,
   orderedShapes,
   replaceShape,
@@ -454,10 +452,6 @@ export function nudgeSelection(dx: number, dy: number): void {
   updateShapes(Object.fromEntries(selection.map((id) => [id, { x: shapes[id].x + dx, y: shapes[id].y + dy }])));
 }
 
-export function selectByIds(ids: string[]): void {
-  select(expandGroups(ids));
-}
-
 // ---------------------------------------------------------------------------
 // Camera
 // ---------------------------------------------------------------------------
@@ -556,4 +550,3 @@ export function revealShape(id: string): void {
   select([id]);
 }
 
-export { markHistory };

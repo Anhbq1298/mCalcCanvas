@@ -4,7 +4,7 @@ import type { InputResultConfig } from '../../documents/DocumentTypes';
 import type { BatchJob, BatchResults } from '../../engine/batch';
 import { runBatch, type BatchHandle, type BatchOptions } from '../../store/batchClient';
 
-export type { BatchResults, BatchRowResult } from '../../engine/batch';
+export type { BatchResults } from '../../engine/batch';
 
 export interface AvailableField {
   regionId: string;

@@ -36,7 +36,7 @@ export const RELATION_LATEX: Record<Relation, string> = {
   '<': '<', '<=': '\\le', '>': '>', '>=': '\\ge', '==': '=', '!=': '\\ne',
 };
 
-export interface PrintOptions {
+interface PrintOptions {
   ctx: ResolveContext;
   /** Return LaTeX for a variable's value to substitute it, or null to print its name. */
   substitute?: (name: string) => { latex: string; hasUnit: boolean; negative: boolean } | null;

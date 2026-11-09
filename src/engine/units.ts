@@ -1,6 +1,6 @@
 /** The unit registry: what users may type and how it maps to mathjs (no mathjs import: safe for the UI thread). */
 
-export interface UnitDef {
+interface UnitDef {
   /** Symbol as typed by the user. */
   symbol: string;
   /** mathjs unit string. */

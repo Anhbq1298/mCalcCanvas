@@ -16,7 +16,7 @@ import type { GraphShape, Shape } from './model/types';
 import { graphRegionId, isDefinitionLatex, type GraphField } from './graphData';
 import { annexInfo } from './annex';
 
-export { graphRegionId, isDefinitionLatex, type GraphField } from './graphData';
+export { graphRegionId } from './graphData';
 
 /**
  * Reading-order key of a region (Mathcad order), compared

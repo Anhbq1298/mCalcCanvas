@@ -1,4 +1,4 @@
-/** Matrices/Tables tab content: dimension picker, operators and functions (the tab itself is in DocsHeader). */
+/** Matrices/Tables tab menus: dimension picker, operators and functions (the tab layout is in tabs.tsx). */
 import { Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { insertMatrix, insertTable } from '../../canvas/matrixTableCommands';

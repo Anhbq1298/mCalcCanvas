@@ -25,7 +25,7 @@ export function isDefinitionLatex(latex: string): boolean {
 
 
 /** A series ready to draw: numbers in the axis display units. */
-export interface PlotSeries {
+interface PlotSeries {
   series: GraphSeries;
   xs: number[];
   ys: number[];
@@ -34,7 +34,7 @@ export interface PlotSeries {
   groups?: number[] | null;
 }
 
-export interface GraphData {
+interface GraphData {
   plots: PlotSeries[];
   errors: string[];
   xUnit: string;

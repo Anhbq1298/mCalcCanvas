@@ -88,7 +88,7 @@ function gridOrigin(p: Point): Point {
 }
 
 /** Nearest grid point (the same grid that is drawn on the page). */
-export function gridPoint(p: Point): Point {
+function gridPoint(p: Point): Point {
   const o = gridOrigin(p);
   return { x: o.x + Math.round((p.x - o.x) / GRID_SIZE) * GRID_SIZE, y: o.y + Math.round((p.y - o.y) / GRID_SIZE) * GRID_SIZE };
 }

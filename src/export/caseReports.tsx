@@ -15,7 +15,7 @@ import type { PrintSheet } from './PrintView';
 import { CaseSummary } from './CaseSummary';
 
 /** Summary page + every page of the worksheet per case. */
-export function buildCaseSheets(config: InputResultConfig, fields: Map<string, AvailableField>, rows: InputResultRow[], results: BatchResults): PrintSheet[] {
+function buildCaseSheets(config: InputResultConfig, fields: Map<string, AvailableField>, rows: InputResultRow[], results: BatchResults): PrintSheet[] {
   const { settings, title, documentId } = useAppStore.getState();
   const shapes = orderedShapes();
   const stamp = `Worksheet “${title}” (document ${documentId?.slice(0, 8) ?? '—'}, version ${useCanvasStore.getState().docVersion}) · ${settings.unitSystem} · calculated ${new Date().toLocaleString()}`;

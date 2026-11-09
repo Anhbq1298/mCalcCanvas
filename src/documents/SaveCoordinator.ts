@@ -13,7 +13,7 @@ import type { DocumentRepository } from './DocumentRepository';
 
 export type SaveState = 'saved' | 'dirty' | 'saving' | 'error';
 
-export interface SaveCoordinatorOptions {
+interface SaveCoordinatorOptions {
   repository: Pick<DocumentRepository, 'put' | 'setLastOpenedId'>;
   /** Snapshot of the document being edited (taken when a save starts). */
   snapshot(): CalculationDocument;

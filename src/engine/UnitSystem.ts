@@ -26,7 +26,7 @@ import {
 import { CalculationError } from './CalculationErrors';
 import { UNITS, parseDisplayUnit, type UnitSystemName } from './units';
 
-export { UNITS, UNIT_SYMBOLS, isUnitSymbol, parseDisplayUnit, type UnitDef, type UnitSystemName } from './units';
+export { UNITS, isUnitSymbol, parseDisplayUnit, type UnitSystemName } from './units';
 
 // Only the functions the engine uses (not `all`): the worker starts faster and is smaller.
 export const math = create(
@@ -116,7 +116,7 @@ export function isUnit(q: unknown): q is Unit {
 
 const DIMENSIONLESS: DimKey = key(0, 0, 0);
 
-export function dimensionKey(q: Quantity): DimKey {
+function dimensionKey(q: Quantity): DimKey {
   if (typeof q === 'number' || !isUnit(q)) return DIMENSIONLESS;
   return q.dimensions.join(',');
 }

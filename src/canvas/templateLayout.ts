@@ -1,13 +1,13 @@
 import { shapeBounds, unionBounds } from './model/geometry.ts';
 import type { Box, Shape } from './model/types.ts';
 
-export interface TemplateLayoutOptions {
+interface TemplateLayoutOptions {
   width?: number;
   height?: number;
   margins?: { left: number; right: number; top: number; bottom: number };
   mode?: 'compact' | 'print';
 }
-export interface TemplateLayoutResult {
+interface TemplateLayoutResult {
   shapes: Shape[];
   pages: number;
   utilization: number[];

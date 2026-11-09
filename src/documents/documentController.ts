@@ -38,7 +38,7 @@ function focusFirstPage() {
   requestAnimationFrame(() => focusPage(w));
 }
 
-export function currentDocument(): CalculationDocument {
+function currentDocument(): CalculationDocument {
   const s = useAppStore.getState();
   return {
     id: s.documentId ?? newId(),
@@ -54,7 +54,7 @@ export function currentDocument(): CalculationDocument {
 }
 
 /** All saving goes through one coordinator: serialised, revision-checked (see SaveCoordinator). */
-export const saves = new SaveCoordinator({
+const saves = new SaveCoordinator({
   repository: DocumentManager,
   snapshot: () => currentDocument(),
   onState: (state) => useAppStore.getState().setSaveState(state),
@@ -132,7 +132,7 @@ function withoutAutosave(fn: () => void) {
 /** Lets a message just posted to the calculation worker reach it (see primeEngine). */
 const nextTask = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
 
-export async function loadDocument(doc: CalculationDocument): Promise<void> {
+async function loadDocument(doc: CalculationDocument): Promise<void> {
   withoutAutosave(() => {
     // Settings first: grid snapping depends on page layout and orientation.
     useAppStore.getState().setDocument(doc);
@@ -246,7 +246,7 @@ function firstRunTemplate(): TemplateId {
 }
 
 /** CalcCanvas worksheet file: the JSON document, saved with its own extension. */
-export const FILE_EXT = '.mCalcCanvas';
+const FILE_EXT = '.mCalcCanvas';
 export const FILE_ACCEPT = '.mCalcCanvas,.mcalccanvas,.json,application/json';
 
 export function isWorksheetFile(f: File): boolean {

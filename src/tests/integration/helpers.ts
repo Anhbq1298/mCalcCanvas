@@ -1,6 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-export interface RegionInfo {
+interface RegionInfo {
   id: string;
   latex: string;
   result: string;
@@ -76,7 +76,7 @@ export async function addRegion(page: Page, x: number, y: number, keys: string[]
   await expect(page.locator('math-field')).toHaveCount(0);
 }
 
-export async function typeKeys(page: Page, keys: string[]) {
+async function typeKeys(page: Page, keys: string[]) {
   for (const k of keys) {
     if (k.startsWith('{') && k.endsWith('}')) await page.keyboard.press(k.slice(1, -1));
     else await page.keyboard.type(k, { delay: 15 });

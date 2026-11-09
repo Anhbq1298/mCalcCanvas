@@ -9,7 +9,7 @@ import { escapeHtml } from './sanitize';
 import { shapeBounds } from './model/geometry';
 import { annexInfo, annexNumber } from './annex';
 
-export function plainText(html: string): string {
+function plainText(html: string): string {
   return html
     .replace(/<br\s*\/?>/gi, ' ')
     .replace(/<\/(div|p|li|h\d)>/gi, ' ')
@@ -25,12 +25,12 @@ export function plainText(html: string): string {
 }
 
 /** Heading level of a shape (0 = not a heading). */
-export function headingLevel(s: Shape): HeadingLevel {
+function headingLevel(s: Shape): HeadingLevel {
   if (s.type !== 'text') return 0;
   return s.props.heading ?? 0;
 }
 
-export interface OutlineItem {
+interface OutlineItem {
   id: string;
   level: 1 | 2 | 3;
   /** Shown text (annex headings get their A.n number in front). */
@@ -39,7 +39,7 @@ export interface OutlineItem {
   title: string;
 }
 
-export function readingSort<T extends { x: number; y: number }>(list: T[]): T[] {
+function readingSort<T extends { x: number; y: number }>(list: T[]): T[] {
   return [...list].sort((a, b) => a.y - b.y || a.x - b.x);
 }
 

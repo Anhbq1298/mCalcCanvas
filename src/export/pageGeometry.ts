@@ -11,10 +11,9 @@ import { DEFAULT_MARGINS, type PageMargins, type PageOrientation, type PaperSize
  * frames, not the regions.
  */
 export const MM = 96 / 25.4;
-export const mmToPx = (mm: number): number => Math.round(mm * MM);
-export const pxToMm = (px: number): number => px / MM;
+const mmToPx = (mm: number): number => Math.round(mm * MM);
 
-export const PAPER_MM: Record<PaperSize, { w: number; h: number }> = { A4: { w: 210, h: 297 }, A3: { w: 297, h: 420 } };
+const PAPER_MM: Record<PaperSize, { w: number; h: number }> = { A4: { w: 210, h: 297 }, A3: { w: 297, h: 420 } };
 
 /** A4 at 96 CSS px per inch. */
 export const A4 = { w: mmToPx(210), h: mmToPx(297) };

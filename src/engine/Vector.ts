@@ -19,7 +19,7 @@ import {
 import type { Unit } from 'mathjs';
 
 /** Largest vector a worksheet may create (protects the UI and graphs). */
-export const MAX_VECTOR_LENGTH = 10_000;
+const MAX_VECTOR_LENGTH = 10_000;
 
 export class QVector {
   private _items: readonly Quantity[] | null;
@@ -65,7 +65,7 @@ export class QVector {
   }
 }
 
-export interface Packed {
+interface Packed {
   si: Float64Array;
   unit: Unit | null;
 }
@@ -154,7 +154,7 @@ export function flatten(args: Value[]): Quantity[] {
 }
 
 /** Entries shown before an array is shortened (first half + … + last half), like pandas. */
-export const DEFAULT_VECTOR_LIMIT = 10;
+const DEFAULT_VECTOR_LIMIT = 10;
 /** Even when expanded, very long arrays stay shortened beyond this length. */
 const EXPANDED_MAX = 1000;
 const GAP = '\u0000gap';

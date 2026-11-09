@@ -44,7 +44,7 @@ export interface MathProps {
   baseline?: number;
 }
 
-export type TextAlign = 'left' | 'center' | 'right' | 'justify';
+type TextAlign = 'left' | 'center' | 'right' | 'justify';
 
 /** Text styles of the Text Formatting gallery besides Normal and the headings. */
 export type TextStyleId = 'title' | 'subtitle';
@@ -186,8 +186,6 @@ export type GraphShape = Base<'graph', GraphProps>;
 export type TableShape = Base<'table', TableProps>;
 
 export type Shape = MathShape | TextShape | ImageShape | RectShape | LineShape | DrawShape | GraphShape | TableShape;
-export type ShapeType = Shape['type'];
-
 export type ToolId = 'select' | 'hand' | 'math' | 'text' | 'rect' | 'line' | 'arrow' | 'draw';
 
 export interface Camera {
@@ -227,7 +225,7 @@ export function fontStack(name: string): string {
   return TEXT_FONTS[name] ?? TEXT_FONTS.Inter;
 }
 
-export const MATH_COLORS = ['#0f172a', '#1e3a5f', '#2563eb', '#047857', '#b45309', '#dc2626'] as const;
+const MATH_COLORS = ['#0f172a', '#1e3a5f', '#2563eb', '#047857', '#b45309', '#dc2626'] as const;
 
 export const DEFAULT_MATH_PROPS: MathProps = {
   w: 60,

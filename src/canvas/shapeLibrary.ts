@@ -6,7 +6,7 @@
  */
 import type { Shape } from './model/types';
 
-export const SHAPE_STROKE = '#1e3a5f';
+const SHAPE_STROKE = '#1e3a5f';
 const W = 1.5;
 
 type Part =

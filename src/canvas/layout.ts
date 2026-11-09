@@ -25,7 +25,7 @@ export interface LayoutPlan {
 const EMPTY: LayoutPlan = { patches: {}, pagesNeeded: 0 };
 
 /** Overlap (px) tolerated between region boxes: their 4 px paddings may touch. */
-export const OVERLAP_TOLERANCE = 8;
+const OVERLAP_TOLERANCE = 8;
 
 // -- line model: major lines numbered continuously across pages ---------------
 

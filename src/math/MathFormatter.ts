@@ -2,7 +2,7 @@ import type { CalculationResult } from '../engine';
 import type { MathDisplayMode } from '../canvas/model/types';
 
 /** Remove a trailing "=" (and MathLive placeholder) the user typed to request a result. */
-export function stripTrailingEquals(latex: string): string {
+function stripTrailingEquals(latex: string): string {
   let s = latex.trim();
   s = s.replace(/\\placeholder(\[[^\]]*\])?\{[^}]*\}\s*$/, '').trim();
   if (s.endsWith('=') && !s.endsWith(':=') && !s.endsWith('\\le=')) s = s.slice(0, -1).trim();
@@ -13,11 +13,11 @@ export function stripTrailingEquals(latex: string): string {
  * Commands that could inject links or styling into rendered markup are
  * removed before static rendering. The calculation parser never accepts them.
  */
-export function sanitizeLatex(latex: string): string {
+function sanitizeLatex(latex: string): string {
   return latex.replace(/\\(href|url|htmlData|htmlId|htmlStyle|class|cssId|style|includegraphics)\b/g, '');
 }
 
-export interface DisplayParts {
+interface DisplayParts {
   /** LaTeX of the region as it should appear on the worksheet. */
   latex: string;
   /** PASS / FAIL badge for check regions. */

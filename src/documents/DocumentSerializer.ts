@@ -57,7 +57,7 @@ const MIGRATIONS: Record<number, (doc: Raw) => Raw> = {
   2: (doc) => ({ ...doc, version: 3, inputResult: EMPTY_INPUT_RESULT_CONFIG }),
 };
 
-export class DocumentFormatError extends Error {}
+class DocumentFormatError extends Error {}
 
 const num = (v: unknown, d = 0) => (typeof v === 'number' && Number.isFinite(v) ? v : d);
 /** Finite number clamped to [min, max]. */
@@ -196,7 +196,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
 }
 
 /** Upper bound on series per graph (each series is evaluated by the engine). */
-export const MAX_GRAPH_SERIES = 20;
+const MAX_GRAPH_SERIES = 20;
 
 const MAX_SHAPES = 20_000;
 
@@ -209,7 +209,7 @@ function newImportId(): string {
  * Give every shape a unique id. A duplicate keeps its content under a new
  * id (dropping it would silently lose part of the worksheet).
  */
-export function dedupeIds(shapes: Shape[]): Shape[] {
+function dedupeIds(shapes: Shape[]): Shape[] {
   const seen = new Set<string>();
   return shapes.map((s) => {
     if (!seen.has(s.id)) {

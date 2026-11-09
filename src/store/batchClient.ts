@@ -36,7 +36,7 @@ let nextJobId = 1;
 const workersAvailable = () => typeof Worker !== 'undefined' && typeof window !== 'undefined' && import.meta.env?.MODE !== 'test';
 
 /** How many workers a run of n cases uses (each worker first calculates the whole worksheet once). */
-export function poolSize(n: number): number {
+function poolSize(n: number): number {
   const cores = typeof navigator !== 'undefined' && navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 2;
   return Math.max(1, Math.min(n, MAX_WORKERS, cores - 1));
 }

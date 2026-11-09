@@ -16,7 +16,7 @@ import { compactTemplate } from './templatePresentation';
 
 export type TemplateId = 'blank' | 'steel-beam' | 'rc-beam' | 'rc-circular-column' | 'rc-rectangular-column';
 
-export interface WorksheetTemplate {
+interface WorksheetTemplate {
   id: TemplateId;
   name: string;
   description: string;

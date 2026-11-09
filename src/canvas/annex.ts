@@ -17,7 +17,7 @@ import { PAGE_GAP, pageSize } from '../export/pageGeometry';
 import type { PageOrientation } from '../documents/DocumentTypes';
 import type { Shape, TextShape } from './model/types';
 
-export interface AnnexBlock {
+interface AnnexBlock {
   /** Stable annex id (heading.props.annex.id). */
   id: string;
   /** Shape id of the annex heading. */
@@ -30,13 +30,13 @@ export interface AnnexBlock {
   members: string[];
 }
 
-export interface LinkState {
+interface LinkState {
   block?: AnnexBlock;
   /** Why the link does nothing (missing target, duplicate, inside the annex). */
   problem?: string;
 }
 
-export interface AnnexInfo {
+interface AnnexInfo {
   /** Shape id of the ANNEX title. */
   start?: string;
   /** Blocks by annex id, in number order. */

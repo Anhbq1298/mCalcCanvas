@@ -7,10 +7,9 @@
  * call depth, so untrusted input can only ever perform bounded arithmetic.
  */
 import { CalculationError } from './CalculationErrors';
-export { isAbsoluteTemperature } from './UnitSystem';
 import { QVector, broadcast1, broadcast2, broadcastN, flatten, isVector, requireScalar, withSi, type Value } from './Vector';
 import type { Unit } from 'mathjs';
-export { QVector, isVector, type Value } from './Vector';
+export { type Value } from './Vector';
 import type { Condition, Expr } from './ExpressionTypes';
 import { walkExpr, walkScoped } from './ExpressionTypes';
 import {
@@ -62,7 +61,7 @@ export function definedLaterMessage(name: string): string {
  *   max(|x|, |y|)). Used only for numerical equality (= and ≠), where exact
  *   equality of computed reals is meaningless (0.1 + 0.2 = 0.3).
  */
-export interface ComparisonPolicy {
+interface ComparisonPolicy {
   mode: 'strict' | 'approximate';
   relativeTolerance?: number;
   absoluteTolerance?: number;
@@ -74,18 +73,18 @@ export const CHECK_POLICY: ComparisonPolicy = { mode: 'strict' };
 export const EQUALITY_POLICY: ComparisonPolicy = { mode: 'approximate', relativeTolerance: 1e-12, absoluteTolerance: 0 };
 
 /** |x − y| within the policy's tolerance (strict: exactly equal). */
-export function withinTolerance(x: number, y: number, policy: ComparisonPolicy): boolean {
+function withinTolerance(x: number, y: number, policy: ComparisonPolicy): boolean {
   if (policy.mode === 'strict') return x === y;
   const tol = Math.max(policy.absoluteTolerance ?? 0, (policy.relativeTolerance ?? 0) * Math.max(Math.abs(x), Math.abs(y)));
   return Math.abs(x - y) <= tol;
 }
 
-export type Resolved =
+type Resolved =
   | { kind: 'var'; name: string }
   | { kind: 'unit'; symbol: string }
   | { kind: 'const'; name: string; value: Quantity };
 
-export type IdentExpr = Extract<Expr, { type: 'ident' }>;
+type IdentExpr = Extract<Expr, { type: 'ident' }>;
 
 export interface ResolveContext {
   isDefined(name: string): boolean;
@@ -507,7 +506,7 @@ function ensureFiniteQ(q: Quantity): Quantity {
 }
 
 /** "Force (kN)", "Length (m)", "a dimensionless number". */
-export function describeQuantity(q: Quantity): string {
+function describeQuantity(q: Quantity): string {
   if (isDimensionless(q)) return 'a dimensionless number';
   const name = dimensionName(q);
   const unit = preferredUnit(q, 'SI');

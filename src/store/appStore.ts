@@ -8,10 +8,10 @@ import {
   type InputResultConfig,
 } from '../documents/DocumentTypes';
 
-export type SaveState = 'saved' | 'dirty' | 'saving' | 'error';
+type SaveState = 'saved' | 'dirty' | 'saving' | 'error';
 
 /** Screen-only view options (this browser, not the document). */
-export interface ViewPrefs {
+interface ViewPrefs {
   ruler: boolean;
   /** Dashed printable-area outline on every page. */
   boundaries: boolean;

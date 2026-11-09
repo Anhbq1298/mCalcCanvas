@@ -24,7 +24,7 @@ export interface BatchRowResult {
 
 export type BatchResults = Record<string, BatchRowResult>;
 
-export interface BatchRunOptions {
+interface BatchRunOptions {
   /** Keep every region result of each case (detailed reports). */
   detail?: boolean;
   /** Called as each case finishes. */
