@@ -12,6 +12,7 @@ import {
   orderedShapes,
   select,
   setCamera,
+  setCameraClamp,
   startEditing,
   transaction,
   updateShapes,
@@ -23,7 +24,7 @@ import { DEFAULT_GRAPH_STYLE, DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, type Graph
 import { plainTextToHtml } from './sanitize';
 import { sanitizeShape } from '../documents/DocumentSerializer';
 import { clampDelta, clampPoint, clampShapesIntoPage, constrained, crossPoint, nextPrintableTop, nextWritingPoint, printableAt } from './pageConstraint';
-import { pageBox, pageCount, pageSize } from '../export/pageGeometry';
+import { PAGE_GAP, pageBox, pageCount, pageSize } from '../export/pageGeometry';
 import { globalLine, lineOccupied, lineRemovable, lineY, pageLines, planLineShift, planSeparation, type LayoutPlan } from './layout';
 import { useAppStore } from '../store/appStore';
 
@@ -31,6 +32,29 @@ const get = () => useCanvasStore.getState();
 
 /** Viewport element size, kept up to date by CanvasView. */
 export const viewport = { w: 1200, h: 800, el: null as HTMLElement | null };
+
+/**
+ * Page layout: scrolling stops a little past the pages (no endless empty desk
+ * above, below or beside them). When the pages are smaller than the view they
+ * can move only within it. Free canvas: unlimited.
+ */
+setCameraClamp((cam) => {
+  const { canvasMode, pageOrientation, pages } = useAppStore.getState().settings;
+  if (canvasMode !== 'page') return cam;
+  const page = pageSize(pageOrientation);
+  const n = pageCount(orderedShapes(), pageOrientation, pages);
+  const m = 48 / cam.z;
+  const axis = (pos: number, c0: number, c1: number, view: number) => {
+    const lo = c0 - m;
+    const hi = c1 + m - view;
+    return Math.min(Math.max(pos, Math.min(lo, hi)), Math.max(lo, hi));
+  };
+  return {
+    x: axis(cam.x, 0, page.w, viewport.w / cam.z),
+    y: axis(cam.y, 0, n * (page.h + PAGE_GAP) - PAGE_GAP, viewport.h / cam.z),
+    z: cam.z,
+  };
+});
 /** Last pointer position in page coordinates. */
 export const lastPointer = { x: 0, y: 0, inside: false };
 

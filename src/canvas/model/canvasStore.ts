@@ -272,6 +272,13 @@ export function setTool(tool: ToolId): void {
   set({ tool, selection: tool === 'select' ? get().selection : [] });
 }
 
+/** Keeps the view on the worksheet (installed by canvasActions; identity until then). */
+let clampCamera: (c: Camera) => Camera = (c) => c;
+export function setCameraClamp(fn: (c: Camera) => Camera): void {
+  clampCamera = fn;
+}
+
 export function setCamera(camera: Camera): void {
-  set({ camera: { x: camera.x, y: camera.y, z: Math.min(8, Math.max(0.1, camera.z)) } });
+  const c = clampCamera({ x: camera.x, y: camera.y, z: Math.min(8, Math.max(0.1, camera.z)) });
+  set({ camera: c });
 }
