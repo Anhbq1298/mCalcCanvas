@@ -284,7 +284,7 @@ export function InputResultsPage() {
             <button type="button" onClick={() => setPickerOpen(true)} className="ir-primary-button mt-5"><Settings2 size={16} aria-hidden /> Configure columns</button>
           </div>
         ) : (
-          <div className="inline-block min-w-full overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+          <div className="inline-block overflow-hidden rounded-lg border border-border bg-card shadow-sm">
             <table className="ir-data-table" data-testid="input-results-table">
               <thead>
                 <tr className="ir-group-row">
