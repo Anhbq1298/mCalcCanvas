@@ -6,7 +6,7 @@ mCalcCanvas is a browser app in the style of Mathcad Prime. You write engineerin
 
 ## 1. Working agreement (always)
 
-- **Branch:** work on the current feature branch (now `feature/if-function`). Commit when a task is done; **never push** unless asked.
+- **Branch:** work directly on `main` (no feature branches). Commit when a task is done; **never push** unless asked (then `git push origin main`).
 - **Language with the owner:** reply in Vietnamese, casual and short. Code, comments, docs and template text are in English.
 - **No silent assumptions in engineering content.** If a code clause, value or rule is not verified, search for it. If you still cannot verify it, say so explicitly in the reply; never present a guess as the code.
 - **Cite clauses** (e.g. "EN 1992-1-1:2023 (8.41)") in template labels, using the code's own symbols.
