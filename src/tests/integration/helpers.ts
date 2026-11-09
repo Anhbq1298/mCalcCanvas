@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 export interface RegionInfo {
   id: string;
@@ -110,4 +110,20 @@ export async function shapePosition(page: Page, id: string) {
     const s = store.getState().shapes[shapeId];
     return { x: s.x, y: s.y };
   }, id);
+}
+
+/**
+ * Bounding box of a locator once it has stopped moving (two equal reads 100 ms
+ * apart). Regions re-measure after fonts load or results arrive; grabbing a box
+ * mid-reflow makes a later pointer-down land beside the region (CI flake).
+ */
+export async function stableBox(locator: Locator) {
+  let last = await locator.boundingBox();
+  for (let i = 0; i < 30; i++) {
+    await locator.page().waitForTimeout(100);
+    const box = await locator.boundingBox();
+    if (box && last && box.x === last.x && box.y === last.y && box.width === last.width && box.height === last.height) return box;
+    last = box;
+  }
+  throw new Error('bounding box never settled');
 }

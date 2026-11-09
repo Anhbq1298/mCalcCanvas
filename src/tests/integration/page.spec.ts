@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { newBlankWorksheet, openFresh, regions } from './helpers.ts';
+import { newBlankWorksheet, openFresh, regions, stableBox } from './helpers.ts';
 
 /** Screen rectangle of the writable area of page 1 (inside the margins). */
 async function writable(page: Page) {
@@ -60,8 +60,8 @@ test.describe('Page layout keeps content inside the margins', () => {
     const region = page.locator('.math-region').first();
     await expect(region).toHaveAttribute('data-status', 'valid');
     await region.click();
-    const grip = await page.getByTestId('grip').boundingBox();
-    await page.mouse.move(grip!.x + grip!.width / 2, grip!.y + grip!.height / 2);
+    const grip = await stableBox(page.getByTestId('grip'));
+    await page.mouse.move(grip.x + grip.width / 2, grip.y + grip.height / 2);
     await page.mouse.down();
     await page.mouse.move(w.left - 300, w.top - 150, { steps: 10 });
     await page.mouse.up();

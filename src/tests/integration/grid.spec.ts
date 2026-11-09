@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { newBlankWorksheet, openFresh } from './helpers.ts';
+import { newBlankWorksheet, openFresh, stableBox } from './helpers.ts';
 
 type S = { id: string; type: string; x: number; y: number; props: { baseline?: number; fontSize: number } };
 const shapes = (page: Page): Promise<S[]> =>
@@ -85,10 +85,10 @@ test.describe('math and text regions snap strictly to the grid', () => {
     for (const s of await shapes(page)) expect(onGrid(s), JSON.stringify(s)).toBe(true);
 
     // drag by an odd amount
-    const box = await page.locator('.math-region').first().boundingBox();
-    await page.mouse.move(box!.x + 6, box!.y + box!.height / 2);
+    const box = await stableBox(page.locator('.math-region').first());
+    await page.mouse.move(box.x + 6, box.y + box.height / 2);
     await page.mouse.down();
-    await page.mouse.move(box!.x + 6 + 37, box!.y + box!.height / 2 + 23, { steps: 7 });
+    await page.mouse.move(box.x + 6 + 37, box.y + box.height / 2 + 23, { steps: 7 });
     await page.mouse.up();
     const math = (await shapes(page)).find((s) => s.type === 'math')!;
     expect(onGrid(math)).toBe(true);
@@ -150,11 +150,12 @@ test.describe('moving regions', () => {
     // Let the new region get its result and settle on its baseline before grabbing it.
     await page.evaluate(() => (window as unknown as { __calccanvas: { idle(): Promise<void> } }).__calccanvas.idle());
     await expect(page.locator('.math-region').first()).toHaveAttribute('data-status', 'valid');
-    await page.waitForTimeout(200);
-    const box = await page.locator('.math-region').first().boundingBox();
-    await page.mouse.move(box!.x + 8, box!.y + box!.height / 2);
+    const box = await stableBox(page.locator('.math-region').first());
+    await page.mouse.move(box.x + 8, box.y + box.height / 2);
     await page.mouse.down();
-    await page.mouse.move(box!.x + 8 + 63, box!.y + box!.height / 2 + 27, { steps: 6 });
+    // The press must have started a move of this region (not a marquee beside it).
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __calccanvas: { store: { getState(): { selection: string[] } } } }).__calccanvas.store.getState().selection.length)).toBe(1);
+    await page.mouse.move(box.x + 8 + 63, box.y + box.height / 2 + 27, { steps: 6 });
     await expect(page.getByTestId('drop-preview')).toBeVisible();
     await page.mouse.up();
     await expect(page.getByTestId('drop-preview')).toHaveCount(0);
@@ -169,10 +170,10 @@ test.describe('moving regions', () => {
     await page.keyboard.type('c:3', { delay: 15 });
     await expect(page.locator('math-field')).toHaveCount(1);
     const before = (await shapes(page))[0];
-    const grip = await page.getByTestId('grip').first().boundingBox();
-    await page.mouse.move(grip!.x + grip!.width / 2, grip!.y + grip!.height / 2);
+    const grip = await stableBox(page.getByTestId('grip').first());
+    await page.mouse.move(grip.x + grip.width / 2, grip.y + grip.height / 2);
     await page.mouse.down();
-    await page.mouse.move(grip!.x + 120, grip!.y + 80, { steps: 6 });
+    await page.mouse.move(grip.x + 120, grip.y + 80, { steps: 6 });
     await page.mouse.up();
     const after = (await shapes(page))[0];
     expect(after.x - before.x).toBeGreaterThanOrEqual(100);
@@ -242,10 +243,10 @@ test('a region dropped onto another pushes it down instead of overlapping', asyn
   const byLatex = async () => Object.fromEntries((await shapes(page)).map((s) => [(s as unknown as { props: { latex: string } }).props.latex[0], lineOf(s)]));
   expect(await byLatex()).toEqual({ a: 100, b: 180, c: 220 });
   // Drag a straight onto b.
-  const box = await page.locator('.math-region').first().boundingBox();
-  await page.mouse.move(box!.x + 8, box!.y + box!.height / 2);
+  const box = await stableBox(page.locator('.math-region').first());
+  await page.mouse.move(box.x + 8, box.y + box.height / 2);
   await page.mouse.down();
-  await page.mouse.move(box!.x + 8, box!.y + box!.height / 2 + 80, { steps: 6 });
+  await page.mouse.move(box.x + 8, box.y + box.height / 2 + 80, { steps: 6 });
   await page.mouse.up();
   await expect.poll(byLatex).toEqual({ a: 180, b: 220, c: 260 });
   // No two regions overlap.
