@@ -83,7 +83,7 @@ import { useState, type ReactNode } from 'react';
 import { commands, type ToolId } from '../../app/commands';
 import { newGraphSeries, viewport, zoomAt } from '../../canvas/canvasActions';
 import { canUndo, updateShapes, useCanvasStore, type ShapePatch } from '../../canvas/model/canvasStore';
-import { fontStack, PARAGRAPH_STYLES, TEXT_FONTS, TEXT_STYLES, type GraphShape, type HeadingLevel, type MathDisplayMode, type Shape, type TextStyleId } from '../../canvas/model/types';
+import { fontStack, PARAGRAPH_STYLES, TEXT_FONTS, TEXT_STYLES, type GraphShape, type HeadingLevel, type MathDisplayMode, type MathFontStyle, type Shape, type TextStyleId } from '../../canvas/model/types';
 import { formatEditingText, hasTextSelection } from '../../canvas/textFormatting';
 import { useAppStore } from '../../store/appStore';
 import { DEFAULT_LABEL_STYLES, DEFAULT_MARGINS, type ResultFormat } from '../../documents/DocumentTypes';
@@ -439,6 +439,15 @@ function MathFormattingTab() {
   const settings = useAppStore((s) => s.settings);
   const math = selected.filter((s): s is Extract<Shape, { type: 'math' }> => s.type === 'math');
   const first = math[0];
+  const currentFontStyle = first?.props.fontStyle ?? 'normal';
+  const isMathBold = currentFontStyle === 'bold' || currentFontStyle === 'bold-italic';
+  const isMathItalic = currentFontStyle === 'italic' || currentFontStyle === 'bold-italic';
+  const toggleMathStyle = (kind: 'bold' | 'italic') => {
+    const bold = kind === 'bold' ? !isMathBold : isMathBold;
+    const italic = kind === 'italic' ? !isMathItalic : isMathItalic;
+    const style: MathFontStyle = bold ? (italic ? 'bold-italic' : 'bold') : italic ? 'italic' : 'normal';
+    patchSelected((sh) => (sh.type === 'math' ? { props: { fontStyle: style } } : null));
+  };
   const [unitDraft, setUnitDraft] = useState<string | null>(null);
   const [unitError, setUnitError] = useState<string | null>(null);
   const applyUnit = (raw: string) => {
@@ -482,7 +491,7 @@ function MathFormattingTab() {
     else patchSelected((sh) => (sh.type === 'math' ? { props: { resultFormat: undefined, trailingZeros: undefined, precision: -1, displayUnit: '', displayMode: 'auto' } } : null));
   };
   const resetFormatting = () =>
-    patchSelected((sh) => (sh.type === 'math' ? { props: { textFont: 'Inter', fontSize: 16, color: '#0f172a', highlight: undefined } } : null));
+    patchSelected((sh) => (sh.type === 'math' ? { props: { textFont: 'Inter', fontStyle: 'normal', fontSize: 16, color: '#0f172a', highlight: undefined } } : null));
   const labels = settings.labelStyles ?? DEFAULT_LABEL_STYLES;
   const setLabel = (k: keyof typeof labels, c: string | null) => useAppStore.getState().updateSettings({ labelStyles: { ...labels, [k]: c ?? DEFAULT_LABEL_STYLES[k] } });
   const fmtNames: [string, string][] = [['general', 'General'], ['decimal', 'Decimal'], ['scientific', 'Scientific'], ['engineering', 'Engineering']];
@@ -581,6 +590,10 @@ function MathFormattingTab() {
               options={Object.keys(TEXT_FONTS).map((f) => [f, f])}
             />
           </Field>
+          <div className="rb-field" aria-label="Math font style">
+            <TB icon={Bold} label="Bold equation" active={isMathBold} disabled={!first} testId="math-font-bold" onClick={() => toggleMathStyle('bold')} />
+            <TB icon={Italic} label="Italic equation" active={isMathItalic} disabled={!first} testId="math-font-italic" onClick={() => toggleMathStyle('italic')} />
+          </div>
           <div className="rb-field">
             <SizeControl kinds={['math']} label="Equation size" />
           </div>

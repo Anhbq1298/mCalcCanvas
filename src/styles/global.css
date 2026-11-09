@@ -446,6 +446,18 @@ body {
 .math-region .ML__latex {
   font-size: 1em;
 }
+.math-region[data-font-style='bold'] .ML__latex,
+.math-region[data-font-style='bold'] .ML__latex *,
+.math-region[data-font-style='bold-italic'] .ML__latex,
+.math-region[data-font-style='bold-italic'] .ML__latex * {
+  font-weight: 700 !important;
+}
+.math-region[data-font-style='italic'] .ML__latex,
+.math-region[data-font-style='italic'] .ML__latex *,
+.math-region[data-font-style='bold-italic'] .ML__latex,
+.math-region[data-font-style='bold-italic'] .ML__latex * {
+  font-style: italic !important;
+}
 .math-region math-field {
   font-size: 1em;
   min-width: 48px;

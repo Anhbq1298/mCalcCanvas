@@ -4,6 +4,7 @@
  */
 
 export type MathDisplayMode = 'auto' | 'formula' | 'result' | 'formulaResult' | 'full';
+export type MathFontStyle = 'normal' | 'bold' | 'italic' | 'bold-italic';
 
 export type VectorLayout = 'row' | 'column';
 
@@ -25,6 +26,8 @@ export interface MathProps {
   highlight?: string;
   /** Font used by text embedded in the equation (for example, \\text{...}). */
   textFont?: string;
+  /** Overall presentation style for the rendered equation. */
+  fontStyle?: MathFontStyle;
   /** How a vector result is shown: a compact row (default) or a column with every entry. */
   vectorLayout?: VectorLayout;
   /** Show every entry of a long vector result instead of the shortened first … last view. */
@@ -232,6 +235,7 @@ export const DEFAULT_MATH_PROPS: MathProps = {
   displayUnit: '',
   precision: -1,
   textFont: 'Inter',
+  fontStyle: 'normal',
   autoSize: true,
   fontSize: 18,
   color: MATH_COLORS[0],

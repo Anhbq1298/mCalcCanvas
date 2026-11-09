@@ -21,7 +21,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   const result = useRegionResult(shape.id);
   const contentRef = useRef<HTMLDivElement>(null);
   const probeRef = useRef<HTMLSpanElement>(null);
-  const { latex, displayMode, fontSize, color, textFont, w, h } = shape.props;
+  const { latex, displayMode, fontSize, color, textFont, fontStyle, w, h } = shape.props;
   const display = useMemo(() => buildDisplay(latex, result, displayMode), [latex, result, displayMode]);
   const hasResult = !!result;
   // Off-screen regions with a measured size are typeset when they come near the view.
@@ -59,7 +59,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     const ro = new ResizeObserver(fit);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, isStatic, editing, display.latex, textFont, hasResult, seen]);
+  }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, isStatic, editing, display.latex, textFont, fontStyle, hasResult, seen]);
 
   useSeparateAfterEditing(shape.id, editing, isStatic);
 
@@ -102,6 +102,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
       data-error={errorMessage ?? ''}
       data-redefines={result?.redefines ? result.redefines.name : undefined}
       data-input={isInput || undefined}
+      data-font-style={fontStyle ?? 'normal'}
       title={
         result?.redefines
           ? `Redefines ${result.redefines.name}: regions below this one use this value; regions above keep the earlier one.`

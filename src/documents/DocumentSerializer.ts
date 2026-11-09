@@ -1,4 +1,4 @@
-import { DEFAULT_GRAPH_STYLE, DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, TEXT_FONTS, type AnnexRole, type GraphSeriesStyle, defaultTableProps, type Shape } from '../canvas/model/types';
+import { DEFAULT_GRAPH_STYLE, DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, TEXT_FONTS, type AnnexRole, type GraphSeriesStyle, type MathFontStyle, defaultTableProps, type Shape } from '../canvas/model/types';
 import { escapeHtml, sanitizeHtml } from '../canvas/sanitize';
 import {
   DEFAULT_LABEL_STYLES,
@@ -100,6 +100,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           ...(typeof p.trailingZeros === 'boolean' ? { trailingZeros: p.trailingZeros } : {}),
           ...(typeof p.highlight === 'string' && /^#[0-9a-fA-F]{6}$/.test(p.highlight) ? { highlight: p.highlight } : {}),
           textFont: TEXT_FONTS[str(p.textFont)] ? str(p.textFont) : 'Inter',
+          fontStyle: ['normal', 'bold', 'italic', 'bold-italic'].includes(str(p.fontStyle)) ? str(p.fontStyle) as MathFontStyle : 'normal',
           // Math regions are intrinsically sized; keep the legacy field only
           // so older documents round-trip into the current behaviour.
           autoSize: true,
