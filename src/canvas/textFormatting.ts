@@ -8,6 +8,8 @@ let savedRoot: HTMLElement | null = null;
 
 if (typeof document !== 'undefined') {
   document.addEventListener('selectionchange', () => {
+    // Only a text region being edited matters (cheap check; selection changes are frequent).
+    if (!document.querySelector('.text-region--editing')) return;
     const sel = document.getSelection();
     if (!sel || !sel.rangeCount) return;
     const node = sel.anchorNode;

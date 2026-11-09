@@ -9,6 +9,7 @@ import type { MathShape } from '../model/types';
 import { majorLineAtOrBelow } from '../pageConstraint';
 import { separateRegion } from '../canvasActions';
 import { useSeparateAfterEditing } from './useSeparate';
+import { useSeen } from './useSeen';
 import { annexInfo, annexNumber, pageNumberOf } from '../annex';
 import { useAppStore } from '../../store/appStore';
 
@@ -23,6 +24,8 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   const { latex, displayMode, autoSize, fontSize, color, w, h } = shape.props;
   const display = useMemo(() => buildDisplay(latex, result, displayMode), [latex, result, displayMode]);
   const hasResult = !!result;
+  // Off-screen regions with a measured size are typeset when they come near the view.
+  const seen = useSeen(contentRef, editing || isStatic || !autoSize || shape.props.baseline === undefined);
 
   // Auto-size: the box follows the rendered equation unless resized manually.
   useEffect(() => {
@@ -31,7 +34,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     if (!el) return;
     // A loaded region with a measured size waits for its first result: measuring the bare
     // formula would move it (and the regions below) and back again when the result arrives.
-    if (!hasResult && shape.props.baseline !== undefined && !editing) return;
+    if ((!hasResult || !seen) && shape.props.baseline !== undefined && !editing) return;
     const fit = () => {
       const nw = Math.max(24, Math.ceil(el.offsetWidth));
       const nh = Math.max(20, Math.ceil(el.offsetHeight));
@@ -56,7 +59,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     const ro = new ResizeObserver(fit);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, autoSize, isStatic, editing, display.latex, hasResult]);
+  }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, autoSize, isStatic, editing, display.latex, hasResult, seen]);
 
   useSeparateAfterEditing(shape.id, editing, isStatic);
 
@@ -121,7 +124,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         ) : (
           <div className="flex items-center gap-2">
             <span className="math-baseline">
-              <MathRenderer latex={display.latex} />
+              {seen ? <MathRenderer latex={display.latex} /> : <span style={{ display: 'inline-block', width: Math.max(0, w - 2 * PAD_X), height: Math.max(0, h - 2 * PAD_Y) }} />}
               <span ref={probeRef} className="baseline-probe" aria-hidden />
             </span>
             {display.check && (

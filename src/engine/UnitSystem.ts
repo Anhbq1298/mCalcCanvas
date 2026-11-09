@@ -5,13 +5,48 @@
  * space explicit: everything else is a variable. mathjs is used purely as a
  * numeric/dimensional library – expressions are never handed to math.evaluate.
  */
-import { all, create, type MathJsInstance, type Unit } from 'mathjs';
+import {
+  absDependencies,
+  addDependencies,
+  cosDependencies,
+  create,
+  createUnitDependencies,
+  divideDependencies,
+  multiplyDependencies,
+  powDependencies,
+  sinDependencies,
+  sqrtDependencies,
+  subtractDependencies,
+  tanDependencies,
+  unaryMinusDependencies,
+  unitDependencies,
+  type MathJsInstance,
+  type Unit,
+} from 'mathjs';
 import { CalculationError } from './CalculationErrors';
 import { UNITS, parseDisplayUnit, type UnitSystemName } from './units';
 
 export { UNITS, UNIT_SYMBOLS, isUnitSymbol, parseDisplayUnit, type UnitDef, type UnitSystemName } from './units';
 
-export const math: MathJsInstance = create(all, { number: 'number', precision: 64 });
+// Only the functions the engine uses (not `all`): the worker starts faster and is smaller.
+export const math = create(
+  {
+    absDependencies,
+    addDependencies,
+    cosDependencies,
+    createUnitDependencies,
+    divideDependencies,
+    multiplyDependencies,
+    powDependencies,
+    sinDependencies,
+    sqrtDependencies,
+    subtractDependencies,
+    tanDependencies,
+    unaryMinusDependencies,
+    unitDependencies,
+  },
+  { number: 'number', precision: 64 },
+) as MathJsInstance;
 
 // mathjs has psi and kip but no ksi.
 if (!math.Unit.isValuelessUnit('ksi')) {
