@@ -42,7 +42,9 @@ CI (`.github/workflows/ci.yml`) runs all of these; GitHub Pages deploys only aft
 - **Document format:** `DOCUMENT_VERSION` in `DocumentTypes.ts`. Optional new fields are fine; a breaking change needs a migration plus a test.
 - Small focused changes, strict TypeScript, no `any`.
 
-**Tests to add with every change:**
+**Keep the unit suite small (owner's rule, 2026-11).** One `it` per behaviour area (one per `describe`); each case inside it is a `step('what it checks', () => { … })` from `src/tests/step.ts` (a failure names the step). Add a new case as a `step` in the matching `it`; open a new `it`/`describe` only for a new area. No duplicate checks, no timing assertions, no one-assertion tests. Heavy template evaluations: reuse one evaluation for several assertions. Files with `beforeEach` expose it as `resetEach()`; call it between steps that need fresh state.
+
+**Where a change's test goes:**
 
 | What changed | Where the test goes |
 |---|---|
@@ -66,6 +68,8 @@ To change a template:
    - It must print no "regions moved by the app" warning. A warning means regions overlapped, or snapped away from where the generator put them.
 3. Run `npm run templates:columns -- --pdf`, then look at the PDF pages (`tools/templates/*.pdf`, git-ignored).
 4. Update `src/tests/unit/columnTemplates.test.ts`. It pins key results (UR values, cotθ branches, b_w and so on) against hand or Python references. Tests find a region by the start of its LaTeX (e.g. `'\\mathrm{UR}_{V.y}\\coloneq'`), so a renamed symbol means an updated test.
+
+**Input & Results set-up:** `finish({ …, batch: { title, inputs, outputs, rows } })`; columns are `[id, label, exact LaTeX of the region]` (an unknown LaTeX stops the generator). The rectangular column ships 5 load cases (N, Mx, My, Vy, Vx → UR_M, UR_V.y, UR_V.x and the three checks); LC1 equals the worksheet values (e2e `loadCases.spec.ts`). Renaming a bound region's LaTeX means updating `batch` too.
 
 ### Generator helpers (both files)
 

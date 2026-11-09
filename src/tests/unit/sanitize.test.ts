@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 import { describe, expect, it } from 'vitest';
+import { step } from '../step';
 import { sanitizeHtml } from '../../canvas/sanitize';
 
 const ALLOWED_TAGS = new Set(['b', 'strong', 'i', 'em', 'u', 'br', 'p', 'div', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'span', 'sub', 'sup', 'font']);
@@ -36,32 +37,31 @@ describe('HTML sanitiser', () => {
     expect(onlyAllowed(out)).toBe(true);
   });
 
-  it('drops embedded SVG/MathML content entirely', () => {
-    const out = sanitizeHtml('<svg><script>alert(1)</script><a href="javascript:x">s</a></svg><math><mi>x</mi></math>');
-    expect(out).not.toMatch(/script|alert|href|svg|math/i);
-    expect(onlyAllowed(out)).toBe(true);
-  });
-
-  it('cleans arbitrarily deep nesting of unsupported elements', () => {
-    let html = '<b onclick="alert(1)">X</b><img src=x onerror=alert(1)>';
-    for (let i = 0; i < 40; i++) html = `<article data-x="${i}"><section onclick="y()">${html}</section></article>`;
-    const out = sanitizeHtml(html);
-    expect(out).toBe('<b>X</b>');
-    expect(onlyAllowed(out)).toBe(true);
-  });
-
-  it('survives pathological depth without keeping disallowed markup', () => {
-    const html = '<span>'.repeat(3000) + '<i onclick="x()">deep</i>' + '</span>'.repeat(3000);
-    const out = sanitizeHtml(html);
-    expect(out).toContain('deep');
-    expect(onlyAllowed(out)).toBe(true);
-  });
-
-  it('keeps supported formatting and engineering text', () => {
-    const html =
-      '<h1>Title</h1><h2>Sub</h2><p><b>M</b><sub>Ed</sub> = 225 kN·m &lt; M<sub>Rd</sub></p>' +
-      '<ul><li><i>a</i></li><li><u>b</u></li></ul><ol><li>1</li></ol><div>σ ≤ f<sub>yd</sub>, x<sup>2</sup><br>line</div>' +
-      '<font color="#188038">green</font><font color="rgb(1, 2, 3)">rgb</font><strong>s</strong><em>e</em><span>sp</span>';
-    expect(sanitizeHtml(html)).toBe(html);
+  it('HTML sanitiser', () => {
+    step('drops embedded SVG/MathML content entirely', () => {
+      const out = sanitizeHtml('<svg><script>alert(1)</script><a href="javascript:x">s</a></svg><math><mi>x</mi></math>');
+      expect(out).not.toMatch(/script|alert|href|svg|math/i);
+      expect(onlyAllowed(out)).toBe(true);
+    });
+    step('cleans arbitrarily deep nesting of unsupported elements', () => {
+      let html = '<b onclick="alert(1)">X</b><img src=x onerror=alert(1)>';
+      for (let i = 0; i < 40; i++) html = `<article data-x="${i}"><section onclick="y()">${html}</section></article>`;
+      const out = sanitizeHtml(html);
+      expect(out).toBe('<b>X</b>');
+      expect(onlyAllowed(out)).toBe(true);
+    });
+    step('survives pathological depth without keeping disallowed markup', () => {
+      const html = '<span>'.repeat(3000) + '<i onclick="x()">deep</i>' + '</span>'.repeat(3000);
+      const out = sanitizeHtml(html);
+      expect(out).toContain('deep');
+      expect(onlyAllowed(out)).toBe(true);
+    });
+    step('keeps supported formatting and engineering text', () => {
+      const html =
+        '<h1>Title</h1><h2>Sub</h2><p><b>M</b><sub>Ed</sub> = 225 kN·m &lt; M<sub>Rd</sub></p>' +
+        '<ul><li><i>a</i></li><li><u>b</u></li></ul><ol><li>1</li></ol><div>σ ≤ f<sub>yd</sub>, x<sup>2</sup><br>line</div>' +
+        '<font color="#188038">green</font><font color="rgb(1, 2, 3)">rgb</font><strong>s</strong><em>e</em><span>sp</span>';
+      expect(sanitizeHtml(html)).toBe(html);
+    });
   });
 });
