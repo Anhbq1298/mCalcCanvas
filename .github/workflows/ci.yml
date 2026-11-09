@@ -42,7 +42,15 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
+      - run: UI_SNAPSHOTS=1 npm run test:e2e
+      - name: Upload UI snapshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-snapshots
+          path: test-results/ui-snapshots
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@v4
