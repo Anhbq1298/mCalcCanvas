@@ -94,8 +94,13 @@ export const SHAPE_LIBRARY: LibraryShape[] = [
     label: 'Distributed load',
     group: 'Structural',
     parts: [
+      // Load line on top, evenly spaced arrows with small open heads (the filled
+      // line arrowheads are sized for long arrows and would merge into a band).
       { type: 'line', x: 0, y: 0, x2: 160, y2: 0 },
-      ...[0, 40, 80, 120, 160].map((x): Part => ({ type: 'line', x, y: 0, x2: 0, y2: 40, arrow: true })),
+      ...[0, 20, 40, 60, 80, 100, 120, 140, 160].flatMap((x): Part[] => [
+        { type: 'line', x, y: 0, x2: 0, y2: 36 },
+        { type: 'draw', points: [[x - 4, 29], [x, 36], [x + 4, 29]] },
+      ]),
     ],
   },
   {
