@@ -285,7 +285,18 @@ export function InputResultsPage() {
           </div>
         ) : (
           <div className="inline-block overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-            <table className="ir-data-table" data-testid="input-results-table">
+            <table
+              className="ir-data-table"
+              data-testid="input-results-table"
+              style={{ width: `${254 + (config.inputs.length + config.outputs.length) * 104}px` }}
+            >
+              <colgroup>
+                <col style={{ width: 112 }} />
+                {config.inputs.map((column) => <col key={`input-width-${column.id}`} style={{ width: 104 }} />)}
+                {config.outputs.map((column) => <col key={`output-width-${column.id}`} style={{ width: 104 }} />)}
+                <col style={{ width: 104 }} />
+                <col style={{ width: 38 }} />
+              </colgroup>
               <thead>
                 <tr className="ir-group-row">
                   <th rowSpan={2} className="ir-case-column">Case</th>
