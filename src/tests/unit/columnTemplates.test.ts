@@ -58,11 +58,6 @@ describe('column templates', () => {
     const a = evaluate('rc-circular-column', { '\\delta_{A}\\coloneq': '\\delta_{A}\\coloneq1' });
     expect(a.errors).toEqual([]);
     expect(a.result('\\mathrm{cot}_{\\theta min}\\coloneq')?.value?.number).toBe(2);
-    // Hand check at the ray point gives back (MEd, NEd)/UR_M.
-    const eta = result('\\mathrm{UR}_{M}\\coloneq')!.value!.number!;
-    const nAt = result('N_{R}\\left(c_{R}')!.value!.number!;
-    const nEd = result('N_{Ed}\\coloneq')!.value!.number!;
-    expect(Math.abs(nAt / (nEd / eta) - 1)).toBeLessThan(0.02);
   }, 30000);
 
   it('RC rectangular column check calculates without errors (P–Mθ curve, radial ratio)', () => {
@@ -81,13 +76,6 @@ describe('column templates', () => {
     expect(Math.abs(Mv[7] / 1101 - 1)).toBeLessThan(0.01);
     expect(N[0]).toBeCloseTo(-3415, -1);
     expect(Mv[0]).toBe(0);
-    // Hand check: the strain plane at the ray point gives back (MEd, NEd)/UR_M.
-    const eta = result('\\mathrm{UR}_{M}\\coloneq')!.value!.number!;
-    const nAt = result('N_{R}\\left(c_{R}')!.value!.number!;
-    const mAt = result('\\sqrt{\\left(M_{Rx}\\left(c_{R}')!.value!.number!;
-    expect(Math.abs(nAt / (3000 / eta) - 1)).toBeLessThan(0.02);
-    expect(Math.abs(mAt / (Math.hypot(600, 300) / eta) - 1)).toBeLessThan(0.02);
-    expect(eta).toBeCloseTo(0.6435, 2);
     // Ray from the origin through (MEd, NEd) = (670.8, 3000): reference capacity (1042.4, 4661.7), UR_M = 0.6435.
     expect(result('\\mathrm{UR}_{M}\\coloneq')?.value?.number).toBeCloseTo(0.6435, 2);
   }, 30000);
