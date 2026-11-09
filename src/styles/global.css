@@ -293,6 +293,7 @@ body {
 .ir-status--error { color: var(--color-destructive); }
 .ir-status--current { color: var(--color-success); }
 .ir-action-cell { width: 68px; min-width: 68px; padding: 0 4px !important; background: var(--color-card); text-align: center; white-space: nowrap; }
+.ir-action-cell > button { display: inline-flex; vertical-align: middle; }
 
 @media (max-width: 640px) {
   .ir-data-column,
@@ -546,3 +547,11 @@ body {
 .report-summary td.is-pass { color: #047857; font-weight: 600; }
 .report-summary td.is-fail { color: #b91c1c; font-weight: 600; }
 .report-note { font-size: 10px; color: #64748b; margin-top: 10px; }
+
+/* Input & Results: selected row and its right-click menu */
+tr.is-selected > td { background: var(--color-accent-soft) !important; }
+.ir-menu { position: fixed; z-index: 60; min-width: 240px; padding: 4px; border: 1px solid var(--color-border); border-radius: 6px; background: var(--color-card); box-shadow: 0 8px 24px rgb(0 0 0 / 0.12); }
+.ir-menu-item { display: block; width: 100%; padding: 6px 10px; border-radius: 4px; text-align: left; font-size: 13px; color: var(--color-foreground); cursor: pointer; }
+.ir-menu-item:hover:not(:disabled), .ir-menu-item:focus-visible { background: var(--color-muted); outline: none; }
+.ir-menu-item:disabled { color: var(--color-muted-foreground); cursor: default; }
+.ir-menu-sep { height: 1px; margin: 4px 2px; background: var(--color-border); }

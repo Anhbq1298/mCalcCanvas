@@ -40,3 +40,21 @@ test('rectangular column: case reports print a summary and the full worksheet pe
   await expect(root.locator('section[data-case="LC4 max My"]')).toHaveCount(perCase, { timeout: 60_000 });
   await expect(root.locator('section[data-case="LC2 max N"]')).toHaveCount(0);
 });
+
+test('rectangular column: right-click a case to show it on the calculation sheet', async ({ page }) => {
+  test.setTimeout(60_000);
+  await openFresh(page, 'rc-rectangular-column');
+  await page.getByRole('tab', { name: 'Input & Results' }).click();
+  await page.getByTestId('case-row').nth(1).click({ button: 'right', position: { x: 20, y: 10 } });
+  await expect(page.getByTestId('case-row').nth(1)).toHaveAttribute('aria-selected', 'true');
+  const menu = page.getByTestId('row-menu');
+  await expect(menu).toBeVisible();
+  await menu.getByRole('menuitem', { name: /calculation sheet$/ }).first().click();
+  await expect(menu).toHaveCount(0);
+  await expect(page.locator('[data-testid=math-region][data-latex^="N_{Ed}\\\\coloneq"]')).toHaveAttribute('data-latex', /coloneq6000/);
+  await page.evaluate(() => (window as unknown as { __calccanvas: { idle(): Promise<void> } }).__calccanvas.idle());
+  await expect(page.locator('[data-testid=math-region][data-latex^="\\\\mathrm{UR}_{M}="]')).toHaveAttribute('data-result', /0\.6366/);
+  // One undo step puts the worksheet's own values back.
+  await page.keyboard.press('Control+z');
+  await expect(page.locator('[data-testid=math-region][data-latex^="N_{Ed}\\\\coloneq"]')).toHaveAttribute('data-latex', /coloneq3000/);
+});

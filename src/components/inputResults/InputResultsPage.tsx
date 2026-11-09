@@ -13,13 +13,13 @@ import {
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { revealShape } from '../../canvas/canvasActions';
 import { readingKey } from '../../canvas/engineBridge';
-import { useCanvasStore } from '../../canvas/model/canvasStore';
+import { select, updateShapes, useCanvasStore } from '../../canvas/model/canvasStore';
 import type { MathShape } from '../../canvas/model/types';
 import type { CalculationResult } from '../../engine';
 import type { InputResultColumn, InputResultConfig, InputResultRow } from '../../documents/DocumentTypes';
 import { useAppStore } from '../../store/appStore';
 import { useCalculationStore } from '../../store/calculationStore';
-import { startBatch, type AvailableField, type BatchResults } from './batchCalculation';
+import { startBatch, withInputValue, type AvailableField, type BatchResults } from './batchCalculation';
 import { CancelledError, type BatchHandle } from '../../store/batchClient';
 import { printCaseReports } from '../../export/caseReports';
 
@@ -298,6 +298,49 @@ export function InputResultsPage() {
     requestAnimationFrame(() => revealShape(regionId));
   };
 
+  // Row selection and its right-click menu.
+  const [selectedRow, setSelectedRow] = useState<string | null>(null);
+  const [menu, setMenu] = useState<{ rowId: string; x: number; y: number } | null>(null);
+  useEffect(() => {
+    if (!menu) return;
+    const close = (e: Event) => {
+      if (e instanceof KeyboardEvent && e.key !== 'Escape') return;
+      if (e.type === 'pointerdown' && (e.target as Element | null)?.closest('[data-testid=row-menu]')) return;
+      setMenu(null);
+    };
+    window.addEventListener('pointerdown', close, true);
+    window.addEventListener('keydown', close, true);
+    window.addEventListener('blur', close);
+    return () => {
+      window.removeEventListener('pointerdown', close, true);
+      window.removeEventListener('keydown', close, true);
+      window.removeEventListener('blur', close);
+    };
+  }, [menu]);
+
+  /** Back to the calculation sheet with this case's values in the bound inputs (one undo step). */
+  const showCaseOnSheet = (rowId: string) => {
+    const row = config.rows.find((r) => r.id === rowId);
+    if (!row) return;
+    const { shapes: current } = useCanvasStore.getState();
+    const patches: Record<string, { props: { latex: string } }> = {};
+    for (const column of config.inputs) {
+      const value = row.values[column.id];
+      const shape = current[column.regionId];
+      if (value === null || value === undefined || shape?.type !== 'math' || fieldsMap.get(column.regionId)?.kind !== 'input') continue;
+      const latex = withInputValue(shape.props.latex, value);
+      if (latex !== shape.props.latex) patches[shape.id] = { props: { latex } };
+    }
+    if (Object.keys(patches).length) updateShapes(patches);
+    setWorkspace('calculation');
+    const ids = config.inputs.map((c) => c.regionId).filter((id) => current[id]);
+    requestAnimationFrame(() => {
+      if (ids[0]) revealShape(ids[0]);
+      select(ids);
+    });
+    useAppStore.getState().showToast('info', `${row.name}: its input values are now on the worksheet (Ctrl+Z to undo).`);
+  };
+
   const canCalculate = config.inputs.length > 0 && config.outputs.length > 0 && config.rows.length > 0 && config.rows.every((row) => config.inputs.every((column) => row.values[column.id] !== null));
 
   return (
@@ -345,14 +388,14 @@ export function InputResultsPage() {
             <table
               className="ir-data-table"
               data-testid="input-results-table"
-              style={{ width: `${254 + (config.inputs.length + config.outputs.length) * 104}px` }}
+              style={{ width: `${284 + (config.inputs.length + config.outputs.length) * 104}px` }}
             >
               <colgroup>
                 <col style={{ width: 112 }} />
                 {config.inputs.map((column) => <col key={`input-width-${column.id}`} style={{ width: 104 }} />)}
                 {config.outputs.map((column) => <col key={`output-width-${column.id}`} style={{ width: 104 }} />)}
                 <col style={{ width: 104 }} />
-                <col style={{ width: 38 }} />
+                <col style={{ width: 68 }} />
               </colgroup>
               <thead>
                 <tr className="ir-group-row">
@@ -381,7 +424,18 @@ export function InputResultsPage() {
                   const rowDone = runState === 'running' && !!batchResults[row.id];
                   const hasError = (runState === 'current' || rowDone) && config.outputs.some((column) => rowResults[column.id]?.status === 'error');
                   return (
-                    <tr key={row.id}>
+                    <tr
+                      key={row.id}
+                      data-testid="case-row"
+                      aria-selected={selectedRow === row.id}
+                      className={selectedRow === row.id ? 'is-selected' : undefined}
+                      onPointerDown={() => setSelectedRow(row.id)}
+                      onContextMenu={(event) => {
+                        event.preventDefault();
+                        setSelectedRow(row.id);
+                        setMenu({ rowId: row.id, x: event.clientX, y: event.clientY });
+                      }}
+                    >
                       <td className="ir-case-cell">
                         <input
                           aria-label={`Name of ${row.name}`}
@@ -413,6 +467,23 @@ export function InputResultsPage() {
           </div>
         )}
       </div>
+
+      {menu && (() => {
+        const row = config.rows.find((r) => r.id === menu.rowId);
+        if (!row) return null;
+        const item = (label: string, onSelect: () => void, disabled = false) => (
+          <button type="button" role="menuitem" disabled={disabled} className="ir-menu-item" onClick={() => { setMenu(null); onSelect(); }}>{label}</button>
+        );
+        return (
+          <div role="menu" aria-label={`${row.name} actions`} data-testid="row-menu" className="ir-menu" style={{ left: Math.min(menu.x, window.innerWidth - 260), top: Math.min(menu.y, window.innerHeight - 160) }}>
+            {item(`Show ${row.name} on the calculation sheet`, () => showCaseOnSheet(row.id), config.inputs.some((c) => row.values[c.id] === null))}
+            {item('Go to the calculation sheet', () => setWorkspace('calculation'))}
+            <div className="ir-menu-sep" role="separator" />
+            {item(`Print report for ${row.name}`, () => void printReports([row.id]), !canCalculate || printing)}
+            {item(`Delete ${row.name}`, () => changeConfig({ ...config, rows: config.rows.filter((r) => r.id !== row.id) }))}
+          </div>
+        );
+      })()}
 
       {pickerOpen && <ColumnPicker fields={fields} config={config} onClose={() => setPickerOpen(false)} onSave={(next) => {
         const nextFieldMap = fieldByRegion(fields);
