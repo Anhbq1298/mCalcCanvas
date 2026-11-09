@@ -6,6 +6,7 @@
  * numeric/dimensional library – expressions are never handed to math.evaluate.
  */
 import { all, create, type MathJsInstance, type Unit } from 'mathjs';
+import { CalculationError } from './CalculationErrors';
 
 export const math: MathJsInstance = create(all, { number: 'number', precision: 64 });
 
@@ -208,6 +209,22 @@ export function parseDisplayUnit(input: string): string {
     if (!UNITS.has(w)) throw new Error(`Unknown unit "${w}".`);
   }
   return cleaned.replace(/[A-Za-z]+/g, (w) => UNITS.get(w)!.mathjs);
+}
+
+/**
+ * Build a calculation quantity from a numeric scenario value and a worksheet
+ * unit label. Batch/scenario overrides use this instead of rewriting the
+ * source LaTeX definition.
+ */
+export function quantityFromDisplayValue(value: number, unit: string | null = null): Quantity {
+  if (!Number.isFinite(value)) throw new CalculationError('not-finite', 'Override value must be a finite number.');
+  if (!unit?.trim()) return value;
+  try {
+    return math.unit(value, parseDisplayUnit(unit));
+  } catch (error) {
+    if (error instanceof CalculationError) throw error;
+    throw new CalculationError('unknown-unit', error instanceof Error ? error.message : `Invalid unit "${unit}".`);
+  }
 }
 
 // ---------------------------------------------------------------------------
