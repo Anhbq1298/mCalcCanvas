@@ -13,10 +13,12 @@ interface MenuButtonProps {
   onOpenChange(open: boolean): void;
   /** Hovering another top-level menu while one is open switches to it. */
   onHover(): void;
+  /** Accent styling so the menu stands out in the menubar (e.g. Templates). */
+  highlight?: boolean;
 }
 
 /** Accessible dropdown menu (menubar item + menu with arrow-key navigation). */
-export function MenuButton({ label, entries, open, onOpenChange, onHover }: MenuButtonProps) {
+export function MenuButton({ label, entries, open, onOpenChange, onHover, highlight }: MenuButtonProps) {
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -54,9 +56,14 @@ export function MenuButton({ label, entries, open, onOpenChange, onHover }: Menu
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={menuId}
+        data-highlight={highlight || undefined}
         className={
           'h-7 cursor-pointer rounded px-2.5 text-[13px] transition-colors duration-150 ' +
-          (open ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted hover:text-foreground')
+          (highlight
+            ? 'bg-accent-soft! font-medium text-accent! ring-1 ring-accent/40 hover:bg-docs-active!' + (open ? ' bg-docs-active!' : '')
+            : open
+              ? 'bg-muted text-foreground'
+              : 'text-muted-foreground hover:bg-muted hover:text-foreground')
         }
         onClick={() => onOpenChange(!open)}
         onPointerEnter={onHover}

@@ -157,7 +157,10 @@ test.describe('Templates', () => {
 
   test('RC beam template: two pages, outline, all regions calculate, checks pass', async ({ page }) => {
     await openFresh(page);
-    await page.getByRole('menuitem', { name: 'File' }).click();
+    const tab = page.getByRole('menuitem', { name: 'Templates' });
+    await expect(tab).toHaveAttribute('data-highlight', 'true');
+    await tab.click();
+    await expect(page.getByRole('menuitem', { name: /RC rectangular column/ })).toBeVisible();
     await page.getByRole('menuitem', { name: /RC beam/ }).click();
     await expect(page.getByLabel('Worksheet title')).toHaveValue('RC Beam Bending Design');
     await resultOf(page, 'M_{Ed}\\coloneq').toContain('364.5');

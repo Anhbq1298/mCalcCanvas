@@ -588,8 +588,6 @@ export function DocsHeader() {
   const menus: Record<string, MenuEntry[]> = {
     File: [
       { label: 'New worksheet', onSelect: () => void commands.newWorksheet(false) },
-      { type: 'heading', label: 'New from template' },
-      ...TEMPLATES.map((t) => ({ label: t.name, onSelect: () => void commands.newFromTemplate(t.id) })),
       { type: 'separator' },
       { label: 'Open…', shortcut: `${MOD}O`, onSelect: commands.open },
       { label: 'Save', shortcut: `${MOD}S`, onSelect: () => void commands.save() },
@@ -601,6 +599,12 @@ export function DocsHeader() {
       { type: 'separator' },
       { label: 'Page setup: landscape', checked: settings.pageOrientation === 'landscape', onSelect: () => updateSettings({ pageOrientation: settings.pageOrientation === 'landscape' ? 'portrait' : 'landscape' }) },
       { label: 'Worksheet details…', onSelect: () => togglePanel(true) },
+    ],
+    Templates: [
+      { type: 'heading', label: 'Load a worksheet from a template' },
+      { label: 'Blank worksheet', onSelect: () => void commands.newWorksheet(false) },
+      { type: 'separator' },
+      ...TEMPLATES.map((t) => ({ label: t.name, onSelect: () => void commands.newFromTemplate(t.id) })),
     ],
     Edit: [
       { label: 'Undo', shortcut: `${MOD}Z`, onSelect: commands.undo },
@@ -713,6 +717,7 @@ export function DocsHeader() {
                 open={openMenu === name}
                 onOpenChange={(o) => setOpenMenu(o ? name : null)}
                 onHover={() => openMenu && openMenu !== name && setOpenMenu(name)}
+                highlight={name === 'Templates'}
               />
             ))}
           </nav>
