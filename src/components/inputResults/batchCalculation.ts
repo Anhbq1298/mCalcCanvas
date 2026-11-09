@@ -12,7 +12,14 @@ export interface AvailableField {
   inputValue: number | null;
 }
 
-export type BatchResults = Record<string, Record<string, CalculationResult | undefined>>;
+export interface BatchRowResult {
+  /** Results selected as visible table columns, keyed by column id. */
+  outputs: Record<string, CalculationResult | undefined>;
+  /** Complete isolated worksheet result set for transparent detailed reports. */
+  regions: Record<string, CalculationResult>;
+}
+
+export type BatchResults = Record<string, BatchRowResult>;
 
 export function unitToLatex(unit: string): string {
   if (!unit) return '';
@@ -41,21 +48,25 @@ export function calculateBatch(
     const isolated = new CalculationEngine(settings);
     isolated.batch(() => {
       for (const shape of mathShapes) {
-        const input = inputByRegion.get(shape.id);
-        const source = fields.get(shape.id);
-        const value = input ? row.values[input.id] : null;
-        const latex = input && source && value !== null
-          ? `${source.definitionLatex}\\coloneq${value}${unitToLatex(source.unit)}`
-          : shape.props.latex;
         isolated.setRegion(shape.id, {
-          latex,
+          latex: shape.props.latex,
           displayUnit: shape.props.displayUnit || null,
           precision: shape.props.precision >= 0 ? shape.props.precision : null,
           order: readingKey(shape),
         });
       }
+      for (const [regionId, input] of inputByRegion) {
+        const source = fields.get(regionId);
+        const value = row.values[input.id];
+        if (source?.kind === 'input' && value !== null && value !== undefined) {
+          isolated.setDefinitionOverride(regionId, { value, unit: source.unit });
+        }
+      }
     });
-    allResults[row.id] = Object.fromEntries(config.outputs.map((column) => [column.id, isolated.getResult(column.regionId)]));
+    allResults[row.id] = {
+      outputs: Object.fromEntries(config.outputs.map((column) => [column.id, isolated.getResult(column.regionId)])),
+      regions: isolated.getResultsSnapshot(),
+    };
   }
   return allResults;
 }
