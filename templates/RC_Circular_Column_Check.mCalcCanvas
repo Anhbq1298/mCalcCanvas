@@ -76,7 +76,7 @@
       "props": {
         "w": 630,
         "h": 24,
-        "html": "Flexure: ray from 0 through (MEd, NEd) to the P–M curve (ηR). Shear: spirals, §6.2.3.",
+        "html": "Flexure: ray from 0 through (MEd, NEd) to the P–M curve (ηR). fcd and shear (spirals):",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#475569",
@@ -91,7 +91,7 @@
       "props": {
         "w": 630,
         "h": 24,
-        "html": "N positive in compression. Annex A.n is calculated at its link ▸.",
+        "html": "EN 1992-1-1:2023 (5.3), §8.2.3.",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#475569",
@@ -102,7 +102,22 @@
       "id": "s_col_5",
       "type": "text",
       "x": 80,
-      "y": 270,
+      "y": 260,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "N positive in compression. Annex A.n is calculated at its link ▸.",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6",
+      "type": "text",
+      "x": 80,
+      "y": 300,
       "props": {
         "w": 630,
         "h": 24,
@@ -115,10 +130,10 @@
       }
     },
     {
-      "id": "s_col_6",
+      "id": "s_col_7",
       "type": "text",
       "x": 80,
-      "y": 310,
+      "y": 340,
       "props": {
         "w": 630,
         "h": 24,
@@ -131,10 +146,10 @@
       }
     },
     {
-      "id": "s_col_7",
+      "id": "s_col_8",
       "type": "text",
       "x": 80,
-      "y": 357,
+      "y": 387,
       "props": {
         "w": 310,
         "h": 24,
@@ -146,10 +161,10 @@
       }
     },
     {
-      "id": "s_col_8",
+      "id": "s_col_9",
       "type": "math",
       "x": 400,
-      "y": 350,
+      "y": 380,
       "props": {
         "w": 60,
         "h": 32,
@@ -163,10 +178,10 @@
       }
     },
     {
-      "id": "s_col_9",
+      "id": "s_col_a",
       "type": "text",
       "x": 80,
-      "y": 397,
+      "y": 427,
       "props": {
         "w": 310,
         "h": 24,
@@ -178,63 +193,31 @@
       }
     },
     {
-      "id": "s_col_a",
+      "id": "s_col_b",
       "type": "math",
       "x": 400,
-      "y": 390,
+      "y": 420,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\gamma_{c}\\coloneq1.5",
+        "latex": "\\gamma_{C}\\coloneq1.5",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": -1,
         "autoSize": true,
         "fontSize": 18,
         "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_b",
-      "type": "text",
-      "x": 80,
-      "y": 437,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Coefficient αcc for flexure (NA)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
       }
     },
     {
       "id": "s_col_c",
-      "type": "math",
-      "x": 400,
-      "y": 430,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\alpha_{cc}\\coloneq0.85",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_d",
       "type": "text",
       "x": 80,
-      "y": 477,
+      "y": 460,
       "props": {
         "w": 310,
         "h": 24,
-        "html": "Coefficient αcc for the shear strut (NA)",
+        "html": "Sustained-load factor (5.3): 0.85, or 1.0 if loaded after 90 days",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -242,14 +225,14 @@
       }
     },
     {
-      "id": "s_col_e",
+      "id": "s_col_d",
       "type": "math",
       "x": 400,
-      "y": 470,
+      "y": 460,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\alpha_{cc.v}\\coloneq1.0",
+        "latex": "k_{tc}\\coloneq0.85",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": -1,
@@ -259,10 +242,10 @@
       }
     },
     {
-      "id": "s_col_f",
+      "id": "s_col_e",
       "type": "text",
       "x": 80,
-      "y": 527,
+      "y": 517,
       "props": {
         "w": 310,
         "h": 24,
@@ -274,10 +257,10 @@
       }
     },
     {
-      "id": "s_col_g",
+      "id": "s_col_f",
       "type": "math",
       "x": 400,
-      "y": 520,
+      "y": 510,
       "props": {
         "w": 60,
         "h": 32,
@@ -291,10 +274,10 @@
       }
     },
     {
-      "id": "s_col_h",
+      "id": "s_col_g",
       "type": "text",
       "x": 80,
-      "y": 567,
+      "y": 557,
       "props": {
         "w": 310,
         "h": 24,
@@ -306,10 +289,10 @@
       }
     },
     {
-      "id": "s_col_i",
+      "id": "s_col_h",
       "type": "math",
       "x": 400,
-      "y": 560,
+      "y": 550,
       "props": {
         "w": 60,
         "h": 32,
@@ -323,10 +306,10 @@
       }
     },
     {
-      "id": "s_col_j",
+      "id": "s_col_i",
       "type": "text",
       "x": 80,
-      "y": 607,
+      "y": 597,
       "props": {
         "w": 310,
         "h": 24,
@@ -338,14 +321,14 @@
       }
     },
     {
-      "id": "s_col_k",
+      "id": "s_col_j",
       "type": "math",
       "x": 400,
-      "y": 600,
+      "y": 590,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\gamma_{s}\\coloneq1.15",
+        "latex": "\\gamma_{S}\\coloneq1.15",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": -1,
@@ -355,10 +338,10 @@
       }
     },
     {
-      "id": "s_col_l",
+      "id": "s_col_k",
       "type": "text",
       "x": 80,
-      "y": 657,
+      "y": 647,
       "props": {
         "w": 310,
         "h": 24,
@@ -370,10 +353,10 @@
       }
     },
     {
-      "id": "s_col_m",
+      "id": "s_col_l",
       "type": "math",
       "x": 400,
-      "y": 650,
+      "y": 640,
       "props": {
         "w": 60,
         "h": 32,
@@ -387,10 +370,10 @@
       }
     },
     {
-      "id": "s_col_n",
+      "id": "s_col_m",
       "type": "text",
       "x": 80,
-      "y": 697,
+      "y": 687,
       "props": {
         "w": 310,
         "h": 24,
@@ -402,10 +385,10 @@
       }
     },
     {
-      "id": "s_col_o",
+      "id": "s_col_n",
       "type": "math",
       "x": 400,
-      "y": 690,
+      "y": 680,
       "props": {
         "w": 60,
         "h": 32,
@@ -419,10 +402,10 @@
       }
     },
     {
-      "id": "s_col_p",
+      "id": "s_col_o",
       "type": "text",
       "x": 80,
-      "y": 737,
+      "y": 727,
       "props": {
         "w": 310,
         "h": 24,
@@ -434,10 +417,10 @@
       }
     },
     {
-      "id": "s_col_q",
+      "id": "s_col_p",
       "type": "math",
       "x": 400,
-      "y": 730,
+      "y": 720,
       "props": {
         "w": 60,
         "h": 32,
@@ -451,10 +434,10 @@
       }
     },
     {
-      "id": "s_col_r",
+      "id": "s_col_q",
       "type": "text",
       "x": 80,
-      "y": 787,
+      "y": 777,
       "props": {
         "w": 310,
         "h": 24,
@@ -466,10 +449,10 @@
       }
     },
     {
-      "id": "s_col_s",
+      "id": "s_col_r",
       "type": "math",
       "x": 400,
-      "y": 780,
+      "y": 770,
       "props": {
         "w": 60,
         "h": 32,
@@ -483,10 +466,10 @@
       }
     },
     {
-      "id": "s_col_t",
+      "id": "s_col_s",
       "type": "text",
       "x": 80,
-      "y": 820,
+      "y": 810,
       "props": {
         "w": 630,
         "h": 24,
@@ -499,10 +482,10 @@
       }
     },
     {
-      "id": "s_col_u",
+      "id": "s_col_t",
       "type": "text",
       "x": 80,
-      "y": 857,
+      "y": 847,
       "props": {
         "w": 310,
         "h": 24,
@@ -514,10 +497,10 @@
       }
     },
     {
-      "id": "s_col_v",
+      "id": "s_col_u",
       "type": "math",
       "x": 400,
-      "y": 850,
+      "y": 840,
       "props": {
         "w": 60,
         "h": 32,
@@ -531,10 +514,10 @@
       }
     },
     {
-      "id": "s_col_w",
+      "id": "s_col_v",
       "type": "text",
       "x": 80,
-      "y": 907,
+      "y": 897,
       "props": {
         "w": 310,
         "h": 24,
@@ -546,10 +529,10 @@
       }
     },
     {
-      "id": "s_col_x",
+      "id": "s_col_w",
       "type": "math",
       "x": 400,
-      "y": 900,
+      "y": 890,
       "props": {
         "w": 60,
         "h": 32,
@@ -563,10 +546,10 @@
       }
     },
     {
-      "id": "s_col_y",
+      "id": "s_col_x",
       "type": "text",
       "x": 80,
-      "y": 940,
+      "y": 930,
       "props": {
         "w": 310,
         "h": 24,
@@ -578,10 +561,10 @@
       }
     },
     {
-      "id": "s_col_z",
+      "id": "s_col_y",
       "type": "math",
       "x": 400,
-      "y": 940,
+      "y": 930,
       "props": {
         "w": 60,
         "h": 32,
@@ -595,10 +578,10 @@
       }
     },
     {
-      "id": "s_col_10",
+      "id": "s_col_z",
       "type": "text",
       "x": 80,
-      "y": 997,
+      "y": 987,
       "props": {
         "w": 310,
         "h": 24,
@@ -610,10 +593,10 @@
       }
     },
     {
-      "id": "s_col_11",
+      "id": "s_col_10",
       "type": "math",
       "x": 400,
-      "y": 990,
+      "y": 980,
       "props": {
         "w": 60,
         "h": 32,
@@ -627,7 +610,7 @@
       }
     },
     {
-      "id": "s_col_12",
+      "id": "s_col_11",
       "type": "text",
       "x": 80,
       "y": 1258,
@@ -642,7 +625,7 @@
       }
     },
     {
-      "id": "s_col_13",
+      "id": "s_col_12",
       "type": "math",
       "x": 400,
       "y": 1251,
@@ -659,7 +642,7 @@
       }
     },
     {
-      "id": "s_col_14",
+      "id": "s_col_13",
       "type": "text",
       "x": 80,
       "y": 1298,
@@ -674,7 +657,7 @@
       }
     },
     {
-      "id": "s_col_15",
+      "id": "s_col_14",
       "type": "math",
       "x": 400,
       "y": 1291,
@@ -691,7 +674,7 @@
       }
     },
     {
-      "id": "s_col_16",
+      "id": "s_col_15",
       "type": "text",
       "x": 80,
       "y": 1348,
@@ -706,7 +689,7 @@
       }
     },
     {
-      "id": "s_col_17",
+      "id": "s_col_16",
       "type": "math",
       "x": 400,
       "y": 1341,
@@ -723,7 +706,7 @@
       }
     },
     {
-      "id": "s_col_18",
+      "id": "s_col_17",
       "type": "text",
       "x": 80,
       "y": 1388,
@@ -738,7 +721,7 @@
       }
     },
     {
-      "id": "s_col_19",
+      "id": "s_col_18",
       "type": "math",
       "x": 400,
       "y": 1381,
@@ -755,7 +738,7 @@
       }
     },
     {
-      "id": "s_col_1a",
+      "id": "s_col_19",
       "type": "text",
       "x": 80,
       "y": 1428,
@@ -770,7 +753,7 @@
       }
     },
     {
-      "id": "s_col_1b",
+      "id": "s_col_1a",
       "type": "math",
       "x": 400,
       "y": 1421,
@@ -787,7 +770,7 @@
       }
     },
     {
-      "id": "s_col_1c",
+      "id": "s_col_1b",
       "type": "text",
       "x": 80,
       "y": 1478,
@@ -802,7 +785,7 @@
       }
     },
     {
-      "id": "s_col_1d",
+      "id": "s_col_1c",
       "type": "math",
       "x": 400,
       "y": 1471,
@@ -819,7 +802,7 @@
       }
     },
     {
-      "id": "s_col_1e",
+      "id": "s_col_1d",
       "type": "text",
       "x": 80,
       "y": 1518,
@@ -834,7 +817,7 @@
       }
     },
     {
-      "id": "s_col_1f",
+      "id": "s_col_1e",
       "type": "math",
       "x": 400,
       "y": 1511,
@@ -851,7 +834,7 @@
       }
     },
     {
-      "id": "s_col_1g",
+      "id": "s_col_1f",
       "type": "text",
       "x": 80,
       "y": 1551,
@@ -867,7 +850,7 @@
       }
     },
     {
-      "id": "s_col_1h",
+      "id": "s_col_1g",
       "type": "text",
       "x": 80,
       "y": 1598,
@@ -882,7 +865,7 @@
       }
     },
     {
-      "id": "s_col_1i",
+      "id": "s_col_1h",
       "type": "math",
       "x": 400,
       "y": 1591,
@@ -899,7 +882,7 @@
       }
     },
     {
-      "id": "s_col_1j",
+      "id": "s_col_1i",
       "type": "text",
       "x": 80,
       "y": 1631,
@@ -915,7 +898,7 @@
       }
     },
     {
-      "id": "s_col_1k",
+      "id": "s_col_1j",
       "type": "text",
       "x": 80,
       "y": 1678,
@@ -930,7 +913,7 @@
       }
     },
     {
-      "id": "s_col_1l",
+      "id": "s_col_1k",
       "type": "math",
       "x": 400,
       "y": 1671,
@@ -947,7 +930,7 @@
       }
     },
     {
-      "id": "s_col_1m",
+      "id": "s_col_1l",
       "type": "text",
       "x": 80,
       "y": 1718,
@@ -962,7 +945,7 @@
       }
     },
     {
-      "id": "s_col_1n",
+      "id": "s_col_1m",
       "type": "math",
       "x": 400,
       "y": 1711,
@@ -979,7 +962,7 @@
       }
     },
     {
-      "id": "s_col_1o",
+      "id": "s_col_1n",
       "type": "text",
       "x": 80,
       "y": 1758,
@@ -994,7 +977,7 @@
       }
     },
     {
-      "id": "s_col_1p",
+      "id": "s_col_1o",
       "type": "math",
       "x": 400,
       "y": 1751,
@@ -1011,7 +994,7 @@
       }
     },
     {
-      "id": "s_col_1q",
+      "id": "s_col_1p",
       "type": "text",
       "x": 80,
       "y": 1798,
@@ -1026,7 +1009,7 @@
       }
     },
     {
-      "id": "s_col_1r",
+      "id": "s_col_1q",
       "type": "math",
       "x": 400,
       "y": 1791,
@@ -1043,7 +1026,7 @@
       }
     },
     {
-      "id": "s_col_1s",
+      "id": "s_col_1r",
       "type": "text",
       "x": 80,
       "y": 1851,
@@ -1059,14 +1042,14 @@
       }
     },
     {
-      "id": "s_col_1t",
+      "id": "s_col_1s",
       "type": "text",
       "x": 80,
-      "y": 1901,
+      "y": 1900,
       "props": {
         "w": 310,
         "h": 24,
-        "html": "Design compressive strength for flexure",
+        "html": "Effective strength factor (5.4), fck,ref = 40 MPa",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -1074,31 +1057,31 @@
       }
     },
     {
-      "id": "s_col_1u",
+      "id": "s_col_1t",
       "type": "math",
       "x": 400,
       "y": 1891,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "f_{cd}\\coloneq\\frac{\\alpha_{cc}f_{ck}}{\\gamma_{c}}",
+        "latex": "\\eta_{cc}\\coloneq\\min\\left(\\left(\\frac{40\\,\\mathrm{MPa}}{f_{ck}}\\right)^{\\frac{1}{3}},1\\right)",
         "displayMode": "formulaResult",
-        "displayUnit": "MPa",
-        "precision": 2,
+        "displayUnit": "",
+        "precision": 3,
         "autoSize": true,
         "fontSize": 18,
         "color": "#0f172a"
       }
     },
     {
-      "id": "s_col_1v",
+      "id": "s_col_1u",
       "type": "text",
       "x": 80,
-      "y": 1942,
+      "y": 1971,
       "props": {
         "w": 310,
         "h": 24,
-        "html": "Design compressive strength for the shear strut",
+        "html": "Design compressive strength (5.3)",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -1106,14 +1089,14 @@
       }
     },
     {
-      "id": "s_col_1w",
+      "id": "s_col_1v",
       "type": "math",
       "x": 400,
-      "y": 1941,
+      "y": 1961,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "f_{cd.v}\\coloneq\\frac{\\alpha_{cc.v}f_{ck}}{\\gamma_{c}}",
+        "latex": "f_{cd}\\coloneq\\frac{\\eta_{cc}k_{tc}f_{ck}}{\\gamma_{C}}",
         "displayMode": "formulaResult",
         "displayUnit": "MPa",
         "precision": 2,
@@ -1123,10 +1106,10 @@
       }
     },
     {
-      "id": "s_col_1x",
+      "id": "s_col_1w",
       "type": "text",
       "x": 80,
-      "y": 2012,
+      "y": 2032,
       "props": {
         "w": 310,
         "h": 24,
@@ -1138,14 +1121,14 @@
       }
     },
     {
-      "id": "s_col_1y",
+      "id": "s_col_1x",
       "type": "math",
       "x": 400,
-      "y": 2001,
+      "y": 2021,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "f_{yd}\\coloneq\\frac{f_{yk}}{\\gamma_{s}}",
+        "latex": "f_{yd}\\coloneq\\frac{f_{yk}}{\\gamma_{S}}",
         "displayMode": "formulaResult",
         "displayUnit": "MPa",
         "precision": 1,
@@ -1155,10 +1138,10 @@
       }
     },
     {
-      "id": "s_col_1z",
+      "id": "s_col_1y",
       "type": "text",
       "x": 80,
-      "y": 2072,
+      "y": 2092,
       "props": {
         "w": 310,
         "h": 24,
@@ -1170,14 +1153,14 @@
       }
     },
     {
-      "id": "s_col_20",
+      "id": "s_col_1z",
       "type": "math",
       "x": 400,
-      "y": 2061,
+      "y": 2081,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "f_{ywd}\\coloneq\\frac{f_{ywk}}{\\gamma_{s}}",
+        "latex": "f_{ywd}\\coloneq\\frac{f_{ywk}}{\\gamma_{S}}",
         "displayMode": "formulaResult",
         "displayUnit": "MPa",
         "precision": 1,
@@ -1187,10 +1170,10 @@
       }
     },
     {
-      "id": "s_col_21",
+      "id": "s_col_20",
       "type": "text",
       "x": 80,
-      "y": 2131,
+      "y": 2151,
       "props": {
         "w": 310,
         "h": 24,
@@ -1202,10 +1185,10 @@
       }
     },
     {
-      "id": "s_col_22",
+      "id": "s_col_21",
       "type": "math",
       "x": 400,
-      "y": 2121,
+      "y": 2141,
       "props": {
         "w": 60,
         "h": 32,
@@ -1219,42 +1202,10 @@
       }
     },
     {
-      "id": "s_col_23",
+      "id": "s_col_22",
       "type": "text",
       "x": 80,
-      "y": 2425,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Strength reduction for cracked concrete (6.6N)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_24",
-      "type": "math",
-      "x": 400,
-      "y": 2422,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\nu_{1}\\coloneq0.6\\left(1-\\frac{f_{ck}}{250\\,\\mathrm{MPa}}\\right)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_25",
-      "type": "text",
-      "x": 80,
-      "y": 2517,
+      "y": 2457,
       "props": {
         "w": 310,
         "h": 24,
@@ -1266,10 +1217,10 @@
       }
     },
     {
-      "id": "s_col_26",
+      "id": "s_col_23",
       "type": "math",
       "x": 400,
-      "y": 2482,
+      "y": 2422,
       "props": {
         "w": 60,
         "h": 32,
@@ -1283,10 +1234,10 @@
       }
     },
     {
-      "id": "s_col_27",
+      "id": "s_col_24",
       "type": "text",
       "x": 80,
-      "y": 2602,
+      "y": 2542,
       "props": {
         "w": 630,
         "h": 24,
@@ -1299,10 +1250,10 @@
       }
     },
     {
-      "id": "s_col_28",
+      "id": "s_col_25",
       "type": "text",
       "x": 80,
-      "y": 2642,
+      "y": 2582,
       "props": {
         "w": 630,
         "h": 24,
@@ -1315,10 +1266,10 @@
       }
     },
     {
-      "id": "s_col_29",
+      "id": "s_col_26",
       "type": "text",
       "x": 80,
-      "y": 2679,
+      "y": 2619,
       "props": {
         "w": 310,
         "h": 24,
@@ -1330,10 +1281,10 @@
       }
     },
     {
-      "id": "s_col_2a",
+      "id": "s_col_27",
       "type": "math",
       "x": 400,
-      "y": 2672,
+      "y": 2612,
       "props": {
         "w": 60,
         "h": 32,
@@ -1347,10 +1298,10 @@
       }
     },
     {
-      "id": "s_col_2b",
+      "id": "s_col_28",
       "type": "text",
       "x": 80,
-      "y": 2729,
+      "y": 2669,
       "props": {
         "w": 310,
         "h": 24,
@@ -1362,10 +1313,10 @@
       }
     },
     {
-      "id": "s_col_2c",
+      "id": "s_col_29",
       "type": "math",
       "x": 400,
-      "y": 2722,
+      "y": 2662,
       "props": {
         "w": 60,
         "h": 32,
@@ -1379,10 +1330,10 @@
       }
     },
     {
-      "id": "s_col_2d",
+      "id": "s_col_2a",
       "type": "text",
       "x": 80,
-      "y": 2780,
+      "y": 2720,
       "props": {
         "w": 310,
         "h": 24,
@@ -1394,10 +1345,10 @@
       }
     },
     {
-      "id": "s_col_2e",
+      "id": "s_col_2b",
       "type": "math",
       "x": 400,
-      "y": 2772,
+      "y": 2712,
       "props": {
         "w": 60,
         "h": 32,
@@ -1411,10 +1362,10 @@
       }
     },
     {
-      "id": "s_col_2f",
+      "id": "s_col_2c",
       "type": "text",
       "x": 80,
-      "y": 2830,
+      "y": 2770,
       "props": {
         "w": 310,
         "h": 24,
@@ -1426,10 +1377,10 @@
       }
     },
     {
-      "id": "s_col_2g",
+      "id": "s_col_2d",
       "type": "math",
       "x": 400,
-      "y": 2822,
+      "y": 2762,
       "props": {
         "w": 60,
         "h": 32,
@@ -1443,10 +1394,10 @@
       }
     },
     {
-      "id": "s_col_2h",
+      "id": "s_col_2e",
       "type": "text",
       "x": 80,
-      "y": 2876,
+      "y": 2816,
       "props": {
         "w": 630,
         "h": 24,
@@ -1458,10 +1409,10 @@
       }
     },
     {
-      "id": "s_col_2i",
+      "id": "s_col_2f",
       "type": "math",
       "x": 96,
-      "y": 2912,
+      "y": 2852,
       "props": {
         "w": 60,
         "h": 32,
@@ -1475,10 +1426,10 @@
       }
     },
     {
-      "id": "s_col_2j",
+      "id": "s_col_2g",
       "type": "text",
       "x": 80,
-      "y": 2969,
+      "y": 2909,
       "props": {
         "w": 310,
         "h": 24,
@@ -1490,10 +1441,10 @@
       }
     },
     {
-      "id": "s_col_2k",
+      "id": "s_col_2h",
       "type": "math",
       "x": 400,
-      "y": 2962,
+      "y": 2902,
       "props": {
         "w": 60,
         "h": 32,
@@ -1507,10 +1458,10 @@
       }
     },
     {
-      "id": "s_col_2l",
+      "id": "s_col_2i",
       "type": "text",
       "x": 80,
-      "y": 3009,
+      "y": 2949,
       "props": {
         "w": 310,
         "h": 24,
@@ -1522,10 +1473,10 @@
       }
     },
     {
-      "id": "s_col_2m",
+      "id": "s_col_2j",
       "type": "math",
       "x": 400,
-      "y": 3002,
+      "y": 2942,
       "props": {
         "w": 60,
         "h": 32,
@@ -1539,10 +1490,10 @@
       }
     },
     {
-      "id": "s_col_2n",
+      "id": "s_col_2k",
       "type": "text",
       "x": 80,
-      "y": 3059,
+      "y": 2999,
       "props": {
         "w": 310,
         "h": 24,
@@ -1554,10 +1505,10 @@
       }
     },
     {
-      "id": "s_col_2o",
+      "id": "s_col_2l",
       "type": "math",
       "x": 400,
-      "y": 3052,
+      "y": 2992,
       "props": {
         "w": 60,
         "h": 32,
@@ -1571,10 +1522,10 @@
       }
     },
     {
-      "id": "s_col_2p",
+      "id": "s_col_2m",
       "type": "text",
       "x": 80,
-      "y": 3099,
+      "y": 3039,
       "props": {
         "w": 310,
         "h": 24,
@@ -1586,10 +1537,10 @@
       }
     },
     {
-      "id": "s_col_2q",
+      "id": "s_col_2n",
       "type": "math",
       "x": 400,
-      "y": 3092,
+      "y": 3032,
       "props": {
         "w": 60,
         "h": 32,
@@ -1603,10 +1554,10 @@
       }
     },
     {
-      "id": "s_col_2r",
+      "id": "s_col_2o",
       "type": "text",
       "x": 80,
-      "y": 3139,
+      "y": 3079,
       "props": {
         "w": 310,
         "h": 24,
@@ -1618,10 +1569,10 @@
       }
     },
     {
-      "id": "s_col_2s",
+      "id": "s_col_2p",
       "type": "math",
       "x": 400,
-      "y": 3132,
+      "y": 3072,
       "props": {
         "w": 60,
         "h": 32,
@@ -1635,10 +1586,10 @@
       }
     },
     {
-      "id": "s_col_2t",
+      "id": "s_col_2q",
       "type": "text",
       "x": 80,
-      "y": 3189,
+      "y": 3119,
       "props": {
         "w": 310,
         "h": 24,
@@ -1650,10 +1601,10 @@
       }
     },
     {
-      "id": "s_col_2u",
+      "id": "s_col_2r",
       "type": "math",
       "x": 400,
-      "y": 3182,
+      "y": 3112,
       "props": {
         "w": 60,
         "h": 32,
@@ -1667,10 +1618,10 @@
       }
     },
     {
-      "id": "s_col_2v",
+      "id": "s_col_2s",
       "type": "text",
       "x": 80,
-      "y": 3229,
+      "y": 3169,
       "props": {
         "w": 310,
         "h": 24,
@@ -1682,10 +1633,10 @@
       }
     },
     {
-      "id": "s_col_2w",
+      "id": "s_col_2t",
       "type": "math",
       "x": 400,
-      "y": 3222,
+      "y": 3162,
       "props": {
         "w": 60,
         "h": 32,
@@ -1699,10 +1650,10 @@
       }
     },
     {
-      "id": "s_col_2x",
+      "id": "s_col_2u",
       "type": "text",
       "x": 80,
-      "y": 3269,
+      "y": 3209,
       "props": {
         "w": 310,
         "h": 24,
@@ -1714,10 +1665,10 @@
       }
     },
     {
-      "id": "s_col_2y",
+      "id": "s_col_2v",
       "type": "math",
       "x": 400,
-      "y": 3262,
+      "y": 3202,
       "props": {
         "w": 60,
         "h": 32,
@@ -1731,10 +1682,10 @@
       }
     },
     {
-      "id": "s_col_2z",
+      "id": "s_col_2w",
       "type": "text",
       "x": 80,
-      "y": 3311,
+      "y": 3251,
       "props": {
         "w": 310,
         "h": 24,
@@ -1746,10 +1697,10 @@
       }
     },
     {
-      "id": "s_col_30",
+      "id": "s_col_2x",
       "type": "math",
       "x": 400,
-      "y": 3302,
+      "y": 3242,
       "props": {
         "w": 60,
         "h": 32,
@@ -1763,10 +1714,10 @@
       }
     },
     {
-      "id": "s_col_31",
+      "id": "s_col_2y",
       "type": "text",
       "x": 80,
-      "y": 3600,
+      "y": 3309,
       "props": {
         "w": 310,
         "h": 24,
@@ -1778,10 +1729,10 @@
       }
     },
     {
-      "id": "s_col_32",
+      "id": "s_col_2z",
       "type": "math",
       "x": 400,
-      "y": 3593,
+      "y": 3302,
       "props": {
         "w": 60,
         "h": 32,
@@ -1795,10 +1746,10 @@
       }
     },
     {
-      "id": "s_col_33",
+      "id": "s_col_30",
       "type": "text",
       "x": 80,
-      "y": 3633,
+      "y": 3593,
       "props": {
         "w": 630,
         "h": 24,
@@ -1811,10 +1762,10 @@
       }
     },
     {
-      "id": "s_col_34",
+      "id": "s_col_31",
       "type": "text",
       "x": 80,
-      "y": 3680,
+      "y": 3640,
       "props": {
         "w": 310,
         "h": 24,
@@ -1826,10 +1777,10 @@
       }
     },
     {
-      "id": "s_col_35",
+      "id": "s_col_32",
       "type": "math",
       "x": 400,
-      "y": 3673,
+      "y": 3633,
       "props": {
         "w": 60,
         "h": 32,
@@ -1843,10 +1794,10 @@
       }
     },
     {
-      "id": "s_col_36",
+      "id": "s_col_33",
       "type": "text",
       "x": 80,
-      "y": 3720,
+      "y": 3680,
       "props": {
         "w": 310,
         "h": 24,
@@ -1858,10 +1809,10 @@
       }
     },
     {
-      "id": "s_col_37",
+      "id": "s_col_34",
       "type": "math",
       "x": 400,
-      "y": 3713,
+      "y": 3673,
       "props": {
         "w": 60,
         "h": 32,
@@ -1875,10 +1826,10 @@
       }
     },
     {
-      "id": "s_col_38",
+      "id": "s_col_35",
       "type": "text",
       "x": 80,
-      "y": 3770,
+      "y": 3720,
       "props": {
         "w": 310,
         "h": 24,
@@ -1890,10 +1841,10 @@
       }
     },
     {
-      "id": "s_col_39",
+      "id": "s_col_36",
       "type": "math",
       "x": 400,
-      "y": 3763,
+      "y": 3713,
       "props": {
         "w": 60,
         "h": 32,
@@ -1907,10 +1858,10 @@
       }
     },
     {
-      "id": "s_col_3a",
+      "id": "s_col_37",
       "type": "text",
       "x": 80,
-      "y": 3825,
+      "y": 3775,
       "props": {
         "w": 310,
         "h": 24,
@@ -1922,10 +1873,10 @@
       }
     },
     {
-      "id": "s_col_3b",
+      "id": "s_col_38",
       "type": "math",
       "x": 400,
-      "y": 3813,
+      "y": 3763,
       "props": {
         "w": 60,
         "h": 32,
@@ -1939,10 +1890,10 @@
       }
     },
     {
-      "id": "s_col_3c",
+      "id": "s_col_39",
       "type": "text",
       "x": 80,
-      "y": 3885,
+      "y": 3835,
       "props": {
         "w": 310,
         "h": 24,
@@ -1954,10 +1905,10 @@
       }
     },
     {
-      "id": "s_col_3d",
+      "id": "s_col_3a",
       "type": "math",
       "x": 400,
-      "y": 3873,
+      "y": 3823,
       "props": {
         "w": 60,
         "h": 32,
@@ -1971,10 +1922,10 @@
       }
     },
     {
-      "id": "s_col_3e",
+      "id": "s_col_3b",
       "type": "text",
       "x": 80,
-      "y": 3945,
+      "y": 3905,
       "props": {
         "w": 310,
         "h": 24,
@@ -1986,10 +1937,10 @@
       }
     },
     {
-      "id": "s_col_3f",
+      "id": "s_col_3c",
       "type": "math",
       "x": 400,
-      "y": 3933,
+      "y": 3893,
       "props": {
         "w": 60,
         "h": 32,
@@ -2003,10 +1954,10 @@
       }
     },
     {
-      "id": "s_col_3g",
+      "id": "s_col_3d",
       "type": "text",
       "x": 80,
-      "y": 4005,
+      "y": 3965,
       "props": {
         "w": 310,
         "h": 24,
@@ -2018,10 +1969,10 @@
       }
     },
     {
-      "id": "s_col_3h",
+      "id": "s_col_3e",
       "type": "math",
       "x": 400,
-      "y": 3993,
+      "y": 3953,
       "props": {
         "w": 60,
         "h": 32,
@@ -2035,10 +1986,10 @@
       }
     },
     {
-      "id": "s_col_3i",
+      "id": "s_col_3f",
       "type": "text",
       "x": 96,
-      "y": 4053,
+      "y": 4013,
       "props": {
         "w": 280,
         "h": 24,
@@ -2050,10 +2001,10 @@
       }
     },
     {
-      "id": "s_col_3j",
+      "id": "s_col_3g",
       "type": "text",
       "x": 400,
-      "y": 4053,
+      "y": 4013,
       "props": {
         "w": 300,
         "h": 24,
@@ -2065,10 +2016,10 @@
       }
     },
     {
-      "id": "s_col_3k",
+      "id": "s_col_3h",
       "type": "math",
       "x": 96,
-      "y": 4083,
+      "y": 4043,
       "props": {
         "w": 60,
         "h": 32,
@@ -2084,10 +2035,10 @@
       }
     },
     {
-      "id": "s_col_3l",
+      "id": "s_col_3i",
       "type": "math",
       "x": 168,
-      "y": 4083,
+      "y": 4043,
       "props": {
         "w": 60,
         "h": 32,
@@ -2103,10 +2054,10 @@
       }
     },
     {
-      "id": "s_col_3m",
+      "id": "s_col_3j",
       "type": "math",
       "x": 283,
-      "y": 4083,
+      "y": 4043,
       "props": {
         "w": 60,
         "h": 32,
@@ -2122,10 +2073,10 @@
       }
     },
     {
-      "id": "s_col_3n",
+      "id": "s_col_3k",
       "type": "math",
       "x": 396,
-      "y": 4083,
+      "y": 4043,
       "props": {
         "w": 60,
         "h": 32,
@@ -2141,10 +2092,10 @@
       }
     },
     {
-      "id": "s_col_3o",
+      "id": "s_col_3l",
       "type": "math",
       "x": 468,
-      "y": 4083,
+      "y": 4043,
       "props": {
         "w": 60,
         "h": 32,
@@ -2160,10 +2111,10 @@
       }
     },
     {
-      "id": "s_col_3p",
+      "id": "s_col_3m",
       "type": "math",
       "x": 583,
-      "y": 4083,
+      "y": 4043,
       "props": {
         "w": 60,
         "h": 32,
@@ -2179,7 +2130,7 @@
       }
     },
     {
-      "id": "s_col_3q",
+      "id": "s_col_3n",
       "type": "graph",
       "x": 247,
       "y": 4756,
@@ -2256,7 +2207,7 @@
       }
     },
     {
-      "id": "s_col_3r",
+      "id": "s_col_3o",
       "type": "text",
       "x": 80,
       "y": 5084,
@@ -2272,7 +2223,7 @@
       }
     },
     {
-      "id": "s_col_3s",
+      "id": "s_col_3p",
       "type": "text",
       "x": 80,
       "y": 5114,
@@ -2287,7 +2238,7 @@
       }
     },
     {
-      "id": "s_col_3t",
+      "id": "s_col_3q",
       "type": "text",
       "x": 80,
       "y": 5144,
@@ -2302,7 +2253,7 @@
       }
     },
     {
-      "id": "s_col_3u",
+      "id": "s_col_3r",
       "type": "text",
       "x": 80,
       "y": 5181,
@@ -2317,7 +2268,7 @@
       }
     },
     {
-      "id": "s_col_3v",
+      "id": "s_col_3s",
       "type": "math",
       "x": 400,
       "y": 5174,
@@ -2334,7 +2285,7 @@
       }
     },
     {
-      "id": "s_col_3w",
+      "id": "s_col_3t",
       "type": "text",
       "x": 80,
       "y": 5233,
@@ -2349,7 +2300,7 @@
       }
     },
     {
-      "id": "s_col_3x",
+      "id": "s_col_3u",
       "type": "math",
       "x": 400,
       "y": 5224,
@@ -2366,7 +2317,7 @@
       }
     },
     {
-      "id": "s_col_3y",
+      "id": "s_col_3v",
       "type": "text",
       "x": 80,
       "y": 5281,
@@ -2381,7 +2332,7 @@
       }
     },
     {
-      "id": "s_col_3z",
+      "id": "s_col_3w",
       "type": "math",
       "x": 400,
       "y": 5274,
@@ -2398,7 +2349,7 @@
       }
     },
     {
-      "id": "s_col_40",
+      "id": "s_col_3x",
       "type": "text",
       "x": 80,
       "y": 5321,
@@ -2413,7 +2364,7 @@
       }
     },
     {
-      "id": "s_col_41",
+      "id": "s_col_3y",
       "type": "math",
       "x": 400,
       "y": 5314,
@@ -2430,7 +2381,7 @@
       }
     },
     {
-      "id": "s_col_42",
+      "id": "s_col_3z",
       "type": "text",
       "x": 80,
       "y": 5376,
@@ -2445,7 +2396,7 @@
       }
     },
     {
-      "id": "s_col_43",
+      "id": "s_col_40",
       "type": "math",
       "x": 400,
       "y": 5364,
@@ -2462,7 +2413,7 @@
       }
     },
     {
-      "id": "s_col_44",
+      "id": "s_col_41",
       "type": "text",
       "x": 80,
       "y": 5444,
@@ -2478,7 +2429,7 @@
       }
     },
     {
-      "id": "s_col_45",
+      "id": "s_col_42",
       "type": "text",
       "x": 80,
       "y": 5474,
@@ -2494,7 +2445,7 @@
       }
     },
     {
-      "id": "s_col_46",
+      "id": "s_col_43",
       "type": "text",
       "x": 80,
       "y": 5518,
@@ -2509,7 +2460,7 @@
       }
     },
     {
-      "id": "s_col_47",
+      "id": "s_col_44",
       "type": "math",
       "x": 96,
       "y": 5544,
@@ -2526,7 +2477,7 @@
       }
     },
     {
-      "id": "s_col_48",
+      "id": "s_col_45",
       "type": "text",
       "x": 80,
       "y": 5601,
@@ -2541,7 +2492,7 @@
       }
     },
     {
-      "id": "s_col_49",
+      "id": "s_col_46",
       "type": "math",
       "x": 400,
       "y": 5594,
@@ -2558,7 +2509,7 @@
       }
     },
     {
-      "id": "s_col_4a",
+      "id": "s_col_47",
       "type": "text",
       "x": 80,
       "y": 5637,
@@ -2573,7 +2524,7 @@
       }
     },
     {
-      "id": "s_col_4b",
+      "id": "s_col_48",
       "type": "math",
       "x": 400,
       "y": 5634,
@@ -2590,7 +2541,7 @@
       }
     },
     {
-      "id": "s_col_4c",
+      "id": "s_col_49",
       "type": "text",
       "x": 80,
       "y": 5947,
@@ -2605,7 +2556,7 @@
       }
     },
     {
-      "id": "s_col_4d",
+      "id": "s_col_4a",
       "type": "math",
       "x": 400,
       "y": 5935,
@@ -2622,7 +2573,7 @@
       }
     },
     {
-      "id": "s_col_4e",
+      "id": "s_col_4b",
       "type": "text",
       "x": 80,
       "y": 5999,
@@ -2637,7 +2588,7 @@
       }
     },
     {
-      "id": "s_col_4f",
+      "id": "s_col_4c",
       "type": "math",
       "x": 96,
       "y": 6025,
@@ -2654,7 +2605,7 @@
       }
     },
     {
-      "id": "s_col_4g",
+      "id": "s_col_4d",
       "type": "text",
       "x": 80,
       "y": 6144,
@@ -2669,7 +2620,7 @@
       }
     },
     {
-      "id": "s_col_4h",
+      "id": "s_col_4e",
       "type": "math",
       "x": 400,
       "y": 6135,
@@ -2686,7 +2637,7 @@
       }
     },
     {
-      "id": "s_col_4i",
+      "id": "s_col_4f",
       "type": "text",
       "x": 80,
       "y": 6207,
@@ -2701,7 +2652,7 @@
       }
     },
     {
-      "id": "s_col_4j",
+      "id": "s_col_4g",
       "type": "math",
       "x": 400,
       "y": 6195,
@@ -2718,7 +2669,7 @@
       }
     },
     {
-      "id": "s_col_4k",
+      "id": "s_col_4h",
       "type": "text",
       "x": 80,
       "y": 6255,
@@ -2734,7 +2685,7 @@
       }
     },
     {
-      "id": "s_col_4l",
+      "id": "s_col_4i",
       "type": "text",
       "x": 80,
       "y": 6285,
@@ -2749,7 +2700,7 @@
       }
     },
     {
-      "id": "s_col_4m",
+      "id": "s_col_4j",
       "type": "text",
       "x": 80,
       "y": 6315,
@@ -2764,7 +2715,7 @@
       }
     },
     {
-      "id": "s_col_4n",
+      "id": "s_col_4k",
       "type": "text",
       "x": 80,
       "y": 6345,
@@ -2779,7 +2730,7 @@
       }
     },
     {
-      "id": "s_col_4o",
+      "id": "s_col_4l",
       "type": "text",
       "x": 80,
       "y": 6464,
@@ -2794,7 +2745,7 @@
       }
     },
     {
-      "id": "s_col_4p",
+      "id": "s_col_4m",
       "type": "math",
       "x": 400,
       "y": 6375,
@@ -2811,7 +2762,7 @@
       }
     },
     {
-      "id": "s_col_4q",
+      "id": "s_col_4n",
       "type": "text",
       "x": 80,
       "y": 6595,
@@ -2827,7 +2778,7 @@
       }
     },
     {
-      "id": "s_col_4r",
+      "id": "s_col_4o",
       "type": "text",
       "x": 80,
       "y": 6689,
@@ -2842,7 +2793,7 @@
       }
     },
     {
-      "id": "s_col_4s",
+      "id": "s_col_4p",
       "type": "math",
       "x": 400,
       "y": 6625,
@@ -2859,7 +2810,7 @@
       }
     },
     {
-      "id": "s_col_4t",
+      "id": "s_col_4q",
       "type": "text",
       "x": 80,
       "y": 7162,
@@ -2874,7 +2825,7 @@
       }
     },
     {
-      "id": "s_col_4u",
+      "id": "s_col_4r",
       "type": "math",
       "x": 400,
       "y": 7106,
@@ -2891,7 +2842,7 @@
       }
     },
     {
-      "id": "s_col_4v",
+      "id": "s_col_4s",
       "type": "text",
       "x": 80,
       "y": 7256,
@@ -2906,7 +2857,7 @@
       }
     },
     {
-      "id": "s_col_4w",
+      "id": "s_col_4t",
       "type": "math",
       "x": 400,
       "y": 7256,
@@ -2923,7 +2874,7 @@
       }
     },
     {
-      "id": "s_col_4x",
+      "id": "s_col_4u",
       "type": "text",
       "x": 80,
       "y": 7306,
@@ -2939,7 +2890,7 @@
       }
     },
     {
-      "id": "s_col_4y",
+      "id": "s_col_4v",
       "type": "text",
       "x": 80,
       "y": 7336,
@@ -2954,7 +2905,7 @@
       }
     },
     {
-      "id": "s_col_4z",
+      "id": "s_col_4w",
       "type": "text",
       "x": 80,
       "y": 7370,
@@ -2969,7 +2920,7 @@
       }
     },
     {
-      "id": "s_col_50",
+      "id": "s_col_4x",
       "type": "math",
       "x": 96,
       "y": 7396,
@@ -2986,7 +2937,7 @@
       }
     },
     {
-      "id": "s_col_51",
+      "id": "s_col_4y",
       "type": "text",
       "x": 80,
       "y": 7440,
@@ -3001,7 +2952,7 @@
       }
     },
     {
-      "id": "s_col_52",
+      "id": "s_col_4z",
       "type": "math",
       "x": 96,
       "y": 7476,
@@ -3018,7 +2969,7 @@
       }
     },
     {
-      "id": "s_col_53",
+      "id": "s_col_50",
       "type": "text",
       "x": 80,
       "y": 7516,
@@ -3034,7 +2985,7 @@
       }
     },
     {
-      "id": "s_col_54",
+      "id": "s_col_51",
       "type": "text",
       "x": 80,
       "y": 7546,
@@ -3049,7 +3000,7 @@
       }
     },
     {
-      "id": "s_col_55",
+      "id": "s_col_52",
       "type": "text",
       "x": 80,
       "y": 7576,
@@ -3068,7 +3019,7 @@
       }
     },
     {
-      "id": "s_col_56",
+      "id": "s_col_53",
       "type": "text",
       "x": 80,
       "y": 7623,
@@ -3083,7 +3034,7 @@
       }
     },
     {
-      "id": "s_col_57",
+      "id": "s_col_54",
       "type": "math",
       "x": 400,
       "y": 7616,
@@ -3100,7 +3051,7 @@
       }
     },
     {
-      "id": "s_col_58",
+      "id": "s_col_55",
       "type": "text",
       "x": 80,
       "y": 7673,
@@ -3115,7 +3066,7 @@
       }
     },
     {
-      "id": "s_col_59",
+      "id": "s_col_56",
       "type": "math",
       "x": 400,
       "y": 7666,
@@ -3132,7 +3083,7 @@
       }
     },
     {
-      "id": "s_col_5a",
+      "id": "s_col_57",
       "type": "text",
       "x": 80,
       "y": 7716,
@@ -3148,7 +3099,7 @@
       }
     },
     {
-      "id": "s_col_5b",
+      "id": "s_col_58",
       "type": "text",
       "x": 80,
       "y": 7756,
@@ -3163,7 +3114,7 @@
       }
     },
     {
-      "id": "s_col_5c",
+      "id": "s_col_59",
       "type": "text",
       "x": 80,
       "y": 7786,
@@ -3179,7 +3130,7 @@
       }
     },
     {
-      "id": "s_col_5d",
+      "id": "s_col_5a",
       "type": "text",
       "x": 80,
       "y": 7825,
@@ -3194,7 +3145,7 @@
       }
     },
     {
-      "id": "s_col_5e",
+      "id": "s_col_5b",
       "type": "math",
       "x": 400,
       "y": 7816,
@@ -3211,7 +3162,7 @@
       }
     },
     {
-      "id": "s_col_5f",
+      "id": "s_col_5c",
       "type": "text",
       "x": 80,
       "y": 7885,
@@ -3226,7 +3177,7 @@
       }
     },
     {
-      "id": "s_col_5g",
+      "id": "s_col_5d",
       "type": "math",
       "x": 400,
       "y": 7876,
@@ -3243,7 +3194,7 @@
       }
     },
     {
-      "id": "s_col_5h",
+      "id": "s_col_5e",
       "type": "text",
       "x": 80,
       "y": 7926,
@@ -3258,7 +3209,7 @@
       }
     },
     {
-      "id": "s_col_5i",
+      "id": "s_col_5f",
       "type": "math",
       "x": 400,
       "y": 7926,
@@ -3275,7 +3226,7 @@
       }
     },
     {
-      "id": "s_col_5j",
+      "id": "s_col_5g",
       "type": "text",
       "x": 80,
       "y": 7983,
@@ -3290,7 +3241,7 @@
       }
     },
     {
-      "id": "s_col_5k",
+      "id": "s_col_5h",
       "type": "math",
       "x": 400,
       "y": 7976,
@@ -3307,7 +3258,7 @@
       }
     },
     {
-      "id": "s_col_5l",
+      "id": "s_col_5i",
       "type": "text",
       "x": 80,
       "y": 8286,
@@ -3322,7 +3273,7 @@
       }
     },
     {
-      "id": "s_col_5m",
+      "id": "s_col_5j",
       "type": "math",
       "x": 400,
       "y": 8277,
@@ -3339,7 +3290,7 @@
       }
     },
     {
-      "id": "s_col_5n",
+      "id": "s_col_5k",
       "type": "text",
       "x": 80,
       "y": 8346,
@@ -3354,7 +3305,7 @@
       }
     },
     {
-      "id": "s_col_5o",
+      "id": "s_col_5l",
       "type": "math",
       "x": 400,
       "y": 8337,
@@ -3371,7 +3322,7 @@
       }
     },
     {
-      "id": "s_col_5p",
+      "id": "s_col_5m",
       "type": "text",
       "x": 80,
       "y": 8394,
@@ -3386,7 +3337,7 @@
       }
     },
     {
-      "id": "s_col_5q",
+      "id": "s_col_5n",
       "type": "math",
       "x": 400,
       "y": 8387,
@@ -3403,7 +3354,7 @@
       }
     },
     {
-      "id": "s_col_5r",
+      "id": "s_col_5o",
       "type": "text",
       "x": 80,
       "y": 8449,
@@ -3418,7 +3369,7 @@
       }
     },
     {
-      "id": "s_col_5s",
+      "id": "s_col_5p",
       "type": "math",
       "x": 400,
       "y": 8437,
@@ -3435,7 +3386,7 @@
       }
     },
     {
-      "id": "s_col_5t",
+      "id": "s_col_5q",
       "type": "text",
       "x": 80,
       "y": 8504,
@@ -3450,7 +3401,7 @@
       }
     },
     {
-      "id": "s_col_5u",
+      "id": "s_col_5r",
       "type": "math",
       "x": 400,
       "y": 8497,
@@ -3467,7 +3418,7 @@
       }
     },
     {
-      "id": "s_col_5v",
+      "id": "s_col_5s",
       "type": "text",
       "x": 80,
       "y": 8554,
@@ -3482,7 +3433,7 @@
       }
     },
     {
-      "id": "s_col_5w",
+      "id": "s_col_5t",
       "type": "math",
       "x": 400,
       "y": 8547,
@@ -3499,7 +3450,7 @@
       }
     },
     {
-      "id": "s_col_5x",
+      "id": "s_col_5u",
       "type": "text",
       "x": 80,
       "y": 8597,
@@ -3515,7 +3466,7 @@
       }
     },
     {
-      "id": "s_col_5y",
+      "id": "s_col_5v",
       "type": "text",
       "x": 80,
       "y": 8627,
@@ -3530,7 +3481,7 @@
       }
     },
     {
-      "id": "s_col_5z",
+      "id": "s_col_5w",
       "type": "text",
       "x": 80,
       "y": 8660,
@@ -3545,7 +3496,7 @@
       }
     },
     {
-      "id": "s_col_60",
+      "id": "s_col_5x",
       "type": "math",
       "x": 400,
       "y": 8657,
@@ -3562,7 +3513,7 @@
       }
     },
     {
-      "id": "s_col_61",
+      "id": "s_col_5y",
       "type": "text",
       "x": 80,
       "y": 8724,
@@ -3577,7 +3528,7 @@
       }
     },
     {
-      "id": "s_col_62",
+      "id": "s_col_5z",
       "type": "math",
       "x": 400,
       "y": 8717,
@@ -3594,7 +3545,7 @@
       }
     },
     {
-      "id": "s_col_63",
+      "id": "s_col_60",
       "type": "text",
       "x": 80,
       "y": 8767,
@@ -3609,7 +3560,7 @@
       }
     },
     {
-      "id": "s_col_64",
+      "id": "s_col_61",
       "type": "math",
       "x": 400,
       "y": 8767,
@@ -3626,7 +3577,7 @@
       }
     },
     {
-      "id": "s_col_65",
+      "id": "s_col_62",
       "type": "text",
       "x": 80,
       "y": 8814,
@@ -3641,7 +3592,7 @@
       }
     },
     {
-      "id": "s_col_66",
+      "id": "s_col_63",
       "type": "math",
       "x": 400,
       "y": 8807,
@@ -3658,7 +3609,7 @@
       }
     },
     {
-      "id": "s_col_67",
+      "id": "s_col_64",
       "type": "text",
       "x": 80,
       "y": 8864,
@@ -3673,7 +3624,7 @@
       }
     },
     {
-      "id": "s_col_68",
+      "id": "s_col_65",
       "type": "math",
       "x": 400,
       "y": 8857,
@@ -3690,7 +3641,7 @@
       }
     },
     {
-      "id": "s_col_69",
+      "id": "s_col_66",
       "type": "text",
       "x": 80,
       "y": 8906,
@@ -3705,7 +3656,7 @@
       }
     },
     {
-      "id": "s_col_6a",
+      "id": "s_col_67",
       "type": "math",
       "x": 400,
       "y": 8897,
@@ -3722,7 +3673,7 @@
       }
     },
     {
-      "id": "s_col_6b",
+      "id": "s_col_68",
       "type": "text",
       "x": 80,
       "y": 8964,
@@ -3737,7 +3688,7 @@
       }
     },
     {
-      "id": "s_col_6c",
+      "id": "s_col_69",
       "type": "math",
       "x": 400,
       "y": 8957,
@@ -3754,7 +3705,7 @@
       }
     },
     {
-      "id": "s_col_6d",
+      "id": "s_col_6a",
       "type": "text",
       "x": 80,
       "y": 9006,
@@ -3769,7 +3720,7 @@
       }
     },
     {
-      "id": "s_col_6e",
+      "id": "s_col_6b",
       "type": "math",
       "x": 400,
       "y": 8997,
@@ -3786,7 +3737,7 @@
       }
     },
     {
-      "id": "s_col_6f",
+      "id": "s_col_6c",
       "type": "text",
       "x": 80,
       "y": 9448,
@@ -3802,7 +3753,7 @@
       }
     },
     {
-      "id": "s_col_6g",
+      "id": "s_col_6d",
       "type": "graph",
       "x": 187,
       "y": 9480,
@@ -3890,14 +3841,14 @@
       }
     },
     {
-      "id": "s_col_6h",
+      "id": "s_col_6e",
       "type": "text",
       "x": 80,
       "y": 9928,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "7. SHEAR CHECK (§6.2.3, SPIRALS)",
+        "html": "7. SHEAR CHECK (EN 1992-1-1:2023 §8.2.3, SPIRALS)",
         "fontFamily": "Inter",
         "fontSize": 16,
         "color": "#0f172a",
@@ -3906,14 +3857,14 @@
       }
     },
     {
-      "id": "s_col_6i",
+      "id": "s_col_6f",
       "type": "text",
       "x": 80,
       "y": 9968,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "7.1 Equivalent rectangle",
+        "html": "7.1 Equivalent rectangle and stresses",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#334155",
@@ -3922,10 +3873,70 @@
       }
     },
     {
+      "id": "s_col_6g",
+      "type": "text",
+      "x": 80,
+      "y": 10008,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Truss in stresses on an equivalent rectangle bw = D: τEd = VEd/(bw·z) (8.18); strut",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6h",
+      "type": "text",
+      "x": 80,
+      "y": 10038,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "σcd = τEd·(cotθ + tanθ) ≤ ν·fcd (8.44), ν = 0.5 (8.2.3(6)). 1 ≤ cotθ ≤ cot θmin (8.41): 2.5;",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6i",
+      "type": "text",
+      "x": 80,
+      "y": 10068,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "3.0 if σcp ≥ 3 MPa and x &lt; 0.25d (linear between); 2.5 if x ≥ 0.25d; 2.5 − 0.1·|NEd|/VEd ≥ 1",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
       "id": "s_col_6j",
       "type": "text",
       "x": 80,
-      "y": 10012,
+      "y": 10098,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "in tension. Spirals of ductility class B or C. cotθ: the largest value ≤ cot θmin with σcd ≤ ν·fcd.",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6k",
+      "type": "text",
+      "x": 80,
+      "y": 10142,
       "props": {
         "w": 630,
         "h": 24,
@@ -3937,10 +3948,10 @@
       }
     },
     {
-      "id": "s_col_6k",
+      "id": "s_col_6l",
       "type": "math",
       "x": 96,
-      "y": 10038,
+      "y": 10168,
       "props": {
         "w": 60,
         "h": 32,
@@ -3954,14 +3965,14 @@
       }
     },
     {
-      "id": "s_col_6l",
+      "id": "s_col_6m",
       "type": "text",
       "x": 80,
-      "y": 10095,
+      "y": 10235,
       "props": {
         "w": 310,
         "h": 24,
-        "html": "Lever arm",
+        "html": "Lever arm, 8.2.1(3)",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -3969,10 +3980,10 @@
       }
     },
     {
-      "id": "s_col_6m",
+      "id": "s_col_6n",
       "type": "math",
       "x": 400,
-      "y": 10088,
+      "y": 10228,
       "props": {
         "w": 60,
         "h": 32,
@@ -3986,14 +3997,14 @@
       }
     },
     {
-      "id": "s_col_6n",
+      "id": "s_col_6o",
       "type": "text",
       "x": 80,
-      "y": 10145,
+      "y": 10275,
       "props": {
         "w": 310,
         "h": 24,
-        "html": "Web width",
+        "html": "Web width (equivalent rectangle)",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -4001,10 +4012,10 @@
       }
     },
     {
-      "id": "s_col_6o",
+      "id": "s_col_6p",
       "type": "math",
       "x": 400,
-      "y": 10138,
+      "y": 10268,
       "props": {
         "w": 60,
         "h": 32,
@@ -4018,10 +4029,106 @@
       }
     },
     {
-      "id": "s_col_6p",
+      "id": "s_col_6q",
       "type": "text",
       "x": 80,
-      "y": 10178,
+      "y": 10317,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Average shear stress (8.18)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6r",
+      "type": "math",
+      "x": 400,
+      "y": 10308,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\tau_{Ed}\\coloneq\\frac{V_{Ed}}{b_{w}z}",
+        "displayMode": "formulaResult",
+        "displayUnit": "MPa",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6s",
+      "type": "text",
+      "x": 80,
+      "y": 10619,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Strength reduction for cracked concrete, 8.2.3(6)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6t",
+      "type": "math",
+      "x": 400,
+      "y": 10619,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\nu\\coloneq0.5",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6u",
+      "type": "text",
+      "x": 80,
+      "y": 10679,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Average axial stress, compression positive",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_6v",
+      "type": "math",
+      "x": 400,
+      "y": 10669,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\sigma_{cp}\\coloneq\\frac{N_{Ed}}{A_{g}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "MPa",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6w",
+      "type": "text",
+      "x": 80,
+      "y": 10719,
       "props": {
         "w": 630,
         "h": 24,
@@ -4034,138 +4141,46 @@
       }
     },
     {
-      "id": "s_col_6q",
-      "type": "text",
-      "x": 80,
-      "y": 10218,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Spirals carry VEd through a truss: concrete struts at angle θ, spirals as ties (EC2 6.2.3).",
-        "fontFamily": "Inter",
-        "fontSize": 14,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_6r",
-      "type": "text",
-      "x": 80,
-      "y": 10248,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Compression: a flatter strut (larger cotθ) needs fewer spirals, but the strut crushes",
-        "fontFamily": "Inter",
-        "fontSize": 14,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_6s",
-      "type": "text",
-      "x": 80,
-      "y": 10278,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "when VEd &gt; VRd,max = bw·z·ν1·fcd / (cotθ + tanθ). So cotθ is the largest value with",
-        "fontFamily": "Inter",
-        "fontSize": 14,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_6t",
-      "type": "text",
-      "x": 80,
-      "y": 10308,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "cotθ + tanθ ≤ a = bw·z·ν1·fcd / VEd, capped at 2.5 (a ≥ 2.9 gives 2.5; a &lt; 2 fails).",
-        "fontFamily": "Inter",
-        "fontSize": 14,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_6u",
-      "type": "text",
-      "x": 80,
-      "y": 10348,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Strut ratio a: limit of cotθ + tanθ for this VEd",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_6v",
-      "type": "math",
-      "x": 400,
-      "y": 10348,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "a\\coloneq\\frac{b_{w}z\\nu_{1}f_{cd.v}}{V_{Ed}}",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_6w",
-      "type": "text",
-      "x": 80,
-      "y": 10626,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "The strut can carry VEd at θ = 45°",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
       "id": "s_col_6x",
-      "type": "math",
-      "x": 400,
-      "y": 10619,
+      "type": "text",
+      "x": 80,
+      "y": 10763,
       "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "a\\ge2",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
+        "w": 630,
+        "h": 24,
+        "html": "Compression chord depth x: neutral axis at the bending resistance under NEd (§8.1)",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
       }
     },
     {
       "id": "s_col_6y",
+      "type": "math",
+      "x": 96,
+      "y": 10789,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "x\\coloneq\\begin{array}{||l}\\mathrm{if}\\ N_{Ed}\\le0\\,\\mathrm{kN}\\\\\\quad\\left\\Vert\\displaystyle 0\\,\\mathrm{mm}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{linterp}\\left(N_{v},c_{v},N_{Ed}\\right)\\right.\\end{array}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_6z",
       "type": "text",
       "x": 80,
-      "y": 10717,
+      "y": 10903,
       "props": {
-        "w": 310,
+        "w": 630,
         "h": 24,
-        "html": "cotθ in compression: 2.5, else the root of cotθ + 1/cotθ = a; a &lt; 2: strut fails",
+        "html": "Flattest strut allowed (8.41)",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -4173,217 +4188,59 @@
       }
     },
     {
-      "id": "s_col_6z",
+      "id": "s_col_70",
       "type": "math",
-      "x": 400,
-      "y": 10659,
+      "x": 96,
+      "y": 10929,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\mathrm{cot}_{\\theta.opt}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ a\\ge2.9\\\\\\quad\\left\\Vert\\displaystyle 2.5\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ a\\ge2\\\\\\quad\\left\\Vert\\displaystyle \\frac{a+\\sqrt{a^2-4}}{2}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\end{array}",
-        "displayMode": "auto",
+        "latex": "\\mathrm{cot}_{\\theta min}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ N_{Ed}<0\\,\\mathrm{kN}\\\\\\quad\\left\\Vert\\displaystyle \\max\\left(1,2.5-0.1\\cdot\\frac{\\left|N_{Ed}\\right|}{V_{Ed}}\\right)\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ x\\ge0.25d\\\\\\quad\\left\\Vert\\displaystyle 2.5\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\sigma_{cp}\\ge3\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle 3.0\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 2.5+0.5\\cdot\\frac{\\sigma_{cp}}{3\\,\\mathrm{MPa}}\\right.\\end{array}",
+        "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": 2,
         "autoSize": true,
         "fontSize": 18,
         "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_70",
-      "type": "text",
-      "x": 80,
-      "y": 10839,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Tension (NEd &lt; 0): cracks open, the strut gets steeper. EN 1992-1-1:2023 (8.41):",
-        "fontFamily": "Inter",
-        "fontSize": 14,
-        "color": "#475569",
-        "align": "left"
       }
     },
     {
       "id": "s_col_71",
       "type": "text",
       "x": 80,
-      "y": 10869,
+      "y": 11163,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "cotθ ≤ cotθ,lim = 2.5 − 0.1·|NEd|/VEd ≥ 1. Design cotθ = min(cotθ,opt, cotθ,lim).",
+        "html": "Design cotθ: cot θmin if the strut holds, else the root of τEd(cotθ + tanθ) = ν·fcd; 1: strut fails",
         "fontFamily": "Inter",
-        "fontSize": 14,
+        "fontSize": 13,
         "color": "#475569",
         "align": "left"
       }
     },
     {
       "id": "s_col_72",
-      "type": "text",
-      "x": 80,
-      "y": 10913,
+      "type": "math",
+      "x": 96,
+      "y": 11189,
       "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Limit from axial force, EN 1992-1-1:2023 (8.41): 2.5 without tension",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
+        "w": 60,
+        "h": 32,
+        "latex": "\\mathrm{cot}_{\\theta}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\tau_{Ed}\\left(\\mathrm{cot}_{\\theta min}+\\frac{1}{\\mathrm{cot}_{\\theta min}}\\right)\\le\\nu f_{cd}\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{cot}_{\\theta min}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ 2\\tau_{Ed}\\le\\nu f_{cd}\\\\\\quad\\left\\Vert\\displaystyle \\frac{\\nu f_{cd}}{2\\tau_{Ed}}+\\sqrt{\\left(\\frac{\\nu f_{cd}}{2\\tau_{Ed}}\\right)^2-1}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\end{array}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
       }
     },
     {
       "id": "s_col_73",
-      "type": "math",
-      "x": 96,
-      "y": 10939,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\mathrm{cot}_{\\theta.lim}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ N_{Ed}\\ge0\\,\\mathrm{kN}\\\\\\quad\\left\\Vert\\displaystyle 2.5\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ 2.5-0.1\\cdot\\frac{\\left|N_{Ed}\\right|}{V_{Ed}}<1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 2.5-0.1\\cdot\\frac{\\left|N_{Ed}\\right|}{V_{Ed}}\\right.\\end{array}",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": 2,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_74",
       "type": "text",
       "x": 80,
-      "y": 11125,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Design cotθ",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_75",
-      "type": "math",
-      "x": 400,
-      "y": 11119,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\mathrm{cot}_{\\theta}\\coloneq\\min\\left(\\mathrm{cot}_{\\theta.opt},\\mathrm{cot}_{\\theta.lim}\\right)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": 2,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_76",
-      "type": "text",
-      "x": 80,
-      "y": 11165,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "EC2 lower limit of cotθ",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_77",
-      "type": "math",
-      "x": 400,
-      "y": 11159,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "1\\le\\mathrm{cot}_{\\theta}",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 2,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_78",
-      "type": "text",
-      "x": 80,
-      "y": 11205,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "EC2 upper limit of cotθ",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_79",
-      "type": "math",
-      "x": 400,
-      "y": 11199,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\mathrm{cot}_{\\theta}\\le2.5",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 2,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_7a",
-      "type": "text",
-      "x": 80,
-      "y": 11251,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Strut angle",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_7b",
-      "type": "math",
-      "x": 400,
-      "y": 11239,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\theta\\coloneq\\arctan\\left(\\frac{1}{\\mathrm{cot}_{\\theta}}\\right)",
-        "displayMode": "formulaResult",
-        "displayUnit": "deg",
-        "precision": 1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_7c",
-      "type": "text",
-      "x": 80,
-      "y": 11309,
+      "y": 11379,
       "props": {
         "w": 630,
         "h": 24,
@@ -4396,10 +4253,25 @@
       }
     },
     {
-      "id": "s_col_7d",
+      "id": "s_col_74",
       "type": "text",
       "x": 80,
-      "y": 11343,
+      "y": 11419,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Spirals: VRd,s = (π/2)·Asw/s·Dsp·fywd·cotθ (circular spiral truss), as a stress τRd,sy = VRd,s/(bw·z).",
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_75",
+      "type": "text",
+      "x": 80,
+      "y": 11453,
       "props": {
         "w": 630,
         "h": 24,
@@ -4411,10 +4283,10 @@
       }
     },
     {
-      "id": "s_col_7e",
+      "id": "s_col_76",
       "type": "math",
       "x": 96,
-      "y": 11369,
+      "y": 11479,
       "props": {
         "w": 60,
         "h": 32,
@@ -4428,10 +4300,10 @@
       }
     },
     {
-      "id": "s_col_7f",
+      "id": "s_col_77",
       "type": "text",
       "x": 80,
-      "y": 11433,
+      "y": 11794,
       "props": {
         "w": 630,
         "h": 24,
@@ -4443,10 +4315,10 @@
       }
     },
     {
-      "id": "s_col_7g",
+      "id": "s_col_78",
       "type": "math",
       "x": 96,
-      "y": 11459,
+      "y": 11820,
       "props": {
         "w": 60,
         "h": 32,
@@ -4460,14 +4332,14 @@
       }
     },
     {
-      "id": "s_col_7h",
+      "id": "s_col_79",
       "type": "text",
       "x": 80,
-      "y": 11526,
+      "y": 11880,
       "props": {
         "w": 310,
         "h": 24,
-        "html": "Spiral resistance (set 2 when δ2 = 1)",
+        "html": "Spiral resistance as a stress (set 2 when δ2 = 1)",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -4475,31 +4347,31 @@
       }
     },
     {
-      "id": "s_col_7i",
+      "id": "s_col_7a",
       "type": "math",
       "x": 400,
-      "y": 11519,
+      "y": 11880,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "V_{Rd.s}\\coloneq V_{Rd.s1}+\\delta_{2}V_{Rd.s2}",
+        "latex": "\\tau_{Rd.sy}\\coloneq\\frac{V_{Rd.s1}+\\delta_{2}V_{Rd.s2}}{b_{w}z}",
         "displayMode": "formulaResult",
-        "displayUnit": "kN",
-        "precision": 0,
+        "displayUnit": "MPa",
+        "precision": 2,
         "autoSize": true,
         "fontSize": 18,
         "color": "#0f172a"
       }
     },
     {
-      "id": "s_col_7j",
+      "id": "s_col_7b",
       "type": "text",
       "x": 80,
-      "y": 11797,
+      "y": 11942,
       "props": {
         "w": 310,
         "h": 24,
-        "html": "Strut stress-state coefficient (conservative)",
+        "html": "Strut stress (8.44)",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -4507,63 +4379,31 @@
       }
     },
     {
-      "id": "s_col_7k",
+      "id": "s_col_7c",
       "type": "math",
       "x": 400,
-      "y": 11790,
+      "y": 11930,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\alpha_{cw}\\coloneq1.0",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_7l",
-      "type": "text",
-      "x": 80,
-      "y": 11840,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Strut resistance, EC2 (6.9)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_7m",
-      "type": "math",
-      "x": 400,
-      "y": 11830,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "V_{Rd.max}\\coloneq\\frac{\\alpha_{cw}b_{w}z\\nu_{1}f_{cd.v}}{\\mathrm{cot}_{\\theta}+\\tan\\left(\\theta\\right)}",
+        "latex": "\\sigma_{cd}\\coloneq\\tau_{Ed}\\left(\\mathrm{cot}_{\\theta}+\\frac{1}{\\mathrm{cot}_{\\theta}}\\right)",
         "displayMode": "formulaResult",
-        "displayUnit": "kN",
-        "precision": 0,
+        "displayUnit": "MPa",
+        "precision": 2,
         "autoSize": true,
         "fontSize": 18,
         "color": "#0f172a"
       }
     },
     {
-      "id": "s_col_7n",
+      "id": "s_col_7d",
       "type": "text",
       "x": 80,
-      "y": 11894,
+      "y": 11994,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "Shear resistance",
+        "html": "Check: spirals",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -4571,27 +4411,59 @@
       }
     },
     {
-      "id": "s_col_7o",
+      "id": "s_col_7e",
       "type": "math",
       "x": 96,
-      "y": 11920,
+      "y": 12030,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "V_{Rd}\\coloneq\\min\\left(V_{Rd.s},V_{Rd.max}\\right)",
-        "displayMode": "formulaResult",
-        "displayUnit": "kN",
-        "precision": 0,
+        "latex": "\\tau_{Ed}\\le\\tau_{Rd.sy}",
+        "displayMode": "auto",
+        "displayUnit": "MPa",
+        "precision": 2,
         "autoSize": true,
         "fontSize": 18,
         "color": "#0f172a"
       }
     },
     {
-      "id": "s_col_7p",
+      "id": "s_col_7f",
       "type": "text",
       "x": 80,
-      "y": 11979,
+      "y": 12074,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Check: strut",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7g",
+      "type": "math",
+      "x": 96,
+      "y": 12100,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\sigma_{cd}\\le\\nu f_{cd}",
+        "displayMode": "auto",
+        "displayUnit": "MPa",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7h",
+      "type": "text",
+      "x": 80,
+      "y": 12162,
       "props": {
         "w": 310,
         "h": 24,
@@ -4603,14 +4475,14 @@
       }
     },
     {
-      "id": "s_col_7q",
+      "id": "s_col_7i",
       "type": "math",
       "x": 400,
-      "y": 11970,
+      "y": 12150,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\eta_{V}\\coloneq\\frac{V_{Ed}}{V_{Rd}}",
+        "latex": "\\eta_{V}\\coloneq\\max\\left(\\frac{\\tau_{Ed}}{\\tau_{Rd.sy}},\\frac{\\sigma_{cd}}{\\nu f_{cd}}\\right)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": 3,
@@ -4620,10 +4492,10 @@
       }
     },
     {
-      "id": "s_col_7r",
+      "id": "s_col_7j",
       "type": "text",
       "x": 80,
-      "y": 12027,
+      "y": 12217,
       "props": {
         "w": 310,
         "h": 24,
@@ -4635,10 +4507,10 @@
       }
     },
     {
-      "id": "s_col_7s",
+      "id": "s_col_7k",
       "type": "math",
       "x": 400,
-      "y": 12020,
+      "y": 12210,
       "props": {
         "w": 60,
         "h": 32,
@@ -4652,10 +4524,10 @@
       }
     },
     {
-      "id": "s_col_7t",
+      "id": "s_col_7l",
       "type": "text",
       "x": 80,
-      "y": 12080,
+      "y": 12260,
       "props": {
         "w": 630,
         "h": 24,
@@ -4668,10 +4540,10 @@
       }
     },
     {
-      "id": "s_col_7u",
+      "id": "s_col_7m",
       "type": "text",
       "x": 80,
-      "y": 12117,
+      "y": 12307,
       "props": {
         "w": 310,
         "h": 24,
@@ -4683,10 +4555,10 @@
       }
     },
     {
-      "id": "s_col_7v",
+      "id": "s_col_7n",
       "type": "math",
       "x": 400,
-      "y": 12110,
+      "y": 12300,
       "props": {
         "w": 60,
         "h": 32,
@@ -4700,10 +4572,10 @@
       }
     },
     {
-      "id": "s_col_7w",
+      "id": "s_col_7o",
       "type": "text",
       "x": 80,
-      "y": 12167,
+      "y": 12347,
       "props": {
         "w": 310,
         "h": 24,
@@ -4715,10 +4587,10 @@
       }
     },
     {
-      "id": "s_col_7x",
+      "id": "s_col_7p",
       "type": "math",
       "x": 400,
-      "y": 12160,
+      "y": 12340,
       "props": {
         "w": 60,
         "h": 32,
@@ -4732,7 +4604,7 @@
       }
     },
     {
-      "id": "s_col_7y",
+      "id": "s_col_7q",
       "type": "text",
       "x": 80,
       "y": 12961,
@@ -4751,7 +4623,7 @@
       }
     },
     {
-      "id": "s_col_7z",
+      "id": "s_col_7r",
       "type": "text",
       "x": 80,
       "y": 13001,
@@ -4771,7 +4643,7 @@
       }
     },
     {
-      "id": "s_col_80",
+      "id": "s_col_7s",
       "type": "text",
       "x": 80,
       "y": 13045,
@@ -4786,7 +4658,7 @@
       }
     },
     {
-      "id": "s_col_81",
+      "id": "s_col_7t",
       "type": "math",
       "x": 96,
       "y": 13071,
@@ -4803,7 +4675,7 @@
       }
     },
     {
-      "id": "s_col_82",
+      "id": "s_col_7u",
       "type": "text",
       "x": 80,
       "y": 13137,
@@ -4818,7 +4690,7 @@
       }
     },
     {
-      "id": "s_col_83",
+      "id": "s_col_7v",
       "type": "math",
       "x": 400,
       "y": 13131,
@@ -4835,7 +4707,7 @@
       }
     },
     {
-      "id": "s_col_84",
+      "id": "s_col_7w",
       "type": "text",
       "x": 80,
       "y": 13188,
@@ -4850,7 +4722,7 @@
       }
     },
     {
-      "id": "s_col_85",
+      "id": "s_col_7x",
       "type": "math",
       "x": 400,
       "y": 13181,
@@ -4867,7 +4739,7 @@
       }
     },
     {
-      "id": "s_col_86",
+      "id": "s_col_7y",
       "type": "text",
       "x": 80,
       "y": 13221,
@@ -4882,7 +4754,7 @@
       }
     },
     {
-      "id": "s_col_87",
+      "id": "s_col_7z",
       "type": "math",
       "x": 400,
       "y": 13221,
@@ -4899,7 +4771,7 @@
       }
     },
     {
-      "id": "s_col_88",
+      "id": "s_col_80",
       "type": "text",
       "x": 80,
       "y": 13268,
@@ -4914,7 +4786,7 @@
       }
     },
     {
-      "id": "s_col_89",
+      "id": "s_col_81",
       "type": "math",
       "x": 400,
       "y": 13261,
@@ -4931,7 +4803,7 @@
       }
     },
     {
-      "id": "s_col_8a",
+      "id": "s_col_82",
       "type": "text",
       "x": 80,
       "y": 13318,
@@ -4946,7 +4818,7 @@
       }
     },
     {
-      "id": "s_col_8b",
+      "id": "s_col_83",
       "type": "math",
       "x": 400,
       "y": 13311,
@@ -4963,7 +4835,7 @@
       }
     },
     {
-      "id": "s_col_8c",
+      "id": "s_col_84",
       "type": "text",
       "x": 96,
       "y": 14132,
@@ -4978,7 +4850,7 @@
       }
     },
     {
-      "id": "s_col_8d",
+      "id": "s_col_85",
       "type": "math",
       "x": 96,
       "y": 14162,
@@ -4997,7 +4869,7 @@
       }
     },
     {
-      "id": "s_col_8e",
+      "id": "s_col_86",
       "type": "math",
       "x": 214,
       "y": 14162,
@@ -5016,7 +4888,7 @@
       }
     },
     {
-      "id": "s_col_8f",
+      "id": "s_col_87",
       "type": "math",
       "x": 340,
       "y": 14162,
@@ -5035,7 +4907,7 @@
       }
     },
     {
-      "id": "s_col_8g",
+      "id": "s_col_88",
       "type": "math",
       "x": 480,
       "y": 14162,
@@ -5054,7 +4926,7 @@
       }
     },
     {
-      "id": "s_col_8h",
+      "id": "s_col_89",
       "type": "math",
       "x": 596,
       "y": 14162,
@@ -5073,6 +4945,6 @@
       }
     }
   ],
-  "createdAt": "2026-11-08T23:28:47.619Z",
-  "updatedAt": "2026-11-08T23:28:47.619Z"
+  "createdAt": "2026-11-09T02:02:48.239Z",
+  "updatedAt": "2026-11-09T02:02:48.239Z"
 }

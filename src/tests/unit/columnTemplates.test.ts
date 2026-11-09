@@ -47,7 +47,8 @@ describe('column templates', () => {
     expect(errors).toEqual([]);
     expect(tpl.settings?.baselineSnap).toBe('minor');
     expect(result('\\eta_{R}\\coloneq')?.value?.number).toBeCloseTo(0.7689, 3);
-    expect(result('\\eta_{V}\\coloneq')?.value?.number).toBeCloseTo(0.612, 3);
+    // EN 1992-1-1:2023: τEd = 2.540 MPa, x = 587 mm ≥ 0.25d → cotθ = 2.5; strut σcd = 7.37 ≤ ν·fcd = 9.92 MPa governs.
+    expect(result('\\eta_{V}\\coloneq')?.value?.number).toBeCloseTo(0.7428, 3);
     // Hand check at the ray point gives back (MEd, NEd)/ηR.
     const eta = result('\\eta_{R}\\coloneq')!.value!.number!;
     const nAt = result('N_{R}\\left(c_{R}')!.value!.number!;
@@ -82,18 +83,35 @@ describe('column templates', () => {
     expect(result('\\eta_{R}\\coloneq')?.value?.number).toBeCloseTo(0.6435, 2);
   }, 30000);
 
-  it('rectangular column in tension: cotθ limited by EN 1992-1-1:2023 (8.41)', () => {
-    const { errors, result } = evaluate('rc-rectangular-column', { 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq-500\\,\\mathrm{kN}' });
-    expect(errors).toEqual([]);
-    const cot = result('\\mathrm{cot}_{\\theta.y}\\coloneq')!.value!.number!;
-    const lim = result('\\mathrm{cot}_{\\theta.lim.y}\\coloneq')!.value!.number!;
-    const opt = result('C_{opt.y}\\coloneq')!.value!.number!;
-    // VEd.y = 400 kN: 2.5 − 0.1·500/400 = 2.375
-    expect(lim).toBeCloseTo(2.375, 6);
-    expect(cot).toBeCloseTo(Math.min(opt, lim), 6);
-    const big = evaluate('rc-rectangular-column', { 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq-20000\\,\\mathrm{kN}' });
-    expect(big.result('\\mathrm{cot}_{\\theta.lim.y}\\coloneq')!.value!.number!).toBe(1);
-  }, 60000);
+  it('rectangular column shear to EN 1992-1-1:2023 §8.2.3: τ form, cot θmin (8.41) branches', () => {
+    const num = (r: ReturnType<typeof evaluate>, k: string) => r.result(k)!.value!.number!;
+    const COTMIN = '\\mathrm{cot}_{\\theta min.y}\\coloneq';
+    const COT = '\\mathrm{cot}_{\\theta.y}\\coloneq';
+    // Defaults: τEd = 400 kN / (500 · 0.9 · 737.5) = 1.205 MPa, x = 390 mm ≥ 0.25d → 2.5; links govern (VRd,s 755.5 kN).
+    const d = evaluate('rc-rectangular-column');
+    expect(d.errors).toEqual([]);
+    expect(num(d, '\\tau_{Ed.y}\\coloneq')).toBeCloseTo(1.2053, 4);
+    expect(num(d, COTMIN)).toBe(2.5);
+    expect(num(d, '\\eta_{V.y}\\coloneq')).toBeCloseTo(400 / 755.5, 3);
+    // Tension: 2.5 − 0.1 · 500 / 400 = 2.375; large tension stops at 1.
+    const t = evaluate('rc-rectangular-column', { 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq-500\\,\\mathrm{kN}' });
+    expect(t.errors).toEqual([]);
+    expect(num(t, COTMIN)).toBeCloseTo(2.375, 6);
+    expect(num(t, COT)).toBeCloseTo(2.375, 6);
+    expect(num(evaluate('rc-rectangular-column', { 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq-20000\\,\\mathrm{kN}' }), COTMIN)).toBe(1);
+    // Small compression chord (fck 60, φ16): σcp ≥ 3 MPa → 3.0; σcp = 0.75 MPa → 2.5 + 0.5 · 0.75 / 3.
+    const base = { 'f_{ck}\\coloneq': 'f_{ck}\\coloneq60\\,\\mathrm{MPa}', '\\phi\\coloneq': '\\phi\\coloneq16\\,\\mathrm{mm}' };
+    const hi = evaluate('rc-rectangular-column', { ...base, 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq1280\\,\\mathrm{kN}' });
+    expect(hi.errors).toEqual([]);
+    expect(num(hi, 'x_{y}\\coloneq')).toBeLessThan(0.25 * num(hi, 'd_{y}\\coloneq'));
+    expect(num(hi, COTMIN)).toBe(3);
+    expect(num(evaluate('rc-rectangular-column', { ...base, 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq300\\,\\mathrm{kN}' }), COTMIN)).toBeCloseTo(2.625, 6);
+    // Strut limits cotθ: τEd = 4.218 MPa, ν·fcd = 9.917 → cotθ = a/2 + √((a/2)² − 1) with a/2 = 1.1755.
+    const s = evaluate('rc-rectangular-column', { 'V_{Ed.y}\\coloneq': 'V_{Ed.y}\\coloneq1400\\,\\mathrm{kN}' });
+    const h = (0.5 * 19.8333) / (2 * num(s, '\\tau_{Ed.y}\\coloneq'));
+    expect(num(s, COT)).toBeCloseTo(h + Math.sqrt(h * h - 1), 4);
+    expect(num(s, '\\sigma_{cd.y}\\coloneq')).toBeCloseTo(0.5 * 19.8333, 3);
+  }, 120000);
 
   it('a small rectangular section needs no inner ties (every bar within 150 mm of a corner)', () => {
     const { errors, result } = evaluate('rc-rectangular-column', {
