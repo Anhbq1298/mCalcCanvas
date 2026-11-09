@@ -1,7 +1,7 @@
 {
   "format": "calccanvas",
   "id": "doc_rc_rectangular_column",
-  "version": 2,
+  "version": 3,
   "title": "RC Rectangular Column Check",
   "metadata": {
     "project": "Project name",
@@ -19,6 +19,125 @@
     "textFont": "Inter",
     "baselineSnap": "minor",
     "pages": 19
+  },
+  "inputResult": {
+    "title": "Load cases",
+    "inputs": [
+      {
+        "id": "n",
+        "regionId": "s_rect_1h",
+        "label": "N_Ed"
+      },
+      {
+        "id": "mx",
+        "regionId": "s_rect_1j",
+        "label": "M_Ed,x"
+      },
+      {
+        "id": "my",
+        "regionId": "s_rect_1l",
+        "label": "M_Ed,y"
+      },
+      {
+        "id": "vy",
+        "regionId": "s_rect_1n",
+        "label": "V_Ed,y"
+      },
+      {
+        "id": "vx",
+        "regionId": "s_rect_1p",
+        "label": "V_Ed,x"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "urm",
+        "regionId": "s_rect_3t",
+        "label": "UR_M"
+      },
+      {
+        "id": "urvy",
+        "regionId": "s_rect_50",
+        "label": "UR_V,y"
+      },
+      {
+        "id": "urvx",
+        "regionId": "s_rect_5r",
+        "label": "UR_V,x"
+      },
+      {
+        "id": "cm",
+        "regionId": "s_rect_3v",
+        "label": "Flexure"
+      },
+      {
+        "id": "cvy",
+        "regionId": "s_rect_52",
+        "label": "Shear y"
+      },
+      {
+        "id": "cvx",
+        "regionId": "s_rect_5t",
+        "label": "Shear x"
+      }
+    ],
+    "rows": [
+      {
+        "id": "lc1",
+        "name": "LC1 design",
+        "values": {
+          "n": 3000,
+          "mx": 600,
+          "my": 300,
+          "vy": 400,
+          "vx": 200
+        }
+      },
+      {
+        "id": "lc2",
+        "name": "LC2 max N",
+        "values": {
+          "n": 6000,
+          "mx": 250,
+          "my": 120,
+          "vy": 250,
+          "vx": 120
+        }
+      },
+      {
+        "id": "lc3",
+        "name": "LC3 max Mx",
+        "values": {
+          "n": 2000,
+          "mx": 850,
+          "my": 150,
+          "vy": 450,
+          "vx": 150
+        }
+      },
+      {
+        "id": "lc4",
+        "name": "LC4 max My",
+        "values": {
+          "n": 2500,
+          "mx": 250,
+          "my": 450,
+          "vy": 300,
+          "vx": 350
+        }
+      },
+      {
+        "id": "lc5",
+        "name": "LC5 low N",
+        "values": {
+          "n": 500,
+          "mx": 400,
+          "my": 200,
+          "vy": 350,
+          "vx": 200
+        }
+      }
+    ]
   },
   "shapes": [
     {

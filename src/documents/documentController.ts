@@ -141,17 +141,18 @@ export function loadDocument(doc: CalculationDocument): void {
 export async function newDocument(opts: { demo?: boolean; template?: TemplateId } = {}): Promise<void> {
   const tpl = templateById(opts.template ?? (opts.demo ? 'steel-beam' : 'blank'));
   await flushBeforeSwitch();
+  const made = tpl?.instantiate?.();
   withoutAutosave(() => {
     useAppStore.getState().setDocument({
       id: newId(),
       title: tpl?.title ?? 'Untitled calculation',
       metadata: tpl ? { ...tpl.metadata } : {},
       settings: { ...DEFAULT_SETTINGS, ...(tpl?.settings ?? {}) },
-      inputResult: undefined,
+      inputResult: made?.inputResult,
       createdAt: new Date().toISOString(),
     });
     applySettings();
-    loadShapes(tpl ? tpl.shapes() : []);
+    loadShapes(made ? made.shapes : tpl ? tpl.shapes() : []);
     resyncAll();
     focusFirstPage();
   });

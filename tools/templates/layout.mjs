@@ -133,7 +133,18 @@ const st = {
 };
 
 /** Writes the annex after the main body and saves the document (fixed dates: the output is reproducible). */
-const finish = ({ id: docId, title, reference, file }) => {
+/** Input & Results set-up: columns refer to math regions by their exact LaTeX. */
+const batchConfig = (spec) => {
+  if (!spec) return { title: 'Batch calculation', inputs: [], outputs: [], rows: [] };
+  const regionOf = (latex) => {
+    const s = out.find((x) => x.type === 'math' && x.props.latex === latex);
+    if (!s) throw new Error(`batch column: no region ${latex}`);
+    return s.id;
+  };
+  const cols = (list) => list.map(([cid, label, latex]) => ({ id: cid, regionId: regionOf(latex), label }));
+  return { title: spec.title, inputs: cols(spec.inputs), outputs: cols(spec.outputs), rows: spec.rows };
+};
+const finish = ({ id: docId, title, reference, file, batch }) => {
   newPage();
   textAt(page, row, 'ANNEX', { heading: 1, annex: { kind: 'start' } });
   row += 1.0;
@@ -147,10 +158,10 @@ const finish = ({ id: docId, title, reference, file }) => {
   const pages = page + 1;
   const date = '2026-01-01T00:00:00.000Z';
   const doc = {
-    format: 'calccanvas', id: docId, version: 2, title,
+    format: 'calccanvas', id: docId, version: 3, title,
     metadata: { project: 'Project name', calculationReference: reference, preparedBy: 'Mark', checkedBy: '', revision: 'A' },
     settings: { unitSystem: 'SI', precision: 2, canvasMode: 'page', pageOrientation: 'portrait', showHeaderFooter: true, textFont: 'Inter', baselineSnap: 'minor', pages },
-    shapes: out, createdAt: date, updatedAt: date,
+    inputResult: batchConfig(batch), shapes: out, createdAt: date, updatedAt: date,
   };
   fs.writeFileSync(path.join(process.env.TEMPLATE_OUT ?? TPL, file), JSON.stringify(doc, null, 2));
   console.log('ok', out.length, 'pages', pages);

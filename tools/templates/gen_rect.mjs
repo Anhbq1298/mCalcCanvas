@@ -273,4 +273,33 @@ P('Radial utilisation on P–Mθ (governs)', R`\mathrm{UR}_{M}=`, M({ precision:
 P('Shear along y', R`\mathrm{UR}_{V.y}=`, M({ precision: 3 }));
 P('Shear along x', R`\mathrm{UR}_{V.x}=`, M({ precision: 3 }));
 
-finish({ id: 'doc_rc_rectangular_column', title: 'RC Rectangular Column Check', reference: 'CALC-COL-02', file: 'RC_Rectangular_Column_Check.mCalcCanvas' });
+// Input & Results tab: load cases (N, Mx, My, Vy, Vx) → utilisation ratios and checks.
+const lc = (id, name, n, mx, my, vy, vx) => ({ id, name, values: { n, mx, my, vy, vx } });
+finish({
+  id: 'doc_rc_rectangular_column', title: 'RC Rectangular Column Check', reference: 'CALC-COL-02', file: 'RC_Rectangular_Column_Check.mCalcCanvas',
+  batch: {
+    title: 'Load cases',
+    inputs: [
+      ['n', 'N_Ed', R`N_{Ed}\coloneq3000\,\mathrm{kN}`],
+      ['mx', 'M_Ed,x', R`M_{Ed.x}\coloneq600\,\mathrm{kN}\cdot\mathrm{m}`],
+      ['my', 'M_Ed,y', R`M_{Ed.y}\coloneq300\,\mathrm{kN}\cdot\mathrm{m}`],
+      ['vy', 'V_Ed,y', R`V_{Ed.y}\coloneq400\,\mathrm{kN}`],
+      ['vx', 'V_Ed,x', R`V_{Ed.x}\coloneq200\,\mathrm{kN}`],
+    ],
+    outputs: [
+      ['urm', 'UR_M', R`\mathrm{UR}_{M}\coloneq\frac{\sqrt{n_{Ed}^2+m_{Ed}^2}}{\rho_{Rd}}`],
+      ['urvy', 'UR_V,y', R`\mathrm{UR}_{V.y}\coloneq\max\left(\frac{\tau_{Ed.y}}{\tau_{Rd.sy.y}},\frac{\sigma_{cd.y}}{\nu f_{cd}}\right)`],
+      ['urvx', 'UR_V,x', R`\mathrm{UR}_{V.x}\coloneq\max\left(\frac{\tau_{Ed.x}}{\tau_{Rd.sy.x}},\frac{\sigma_{cd.x}}{\nu f_{cd}}\right)`],
+      ['cm', 'Flexure', R`\mathrm{UR}_{M}\le1`],
+      ['cvy', 'Shear y', R`\mathrm{UR}_{V.y}\le1`],
+      ['cvx', 'Shear x', R`\mathrm{UR}_{V.x}\le1`],
+    ],
+    rows: [
+      lc('lc1', 'LC1 design', 3000, 600, 300, 400, 200),
+      lc('lc2', 'LC2 max N', 6000, 250, 120, 250, 120),
+      lc('lc3', 'LC3 max Mx', 2000, 850, 150, 450, 150),
+      lc('lc4', 'LC4 max My', 2500, 250, 450, 300, 350),
+      lc('lc5', 'LC5 low N', 500, 400, 200, 350, 200),
+    ],
+  },
+});

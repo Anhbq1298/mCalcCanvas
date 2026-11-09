@@ -1,7 +1,7 @@
 {
   "format": "calccanvas",
   "id": "doc_rc_circular_column",
-  "version": 2,
+  "version": 3,
   "title": "RC Circular Column Check",
   "metadata": {
     "project": "Project name",
@@ -19,6 +19,12 @@
     "textFont": "Inter",
     "baselineSnap": "minor",
     "pages": 14
+  },
+  "inputResult": {
+    "title": "Batch calculation",
+    "inputs": [],
+    "outputs": [],
+    "rows": []
   },
   "shapes": [
     {

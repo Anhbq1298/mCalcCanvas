@@ -5,7 +5,7 @@
  */
 import { newShapeId } from '../canvas/model/canvasStore';
 import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, PARAGRAPH_STYLES, type MathProps, type Shape } from '../canvas/model/types';
-import type { DocumentMetadata, DocumentSettings } from './DocumentTypes';
+import type { DocumentMetadata, DocumentSettings, InputResultConfig } from './DocumentTypes';
 import { parseDocument } from './DocumentSerializer';
 import rcCircularColumn from '../../templates/RC_Circular_Column_Check.mCalcCanvas?raw';
 import rcRectangularColumn from '../../templates/RC_Rectangular_Column_Check.mCalcCanvas?raw';
@@ -24,6 +24,8 @@ export interface WorksheetTemplate {
   /** Worksheet settings the template relies on (pages, snapping…). */
   settings?: Partial<DocumentSettings>;
   shapes(): Shape[];
+  /** Shapes plus the Input & Results set-up bound to them (file templates). */
+  instantiate?(): { shapes: Shape[]; inputResult: InputResultConfig };
 }
 
 /** A template saved as a .mCalcCanvas file (repo folder templates/): fresh shape ids each time. */
@@ -33,11 +35,17 @@ function fileTemplate(raw: string) {
     title: doc.title,
     metadata: doc.metadata,
     settings: doc.settings,
-    shapes: (): Shape[] => {
-      const ids = new Map(doc.shapes.map((s) => [s.id, newShapeId()] as const));
-      return doc.shapes.map((s) => ({ ...structuredClone(s), id: ids.get(s.id)! }));
-    },
+    shapes: (): Shape[] => instantiate().shapes,
+    instantiate,
   };
+  function instantiate(): { shapes: Shape[]; inputResult: InputResultConfig } {
+    const ids = new Map(doc.shapes.map((s) => [s.id, newShapeId()] as const));
+    const cols = (c: InputResultConfig['inputs']) => c.map((x) => ({ ...x, regionId: ids.get(x.regionId) ?? x.regionId }));
+    return {
+      shapes: doc.shapes.map((s) => ({ ...structuredClone(s), id: ids.get(s.id)! })),
+      inputResult: { ...structuredClone(doc.inputResult), inputs: cols(doc.inputResult.inputs), outputs: cols(doc.inputResult.outputs) },
+    };
+  }
 }
 const circular = fileTemplate(rcCircularColumn);
 const rectangular = fileTemplate(rcRectangularColumn);
