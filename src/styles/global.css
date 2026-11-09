@@ -183,10 +183,9 @@ body {
 .ir-secondary-button:disabled { cursor: default; opacity: 0.4; }
 
 .ir-data-table {
-  width: max-content;
   border-collapse: separate;
   border-spacing: 0;
-  table-layout: auto;
+  table-layout: fixed;
   font-size: 12px;
   color: var(--color-foreground);
 }
