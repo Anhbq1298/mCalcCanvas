@@ -10,7 +10,7 @@ import { escapeHtml } from '../canvas/sanitize';
 import { demoWorksheetShapes } from './demoWorksheet';
 import { A4, PAGE_GAP } from '../export/pageGeometry';
 
-export type TemplateId = 'blank' | 'steel-beam' | 'rc-beam' | 'rc-column';
+export type TemplateId = 'blank' | 'steel-beam' | 'rc-beam';
 
 export interface WorksheetTemplate {
   id: TemplateId;
@@ -139,62 +139,7 @@ function rcBeamShapes(): Shape[] {
   return out;
 }
 
-
-/** Reinforced concrete column, concentric axial resistance to EN 1992-1-1. */
-function rcColumnShapes(): Shape[] {
-  const { out, text, math } = builder();
-  const ln = (n: number) => 60 + 40 * n - 20;
-
-  text(80, ln(1), 'RC COLUMN – AXIAL RESISTANCE TO EN 1992-1-1', { heading: 1 });
-  text(80, ln(2), 'Use Input & Results to compare column sizes, materials, reinforcement and axial loads.', { w: 640 });
-
-  text(80, ln(3), '1. INPUTS', { heading: 2 });
-  text(80, ln(4), '1.1 Materials', { heading: 3 });
-  math(96, ln(5), 'f_{ck}\\coloneq40\\,\\mathrm{MPa}');
-  math(280, ln(5), 'f_{yk}\\coloneq500\\,\\mathrm{MPa}');
-  math(500, ln(5), '\\alpha_{cc}\\coloneq0.85');
-  math(96, ln(6), '\\gamma_{c}\\coloneq1.5');
-  math(280, ln(6), '\\gamma_{s}\\coloneq1.15');
-
-  text(80, ln(7), '1.2 Section and design action', { heading: 3 });
-  math(96, ln(8), 'b\\coloneq600\\,\\mathrm{mm}');
-  math(280, ln(8), 'h\\coloneq600\\,\\mathrm{mm}');
-  math(500, ln(8), 'A_{s}\\coloneq9425\\,\\mathrm{mm}^2');
-  math(96, ln(9), 'N_{Ed}\\coloneq6500\\,\\mathrm{kN}');
-
-  const SX = 555;
-  const SY = ln(10) + 4;
-  const ink = '#1e3a5f';
-  out.push({ id: newShapeId(), type: 'rect', x: SX, y: SY, props: { w: 116, h: 116, stroke: ink, strokeWidth: 2 } });
-  out.push({ id: newShapeId(), type: 'rect', x: SX + 10, y: SY + 10, props: { w: 96, h: 96, stroke: '#94a3b8', strokeWidth: 1 } });
-  for (const [cx, cy] of [[SX + 17, SY + 17], [SX + 58, SY + 17], [SX + 99, SY + 17], [SX + 17, SY + 58], [SX + 99, SY + 58], [SX + 17, SY + 99], [SX + 58, SY + 99], [SX + 99, SY + 99]]) {
-    out.push(circle(cx, cy, 3.8, '#dc2626'));
-  }
-
-  text(80, ln(11), '2. DESIGN VALUES', { heading: 2 });
-  math(96, ln(12), 'f_{cd}\\coloneq\\frac{\\alpha_{cc}f_{ck}}{\\gamma_{c}}', { displayMode: 'full' });
-  math(400, ln(12), 'f_{yd}\\coloneq\\frac{f_{yk}}{\\gamma_{s}}', { displayMode: 'full' });
-  math(96, ln(15), 'A_{c}\\coloneq b\\cdot h', { displayUnit: 'mm^2', precision: 0 });
-
-  text(80, ln(16), '3. AXIAL RESISTANCE', { heading: 2 });
-  math(96, ln(17), 'N_{Rd}\\coloneq f_{cd}\\left(A_{c}-A_{s}\\right)+f_{yd}A_{s}', { displayUnit: 'kN', precision: 0 });
-  math(96, ln(19), '\\eta_{N}\\coloneq\\frac{N_{Ed}}{N_{Rd}}', { precision: 3 });
-  math(400, ln(19), '\\eta_{N}\\le1');
-
-  text(80, ln(21), '4. SCOPE NOTE', { heading: 2 });
-  text(80, ln(22), 'This template demonstrates concentric section resistance only. Add slenderness, second-order effects and interaction checks for a complete column design.', { w: 650, size: 12.5 });
-  return out;
-}
-
 export const TEMPLATES: WorksheetTemplate[] = [
-  {
-    id: 'rc-column',
-    name: 'RC column – axial resistance (EN 1992-1-1)',
-    description: 'One-page column template for batch comparison of section size, materials, reinforcement and axial load.',
-    title: 'RC Column Axial Resistance',
-    metadata: { project: 'Project name', calculationReference: 'CALC-003', preparedBy: '', checkedBy: '', revision: 'A' },
-    shapes: rcColumnShapes,
-  },
   {
     id: 'rc-beam',
     name: 'RC beam – bending (EN 1992-1-1)',
