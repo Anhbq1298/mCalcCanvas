@@ -2,7 +2,7 @@
 
 **Live app:** https://anhbq1298.github.io/mCalcCanvas/
 
-A browser-based engineering calculation workspace built on its own canvas engine: type equations anywhere on a free canvas, define variables with units, and every dependent result updates automatically. The same canvas lays out as A4 pages and exports a vector PDF calculation sheet.
+A browser-based engineering calculation workspace in the style of Mathcad Prime, built on its own canvas engine. You type equations anywhere on A4/A3 pages, define variables with units, and every dependent result updates automatically. A worksheet prints to a vector PDF calculation sheet. The same worksheet can be run for many load cases (Input & Results), and each case can be printed as a report.
 
 ```
 L := 8.5 m           w := (1.35G + 1.5Q)·b = 28.5 kN/m
@@ -17,33 +17,77 @@ npm install
 npm run dev          # http://localhost:5173
 ```
 
-On first launch the **Simply Supported Steel Beam Calculation** sample opens. Worksheets autosave to the browser (IndexedDB).
+On a first visit the **RC beam** template opens. Worksheets autosave to the browser (IndexedDB).
 
 | Command | |
 |---|---|
 | `npm run dev` | Development server |
 | `npm run build` | Type-check and production build (`dist/`) |
-| `npm test` | Engine + serializer unit tests (Vitest) |
-| `npm run test:e2e` | Browser acceptance tests (Playwright) |
+| `npm run build:single` | One offline HTML file (`dist-single/index.html`) |
+| `npm test` | Engine and unit tests (Vitest) |
+| `npm run test:e2e` | Browser tests (Playwright) |
 | `npm run typecheck` / `npm run lint` | |
+| `npm run templates:columns` | Regenerate the column templates (needs a build; see AGENTS.md) |
 
-Playwright needs a Chromium: `npx playwright install chromium`, or point it at an installed Chrome with `CHROME_PATH=/path/to/chrome npm run test:e2e`.
+Playwright needs a Chromium. Run `npx playwright install chromium`, or point it at an installed Chrome with `CHROME_PATH=/path/to/chrome npm run test:e2e`.
 
 ## Using it
 
-The interface follows Google Docs: menus and one toolbar, white A4 pages with an engineering grid inside the margins (20 px light-grey squares, a major line every 2 × 2; equations and text sit with their baseline on a major line like ruled paper (or on every grid line: View → *Snap equations to minor grid lines*, or *Snap: squares* in Math formatting) — click to place the **+** cross; **Enter** inserts a line and pushes everything below down — content flows onto the next page — **Backspace** removes the blank line above, arrow keys move the cross). Units are shown in light blue with a dot before them (`25 · kN/m`); this is display only, a title block (header/footer) on every page, an **Outline / Parameters** side panel on the left (Outline: headings as a navigation pane — click to jump, double-click to rename, **+ Section / + Sub-section**; paragraph styles Normal / Heading 1–3 from the toolbar or `Ctrl+Alt+0–3`) and a properties panel on the right. The toolbar has **Math formatting** (operator gallery laid out like Mathcad Prime — operators the engine can't evaluate yet are shown greyed out — symbols, constants, units, display format, result unit, decimals, size, colour, worksheet unit system and precision) and **Text formatting** (style, font, size, bold/italic/underline, sub/superscript, colour, alignment, lists) tabs that follow the selection. **Help → Display formats & units guide** shows a live example of every display format and unit feature.
+**Layout.** The menu row holds File, Templates, Edit, View, Insert, Tools and Help. Next to it are the workspaces (**Calculation**, **Input & Results**) and the ribbon tabs (**Document**, **Math Formatting**, **Text Formatting**, **Graph**, **Help**).
 
-- **Create a region**: click the page (a blue **+** marks the spot) and start typing. `"` starts a text region. Double-click empty space for a new math region.
-- **Equation keys**: `:` definition ≔ · `=` evaluate · `/` fraction · `^` power · `.` after a name = literal subscript (`M.Ed` → M_Ed) · `\` √ · `Ctrl+\` ⁿ√ · `|` absolute value · `'` parentheses · `Ctrl+G` Greek (a → α) · `Ctrl+Shift+P` π · `Ctrl+9 / 0 / 3` ≤ ≥ ≠ · `Enter` finishes and moves the + below, ready for the next line.
-- **Built-in constants**: π, e, g = 9.80665 m/s², ∞ = 10³⁰⁷, % = 0.01. A worksheet definition with the same name overrides them (with a warning).
-- **Palettes** on the Math tab insert operators, Greek symbols, constants and units at the cursor of the equation you're editing.
-- **Checks**: `eta_M <= 1` (or Ctrl+9) shows the value with a PASS/FAIL badge.
-- Text regions: font (Inter, Arial, Segoe UI, Calibri, Times New Roman, Georgia, Cambria, Courier New), size, alignment, bold/italic/underline/heading/lists, and any colour (swatches, picker or hex) for the whole text or just the selection.
-- Drag, resize, marquee select, copy/paste (incl. screenshots), drag-and-drop images, duplicate (`Ctrl+D`), group (`Ctrl+G` on regions), undo/redo, arrow-key nudge, `Ctrl+wheel` zoom, wheel or `Space`+drag pan.
-- **Templates**: File → New from template → *RC beam – bending (EN 1992-1-1)* (two pages: headings/outline, inputs, full calculations, result units, PASS/FAIL checks, section sketch, summary) or *Steel beam – simply supported*. A first visit opens the RC beam template; a link with `?template=rc-beam` or `?template=steel-beam` always starts a new worksheet from that template.
-- **Files**: worksheets auto-save in the browser (IndexedDB). **File → Save to file** (`Ctrl+Shift+S`) writes a `.mCalcCanvas` file (plain JSON, schema-versioned) to share or back up; **File → Open file** (`Ctrl+Shift+O`), the Open dialog, or dragging the file onto the page loads it again. `.json` works too.
-- **Input & Results**: map existing worksheet definitions, calculated results and checks into a compact batch table. Units come from the bound regions, cells accept numbers only, and results remain unchanged until **Calculate All**. The table definition and draft input rows are stored in the `.mCalcCanvas` file; calculated outputs are recomputed on demand.
-- **Document** tab: page/free canvas, grid, header & footer, orientation, zoom, export PDF. Double-click the header to edit the worksheet details.
+The ribbon shows its groups with their names underneath, like Mathcad Prime. Two groups are always shown: Edit (undo, redo, calculate, drawing tools) and Regions (equation, text, check, image, graph). The tab follows what you select: an equation shows Math Formatting, text shows Text Formatting, a graph shows Graph.
+
+The left side panel has the **Outline** (headings, click to jump) and **Parameters**. The right side panel holds the properties.
+
+**Writing on the page.** Pages carry an engineering grid: 20 px squares, with a major line every 2 squares. Equations and text sit on the lines like ruled paper.
+
+- **Place the cross**: click the page; a **+** cross marks the spot.
+- **Type**: start typing to create a math region at the cross, or press `"` to start a text region.
+- **Lines**: `Enter` inserts a line and pushes everything below down (content flows onto the next page). `Delete` removes the blank line the cross is on, and `Backspace` removes the blank line above it. Deleting regions also closes the lines they leave empty.
+- **Units** are shown in a colour, with a dot before them (`25 · kN/m`). The colour is a document label style.
+
+**Equations**:
+- **Keys**: `:` definition ≔ · `=` evaluate · `/` fraction · `^` power · `.` after a name gives a literal subscript (`M.Ed` → M_Ed) · `\` √ · `Ctrl+\` ⁿ√ · `|` absolute value · `'` parentheses · `Ctrl+G` Greek (a → α) · `Ctrl+Shift+P` π · `Ctrl+9 / 0 / 3` ≤ ≥ ≠.
+- **Functions**: user functions `f(x) := …`, ranges `i := 0..n−1`, vectors with `map`, `linterp` and `stack`, if blocks laid out like Mathcad Prime, and checks (`η ≤ 1` shows PASS/FAIL).
+- **Constants**: π, e, g, ∞ and %. A worksheet definition with the same name overrides a constant (with a warning).
+
+**Tabs**:
+- **Document**:
+  - Page setup: paper A4 or A3, portrait or landscape, margins in mm (Standard 20/16, Normal 25, Narrow 12.7, Wide 30, or custom). The Page setup dialog shows a preview of the paper and its printable area.
+  - Page view: page boundaries, millimetre rulers (they follow zoom and scrolling, and shade the margins), grid, header & footer, and pages on or off.
+  - Zoom: zoom level, 100 %, fit page and fit width.
+  - Insert: math or text region, page break (`Ctrl+Shift+Enter`), blank page (`Ctrl+Enter`).
+  - Page settings only move the page frames. Regions keep their positions and nothing is recalculated. A region left outside the printable area is marked in red.
+- **Math Formatting**:
+  - Operators & Symbols: operator, symbol, constant and unit palettes.
+  - Display: formula only, result only, formula = result, or the full calculation with values substituted; result unit; how arrays are shown.
+  - Results: number format (general, decimal, scientific, engineering), decimal places, trailing zeros. These apply to the selected equations, or are the worksheet default when nothing is selected. They change only how a number is written; the value keeps full precision.
+  - Math Font: size, colour, highlight.
+  - Label Styles: colours of units and of inputs.
+  - Worksheet: unit system (SI or USCS), default decimal places, snap.
+- **Text Formatting**:
+  - Font, size, bold/italic/underline, sub/superscript, colour, highlight and clear formatting. These apply to the selected characters, or to the whole region.
+  - Alignment (including justify), lists and indent.
+  - Styles: Normal, Title, Subtitle, Heading 1–3. Headings appear in the outline (`Ctrl+Alt+0–3`).
+  - Links: http, https and mailto only.
+- **Graph**: X-Y graphs with series, axis units, equal axes and grid.
+- **Help**: the Help center (`F1`), with guides and a searchable list of every keyboard shortcut; the display-formats guide; the math syntax reference.
+
+**Templates** (Templates menu, or a link such as `?template=rc-beam`):
+- *RC beam – bending (EN 1992-1-1)*.
+- *Steel beam – simply supported*.
+- *RC rectangular column check (EN 1992-1-1)* and *RC circular column check (EN 1992-1-1)*. These cover a P–Mθ interaction curve from fibres, shear to EN 1992-1-1:2023 §8.2.3, and an annex with the derivations. The rectangular column comes with 5 load cases.
+
+**Input & Results** (workspace tab):
+- **Load cases**: bind worksheet inputs and results to columns, enter numbers for each case, then press **Calculate All**. Cases run off the UI thread on a small pool of workers. Each worker sets up the worksheet once and changes only the bound inputs from case to case.
+- **Outdated results**: results are marked *Outdated* as soon as anything they depend on changes.
+- **Right-click a case** to show it on the calculation sheet (its values go into the inputs as one undo step), print its report, or delete it.
+- **Print reports** prints a summary page of all cases, then the full worksheet for each case with that case's values and results.
+
+**Files**:
+- **Autosave**: worksheets save automatically in the browser.
+- **Save and open files**: **File → Save to file** (`Ctrl+Shift+S`) writes a `.mCalcCanvas` file (plain JSON, schema-versioned). **File → Open file** (`Ctrl+Shift+O`) opens it again, and so does dropping the file onto the page. `.json` files also work.
+- **PDF**: **File → Download PDF / Print** (`Ctrl+P`) prints with the document's paper size, orientation and margins, without the grid, rulers or selection marks.
 
 ## Architecture
 
@@ -51,89 +95,98 @@ The interface follows Google Docs: menus and one toolbar, white A4 pages with an
 src/
   engine/        Pure TypeScript calculation engine (no React, no canvas code)
     LatexParser.ts        LaTeX (MathLive subset) → JSON expression tree, recursive descent
-    ExpressionEvaluator   symbol resolution + evaluation on mathjs numbers/Units
-    UnitSystem.ts         explicit unit registry, dimension names, display units, formatting
-    DependencyGraph.ts    name-based graph (definers/referrers), affected-set expansion
-    CalculationEngine.ts  incremental recalculation, cycles, duplicates, drafts
-    LatexFormatter.ts     tree → LaTeX (result-only and substituted "full calculation" lines)
+    ExpressionEvaluator   symbol resolution + evaluation; packed-vector fast paths
+    UnitSystem.ts         unit registry, dimension names, display units, number formats
+    DependencyGraph.ts    region-to-region dependency edges, affected-set expansion
+    CalculationEngine.ts  incremental recalculation, overrides (batch), progressive results
+    batch.ts              Input & Results: one engine per worker, cases via definition overrides
+    worker/               the calculation Web Worker and its message protocol
   canvas/        Own canvas engine (no third-party canvas SDK)
     model/              shape types, geometry, document store with snapshot undo/redo
-    CanvasView.tsx      pan/zoom viewport, select/marquee/move/resize, drawing tools
-    shapes/             math, rich text, image, rectangle, line/arrow, freehand renderers
-    canvasActions.ts    clipboard, duplicate, group, images, zoom
-    engineBridge.ts     canvas store → calculation engine sync
-  math/          MathLive editor, static renderer, display composition
-  documents/     IndexedDB storage, JSON (de)serialisation with migrations, demo sheet
-  export/        page geometry, print/PDF export
-  components/    menu bar, toolbar, properties panel, dialogs, status bar
-  store/         Zustand stores (app UI state, per-region results)
+    CanvasView.tsx      pan/zoom viewport, select/marquee/move/resize, drawing tools, rulers
+    layout.ts           ruled-line model: insert/remove lines, separation, page flow
+    engineBridge.ts     canvas store → calculation engine sync (reading-order keys)
+  app/           commands, keyboard shortcut registry (shortcuts.ts) and actions
+  math/          MathLive editor, Mathcad keys, static renderer, display composition
+  documents/     IndexedDB storage, (de)serialisation with migrations, templates
+  export/        page geometry (paper, margins), print/PDF, case reports
+  components/    header + ribbon, Input & Results, panels, dialogs (Help center, Page setup)
+  store/         Zustand stores, engine client (worker), batch worker pool
+tools/templates/ generators for the column templates
 ```
 
-**Single source of truth.** Math regions store only JSON props (LaTeX, display options) in the canvas store. The engine is derived: every store change — typing, undo, paste, load — flows one way through `engineBridge.ts`. Results are never persisted; they're recomputed on load.
+**Single source of truth.** Math regions store only JSON props (LaTeX, display options) in the canvas store. The engine is derived from them: every store change (typing, undo, paste, load) flows one way through `engineBridge.ts`. Results are never saved; they are recalculated on load.
 
-**Evaluation order.** Regions are evaluated in reading order. The canvas layer (`engineBridge.ts`) gives every math region a key `[page, y, x, id]`; the engine compares keys lexicographically (`compareOrderKeys`) and knows nothing about geometry. Coordinates are used exactly — no rounding or numeric packing — so large and negative positions order correctly, and the id makes equal positions deterministic. A region can only use definitions before it (a name defined only below is reported as "defined below"), and uses the nearest definition before it when a name is defined more than once; redefinitions are outlined in green.
+**Off the UI thread.** The engine runs in a Web Worker (`src/engine/worker`). The UI thread loads only the light parts it needs (units, order keys).
+- **Progressive results**: a long recalculation sends results as they finish, inputs first, so a sheet fills in from the top.
+- **Loading**: when a worksheet loads, its regions go to the worker before the canvas renders, so calculating and drawing happen at the same time.
+- **Lazy drawing**: equations far outside the view are typeset only when they come near it.
 
-**Dependencies.** Every referenced name is resolved to the exact *defining region* it uses, and the graph (`DependencyGraph.ts`) stores those region-to-region edges. Two definitions of `x` therefore feed two independent sets of regions: editing the first `x` recalculates only the regions that use it. Each region also records the names that could change its resolution (each identifier and, for letter runs like `wL`, each letter); adding, removing, renaming or moving a definition of such a name re-resolves just those regions. Display-only changes (result unit, precision, unit system) re-format the region without recalculating dependents. Recalculation is incremental: changing an input in a 1 000-region worksheet evaluates only its dependency chain.
+**Evaluation order.** Regions are evaluated in reading order. Each region gets a key `[y, x, id]`; pages are stacked vertically, so the key also orders pages and does not change with the paper size. A region can only use definitions before it (a name defined only further down is reported as "defined below"). When a name is defined more than once, a region uses the nearest definition before it, and redefinitions are outlined in green. Annex blocks are calculated at their link.
 
-**Numerics.** Values are kept at full double precision in SI base units; rounding happens only when a value is formatted for display. Checks compare unrounded values under an explicit `ComparisonPolicy`: acceptance checks (≤ < ≥ >) are **strict** — no tolerance at all, so η = 1.0000001 (or 1 + 2⁻⁵²) against 1 fails although it displays as 1; floating-point noise can only make a borderline check fail, never pass. Only numerical equality (= ≠) is approximate, with an explicit 10⁻¹² relative tolerance. Every intermediate result is checked: division by zero, results outside the real numbers (√ of a negative, log ≤ 0, asin(2), negative base with a non-integer power) and overflow are reported as errors, never as NaN/∞. Trigonometric functions take an angle unit (°, rad) or a dimensionless number in radians. Absolute temperatures in °C are affine: °C ± K → °C, °C − °C → K, while adding, scaling or applying functions to °C is rejected with an explanation.
+**Dependencies.** Every name is resolved to the exact *defining region* it uses, so two definitions of `x` feed two independent sets of regions. Display-only changes (result unit, precision, number format, unit system) re-format a region without recalculating its dependents. Recalculation is incremental.
 
-**Incremental.** A change re-evaluates only the edited region and its transitive dependents; each region subscribes to its own result, so unrelated regions don't re-render.
+**Numerics.** Values keep full double precision in SI base units; rounding happens only when a value is written out. Acceptance checks (≤ < ≥ >) are **strict**, with no tolerance. Only = and ≠ use a 10⁻¹² relative tolerance. Division by zero, non-real results and overflow are reported as errors, never as NaN or ∞. Absolute temperatures in °C are affine.
 
-**Rich-text and file safety.** Text from typing, pasting, the clipboard and imported files is rebuilt by an allow-list sanitiser (`sanitize.ts`): a new DOM tree is created containing only allowed tags (b, i, u, lists, headings, …) and a validated colour on `<font>`, at any nesting depth; script-like elements are dropped with their content. Clipboard shapes and imported documents go through the same validation (`sanitizeShape`), with numbers clamped to sane ranges and duplicate ids renamed rather than dropped.
+**Speed.**
+- **Packed vectors**: vectors whose entries share one dimension are stored as SI numbers (`Float64Array`) plus one unit. Arithmetic, comparisons, element-wise `if` and aggregates work on the numbers directly. Anything unusual falls back to the per-entry path.
+- **Measured result**: a rectangular column (900 fibres × 150 neutral-axis positions) calculates in about 0.3 s, and 100 load cases in about 1 s.
 
-**Safety.** Expressions are untrusted input. There is no `eval` and no `math.evaluate` on strings: the parser builds a JSON tree and the evaluator calls a fixed set of mathjs functions on numbers and Unit objects. Input length, tree size, nesting depth and exponents are bounded, so evaluation is linear in expression size and cannot loop — which is why evaluation runs on the main thread rather than a worker for now.
+**Shortcuts.** `src/app/shortcuts.ts` is the single list of keyboard shortcuts. It drives the keyboard handler, the Help center, tooltips and a conflict test, and it does not claim keys the browser keeps for itself (`Ctrl+T`, `Ctrl+W`, …).
+
+**Safety.** Expressions are untrusted input. There is no `eval` and no `math.evaluate` on strings: the parser builds a JSON tree, and the evaluator calls a fixed set of mathjs functions. Input length, tree size, nesting depth and exponents are bounded. Rich text from typing, pasting and imported files is rebuilt by an allow-list sanitiser (`sanitize.ts`), which keeps safe links (http, https, mailto), validated colours and highlights only. Imported documents and pasted shapes go through `sanitizeShape`.
 
 ### Symbol resolution
 
-Deterministic, documented rules so `m` (metre) and `m` (a variable) are never ambiguous:
-
 1. Upright names (`\mathrm{kN}`) are units if registered, otherwise variables.
-2. A name defined in the worksheet is a variable (defining a unit's name shows a "shadows the unit" warning).
-3. `π` is the constant. 4. A registered unit symbol is a unit.
-5. A run of italic letters splits into factors: `wL^2` = w·L² (the power binds to the last factor, as in TeX), while `mm^2` stays (mm)².
+2. A name defined in the worksheet is a variable (shadowing a unit gives a warning).
+3. `π` is the constant.
+4. A registered unit symbol is a unit.
+5. A run of italic letters splits into factors: `wL^2` = w·L², while `mm^2` stays (mm)².
 
-Multi-letter units (kN, kPa, mm…) are converted to upright form while typing. Supported: mm cm m km in ft · N kN MN lbf kip · Pa kPa MPa GPa psi ksi · kg tonne · s Hz K °C · ° rad.
+Supported units: mm cm m km in ft · N kN MN lbf kip · Pa kPa MPa GPa psi ksi · kg tonne · s Hz K °C · ° rad.
 
 ### Why not Compute Engine for parsing?
 
-CortexJS Compute Engine (0.173) parses `25kN/m` as `25·k·N/m`, losing the unit. A dedicated parser for the MathLive LaTeX subset gives unit-aware tokenisation and precise error messages, and keeps the engine free of a large dependency. MathLive is used for editing and rendering.
+CortexJS Compute Engine parses `25kN/m` as `25·k·N/m`, losing the unit. A dedicated parser for the MathLive LaTeX subset gives unit-aware tokenisation and precise error messages. MathLive is used for editing and rendering.
 
 ## Design
 
-UI tokens come from [UI/UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) (vendored at `.claude/skills/ui-ux-pro-max`, MIT): *Minimalism & Swiss Style*, navy/blue professional palette, Inter. The generated system is in `design-system/calccanvas/MASTER.md`; tokens live in `src/styles/global.css`. Regenerate or query it with:
-
-```bash
-python3 .claude/skills/ui-ux-pro-max/scripts/search.py "engineering calculation tool" --design-system -p CalcCanvas
-```
+UI tokens come from [UI/UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) (vendored at `.claude/skills/ui-ux-pro-max`, MIT): *Minimalism & Swiss Style*, a navy/blue professional palette and the Inter font. The generated system is in `design-system/calccanvas/MASTER.md`, and the tokens live in `src/styles/global.css`. The ribbon follows the compact layout of Mathcad Prime.
 
 ## Contributing
 
-See **AGENTS.md** and `docs/` (ARCHITECTURE, ENGINE_DESIGN, PROJECT_MEMORY, ROADMAP). CI (`.github/workflows/ci.yml`) runs typecheck, lint, unit and browser tests; GitHub Pages deploys only after they pass.
+See **AGENTS.md** (the rules for every agent and contributor) and `docs/` (ARCHITECTURE, ENGINE_DESIGN, PROJECT_MEMORY, ROADMAP). CI (`.github/workflows/ci.yml`) runs the typecheck, lint, unit and browser tests; GitHub Pages deploys only after they pass. Keep the unit suite small: one test per behaviour area, with each case written as a `step`.
 
 ## Tests
 
 `npm test` (Vitest) and `npm run test:e2e` (Playwright; set `CHROME_PATH` to use a system Chrome).
 
-- **Engine**: parser, units and dimension errors, display units, symbol resolution, reading order (same row, defined below, moves, equal and very large coordinates, multiple pages), definition-level dependencies (independent redefinitions, deletion, insertion, chains, unrelated regions not re-evaluated), numerical safeguards (precision, strict checks, division by zero, domain errors, powers with units, temperatures, trigonometry), error messages and engineering reference values (bending, shear, deflection, utilisation).
-- **Performance** (`performance.test.ts`): 100 / 500 / 1 000 regions; asserts how many regions an edit or move re-evaluates and logs timings.
-- **Unit**: sanitiser (malicious input, deep nesting, formatting preserved), serializer (round trip of every shape type, migrations, duplicate ids, invalid numbers, unknown types), clipboard paste validation, canvas→engine synchronisation with the real stores (create, edit, move across pages, undo/redo, delete, load, display units), PDF page assignment.
-- **Browser**: acceptance tests A–I, canvas, Mathcad keys, page layout, grid, panels, templates, files, and pasting HTML into a text region.
+- **Engine**:
+  - parser, units, display units and number formats;
+  - reading order and dependencies;
+  - numerical safeguards;
+  - functions, vectors and if blocks;
+  - batch overrides and progressive results;
+  - engineering reference values.
+- **Unit**:
+  - column templates against hand calculations, and that they match their generators;
+  - Input & Results: every case equals a fresh engine, in either order;
+  - layout (lines, separation, deleting regions);
+  - shortcut registry, sanitiser, serializer and annex.
+- **Browser**:
+  - acceptance tests, canvas, Mathcad keys, grid and lines;
+  - panels and templates;
+  - load cases, case reports and the right-click menu.
 
 ## Known limitations
 
-- Default precision is 2 decimals (≥ 3 significant figures below 1), so V_Ed shows 121.13 kN; set 3 decimals to see 121.125.
-- PDF export uses the browser print dialog (vector output); multi-page is supported by stacking pages vertically. Each object prints on the page that contains its top edge; anything extending past that page's edge is clipped (and flagged before printing).
-- Single-letter units typed bare (`8.5m`) render italic; multi-letter units render upright.
-- Variables are document-scoped; no local scopes, user-defined functions, matrices, ranges or iteration yet.
-- Text formatting uses the browser's contentEditable commands (bold, italic, underline, heading, lists); pasted HTML is reduced to a safe whitelist.
-- No rotation or z-order controls yet; multi-selection moves but doesn't resize.
-- Free-positioned table regions on the calculation canvas are not implemented; batch Input & Results uses its own document workspace.
-- Evaluation runs on the main thread (bounded per the safety notes above).
-
-## Single-file build
-
-`npm run build:single` writes `dist-single/index.html` (~2.5 MB): the whole app with fonts inlined, no server or network needed. Open it directly in Chrome or Edge.
+- PDF export uses the browser's print dialog. Each object prints on the page that contains its top edge; anything past that page's edge is clipped (and flagged before printing).
+- The math font family is set by the renderer: equations can change size and colour, not font.
+- Changing a text style does not update text already formatted with it; the style's size and colour are copied when it is applied.
+- There are no matrices, solvers or symbolic algebra yet, and no free-positioned table regions on the canvas (Input & Results is a separate workspace).
+- No rotation or z-order controls; multi-selection moves but doesn't resize.
 
 ## Licensing
 
-All dependencies are MIT/Apache-licensed (React, MathLive, mathjs, Zustand, lucide). The canvas is CalcCanvas's own code, so there is no canvas SDK license or watermark.
+All dependencies are MIT- or Apache-licensed (React, MathLive, mathjs, Zustand, lucide). The canvas is CalcCanvas's own code, so there is no canvas SDK license or watermark.
