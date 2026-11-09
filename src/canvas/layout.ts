@@ -28,7 +28,7 @@ export const OVERLAP_TOLERANCE = 8;
 
 // -- line model: major lines numbered continuously across pages ---------------
 
-function pageLines() {
+export function pageLines() {
   const orientation = useAppStore.getState().settings.pageOrientation;
   const p0 = printableBox(0, orientation);
   const p1 = printableBox(1, orientation);

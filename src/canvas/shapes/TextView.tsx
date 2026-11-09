@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef } from 'react';
 import { stopEditing, updateShape, useCanvasStore } from '../model/canvasStore';
 import { separateRegion } from '../canvasActions';
 import { useSeparateAfterEditing } from './useSeparate';
-import { fontStack, PARAGRAPH_STYLES, type TextShape } from '../model/types';
+import { fontStack, PARAGRAPH_STYLES, TEXT_STYLES, type TextShape } from '../model/types';
 import { escapeHtml, plainTextToHtml, sanitizeHtml } from '../sanitize';
 import { annexInfo, annexNumber, blockTitle, pageNumberOf } from '../annex';
 import { useAppStore } from '../../store/appStore';
@@ -13,7 +13,7 @@ import { useAppStore } from '../../store/appStore';
  */
 export function TextView({ shape, editing, isStatic }: { shape: TextShape; editing: boolean; isStatic: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
-  const { html, w, fontSize, color, align, fontFamily, heading } = shape.props;
+  const { html, w, fontSize, color, align, fontFamily, heading, textStyle } = shape.props;
   const annexHtml = useAnnexHtml(shape);
 
   // Keep stored height equal to the rendered height (no undo entries).
@@ -64,7 +64,8 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
     fontSize,
     color,
     textAlign: align,
-    fontWeight: heading ? PARAGRAPH_STYLES[heading].weight : undefined,
+    fontWeight: heading ? PARAGRAPH_STYLES[heading].weight : textStyle ? TEXT_STYLES[textStyle].weight : undefined,
+    fontStyle: textStyle && TEXT_STYLES[textStyle].italic ? 'italic' : undefined,
     lineHeight: 1.45,
     minHeight: fontSize * 1.45,
     outline: 'none',
@@ -106,8 +107,17 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
       className={shape.props.annex?.kind === 'link' ? 'text-region text-region--annex-link' : 'text-region'}
       data-testid="text-region"
       data-heading={heading || undefined}
+      data-text-style={textStyle}
       data-annex={shape.props.annex?.kind}
       style={style}
+      onClick={(e) => {
+        // Links open with Ctrl/⌘+click (a plain click selects the region).
+        const a = (e.target as HTMLElement).closest('a');
+        if (a && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          window.open(a.href, '_blank', 'noopener,noreferrer');
+        } else if (a) e.preventDefault();
+      }}
       dangerouslySetInnerHTML={{ __html: annexHtml || html || '&nbsp;' }}
     />
   );

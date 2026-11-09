@@ -32,14 +32,15 @@ beforeEach(resetEach);
 
 describe('engine bridge', () => {
   it('engine bridge', () => {
-    step('orders by page, then y, then x, then id', () => {
+    step('orders top to bottom (later pages after earlier ones), then x, then id; paper settings do not change keys', () => {
       const a = readingKey(math('a', 100, 900, ''));
       const b = readingKey(math('b', 80, P2 + 100, ''));
       const c = readingKey(math('c', 300, 900, ''));
-      expect(a[0]).toBe(0);
-      expect(b[0]).toBe(1);
       expect(compareOrderKeys(a, b)).toBeLessThan(0);
       expect(compareOrderKeys(a, c)).toBeLessThan(0);
+      useAppStore.getState().updateSettings({ paper: 'A3', pageOrientation: 'landscape' });
+      expect(readingKey(math('b', 80, P2 + 100, ''))).toEqual(b);
+      useAppStore.getState().updateSettings({ paper: 'A4', pageOrientation: 'portrait' });
     });
     resetEach();
     step('create, edit, move, move across pages, undo/redo, delete', () => {

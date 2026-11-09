@@ -23,8 +23,8 @@ import { DEFAULT_GRAPH_STYLE, DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, type Graph
 import { plainTextToHtml } from './sanitize';
 import { sanitizeShape } from '../documents/DocumentSerializer';
 import { clampDelta, clampPoint, clampShapesIntoPage, constrained, crossPoint, nextPrintableTop, nextWritingPoint, printableAt } from './pageConstraint';
-import { pageCount } from '../export/pageGeometry';
-import { globalLine, lineOccupied, lineRemovable, lineY, planLineShift, planSeparation, type LayoutPlan } from './layout';
+import { pageBox, pageCount, pageSize } from '../export/pageGeometry';
+import { globalLine, lineOccupied, lineRemovable, lineY, pageLines, planLineShift, planSeparation, type LayoutPlan } from './layout';
 import { useAppStore } from '../store/appStore';
 
 const get = () => useCanvasStore.getState();
@@ -412,6 +412,55 @@ export function zoomToFit(): void {
   const pad = 48;
   const z = Math.min(2, Math.max(0.1, Math.min((viewport.w - pad * 2) / Math.max(b.w, 1), (viewport.h - pad * 2) / Math.max(b.h, 1))));
   setCamera({ x: b.x + b.w / 2 - viewport.w / 2 / z, y: b.y + b.h / 2 - viewport.h / 2 / z, z });
+}
+
+/** The page under the middle of the view. */
+function pageInView(): number {
+  const orientation = useAppStore.getState().settings.pageOrientation;
+  const { h } = pageSize(orientation);
+  const c = screenToPage({ x: viewport.w / 2, y: viewport.h / 2 }, get().camera);
+  return Math.max(0, Math.floor(c.y / (h + 48)));
+}
+
+/** Zoom so the whole page under the view fits, centred. */
+export function zoomFitPage(): void {
+  const b = pageBox(pageInView(), useAppStore.getState().settings.pageOrientation);
+  const z = Math.min(8, Math.max(0.1, Math.min((viewport.w - 32) / b.w, (viewport.h - 32) / b.h)));
+  setCamera({ x: b.x + b.w / 2 - viewport.w / 2 / z, y: b.y + b.h / 2 - viewport.h / 2 / z, z });
+}
+
+/** Zoom so the page width fills the view, keeping the page's top in view. */
+export function zoomFitWidth(): void {
+  const b = pageBox(pageInView(), useAppStore.getState().settings.pageOrientation);
+  const cam = get().camera;
+  const centreY = screenToPage({ x: 0, y: viewport.h / 2 }, cam).y;
+  const z = Math.min(8, Math.max(0.1, (viewport.w - 32) / b.w));
+  setCamera({ x: b.x - 16 / z, y: centreY - viewport.h / 2 / z, z });
+}
+
+/** 100 %, keeping the centre of the view. */
+export function zoomActualSize(): void {
+  zoomAt({ x: viewport.w / 2, y: viewport.h / 2 }, 1 / get().camera.z);
+}
+
+/**
+ * Page break at the + cross (or above the selected regions): the line there and
+ * everything below it move to the top of the next page. It is a layout move,
+ * so it is saved, printed and undone like any other (one undo step).
+ */
+export function insertPageBreak(): boolean {
+  if (!constrained()) return false;
+  const st = get();
+  const sel = st.selection.map((id) => st.shapes[id]).filter(Boolean);
+  const y = st.crosshair ? st.crosshair.y : sel.length ? Math.min(...sel.map((s) => shapeBounds(s).y)) + 20 : null;
+  if (y === null) return false;
+  const g = globalLine(y);
+  const { perPage } = pageLines();
+  const next = (Math.floor(g / perPage) + 1) * perPage;
+  if (g % perPage === 0) return false; // already the first line of a page
+  transaction(() => applyLayout(planLineShift(get().shapes, g, next - g)));
+  if (st.crosshair) setCross({ x: st.crosshair.x, y: lineY(next) });
+  return true;
 }
 
 /** Show the top of page 1 at 100 %, centred horizontally. */

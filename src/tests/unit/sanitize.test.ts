@@ -38,6 +38,15 @@ describe('HTML sanitiser', () => {
   });
 
   it('HTML sanitiser', () => {
+    step('keeps safe links (http, https, mailto), highlight colours and indents; drops unsafe link targets', () => {
+      expect(sanitizeHtml('<a href="https://example.com/a?b=1" onclick="x()">site</a>')).toBe('<a href="https://example.com/a?b=1" target="_blank" rel="noopener noreferrer">site</a>');
+      expect(sanitizeHtml('<a href="mailto:a@b.c">mail</a>')).toContain('href="mailto:a@b.c"');
+      expect(sanitizeHtml('<a href="javascript:alert(1)">x</a>')).toBe('x');
+      expect(sanitizeHtml('<a href="data:text/html,hi">x</a>')).toBe('x');
+      expect(sanitizeHtml('<span style="background-color: rgb(255, 245, 157); position: fixed">hi</span>')).toBe('<span style="background-color: rgb(255, 245, 157)">hi</span>');
+      expect(sanitizeHtml('<span style="background-color: url(x)">hi</span>')).toBe('<span>hi</span>');
+      expect(sanitizeHtml('<blockquote style="margin: 0 0 0 40px">in</blockquote>')).toBe('<blockquote>in</blockquote>');
+    });
     step('drops embedded SVG/MathML content entirely', () => {
       const out = sanitizeHtml('<svg><script>alert(1)</script><a href="javascript:x">s</a></svg><math><mi>x</mi></math>');
       expect(out).not.toMatch(/script|alert|href|svg|math/i);

@@ -1,12 +1,15 @@
 import { DEFAULT_GRAPH_STYLE, DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, TEXT_FONTS, type AnnexRole, type GraphSeriesStyle, type Shape } from '../canvas/model/types';
 import { escapeHtml, sanitizeHtml } from '../canvas/sanitize';
 import {
+  DEFAULT_LABEL_STYLES,
   DEFAULT_SETTINGS,
   DOCUMENT_VERSION,
   EMPTY_INPUT_RESULT_CONFIG,
   type CalculationDocument,
   type InputResultConfig,
   type DocumentSettings,
+  type LabelStyles,
+  type PageMargins,
 } from './DocumentTypes';
 
 type Raw = Record<string, unknown>;
@@ -93,6 +96,9 @@ export function sanitizeShape(raw: unknown): Shape | null {
           ...(p.vectorLayout === 'column' ? { vectorLayout: 'column' as const } : {}),
           ...(p.vectorExpanded === true ? { vectorExpanded: true } : {}),
           ...(p.constant === true ? { constant: true } : {}),
+          ...(['general', 'decimal', 'scientific', 'engineering'].includes(p.resultFormat as string) ? { resultFormat: p.resultFormat as never } : {}),
+          ...(typeof p.trailingZeros === 'boolean' ? { trailingZeros: p.trailingZeros } : {}),
+          ...(typeof p.highlight === 'string' && /^#[0-9a-fA-F]{6}$/.test(p.highlight) ? { highlight: p.highlight } : {}),
           autoSize: p.autoSize !== false,
           fontSize: Math.min(64, Math.max(8, num(p.fontSize, 18))),
           color: color(p.color, '#0f172a'),
@@ -111,8 +117,9 @@ export function sanitizeShape(raw: unknown): Shape | null {
           fontFamily: TEXT_FONTS[str(p.fontFamily)] ? str(p.fontFamily) : 'Inter',
           fontSize: Math.min(72, Math.max(8, num(p.fontSize, 15))),
           color: color(p.color, '#0f172a'),
-          align: (['left', 'center', 'right'].includes(p.align as string) ? p.align : 'left') as never,
+          align: (['left', 'center', 'right', 'justify'].includes(p.align as string) ? p.align : 'left') as never,
           ...([1, 2, 3].includes(p.heading as number) ? { heading: p.heading as 1 | 2 | 3 } : {}),
+          ...(p.textStyle === 'title' || p.textStyle === 'subtitle' ? { textStyle: p.textStyle } : {}),
           ...annexRole(p.annex),
         },
       };
@@ -229,6 +236,19 @@ export function parseDocument(input: unknown): CalculationDocument {
   if (!TEXT_FONTS[settings.textFont]) settings.textFont = 'Inter';
   settings.baselineSnap = settings.baselineSnap === 'minor' ? 'minor' : 'major';
   settings.pages = Math.min(200, Math.max(1, Math.round(num(settings.pages, 1))));
+  // Page setup (absent in older worksheets: A4 and the original 20/16 mm margins).
+  if (settings.paper !== 'A3') delete settings.paper;
+  const m = settings.margins as Partial<PageMargins> | undefined;
+  const mm = (v: unknown, d: number) => Math.min(200, Math.max(0, num(v, d)));
+  if (m && typeof m === 'object') settings.margins = { top: mm(m.top, 16), bottom: mm(m.bottom, 16), left: mm(m.left, 20), right: mm(m.right, 20) };
+  else delete settings.margins;
+  if (!['general', 'decimal', 'scientific', 'engineering'].includes(settings.resultFormat as string)) delete settings.resultFormat;
+  if (typeof settings.trailingZeros !== 'boolean') delete settings.trailingZeros;
+  const ls = settings.labelStyles as Partial<LabelStyles> | undefined;
+  const hex = (v: unknown, d: string) => (typeof v === 'string' && /^#[0-9a-fA-F]{6}$/.test(v) ? v : d);
+  if (ls && typeof ls === 'object')
+    settings.labelStyles = { unitColor: hex(ls.unitColor, DEFAULT_LABEL_STYLES.unitColor), inputColor: hex(ls.inputColor, DEFAULT_LABEL_STYLES.inputColor), inputBackground: hex(ls.inputBackground, DEFAULT_LABEL_STYLES.inputBackground) };
+  else delete settings.labelStyles;
   settings.vectorLimit = Math.min(1000, Math.max(0, Math.round(num(settings.vectorLimit, 10))));
   if (settings.vectorLimit === 1) settings.vectorLimit = 2;
   settings.precision = Math.min(8, Math.max(0, Math.round(num(settings.precision, DEFAULT_SETTINGS.precision))));

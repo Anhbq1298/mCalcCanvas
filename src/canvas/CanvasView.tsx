@@ -34,6 +34,7 @@ import { separateRegion } from './canvasActions';
 import { followAnnex } from './annexActions';
 import type { Box, Camera, Point, Shape } from './model/types';
 import { ShapeView } from './shapes/ShapeView';
+import { Rulers } from './Rulers';
 
 export type HandleId = 'nw' | 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'start' | 'end';
 
@@ -569,6 +570,7 @@ export function CanvasView() {
           />
         )}
       </div>
+      <Rulers />
     </div>
   );
 }

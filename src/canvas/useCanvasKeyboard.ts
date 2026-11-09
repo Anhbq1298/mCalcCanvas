@@ -1,25 +1,19 @@
-import { setParagraphStyle } from './headings';
 import { baselineStep } from './pageConstraint';
 import { deleteLineAboveCrosshair, deleteLineAtCrosshair, insertLineAtCrosshair, moveCrosshair } from './canvasActions';
-import type { HeadingLevel } from './model/types';
 import { useEffect } from 'react';
-import { commands } from '../app/commands';
+import { runShortcut } from '../app/shortcuts';
+import { SHORTCUT_ACTIONS } from '../app/shortcutActions';
 import { queueKey } from '../math/activeEditor';
 import {
   beginEditSelected,
-  copySelection,
   createMathRegion,
   createTextRegion,
-  cutSelection,
   deleteSelection,
-  duplicateSelection,
-  groupSelection,
   handlePasteData,
   insertionPoint,
   nudgeSelection,
-  ungroupSelection,
 } from './canvasActions';
-import { GRID_MAJOR, GRID_SIZE, redo, select, selectAll, setTool, undo, useCanvasStore } from './model/canvasStore';
+import { GRID_MAJOR, GRID_SIZE, select, setTool, useCanvasStore } from './model/canvasStore';
 
 function isTypingTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
@@ -39,53 +33,8 @@ export function useCanvasKeyboard(): void {
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       const mod = e.ctrlKey || e.metaKey;
-      const key = e.key.toLowerCase();
-      if (mod && e.shiftKey && !e.altKey && key === 's') {
-        e.preventDefault();
-        void commands.saveToFile();
-        return;
-      }
-      if (mod && e.shiftKey && !e.altKey && key === 'o') {
-        e.preventDefault();
-        void commands.importJson();
-        return;
-      }
-      if (mod && !e.altKey && key === 's') {
-        e.preventDefault();
-        void commands.save();
-        return;
-      }
-      if (mod && !e.altKey && key === 'o') {
-        e.preventDefault();
-        commands.open();
-        return;
-      }
-      if (mod && !e.altKey && key === 'p') {
-        e.preventDefault();
-        void commands.exportPdf();
-        return;
-      }
-      // Google Docs: Ctrl+Alt+1..3 heading, Ctrl+Alt+0 normal text (also while editing the text).
-      if (mod && e.altKey && /^Digit[0-3]$/.test(e.code)) {
-        const st = useCanvasStore.getState();
-        const ids = st.editingId ? [st.editingId] : st.selection;
-        if (ids.some((id) => st.shapes[id]?.type === 'text')) {
-          e.preventDefault();
-          setParagraphStyle(ids, Number(e.code.slice(5)) as HeadingLevel);
-          return;
-        }
-      }
-      if (mod && !e.altKey && e.key === 'Enter') {
-        // Google Docs: Ctrl+Enter inserts a page break / blank page.
-        e.preventDefault();
-        commands.insertBlankPage();
-        return;
-      }
-      if (e.key === 'F9') {
-        e.preventDefault();
-        commands.calculateAll();
-        return;
-      }
+      // Global shortcuts (also while typing in an editor): see app/shortcuts.ts.
+      if (runShortcut(e, 'global', SHORTCUT_ACTIONS)) return;
       if (isTypingTarget(e.target)) return;
       // A math region is being created but its editor hasn't taken focus yet:
       // hand the keystroke to it instead of dropping it.
@@ -102,20 +51,7 @@ export function useCanvasKeyboard(): void {
 
       const st = useCanvasStore.getState();
       if (mod) {
-        const handlers: Record<string, () => void> = {
-          z: () => (e.shiftKey ? redo() : undo()),
-          y: redo,
-          c: () => void copySelection(),
-          x: () => void cutSelection(),
-          d: duplicateSelection,
-          a: selectAll,
-          g: () => (e.shiftKey ? ungroupSelection() : groupSelection()),
-        };
-        const h = handlers[key];
-        if (h) {
-          e.preventDefault();
-          h();
-        }
+        runShortcut(e, 'worksheet', SHORTCUT_ACTIONS);
         return; // Ctrl+V is handled by the paste event.
       }
       if (e.altKey) return;

@@ -12,6 +12,7 @@ import {
   formatQuantity,
   parseDisplayUnit,
   type FormattedQuantity,
+  type NumberStyle,
   type Quantity,
   type UnitSystemName,
 } from './UnitSystem';
@@ -169,6 +170,7 @@ export function formatVector(
     decimals: number;
     system: UnitSystemName;
     targetUnit?: string | null;
+    style?: NumberStyle;
     layout?: 'row' | 'column';
     /** Show at most this many entries (half from the start, half from the end); 0 = all. */
     limit?: number;
@@ -208,7 +210,7 @@ export function formatVector(
     // Round-off such as cos(π/2) = 6e-17 is shown as 0 rather than in scientific notation.
     const maxAbs = Math.max(...every.map((f) => Math.abs(f.number)));
     const clean = (x: number) => (Math.abs(x) <= maxAbs * 1e-12 ? 0 : x);
-    const nums = shown.map((i) => (i < 0 ? null : formatNumber(clean(every[i].number), opts.decimals)));
+    const nums = shown.map((i) => (i < 0 ? null : formatNumber(clean(every[i].number), opts.decimals, opts.style)));
     const text = `[${nums.map((x) => (x ? x.text : '…')).join(', ')}]`;
     const latex = wrap(nums.map((x) => (x ? x.latex : GAP)), '\\ldots');
     const deg = first.unitText === '°';

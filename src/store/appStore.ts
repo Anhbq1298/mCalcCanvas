@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { setPageSetup } from '../export/pageGeometry';
 import {
   DEFAULT_SETTINGS,
   EMPTY_INPUT_RESULT_CONFIG,
@@ -8,6 +9,23 @@ import {
 } from '../documents/DocumentTypes';
 
 export type SaveState = 'saved' | 'dirty' | 'saving' | 'error';
+
+/** Screen-only view options (this browser, not the document). */
+export interface ViewPrefs {
+  ruler: boolean;
+  /** Dashed printable-area outline on every page. */
+  boundaries: boolean;
+}
+
+const VIEW_KEY = 'calccanvas.view';
+function loadView(): ViewPrefs {
+  const fallback = { ruler: false, boundaries: false };
+  try {
+    return { ...fallback, ...JSON.parse(localStorage.getItem(VIEW_KEY) ?? '{}') };
+  } catch {
+    return fallback;
+  }
+}
 
 interface AppState {
   documentId: string | null;
@@ -22,7 +40,10 @@ interface AppState {
   paramsOpen: boolean;
   leftTab: 'outline' | 'params';
   workspace: 'calculation' | 'input-results';
-  dialog: null | 'open' | 'shortcuts' | 'syntax' | 'guide' | 'about';
+  dialog: null | 'open' | 'shortcuts' | 'syntax' | 'guide' | 'about' | 'page-setup' | 'help';
+  /** Section the Help center opens on. */
+  helpSection: string;
+  view: ViewPrefs;
   toast: { kind: 'info' | 'error'; message: string } | null;
 
   setDocument(doc: {
@@ -44,6 +65,8 @@ interface AppState {
   /** Toolbar button for a tab: opens the panel on that tab, or closes it if already showing. */
   showLeftTab(tab: 'outline' | 'params'): void;
   openDialog(d: AppState['dialog']): void;
+  openHelp(section?: string): void;
+  setView(patch: Partial<ViewPrefs>): void;
   showToast(kind: 'info' | 'error', message: string): void;
 }
 
@@ -60,9 +83,12 @@ export const useAppStore = create<AppState>((set) => ({
   leftTab: 'outline',
   workspace: 'calculation',
   dialog: null,
+  helpSection: 'getting-started',
+  view: loadView(),
   toast: null,
 
-  setDocument: (doc) =>
+  setDocument: (doc) => {
+    setPageSetup(doc.settings);
     set({
       documentId: doc.id,
       title: doc.title,
@@ -72,10 +98,17 @@ export const useAppStore = create<AppState>((set) => ({
       createdAt: doc.createdAt,
       saveState: 'saved',
       workspace: 'calculation',
-    }),
+    });
+  },
   updateTitle: (title) => set({ title, saveState: 'dirty' }),
   updateMetadata: (patch) => set((s) => ({ metadata: { ...s.metadata, ...patch }, saveState: 'dirty' })),
-  updateSettings: (patch) => set((s) => ({ settings: { ...s.settings, ...patch }, saveState: 'dirty' })),
+  updateSettings: (patch) =>
+    set((s) => {
+      const settings = { ...s.settings, ...patch };
+      // Page geometry is read synchronously while rendering: update it first.
+      setPageSetup(settings);
+      return { settings, saveState: 'dirty' };
+    }),
   updateInputResult: (inputResult) => set({ inputResult, saveState: 'dirty' }),
   setWorkspace: (workspace) => set({ workspace }),
   setSaveState: (saveState) => set({ saveState }),
@@ -83,5 +116,16 @@ export const useAppStore = create<AppState>((set) => ({
   toggleParams: (open) => set((s) => ({ paramsOpen: open ?? !s.paramsOpen })),
   showLeftTab: (tab) => set((s) => (s.paramsOpen && s.leftTab === tab ? { paramsOpen: false } : { paramsOpen: true, leftTab: tab })),
   openDialog: (dialog) => set({ dialog }),
+  openHelp: (section) => set((s) => ({ dialog: 'help', helpSection: section ?? s.helpSection })),
+  setView: (patch) =>
+    set((s) => {
+      const view = { ...s.view, ...patch };
+      try {
+        localStorage.setItem(VIEW_KEY, JSON.stringify(view));
+      } catch {
+        /* storage unavailable */
+      }
+      return { view };
+    }),
   showToast: (kind, message) => set({ toast: { kind, message } }),
 }));

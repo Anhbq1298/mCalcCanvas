@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { step } from '../step';
 import { CalculationEngine, compareOrderKeys, type OrderKey } from '../../engine';
 import { CHECK_POLICY, compareQuantities, EQUALITY_POLICY } from '../../engine/ExpressionEvaluator';
-import { math } from '../../engine/UnitSystem';
+import { formatNumber, math } from '../../engine/UnitSystem';
 
 type Reg = [id: string, latex: string, order: number | OrderKey];
 
@@ -212,6 +212,21 @@ describe('3. dependencies follow the exact defining region', () => {
 
 describe('5. numerical reliability', () => {
   it('5. numerical reliability', () => {
+    step('5.1b result formats (general, decimal, scientific, engineering, trailing zeros) change presentation only', () => {
+      expect(formatNumber(1234.56789, 2).text).toBe('1234.57');
+      expect(formatNumber(2.5, 2, { trailingZeros: true }).text).toBe('2.50');
+      expect(formatNumber(0.000123, 3, { format: 'decimal' }).text).toBe('0');
+      expect(formatNumber(1234.56789, 2, { format: 'scientific' }).latex).toBe('1.23\\times10^{3}');
+      expect(formatNumber(1234.56789, 2, { format: 'engineering' }).text).toBe('1.23×10^3');
+      expect(formatNumber(123456, 1, { format: 'engineering' }).text).toBe('123.5×10^3');
+      expect(formatNumber(999.96, 1, { format: 'engineering' }).text).toBe('1×10^3');
+      expect(formatNumber(42, 2, { format: 'engineering', trailingZeros: true }).text).toBe('42.00');
+      const e = new CalculationEngine();
+      e.setRegion('x', { latex: 'x\\coloneq1234.56789', order: [1], precision: 2, resultFormat: 'scientific', trailingZeros: true });
+      e.setRegion('y', { latex: 'y\\coloneq x\\cdot1', order: [2], precision: 6 });
+      expect(e.getResult('x')?.value?.text).toBe('1.23×10^3');
+      expect(e.getResult('y')?.value?.number).toBeCloseTo(1234.56789, 9); // the value is not rounded
+    });
     step('5.1 keeps full precision internally (display rounds only)', () => {
       const e = sheet([
         ['L', 'L\\coloneq8.5\\,\\mathrm{m}', 1],

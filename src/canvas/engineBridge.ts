@@ -9,7 +9,6 @@
  */
 import { engine } from '../store/calculationStore';
 import { useAppStore } from '../store/appStore';
-import { PAGE_GAP, pageSize } from '../export/pageGeometry';
 import { orderKeysEqual, type OrderKey } from '../engine/light';
 import type { RegionInput } from '../engine';
 import { placeShapes, useCanvasStore, type CanvasState } from './model/canvasStore';
@@ -21,16 +20,16 @@ export { graphRegionId, isDefinitionLatex, type GraphField } from './graphData';
 
 /**
  * Reading-order key of a region (Mathcad order), compared
- * lexicographically by the engine: page, then top to bottom, then left to
+ * lexicographically by the engine: top to bottom (pages included), then left to
  * right, then the region id so equal positions still have a fixed order.
  * Coordinates are used exactly (no rounding or numeric packing), so large
  * and negative positions order correctly. A key depends only on the
  * region's own position, so moving one region re-keys only that region.
  */
 export function readingKey(s: Shape): OrderKey {
-  const { canvasMode, pageOrientation } = useAppStore.getState().settings;
-  const page = canvasMode === 'page' ? Math.max(0, Math.floor(s.y / (pageSize(pageOrientation).h + PAGE_GAP))) : 0;
-  return [page, s.y, s.x, s.id];
+  // Pages are stacked top to bottom, so y alone gives the page order: the key
+  // does not change with paper size, orientation or margins (no recalculation).
+  return [s.y, s.x, s.id];
 }
 
 type Regions = Map<string, RegionInput>;
@@ -67,6 +66,8 @@ function regionsOf(s: Shape, editingId: string | null, shapes: Record<string, Sh
       precision: s.props.precision >= 0 ? s.props.precision : null,
       ...(s.props.vectorLayout === 'column' ? { vectorLayout: 'column' as const } : {}),
       ...(s.props.vectorExpanded ? { vectorExpanded: true } : {}),
+      ...(s.props.resultFormat ? { resultFormat: s.props.resultFormat } : {}),
+      ...(s.props.trailingZeros !== undefined ? { trailingZeros: s.props.trailingZeros } : {}),
       draft: s.id === editingId,
       order: calcKey(s, shapes),
     });
@@ -106,6 +107,8 @@ function sameInput(a: RegionInput | undefined, b: RegionInput): boolean {
     a.precision === b.precision &&
     (a.vectorLayout ?? 'row') === (b.vectorLayout ?? 'row') &&
     !!a.vectorExpanded === !!b.vectorExpanded &&
+    (a.resultFormat ?? null) === (b.resultFormat ?? null) &&
+    (a.trailingZeros ?? null) === (b.trailingZeros ?? null) &&
     !!a.draft === !!b.draft &&
     orderKeysEqual(a.order as OrderKey, b.order as OrderKey)
   );

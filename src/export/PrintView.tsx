@@ -5,7 +5,7 @@ import type { CalculationResult } from '../engine/CalculationEngine';
 import { useAppStore } from '../store/appStore';
 import { ReportResults } from '../store/reportResults';
 import { PageChrome } from './PageChrome';
-import { pageBox } from './pageGeometry';
+import { currentPageSetup, pageBox, paperMm } from './pageGeometry';
 
 /** One printed sheet: a worksheet page (optionally with one case's results) or a free page (case summary). */
 export type PrintSheet =
@@ -19,12 +19,15 @@ export function PrintView({ pages }: { pages: { index: number; shapes: Shape[] }
 
 export function PrintSheets({ sheets }: { sheets: PrintSheet[] }) {
   const { settings } = useAppStore.getState();
-  const landscape = settings.pageOrientation === 'landscape';
   const total = sheets.length;
+  // Paper from the page setup (A4/A3, portrait/landscape); the PDF page size follows it.
+  const paper = paperMm(settings.pageOrientation);
+  const size = { width: `${paper.w}mm`, height: `${paper.h}mm` };
   return (
     <>
+      <style>{`@media print { @page { size: ${paper.w}mm ${paper.h}mm; margin: 0; } }`}</style>
       {sheets.map((sheet, n) => (
-        <section key={sheet.key} className={`print-page${landscape ? ' landscape' : ''}`} data-page={n + 1} data-case={sheet.caseLabel}>
+        <section key={sheet.key} className="print-page" style={size} data-page={n + 1} data-case={sheet.caseLabel} data-paper={`${currentPageSetup().paper} ${settings.pageOrientation}`}>
           {sheet.kind === 'page' ? (
             <ReportResults.Provider value={sheet.results ?? null}>
               <div className="print-content" style={{ position: 'absolute', left: -pageBox(sheet.index, settings.pageOrientation).x, top: -pageBox(sheet.index, settings.pageOrientation).y, width: 0, height: 0 }}>

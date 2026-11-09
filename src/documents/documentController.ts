@@ -22,7 +22,13 @@ function newId(): string {
 
 function applySettings() {
   const { settings } = useAppStore.getState();
-  engine.setSettings({ unitSystem: settings.unitSystem, precision: settings.precision, vectorLimit: settings.vectorLimit ?? 10 });
+  engine.setSettings({
+    unitSystem: settings.unitSystem,
+    precision: settings.precision,
+    vectorLimit: settings.vectorLimit ?? 10,
+    resultFormat: settings.resultFormat,
+    trailingZeros: settings.trailingZeros,
+  });
 }
 
 function focusFirstPage() {
@@ -84,11 +90,9 @@ export function startAutosave(): () => void {
   });
   const stopApp = useAppStore.subscribe((s, prev) => {
     if (s.settings !== prev.settings) applySettings();
-    if (
-      s.settings.canvasMode !== prev.settings.canvasMode ||
-      s.settings.pageOrientation !== prev.settings.pageOrientation ||
-      s.settings.baselineSnap !== prev.settings.baselineSnap
-    ) {
+    // Paper size, orientation and margins only move the page frames: regions keep
+    // their document positions (and the calculation is not touched).
+    if (s.settings.canvasMode !== prev.settings.canvasMode || s.settings.baselineSnap !== prev.settings.baselineSnap) {
       // The grid origin moved: put math/text regions back on the grid.
       const { shapes } = useCanvasStore.getState();
       updateShapes(

@@ -83,6 +83,9 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   const error = result?.error;
   const empty = latex.trim() === '';
   // Inputs (a definition from literals only, e.g. fck := 35 MPa): light-yellow highlight, blue text.
+  const labels = useAppStore((s) => s.settings.labelStyles);
+  const INPUT_COLOR = labels?.inputColor ?? DEFAULT_INPUT_COLOR;
+  const INPUT_BACKGROUND = labels?.inputBackground ?? DEFAULT_INPUT_BACKGROUND;
   const isInput = !shape.props.constant && !!result && result.status === 'valid' && result.kind === 'definition' && result.references.length === 0 && !!result.value;
   const errorMessage = error && annexHint && /defined (below|above) this equation/.test(error.message) ? `${error.message} ${annexHint}` : error?.message;
 
@@ -111,6 +114,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
           minHeight: autoSize ? undefined : h,
           padding: `${PAD_Y}px ${PAD_X}px`,
           // Green outline: this region redefines a variable defined earlier.
+          ...(shape.props.highlight && !editing ? { background: shape.props.highlight, borderRadius: 3 } : {}),
           ...(isInput && !editing ? { background: INPUT_BACKGROUND, borderRadius: 3 } : {}),
           ...(result?.redefines && !isStatic ? { outline: '1.5px solid var(--color-redefine)', outlineOffset: -1, borderRadius: 3 } : {}),
         } as React.CSSProperties
@@ -151,8 +155,8 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
 }
 
 /** Input regions: light yellow highlight and blue text (also in the PDF). */
-const INPUT_BACKGROUND = '#fff6bf';
-const INPUT_COLOR = '#1d4ed8';
+const DEFAULT_INPUT_BACKGROUND = '#fff6bf';
+const DEFAULT_INPUT_COLOR = '#1d4ed8';
 
 const ICONS = { error: AlertCircle, warning: AlertTriangle, draft: CircleDashed };
 const TONE = { error: 'text-destructive', warning: 'text-warning', draft: 'text-muted-foreground' };

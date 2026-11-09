@@ -4,8 +4,27 @@
  */
 import {
   AlignCenter,
+  AlignJustify,
   AlignLeft,
   AlignRight,
+  BookOpen,
+  Eraser,
+  FileText,
+  Highlighter,
+  IndentDecrease,
+  IndentIncrease,
+  Info,
+  Keyboard,
+  Link2,
+  Unlink,
+  Maximize,
+  MoveHorizontal,
+  RectangleHorizontal,
+  RectangleVertical,
+  RotateCcw,
+  Ruler,
+  ScissorsLineDashed,
+  SquareDashed,
   ArrowUpRight,
   Bold,
   Calculator,
@@ -39,7 +58,7 @@ import {
   Undo2,
   type LucideIcon,
 } from 'lucide-react';
-import { addHeading, setParagraphStyle } from '../../canvas/headings';
+import { addHeading, setTextStyle } from '../../canvas/headings';
 import { insertAnnexLink, sortAnnexByLinkOrder } from '../../canvas/annexActions';
 import { unitPatch } from '../../canvas/inputUnits';
 import { TEMPLATES } from '../../documents/templates';
@@ -47,9 +66,13 @@ import { useState, type ReactNode } from 'react';
 import { commands, type ToolId } from '../../app/commands';
 import { newGraphSeries, viewport, zoomAt } from '../../canvas/canvasActions';
 import { canUndo, updateShapes, useCanvasStore, type ShapePatch } from '../../canvas/model/canvasStore';
-import { fontStack, PARAGRAPH_STYLES, TEXT_FONTS, type GraphShape, type HeadingLevel, type MathDisplayMode, type Shape } from '../../canvas/model/types';
+import { fontStack, PARAGRAPH_STYLES, TEXT_FONTS, TEXT_STYLES, type GraphShape, type HeadingLevel, type MathDisplayMode, type Shape, type TextStyleId } from '../../canvas/model/types';
 import { formatEditingText, hasTextSelection } from '../../canvas/textFormatting';
 import { useAppStore } from '../../store/appStore';
+import { DEFAULT_LABEL_STYLES, DEFAULT_MARGINS, type ResultFormat } from '../../documents/DocumentTypes';
+import { MARGIN_PRESETS, presetOf } from '../../export/marginPresets';
+import { safeHref } from '../../canvas/sanitize';
+import { withShortcut } from '../../app/shortcuts';
 import { parseDisplayUnit } from '../../engine/light';
 import { MenuButton, type MenuEntry } from '../common/MenuButton';
 import { CONSTANTS, OPERATORS, SYMBOLS, UNITS_PALETTE } from '../ribbon/palettes';
@@ -73,11 +96,6 @@ function useSelectedShapes(): Shape[] {
   const selection = useCanvasStore((s) => s.selection);
   const shapes = useCanvasStore((s) => s.shapes);
   return selection.map((id) => shapes[id]).filter(Boolean);
-}
-
-function selectedTextIds(): string[] {
-  const { selection, shapes } = useCanvasStore.getState();
-  return selection.filter((id) => shapes[id]?.type === 'text');
 }
 
 function patchSelected(fn: (s: Shape) => ShapePatch | null) {
@@ -113,6 +131,84 @@ function TB({ icon: Icon, label, onClick, active, disabled, testId, children }: 
 }
 
 const Sep = () => <div className="mx-1 h-5 w-px shrink-0 bg-docs-sep" aria-hidden />;
+
+/** A ribbon group: controls (one or two rows) with its name underneath, like Mathcad Prime. */
+function Group({ label, children, testId }: { label: string; children: ReactNode; testId?: string }) {
+  return (
+    <div className="rb-group" role="group" aria-label={label} data-testid={testId}>
+      <div className="rb-controls">{children}</div>
+      <div className="rb-label">{label}</div>
+    </div>
+  );
+}
+const Row = ({ children }: { children: ReactNode }) => <div className="rb-row">{children}</div>;
+
+/** Small labelled checkbox for the ribbon. */
+function Check({ label, checked, onChange, testId, title, disabled, mixed }: { label: string; checked: boolean; onChange(v: boolean): void; testId?: string; title?: string; disabled?: boolean; mixed?: boolean }) {
+  return (
+    <label className={'rb-check ' + (disabled ? 'opacity-40' : '')} title={title ?? label}>
+      <input
+        type="checkbox"
+        data-testid={testId}
+        checked={checked}
+        disabled={disabled}
+        ref={(el) => {
+          if (el) el.indeterminate = !!mixed;
+        }}
+        onMouseDown={(e) => e.preventDefault()}
+        onChange={(e) => onChange(e.target.checked)}
+      />
+      {label}
+    </label>
+  );
+}
+
+/** Ribbon button with a small icon above a label (used for the main commands of a group). */
+function BigButton({ icon: Icon, label, onClick, testId, title, disabled, active }: { icon: LucideIcon; label: string; onClick(): void; testId?: string; title?: string; disabled?: boolean; active?: boolean }) {
+  return (
+    <button type="button" className={'rb-big ' + (active ? 'is-active' : '')} title={title ?? label} aria-label={title ?? label} aria-pressed={active} data-testid={testId} disabled={disabled} onMouseDown={(e) => e.preventDefault()} onClick={onClick}>
+      <Icon size={18} strokeWidth={1.8} aria-hidden />
+      <span>{label}</span>
+    </button>
+  );
+}
+
+/** Swatch colour picker (no text), for label styles and highlights. */
+function SwatchPicker({ testId, title, value, onPick, allowNone }: { testId: string; title: string; value: string | null; onPick(c: string | null): void; allowNone?: boolean }) {
+  return (
+    <Popover
+      title={title}
+      testId={testId}
+      width={216}
+      trigger={
+        <span className="flex items-center gap-1">
+          <span className="h-3.5 w-3.5 rounded-sm border border-black/20" style={{ background: value ?? 'transparent' }} />
+        </span>
+      }
+    >
+      {(close) => (
+        <div className="space-y-2">
+          <div className="grid grid-cols-6 gap-1">
+            {[...HIGHLIGHTS, ...COLOR_GRID.slice(6, 18)].map((c) => (
+              <button key={c} type="button" aria-label={`Color ${c}`} title={c} onMouseDown={(e) => e.preventDefault()} onClick={() => (onPick(c), close())} className="h-6 w-6 cursor-pointer rounded border border-black/10" style={{ background: c }} />
+            ))}
+          </div>
+          <div className="flex items-center gap-2 border-t border-docs-border pt-2 text-[12px]">
+            <input type="color" aria-label={`${title}: custom colour`} value={value && /^#[0-9a-fA-F]{6}$/.test(value) ? value : '#ffffff'} onChange={(e) => onPick(e.target.value)} className="h-7 w-9 cursor-pointer rounded border border-docs-border p-0.5" />
+            Custom…
+            {allowNone && (
+              <button type="button" className="ml-auto text-docs-blue" onMouseDown={(e) => e.preventDefault()} onClick={() => (onPick(null), close())}>
+                None
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+    </Popover>
+  );
+}
+
+const HIGHLIGHTS = ['#fff59d', '#fff6bf', '#c8e6c9', '#b3e5fc', '#f8bbd0', '#ffe0b2'];
 
 function TBSelect({ value, onChange, options, label, width, testId, style }: { value: string | number; onChange(v: string): void; options: [string | number, string][]; label: string; width: number; testId?: string; style?: React.CSSProperties }) {
   return (
@@ -168,7 +264,7 @@ function SizeControl({ kinds, label }: { kinds: ('text' | 'math')[]; label: stri
   );
 }
 
-/** Text formatting tab: paragraph style, font, size, emphasis, colour, alignment, lists. */
+/** Text Formatting tab: Text Font, Paragraph, Styles, Links (Mathcad Prime layout). */
 function TextFormattingTab() {
   const selected = useSelectedShapes();
   const textFont = useAppStore((s) => s.settings.textFont);
@@ -182,44 +278,109 @@ function TextFormattingTab() {
   };
 
   const textIds = selected.filter((s) => s.type === 'text').map((s) => s.id);
+  const editingId = useCanvasStore((s) => s.editingId);
+  const styleTargets = editingText && editingId ? [editingId] : textIds;
   const level = text?.type === 'text' ? (text.props.heading ?? 0) : 0;
-  const fmt = (icon: LucideIcon, label: string, command: string) => (
-    <TB icon={icon} label={label} disabled={!editingText} onClick={() => formatEditingText(command)} />
+  const styleValue = text?.type === 'text' ? (text.props.textStyle ?? String(level)) : '';
+  const fmt = (icon: LucideIcon, label: string, command: string, testId?: string) => (
+    <TB icon={icon} label={label} disabled={!editingText} testId={testId} onClick={() => formatEditingText(command)} />
   );
+  const link = () => {
+    if (!hasTextSelection()) {
+      useAppStore.getState().showToast('info', 'Select the text to link first (while editing the text region).');
+      return;
+    }
+    const url = window.prompt('Link address (https://…, http://… or mailto:…)', 'https://');
+    if (url === null) return;
+    const href = safeHref(url);
+    if (!href) {
+      useAppStore.getState().showToast('error', 'Only http, https and mailto links are allowed.');
+      return;
+    }
+    formatEditingText('createLink', href);
+  };
+  const styles: { id: string; label: string; apply: HeadingLevel | TextStyleId; css: React.CSSProperties }[] = [
+    { id: '0', label: 'Normal', apply: 0, css: { fontSize: 12 } },
+    { id: 'title', label: 'Title', apply: 'title', css: { fontSize: 14, fontWeight: 700, color: TEXT_STYLES.title.color } },
+    { id: 'subtitle', label: 'Subtitle', apply: 'subtitle', css: { fontSize: 12, fontStyle: 'italic', color: TEXT_STYLES.subtitle.color } },
+    { id: '1', label: 'Heading 1', apply: 1, css: { fontSize: 13, fontWeight: 700, color: PARAGRAPH_STYLES[1].color } },
+    { id: '2', label: 'Heading 2', apply: 2, css: { fontSize: 12, fontWeight: 700 } },
+    { id: '3', label: 'Heading 3', apply: 3, css: { fontSize: 11, fontWeight: 600, color: PARAGRAPH_STYLES[3].color } },
+  ];
   return (
     <>
-      <TBSelect
-        label="Paragraph style (headings appear in the outline)"
-        testId="paragraph-style"
-        value={textIds.length ? level : ''}
-        width={118}
-        onChange={(v) => setParagraphStyle(textIds, Number(v) as HeadingLevel)}
-        options={[...(textIds.length ? [] : [['', 'Style'] as [string, string]]), ...([0, 1, 2, 3] as const).map((l) => [l, PARAGRAPH_STYLES[l].label] as [number, string])]}
-      />
-      <Sep />
-      <TBSelect
-        label={text ? 'Font' : 'Font for new text'}
-        testId="text-font"
-        value={font}
-        width={128}
-        style={{ fontFamily: fontStack(font) }}
-        onChange={setFont}
-        options={Object.keys(TEXT_FONTS).map((f) => [f, f])}
-      />
-      <Sep />
-      <SizeControl kinds={['text']} label="Font size" />
-      <Sep />
-      {fmt(Bold, `Bold (${MOD}B)`, 'bold')}
-      {fmt(Italic, `Italic (${MOD}I)`, 'italic')}
-      {fmt(Underline, `Underline (${MOD}U)`, 'underline')}
-      {fmt(Subscript, 'Subscript', 'subscript')}
-      {fmt(Superscript, 'Superscript', 'superscript')}
-      <ColorButton testId="text-color" title="Text color" kinds={['text']} />
-      <Sep />
-      <AlignControls />
-      <Sep />
-      {fmt(List, 'Bulleted list', 'insertUnorderedList')}
-      {fmt(ListOrdered, 'Numbered list', 'insertOrderedList')}
+      <Group label="Text Font">
+        <Row>
+          <TBSelect
+            label={text ? 'Font' : 'Font for new text'}
+            testId="text-font"
+            value={font}
+            width={128}
+            style={{ fontFamily: fontStack(font) }}
+            onChange={setFont}
+            options={Object.keys(TEXT_FONTS).map((f) => [f, f])}
+          />
+          <SizeControl kinds={['text']} label="Font size" />
+        </Row>
+        <Row>
+          {fmt(Bold, `Bold (${MOD}B)`, 'bold')}
+          {fmt(Italic, `Italic (${MOD}I)`, 'italic')}
+          {fmt(Underline, `Underline (${MOD}U)`, 'underline')}
+          {fmt(Subscript, 'Subscript', 'subscript')}
+          {fmt(Superscript, 'Superscript', 'superscript')}
+          <ColorButton testId="text-color" title="Text color" kinds={['text']} />
+          <SwatchPicker testId="text-highlight" title="Text highlight colour (select text while editing)" value={null} onPick={(c) => formatEditingText('hiliteColor', c ?? 'transparent')} allowNone />
+          {fmt(Eraser, 'Clear formatting of the selected text', 'removeFormat', 'text-clear')}
+        </Row>
+      </Group>
+      <Group label="Paragraph">
+        <Row>
+          <AlignControls />
+        </Row>
+        <Row>
+          {fmt(List, 'Bulleted list', 'insertUnorderedList')}
+          {fmt(ListOrdered, 'Numbered list', 'insertOrderedList')}
+          {fmt(IndentDecrease, 'Decrease indent', 'outdent', 'text-outdent')}
+          {fmt(IndentIncrease, 'Increase indent', 'indent', 'text-indent')}
+        </Row>
+      </Group>
+      <Group label="Styles">
+        <div className="rb-gallery" role="listbox" aria-label="Text styles">
+          {styles.map((st) => (
+            <button
+              key={st.id}
+              type="button"
+              role="option"
+              aria-selected={styleValue === st.id}
+              data-testid={`text-style-${st.id}`}
+              disabled={!styleTargets.length}
+              title={`Style: ${st.label}${typeof st.apply === 'number' ? ` (${MOD}Alt+${st.apply})${st.apply > 0 ? ', shown in the outline' : ''}` : ''}`}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => setTextStyle(styleTargets, st.apply)}
+              className="rb-style"
+            >
+              <span style={st.css}>{st.label}</span>
+            </button>
+          ))}
+        </div>
+        <TBSelect
+          label="Paragraph style (headings appear in the outline)"
+          testId="paragraph-style"
+          value={textIds.length ? styleValue : ''}
+          width={0}
+          style={{ position: 'absolute', width: 1, height: 1, opacity: 0, pointerEvents: 'none' }}
+          onChange={(v) => setTextStyle(textIds, v === 'title' || v === 'subtitle' ? v : (Number(v) as HeadingLevel))}
+          options={[...(textIds.length ? [] : [['', 'Style'] as [string, string]]), ...([0, 1, 2, 3] as const).map((l) => [l, PARAGRAPH_STYLES[l].label] as [number, string]), ['title', 'Title'], ['subtitle', 'Subtitle']]}
+        />
+      </Group>
+      <Group label="Links">
+        <Row>
+          <TB icon={Link2} label="Insert or edit a link on the selected text (http, https, mailto)" disabled={!editingText} onClick={link} testId="text-link" />
+        </Row>
+        <Row>
+          <TB icon={Unlink} label="Remove the link" disabled={!editingText} onClick={() => formatEditingText('unlink')} testId="text-unlink" />
+        </Row>
+      </Group>
     </>
   );
 }
@@ -257,94 +418,166 @@ function MathFormattingTab() {
       (e: Error) => setUnitError(e.message),
     );
   };
+  // Results: the selected equations, or the worksheet defaults when none is selected.
+  const formats = new Set(math.map((m) => m.props.resultFormat ?? 'inherit'));
+  const zeros = new Set(math.map((m) => m.props.trailingZeros ?? 'inherit'));
+  const formatValue = !first ? settings.resultFormat ?? 'general' : formats.size > 1 ? 'mixed' : (first.props.resultFormat ?? 'inherit');
+  const setFormat = (v: string) => {
+    if (v === 'mixed') return;
+    if (!first) useAppStore.getState().updateSettings({ resultFormat: v as ResultFormat });
+    else patchSelected((sh) => (sh.type === 'math' ? { props: { resultFormat: v === 'inherit' ? undefined : (v as ResultFormat) } } : null));
+  };
+  const zerosOn = !first ? !!settings.trailingZeros : (first.props.trailingZeros ?? !!settings.trailingZeros);
+  const setZeros = (v: boolean) => {
+    if (!first) useAppStore.getState().updateSettings({ trailingZeros: v });
+    else patchSelected((sh) => (sh.type === 'math' ? { props: { trailingZeros: v } } : null));
+  };
+  const resetResults = () => {
+    if (!first) useAppStore.getState().updateSettings({ resultFormat: undefined, trailingZeros: undefined, precision: 2 });
+    else patchSelected((sh) => (sh.type === 'math' ? { props: { resultFormat: undefined, trailingZeros: undefined, precision: -1, displayUnit: '', displayMode: 'auto' } } : null));
+  };
+  const resetFormatting = () =>
+    patchSelected((sh) => (sh.type === 'math' ? { props: { fontSize: 16, color: '#0f172a', highlight: undefined } } : null));
+  const labels = settings.labelStyles ?? DEFAULT_LABEL_STYLES;
+  const setLabel = (k: keyof typeof labels, c: string | null) => useAppStore.getState().updateSettings({ labelStyles: { ...labels, [k]: c ?? DEFAULT_LABEL_STYLES[k] } });
+  const fmtNames: [string, string][] = [['general', 'General'], ['decimal', 'Decimal'], ['scientific', 'Scientific'], ['engineering', 'Engineering']];
   return (
     <>
-      <PalettePopover label="Operators" glyph="√" sections={OPERATORS} testId="palette-operators" columns={5} />
-      <PalettePopover label="Symbols" glyph="β" sections={SYMBOLS} testId="palette-symbols" />
-      <PalettePopover label="Constants" glyph="π" sections={CONSTANTS} testId="palette-constants" />
-      <PalettePopover label="Units" glyph="m" sections={UNITS_PALETTE} testId="palette-units" />
-      <Sep />
-      <DisplayModeSelect />
-      <Sep />
-      <input
-        aria-label="Result unit"
-        title={unitError ?? 'Result unit for the selected equations (e.g. kN·m, MPa). Empty = automatic.'}
-        data-testid="math-result-unit"
-        list="cc-result-units"
-        disabled={!first}
-        placeholder="Unit"
-        value={unitDraft ?? first?.props.displayUnit ?? ''}
-        onChange={(e) => {
-          setUnitDraft(e.target.value);
-          setUnitError(null);
-        }}
-        onBlur={() => {
-          if (unitDraft !== null) applyUnit(unitDraft);
-          setUnitDraft(null);
-        }}
-        onKeyDown={(e) => e.key === 'Enter' && (e.currentTarget as HTMLInputElement).blur()}
-        className={'h-7 w-[78px] rounded border bg-white px-1.5 text-[13px] disabled:opacity-40 ' + (unitError ? 'border-destructive' : 'border-docs-border')}
-      />
-      <datalist id="cc-result-units">
-        {RESULT_UNITS.map((u) => (
-          <option key={u} value={u} />
-        ))}
-      </datalist>
-      <TBSelect
-        label="Decimal places of the selected equations"
-        testId="math-decimals"
-        value={first ? String(first.props.precision) : '-1'}
-        width={92}
-        onChange={(v) => patchSelected((s) => (s.type === 'math' ? { props: { precision: Number(v) } } : null))}
-        options={[['-1', `Auto (${settings.precision})`], ...[0, 1, 2, 3, 4, 5, 6].map((d) => [String(d), `${d} dp`] as [string, string])]}
-      />
-      <TBSelect
-        label="Array results of the selected equations: row or column, shortened (first … last) or every entry"
-        testId="math-array"
-        value={first ? `${first.props.vectorLayout ?? 'row'}-${first.props.vectorExpanded ? 'all' : 'short'}` : 'row-short'}
-        width={156}
-        onChange={(v) => {
-          const [layout, entries] = v.split('-');
-          patchSelected((s) =>
-            s.type === 'math' ? { props: { vectorLayout: layout === 'column' ? 'column' : undefined, vectorExpanded: entries === 'all' ? true : undefined } } : null,
-          );
-        }}
-        options={[
-          ['row-short', 'Array: row, short'],
-          ['row-all', 'Array: row, all'],
-          ['column-short', 'Array: column, short'],
-          ['column-all', 'Array: column, all'],
-        ]}
-      />
-      <Sep />
-      <SizeControl kinds={['math']} label="Equation size" />
-      <ColorButton testId="math-color" title="Equation color" kinds={['math']} />
-      <Sep />
-      <span className="px-1 text-[12px] text-docs-muted">Worksheet</span>
-      <TBSelect
-        label="Equations and text snap their baseline to major lines (every 2 squares) or to every grid line"
-        testId="baseline-snap"
-        value={settings.baselineSnap ?? 'major'}
-        width={110}
-        onChange={(v) => useAppStore.getState().updateSettings({ baselineSnap: v as 'major' | 'minor' })}
-        options={[['major', 'Snap: lines'], ['minor', 'Snap: squares']]}
-      />
-      <TBSelect
-        label="Unit system for results (whole worksheet)"
-        testId="worksheet-units"
-        value={settings.unitSystem}
-        width={70}
-        onChange={(v) => useAppStore.getState().updateSettings({ unitSystem: v as 'SI' | 'Imperial' })}
-        options={[['SI', 'SI'], ['Imperial', 'USCS']]}
-      />
-      <TBSelect
-        label="Default decimal places (whole worksheet)"
-        testId="worksheet-decimals"
-        value={settings.precision}
-        width={70}
-        onChange={(v) => useAppStore.getState().updateSettings({ precision: Number(v) })}
-        options={[0, 1, 2, 3, 4, 5, 6].map((d) => [d, `${d} dp`])}
-      />
+      <Group label="Operators & Symbols">
+        <Row>
+          <PalettePopover label="Operators" glyph="√" sections={OPERATORS} testId="palette-operators" columns={5} />
+          <PalettePopover label="Symbols" glyph="β" sections={SYMBOLS} testId="palette-symbols" />
+        </Row>
+        <Row>
+          <PalettePopover label="Constants" glyph="π" sections={CONSTANTS} testId="palette-constants" />
+          <PalettePopover label="Units" glyph="m" sections={UNITS_PALETTE} testId="palette-units" />
+        </Row>
+      </Group>
+      <Group label="Display">
+        <Row>
+          <DisplayModeSelect />
+        </Row>
+        <Row>
+          <input
+            aria-label="Result unit"
+            title={unitError ?? 'Result unit for the selected equations (e.g. kN·m, MPa). Empty = automatic.'}
+            data-testid="math-result-unit"
+            list="cc-result-units"
+            disabled={!first}
+            placeholder="Unit"
+            value={unitDraft ?? first?.props.displayUnit ?? ''}
+            onChange={(e) => {
+              setUnitDraft(e.target.value);
+              setUnitError(null);
+            }}
+            onBlur={() => {
+              if (unitDraft !== null) applyUnit(unitDraft);
+              setUnitDraft(null);
+            }}
+            onKeyDown={(e) => e.key === 'Enter' && (e.currentTarget as HTMLInputElement).blur()}
+            className={'h-7 w-[64px] rounded border bg-white px-1.5 text-[13px] disabled:opacity-40 ' + (unitError ? 'border-destructive' : 'border-docs-border')}
+          />
+          <datalist id="cc-result-units">
+            {RESULT_UNITS.map((u) => (
+              <option key={u} value={u} />
+            ))}
+          </datalist>
+          <TBSelect
+            label="Array results of the selected equations: row or column, shortened (first … last) or every entry"
+            testId="math-array"
+            value={first ? `${first.props.vectorLayout ?? 'row'}-${first.props.vectorExpanded ? 'all' : 'short'}` : 'row-short'}
+            width={136}
+            onChange={(v) => {
+              const [layout, entries] = v.split('-');
+              patchSelected((sh) =>
+                sh.type === 'math' ? { props: { vectorLayout: layout === 'column' ? 'column' : undefined, vectorExpanded: entries === 'all' ? true : undefined } } : null,
+              );
+            }}
+            options={[
+              ['row-short', 'Array: row, short'],
+              ['row-all', 'Array: row, all'],
+              ['column-short', 'Array: column, short'],
+              ['column-all', 'Array: column, all'],
+            ]}
+          />
+        </Row>
+      </Group>
+      <Group label={first ? 'Results' : 'Results (worksheet default)'}>
+        <Row>
+          <TBSelect
+            label={first ? 'Number format of the selected results (presentation only)' : 'Default number format of results'}
+            testId="math-result-format"
+            value={formatValue}
+            width={112}
+            onChange={setFormat}
+            options={[...(formatValue === 'mixed' ? [['mixed', 'Mixed'] as [string, string]] : []), ...(first ? [['inherit', `Default (${settings.resultFormat ?? 'general'})`] as [string, string]] : []), ...fmtNames]}
+          />
+          <TBSelect
+            label="Decimal places of the selected equations"
+            testId="math-decimals"
+            value={first ? String(first.props.precision) : '-1'}
+            width={84}
+            onChange={(v) => patchSelected((sh) => (sh.type === 'math' ? { props: { precision: Number(v) } } : null))}
+            options={[['-1', `Auto (${settings.precision})`], ...[0, 1, 2, 3, 4, 5, 6].map((d) => [String(d), `${d} dp`] as [string, string])]}
+          />
+        </Row>
+        <Row>
+          <Check label="Trailing zeros" testId="math-trailing-zeros" checked={zerosOn} mixed={zeros.size > 1} onChange={setZeros} title="Show trailing zeros (2.50 instead of 2.5); the value is not rounded" />
+          <TB icon={RotateCcw} label={first ? 'Reset result formatting of the selected equations' : 'Reset the worksheet result defaults'} onClick={resetResults} testId="math-reset-results" />
+        </Row>
+      </Group>
+      <Group label="Math Font">
+        <Row>
+          <SizeControl kinds={['math']} label="Equation size" />
+        </Row>
+        <Row>
+          <ColorButton testId="math-color" title="Equation color" kinds={['math']} />
+          <SwatchPicker testId="math-highlight" title="Highlight the selected equations" value={first?.props.highlight ?? null} allowNone onPick={(c) => patchSelected((sh) => (sh.type === 'math' ? { props: { highlight: c ?? undefined } } : null))} />
+          <TB icon={Eraser} label="Reset size, colour and highlight of the selected equations" disabled={!first} onClick={resetFormatting} testId="math-reset-format" />
+        </Row>
+      </Group>
+      <Group label="Label Styles">
+        <Row>
+          <span className="rb-mini">Unit</span>
+          <SwatchPicker testId="label-unit-color" title="Colour of units (whole worksheet)" value={labels.unitColor} onPick={(c) => setLabel('unitColor', c)} />
+          <span className="rb-mini">Input</span>
+          <SwatchPicker testId="label-input-color" title="Text colour of inputs (literal definitions)" value={labels.inputColor} onPick={(c) => setLabel('inputColor', c)} />
+          <SwatchPicker testId="label-input-bg" title="Background of inputs" value={labels.inputBackground} onPick={(c) => setLabel('inputBackground', c)} />
+        </Row>
+        <Row>
+          <TB icon={RotateCcw} label="Default label styles" onClick={() => useAppStore.getState().updateSettings({ labelStyles: undefined })} testId="label-reset" />
+        </Row>
+      </Group>
+      <Group label="Worksheet">
+        <Row>
+          <TBSelect
+            label="Unit system for results (whole worksheet)"
+            testId="worksheet-units"
+            value={settings.unitSystem}
+            width={70}
+            onChange={(v) => useAppStore.getState().updateSettings({ unitSystem: v as 'SI' | 'Imperial' })}
+            options={[['SI', 'SI'], ['Imperial', 'USCS']]}
+          />
+          <TBSelect
+            label="Default decimal places (whole worksheet)"
+            testId="worksheet-decimals"
+            value={settings.precision}
+            width={64}
+            onChange={(v) => useAppStore.getState().updateSettings({ precision: Number(v) })}
+            options={[0, 1, 2, 3, 4, 5, 6].map((d) => [d, `${d} dp`])}
+          />
+        </Row>
+        <Row>
+          <TBSelect
+            label="Equations and text snap their baseline to major lines (every 2 squares) or to every grid line"
+            testId="baseline-snap"
+            value={settings.baselineSnap ?? 'major'}
+            width={110}
+            onChange={(v) => useAppStore.getState().updateSettings({ baselineSnap: v as 'major' | 'minor' })}
+            options={[['major', 'Snap: lines'], ['minor', 'Snap: squares']]}
+          />
+        </Row>
+      </Group>
     </>
   );
 }
@@ -405,12 +638,13 @@ function AlignControls() {
   const selected = useSelectedShapes();
   const text = selected.find((s) => s.type === 'text');
   const align = text?.type === 'text' ? text.props.align : 'left';
-  const set = (a: 'left' | 'center' | 'right') => patchSelected((s) => (s.type === 'text' ? { props: { align: a } } : null));
+  const set = (a: 'left' | 'center' | 'right' | 'justify') => patchSelected((s) => (s.type === 'text' ? { props: { align: a } } : null));
   return (
     <>
       <TB icon={AlignLeft} label="Left align" disabled={!text} active={!!text && align === 'left'} onClick={() => set('left')} />
       <TB icon={AlignCenter} label="Center align" disabled={!text} active={!!text && align === 'center'} onClick={() => set('center')} />
       <TB icon={AlignRight} label="Right align" disabled={!text} active={!!text && align === 'right'} onClick={() => set('right')} />
+      <TB icon={AlignJustify} label="Justify" disabled={!text} active={!!text && align === 'justify'} onClick={() => set('justify')} testId="text-justify" />
     </>
   );
 }
@@ -436,17 +670,20 @@ function DisplayModeSelect() {
   );
 }
 
-function ToolButtons() {
+function ToolButtons({ first }: { first: boolean }) {
   const tool = useCanvasStore((s) => s.tool);
   const t = (id: ToolId, icon: LucideIcon, label: string) => <TB key={id} icon={icon} label={label} active={tool === id} onClick={() => commands.setTool(id)} testId={`tool-${id}`} />;
-  return (
+  return first ? (
     <>
       {t('select', MousePointer2, 'Select')}
       {t('hand', Hand, 'Pan (Space+drag)')}
+      {t('draw', Pencil, 'Freehand')}
+    </>
+  ) : (
+    <>
       {t('line', Minus, 'Line')}
       {t('arrow', ArrowUpRight, 'Arrow')}
       {t('rect', Square, 'Rectangle')}
-      {t('draw', Pencil, 'Freehand')}
     </>
   );
 }
@@ -490,7 +727,7 @@ function GraphTab() {
     />
   );
   return (
-    <>
+    <Group label="X-Y Graph">
       <TB icon={LineChart} label="Insert X-Y graph" onClick={() => commands.insertGraph()} testId="graph-insert" />
       <Sep />
       {field('title', 'Graph title', 120, 'Title')}
@@ -513,18 +750,124 @@ function GraphTab() {
         testId="graph-add-series"
       />
       <span className="px-1 text-[12px] text-docs-muted">{graph ? `${graph.props.series.length} series` : 'Select a graph'}</span>
+    </Group>
+  );
+}
+
+/** Document tab: page setup, page view, zoom and insert (pages, regions). */
+function DocumentTab() {
+  const settings = useAppStore((s) => s.settings);
+  const view = useAppStore((s) => s.view);
+  const isGrid = useCanvasStore((s) => s.isGrid);
+  const zoom = useCanvasStore((s) => s.camera.z);
+  const { updateSettings, setView, openDialog } = useAppStore.getState();
+  const paged = settings.canvasMode === 'page';
+  const margins = settings.margins ?? DEFAULT_MARGINS;
+  const preset = presetOf(margins);
+  const zoomPct = Math.round(zoom * 100);
+  return (
+    <>
+      <Group label="Page Setup" testId="group-page-setup">
+        <Row>
+          <TBSelect label="Paper size" testId="doc-paper" value={settings.paper ?? 'A4'} width={62} onChange={(v) => updateSettings({ paper: v as 'A4' | 'A3' })} options={[['A4', 'A4'], ['A3', 'A3']]} />
+          <TB icon={RectangleVertical} label="Portrait" active={settings.pageOrientation === 'portrait'} onClick={() => updateSettings({ pageOrientation: 'portrait' })} testId="doc-portrait" />
+          <TB icon={RectangleHorizontal} label="Landscape" active={settings.pageOrientation === 'landscape'} onClick={() => updateSettings({ pageOrientation: 'landscape' })} testId="doc-landscape" />
+        </Row>
+        <Row>
+          <TBSelect
+            label="Margins"
+            testId="doc-margins"
+            value={preset}
+            width={150}
+            onChange={(v) => (v === 'custom' ? openDialog('page-setup') : updateSettings({ margins: MARGIN_PRESETS.find((p) => p.id === v)!.margins }))}
+            options={[...MARGIN_PRESETS.map((p) => [p.id, `Margins: ${p.label.split(' (')[0]}`] as [string, string]), ['custom', preset === 'custom' ? `Custom (${margins.left}/${margins.top} mm)` : 'Custom…']]}
+          />
+          <TB icon={FileText} label="Page setup… (paper, orientation, margins, preview)" onClick={() => openDialog('page-setup')} testId="doc-page-setup" />
+        </Row>
+      </Group>
+      <Group label="Page View">
+        <Row>
+          <Check label="Page boundaries" testId="doc-boundaries" checked={view.boundaries} disabled={!paged} onChange={(v) => setView({ boundaries: v })} title="Show the paper edge and the printable area (dashed) of every page" />
+          <Check label="Ruler" testId="doc-ruler" checked={view.ruler} onChange={(v) => setView({ ruler: v })} title="Millimetre rulers along the top and left (follow zoom and scrolling)" />
+        </Row>
+        <Row>
+          <Check label="Grid" testId="doc-grid" checked={isGrid} onChange={() => commands.toggleGrid()} />
+          <Check label="Header & footer" testId="doc-header" checked={settings.showHeaderFooter} onChange={(v) => updateSettings({ showHeaderFooter: v })} />
+          <Check label="Pages" testId="doc-pages" checked={paged} onChange={(v) => updateSettings({ canvasMode: v ? 'page' : 'free' })} title="Page layout (checked) or a free canvas without pages" />
+        </Row>
+      </Group>
+      <Group label="Zoom">
+        <Row>
+          <TBSelect
+            label="Zoom"
+            value={[50, 75, 90, 100, 125, 150, 200].includes(zoomPct) ? zoomPct : 'cur'}
+            width={70}
+            onChange={(v) => {
+              if (v === 'fit') commands.zoomToFit();
+              else if (v !== 'cur') zoomAt({ x: viewport.w / 2, y: viewport.h / 2 }, Number(v) / 100 / useCanvasStore.getState().camera.z);
+            }}
+            options={[...(![50, 75, 90, 100, 125, 150, 200].includes(zoomPct) ? [['cur', `${zoomPct}%`] as [string, string]] : []), ...[50, 75, 90, 100, 125, 150, 200].map((z) => [z, `${z}%`] as [number, string]), ['fit', 'Fit content']]}
+          />
+          <TB label="Actual size (100 %)" onClick={commands.zoomActualSize} testId="doc-zoom-100">
+            <span className="text-[11px] font-semibold">1:1</span>
+          </TB>
+        </Row>
+        <Row>
+          <TB icon={Maximize} label="Fit page" onClick={commands.zoomFitPage} testId="doc-fit-page" disabled={!paged} />
+          <TB icon={MoveHorizontal} label="Fit width" onClick={commands.zoomFitWidth} testId="doc-fit-width" disabled={!paged} />
+        </Row>
+      </Group>
+      <Group label="Insert">
+        <Row>
+          <TB icon={Sigma} label="Math region (or just type on the page)" onClick={() => commands.setTool('math')} testId="doc-insert-math" />
+          <TB icon={Type} label="Text region (or type &quot;)" onClick={() => commands.setTool('text')} testId="doc-insert-text" />
+        </Row>
+        <Row>
+          <TB icon={ScissorsLineDashed} label={withShortcut('Page break at the + cross', 'page-break')} onClick={commands.pageBreak} testId="doc-page-break" disabled={!paged} />
+          <TB icon={FilePlus2} label={withShortcut('Insert blank page', 'blank-page')} onClick={commands.insertBlankPage} testId="insert-page" disabled={!paged} />
+        </Row>
+      </Group>
     </>
   );
 }
 
-type FormatTab = 'math' | 'text' | 'graph';
+/** Help tab: help center, shortcuts and guides. */
+function HelpTab() {
+  const { openHelp, openDialog } = useAppStore.getState();
+  return (
+    <>
+      <Group label="Help">
+        <BigButton icon={BookOpen} label="Help center" onClick={() => openHelp('getting-started')} testId="help-open" title={withShortcut('Help center', 'help')} />
+        <BigButton icon={Keyboard} label="Shortcuts" onClick={() => openHelp('shortcuts')} testId="help-shortcuts" title="Keyboard shortcuts (searchable)" />
+      </Group>
+      <Group label="Guides">
+        <BigButton icon={Highlighter} label="Formats" onClick={() => openDialog('guide')} testId="help-guide" title="Display formats & units guide" />
+        <BigButton icon={SquareDashed} label="Syntax" onClick={() => openDialog('syntax')} testId="help-syntax" title="Math syntax, units & constants" />
+        <BigButton icon={Ruler} label="Pages" onClick={() => openHelp('document')} testId="help-document" title="Document settings: paper, margins, rulers, page breaks" />
+      </Group>
+      <Group label="About">
+        <BigButton icon={Info} label="About" onClick={() => openDialog('about')} testId="help-about" />
+      </Group>
+    </>
+  );
+}
+
+type FormatTab = 'document' | 'math' | 'text' | 'graph' | 'help';
+
+const TAB_LABELS: [FormatTab, string][] = [
+  ['document', 'Document'],
+  ['math', 'Math Formatting'],
+  ['text', 'Text Formatting'],
+  ['graph', 'Graph'],
+  ['help', 'Help'],
+];
 
 /**
- * Formatting tabs (like Mathcad's Math / Text Formatting ribbons). The tab
- * follows what you work on: selecting or editing an equation shows Math
- * formatting, a text region shows Text formatting; it can also be chosen.
+ * The ribbon (Mathcad Prime style): tabs on top, groups with their names
+ * underneath. Selecting or editing an equation shows Math Formatting, a text
+ * region Text Formatting, a graph Graph; any tab can also be chosen.
  */
-function FormatTabs() {
+function useRibbonTab(): [FormatTab, (t: FormatTab) => void] {
   const [tab, setTab] = useState<FormatTab>('math');
   const focusKind = useCanvasStore((s) => {
     const id = s.editingId ?? (s.selection.length ? s.selection[0] : null);
@@ -536,33 +879,36 @@ function FormatTabs() {
     setLastKind(focusKind);
     if (focusKind) setTab(focusKind);
   }
-  const tabBtn = (id: FormatTab, label: string) => (
-    <button
-      type="button"
-      role="tab"
-      aria-selected={tab === id}
-      data-testid={`format-tab-${id}`}
-      onMouseDown={(e) => e.preventDefault()}
-      onClick={() => setTab(id)}
-      className={
-        'h-7 cursor-pointer whitespace-nowrap rounded-full px-3 text-[13px] font-medium transition-colors duration-150 ' +
-        (tab === id ? 'bg-docs-active text-docs-blue' : 'text-docs-muted hover:bg-docs-hover hover:text-docs-ink')
-      }
-    >
-      {label}
-    </button>
-  );
+  return [tab, setTab];
+}
+
+function RibbonTabs({ tab, setTab }: { tab: FormatTab; setTab(t: FormatTab): void }) {
   return (
-    <>
-      <div role="tablist" aria-label="Formatting" className="mr-1 flex items-center gap-0.5 rounded-full bg-white/70 p-0.5">
-        {tabBtn('math', 'Math formatting')}
-        {tabBtn('text', 'Text formatting')}
-        {tabBtn('graph', 'Graph')}
-      </div>
-      <div role="tabpanel" aria-label={tab === 'math' ? 'Math formatting' : tab === 'text' ? 'Text formatting' : 'Graph'} className="flex flex-wrap items-center gap-0.5" data-testid={`format-panel-${tab}`}>
-        {tab === 'math' ? <MathFormattingTab /> : tab === 'text' ? <TextFormattingTab /> : <GraphTab />}
-      </div>
-    </>
+    <div role="tablist" aria-label="Ribbon" className="rb-tabs">
+      {TAB_LABELS.map(([id, label]) => (
+        <button
+          key={id}
+          type="button"
+          role="tab"
+          aria-selected={tab === id}
+          data-testid={`format-tab-${id}`}
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => setTab(id)}
+          className={'rb-tab ' + (tab === id ? 'is-active' : '')}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function RibbonPanel({ tab }: { tab: FormatTab }) {
+  const label = TAB_LABELS.find(([id]) => id === tab)![1];
+  return (
+    <div role="tabpanel" aria-label={label} className="rb-panel" data-testid={`format-panel-${tab}`}>
+      {tab === 'document' ? <DocumentTab /> : tab === 'math' ? <MathFormattingTab /> : tab === 'text' ? <TextFormattingTab /> : tab === 'graph' ? <GraphTab /> : <HelpTab />}
+    </div>
   );
 }
 
@@ -579,12 +925,13 @@ export function DocsHeader() {
   const paramsOpen = useAppStore((s) => s.paramsOpen);
   const leftTab = useAppStore((s) => s.leftTab);
   const workspace = useAppStore((s) => s.workspace);
+  const view = useAppStore((s) => s.view);
   const { updateTitle, updateSettings, togglePanel, showLeftTab, openDialog, setWorkspace } = useAppStore.getState();
   const tool = useCanvasStore((s) => s.tool);
-  const zoom = useCanvasStore((s) => s.camera.z);
   const isGrid = useCanvasStore((s) => s.isGrid);
   const isSnap = useCanvasStore((s) => s.isSnap);
   const undoable = useCanvasStore(canUndo);
+  const [ribbonTab, setRibbonTab] = useRibbonTab();
   const redoable = useCanvasStore((s) => s.redoStack.length > 0);
 
   const menus: Record<string, MenuEntry[]> = {
@@ -630,6 +977,9 @@ export function DocsHeader() {
       { label: 'Snap to grid', checked: isSnap, onSelect: commands.toggleSnap },
       { label: 'Snap equations to minor grid lines', checked: settings.baselineSnap === 'minor', onSelect: () => updateSettings({ baselineSnap: settings.baselineSnap === 'minor' ? 'major' : 'minor' }) },
       { label: 'Header & footer', checked: settings.showHeaderFooter, onSelect: () => updateSettings({ showHeaderFooter: !settings.showHeaderFooter }) },
+      { label: 'Page boundaries', checked: view.boundaries, onSelect: () => useAppStore.getState().setView({ boundaries: !view.boundaries }) },
+      { label: 'Ruler', checked: view.ruler, onSelect: () => useAppStore.getState().setView({ ruler: !view.ruler }) },
+      { label: 'Page setup…', onSelect: () => openDialog('page-setup') },
       { label: 'Outline', checked: paramsOpen && leftTab === 'outline', onSelect: () => showLeftTab('outline') },
       { label: 'Parameters', checked: paramsOpen && leftTab === 'params', onSelect: () => showLeftTab('params') },
       { label: 'Properties panel', checked: panelOpen, onSelect: () => togglePanel() },
@@ -637,6 +987,8 @@ export function DocsHeader() {
       { label: 'Zoom in', onSelect: commands.zoomIn },
       { label: 'Zoom out', onSelect: commands.zoomOut },
       { label: 'Zoom to 100%', onSelect: commands.resetZoom },
+      { label: 'Fit page', onSelect: commands.zoomFitPage },
+      { label: 'Fit width', onSelect: commands.zoomFitWidth },
     ],
     Insert: [
       { label: 'Equation', shortcut: 'type', onSelect: () => commands.insertMath() },
@@ -649,6 +1001,7 @@ export function DocsHeader() {
       { label: 'Sub-section heading', onSelect: () => addHeading(2) },
       { label: 'Annex link', onSelect: () => insertAnnexLink() },
       { type: 'separator' },
+      { label: 'Page break', shortcut: `${MOD}⇧↵`, onSelect: commands.pageBreak },
       { label: 'Blank page', shortcut: `${MOD}↵`, onSelect: commands.insertBlankPage },
       { label: 'Delete empty page', onSelect: commands.deletePage },
       { type: 'separator' },
@@ -656,20 +1009,6 @@ export function DocsHeader() {
       { label: 'Arrow', onSelect: () => commands.setTool('arrow') },
       { label: 'Rectangle', onSelect: () => commands.setTool('rect') },
       { label: 'Freehand', onSelect: () => commands.setTool('draw') },
-    ],
-    Format: [
-      { type: 'heading', label: 'Equation display' },
-      { label: 'Automatic', onSelect: () => commands.setDisplayMode('auto') },
-      { label: 'Formula only', onSelect: () => commands.setDisplayMode('formula') },
-      { label: 'Result only', onSelect: () => commands.setDisplayMode('result') },
-      { label: 'Formula = result', onSelect: () => commands.setDisplayMode('formulaResult') },
-      { label: 'Full calculation', onSelect: () => commands.setDisplayMode('full') },
-      { type: 'heading', label: 'Paragraph style (text)' },
-      ...([0, 1, 2, 3] as const).map((l) => ({ label: PARAGRAPH_STYLES[l].label, shortcut: `${MOD}⌥${l}`, onSelect: () => setParagraphStyle(selectedTextIds(), l) })),
-      { type: 'separator' },
-      { label: 'Text, colour & units…', onSelect: () => togglePanel(true) },
-      { type: 'separator' },
-      { label: 'Help: formats & units', onSelect: () => openDialog('guide') },
     ],
     Tools: [
       { label: 'Calculate all', shortcut: 'F9', onSelect: commands.calculateAll },
@@ -681,14 +1020,14 @@ export function DocsHeader() {
       ...[1, 2, 3, 4].map((p) => ({ label: String(p), checked: settings.precision === p, onSelect: () => updateSettings({ precision: p }) })),
     ],
     Help: [
-      { label: 'Keyboard shortcuts', onSelect: () => openDialog('shortcuts') },
+      { label: 'Help center', shortcut: 'F1', onSelect: () => useAppStore.getState().openHelp('getting-started') },
+      { label: 'Keyboard shortcuts', onSelect: () => useAppStore.getState().openHelp('shortcuts') },
       { label: 'Display formats & units guide', onSelect: () => openDialog('guide') },
       { label: 'Math syntax, units & constants', onSelect: () => openDialog('syntax') },
       { label: 'About CalcCanvas', onSelect: () => openDialog('about') },
     ],
   };
 
-  const zoomPct = Math.round(zoom * 100);
   return (
     <header className="shrink-0 bg-docs-bg" data-testid="docs-header">
       {/* Title + menus */}
@@ -744,6 +1083,12 @@ export function DocsHeader() {
                 <TableProperties size={13} aria-hidden /> Input &amp; Results
               </button>
             </div>
+            {workspace === 'calculation' && (
+              <>
+                <span className="mx-1.5 h-4 w-px bg-docs-border" aria-hidden />
+                <RibbonTabs tab={ribbonTab} setTab={setRibbonTab} />
+              </>
+            )}
           </nav>
         </div>
         {workspace === 'calculation' && <button
@@ -764,39 +1109,47 @@ export function DocsHeader() {
         </button>}
       </div>
 
-      {/* Toolbar */}
-      {workspace === 'calculation' && <div role="toolbar" aria-label="Formatting" className="mx-2 mb-1.5 mt-1.5 flex min-h-10 flex-wrap items-center gap-x-0.5 gap-y-0.5 rounded-[20px] bg-docs-toolbar px-3 py-1">
-        <TB icon={Undo2} label={`Undo (${MOD}Z)`} disabled={!undoable} onClick={commands.undo} />
-        <TB icon={Redo2} label={`Redo (${MOD}Y)`} disabled={!redoable} onClick={commands.redo} />
-        <TBSelect
-          label="Zoom"
-          value={[50, 75, 90, 100, 125, 150, 200].includes(zoomPct) ? zoomPct : 'cur'}
-          width={74}
-          onChange={(v) => {
-            if (v === 'fit') commands.zoomToFit();
-            else if (v !== 'cur') zoomAt({ x: viewport.w / 2, y: viewport.h / 2 }, Number(v) / 100 / useCanvasStore.getState().camera.z);
-          }}
-          options={[...(![50, 75, 90, 100, 125, 150, 200].includes(zoomPct) ? [['cur', `${zoomPct}%`] as [string, string]] : []), ...[50, 75, 90, 100, 125, 150, 200].map((z) => [z, `${z}%`] as [number, string]), ['fit', 'Fit']]}
-        />
-        <Sep />
-        <TB icon={Sigma} label="Insert equation (or just type on the page)" active={tool === 'math'} onClick={() => commands.setTool('math')} testId="tool-math" />
-        <TB icon={Type} label="Text (or type &quot;)" active={tool === 'text'} onClick={() => commands.setTool('text')} testId="tool-text" />
-        <TB icon={CheckSquare} label="Insert check (≤ 1)" onClick={() => commands.insertCheck()} testId="insert-check" />
-        <TB icon={ImagePlus} label="Insert image" onClick={() => void commands.insertImage()} />
-        <TB icon={LineChart} label="Insert X-Y graph" onClick={() => commands.insertGraph()} testId="insert-graph" />
-        <TB icon={FilePlus2} label="Insert blank page (Ctrl+Enter)" onClick={commands.insertBlankPage} testId="insert-page" />
-        <Sep />
-        <ToolButtons />
-        <Sep />
-        <FormatTabs />
-        <div className="ml-auto flex items-center gap-0.5 pl-2">
-          <TB icon={ListTree} label="Outline" active={paramsOpen && leftTab === 'outline'} onClick={() => showLeftTab('outline')} testId="toggle-outline" />
-          <TB icon={Variable} label="Parameters" active={paramsOpen && leftTab === 'params'} onClick={() => showLeftTab('params')} testId="toggle-params" />
-          <TB icon={Grid3x3} label="Grid" active={isGrid} onClick={commands.toggleGrid} testId="toggle-grid" />
-          <TB icon={PanelTop} label="Header & footer" active={settings.showHeaderFooter} onClick={() => updateSettings({ showHeaderFooter: !settings.showHeaderFooter })} testId="toggle-chrome" />
-          <TB icon={PanelRight} label="Properties panel" active={panelOpen} onClick={() => togglePanel()} testId="toggle-properties" />
+      {/* Ribbon */}
+      {workspace === 'calculation' && (
+        <div role="toolbar" aria-label="Formatting" className="rb" data-testid="ribbon">
+          <div className="rb-body">
+            <Group label="Edit">
+              <Row>
+                <TB icon={Undo2} label={withShortcut('Undo', 'undo')} disabled={!undoable} onClick={commands.undo} />
+                <TB icon={Redo2} label={withShortcut('Redo', 'redo')} disabled={!redoable} onClick={commands.redo} />
+                <TB icon={Calculator} label={withShortcut('Calculate all', 'calculate')} onClick={commands.calculateAll} testId="rb-calculate" />
+              </Row>
+              <Row>
+                <ToolButtons first />
+              </Row>
+            </Group>
+            <Group label="Regions">
+              <Row>
+                <TB icon={Sigma} label="Insert equation (or just type on the page)" active={tool === 'math'} onClick={() => commands.setTool('math')} testId="tool-math" />
+                <TB icon={Type} label="Text (or type &quot;)" active={tool === 'text'} onClick={() => commands.setTool('text')} testId="tool-text" />
+                <TB icon={CheckSquare} label="Insert check (≤ 1)" onClick={() => commands.insertCheck()} testId="insert-check" />
+              </Row>
+              <Row>
+                <TB icon={ImagePlus} label="Insert image" onClick={() => void commands.insertImage()} />
+                <TB icon={LineChart} label="Insert X-Y graph" onClick={() => commands.insertGraph()} testId="insert-graph" />
+                <ToolButtons first={false} />
+              </Row>
+            </Group>
+            <RibbonPanel tab={ribbonTab} />
+            <div className="rb-side" aria-label="Panels and view">
+              <Row>
+                <TB icon={ListTree} label="Outline" active={paramsOpen && leftTab === 'outline'} onClick={() => showLeftTab('outline')} testId="toggle-outline" />
+                <TB icon={Variable} label="Parameters" active={paramsOpen && leftTab === 'params'} onClick={() => showLeftTab('params')} testId="toggle-params" />
+                <TB icon={PanelRight} label="Properties panel" active={panelOpen} onClick={() => togglePanel()} testId="toggle-properties" />
+              </Row>
+              <Row>
+                <TB icon={Grid3x3} label="Grid" active={isGrid} onClick={commands.toggleGrid} testId="toggle-grid" />
+                <TB icon={PanelTop} label="Header & footer" active={settings.showHeaderFooter} onClick={() => updateSettings({ showHeaderFooter: !settings.showHeaderFooter })} testId="toggle-chrome" />
+              </Row>
+            </div>
+          </div>
         </div>
-      </div>}
+      )}
     </header>
   );
 }

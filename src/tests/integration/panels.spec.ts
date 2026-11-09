@@ -42,6 +42,7 @@ test.describe('Parameters panel', () => {
   test('insert and delete a blank page', async ({ page }) => {
     await newBlankWorksheet(page, 'page');
     await expect.poll(() => pageCount(page)).toBe(1);
+    await page.getByTestId('format-tab-document').click();
     await page.getByTestId('insert-page').click();
     await expect.poll(() => pageCount(page)).toBe(2);
     await page.keyboard.press('Control+Enter');
@@ -56,6 +57,7 @@ test.describe('Parameters panel', () => {
     // Demo: everything is on page 1; select L and insert a page after page 1 — nothing moves.
     await resultOf(page, 'M_{Ed}').not.toBe('');
     const yBefore = await page.evaluate(() => Object.values((window as unknown as { __calccanvas: { store: { getState(): { shapes: Record<string, { y: number }> } } } }).__calccanvas.store.getState().shapes).map((s) => s.y));
+    await page.getByTestId('format-tab-document').click();
     await page.getByTestId('insert-page').click();
     const yAfter = await page.evaluate(() => Object.values((window as unknown as { __calccanvas: { store: { getState(): { shapes: Record<string, { y: number }> } } } }).__calccanvas.store.getState().shapes).map((s) => s.y));
     expect(yAfter).toEqual(yBefore);

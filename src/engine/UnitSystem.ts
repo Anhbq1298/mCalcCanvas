@@ -210,23 +210,60 @@ export function quantityFromDisplayValue(value: number, unit: string | null = nu
 // Formatting
 // ---------------------------------------------------------------------------
 
+/** How a result number is written (presentation only: values keep full precision). */
+export type NumberFormat = 'general' | 'decimal' | 'scientific' | 'engineering';
+export interface NumberStyle {
+  format?: NumberFormat;
+  /** Keep trailing zeros (2.50 with 2 decimals) instead of trimming them (2.5). */
+  trailingZeros?: boolean;
+}
+
+const sci = (m: string, e: number) => ({ text: `${m}×10^${e}`, latex: `${m}\\times10^{${e}}` });
+
 /**
- * Engineering number format: `decimals` places for |x| ≥ 1 (trailing zeros
- * trimmed), at least 3 significant figures below 1, scientific notation for
- * very large or very small magnitudes.
+ * Number formats:
+ * - general (default): `decimals` places for |x| ≥ 1, at least 3 significant
+ *   figures below 1, scientific notation for very large or very small values;
+ * - decimal: always `decimals` places (scientific only beyond 1e15);
+ * - scientific: m×10^e with `decimals` places in m;
+ * - engineering: like scientific with e a multiple of 3.
+ * Trailing zeros are trimmed unless `trailingZeros`.
  */
-export function formatNumber(x: number, decimals: number): { text: string; latex: string } {
-  if (x === 0 || Object.is(x, -0)) return { text: '0', latex: '0' };
+export function formatNumber(x: number, decimals: number, style: NumberStyle = {}): { text: string; latex: string } {
+  const keep = !!style.trailingZeros;
+  const trim = (t: string) => (keep ? t : trimZeros(t));
+  const format = style.format ?? 'general';
+  if (x === 0 || Object.is(x, -0)) {
+    const z = keep && decimals > 0 && format !== 'general' ? (0).toFixed(decimals) : '0';
+    return { text: z, latex: z };
+  }
   const ax = Math.abs(x);
+  if (format === 'scientific' || format === 'engineering' || (format === 'decimal' && ax >= 1e15)) {
+    let e = Math.floor(Math.log10(ax));
+    if (format === 'engineering') e = Math.floor(e / 3) * 3;
+    let m = x / 10 ** e;
+    let mt = m.toFixed(decimals);
+    // Rounding can carry over (9.996 → 10.00): move to the next exponent.
+    const limit = format === 'engineering' ? 1000 : 10;
+    if (Math.abs(Number(mt)) >= limit) {
+      e += format === 'engineering' ? 3 : 1;
+      m = x / 10 ** e;
+      mt = m.toFixed(decimals);
+    }
+    const ms = trim(mt);
+    return e === 0 && format === 'engineering' ? { text: ms, latex: ms } : sci(ms, e);
+  }
+  if (format === 'decimal') {
+    const t = trim(x.toFixed(decimals));
+    return { text: t, latex: t };
+  }
   if (ax >= 1e7 || ax < 1e-4) {
     const [mant, exp] = x.toExponential(Math.max(decimals, 2)).split('e');
-    const m = trimZeros(mant);
-    const e = Number(exp);
-    return { text: `${m}×10^${e}`, latex: `${m}\\times10^{${e}}` };
+    return sci(trim(mant), Number(exp));
   }
   let s: string;
-  if (ax >= 1) s = trimZeros(x.toFixed(decimals));
-  else s = trimZeros(x.toPrecision(Math.max(decimals + 1, 3)));
+  if (ax >= 1) s = trim(x.toFixed(decimals));
+  else s = trim(x.toPrecision(Math.max(decimals + 1, 3)));
   return { text: s, latex: s };
 }
 
@@ -297,7 +334,7 @@ export interface FormattedQuantity {
  */
 export function formatQuantity(
   q: Quantity,
-  opts: { decimals: number; system: UnitSystemName; targetUnit?: string | null },
+  opts: { decimals: number; system: UnitSystemName; targetUnit?: string | null; style?: NumberStyle },
 ): FormattedQuantity {
   const dimension = dimensionName(q);
   let number: number;
@@ -337,7 +374,7 @@ export function formatQuantity(
   } else {
     number = q;
   }
-  const n = formatNumber(number, opts.decimals);
+  const n = formatNumber(number, opts.decimals, opts.style);
   if (!unitStr) {
     return { text: n.text, latex: n.latex, number, unitText: '', unitLatex: '', dimension };
   }

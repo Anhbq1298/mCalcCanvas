@@ -27,13 +27,13 @@ const NUMBER_THEN_UNIT = new RegExp(
 const UNIT_RUN = new RegExp(`${UNIT_ATOM}`, 'g');
 const DEGREE_FOLLOWS = new RegExp(`^(?:\\s|\\\\[,;:! ]|~)*\\\\(?:mathrm|unit)\\{\\s*\\\\degree`);
 
-export function styleUnits(latex: string): string {
+export function styleUnits(latex: string, unitColor: string = UNIT_COLOR): string {
   if (!NAMES || !/\\(?:mathrm|unit)\{/.test(latex)) return latex;
   // 1. "25\,\mathrm{kN}" → "25\cdot\mathrm{kN}" (not for degrees: "20 °C").
   let out = latex.replace(NUMBER_THEN_UNIT, (m, d: string, offset: number) =>
     DEGREE_FOLLOWS.test(latex.slice(offset + 1)) ? m : `${d}\\cdot `,
   );
   // 2. Colour every unit atom.
-  out = out.replace(UNIT_RUN, (u) => `\\textcolor{${UNIT_COLOR}}{${u}}`);
+  out = out.replace(UNIT_RUN, (u) => `\\textcolor{${unitColor}}{${u}}`);
   return out;
 }

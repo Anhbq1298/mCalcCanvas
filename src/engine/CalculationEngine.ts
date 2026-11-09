@@ -37,6 +37,8 @@ import {
   quantityFromDisplayValue,
   siValue,
   type FormattedQuantity,
+  type NumberFormat,
+  type NumberStyle,
   type Quantity,
   type UnitSystemName,
 } from './UnitSystem';
@@ -50,6 +52,10 @@ export interface RegionInput {
   displayUnit?: string | null;
   /** Decimal places; falls back to the worksheet precision. */
   precision?: number | null;
+  /** Result number format; falls back to the worksheet's. */
+  resultFormat?: NumberFormat | null;
+  /** Keep trailing zeros; falls back to the worksheet's. */
+  trailingZeros?: boolean | null;
   /** Vector results: compact row (default) or a column with every entry. */
   vectorLayout?: 'row' | 'column';
   /** Show every entry of a long vector (the user expanded it). */
@@ -74,6 +80,10 @@ export interface EngineSettings {
   precision: number;
   /** Arrays longer than this are shown shortened (first half … last half); 0 = show all. */
   vectorLimit?: number;
+  /** Default result number format (general when absent). */
+  resultFormat?: NumberFormat;
+  /** Default: keep trailing zeros in results. */
+  trailingZeros?: boolean;
 }
 
 /** Numeric scenario value applied to one existing definition region. */
@@ -300,6 +310,8 @@ export class CalculationEngine {
       prev.input.latex === input.latex &&
       prev.input.displayUnit === input.displayUnit &&
       prev.input.precision === input.precision &&
+      (prev.input.resultFormat ?? null) === (input.resultFormat ?? null) &&
+      (prev.input.trailingZeros ?? null) === (input.trailingZeros ?? null) &&
       (prev.input.vectorLayout ?? 'row') === (input.vectorLayout ?? 'row') &&
       !!prev.input.vectorExpanded === !!input.vectorExpanded &&
       !!prev.input.draft === !!input.draft
@@ -655,10 +667,15 @@ export class CalculationEngine {
         return fail('display-unit', (e as Error).message);
       }
     }
+    // Presentation only: the stored value is never rounded.
+    const style: NumberStyle = {
+      format: region.input.resultFormat ?? this.settings.resultFormat ?? 'general',
+      trailingZeros: region.input.trailingZeros ?? this.settings.trailingZeros ?? false,
+    };
     const fmt = (q: Quantity, unit: string | null = null) =>
-      formatQuantity(q, { decimals, system: this.settings.unitSystem, targetUnit: unit });
+      formatQuantity(q, { decimals, system: this.settings.unitSystem, targetUnit: unit, style });
     const fmtValue = (v: Value, unit: string | null = null): FormattedQuantity =>
-      isVector(v) ? formatVector(v, { decimals, system: this.settings.unitSystem, targetUnit: unit, layout: region.input.vectorLayout, limit: this.settings.vectorLimit, expanded: region.input.vectorExpanded }) : fmt(v, unit);
+      isVector(v) ? formatVector(v, { decimals, system: this.settings.unitSystem, targetUnit: unit, style, layout: region.input.vectorLayout, limit: this.settings.vectorLimit, expanded: region.input.vectorExpanded }) : fmt(v, unit);
 
     try {
       if (statement.kind === 'definition' && override) {

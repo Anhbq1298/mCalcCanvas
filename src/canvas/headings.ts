@@ -4,7 +4,7 @@
 import { clampShapesIntoPage, constrained, nextWritingPoint } from './pageConstraint';
 import { createTextRegion, revealShape, viewportCenter } from './canvasActions';
 import { orderedShapes, updateShapes, useCanvasStore, type ShapePatch } from './model/canvasStore';
-import { PARAGRAPH_STYLES, type HeadingLevel, type Shape, type TextShape } from './model/types';
+import { PARAGRAPH_STYLES, TEXT_STYLES, type HeadingLevel, type Shape, type TextShape, type TextStyleId } from './model/types';
 import { escapeHtml } from './sanitize';
 import { shapeBounds } from './model/geometry';
 import { annexInfo, annexNumber } from './annex';
@@ -74,8 +74,18 @@ export function setParagraphStyle(ids: string[], level: HeadingLevel): void {
   for (const id of ids) {
     const s = shapes[id];
     if (s?.type !== 'text') continue;
-    patches[id] = { props: { heading: level || undefined, fontSize: st.fontSize, color: st.color } };
+    patches[id] = { props: { heading: level || undefined, textStyle: undefined, fontSize: st.fontSize, color: st.color } };
   }
+  if (Object.keys(patches).length) updateShapes(patches);
+}
+
+/** Apply a gallery style: Normal / Heading 1–3 (outline) or Title / Subtitle. */
+export function setTextStyle(ids: string[], style: HeadingLevel | TextStyleId): void {
+  if (typeof style === 'number') return setParagraphStyle(ids, style);
+  const { shapes } = useCanvasStore.getState();
+  const st = TEXT_STYLES[style];
+  const patches: Record<string, ShapePatch> = {};
+  for (const id of ids) if (shapes[id]?.type === 'text') patches[id] = { props: { heading: undefined, textStyle: style, fontSize: st.fontSize, color: st.color } };
   if (Object.keys(patches).length) updateShapes(patches);
 }
 

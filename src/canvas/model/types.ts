@@ -17,6 +17,12 @@ export interface MathProps {
   displayUnit: string;
   /** Decimal places; -1 = worksheet default. */
   precision: number;
+  /** Result number format; absent = worksheet default. Presentation only. */
+  resultFormat?: 'general' | 'decimal' | 'scientific' | 'engineering';
+  /** Keep trailing zeros in the result; absent = worksheet default. */
+  trailingZeros?: boolean;
+  /** Background highlight of the region (absent = none; inputs keep their input colour). */
+  highlight?: string;
   /** How a vector result is shown: a compact row (default) or a column with every entry. */
   vectorLayout?: VectorLayout;
   /** Show every entry of a long vector result instead of the shortened first … last view. */
@@ -31,7 +37,10 @@ export interface MathProps {
   baseline?: number;
 }
 
-export type TextAlign = 'left' | 'center' | 'right';
+export type TextAlign = 'left' | 'center' | 'right' | 'justify';
+
+/** Text styles of the Text Formatting gallery besides Normal and the headings. */
+export type TextStyleId = 'title' | 'subtitle';
 
 export interface TextProps {
   w: number;
@@ -46,6 +55,8 @@ export interface TextProps {
   align: TextAlign;
   /** Paragraph style: 0 normal text, 1–3 heading levels (shown in the outline). */
   heading?: HeadingLevel;
+  /** Title or Subtitle style (not in the outline); absent for Normal and headings. */
+  textStyle?: TextStyleId;
   /** Annex role (see canvas/annex.ts): the ANNEX title, an annex heading, or a link to one. */
   annex?: AnnexRole;
 }
@@ -65,6 +76,12 @@ export const PARAGRAPH_STYLES: Record<HeadingLevel, { label: string; fontSize: n
   1: { label: 'Heading 1', fontSize: 20, weight: 700, color: '#1e3a5f' },
   2: { label: 'Heading 2', fontSize: 16, weight: 700, color: '#0f172a' },
   3: { label: 'Heading 3', fontSize: 14, weight: 600, color: '#334155' },
+};
+
+/** Title and Subtitle styles of the Text Formatting gallery (not in the outline). */
+export const TEXT_STYLES: Record<TextStyleId, { label: string; fontSize: number; weight: number; color: string; italic?: boolean }> = {
+  title: { label: 'Title', fontSize: 26, weight: 700, color: '#1e3a5f' },
+  subtitle: { label: 'Subtitle', fontSize: 17, weight: 400, color: '#475569', italic: true },
 };
 
 export interface ImageProps {

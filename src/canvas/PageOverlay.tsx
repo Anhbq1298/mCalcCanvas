@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { PageChrome } from '../export/PageChrome';
-import { PAGE_MARGIN, PAGE_MARGIN_V, pageBox, pageCount, shapesOutsidePrintArea } from '../export/pageGeometry';
+import { marginPx, pageBox, pageCount, shapesOutsidePrintArea } from '../export/pageGeometry';
 import { useAppStore } from '../store/appStore';
 import { GRID_MAJOR, GRID_SIZE, orderedShapes, useCanvasStore } from './model/canvasStore';
 import { shapeBounds } from './model/geometry';
@@ -15,8 +15,13 @@ export function PageOverlay() {
   const order = useCanvasStore((s) => s.order);
   const shapes = useMemo(() => orderedShapes({ ...useCanvasStore.getState(), shapes: shapesMap, order }), [shapesMap, order]);
   const minPages = useAppStore((s) => s.settings.pages);
-  const pages = useMemo(() => pageCount(shapes, orientation, minPages), [shapes, orientation, minPages]);
-  const outside = useMemo(() => (mode === 'page' ? shapesOutsidePrintArea(shapes, orientation).map(shapeBounds) : []), [shapes, orientation, mode]);
+  // Paper and margins (page geometry reads them; these keep the overlay in step).
+  const paper = useAppStore((s) => s.settings.paper);
+  const margins = useAppStore((s) => s.settings.margins);
+  const boundaries = useAppStore((s) => s.view.boundaries);
+  const m = useMemo(() => marginPx(), [margins]); // eslint-disable-line react-hooks/exhaustive-deps
+  const pages = useMemo(() => pageCount(shapes, orientation, minPages), [shapes, orientation, minPages, paper]); // eslint-disable-line react-hooks/exhaustive-deps
+  const outside = useMemo(() => (mode === 'page' ? shapesOutsidePrintArea(shapes, orientation).map(shapeBounds) : []), [shapes, orientation, mode, paper, margins]); // eslint-disable-line react-hooks/exhaustive-deps
   if (mode !== 'page') return null;
 
   return (
@@ -42,11 +47,11 @@ export function PageOverlay() {
               data-testid={isGrid ? 'page-grid' : undefined}
               style={{
                 position: 'absolute',
-                left: PAGE_MARGIN,
-                right: PAGE_MARGIN,
-                top: PAGE_MARGIN_V,
-                bottom: PAGE_MARGIN_V,
-                outline: isGrid ? '1px solid var(--grid-major)' : undefined,
+                left: m.left,
+                right: m.right,
+                top: m.top,
+                bottom: m.bottom,
+                outline: boundaries ? '1px dashed var(--color-docs-blue)' : isGrid ? '1px solid var(--grid-major)' : undefined,
                 // Engineering pad: 10 px minor / 40 px major (4 × 4) squares inside the print area.
                 backgroundImage: isGrid
                   ? 'linear-gradient(var(--grid-major) 1px, transparent 1px), linear-gradient(90deg, var(--grid-major) 1px, transparent 1px), linear-gradient(var(--grid-minor) 1px, transparent 1px), linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px)'
@@ -54,7 +59,8 @@ export function PageOverlay() {
                 backgroundSize: isGrid ? `${GRID_MAJOR}px ${GRID_MAJOR}px, ${GRID_MAJOR}px ${GRID_MAJOR}px, ${GRID_SIZE}px ${GRID_SIZE}px, ${GRID_SIZE}px ${GRID_SIZE}px` : undefined,
               }}
             />
-            <MarginMarks />
+            {boundaries && <div data-testid="page-boundary" style={{ position: 'absolute', inset: 0, outline: '1px solid #9aa0a6' }} />}
+            <MarginMarks m={m} />
             <PageChrome index={i} total={pages} />
             {!showChrome && (
               <div style={{ position: 'absolute', right: 8, bottom: 6, font: '500 10px var(--font-sans)', color: 'var(--color-muted-foreground)' }}>Page {i + 1}</div>
@@ -74,16 +80,16 @@ export function PageOverlay() {
 }
 
 /** Docs-style "L" marks at the four corners of the writable area. */
-function MarginMarks() {
+function MarginMarks({ m }: { m: { left: number; right: number; top: number; bottom: number } }) {
   const len = 14;
   const c = '#bdc1c6';
   const corner = (style: React.CSSProperties) => <div style={{ position: 'absolute', width: len, height: len, ...style }} />;
   return (
     <>
-      {corner({ left: PAGE_MARGIN - len, top: PAGE_MARGIN_V - len, borderRight: `1px solid ${c}`, borderBottom: `1px solid ${c}` })}
-      {corner({ right: PAGE_MARGIN - len, top: PAGE_MARGIN_V - len, borderLeft: `1px solid ${c}`, borderBottom: `1px solid ${c}` })}
-      {corner({ left: PAGE_MARGIN - len, bottom: PAGE_MARGIN_V - len, borderRight: `1px solid ${c}`, borderTop: `1px solid ${c}` })}
-      {corner({ right: PAGE_MARGIN - len, bottom: PAGE_MARGIN_V - len, borderLeft: `1px solid ${c}`, borderTop: `1px solid ${c}` })}
+      {corner({ left: m.left - len, top: m.top - len, borderRight: `1px solid ${c}`, borderBottom: `1px solid ${c}` })}
+      {corner({ right: m.right - len, top: m.top - len, borderLeft: `1px solid ${c}`, borderBottom: `1px solid ${c}` })}
+      {corner({ left: m.left - len, bottom: m.bottom - len, borderRight: `1px solid ${c}`, borderTop: `1px solid ${c}` })}
+      {corner({ right: m.right - len, bottom: m.bottom - len, borderLeft: `1px solid ${c}`, borderTop: `1px solid ${c}` })}
     </>
   );
 }

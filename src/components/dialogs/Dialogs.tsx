@@ -6,6 +6,8 @@ import { openDocument } from '../../documents/documentController';
 import type { DocumentSummary } from '../../documents/DocumentTypes';
 import { BUILTIN_CONSTANT_INFO, UNIT_SYMBOLS } from '../../engine/light';
 import { useAppStore } from '../../store/appStore';
+import { HelpCenter } from './HelpCenter';
+import { PageSetupDialog } from './PageSetupDialog';
 // The format guide runs its own engine: loaded only when opened.
 const FormatGuideDialog = lazy(() => import('./FormatGuide').then((m) => ({ default: m.FormatGuideDialog })));
 
@@ -102,58 +104,6 @@ function OpenDialog({ onClose }: { onClose(): void }) {
   );
 }
 
-const SHORTCUTS: [string, string][] = [
-  ['Click empty page', 'Place the blue + cursor'],
-  ['Type on empty page', 'Create a math region at the + cursor'],
-  ['"', 'Create a text region'],
-  ['Double-click', 'Edit a region (or new region on empty space)'],
-  ['Enter', 'Finish the region, + cursor moves below'],
-  ['Esc', 'Finish the region'],
-  [':', 'Definition ≔ (typing := also works)'],
-  ['=', 'Evaluate the whole region'],
-  ['/  ^', 'Fraction / exponent'],
-  ['.  after a name', 'Literal subscript (M.Ed → M_Ed)'],
-  [';', 'Range i := 0..n−1 (also a, a+Δ..b)'],
-  ['\\', 'Square root'],
-  ['Ctrl+\\', 'Nth root'],
-  ['|', 'Absolute value'],
-  ["'", 'Parentheses around the selection'],
-  ['Ctrl+G', 'Greek ↔ Latin for the letter before the cursor (a → α)'],
-  ['Ctrl+Shift+P', 'π'],
-  ['Ctrl+9 / Ctrl+0 / Ctrl+3', '≤ / ≥ / ≠'],
-  ['Ctrl+=', 'Comparison equal ≡'],
-  ['Ctrl+C / Ctrl+X / Ctrl+V', 'Copy / cut / paste'],
-  ['Ctrl+D', 'Duplicate'],
-  ['Ctrl+G / Ctrl+Shift+G (regions)', 'Group / ungroup'],
-  ['Delete', 'Delete selection'],
-  ['Arrow keys', 'Nudge (Shift = 10 px)'],
-  ['Ctrl+Z / Ctrl+Y', 'Undo / redo'],
-  ['Ctrl+Alt+1 / 2 / 3, Ctrl+Alt+0', 'Heading 1 / 2 / 3, normal text'],
-  ['Ctrl+S / Ctrl+O', 'Save / open (in this browser)'],
-  ['Ctrl+Shift+S / Ctrl+Shift+O', 'Save to / open a .mCalcCanvas file'],
-  ['F9', 'Calculate all'],
-  ['Ctrl+wheel / Space+drag', 'Zoom / pan'],
-];
-
-function ShortcutsDialog({ onClose }: { onClose(): void }) {
-  return (
-    <Modal title="Keyboard shortcuts" onClose={onClose}>
-      <table className="w-full">
-        <tbody>
-          {SHORTCUTS.map(([k, v]) => (
-            <tr key={k} className="border-b border-border last:border-0">
-              <td className="py-1.5 pr-4">
-                <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-sans text-[12px]">{k}</kbd>
-              </td>
-              <td className="py-1.5 text-muted-foreground">{v}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </Modal>
-  );
-}
-
 function SyntaxDialog({ onClose }: { onClose(): void }) {
   return (
     <Modal title="Math syntax & units" onClose={onClose} wide>
@@ -221,7 +171,8 @@ export function Dialogs() {
   const dialog = useAppStore((s) => s.dialog);
   const close = () => useAppStore.getState().openDialog(null);
   if (dialog === 'open') return <OpenDialog onClose={close} />;
-  if (dialog === 'shortcuts') return <ShortcutsDialog onClose={close} />;
+  if (dialog === 'shortcuts' || dialog === 'help') return <HelpCenter onClose={close} />;
+  if (dialog === 'page-setup') return <PageSetupDialog onClose={close} />;
   if (dialog === 'syntax') return <SyntaxDialog onClose={close} />;
   if (dialog === 'guide')
     return (

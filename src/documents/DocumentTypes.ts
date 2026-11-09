@@ -5,6 +5,29 @@ export const DOCUMENT_VERSION = 3;
 
 export type CanvasMode = 'free' | 'page';
 export type PageOrientation = 'portrait' | 'landscape';
+export type PaperSize = 'A4' | 'A3';
+
+/** Page margins in millimetres. */
+export interface PageMargins {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+}
+
+/** Margins of worksheets made before page setup existed (20 mm sides, 16 mm top/bottom ≈ 76/60 px). */
+export const DEFAULT_MARGINS: PageMargins = { top: 16, bottom: 16, left: 20, right: 20 };
+
+/** How result numbers are written: general (engineering default), fixed decimals, scientific, engineering (exponent a multiple of 3). */
+export type ResultFormat = 'general' | 'decimal' | 'scientific' | 'engineering';
+
+export interface LabelStyles {
+  unitColor: string;
+  inputColor: string;
+  inputBackground: string;
+}
+
+export const DEFAULT_LABEL_STYLES: LabelStyles = { unitColor: '#2b8fd6', inputColor: '#1d4ed8', inputBackground: '#fff6bf' };
 
 export interface DocumentMetadata {
   project?: string;
@@ -19,6 +42,16 @@ export interface DocumentSettings {
   precision: number;
   canvasMode: CanvasMode;
   pageOrientation: PageOrientation;
+  /** Paper size (A4 when absent). */
+  paper?: PaperSize;
+  /** Page margins in mm (DEFAULT_MARGINS when absent). */
+  margins?: PageMargins;
+  /** Result number format for equations without their own (general when absent). */
+  resultFormat?: ResultFormat;
+  /** Keep trailing zeros in results (2.50 instead of 2.5). */
+  trailingZeros?: boolean;
+  /** Label styles: colour of units and of inputs (literal definitions). */
+  labelStyles?: LabelStyles;
   /** Show the title block (header/footer) on pages and in the PDF. */
   showHeaderFooter: boolean;
   /** Default font for new text regions (one of TEXT_FONTS). */

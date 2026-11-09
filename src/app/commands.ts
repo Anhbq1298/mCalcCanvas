@@ -18,6 +18,10 @@ import {
   zoomOut,
   zoomToFit,
   viewportCenter,
+  zoomFitPage,
+  zoomFitWidth,
+  zoomActualSize,
+  insertPageBreak,
 } from '../canvas/canvasActions';
 import { currentPageIndex, deletePage, insertBlankPageAfter, totalPages } from '../canvas/pageConstraint';
 import { pageBox } from '../export/pageGeometry';
@@ -111,8 +115,21 @@ export const commands = {
   zoomOut,
   resetZoom,
   zoomToFit,
+  zoomFitPage,
+  zoomFitWidth,
+  zoomActualSize,
 
-  /** Insert a blank A4 page after the current page and scroll to it. */
+  /** Page break at the + cross or above the selection (Page layout view). */
+  pageBreak() {
+    const app = useAppStore.getState();
+    if (app.settings.canvasMode !== 'page') {
+      app.showToast('info', 'Page breaks exist in Page layout view.');
+      return;
+    }
+    if (!insertPageBreak()) app.showToast('info', 'Click on a line (the + cross) or select a region where the new page should start.');
+  },
+
+  /** Insert a blank page after the current page and scroll to it. */
   insertBlankPage() {
     const app = useAppStore.getState();
     if (app.settings.canvasMode !== 'page') {

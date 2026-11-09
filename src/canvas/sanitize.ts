@@ -4,20 +4,33 @@
  * The input is parsed into an inert document (DOMParser never runs scripts)
  * and a *new* tree is built from it: only allowed elements are recreated,
  * with no attributes except a validated colour on <font> (what
- * execCommand('foreColor') produces). Text is copied as text nodes.
+ * execCommand('foreColor') produces), a validated background colour on <span>
+ * (highlight) and a validated http(s)/mailto href on <a>. Text is copied as text nodes.
  * Unsupported elements are unwrapped (their text is kept); elements whose
  * content is code or embedded documents are dropped with their content.
  * Because nothing is copied from the input except text and allowed tag
  * names, the output can only contain allowed elements and attributes, at
  * any nesting depth.
  */
-const ALLOWED = new Set(['B', 'STRONG', 'I', 'EM', 'U', 'BR', 'P', 'DIV', 'UL', 'OL', 'LI', 'H1', 'H2', 'H3', 'SPAN', 'SUB', 'SUP', 'FONT']);
+const ALLOWED = new Set(['B', 'STRONG', 'I', 'EM', 'U', 'BR', 'P', 'DIV', 'UL', 'OL', 'LI', 'H1', 'H2', 'H3', 'SPAN', 'SUB', 'SUP', 'FONT', 'BLOCKQUOTE', 'A', 'MARK']);
 /** Dropped together with everything inside them. */
 const DROP = new Set([
   'SCRIPT', 'STYLE', 'TEMPLATE', 'NOSCRIPT', 'NOEMBED', 'NOFRAMES', 'IFRAME', 'FRAME', 'FRAMESET', 'OBJECT', 'EMBED',
   'APPLET', 'SVG', 'MATH', 'TITLE', 'TEXTAREA', 'SELECT', 'OPTION', 'XMP', 'PLAINTEXT', 'HEAD', 'META', 'LINK', 'BASE',
 ]);
 const SAFE_COLOR = /^(#[0-9a-fA-F]{3,8}|rgb\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\))$/;
+
+/** A link target that is safe to keep: http(s) or mailto only (no javascript:, data:, …). */
+export function safeHref(raw: string | null | undefined): string | null {
+  const v = (raw ?? '').trim();
+  if (!v || v.length > 2000) return null;
+  try {
+    const u = new URL(v);
+    return u.protocol === 'http:' || u.protocol === 'https:' || u.protocol === 'mailto:' ? u.href : null;
+  } catch {
+    return null;
+  }
+}
 /** Allowed elements nested deeper than this are unwrapped (no legitimate rich text nests this deep). */
 const MAX_DEPTH = 64;
 /** Upper bound on the input size handled (characters). */
@@ -57,6 +70,21 @@ export function sanitizeHtml(html: string): string {
     if (tag === 'FONT') {
       const c = el.getAttribute('color')?.trim();
       if (c && SAFE_COLOR.test(c)) copy.setAttribute('color', c);
+    }
+    if (tag === 'SPAN' || tag === 'FONT') {
+      // Highlight (execCommand('hiliteColor')): only a background colour survives.
+      const bg = (el as HTMLElement).style?.backgroundColor?.trim();
+      if (bg && SAFE_COLOR.test(bg)) copy.setAttribute('style', `background-color: ${bg}`);
+    }
+    if (tag === 'A') {
+      const href = safeHref(el.getAttribute('href'));
+      if (!href) {
+        pushChildren(el, parent, depth);
+        continue;
+      }
+      copy.setAttribute('href', href);
+      copy.setAttribute('target', '_blank');
+      copy.setAttribute('rel', 'noopener noreferrer');
     }
     parent.appendChild(copy);
     pushChildren(el, copy, depth + 1);

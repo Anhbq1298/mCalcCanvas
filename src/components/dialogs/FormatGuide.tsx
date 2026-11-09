@@ -75,7 +75,7 @@ function FormatsTab() {
     <div className="space-y-3">
       <p className="text-muted-foreground">
         Each equation region has its own display format. Select one or more regions, then choose a format in the toolbar box <b className="text-foreground">Auto display</b> or in{' '}
-        <b className="text-foreground">Format → Equation display</b>. The format only changes what is shown (and printed); the calculation is the same.
+        <b className="text-foreground">Math Formatting → Display</b>. The format only changes what is shown (and printed); the calculation is the same.
       </p>
       {modes.map((m) => (
         <Card key={m.mode} title={m.title} how={m.use}>
