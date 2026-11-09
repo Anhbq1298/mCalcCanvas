@@ -40,6 +40,7 @@ import {
 } from 'lucide-react';
 import { addHeading, setParagraphStyle } from '../../canvas/headings';
 import { insertAnnexLink, sortAnnexByLinkOrder } from '../../canvas/annexActions';
+import { unitPatch } from '../../canvas/inputUnits';
 import { TEMPLATES } from '../../documents/templates';
 import { useState, type ReactNode } from 'react';
 import { commands, type ToolId } from '../../app/commands';
@@ -243,8 +244,12 @@ function MathFormattingTab() {
         return;
       }
     }
-    setUnitError(null);
-    patchSelected((s) => (s.type === 'math' ? { props: { displayUnit: v } } : null));
+    try {
+      patchSelected((s) => unitPatch(s, v));
+      setUnitError(null);
+    } catch (e) {
+      setUnitError((e as Error).message);
+    }
   };
   return (
     <>

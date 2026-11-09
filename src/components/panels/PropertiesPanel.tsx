@@ -7,6 +7,7 @@ import { fontStack, TEXT_FONTS, type DrawShape, type GraphProps, type GraphSerie
 import { newGraphSeries } from '../../canvas/canvasActions';
 import { MathInput } from '../../math/MathInput';
 import { SeriesSources } from './SeriesSources';
+import { unitPatch } from '../../canvas/inputUnits';
 import { parseDisplayUnit } from '../../engine';
 import { useAppStore } from '../../store/appStore';
 import { useRegionResult } from '../../store/calculationStore';
@@ -108,7 +109,8 @@ const DISPLAY_MODES: { value: MathDisplayMode; label: string }[] = [
 function MathProperties({ shape }: { shape: MathShape }) {
   const result = useRegionResult(shape.id);
   const update = (props: Partial<MathShape['props']>) => updateShape(shape.id, { props });
-  const unitError = result?.error?.code === 'display-unit' ? result.error.message : null;
+  const [convertError, setConvertError] = useState<string | null>(null);
+  const unitError = convertError ?? (result?.error?.code === 'display-unit' ? result.error.message : null);
 
   return (
     <>
@@ -172,7 +174,7 @@ function MathProperties({ shape }: { shape: MathShape }) {
                 {unitError}
               </p>
             ) : (
-              <p className="text-[11px] text-muted-foreground">e.g. kN·mm, MPa, kN/m². Empty = automatic.</p>
+              <p className="text-[11px] text-muted-foreground">e.g. kN·mm, MPa, kN/m². Empty = automatic. On an input the value is converted (35 MPa → ksi).</p>
             )
           }
         >
@@ -181,7 +183,15 @@ function MathProperties({ shape }: { shape: MathShape }) {
               key={`${shape.id}:${shape.props.displayUnit}`}
               id={id}
               value={shape.props.displayUnit}
-              onCommit={(displayUnit) => update({ displayUnit })}
+              onCommit={(displayUnit) => {
+                try {
+                  const p = unitPatch(shape, displayUnit);
+                  if (p) updateShape(shape.id, p);
+                  setConvertError(null);
+                } catch (e) {
+                  setConvertError((e as Error).message);
+                }
+              }}
             />
           )}
         </Field>
