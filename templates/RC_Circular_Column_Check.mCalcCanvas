@@ -18,7 +18,7 @@
     "showHeaderFooter": true,
     "textFont": "Inter",
     "baselineSnap": "minor",
-    "pages": 14
+    "pages": 13
   },
   "shapes": [
     {
@@ -76,7 +76,7 @@
       "props": {
         "w": 630,
         "h": 24,
-        "html": "Flexure: ray from 0 through (MEd, NEd) to the P–M curve (ηR). fcd and shear (spirals):",
+        "html": "Flexure: ray from 0 through (MEd, NEd) to the P–M curve (UR_M). fcd and shear (spirals):",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#475569",
@@ -3440,7 +3440,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\eta_{R}\\coloneq\\frac{\\rho_{Ed}}{\\rho_{Rd}}",
+        "latex": "\\mathrm{UR}_{M}\\coloneq\\frac{\\rho_{Ed}}{\\rho_{Rd}}",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": 3,
@@ -3453,7 +3453,7 @@
       "id": "s_col_5u",
       "type": "text",
       "x": 80,
-      "y": 8554,
+      "y": 8553,
       "props": {
         "w": 310,
         "h": 24,
@@ -3472,7 +3472,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\eta_{R}\\le1",
+        "latex": "\\mathrm{UR}_{M}\\le1",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": 3,
@@ -3680,7 +3680,7 @@
       "props": {
         "w": 310,
         "h": 24,
-        "html": "… equals NEd/ηR",
+        "html": "… equals NEd/UR_M",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -3695,7 +3695,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\frac{N_{Ed}}{\\eta_{R}}=",
+        "latex": "\\frac{N_{Ed}}{\\mathrm{UR}_{M}}=",
         "displayMode": "auto",
         "displayUnit": "kN",
         "precision": 0,
@@ -3708,7 +3708,7 @@
       "id": "s_col_6a",
       "type": "text",
       "x": 80,
-      "y": 8964,
+      "y": 8954,
       "props": {
         "w": 310,
         "h": 24,
@@ -3723,7 +3723,7 @@
       "id": "s_col_6b",
       "type": "math",
       "x": 400,
-      "y": 8957,
+      "y": 8947,
       "props": {
         "w": 60,
         "h": 32,
@@ -3744,7 +3744,7 @@
       "props": {
         "w": 310,
         "h": 24,
-        "html": "… equals MEd/ηR",
+        "html": "… equals MEd/UR_M",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -3759,7 +3759,7 @@
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\frac{M_{Ed}}{\\eta_{R}}=",
+        "latex": "\\frac{M_{Ed}}{\\mathrm{UR}_{M}}=",
         "displayMode": "auto",
         "displayUnit": "kN m",
         "precision": 1,
@@ -3839,8 +3839,8 @@
           {
             "id": "ray",
             "label": "",
-            "x": "\\mathrm{stack}\\left(0,\\max\\left(1,\\frac{1}{\\eta_{R}}\\right)\\right)M_{Ed}",
-            "y": "\\mathrm{stack}\\left(0,\\max\\left(1,\\frac{1}{\\eta_{R}}\\right)\\right)N_{Ed}",
+            "x": "\\mathrm{stack}\\left(0,\\max\\left(1,\\frac{1}{\\mathrm{UR}_{M}}\\right)\\right)M_{Ed}",
+            "y": "\\mathrm{stack}\\left(0,\\max\\left(1,\\frac{1}{\\mathrm{UR}_{M}}\\right)\\right)N_{Ed}",
             "style": "line",
             "r": "",
             "color": "#94a3b8",
@@ -3850,8 +3850,8 @@
           {
             "id": "cap",
             "label": "Capacity on the ray",
-            "x": "\\frac{M_{Ed}}{\\eta_{R}}",
-            "y": "\\frac{N_{Ed}}{\\eta_{R}}",
+            "x": "\\frac{M_{Ed}}{\\mathrm{UR}_{M}}",
+            "y": "\\frac{N_{Ed}}{\\mathrm{UR}_{M}}",
             "style": "marker",
             "r": "",
             "color": "#047857",
@@ -4508,11 +4508,11 @@
       "id": "s_col_7k",
       "type": "text",
       "x": 80,
-      "y": 12514,
+      "y": 12522,
       "props": {
-        "w": 630,
+        "w": 310,
         "h": 24,
-        "html": "Check: spirals",
+        "html": "Shear utilisation ratio",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -4522,76 +4522,12 @@
     {
       "id": "s_col_7l",
       "type": "math",
-      "x": 96,
-      "y": 12540,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\tau_{Ed}\\le\\tau_{Rd.sy}",
-        "displayMode": "auto",
-        "displayUnit": "MPa",
-        "precision": 2,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_7m",
-      "type": "text",
-      "x": 80,
-      "y": 12584,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "Check: strut",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_7n",
-      "type": "math",
-      "x": 96,
-      "y": 12620,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\sigma_{cd}\\le\\nu f_{cd}",
-        "displayMode": "auto",
-        "displayUnit": "MPa",
-        "precision": 2,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_7o",
-      "type": "text",
-      "x": 80,
-      "y": 12672,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Shear ratio",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_7p",
-      "type": "math",
       "x": 400,
-      "y": 12660,
+      "y": 12510,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\eta_{V}\\coloneq\\max\\left(\\frac{\\tau_{Ed}}{\\tau_{Rd.sy}},\\frac{\\sigma_{cd}}{\\nu f_{cd}}\\right)",
+        "latex": "\\mathrm{UR}_{V}\\coloneq\\max\\left(\\frac{\\tau_{Ed}}{\\tau_{Rd.sy}},\\frac{\\sigma_{cd}}{\\nu f_{cd}}\\right)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": 3,
@@ -4601,10 +4537,10 @@
       }
     },
     {
-      "id": "s_col_7q",
+      "id": "s_col_7m",
       "type": "text",
       "x": 80,
-      "y": 12968,
+      "y": 12576,
       "props": {
         "w": 310,
         "h": 24,
@@ -4616,14 +4552,14 @@
       }
     },
     {
-      "id": "s_col_7r",
+      "id": "s_col_7n",
       "type": "math",
       "x": 400,
-      "y": 12961,
+      "y": 12570,
       "props": {
         "w": 60,
         "h": 32,
-        "latex": "\\eta_{V}\\le1",
+        "latex": "\\mathrm{UR}_{V}\\le1",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": 3,
@@ -4633,10 +4569,10 @@
       }
     },
     {
-      "id": "s_col_7s",
+      "id": "s_col_7o",
       "type": "text",
       "x": 80,
-      "y": 13021,
+      "y": 12620,
       "props": {
         "w": 630,
         "h": 24,
@@ -4649,74 +4585,74 @@
       }
     },
     {
+      "id": "s_col_7p",
+      "type": "text",
+      "x": 80,
+      "y": 12666,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Flexure utilisation ratio",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7q",
+      "type": "math",
+      "x": 400,
+      "y": 12660,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\mathrm{UR}_{M}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_col_7r",
+      "type": "text",
+      "x": 80,
+      "y": 12706,
+      "props": {
+        "w": 310,
+        "h": 24,
+        "html": "Shear utilisation ratio",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_col_7s",
+      "type": "math",
+      "x": 400,
+      "y": 12700,
+      "props": {
+        "w": 60,
+        "h": 32,
+        "latex": "\\mathrm{UR}_{V}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 18,
+        "color": "#0f172a"
+      }
+    },
+    {
       "id": "s_col_7t",
       "type": "text",
       "x": 80,
-      "y": 13058,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Radial ratio (flexure)",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_7u",
-      "type": "math",
-      "x": 400,
-      "y": 13051,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\eta_{R}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_7v",
-      "type": "text",
-      "x": 80,
-      "y": 13098,
-      "props": {
-        "w": 310,
-        "h": 24,
-        "html": "Shear ratio",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_col_7w",
-      "type": "math",
-      "x": 400,
-      "y": 13091,
-      "props": {
-        "w": 60,
-        "h": 32,
-        "latex": "\\eta_{V}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 18,
-        "color": "#0f172a"
-      }
-    },
-    {
-      "id": "s_col_7x",
-      "type": "text",
-      "x": 80,
-      "y": 14132,
+      "y": 12961,
       "props": {
         "w": 630,
         "h": 24,
@@ -4732,10 +4668,10 @@
       }
     },
     {
-      "id": "s_col_7y",
+      "id": "s_col_7u",
       "type": "text",
       "x": 80,
-      "y": 14172,
+      "y": 13001,
       "props": {
         "w": 630,
         "h": 24,
@@ -4752,10 +4688,10 @@
       }
     },
     {
-      "id": "s_col_7z",
+      "id": "s_col_7v",
       "type": "text",
       "x": 80,
-      "y": 14216,
+      "y": 13045,
       "props": {
         "w": 630,
         "h": 24,
@@ -4767,10 +4703,10 @@
       }
     },
     {
-      "id": "s_col_80",
+      "id": "s_col_7w",
       "type": "math",
       "x": 96,
-      "y": 14242,
+      "y": 13071,
       "props": {
         "w": 60,
         "h": 32,
@@ -4784,10 +4720,10 @@
       }
     },
     {
-      "id": "s_col_81",
+      "id": "s_col_7x",
       "type": "text",
       "x": 80,
-      "y": 14308,
+      "y": 13137,
       "props": {
         "w": 310,
         "h": 24,
@@ -4799,10 +4735,10 @@
       }
     },
     {
-      "id": "s_col_82",
+      "id": "s_col_7y",
       "type": "math",
       "x": 400,
-      "y": 14302,
+      "y": 13131,
       "props": {
         "w": 60,
         "h": 32,
@@ -4816,10 +4752,10 @@
       }
     },
     {
-      "id": "s_col_83",
+      "id": "s_col_7z",
       "type": "text",
       "x": 80,
-      "y": 14359,
+      "y": 13188,
       "props": {
         "w": 310,
         "h": 24,
@@ -4831,10 +4767,10 @@
       }
     },
     {
-      "id": "s_col_84",
+      "id": "s_col_80",
       "type": "math",
       "x": 400,
-      "y": 14352,
+      "y": 13181,
       "props": {
         "w": 60,
         "h": 32,
@@ -4848,10 +4784,10 @@
       }
     },
     {
-      "id": "s_col_85",
+      "id": "s_col_81",
       "type": "text",
       "x": 80,
-      "y": 14392,
+      "y": 13221,
       "props": {
         "w": 310,
         "h": 24,
@@ -4863,10 +4799,10 @@
       }
     },
     {
-      "id": "s_col_86",
+      "id": "s_col_82",
       "type": "math",
       "x": 400,
-      "y": 14392,
+      "y": 13221,
       "props": {
         "w": 60,
         "h": 32,
@@ -4880,10 +4816,10 @@
       }
     },
     {
-      "id": "s_col_87",
+      "id": "s_col_83",
       "type": "text",
       "x": 80,
-      "y": 14439,
+      "y": 13268,
       "props": {
         "w": 310,
         "h": 24,
@@ -4895,10 +4831,10 @@
       }
     },
     {
-      "id": "s_col_88",
+      "id": "s_col_84",
       "type": "math",
       "x": 400,
-      "y": 14432,
+      "y": 13261,
       "props": {
         "w": 60,
         "h": 32,
@@ -4912,10 +4848,10 @@
       }
     },
     {
-      "id": "s_col_89",
+      "id": "s_col_85",
       "type": "text",
       "x": 80,
-      "y": 14489,
+      "y": 13318,
       "props": {
         "w": 310,
         "h": 24,
@@ -4927,10 +4863,10 @@
       }
     },
     {
-      "id": "s_col_8a",
+      "id": "s_col_86",
       "type": "math",
       "x": 400,
-      "y": 14482,
+      "y": 13311,
       "props": {
         "w": 60,
         "h": 32,
@@ -4944,10 +4880,10 @@
       }
     },
     {
-      "id": "s_col_8b",
+      "id": "s_col_87",
       "type": "text",
       "x": 96,
-      "y": 15303,
+      "y": 14132,
       "props": {
         "w": 400,
         "h": 24,
@@ -4959,10 +4895,10 @@
       }
     },
     {
-      "id": "s_col_8c",
+      "id": "s_col_88",
       "type": "math",
       "x": 96,
-      "y": 15333,
+      "y": 14162,
       "props": {
         "w": 60,
         "h": 32,
@@ -4978,10 +4914,10 @@
       }
     },
     {
-      "id": "s_col_8d",
+      "id": "s_col_89",
       "type": "math",
       "x": 214,
-      "y": 15333,
+      "y": 14162,
       "props": {
         "w": 60,
         "h": 32,
@@ -4997,10 +4933,10 @@
       }
     },
     {
-      "id": "s_col_8e",
+      "id": "s_col_8a",
       "type": "math",
       "x": 340,
-      "y": 15333,
+      "y": 14162,
       "props": {
         "w": 60,
         "h": 32,
@@ -5016,10 +4952,10 @@
       }
     },
     {
-      "id": "s_col_8f",
+      "id": "s_col_8b",
       "type": "math",
       "x": 480,
-      "y": 15333,
+      "y": 14162,
       "props": {
         "w": 60,
         "h": 32,
@@ -5035,10 +4971,10 @@
       }
     },
     {
-      "id": "s_col_8g",
+      "id": "s_col_8c",
       "type": "math",
       "x": 596,
-      "y": 15333,
+      "y": 14162,
       "props": {
         "w": 60,
         "h": 32,
@@ -5054,6 +4990,6 @@
       }
     }
   ],
-  "createdAt": "2026-11-09T02:31:45.799Z",
-  "updatedAt": "2026-11-09T02:31:45.799Z"
+  "createdAt": "2026-11-09T03:13:27.164Z",
+  "updatedAt": "2026-11-09T03:13:27.164Z"
 }

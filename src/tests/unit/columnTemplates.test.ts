@@ -42,24 +42,24 @@ function evaluate(id: TemplateId, inputs: Record<string, string> = {}) {
 }
 
 describe('column templates', () => {
-  it('RC circular column check calculates without errors (ηR, ηV)', () => {
+  it('RC circular column check calculates without errors (UR_M, UR_V)', () => {
     const { errors, result, tpl } = evaluate('rc-circular-column');
     expect(errors).toEqual([]);
     expect(tpl.settings?.baselineSnap).toBe('minor');
-    expect(result('\\eta_{R}\\coloneq')?.value?.number).toBeCloseTo(0.7689, 3);
+    expect(result('\\mathrm{UR}_{M}\\coloneq')?.value?.number).toBeCloseTo(0.7689, 3);
     // EN 1992-1-1:2023 §8.2.3: x = 587 mm, compression chord centroid at 285.9 mm → bw = 2√(R² − (R − 285.9)²) = 1022.4 mm
     // (narrower than at the tension chord d = 911.3 mm); τEd = 2.981 MPa; ρw = 2·Aw/(bw·s) = 0.00723;
     // x ≥ 0.25d → cotθ = 2.5; strut σcd = 8.646 ≤ ν·fcd = 9.917 MPa governs.
     expect(result('b_{w}\\coloneq')?.value?.number).toBeCloseTo(2 * Math.sqrt(600 ** 2 - (600 - result('y_{cc}\\coloneq')!.value!.number!) ** 2), 6);
     expect(result('b_{w}\\coloneq')?.value?.number).toBeCloseTo(1022.41, 1);
     expect(result('\\rho_{w}\\coloneq')?.value?.number).toBeCloseTo((2 * Math.PI * 100) / 85 / 1022.415, 6);
-    expect(result('\\eta_{V}\\coloneq')?.value?.number).toBeCloseTo(0.8718, 3);
+    expect(result('\\mathrm{UR}_{V}\\coloneq')?.value?.number).toBeCloseTo(0.8718, 3);
     // Class A spirals: cot θmin × 0.8 = 2.0.
     const a = evaluate('rc-circular-column', { '\\delta_{A}\\coloneq': '\\delta_{A}\\coloneq1' });
     expect(a.errors).toEqual([]);
     expect(a.result('\\mathrm{cot}_{\\theta min}\\coloneq')?.value?.number).toBe(2);
-    // Hand check at the ray point gives back (MEd, NEd)/ηR.
-    const eta = result('\\eta_{R}\\coloneq')!.value!.number!;
+    // Hand check at the ray point gives back (MEd, NEd)/UR_M.
+    const eta = result('\\mathrm{UR}_{M}\\coloneq')!.value!.number!;
     const nAt = result('N_{R}\\left(c_{R}')!.value!.number!;
     const nEd = result('N_{Ed}\\coloneq')!.value!.number!;
     expect(Math.abs(nAt / (nEd / eta) - 1)).toBeLessThan(0.02);
@@ -81,15 +81,15 @@ describe('column templates', () => {
     expect(Math.abs(Mv[7] / 1101 - 1)).toBeLessThan(0.01);
     expect(N[0]).toBeCloseTo(-3415, -1);
     expect(Mv[0]).toBe(0);
-    // Hand check: the strain plane at the ray point gives back (MEd, NEd)/ηR.
-    const eta = result('\\eta_{R}\\coloneq')!.value!.number!;
+    // Hand check: the strain plane at the ray point gives back (MEd, NEd)/UR_M.
+    const eta = result('\\mathrm{UR}_{M}\\coloneq')!.value!.number!;
     const nAt = result('N_{R}\\left(c_{R}')!.value!.number!;
     const mAt = result('\\sqrt{\\left(M_{Rx}\\left(c_{R}')!.value!.number!;
     expect(Math.abs(nAt / (3000 / eta) - 1)).toBeLessThan(0.02);
     expect(Math.abs(mAt / (Math.hypot(600, 300) / eta) - 1)).toBeLessThan(0.02);
     expect(eta).toBeCloseTo(0.6435, 2);
-    // Ray from the origin through (MEd, NEd) = (670.8, 3000): reference capacity (1042.4, 4661.7), ηR = 0.6435.
-    expect(result('\\eta_{R}\\coloneq')?.value?.number).toBeCloseTo(0.6435, 2);
+    // Ray from the origin through (MEd, NEd) = (670.8, 3000): reference capacity (1042.4, 4661.7), UR_M = 0.6435.
+    expect(result('\\mathrm{UR}_{M}\\coloneq')?.value?.number).toBeCloseTo(0.6435, 2);
   }, 30000);
 
   it('rectangular column shear to EN 1992-1-1:2023 §8.2.3: τ form, cot θmin (8.41) branches', () => {
@@ -101,7 +101,7 @@ describe('column templates', () => {
     expect(d.errors).toEqual([]);
     expect(num(d, '\\tau_{Ed.y}\\coloneq')).toBeCloseTo(1.2053, 4);
     expect(num(d, COTMIN)).toBe(2.5);
-    expect(num(d, '\\eta_{V.y}\\coloneq')).toBeCloseTo(400 / 755.5, 3);
+    expect(num(d, '\\mathrm{UR}_{V.y}\\coloneq')).toBeCloseTo(400 / 755.5, 3);
     // Tension: 2.5 − 0.1 · 500 / 400 = 2.375; large tension stops at 1.
     const t = evaluate('rc-rectangular-column', { 'N_{Ed}\\coloneq': 'N_{Ed}\\coloneq-500\\,\\mathrm{kN}' });
     expect(t.errors).toEqual([]);
