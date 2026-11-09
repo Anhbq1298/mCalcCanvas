@@ -13,6 +13,7 @@
 - **Units display.** Light blue (`UNIT_COLOR`), with a `·` between number and unit (display only, `unitStyle.ts`). Temperatures keep `20 °C`.
 - **Templates.** The RC beam (EN 1992-1-1) template is the default on first visit; the steel beam is the test fixture. `?template=<id>` starts a new worksheet from a template.
 - **Files.** `.mCalcCanvas` is the JSON document. Results are never stored.
+- **Input & Results.** This is a separate dense workspace, not a canvas table shape. Inputs and Outputs bind to exact region ids. Units are inherited from the worksheet and batch cells contain numbers only. Editing marks existing results outdated; only Calculate All runs isolated engines and refreshes every row.
 - **Operators gallery.** It mirrors Mathcad Prime. Operators the engine can't evaluate yet are shown disabled, not hidden.
 
 ## Engineering policies
@@ -31,4 +32,4 @@
 - Kelvin values are linear; only °C is affine.
 - `\Delta T` (a Greek letter followed by a letter) is not joined into one variable name.
 - A shape that crosses a page edge is clipped on its page when printed (a warning is shown first).
-- There are no matrices, user-defined functions, solvers, plots or tables yet.
+- There are no matrices, user-defined functions, solvers, plots or free-positioned canvas table regions yet.

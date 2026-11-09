@@ -34,6 +34,7 @@ documentController ── SaveCoordinator ── DocumentRepository (IndexedDB: 
 | `src/documents/` | Types and version, serializer with migrations and validation, IndexedDB repository, `SaveCoordinator`, templates, controller (new/open/import/export/autosave). |
 | `src/export/` | A4 geometry, header/footer, PDF via `window.print` of statically rendered pages. Each shape prints on one page. |
 | `src/components/` | Google-Docs-style chrome: menus, a toolbar with Math/Text formatting tabs, Outline/Parameters panel, Properties panel, dialogs, help guide. |
+| `src/components/inputResults/` | Input/Output binding form and compact batch grid. Each run uses an isolated `CalculationEngine`; editing draft inputs never mutates the canvas or triggers calculation. |
 
 ## Data flow rules
 
@@ -45,6 +46,6 @@ documentController ── SaveCoordinator ── DocumentRepository (IndexedDB: 
 
 ## Persistence
 
-- `CalculationDocument` (v2): `{ id, version, title, metadata, settings, shapes[], createdAt, updatedAt }`. Results are never stored.
+- `CalculationDocument` (v3): `{ id, version, title, metadata, settings, inputResult, shapes[], createdAt, updatedAt }`. `inputResult` stores bindings and numeric draft rows. Results are never stored.
 - `parseDocument` validates every field, migrates v0/v1, sanitises HTML, clamps numbers and renames duplicate ids.
 - `SaveCoordinator` serialises saves and tracks revisions. "Saved" means the latest revision was written. Before switching documents, pending edits are flushed. On unload with unsaved changes, the browser warns.

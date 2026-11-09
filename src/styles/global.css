@@ -40,6 +40,12 @@
   --color-docs-blue: #0b57d0;
   --color-docs-share: #c2e7ff;
   --color-docs-share-hover: #b3dcf5;
+  --color-ir-input-group: #e8f1fb;
+  --color-ir-input-header: #f6faff;
+  --color-ir-input-cell: #fbfdff;
+  --color-ir-output-group: #eef1f4;
+  --color-ir-output-header: #f5f6f8;
+  --color-ir-output-cell: #f8f9fb;
 
   /* Engineering pad (grid on the page) */
   --grid-minor: rgb(66 133 244 / 0.10);
@@ -133,6 +139,166 @@ body {
 }
 .docs-tb-select:hover { background: var(--color-docs-hover); }
 .docs-tb-select:focus-visible { outline: 2px solid var(--color-docs-blue); }
+.docs-workspace-tab {
+  display: inline-flex;
+  height: 24px;
+  align-items: center;
+  gap: 5px;
+  border-radius: 999px;
+  padding: 0 9px;
+  color: var(--color-docs-muted);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 150ms, color 150ms;
+}
+.docs-workspace-tab:hover { background: var(--color-docs-hover); color: var(--color-docs-ink); }
+.docs-workspace-tab.is-active { background: var(--color-docs-active); color: var(--color-docs-blue); }
+
+/* ---------------------------------------------------------------------- */
+/* Input & Results — dense engineering batch table                         */
+/* ---------------------------------------------------------------------- */
+
+.ir-primary-button,
+.ir-secondary-button {
+  display: inline-flex;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 6px;
+  padding: 0 11px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 150ms, border-color 150ms, color 150ms, opacity 150ms;
+}
+.ir-primary-button { background: var(--color-primary); color: var(--color-on-primary); }
+.ir-primary-button:hover:not(:disabled) { background: var(--color-docs-blue); }
+.ir-secondary-button { border: 1px solid var(--color-border-strong); background: var(--color-card); color: var(--color-foreground); }
+.ir-secondary-button:hover:not(:disabled) { background: var(--color-muted); border-color: var(--color-docs-sep); }
+.ir-primary-button:disabled,
+.ir-secondary-button:disabled { cursor: default; opacity: 0.4; }
+
+.ir-data-table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: auto;
+  font-size: 12px;
+  color: var(--color-foreground);
+}
+.ir-data-table th,
+.ir-data-table td {
+  height: 36px;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 6px;
+  white-space: nowrap;
+}
+.ir-data-table tr:last-child td { border-bottom: 0; }
+.ir-data-table th:last-child,
+.ir-data-table td:last-child { border-right: 0; }
+.ir-group-row th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  height: 28px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ir-column-row th {
+  position: sticky;
+  top: 28px;
+  z-index: 3;
+  height: 42px;
+  font-weight: 600;
+}
+.ir-input-group { background: var(--color-ir-input-group); color: var(--color-primary); text-align: left; }
+.ir-output-group { background: var(--color-ir-output-group); color: var(--color-muted-foreground); text-align: left; border-left: 2px solid var(--color-border-strong); }
+.ir-case-column,
+.ir-status-column,
+.ir-action-column { background: var(--color-muted); color: var(--color-muted-foreground); }
+.ir-case-column { left: 0; z-index: 5 !important; min-width: 104px; text-align: left; }
+.ir-status-column { min-width: 104px; text-align: left; }
+.ir-action-column { width: 38px; min-width: 38px; }
+.ir-data-column {
+  width: 1%;
+  min-width: 104px;
+  max-width: 168px;
+  padding: 0 !important;
+  text-align: right;
+  vertical-align: middle;
+}
+.ir-data-column > button {
+  position: relative;
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  align-content: center;
+  justify-items: end;
+  padding: 3px 7px;
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+.ir-data-column > button:hover { background: rgb(11 87 208 / 0.07); }
+.ir-data-column > button > span { max-width: 142px; overflow: hidden; text-overflow: ellipsis; }
+.ir-data-column small { max-width: 142px; overflow: hidden; color: var(--color-docs-blue); font-size: 10px; font-weight: 500; text-overflow: ellipsis; }
+.ir-data-column svg { position: absolute; left: 5px; top: 5px; color: var(--color-muted-foreground); opacity: 0; transition: opacity 150ms; }
+.ir-data-column:hover svg,
+.ir-data-column:focus-within svg { opacity: 1; }
+.ir-input-column { background: var(--color-ir-input-header); }
+.ir-output-column { background: var(--color-ir-output-header); border-left: 2px solid var(--color-border-strong) !important; }
+.ir-output-column + .ir-output-column { border-left-width: 0 !important; }
+.ir-case-cell {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  min-width: 104px;
+  background: var(--color-card);
+}
+.ir-case-input,
+.ir-number-input {
+  width: 100%;
+  height: 26px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  padding: 0 5px;
+  font-size: 12px;
+  color: var(--color-foreground);
+}
+.ir-case-input { min-width: 88px; font-weight: 600; }
+.ir-number-input { min-width: 88px; text-align: right; font-variant-numeric: tabular-nums; }
+.ir-case-input:hover,
+.ir-number-input:hover { border-color: var(--color-border-strong); background: var(--color-card); }
+.ir-case-input:focus,
+.ir-number-input:focus { border-color: var(--color-docs-blue); background: var(--color-card); outline: none; box-shadow: 0 0 0 2px rgb(11 87 208 / 0.12); }
+.ir-input-cell { width: 1%; min-width: 104px; max-width: 168px; background: var(--color-ir-input-cell); }
+.ir-output-cell { width: 1%; min-width: 104px; max-width: 168px; border-left: 2px solid var(--color-border-strong) !important; background: var(--color-ir-output-cell); text-align: right; font-variant-numeric: tabular-nums; }
+.ir-output-cell + .ir-output-cell { border-left-width: 0 !important; }
+.ir-output-cell.is-outdated { color: var(--color-muted-foreground); background-image: repeating-linear-gradient(-45deg, transparent, transparent 5px, rgb(148 163 184 / 0.08) 5px, rgb(148 163 184 / 0.08) 10px); }
+.ir-result--pass { color: var(--color-success); font-weight: 700; }
+.ir-result--fail,
+.ir-result--error { color: var(--color-destructive); font-weight: 700; }
+.ir-status-cell { min-width: 104px; background: var(--color-card); }
+.ir-status { display: inline-flex; align-items: center; gap: 4px; color: var(--color-muted-foreground); font-size: 11px; font-weight: 600; }
+.ir-status--warning { color: var(--color-warning); }
+.ir-status--error { color: var(--color-destructive); }
+.ir-status--current { color: var(--color-success); }
+.ir-action-cell { width: 38px; min-width: 38px; padding: 0 4px !important; background: var(--color-card); text-align: center; }
+
+@media (max-width: 640px) {
+  .ir-data-column,
+  .ir-input-cell,
+  .ir-output-cell { min-width: 96px; }
+}
 
 .cc-layer [data-page-chrome] {
   pointer-events: auto;

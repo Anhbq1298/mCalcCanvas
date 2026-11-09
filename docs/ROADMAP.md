@@ -10,6 +10,7 @@
 | P1 | Agent documentation | Done (AGENTS.md, CLAUDE.md, docs/) |
 | P2 | `DocumentRepository` abstraction | Interface done; IndexedDB is the only backend |
 | P2 | `CalculationValue` abstraction (scalar + matrix) introduced incrementally | Planned |
+| P2 | Input & Results batch workspace: persisted bindings/rows, inherited units, explicit Calculate All | Done |
 | P2 | User-defined functions `f(x) := …` | Planned |
 | P2 | Matrices and vectors with per-entry units | Planned |
 | P2 | Units tests: stiffness (kN/mm), rotational stiffness (kN·m/rad), thermal expansion | Planned |
