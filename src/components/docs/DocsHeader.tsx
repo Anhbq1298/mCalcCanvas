@@ -77,6 +77,7 @@ import { parseDisplayUnit } from '../../engine/light';
 import { MenuButton, type MenuEntry } from '../common/MenuButton';
 import { CONSTANTS, OPERATORS, SYMBOLS, UNITS_PALETTE } from '../ribbon/palettes';
 import { Popover, PalettePopover } from './Popover';
+import { MatricesTablesRibbon } from '../ribbon/MatricesTablesRibbon';
 
 const MOD = typeof navigator !== 'undefined' && /Mac/.test(navigator.platform) ? '⌘' : 'Ctrl+';
 
@@ -852,13 +853,14 @@ function HelpTab() {
   );
 }
 
-type FormatTab = 'document' | 'math' | 'text' | 'graph' | 'help';
+type FormatTab = 'document' | 'math' | 'text' | 'graph' | 'matrices' | 'help';
 
 const TAB_LABELS: [FormatTab, string][] = [
   ['document', 'Document'],
   ['math', 'Math Formatting'],
   ['text', 'Text Formatting'],
   ['graph', 'Graph'],
+  ['matrices', 'Matrices/Tables'],
   ['help', 'Help'],
 ];
 
@@ -871,7 +873,9 @@ function useRibbonTab(): [FormatTab, (t: FormatTab) => void] {
   const [tab, setTab] = useState<FormatTab>('math');
   const focusKind = useCanvasStore((s) => {
     const id = s.editingId ?? (s.selection.length ? s.selection[0] : null);
-    const t = id ? s.shapes[id]?.type : undefined;
+    const shape = id ? s.shapes[id] : undefined;
+    if (shape?.type === 'table' || (shape?.type === 'math' && /\\begin\\{bmatrix\\}/.test(shape.props.latex))) return 'matrices';
+    const t = shape?.type;
     return t === 'math' || t === 'text' || t === 'graph' ? t : null;
   });
   const [lastKind, setLastKind] = useState<FormatTab | null>(null);
@@ -907,7 +911,7 @@ function RibbonPanel({ tab }: { tab: FormatTab }) {
   const label = TAB_LABELS.find(([id]) => id === tab)![1];
   return (
     <div role="tabpanel" aria-label={label} className="rb-panel" data-testid={`format-panel-${tab}`}>
-      {tab === 'document' ? <DocumentTab /> : tab === 'math' ? <MathFormattingTab /> : tab === 'text' ? <TextFormattingTab /> : tab === 'graph' ? <GraphTab /> : <HelpTab />}
+      {tab === 'document' ? <DocumentTab /> : tab === 'math' ? <MathFormattingTab /> : tab === 'text' ? <TextFormattingTab /> : tab === 'graph' ? <GraphTab /> : tab === 'matrices' ? <MatricesTablesRibbon /> : <HelpTab />}
     </div>
   );
 }

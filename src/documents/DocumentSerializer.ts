@@ -1,4 +1,4 @@
-import { DEFAULT_GRAPH_STYLE, DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, TEXT_FONTS, type AnnexRole, type GraphSeriesStyle, type Shape } from '../canvas/model/types';
+import { DEFAULT_GRAPH_STYLE, DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, TEXT_FONTS, type AnnexRole, type GraphSeriesStyle, defaultTableProps, type Shape } from '../canvas/model/types';
 import { escapeHtml, sanitizeHtml } from '../canvas/sanitize';
 import {
   DEFAULT_LABEL_STYLES,
@@ -141,6 +141,13 @@ export function sanitizeShape(raw: unknown): Shape | null {
       if (!pts.length) return null;
       return { ...base, type: 'draw', props: { points: pts.slice(0, 20000), stroke: color(p.stroke, '#1e3a5f'), strokeWidth: bounded(p.strokeWidth, 2, 0.25, 20) } };
     }
+    case 'table': {
+      const rows = Math.round(bounded(p.rows, 3, 1, 100)); const columns = Math.round(bounded(p.columns, 3, 1, 50));
+      const defaults = defaultTableProps(rows, columns); const rawCells = Array.isArray(p.cells) ? p.cells : [];
+      const cells = Array.from({ length: rows }, (_, rIndex) => { const row = Array.isArray(rawCells[rIndex]) ? rawCells[rIndex] as unknown[] : []; return Array.from({ length: columns }, (_, cIndex) => { const cell = row[cIndex]; return { value: (cell && typeof cell === 'object' ? str((cell as Raw).value) : str(cell)).slice(0, 1000) }; }); });
+      const rawWidths = Array.isArray(p.columnWidths) ? p.columnWidths : []; const columnWidths = Array.from({ length: columns }, (_, index) => bounded(rawWidths[index], 112, 48, 600));
+      return { ...base, type: 'table', props: { ...defaults, w: bounded(p.w, columnWidths.reduce((sum, width) => sum + width, 0), 48, SIZE_LIMIT), h: bounded(p.h, rows * 32, 24, SIZE_LIMIT), cells, columnWidths, headerRow: p.headerRow !== false } };
+    }
     case 'graph': {
       const styles = ['line', 'marker', 'circle', 'segments'];
       const latex = (v: unknown) => str(v).slice(0, 2000);
@@ -236,6 +243,8 @@ export function parseDocument(input: unknown): CalculationDocument {
   if (!TEXT_FONTS[settings.textFont]) settings.textFont = 'Inter';
   settings.baselineSnap = settings.baselineSnap === 'minor' ? 'minor' : 'major';
   settings.pages = Math.min(200, Math.max(1, Math.round(num(settings.pages, 1))));
+  settings.showMatrixIndices = settings.showMatrixIndices === true;
+  settings.collapseNestedMatrices = settings.collapseNestedMatrices === true;
   // Page setup (absent in older worksheets: A4 and the original 20/16 mm margins).
   if (settings.paper !== 'A3') delete settings.paper;
   const m = settings.margins as Partial<PageMargins> | undefined;

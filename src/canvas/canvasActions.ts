@@ -19,7 +19,7 @@ import {
   type ShapePatch,
 } from './model/canvasStore';
 import { screenToPage, shapeBounds, snap, unionBounds } from './model/geometry';
-import { DEFAULT_GRAPH_STYLE, DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, type GraphProps, type GraphSeries, type Point, type Shape } from './model/types';
+import { DEFAULT_GRAPH_STYLE, DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, defaultTableProps, type GraphProps, type GraphSeries, type Point, type Shape } from './model/types';
 import { plainTextToHtml } from './sanitize';
 import { sanitizeShape } from '../documents/DocumentSerializer';
 import { clampDelta, clampPoint, clampShapesIntoPage, constrained, crossPoint, nextPrintableTop, nextWritingPoint, printableAt } from './pageConstraint';
@@ -167,11 +167,19 @@ export function createTextRegion(point: Point, html = ''): string {
   return id;
 }
 
+export function createTableRegion(point: Point, rows = 3, columns = 3): string {
+  const id = newShapeId(); const p = snapPoint(point);
+  addShapes([{ id, type: 'table', x: p.x, y: p.y, props: defaultTableProps(rows, columns) }], { select: true });
+  clampShapesIntoPage([id]);
+  useCanvasStore.setState({ editingId: id, activeGridCell: { shapeId: id, row: 0, column: 0 }, tool: 'select', crosshair: null });
+  return id;
+}
+
 export function beginEditSelected(): boolean {
   const { selection, shapes } = get();
   if (selection.length !== 1) return false;
   const s = shapes[selection[0]];
-  if (s?.type !== 'math' && s?.type !== 'text') return false;
+  if (s?.type !== 'math' && s?.type !== 'text' && s?.type !== 'table') return false;
   if (s.type === 'text' && s.props.annex?.kind === 'link') return false;
   startEditing(s.id);
   return true;

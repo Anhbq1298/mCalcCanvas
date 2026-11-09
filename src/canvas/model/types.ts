@@ -112,6 +112,8 @@ export interface DrawProps {
   stroke: string;
   strokeWidth: number;
 }
+export interface TableCell { value: string; }
+export interface TableProps { w: number; h: number; rows: number; columns: number; cells: TableCell[][]; columnWidths: number[]; headerRow: boolean; }
 
 /** House style for new graphs: Roboto, light lemon background, no grid, axes through the origin. */
 export const DEFAULT_GRAPH_STYLE = { grid: false, axesAtOrigin: true, font: 'Roboto', background: '#fff9c4' } as const;
@@ -174,8 +176,9 @@ export type RectShape = Base<'rect', RectProps>;
 export type LineShape = Base<'line', LineProps>;
 export type DrawShape = Base<'draw', DrawProps>;
 export type GraphShape = Base<'graph', GraphProps>;
+export type TableShape = Base<'table', TableProps>;
 
-export type Shape = MathShape | TextShape | ImageShape | RectShape | LineShape | DrawShape | GraphShape;
+export type Shape = MathShape | TextShape | ImageShape | RectShape | LineShape | DrawShape | GraphShape | TableShape;
 export type ShapeType = Shape['type'];
 
 export type ToolId = 'select' | 'hand' | 'math' | 'text' | 'rect' | 'line' | 'arrow' | 'draw';
@@ -240,3 +243,10 @@ export const DEFAULT_TEXT_PROPS: TextProps = {
   color: '#0f172a',
   align: 'left',
 };
+
+export function defaultTableProps(rows = 3, columns = 3): TableProps {
+  const safeRows = Math.max(1, Math.min(100, Math.round(rows)));
+  const safeColumns = Math.max(1, Math.min(50, Math.round(columns)));
+  const columnWidths = Array.from({ length: safeColumns }, () => 112);
+  return { w: columnWidths.reduce((sum, width) => sum + width, 0), h: safeRows * 32, rows: safeRows, columns: safeColumns, cells: Array.from({ length: safeRows }, () => Array.from({ length: safeColumns }, () => ({ value: '' }))), columnWidths, headerRow: true };
+}
