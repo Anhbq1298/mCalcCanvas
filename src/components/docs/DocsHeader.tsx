@@ -49,7 +49,7 @@ import { canUndo, updateShapes, useCanvasStore, type ShapePatch } from '../../ca
 import { fontStack, PARAGRAPH_STYLES, TEXT_FONTS, type GraphShape, type HeadingLevel, type MathDisplayMode, type Shape } from '../../canvas/model/types';
 import { formatEditingText, hasTextSelection } from '../../canvas/textFormatting';
 import { useAppStore } from '../../store/appStore';
-import { parseDisplayUnit } from '../../engine';
+import { parseDisplayUnit } from '../../engine/light';
 import { MenuButton, type MenuEntry } from '../common/MenuButton';
 import { CONSTANTS, OPERATORS, SYMBOLS, UNITS_PALETTE } from '../ribbon/palettes';
 import { Popover, PalettePopover } from './Popover';
@@ -244,12 +244,17 @@ function MathFormattingTab() {
         return;
       }
     }
-    try {
-      patchSelected((s) => unitPatch(s, v));
-      setUnitError(null);
-    } catch (e) {
-      setUnitError((e as Error).message);
-    }
+    const { selection, shapes } = useCanvasStore.getState();
+    const targets = selection.map((id) => shapes[id]).filter((s): s is Shape => !!s);
+    Promise.all(targets.map(async (s) => [s.id, await unitPatch(s, v)] as const)).then(
+      (list) => {
+        const patches: Record<string, ShapePatch> = {};
+        for (const [id, p] of list) if (p) patches[id] = p;
+        if (Object.keys(patches).length) updateShapes(patches);
+        setUnitError(null);
+      },
+      (e: Error) => setUnitError(e.message),
+    );
   };
   return (
     <>

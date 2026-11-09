@@ -106,6 +106,12 @@ Mathcad Prime layout, one column with a double bar, each value with its own bar:
 
 An annex block (an annex heading and everything below it up to the next annex heading, all below the ANNEX title) is calculated where its link stands in the main body: `engineBridge.calcKey` gives each region of a linked block the key `[...readingKey(link), ...readingKey(region)]`. The engine still sees one top-to-bottom order, so an annex can use only names defined above its link, and regions below the link use the annex results. When any link or block membership changes (`annexSignature`), every region is re-keyed. `canvas/annex.ts` computes blocks, numbers (link order, then unlinked blocks) and problems (missing target, duplicate link, link inside the annex, heading above the ANNEX title); unlinked blocks are calculated where they stand.
 
+## Responsiveness (worker)
+- In the browser the engine runs in a Web Worker (`src/engine/worker/engine.worker.ts`). The UI talks to it through `src/store/engineClient.ts`: region changes are batched into one message, results come back as plain data and are mirrored into `calculationStore`. A heavy worksheet (the rectangular column, ~3 s) no longer freezes typing or scrolling.
+- `engine.idle()` resolves after everything sent so far has been calculated; `engine.inputInUnit()` is asynchronous.
+- The UI thread must not import the evaluator or mathjs: use `src/engine/light.ts` (units registry, order keys, constant names). Types may come from `src/engine`.
+- Without module workers the engine loads in-process on demand (`engineFallback.ts`); unit tests use the synchronous `engineFallback.sync.ts` (alias in `vite.config.ts`). The single-file build inlines the worker (`engineWorkerInline.ts`).
+
 ## Extending the value model (planned)
 
 Matrices, user functions and solvers need a richer value type. Vectors (above) are the first step; matrices extend `Value` with a 2-D type. Matrices in structural engineering can mix units per entry (translational and rotational DOFs), so a matrix must not assume one common unit.

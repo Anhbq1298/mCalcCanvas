@@ -5,7 +5,7 @@
  * MathLive must not try to fetch them itself.
  */
 import { MathfieldElement } from 'mathlive';
-import { UNIT_SYMBOLS } from '../engine';
+import { UNIT_SYMBOLS } from '../engine/light';
 
 MathfieldElement.fontsDirectory = null;
 MathfieldElement.soundsDirectory = null;

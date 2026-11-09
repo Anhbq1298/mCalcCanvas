@@ -33,7 +33,7 @@ CI (`.github/workflows/ci.yml`) runs all of these; GitHub Pages deploys only aft
 ## 3. Ground rules (code)
 
 - **The canvas store is the source of truth.** The engine is derived from it through `src/canvas/engineBridge.ts`. Never write results into the canvas store or persist them.
-- **The engine is independent of React, the DOM and canvas geometry.** It receives LaTeX plus an opaque reading-order key per region.
+- **The engine is independent of React, the DOM and canvas geometry.** It receives LaTeX plus an opaque reading-order key per region, and runs in a Web Worker. UI code imports runtime values only from `src/engine/light.ts` (never the evaluator or mathjs); results are asynchronous (`engine.idle()`). See ENGINE_DESIGN.md → Responsiveness.
 - **No string evaluation.** Never use `eval`, `new Function`, or `math.evaluate`/`math.parse` on user text. The parser builds a JSON tree, and the evaluator calls a fixed set of functions.
 - **Strict checks.** No tolerances on ≤ < ≥ > (`ComparisonPolicy`). Never compare or round displayed values.
 - **Untrusted input:** files, clipboard and pasted HTML go through `sanitizeShape` / `sanitizeHtml`. New shape props must be validated in `DocumentSerializer.sanitizeShape`.
@@ -73,6 +73,7 @@ To change a template:
 |---|---|
 | `H(level, text)` | Heading |
 | `T(text)` | One line of note text. Keep it to about 95 characters at 13 px, otherwise it wraps and overlaps the next line. |
+| (all helpers live in `tools/templates/layout.mjs`) | |
 | `P(desc, latex, opts)` | Description on the left and a math region on the right. A long formula goes on its own line under the description. Options: `M(unit, fr / FU / fo)`. `fr` = formula = result, `FU` = full substitution, `fo` = formula only. |
 | `ROW(items, h)` | Side-by-side regions (tables) |
 | `GRAPH(size, props)` | A graph |

@@ -4,7 +4,7 @@
  * ("25 · kN/m"), so values and units are easy to tell apart. The LaTeX used
  * for calculation is never changed.
  */
-import { UNITS } from '../engine';
+import { UNITS } from '../engine/light';
 
 /** Light blue used for units (readable on white and in print). */
 export const UNIT_COLOR = '#2b8fd6';

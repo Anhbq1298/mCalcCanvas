@@ -1,5 +1,5 @@
 import type { Shape } from '../canvas/model/types';
-import type { UnitSystemName } from '../engine';
+import type { UnitSystemName } from '../engine/light';
 
 export const DOCUMENT_VERSION = 2;
 

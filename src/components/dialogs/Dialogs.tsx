@@ -1,12 +1,13 @@
 import { FileText, FolderOpen, Trash2, X } from 'lucide-react';
 import { commands } from '../../app/commands';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
 import { DocumentManager } from '../../documents/DocumentManager';
 import { openDocument } from '../../documents/documentController';
 import type { DocumentSummary } from '../../documents/DocumentTypes';
-import { BUILTIN_CONSTANTS, UNIT_SYMBOLS } from '../../engine';
+import { BUILTIN_CONSTANT_INFO, UNIT_SYMBOLS } from '../../engine/light';
 import { useAppStore } from '../../store/appStore';
-import { FormatGuideDialog } from './FormatGuide';
+// The format guide runs its own engine: loaded only when opened.
+const FormatGuideDialog = lazy(() => import('./FormatGuide').then((m) => ({ default: m.FormatGuideDialog })));
 
 export function Modal({ title, onClose, children, wide }: { title: string; onClose(): void; children: ReactNode; wide?: boolean }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -185,9 +186,9 @@ function SyntaxDialog({ onClose }: { onClose(): void }) {
         <section>
           <h3 className="mb-1 font-semibold">Built-in constants</h3>
           <ul className="list-disc space-y-0.5 pl-5">
-            {Object.entries(BUILTIN_CONSTANTS).map(([k, c]) => (
-              <li key={k}>
-                <b className="font-math italic">{k}</b> – {c.description}
+            {BUILTIN_CONSTANT_INFO.map((c) => (
+              <li key={c.name}>
+                <b className="font-math italic">{c.name}</b> – {c.description}
               </li>
             ))}
           </ul>
@@ -222,7 +223,12 @@ export function Dialogs() {
   if (dialog === 'open') return <OpenDialog onClose={close} />;
   if (dialog === 'shortcuts') return <ShortcutsDialog onClose={close} />;
   if (dialog === 'syntax') return <SyntaxDialog onClose={close} />;
-  if (dialog === 'guide') return <FormatGuideDialog onClose={close} />;
+  if (dialog === 'guide')
+    return (
+      <Suspense fallback={null}>
+        <FormatGuideDialog onClose={close} />
+      </Suspense>
+    );
   if (dialog === 'about') return <AboutDialog onClose={close} />;
   return null;
 }

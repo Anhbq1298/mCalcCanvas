@@ -1,12 +1,13 @@
 import { create } from 'zustand';
-import { CalculationEngine, type CalculationResult } from '../engine';
+import type { CalculationResult } from '../engine';
+import { createEngineClient } from './engineClient';
 
 /**
- * The single engine instance for the app. Results are mirrored into a
+ * The single engine for the app (a Web Worker in the browser, see engineClient.ts). Results are mirrored into a
  * Zustand store keyed by region id so each region subscribes only to its
  * own result and re-renders only when that result changes.
  */
-export const engine = new CalculationEngine({ unitSystem: 'SI', precision: 2 });
+export const engine = createEngineClient();
 
 interface CalculationState {
   results: Record<string, CalculationResult | undefined>;

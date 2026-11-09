@@ -10,7 +10,8 @@
 import { engine } from '../store/calculationStore';
 import { useAppStore } from '../store/appStore';
 import { PAGE_GAP, pageSize } from '../export/pageGeometry';
-import { orderKeysEqual, type OrderKey, type RegionInput } from '../engine';
+import { orderKeysEqual, type OrderKey } from '../engine/light';
+import type { RegionInput } from '../engine';
 import { useCanvasStore, type CanvasState } from './model/canvasStore';
 import type { GraphShape, Shape } from './model/types';
 import { graphRegionId, isDefinitionLatex, type GraphField } from './graphData';

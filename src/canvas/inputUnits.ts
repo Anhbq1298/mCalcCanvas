@@ -7,14 +7,15 @@ import { engine } from '../store/calculationStore';
 import type { ShapePatch } from './model/canvasStore';
 import type { Shape } from './model/types';
 
-/** Patch for one shape; throws (with an engineer-readable message) for an unknown or mismatching unit. */
-export function unitPatch(shape: Shape, unit: string): ShapePatch | null {
+/** Patch for one shape; rejects (with an engineer-readable message) for an unknown or mismatching unit. */
+export async function unitPatch(shape: Shape, unit: string): Promise<ShapePatch | null> {
   if (shape.type !== 'math') return null;
   const v = unit.trim();
   if (v) {
     let latex: string | null;
     try {
-      latex = engine.inputInUnit(shape.id, v);
+      await engine.idle();
+      latex = await engine.inputInUnit(shape.id, v);
     } catch (e) {
       throw new Error((e as Error).message.replace(/^Cannot display/, 'Cannot convert'));
     }

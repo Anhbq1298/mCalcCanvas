@@ -8,7 +8,7 @@ import { newGraphSeries } from '../../canvas/canvasActions';
 import { MathInput } from '../../math/MathInput';
 import { SeriesSources } from './SeriesSources';
 import { unitPatch } from '../../canvas/inputUnits';
-import { parseDisplayUnit } from '../../engine';
+import { parseDisplayUnit } from '../../engine/light';
 import { useAppStore } from '../../store/appStore';
 import { useRegionResult } from '../../store/calculationStore';
 
@@ -196,13 +196,13 @@ function MathProperties({ shape }: { shape: MathShape }) {
               id={id}
               value={shape.props.displayUnit}
               onCommit={(displayUnit) => {
-                try {
-                  const p = unitPatch(shape, displayUnit);
-                  if (p) updateShape(shape.id, p);
-                  setConvertError(null);
-                } catch (e) {
-                  setConvertError((e as Error).message);
-                }
+                unitPatch(shape, displayUnit).then(
+                  (p) => {
+                    if (p) updateShape(shape.id, p);
+                    setConvertError(null);
+                  },
+                  (e: Error) => setConvertError(e.message),
+                );
               }}
             />
           )}
