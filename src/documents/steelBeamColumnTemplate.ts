@@ -155,7 +155,7 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   calc(4,20,'shearLimit',t`\frac{72${v('epsilon')}}{${v('eta')}}`,{w:290},396);
   note(4,21.4,'Web slenderness above 72ε/η with web shear requires EN 1993-1-5 shear-buckling verification.');
   note(4,22.3,'Both shear directions acting together require a separate biaxial shear check.');
-  note(4,23.2,'The summary controls PASS / FAIL / NOT VERIFIED, including the checks not covered by these equations.');
+  note(4,23.2,'A missing required check or input leaves the design NOT VERIFIED.');
 
   // 5 — No black-box extraction of Euler loads or reduction factors.
   note(5,0,'4  COMPRESSION MEMBER BUCKLING',1);
@@ -201,6 +201,7 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(6,15.1,'λLT = √(Wy fy / Mcr). Without a verified Mcr, LTB is NOT VERIFIED.');
   note(6,16,'External-Mcr mode bypasses the coefficient calculation.');
   note(6,16.9,'The selected reference case, restraint and signed load height must match the member.');
+  calc(6,18,'LTBResult',t`\operatorname{entry}(${v('R')},${outputFields.length+2*9+1})`,{steelFigure:'state',w:115});
   note(6,19,'Reference: SCI NCCI SN003b; uniform rolled I/H sections, fork-end restraint and free warping.');
 
   // 7 — Both Annex B equations are evaluated explicitly.
