@@ -67,7 +67,10 @@ test('EC3 catalogue, editable K, LTB safety, batch, custom section, mCCV and pri
  await expect(page.locator('svg[aria-label="LTB coefficient cases 1 to 13"]').first()).toHaveAttribute('data-selected-case','10');
  await page.screenshot({path:`${out}/03-ltb-case-lookup.png`});
  await page.getByTestId('param-input-LTBcase').fill('14');await page.getByTestId('param-input-LTBcase').press('Enter');await idle();
- await expect(page.getByTestId('steel-state').first()).toHaveText('NOT VERIFIED');
+ await expect.poll(()=>page.locator('[data-testid=math-region]').evaluateAll(els=>{
+   const region=els.find(e=>e.getAttribute('data-latex')?.startsWith('\\mathrm{LTBResult}\\coloneq'));
+   return region?.querySelector('[data-testid=steel-state]')?.textContent;
+ })).toBe('NOT VERIFIED');
  await page.getByTestId('param-input-LTBcase').fill('1');await page.getByTestId('param-input-LTBcase').press('Enter');await idle();
  // Custom profile is embedded as literal quantities, without a lookup/global storage dependency.
  await revealInput('Section');await page.getByTestId('browse-steel').click();await page.getByRole('button',{name:'User-Defined Section',exact:true}).click();
