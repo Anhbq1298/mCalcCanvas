@@ -120,7 +120,7 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
 
   // 3 — Source properties are named; lookup indices are confined to the technical annex.
   note(3,0,'3  SECTION AND CLASSIFICATION',1);
-  note(3,0.9,'HEB/I/H geometry and properties — selected section designation is shown on the first page.');
+  note(3,0.9,'Steel section source: licensed offline catalogue; designation and dataset shown beside Section ID.');
   calc(3,1.5,'SectionDrawing',t`\operatorname{stack}(${v('h')}/\mathrm{mm},${v('b')}/\mathrm{mm},${v('tw')}/\mathrm{mm},${v('tf')}/\mathrm{mm})`,{steelFigure:'section',w:260,h:190});
   (['h','b','tw','tf','A','Iy','Iz','Wpl_y','Wpl_z','It','Iw'] as const).forEach((key,i)=>math(3,1.5+i*0.43,`${v(key)}=`,396,{displayMode:'result',fontSize:12,w:290,h:18,displayUnit:sectionUnits[key]}));
   note(3,6.4,'EN 1993-1-1 §5.5 / Table 5.2. Biaxial loading: uniform web compression is conservative.');
