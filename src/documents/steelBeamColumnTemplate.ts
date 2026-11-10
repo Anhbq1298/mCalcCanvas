@@ -268,12 +268,12 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   const ltbHeading=shapes.at(-1)!;
   if(ltbHeading.type==='text'){ltbHeading.props.fontSize=19;ltbHeading.props.color='#1e3a5f';ltbHeading.props.h=28;}
   note(11,0.8,'Enter the case number shown below. Coefficients are for k = kw = 1; load-height zg is entered on page 1.');
-  calc(11,1.4,'LTBcatalog',t`\operatorname{stack}(${v('LTBcase')})`,{steelFigure:'ltbCatalog',w:634,h:680},76);
-  note(11,19.4,'Cases 1–9: SCI NCCI SN003b Table 3.1, end-moment ratio ψ = smaller / larger end moment; C2 = 0.');
-  note(11,20.2,'Cases 10–13: Table 3.2 transverse loading. Fixed-end cases use their own coefficients; do not substitute pin-ended values.');
-  note(11,21,'Combined end moments plus transverse loading require SN003b §3.4 curves and ψ/μ. They are not silently interpolated here.');
-  note(11,21.8,'Outside cases 1–13, or k/kw ≠ 1, returns NOT VERIFIED unless verified manual coefficients or external Mcr are supplied.');
-  note(11,22.6,'Reference: SCI NCCI SN003b, Tables 3.1/3.2, §§2–3.3. End restraints and load position must match.');
+  calc(11,1.4,'LTBcatalog',t`\operatorname{stack}(${v('LTBcase')})`,{steelFigure:'ltbCatalog',w:634,h:520},76);
+  note(11,15,'Cases 1–9: SCI NCCI SN003b Table 3.1, end-moment ratio ψ = smaller / larger end moment; C2 = 0.');
+  note(11,15.8,'Cases 10–13: Table 3.2 transverse loading. Fixed-end cases use their own coefficients; do not substitute pin-ended values.');
+  note(11,16.6,'Combined end moments plus transverse loading require SN003b §3.4 curves and ψ/μ. They are not silently interpolated here.');
+  note(11,17.4,'Outside cases 1–13, or k/kw ≠ 1, returns NOT VERIFIED unless verified manual coefficients or external Mcr are supplied.');
+  note(11,18.2,'Reference: SCI NCCI SN003b, Tables 3.1/3.2, §§2–3.3. End restraints and load position must match.');
 
   note(12,0,'ANNEX C — LTB COEFFICIENT TABLE',1);
   note(12,0.8,'Use the case number beside the matching diagram in Annex B. Coefficients are not interchangeable.');
