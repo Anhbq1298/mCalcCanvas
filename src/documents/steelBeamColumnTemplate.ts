@@ -25,15 +25,15 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
     epsilon:'Material factor ε = √(235 MPa / fy)',
     webLimit1:'Web limit for Class 1', webLimit2:'Web limit for Class 2', webBendLimit3:'Web limit for Class 3 (bending)',
     sectionClass:'Governing cross-section class',
-    NcRd:'Compression resistance of the gross section (6.2.4)', rho:'Reduction for high shear (6.2.8)',
-    MyRd:'Major-axis bending resistance (6.2.5)', MzRd:'Minor-axis bending resistance (6.2.5)',
-    NAxRd:'Axial resistance after shear reduction', URsection:'Combined section utilisation (6.2.1(7))',
-    NcrY:'Euler critical load about y–y', chiY:'Buckling reduction factor χy', NbY:'Design buckling resistance about y–y',
-    NcrZ:'Euler critical load about z–z', chiZ:'Buckling reduction factor χz', NbZ:'Design buckling resistance about z–z',
-    iZero:'Polar radius of gyration for torsional buckling', NcrT:'Elastic torsional critical load',
-    chiT:'Torsional buckling reduction factor χT', NbT:'Design torsional buckling resistance',
-    Tcr:'Elastic lateral bending term', Bcr:'Torsional and warping term', McrCalc:'Elastic critical moment Mcr',
-    lambdaLT:'Relative LTB slenderness', Mb:'LTB design resistance moment (6.3.2.2)',
+    NcRd:'Compression resistance Nc,Rd', rho:'High-shear reduction ρ (6.2.8)',
+    MyRd:'Major-axis resistance My,Rd', MzRd:'Minor-axis resistance Mz,Rd',
+    NAxRd:'Axial resistance after shear reduction', URsection:'Section interaction (6.2.1(7))',
+    NcrY:'Euler load Ncr,y', chiY:'Buckling reduction χy', NbY:'Buckling resistance Nb,y,Rd',
+    NcrZ:'Euler load Ncr,z', chiZ:'Buckling reduction χz', NbZ:'Buckling resistance Nb,z,Rd',
+    iZero:'Polar radius i0', NcrT:'Torsional critical load Ncr,T',
+    chiT:'Torsional reduction χT', NbT:'Torsional resistance Nb,T,Rd',
+    Tcr:'Elastic bending term Tcr', Bcr:'Torsion and warping term Bcr', McrCalc:'Elastic critical moment Mcr',
+    lambdaLT:'Relative LTB slenderness λLT', Mb:'LTB resistance Mb,Rd (6.3.2.2)',
     kyyAuto:'Interaction factor kyy (Annex B, Method 2)', kzzAuto:'Interaction factor kzz (Annex B, Method 2)',
     Jy:'Interaction check about y–y (6.61)', Jz:'Interaction check about z–z (6.62)',
     deltaSimple:'Simply supported beam deflection', deltaCantilever:'Cantilever beam deflection',
@@ -69,14 +69,14 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(1,0.8,'EN 1993-1-1:2005 + A1:2014 · LC1 · Straight, prismatic rolled I/H member');
   note(1,1.5,'1  DESIGN BASIS — EN 1993-1-1:2005 + A1:2014; compression positive; y major / z minor.');
   input(1,2.3,'Section','1211');
-  note(1,3.1,'Steel section source: licensed offline catalogue; designation and dataset shown beside Section ID');
+  note(1,3.1,'Section properties and data source are listed in Annex A.1.');
   note(1,4,'2  INPUTS',2);
   pairWithLabels(1,5,'Yield strength fy',['fy',q(355,'MPa')],'Ultimate strength fu',['fu',q(510,'MPa')]);
   pairWithLabels(1,6,'Elastic modulus E',['E',q(210,'GPa')],'Shear modulus G',['G',q(80.76923,'GPa')]);
   pairWithLabels(1,7,'Section factor γM0',['gamma0','1'],'Buckling factor γM1',['gamma1','1']);
   pairWithLabels(1,8,'Tension factor γM2',['gamma2','1.25'],'Member length L',['L',q(5,'m')]);
-  pairWithLabels(1,9,'Effective length factor Ky',['Ky','1'],'Effective Kz',['Kz','1']);
-  pairWithLabels(1,10,'LTB unrestrained length',['Llt',q(5,'m')],'LTB model — use picker',['LTBmode','0']);
+  pairWithLabels(1,9,'Ky (effective length)',['Ky','1'],'Kz (effective length)',['Kz','1']);
+  pairWithLabels(1,10,'LTB length Lb',['Llt',q(5,'m')],'LTB model',['LTBmode','0']);
   note(1,11,'2.1  DESIGN ACTIONS — LC1, simultaneous at same position',2);
   pairWithLabels(1,12,'Compression NEd',['N',q(100,'kN')],'Major-axis My,Ed',['My',q(50,'kN')+t`\cdot\mathrm{m}`]);
   pairWithLabels(1,13,'Minor-axis Mz,Ed',['Mz',q(5,'kN')+t`\cdot\mathrm{m}`],'Shear Vy,Ed',['Vy',q(0,'kN')]);
