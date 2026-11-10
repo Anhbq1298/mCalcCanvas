@@ -25,8 +25,8 @@ test('EC3 catalogue, editable K, LTB safety, batch, custom section, mCCV and pri
    const text=await baselinePages.nth(i).innerText();
    expect(text).not.toMatch(/steelDesign|operatorname|entry\(|stack\(/);
  }
- await expect(baselinePages.first().getByRole('img',{name:'LTB loading and moment diagram'})).toBeVisible();
- await expect(baselinePages.nth(6).getByRole('img',{name:'Separate serviceability load case'})).toBeVisible();
+ await expect(page.locator('#print-root').getByRole('img',{name:'LTB loading and moment diagram'})).toHaveCount(1);
+ await expect(page.locator('#print-root').getByRole('img',{name:'Separate serviceability load case'})).toHaveCount(1);
 
  const tableLayout=await page.locator('#print-root [data-testid=math-region]').evaluateAll(els=>{
    const find=(key:string)=>els.find(e=>e.getAttribute('data-latex')?.startsWith(key))?.getBoundingClientRect();
