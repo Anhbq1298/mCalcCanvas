@@ -96,6 +96,10 @@ describe('steel worksheet engine, workers contract, batch and serialization',()=
   step('manually laid-out report and LTB annex fit the printable pages',()=>{
    const size=pageSize('portrait');const plan=optimizeTemplateLayout(shapes,{...size,margins:marginPx(),mode:'print'});
    expect(pageCount(shapes,'portrait')).toBe(11);expect(plan.pages).toBe(11);expect(plan.issues).toEqual([]);expect(shapesOutsidePrintArea(shapes,'portrait')).toEqual([]);
+   const text=shapes.filter(shape=>shape.type==='text').map(shape=>shape.props.html).join('\n');
+   expect(text).not.toMatch(/DESIGN SUMMARY/i);
+   expect(text).toContain('LTB COEFFICIENT TABLE');
+   expect(text).toContain('Loading / moment case');
   });
   const regions=shapes.filter(s=>s.type==='math').map(s=>({id:s.id,input:{latex:s.props.latex,order:calcKey(s,record)}}));
   const engine=new CalculationEngine();engine.batch(()=>regions.forEach(r=>engine.setRegion(r.id,r.input)));
