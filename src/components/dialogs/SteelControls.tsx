@@ -21,7 +21,7 @@ export function SectionProfile({h,b,tw,tf}: {h:number;b:number;tw:number;tf:numb
   const scale=140/Math.max(h,b), w=b*scale, d=h*scale, t=tf*scale, web=tw*scale, x=(200-w)/2,y=(170-d)/2;
   return <svg role="img" aria-label="Doubly symmetric I/H section profile" viewBox="0 0 240 190" width="240" height="190">
     <path d={`M${x},${y}h${w}v${t}h${-(w-web)/2}v${d-2*t}h${(w-web)/2}v${t}h${-w}v${-t}h${(w-web)/2}v${-(d-2*t)}h${-(w-web)/2}z`} fill="#dbeafe" stroke="#334155" strokeWidth="1.5"/>
-    <text x="205" y="90" fontSize="12">h={h}</text><text x="55" y="183" fontSize="12">b={b} mm</text>
+    <text x="185" y="90" fontSize="12">h={h.toFixed(1)}</text><text x="55" y="183" fontSize="12">b={b.toFixed(1)} mm</text>
     <path d="M15 90h170M100 10v155" stroke="#94a3b8" strokeDasharray="4 4"/><text x="180" y="85" fontSize="12">y</text><text x="105" y="15" fontSize="12">z</text>
   </svg>;
 }

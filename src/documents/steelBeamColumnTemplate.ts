@@ -16,7 +16,7 @@ export function steelBeamColumnTemplate(): {shapes:Shape[];inputResult:InputResu
   const math=(p:number,r:number,latex:string,x=96,extra:Partial<MathProps>={})=>{
     const id=newShapeId(); shapes.push({id,type:'math',x,y:Y(p,r),props:{...DEFAULT_MATH_PROPS,latex,fontSize:14,w:250,h:32,baseline:20,displayMode:'formulaResult',...extra}});return id;
   };
-  const input=(p:number,r:number,key:string,rhs:string,x=96)=>{const id=math(p,r,definition(key)+rhs,x);bound.set(key,id);return id;};
+  const input=(p:number,r:number,key:string,rhs:string,x=96)=>{const id=math(p,r,definition(key)+rhs,x,{displayMode:'formula'});bound.set(key,id);return id;};
   const pair=(p:number,r:number,a:[string,string],b:[string,string])=>{input(p,r,...a);input(p,r,...b,396);};
   const q=(n:number,u:string)=>`${n}\\,\\mathrm{${u}}`;
   text(1,0,'STEEL BEAM & BEAM-COLUMN DESIGN',1);
@@ -33,7 +33,7 @@ export function steelBeamColumnTemplate(): {shapes:Shape[];inputResult:InputResu
   pair(1,10.7,['Ky','1'],['Kz','1']);
   text(1,11.7,'3  SIMULTANEOUS ULS ACTIONS — one combination and member position',2);
   pair(1,12.7,['N',q(100,'kN')],['My',q(50,'kN')+'\\cdot\\mathrm{m}']);
-  pair(1,13.7,['Mz',q(5,'kN')+'\\cdot\\mathrm{m}'],['Vy',q(10,'kN')]);
+  pair(1,13.7,['Mz',q(5,'kN')+'\\cdot\\mathrm{m}'],['Vy',q(0,'kN')]);
   input(1,14.7,'Vz',q(30,'kN'));
   text(1,15.7,'Compression N positive; y major, z minor. Moment/shear signs retained; checks use |demand|.');
   text(1,16.7,'4  SERVICEABILITY — separate unfactored loads / project limit',2);
@@ -49,7 +49,7 @@ export function steelBeamColumnTemplate(): {shapes:Shape[];inputResult:InputResu
   math(2,1,definition('State')+'\\operatorname{entry}('+symbol('R')+',4)',96,{steelFigure:'state'});
   math(2,1,definition('UR')+'\\operatorname{entry}('+symbol('R')+',3)',396);
   math(2,2,definition('Issues')+`\\operatorname{entry}(${symbol('R')},${outputFields.findIndex(([n])=>n==='flags')})`,76,{steelFigure:'issues',displayMode:'result'});
-  text(2,3,'Check / clause',2,76,180);text(2,3,'Resistance',2,276,120);text(2,3,'Demand',2,416,100);text(2,3,'UR',2,556,60);text(2,3,'Status',2,636,100);
+  text(2,3,'Check / clause',0,76,180);text(2,3,'Resistance',0,276,120);text(2,3,'Demand',0,416,100);text(2,3,'UR',0,536,60);text(2,3,'Status',0,616,100);
   const resistances=[`\\operatorname{if}(${symbol('N')}<0\\,\\mathrm{N},\\operatorname{entry}(${symbol('R')},7),\\operatorname{entry}(${symbol('R')},6))`,...['My','Mz','Vy','Vz'].map(k=>`\\operatorname{entry}(${symbol('R')},${outputFields.findIndex(([n])=>n===k)})`),'1',...['NbY','NbZ','NbT','Mb'].map(k=>`\\operatorname{entry}(${symbol('R')},${outputFields.findIndex(([n])=>n===k)})`),'1','1',`${symbol('L')}/${symbol('LimitRatio')}`];
   const demands=['N','My','Mz','Vy','Vz','sectionUr','N','N','N','My','iy','iz','delta'];
   const clauses=['6.2.3 / 6.2.4','6.2.5 / 6.2.8','6.2.5 / 6.2.8','6.2.6','6.2.6 / EN 1993-1-5','6.2.1(7) / 6.2.10','6.3.1.2','6.3.1.2','6.3.1.4','6.3.2.2','6.3.3 / Annex B','6.3.3 / Annex B','EN 1990 / project'];
@@ -60,8 +60,8 @@ export function steelBeamColumnTemplate(): {shapes:Shape[];inputResult:InputResu
     const demand=i===5||i>=10?`\\operatorname{entry}(${symbol('R')},${outputFields.findIndex(([n])=>n===demands[i])})`:`\\operatorname{abs}(${symbol(demands[i])})`;
     math(2,row+0.3,definition('d'+i)+demand,416,{displayMode:'result',w:120,fontSize:12});
     const urIndex=outputFields.length+2*i;
-    math(2,row+0.3,definition('UR'+i)+`\\operatorname{entry}(${symbol('R')},${urIndex})`,556,{displayMode:'result',w:70,fontSize:12});
-    const id=math(2,row+0.3,definition('State'+i)+`\\operatorname{entry}(${symbol('R')},${urIndex+1})`,636,{steelFigure:'state',w:100});bound.set('State'+i,id);
+    math(2,row+0.3,definition('UR'+i)+`\\operatorname{entry}(${symbol('R')},${urIndex})`,536,{displayMode:'result',w:70,fontSize:12});
+    const id=math(2,row+0.3,definition('State'+i)+`\\operatorname{entry}(${symbol('R')},${urIndex+1})`,616,{steelFigure:'state',w:100});bound.set('State'+i,id);
   });
   text(2,17.8,'6  KEY INTERMEDIATE RESULTS — section class, Euler loads, reduction factors',2);
   const intermediates=['sectionClass','NcrY','NcrZ','chiY','chiZ','Mcr','chiLT','kyy','kyz','kzy','kzz','rho'];
@@ -110,7 +110,7 @@ export function steelBeamColumnTemplate(): {shapes:Shape[];inputResult:InputResu
   text(5,14,'High shear: conservative global yield reduction; beam-column stability requires separate verification.');
   text(5,15,'Cross-section N–M uses conservative §6.2.1(7) summation with class-appropriate moduli.');
   text(5,16,'Torsion: doubly symmetric uncoupled critical load, Lt specified independently; no applied torsion.');
-  text(5,17,'Tension: gross yielding / net fracture only. Connections, block tearing and fatigue are excluded.');
+  text(5,17,'Tension: gross/net resistance only. Biaxial shear interaction needs separate verification.');
   text(5,18,'National Annex: select partial factors, curves and η; general LTB method §6.3.2.2 only.');
   text(5,19,'SLS: elastic major-axis prismatic beam; enter external displacement for other loading or shear effects.');
   text(5,21,'Sources: EN 1993-1-1:2005+A1:2014 §§5.5, 6.2, 6.3; NCCI SN003b; JRC 2014 Simões.');
@@ -118,7 +118,7 @@ export function steelBeamColumnTemplate(): {shapes:Shape[];inputResult:InputResu
   const inputs=['Section','fy','fu','L','Ky','Kz','Llt','N','My','Mz','Vy','Vz','LTBmode','LoadCase'];
   const outputs=['sectionClass','Mcr','chiY','chiZ','chiLT','kyy','kyz','kzy','kzz'];
   const find=(prefix:string)=>shapes.find(s=>s.type==='math'&&s.props.latex.startsWith(definition(prefix)))!.id;
-  const inputResult:InputResultConfig={title:'EC3 members — simultaneous combinations',inputs:inputs.map(key=>({id:key,label:key==='Section'?'Section ID (library)':key,regionId:bound.get(key)!})),outputs:[...outputs,'UR','State','Governing','SectionOut',...checkNames.map((_,i)=>'State'+i)].map(key=>({id:key,label:key==='State'?'State: 1 PASS / 0 FAIL / −1 NOT VERIFIED':key,regionId:bound.get(key)??find(key), ...(key.startsWith('State')?{valueLabels:{'1':'PASS','0':'FAIL','-1':'NOT VERIFIED'}}:key==='Governing'?{valueLabels:Object.fromEntries(checkNames.map((n,i)=>[String(i),n]))}:key==='SectionOut'?{valueLabels:{'0':'User-defined',...Object.fromEntries(sections.map(s=>[String(s.id),s.name]))}}:{})})),rows:[{id:'LC1',name:'Member 1 / ULS 1',values:{N:100,My:50,Mz:5,Vy:10,Vz:30}},{id:'LC2',name:'Member 1 / ULS 2',values:{N:200,My:100,Mz:10,Vy:20,Vz:60}}]};
+  const inputResult:InputResultConfig={title:'EC3 members — simultaneous combinations',inputs:inputs.map(key=>({id:key,label:key==='Section'?'Section ID (library)':key,regionId:bound.get(key)!})),outputs:[...outputs,'UR','State','Governing','SectionOut',...checkNames.map((_,i)=>'State'+i)].map(key=>({id:key,label:key==='State'?'State: 1 PASS / 0 FAIL / −1 NOT VERIFIED':key,regionId:bound.get(key)??find(key), ...(key.startsWith('State')?{valueLabels:{'1':'PASS','0':'FAIL','-1':'NOT VERIFIED'}}:key==='Governing'?{valueLabels:Object.fromEntries(checkNames.map((n,i)=>[String(i),n]))}:key==='SectionOut'?{valueLabels:{'0':'User-defined',...Object.fromEntries(sections.map(s=>[String(s.id),s.name]))}}:{})})),rows:[{id:'LC1',name:'Member 1 / ULS 1',values:{N:100,My:50,Mz:5,Vy:0,Vz:30}},{id:'LC2',name:'Member 1 / ULS 2',values:{N:200,My:100,Mz:10,Vy:0,Vz:60}}]};
   for(const row of inputResult.rows) row.values={...Object.fromEntries(inputs.map(k=>[k,null])),...row.values};
   return {shapes,inputResult};
 }

@@ -39,7 +39,7 @@ export function CaseSummary({ config, fields, rows, results, stamp }: { config: 
               <td>{row.name}</td>
               {config.inputs.map((c) => (
                 <td key={c.id} className="num">
-                  {row.values[c.id] ?? '—'}
+                  {row.values[c.id] ?? fields.get(c.regionId)?.inputValue ?? '—'}
                 </td>
               ))}
               {config.outputs.map((c) => {

@@ -3,7 +3,7 @@
  * No React, hidden worksheet state, rounding or relaxed acceptance comparisons.
  * Sources/applicability: docs/steel-design/TECHNICAL.md.
  */
-export type DesignState = 'PASS' | 'FAIL' | 'NOT VERIFIED';
+type DesignState = 'PASS' | 'FAIL' | 'NOT VERIFIED';
 export interface SectionGeometry {
   h: number; b: number; tw: number; tf: number; r: number; A: number;
   Iy: number; Iz: number; Wel_y: number; Wel_z: number; Wpl_y: number; Wpl_z: number;
@@ -21,11 +21,11 @@ export interface SteelInput {
   slsMode: number; q: number; P: number; displacement: number; limitRatio: number;
   netArea: number; eta: number; verifiedFactors: number; ltbVerified: number; curveVerified: number; manualVerified: number;
 }
-export interface DesignCheck {
+interface DesignCheck {
   name: string; clause: string; demand: number; resistance: number | null;
   ur: number | null; state: DesignState; reason?: string;
 }
-export interface SteelResult {
+interface SteelResult {
   checks: DesignCheck[]; state: DesignState; governing: string; governingUr: number;
   sectionClass: number; flangeClass: number; webClass: number;
   values: Record<string, number>; limitations: string[];
@@ -33,7 +33,7 @@ export interface SteelResult {
 const positive = (x: number) => Number.isFinite(x) && x > 0;
 const classify = (ratio: number, limits: number[]) => 1 + limits.filter(x => ratio > x).length;
 /** §6.3.1.2 (6.49)-(6.50); also general LTB §6.3.2.2. */
-export function reduction(lambda: number, alpha: number): number {
+function reduction(lambda: number, alpha: number): number {
   if (!Number.isFinite(lambda) || lambda < 0 || !positive(alpha)) throw new Error('Invalid buckling slenderness or imperfection factor');
   const phi = 0.5 * (1 + alpha * (lambda - 0.2) + lambda ** 2);
   return Math.min(1, 1 / (phi + Math.sqrt(Math.max(0, phi ** 2 - lambda ** 2))));
@@ -103,8 +103,9 @@ export function designSteel(s: SectionGeometry, a: SteelInput): SteelResult {
   check('Shear Z','6.2.6 / EN 1993-1-5', a.Vz, Vz, a.Vz !== 0 ? shearReason : undefined);
   const ratio = (x: number, y: number) => x === 0 ? 0 : Math.min(1e100, Math.abs(x) / Math.max(y, 1e-100));
   // Explicit conservative §6.2.1(7) summation; shear reduction also applied to axial capacity.
+  const biaxialShear = a.Vy !== 0 && a.Vz !== 0 ? 'Biaxial shear interaction requires separate verification' : undefined;
   const sectionUr = ratio(a.N, (a.N < 0 ? Nt : Nc) * (1 - rho)) + ratio(a.My, My) + ratio(a.Mz, Mz);
-  check('Section interaction','6.2.1(7) / 6.2.10', sectionUr, 1, unsupported || shearReason);
+  check('Section interaction','6.2.1(7) / 6.2.10', sectionUr, 1, unsupported || shearReason || biaxialShear);
   const NcrY = Math.PI ** 2 * a.E * s.Iy / (a.Ky * a.L) ** 2;
   const NcrZ = Math.PI ** 2 * a.E * s.Iz / (a.Kz * a.L) ** 2;
   const NcrT = (a.G * s.It + Math.PI ** 2 * a.E * s.Iw / a.Lt ** 2) / ((s.Iy + s.Iz) / s.A);
@@ -135,7 +136,7 @@ export function designSteel(s: SectionGeometry, a: SteelInput): SteelResult {
   if (a.interactionMode === 1 && a.manualVerified === 1 && [a.kyy,a.kyz,a.kzy,a.kzz].every(v => v >= 0)) factors=[a.kyy,a.kyz,a.kzy,a.kzz];
   if (a.interactionMode === 0 && sectionClass <= 2 && a.verifiedFactors === 1) factors=method2(Math.max(0,a.N)/NbY,Math.max(0,a.N)/NbZ,ly,lz,a.Cmy,a.Cmz,a.CmLT);
   const needsInteraction = a.N > 0 && (a.My !== 0 || a.Mz !== 0);
-  const interactionReason = needsInteraction ? unsupported || curveReason || shearReason || (NbT < Math.min(NbY,NbZ) ? 'Torsional mode governs: combined stability requires separate verification' : undefined) || (rho > 0 ? 'High-shear member interaction requires separate verification' : undefined) || (!factors ? 'Annex B branch/factors not verified; supply independently verified kij' : undefined) || (a.My !== 0 ? ltbReason : undefined) : undefined;
+  const interactionReason = needsInteraction ? unsupported || biaxialShear || curveReason || shearReason || (NbT < Math.min(NbY,NbZ) ? 'Torsional mode governs: combined stability requires separate verification' : undefined) || (rho > 0 ? 'High-shear member interaction requires separate verification' : undefined) || (!factors ? 'Annex B branch/factors not verified; supply independently verified kij' : undefined) || (a.My !== 0 ? ltbReason : undefined) : undefined;
   const [kyy,kyz,kzy,kzz] = factors ?? [0,0,0,0];
   const iy = ratio(Math.max(0,a.N),NbY) + kyy * ratio(a.My,Mb ?? 0) + kyz * ratio(a.Mz,Wz*a.fy/a.gamma1);
   const iz = ratio(Math.max(0,a.N),NbZ) + kzy * ratio(a.My,Mb ?? 0) + kzz * ratio(a.Mz,Wz*a.fy/a.gamma1);
@@ -148,7 +149,7 @@ export function designSteel(s: SectionGeometry, a: SteelInput): SteelResult {
   Object.assign(values,{Nc,Nt,My,Mz,Vy,Vz,NcrY,NcrZ,NcrT,ly,lz,lt,chiY,chiZ,chiT,NbY,NbZ,NbT,Mcr:Mcr??0,lambdaLT:lambdaLT??0,chiLT:chiLT??0,Mb:Mb??0,C1,C2,kyy,kyz,kzy,kzz,iy,iz,delta,rho,sectionUr});
   const known=checks.filter(c=>c.ur!==null);
   const governing=known.reduce((m,c)=>c.ur!>m.ur! ? c : m,known[0]);
-  values.flags=(unsupported?1:0)|(shearReason?2:0)|(!Mcr&&a.My!==0?4:0)|(curveReason?8:0)|(needsInteraction&&!factors?16:0)|(needsInteraction&&rho>0?32:0)|(needsInteraction&&NbT<Math.min(NbY,NbZ)?64:0)|(![0,1,2].includes(a.slsMode)?128:0);
+  values.flags=(biaxialShear?256:0)|(unsupported?1:0)|(shearReason?2:0)|(!Mcr&&a.My!==0?4:0)|(curveReason?8:0)|(needsInteraction&&!factors?16:0)|(needsInteraction&&rho>0?32:0)|(needsInteraction&&NbT<Math.min(NbY,NbZ)?64:0)|(![0,1,2].includes(a.slsMode)?128:0);
   const state: DesignState = checks.some(c=>c.state==='FAIL') ? 'FAIL' : checks.some(c=>c.state==='NOT VERIFIED') ? 'NOT VERIFIED' : 'PASS';
   return {checks,state,governing:governing.name,governingUr:governing.ur!,sectionClass,flangeClass,webClass,values,limitations};
 }

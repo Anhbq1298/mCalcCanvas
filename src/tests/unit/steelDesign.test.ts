@@ -10,7 +10,7 @@ import {runBatchJob} from '../../engine/batch';
 import {parseDocument,serializeDocument} from '../../documents/DocumentSerializer';
 import {DEFAULT_SETTINGS,DOCUMENT_VERSION} from '../../documents/DocumentTypes';
 const s=sectionById(1211).values;
-const a:SteelInput={fy:355,fu:510,E:210000,G:80769.23,gamma0:1,gamma1:1,gamma2:1.25,L:5000,Ky:1,Kz:1,Llt:5000,Lt:5000,N:100000,My:50e6,Mz:5e6,Vy:10000,Vz:30000,alphaY:0.21,alphaZ:0.34,alphaLT:0.34,ltbMode:0,loadCase:0,loadHeight:0,k:1,kw:1,C1:1,C2:0,externalMcr:0,interactionMode:0,Cmy:1,Cmz:1,CmLT:1,kyy:1,kyz:1,kzy:1,kzz:1,slsMode:0,q:5,P:0,displacement:0,limitRatio:250,netArea:s.A,eta:1.2,verifiedFactors:1,ltbVerified:0,curveVerified:1,manualVerified:0};
+const a:SteelInput={fy:355,fu:510,E:210000,G:80769.23,gamma0:1,gamma1:1,gamma2:1.25,L:5000,Ky:1,Kz:1,Llt:5000,Lt:5000,N:100000,My:50e6,Mz:5e6,Vy:0,Vz:30000,alphaY:0.21,alphaZ:0.34,alphaLT:0.34,ltbMode:0,loadCase:0,loadHeight:0,k:1,kw:1,C1:1,C2:0,externalMcr:0,interactionMode:0,Cmy:1,Cmz:1,CmLT:1,kyy:1,kyz:1,kzy:1,kzz:1,slsMode:0,q:5,P:0,displacement:0,limitRatio:250,netArea:s.A,eta:1.2,verifiedFactors:1,ltbVerified:0,curveVerified:1,manualVerified:0};
 
 describe('EC3 2005 engineering and catalogue',()=>{
  it('validates sources, independent references and bounded design scope',()=>{
@@ -58,6 +58,7 @@ describe('EC3 2005 engineering and catalogue',()=>{
    expect(designSteel(s,{...a,interactionMode:1}).state).toBe('NOT VERIFIED');
    expect(designSteel(s,{...a,interactionMode:1,manualVerified:1}).state).toBe('PASS');
    expect(designSteel(s,{...a,curveVerified:0}).state).toBe('NOT VERIFIED');
+   expect(designSteel(s,{...a,Vy:10000,Vz:30000}).state).toBe('NOT VERIFIED');
    expect(designSteel(s,{...a,verifiedFactors:0}).state).toBe('NOT VERIFIED');
    expect(designSteel(s,{...a,loadCase:5}).state).toBe('NOT VERIFIED');
    expect(designSteel(s,{...a,kw:0.5}).state).toBe('NOT VERIFIED');

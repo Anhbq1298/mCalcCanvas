@@ -61,7 +61,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{Section}\\coloneq1211",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -113,7 +113,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{fy}\\coloneq355\\,\\mathrm{MPa}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -134,7 +134,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{fu}\\coloneq510\\,\\mathrm{MPa}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -155,7 +155,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{E}\\coloneq210\\,\\mathrm{GPa}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -176,7 +176,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{G}\\coloneq80.76923\\,\\mathrm{GPa}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -197,7 +197,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{gamma}_{0}\\coloneq1",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -218,7 +218,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{gamma}_{1}\\coloneq1",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -239,7 +239,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{gamma}_{2}\\coloneq1.25",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -276,7 +276,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{L}\\coloneq5\\,\\mathrm{m}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -297,7 +297,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{Llt}\\coloneq5\\,\\mathrm{m}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -318,7 +318,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{Ky}\\coloneq1",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -339,7 +339,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{Kz}\\coloneq1",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -376,7 +376,7 @@
         "w": 250,
         "h": 32,
         "latex": "N_{Ed}\\coloneq100\\,\\mathrm{kN}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -397,7 +397,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{My}\\coloneq50\\,\\mathrm{kN}\\cdot\\mathrm{m}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -418,7 +418,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{Mz}\\coloneq5\\,\\mathrm{kN}\\cdot\\mathrm{m}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -438,8 +438,8 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{Vy}\\coloneq10\\,\\mathrm{kN}",
-        "displayMode": "formulaResult",
+        "latex": "\\mathrm{Vy}\\coloneq0\\,\\mathrm{kN}",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -460,7 +460,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{Vz}\\coloneq30\\,\\mathrm{kN}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -512,7 +512,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{q}\\coloneq5\\,\\mathrm{kN}/\\mathrm{m}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -533,7 +533,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{P}\\coloneq0\\,\\mathrm{kN}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -554,7 +554,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{SLSmode}\\coloneq0",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -575,7 +575,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{LimitRatio}\\coloneq250",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -611,7 +611,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{LTBmode}\\coloneq0",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -760,13 +760,12 @@
       "y": 1351,
       "props": {
         "w": 180,
-        "h": 28,
+        "h": 24,
         "html": "Check / clause",
         "fontFamily": "Inter",
-        "fontSize": 15,
-        "color": "#1e3a5f",
-        "align": "left",
-        "heading": 2
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
       }
     },
     {
@@ -776,13 +775,12 @@
       "y": 1351,
       "props": {
         "w": 120,
-        "h": 28,
+        "h": 24,
         "html": "Resistance",
         "fontFamily": "Inter",
-        "fontSize": 15,
-        "color": "#1e3a5f",
-        "align": "left",
-        "heading": 2
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
       }
     },
     {
@@ -792,45 +790,42 @@
       "y": 1351,
       "props": {
         "w": 100,
-        "h": 28,
+        "h": 24,
         "html": "Demand",
         "fontFamily": "Inter",
-        "fontSize": 15,
-        "color": "#1e3a5f",
-        "align": "left",
-        "heading": 2
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
       }
     },
     {
       "id": "ec3_41",
       "type": "text",
-      "x": 556,
+      "x": 536,
       "y": 1351,
       "props": {
         "w": 60,
-        "h": 28,
+        "h": 24,
         "html": "UR",
         "fontFamily": "Inter",
-        "fontSize": 15,
-        "color": "#1e3a5f",
-        "align": "left",
-        "heading": 2
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
       }
     },
     {
       "id": "ec3_42",
       "type": "text",
-      "x": 636,
+      "x": 616,
       "y": 1351,
       "props": {
         "w": 100,
-        "h": 28,
+        "h": 24,
         "html": "Status",
         "fontFamily": "Inter",
-        "fontSize": 15,
-        "color": "#1e3a5f",
-        "align": "left",
-        "heading": 2
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
       }
     },
     {
@@ -908,7 +903,7 @@
     {
       "id": "ec3_47",
       "type": "math",
-      "x": 556,
+      "x": 536,
       "y": 1403,
       "props": {
         "w": 70,
@@ -929,7 +924,7 @@
     {
       "id": "ec3_48",
       "type": "math",
-      "x": 636,
+      "x": 616,
       "y": 1403,
       "props": {
         "w": 100,
@@ -1023,7 +1018,7 @@
     {
       "id": "ec3_53",
       "type": "math",
-      "x": 556,
+      "x": 536,
       "y": 1443,
       "props": {
         "w": 70,
@@ -1044,7 +1039,7 @@
     {
       "id": "ec3_54",
       "type": "math",
-      "x": 636,
+      "x": 616,
       "y": 1443,
       "props": {
         "w": 100,
@@ -1138,7 +1133,7 @@
     {
       "id": "ec3_59",
       "type": "math",
-      "x": 556,
+      "x": 536,
       "y": 1483,
       "props": {
         "w": 70,
@@ -1159,7 +1154,7 @@
     {
       "id": "ec3_60",
       "type": "math",
-      "x": 636,
+      "x": 616,
       "y": 1483,
       "props": {
         "w": 100,
@@ -1253,7 +1248,7 @@
     {
       "id": "ec3_65",
       "type": "math",
-      "x": 556,
+      "x": 536,
       "y": 1523,
       "props": {
         "w": 70,
@@ -1274,7 +1269,7 @@
     {
       "id": "ec3_66",
       "type": "math",
-      "x": 636,
+      "x": 616,
       "y": 1523,
       "props": {
         "w": 100,
@@ -1368,7 +1363,7 @@
     {
       "id": "ec3_71",
       "type": "math",
-      "x": 556,
+      "x": 536,
       "y": 1563,
       "props": {
         "w": 70,
@@ -1389,7 +1384,7 @@
     {
       "id": "ec3_72",
       "type": "math",
-      "x": 636,
+      "x": 616,
       "y": 1563,
       "props": {
         "w": 100,
@@ -1483,7 +1478,7 @@
     {
       "id": "ec3_77",
       "type": "math",
-      "x": 556,
+      "x": 536,
       "y": 1603,
       "props": {
         "w": 70,
@@ -1504,7 +1499,7 @@
     {
       "id": "ec3_78",
       "type": "math",
-      "x": 636,
+      "x": 616,
       "y": 1603,
       "props": {
         "w": 100,
@@ -1598,7 +1593,7 @@
     {
       "id": "ec3_83",
       "type": "math",
-      "x": 556,
+      "x": 536,
       "y": 1643,
       "props": {
         "w": 70,
@@ -1619,7 +1614,7 @@
     {
       "id": "ec3_84",
       "type": "math",
-      "x": 636,
+      "x": 616,
       "y": 1643,
       "props": {
         "w": 100,
@@ -1713,7 +1708,7 @@
     {
       "id": "ec3_89",
       "type": "math",
-      "x": 556,
+      "x": 536,
       "y": 1683,
       "props": {
         "w": 70,
@@ -1734,7 +1729,7 @@
     {
       "id": "ec3_90",
       "type": "math",
-      "x": 636,
+      "x": 616,
       "y": 1683,
       "props": {
         "w": 100,
@@ -1828,7 +1823,7 @@
     {
       "id": "ec3_95",
       "type": "math",
-      "x": 556,
+      "x": 536,
       "y": 1723,
       "props": {
         "w": 70,
@@ -1849,7 +1844,7 @@
     {
       "id": "ec3_96",
       "type": "math",
-      "x": 636,
+      "x": 616,
       "y": 1723,
       "props": {
         "w": 100,
@@ -1943,7 +1938,7 @@
     {
       "id": "ec3_101",
       "type": "math",
-      "x": 556,
+      "x": 536,
       "y": 1763,
       "props": {
         "w": 70,
@@ -1964,7 +1959,7 @@
     {
       "id": "ec3_102",
       "type": "math",
-      "x": 636,
+      "x": 616,
       "y": 1763,
       "props": {
         "w": 100,
@@ -2058,7 +2053,7 @@
     {
       "id": "ec3_107",
       "type": "math",
-      "x": 556,
+      "x": 536,
       "y": 1803,
       "props": {
         "w": 70,
@@ -2079,7 +2074,7 @@
     {
       "id": "ec3_108",
       "type": "math",
-      "x": 636,
+      "x": 616,
       "y": 1803,
       "props": {
         "w": 100,
@@ -2173,7 +2168,7 @@
     {
       "id": "ec3_113",
       "type": "math",
-      "x": 556,
+      "x": 536,
       "y": 1843,
       "props": {
         "w": 70,
@@ -2194,7 +2189,7 @@
     {
       "id": "ec3_114",
       "type": "math",
-      "x": 636,
+      "x": 616,
       "y": 1843,
       "props": {
         "w": 100,
@@ -2288,7 +2283,7 @@
     {
       "id": "ec3_119",
       "type": "math",
-      "x": 556,
+      "x": 536,
       "y": 1883,
       "props": {
         "w": 70,
@@ -2309,7 +2304,7 @@
     {
       "id": "ec3_120",
       "type": "math",
-      "x": 636,
+      "x": 616,
       "y": 1883,
       "props": {
         "w": 100,
@@ -3053,7 +3048,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{Lt}\\coloneq\\mathrm{L}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3074,7 +3069,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{alphaY}\\coloneq0.34",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3095,7 +3090,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{alphaZ}\\coloneq0.49",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3116,7 +3111,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{alphaLT}\\coloneq0.21",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3137,7 +3132,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{LoadCase}\\coloneq0",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3158,7 +3153,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{zg}\\coloneq0\\,\\mathrm{mm}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3179,7 +3174,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{k}\\coloneq1",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3200,7 +3195,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{kw}\\coloneq1",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3221,7 +3216,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{C}_{1}\\coloneq1",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3242,7 +3237,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{C}_{2}\\coloneq0",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3263,7 +3258,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{McrExternal}\\coloneq0\\,\\mathrm{kN}\\cdot\\mathrm{m}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3284,7 +3279,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{InteractionMode}\\coloneq0",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3305,7 +3300,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{Cmy}\\coloneq1",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3326,7 +3321,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{Cmz}\\coloneq1",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3347,7 +3342,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{CmLT}\\coloneq1",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3368,7 +3363,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{kyyManual}\\coloneq1",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3389,7 +3384,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{kyzManual}\\coloneq1",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3410,7 +3405,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{kzyManual}\\coloneq1",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3431,7 +3426,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{kzzManual}\\coloneq1",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3452,7 +3447,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{DeltaExternal}\\coloneq0\\,\\mathrm{mm}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3473,7 +3468,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{Anet}\\coloneq\\mathrm{A}",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3494,7 +3489,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{eta}\\coloneq1.2",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3515,7 +3510,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{FactorsVerified}\\coloneq1",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3536,7 +3531,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{LTBverified}\\coloneq0",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3557,7 +3552,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{CurvesVerified}\\coloneq1",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -3578,7 +3573,7 @@
         "w": 250,
         "h": 32,
         "latex": "\\mathrm{ManualFactorsVerified}\\coloneq0",
-        "displayMode": "formulaResult",
+        "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
@@ -4153,7 +4148,7 @@
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Tension: gross yielding / net fracture only. Connections, block tearing and fatigue are excluded.",
+        "html": "Tension: gross/net resistance only. Biaxial shear interaction needs separate verification.",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -4909,7 +4904,7 @@
           "N": 100,
           "My": 50,
           "Mz": 5,
-          "Vy": 10,
+          "Vy": 0,
           "Vz": 30,
           "LTBmode": null,
           "LoadCase": null
@@ -4929,7 +4924,7 @@
           "N": 200,
           "My": 100,
           "Mz": 10,
-          "Vy": 20,
+          "Vy": 0,
           "Vz": 60,
           "LTBmode": null,
           "LoadCase": null
