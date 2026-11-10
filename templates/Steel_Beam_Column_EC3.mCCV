@@ -5973,7 +5973,6 @@
         "fontSize": 19,
         "color": "#1e3a5f",
         "align": "left",
-        "heading": 1,
         "annex": {
           "kind": "heading",
           "id": "ltb-cases"
