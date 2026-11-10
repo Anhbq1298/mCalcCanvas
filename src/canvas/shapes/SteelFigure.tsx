@@ -4,10 +4,10 @@ import type { FormattedQuantity } from '../../engine/UnitSystem';
 export function SteelFigure({kind,value}: {kind:'section'|'ltb'|'buckling'|'state'|'mode'|'issues';value?:FormattedQuantity}) {
   if(kind==='mode') return <span className="font-sans text-xs text-slate-700">Governing: {checkNames[value?.number??-1]??'NOT VERIFIED'}</span>;
   if(kind==='issues') {
-    const labels=['NOT VERIFIED — CLASS 4 SECTION','Shear buckling required','LTB configuration unverified','Buckling curves unverified','Annex B factors unverified','High-shear stability unverified','Torsional interaction unverified','SLS model unverified','Biaxial shear interaction unverified'];
+    const labels=['CLASS 4 SECTION','Shear buckling','LTB configuration','Buckling curves','Annex B factors','High-shear stability','Torsional interaction','SLS model','Biaxial shear'];
     const flags=value?.number??255;
     const messages=labels.filter((_,i)=>(flags&(1<<i))!==0);
-    return <span className="block max-w-[610px] whitespace-normal font-sans text-[10px] text-amber-800">{messages.length?messages.join('; '):'All applicable checks verified within the stated scope. See assumptions and limitations in annex.'}</span>;
+    return <span className="block max-w-[610px] whitespace-normal font-sans text-[10px] text-amber-800">{messages.length?'NOT VERIFIED — '+messages.join('; '):'All applicable checks verified within the stated scope. See assumptions and limitations in annex.'}</span>;
   }
   if(kind==='state') {
     const n=value?.number;

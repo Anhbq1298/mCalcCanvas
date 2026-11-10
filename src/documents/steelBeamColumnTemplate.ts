@@ -48,7 +48,7 @@ export function steelBeamColumnTemplate(): {shapes:Shape[];inputResult:InputResu
   text(2,0,'5  GOVERNING DESIGN SUMMARY',1);
   math(2,1,definition('State')+'\\operatorname{entry}('+symbol('R')+',4)',96,{steelFigure:'state'});
   math(2,1,definition('UR')+'\\operatorname{entry}('+symbol('R')+',3)',396,{displayMode:'result'});
-  math(2,2.6,definition('Issues')+`\\operatorname{entry}(${symbol('R')},${outputFields.findIndex(([n])=>n==='flags')})`,76,{steelFigure:'issues',displayMode:'result'});
+  math(2,2.5,definition('Issues')+`\\operatorname{entry}(${symbol('R')},${outputFields.findIndex(([n])=>n==='flags')})`,76,{steelFigure:'issues',displayMode:'result'});
   text(2,3.5,'Check / clause',0,76,180);text(2,3.5,'Resistance',0,276,120);text(2,3.5,'Demand',0,416,100);text(2,3.5,'UR',0,536,60);text(2,3.5,'Status',0,616,100);
   const resistances=[`\\operatorname{if}(${symbol('N')}<0\\,\\mathrm{N},\\operatorname{entry}(${symbol('R')},7),\\operatorname{entry}(${symbol('R')},6))`,...['My','Mz','Vy','Vz'].map(k=>`\\operatorname{entry}(${symbol('R')},${outputFields.findIndex(([n])=>n===k)})`),'1',...['NbY','NbZ','NbT','Mb'].map(k=>`\\operatorname{entry}(${symbol('R')},${outputFields.findIndex(([n])=>n===k)})`),'1','1',`${symbol('L')}/${symbol('LimitRatio')}`];
   const demands=['N','My','Mz','Vy','Vz','sectionUr','N','N','N','My','iy','iz','delta'];
@@ -65,7 +65,7 @@ export function steelBeamColumnTemplate(): {shapes:Shape[];inputResult:InputResu
   });
   text(2,18.2,'6  KEY INTERMEDIATE RESULTS — section class, Euler loads, reduction factors',2);
   const intermediates=['sectionClass','NcrY','NcrZ','chiY','chiZ','Mcr','chiLT','kyy','kyz','kzy','kzz','rho'];
-  intermediates.forEach((key,i)=>{const index=outputFields.findIndex(([n])=>n===key);const id=math(2,19.3+Math.floor(i/2),definition(key)+`\\operatorname{entry}(${symbol('R')},${index})`,i%2?396:96,{displayMode:'result'});bound.set(key,id);});
+  intermediates.forEach((key,i)=>{const index=outputFields.findIndex(([n])=>n===key);const id=math(2,19.2+Math.floor(i/2),definition(key)+`\\operatorname{entry}(${symbol('R')},${index})`,i%2?396:96,{displayMode:'result'});bound.set(key,id);});
   math(2,1.8,definition('Governing')+`\\operatorname{entry}(${symbol('R')},5)`,96,{displayMode:'result',steelFigure:'mode'});
   math(2,1.8,definition('SectionOut')+symbol('Section'),396,{displayMode:'result'});
   text(2,17.3,'Batch: 1 PASS / 0 FAIL / −1 NOT VERIFIED. UR −1 means unverified.');
