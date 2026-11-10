@@ -10,7 +10,7 @@ import {runBatchJob} from '../../engine/batch';
 import {parseDocument,serializeDocument} from '../../documents/DocumentSerializer';
 import {DEFAULT_SETTINGS,DOCUMENT_VERSION} from '../../documents/DocumentTypes';
 const s=sectionById(1211).values;
-const a:SteelInput={fy:355,fu:510,E:210000,G:80769.23,gamma0:1,gamma1:1,gamma2:1.25,L:5000,Ky:1,Kz:1,Llt:5000,Lt:5000,N:100000,My:50e6,Mz:5e6,Vy:10000,Vz:30000,alphaY:0.21,alphaZ:0.34,alphaLT:0.34,ltbMode:0,loadCase:0,loadHeight:0,k:1,kw:1,C1:1,C2:0,externalMcr:0,interactionMode:0,Cmy:1,Cmz:1,CmLT:1,kyy:1,kyz:1,kzy:1,kzz:1,slsMode:0,q:5,P:0,displacement:0,limitRatio:250,netArea:s.A,eta:1.2,verifiedFactors:1,ltbVerified:0,curveVerified:1};
+const a:SteelInput={fy:355,fu:510,E:210000,G:80769.23,gamma0:1,gamma1:1,gamma2:1.25,L:5000,Ky:1,Kz:1,Llt:5000,Lt:5000,N:100000,My:50e6,Mz:5e6,Vy:10000,Vz:30000,alphaY:0.21,alphaZ:0.34,alphaLT:0.34,ltbMode:0,loadCase:0,loadHeight:0,k:1,kw:1,C1:1,C2:0,externalMcr:0,interactionMode:0,Cmy:1,Cmz:1,CmLT:1,kyy:1,kyz:1,kzy:1,kzz:1,slsMode:0,q:5,P:0,displacement:0,limitRatio:250,netArea:s.A,eta:1.2,verifiedFactors:1,ltbVerified:0,curveVerified:1,manualVerified:0};
 
 describe('EC3 2005 engineering and catalogue',()=>{
  it('validates sources, independent references and bounded design scope',()=>{
@@ -39,6 +39,11 @@ describe('EC3 2005 engineering and catalogue',()=>{
    for(const actions of [{N:100000},{N:-100000},{My:50e6},{Mz:5e6},{My:50e6,Mz:5e6},{N:100000,My:50e6,Mz:5e6},{Vz:30000}]){
     const r=designSteel(s,{...pure,...actions});expect(r.state,JSON.stringify({actions,limitations:r.limitations})).toBe('PASS');expect(r.governingUr).toBeGreaterThanOrEqual(0);
    }
+   const resistance=designSteel(s,pure).values;
+   expect(resistance.Nc).toBeCloseTo(5727676.5,6);expect(resistance.Nt).toBeCloseTo(5727676.5,6);
+   expect(resistance.My).toBeCloseTo(762980200,4);expect(resistance.Mz).toBeCloseTo(333379435,4);
+   expect(resistance.Vy).toBeCloseTo(2520999.950416501,6);expect(resistance.Vz).toBeCloseTo(1061080.6807564828,6);
+   expect(designSteel(s,{...pure,N:-3e6,netArea:s.A/2}).checks[0].state).toBe('FAIL');
    expect(designSteel(s,{...pure,N:4e6}).state).toBe('FAIL');
    expect(designSteel(s,{...pure,N:-8e6}).state).toBe('FAIL');
    expect(designSteel(s,{...a,Ky:2}).values.NcrY).toBeCloseTo(designSteel(s,a).values.NcrY/4,6);
@@ -50,6 +55,8 @@ describe('EC3 2005 engineering and catalogue',()=>{
     expect(r.flangeClass).toBe(cl);if(cl===4)expect(r.state).toBe('NOT VERIFIED');
    }
    expect(method2(0.1,0.2,0.3,0.2,1,1,1)).toBeNull();
+   expect(designSteel(s,{...a,interactionMode:1}).state).toBe('NOT VERIFIED');
+   expect(designSteel(s,{...a,interactionMode:1,manualVerified:1}).state).toBe('PASS');
    expect(designSteel(s,{...a,curveVerified:0}).state).toBe('NOT VERIFIED');
    expect(designSteel(s,{...a,verifiedFactors:0}).state).toBe('NOT VERIFIED');
    expect(designSteel(s,{...a,loadCase:5}).state).toBe('NOT VERIFIED');
@@ -64,6 +71,7 @@ describe('EC3 2005 engineering and catalogue',()=>{
   step('classical SLS closed form and project-specific limits',()=>{
    // Independent prismatic I=308235000 mm4, E=210000 MPa, L=5000 mm, w=5 N/mm.
    expect(designSteel(s,a).values.delta).toBeCloseTo(0.6286190756846263,7);
+   expect(designSteel(s,{...a,slsMode:1}).values.delta).toBeCloseTo(6.034743126572412,7);
    const external=designSteel(s,{...a,slsMode:2,displacement:21,limitRatio:250});
    expect(external.checks.at(-1)?.state).toBe('FAIL');
   });

@@ -19,7 +19,7 @@ export interface SteelInput {
   interactionMode: number; Cmy: number; Cmz: number; CmLT: number;
   kyy: number; kyz: number; kzy: number; kzz: number;
   slsMode: number; q: number; P: number; displacement: number; limitRatio: number;
-  netArea: number; eta: number; verifiedFactors: number; ltbVerified: number; curveVerified: number;
+  netArea: number; eta: number; verifiedFactors: number; ltbVerified: number; curveVerified: number; manualVerified: number;
 }
 export interface DesignCheck {
   name: string; clause: string; demand: number; resistance: number | null;
@@ -132,7 +132,7 @@ export function designSteel(s: SectionGeometry, a: SteelInput): SteelResult {
   check('LTB','6.3.2.2 (general method)',a.My,a.My === 0 ? 1 : Mb,a.My !== 0 ? ltbReason : undefined);
   // No favourable axial tension credit in the LTB check.
   let factors: [number,number,number,number] | null = null;
-  if (a.interactionMode === 1 && a.verifiedFactors === 1 && [a.kyy,a.kyz,a.kzy,a.kzz].every(v => v >= 0)) factors=[a.kyy,a.kyz,a.kzy,a.kzz];
+  if (a.interactionMode === 1 && a.manualVerified === 1 && [a.kyy,a.kyz,a.kzy,a.kzz].every(v => v >= 0)) factors=[a.kyy,a.kyz,a.kzy,a.kzz];
   if (a.interactionMode === 0 && sectionClass <= 2 && a.verifiedFactors === 1) factors=method2(Math.max(0,a.N)/NbY,Math.max(0,a.N)/NbZ,ly,lz,a.Cmy,a.Cmz,a.CmLT);
   const needsInteraction = a.N > 0 && (a.My !== 0 || a.Mz !== 0);
   const interactionReason = needsInteraction ? unsupported || curveReason || shearReason || (NbT < Math.min(NbY,NbZ) ? 'Torsional mode governs: combined stability requires separate verification' : undefined) || (rho > 0 ? 'High-shear member interaction requires separate verification' : undefined) || (!factors ? 'Annex B branch/factors not verified; supply independently verified kij' : undefined) || (a.My !== 0 ? ltbReason : undefined) : undefined;

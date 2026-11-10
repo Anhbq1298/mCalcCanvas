@@ -14,7 +14,7 @@ export function steelBeamColumnTemplate(): {shapes:Shape[];inputResult:InputResu
     shapes.push({id:newShapeId(),type:'text',x,y:Y(p,r),props:{...DEFAULT_TEXT_PROPS,w,h:heading?28:24,html:escapeHtml(html),fontSize:heading===1?19:heading===2?15:12,color:heading?'#1e3a5f':'#475569',...(heading?{heading}:{}),...(annex?{annex}:{})}});
   };
   const math=(p:number,r:number,latex:string,x=96,extra:Partial<MathProps>={})=>{
-    const id=newShapeId(); shapes.push({id,type:'math',x,y:Y(p,r)-20,props:{...DEFAULT_MATH_PROPS,latex,fontSize:14,w:250,h:32,baseline:20,displayMode:'formulaResult',...extra}});return id;
+    const id=newShapeId(); shapes.push({id,type:'math',x,y:Y(p,r),props:{...DEFAULT_MATH_PROPS,latex,fontSize:14,w:250,h:32,baseline:20,displayMode:'formulaResult',...extra}});return id;
   };
   const input=(p:number,r:number,key:string,rhs:string,x=96)=>{const id=math(p,r,definition(key)+rhs,x);bound.set(key,id);return id;};
   const pair=(p:number,r:number,a:[string,string],b:[string,string])=>{input(p,r,...a);input(p,r,...b,396);};
@@ -55,7 +55,7 @@ export function steelBeamColumnTemplate(): {shapes:Shape[];inputResult:InputResu
   const clauses=['6.2.3 / 6.2.4','6.2.5 / 6.2.8','6.2.5 / 6.2.8','6.2.6','6.2.6 / EN 1993-1-5','6.2.1(7) / 6.2.10','6.3.1.2','6.3.1.2','6.3.1.4','6.3.2.2','6.3.3 / Annex B','6.3.3 / Annex B','EN 1990 / project'];
   checkNames.forEach((name,i)=>{
     const row=4+i;
-    text(2,row,name,0,76,190);text(2,row+0.44,clauses[i],0,76,190);
+    text(2,row,name,0,76,190);text(2,row+0.44,clauses[i],0,76,190);const clause=shapes.at(-1)!;if(clause.type==='text'){clause.props.fontSize=10;clause.props.h=18;}
     math(2,row+0.3,definition('r'+i)+resistances[i],276,{displayMode:'result',w:120,fontSize:12});
     const demand=i===5||i>=10?`\\operatorname{entry}(${symbol('R')},${outputFields.findIndex(([n])=>n===demands[i])})`:`\\operatorname{abs}(${symbol(demands[i])})`;
     math(2,row+0.3,definition('d'+i)+demand,416,{displayMode:'result',w:120,fontSize:12});
@@ -68,7 +68,7 @@ export function steelBeamColumnTemplate(): {shapes:Shape[];inputResult:InputResu
   intermediates.forEach((key,i)=>{const index=outputFields.findIndex(([n])=>n===key);const id=math(2,19+Math.floor(i/2),definition(key)+`\\operatorname{entry}(${symbol('R')},${index})`,i%2?396:96,{displayMode:'result'});bound.set(key,id);});
   math(2,1.7,definition('Governing')+`\\operatorname{entry}(${symbol('R')},5)`,96,{displayMode:'result',steelFigure:'mode'});
   math(2,1.7,definition('SectionOut')+symbol('Section'),396,{displayMode:'result'});
-  text(2,25,'UR = −1 means NOT VERIFIED. State: 1 PASS, 0 FAIL, −1 NOT VERIFIED (also in batch).');
+  text(2,17.15,'Batch: 1 PASS / 0 FAIL / −1 NOT VERIFIED. UR −1 means unverified.');
 
   text(3,0,'ANNEX',1,76,640,{kind:'start'});
   text(3,1,'Section data, calculation inputs and EC3 calculation',2,76,640,{kind:'heading',id:'ec3'});
@@ -78,10 +78,10 @@ export function steelBeamColumnTemplate(): {shapes:Shape[];inputResult:InputResu
     ['Lt',symbol('L')],['alphaY','0.34'],['alphaZ','0.49'],['alphaLT','0.21'],
     ['LoadCase','0'],['zg',q(0,'mm')],['k','1'],['kw','1'],['C1','1'],['C2','0'],['McrExternal',q(0,'kN')+'\\cdot\\mathrm{m}'],
     ['InteractionMode','0'],['Cmy','1'],['Cmz','1'],['CmLT','1'],['kyyManual','1'],['kyzManual','1'],['kzyManual','1'],['kzzManual','1'],
-    ['DeltaExternal',q(0,'mm')],['Anet',symbol('A')],['eta','1.2'],['FactorsVerified','1'],['LTBverified','0'],['CurvesVerified','1'],
+    ['DeltaExternal',q(0,'mm')],['Anet',symbol('A')],['eta','1.2'],['FactorsVerified','1'],['LTBverified','0'],['CurvesVerified','1'],['ManualFactorsVerified','0'],
   ];
   advanced.forEach(([key,rhs],i)=>input(3,11.5+Math.floor(i/2),key,rhs,i%2?396:96));
-  text(3,24,'InteractionMode: 0 Annex B plastic I, λz ≥ 0.4; 1 independently verified manual kij.');
+  text(3,24.4,'InteractionMode: 0 Annex B plastic I, λz ≥ 0.4; 1 independently verified manual kij.');
 
 
   text(4,0,'CALCULATION CONTRACT / REFERENCES',2);
@@ -92,7 +92,7 @@ export function steelBeamColumnTemplate(): {shapes:Shape[];inputResult:InputResu
     math(4,start+groups.length,definition(prefix)+stack(groups),96,{displayMode:'formula'});return start+groups.length+1;
   };
   let row=chunks(propertyKeys.slice(0,16),'S',1);
-  const mapping: Record<string,string>={gamma0:'gamma0',gamma1:'gamma1',gamma2:'gamma2',ltbMode:'LTBmode',loadCase:'LoadCase',loadHeight:'zg',externalMcr:'McrExternal',interactionMode:'InteractionMode',kyy:'kyyManual',kyz:'kyzManual',kzy:'kzyManual',kzz:'kzzManual',slsMode:'SLSmode',displacement:'DeltaExternal',limitRatio:'LimitRatio',netArea:'Anet',verifiedFactors:'FactorsVerified',ltbVerified:'LTBverified',curveVerified:'CurvesVerified'};
+  const mapping: Record<string,string>={gamma0:'gamma0',gamma1:'gamma1',gamma2:'gamma2',ltbMode:'LTBmode',loadCase:'LoadCase',loadHeight:'zg',externalMcr:'McrExternal',interactionMode:'InteractionMode',kyy:'kyyManual',kyz:'kyzManual',kzy:'kzyManual',kzz:'kzzManual',slsMode:'SLSmode',displacement:'DeltaExternal',limitRatio:'LimitRatio',netArea:'Anet',verifiedFactors:'FactorsVerified',ltbVerified:'LTBverified',curveVerified:'CurvesVerified',manualVerified:'ManualFactorsVerified'};
   row=chunks(inputFields.map(([n])=>mapping[n]??n),'I',row);
   math(4,row,definition('R')+`\\operatorname{steelDesign}(${symbol('S')},${symbol('I')})`,96,{displayMode:'formula'});
   text(4,row+1,'LTB reference: NCCI SN003b; uniform I/H; fork ends / free warping');
@@ -100,7 +100,7 @@ export function steelBeamColumnTemplate(): {shapes:Shape[];inputResult:InputResu
   // Reference diagrams are unlinked and never modify Ky / Kz.
   text(5,0,'BUCKLING K — REFERENCE ONLY',2,76,640,{kind:'heading',id:'buckling-k'});
   math(5,1,definition('Kreference')+'1',76,{steelFigure:'buckling',displayMode:'formula'});
-  text(5,6,'Ideal elastic members only. Fixed–guided: end rotations restrained, relative translation free.');
+  text(5,6.2,'Ideal elastic members only. Fixed–guided: end rotations restrained, relative translation free.');
   text(5,7,'Actual K depends on frame sway, connection stiffness and intermediate restraints.');
   text(5,8,'Complex frames may require a separate stability analysis. Viewing this annex never changes Ky/Kz.');
   text(5,9,'LTB k / kw are lateral-bending / warping boundary factors, separate from flexural Ky / Kz.');

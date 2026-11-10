@@ -6,7 +6,7 @@ export const inputFields = [
  ['alphaY',''],['alphaZ',''],['alphaLT',''],['ltbMode',''],['loadCase',''],['loadHeight','mm'],['k',''],['kw',''],
  ['C1',''],['C2',''],['externalMcr','N*mm'],['interactionMode',''],['Cmy',''],['Cmz',''],['CmLT',''],
  ['kyy',''],['kyz',''],['kzy',''],['kzz',''],['slsMode',''],['q','N/mm'],['P','N'],['displacement','mm'],['limitRatio',''],
- ['netArea','mm^2'],['eta',''],['verifiedFactors',''],['ltbVerified',''],['curveVerified',''],
+ ['netArea','mm^2'],['eta',''],['verifiedFactors',''],['ltbVerified',''],['curveVerified',''],['manualVerified',''],
 ] as const;
 export const outputFields = [
  ['sectionClass',''],['flangeClass',''],['webClass',''],['governingUr',''],['state',''],['governing',''],
