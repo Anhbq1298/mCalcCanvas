@@ -2574,7 +2574,7 @@
       "props": {
         "w": 640,
         "h": 24,
-        "html": "The summary controls PASS / FAIL / NOT VERIFIED, including the checks not covered by these equations.",
+        "html": "A missing required check or input leaves the design NOT VERIFIED.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -3650,6 +3650,29 @@
     },
     {
       "id": "ec3_188",
+      "type": "math",
+      "x": 96,
+      "y": 5464,
+      "props": {
+        "w": 115,
+        "h": 32,
+        "latex": "\\mathrm{LTBResult}\\coloneq \\operatorname{entry}(\\mathrm{R},58)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 13,
+        "color": "#0f172a",
+        "baseline": 20,
+        "steelFigure": "state"
+      },
+      "printGroupId": "ec3-sheet-4"
+    },
+    {
+      "id": "ec3_189",
       "type": "text",
       "x": 76,
       "y": 5504,
@@ -3665,7 +3688,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_189",
+      "id": "ec3_190",
       "type": "text",
       "x": 76,
       "y": 5915,
@@ -3682,7 +3705,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_190",
+      "id": "ec3_191",
       "type": "text",
       "x": 76,
       "y": 5951,
@@ -3698,7 +3721,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_191",
+      "id": "ec3_192",
       "type": "math",
       "x": 96,
       "y": 5987,
@@ -3720,7 +3743,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_192",
+      "id": "ec3_193",
       "type": "math",
       "x": 396,
       "y": 5987,
@@ -3742,7 +3765,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_193",
+      "id": "ec3_194",
       "type": "text",
       "x": 76,
       "y": 6027,
@@ -3758,7 +3781,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_194",
+      "id": "ec3_195",
       "type": "math",
       "x": 300,
       "y": 6027,
@@ -3780,7 +3803,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_195",
+      "id": "ec3_196",
       "type": "text",
       "x": 76,
       "y": 6071,
@@ -3796,7 +3819,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_196",
+      "id": "ec3_197",
       "type": "math",
       "x": 300,
       "y": 6071,
@@ -3818,7 +3841,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_197",
+      "id": "ec3_198",
       "type": "math",
       "x": 96,
       "y": 6115,
@@ -3840,7 +3863,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_198",
+      "id": "ec3_199",
       "type": "math",
       "x": 96,
       "y": 6163,
@@ -3862,7 +3885,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_199",
+      "id": "ec3_200",
       "type": "math",
       "x": 396,
       "y": 6163,
@@ -3884,7 +3907,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_200",
+      "id": "ec3_201",
       "type": "math",
       "x": 96,
       "y": 6203,
@@ -3906,7 +3929,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_201",
+      "id": "ec3_202",
       "type": "math",
       "x": 396,
       "y": 6203,
@@ -3928,7 +3951,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_202",
+      "id": "ec3_203",
       "type": "math",
       "x": 96,
       "y": 6243,
@@ -3950,7 +3973,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_203",
+      "id": "ec3_204",
       "type": "math",
       "x": 396,
       "y": 6243,
@@ -3972,7 +3995,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_204",
+      "id": "ec3_205",
       "type": "math",
       "x": 96,
       "y": 6283,
@@ -3994,7 +4017,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_205",
+      "id": "ec3_206",
       "type": "text",
       "x": 396,
       "y": 6283,
@@ -4010,7 +4033,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_206",
+      "id": "ec3_207",
       "type": "text",
       "x": 76,
       "y": 6323,
@@ -4026,7 +4049,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_207",
+      "id": "ec3_208",
       "type": "math",
       "x": 300,
       "y": 6323,
@@ -4048,7 +4071,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_208",
+      "id": "ec3_209",
       "type": "math",
       "x": 96,
       "y": 6363,
@@ -4071,7 +4094,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_209",
+      "id": "ec3_210",
       "type": "text",
       "x": 256,
       "y": 6363,
@@ -4087,7 +4110,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_210",
+      "id": "ec3_211",
       "type": "text",
       "x": 76,
       "y": 6403,
@@ -4103,7 +4126,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_211",
+      "id": "ec3_212",
       "type": "math",
       "x": 300,
       "y": 6403,
@@ -4125,7 +4148,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_212",
+      "id": "ec3_213",
       "type": "math",
       "x": 96,
       "y": 6443,
@@ -4148,7 +4171,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_213",
+      "id": "ec3_214",
       "type": "text",
       "x": 256,
       "y": 6443,
@@ -4164,7 +4187,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_214",
+      "id": "ec3_215",
       "type": "text",
       "x": 76,
       "y": 6467,
@@ -4180,7 +4203,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_215",
+      "id": "ec3_216",
       "type": "text",
       "x": 76,
       "y": 6499,
@@ -4196,7 +4219,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_216",
+      "id": "ec3_217",
       "type": "text",
       "x": 76,
       "y": 7086,
@@ -4216,7 +4239,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_217",
+      "id": "ec3_218",
       "type": "text",
       "x": 76,
       "y": 7126,
@@ -4237,7 +4260,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_218",
+      "id": "ec3_219",
       "type": "text",
       "x": 76,
       "y": 7166,
@@ -4253,7 +4276,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_219",
+      "id": "ec3_220",
       "type": "math",
       "x": 76,
       "y": 7206,
@@ -4275,7 +4298,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_220",
+      "id": "ec3_221",
       "type": "math",
       "x": 236,
       "y": 7206,
@@ -4297,7 +4320,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_221",
+      "id": "ec3_222",
       "type": "math",
       "x": 396,
       "y": 7206,
@@ -4319,7 +4342,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_222",
+      "id": "ec3_223",
       "type": "math",
       "x": 556,
       "y": 7206,
@@ -4341,7 +4364,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_223",
+      "id": "ec3_224",
       "type": "math",
       "x": 76,
       "y": 7246,
@@ -4363,7 +4386,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_224",
+      "id": "ec3_225",
       "type": "math",
       "x": 236,
       "y": 7246,
@@ -4385,7 +4408,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_225",
+      "id": "ec3_226",
       "type": "math",
       "x": 396,
       "y": 7246,
@@ -4407,7 +4430,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_226",
+      "id": "ec3_227",
       "type": "math",
       "x": 556,
       "y": 7246,
@@ -4429,7 +4452,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_227",
+      "id": "ec3_228",
       "type": "math",
       "x": 76,
       "y": 7286,
@@ -4451,7 +4474,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_228",
+      "id": "ec3_229",
       "type": "math",
       "x": 236,
       "y": 7286,
@@ -4473,7 +4496,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_229",
+      "id": "ec3_230",
       "type": "math",
       "x": 396,
       "y": 7286,
@@ -4495,7 +4518,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_230",
+      "id": "ec3_231",
       "type": "math",
       "x": 556,
       "y": 7286,
@@ -4517,7 +4540,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_231",
+      "id": "ec3_232",
       "type": "math",
       "x": 76,
       "y": 7326,
@@ -4539,7 +4562,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_232",
+      "id": "ec3_233",
       "type": "math",
       "x": 236,
       "y": 7326,
@@ -4561,7 +4584,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_233",
+      "id": "ec3_234",
       "type": "math",
       "x": 396,
       "y": 7326,
@@ -4583,7 +4606,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_234",
+      "id": "ec3_235",
       "type": "math",
       "x": 556,
       "y": 7326,
@@ -4605,7 +4628,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_235",
+      "id": "ec3_236",
       "type": "math",
       "x": 96,
       "y": 7386,
@@ -4627,7 +4650,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_236",
+      "id": "ec3_237",
       "type": "math",
       "x": 396,
       "y": 7386,
@@ -4649,7 +4672,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_237",
+      "id": "ec3_238",
       "type": "math",
       "x": 96,
       "y": 7426,
@@ -4671,7 +4694,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_238",
+      "id": "ec3_239",
       "type": "math",
       "x": 396,
       "y": 7426,
@@ -4693,7 +4716,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_239",
+      "id": "ec3_240",
       "type": "math",
       "x": 96,
       "y": 7466,
@@ -4715,7 +4738,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_240",
+      "id": "ec3_241",
       "type": "math",
       "x": 396,
       "y": 7466,
@@ -4737,7 +4760,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_241",
+      "id": "ec3_242",
       "type": "math",
       "x": 96,
       "y": 7506,
@@ -4759,7 +4782,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_242",
+      "id": "ec3_243",
       "type": "math",
       "x": 396,
       "y": 7506,
@@ -4781,7 +4804,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_243",
+      "id": "ec3_244",
       "type": "math",
       "x": 96,
       "y": 7546,
@@ -4803,7 +4826,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_244",
+      "id": "ec3_245",
       "type": "math",
       "x": 396,
       "y": 7546,
@@ -4825,7 +4848,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_245",
+      "id": "ec3_246",
       "type": "math",
       "x": 96,
       "y": 7586,
@@ -4847,7 +4870,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_246",
+      "id": "ec3_247",
       "type": "math",
       "x": 396,
       "y": 7586,
@@ -4869,7 +4892,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_247",
+      "id": "ec3_248",
       "type": "math",
       "x": 96,
       "y": 7626,
@@ -4891,7 +4914,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_248",
+      "id": "ec3_249",
       "type": "math",
       "x": 396,
       "y": 7626,
@@ -4913,7 +4936,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_249",
+      "id": "ec3_250",
       "type": "math",
       "x": 96,
       "y": 7666,
@@ -4935,7 +4958,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_250",
+      "id": "ec3_251",
       "type": "math",
       "x": 396,
       "y": 7666,
@@ -4957,7 +4980,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_251",
+      "id": "ec3_252",
       "type": "math",
       "x": 96,
       "y": 7706,
@@ -4979,7 +5002,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_252",
+      "id": "ec3_253",
       "type": "math",
       "x": 396,
       "y": 7706,
@@ -5001,7 +5024,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_253",
+      "id": "ec3_254",
       "type": "math",
       "x": 96,
       "y": 7746,
@@ -5023,7 +5046,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_254",
+      "id": "ec3_255",
       "type": "math",
       "x": 396,
       "y": 7746,
@@ -5045,7 +5068,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_255",
+      "id": "ec3_256",
       "type": "math",
       "x": 96,
       "y": 7786,
@@ -5067,7 +5090,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_256",
+      "id": "ec3_257",
       "type": "math",
       "x": 396,
       "y": 7786,
@@ -5089,7 +5112,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_257",
+      "id": "ec3_258",
       "type": "math",
       "x": 96,
       "y": 7826,
@@ -5111,7 +5134,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_258",
+      "id": "ec3_259",
       "type": "math",
       "x": 396,
       "y": 7826,
@@ -5133,7 +5156,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_259",
+      "id": "ec3_260",
       "type": "math",
       "x": 96,
       "y": 7866,
@@ -5155,7 +5178,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_260",
+      "id": "ec3_261",
       "type": "math",
       "x": 96,
       "y": 7954,
@@ -5177,7 +5200,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_261",
+      "id": "ec3_262",
       "type": "text",
       "x": 76,
       "y": 8022,
@@ -5193,7 +5216,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_262",
+      "id": "ec3_263",
       "type": "text",
       "x": 76,
       "y": 8054,
@@ -5209,7 +5232,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_263",
+      "id": "ec3_264",
       "type": "text",
       "x": 76,
       "y": 9428,
@@ -5230,7 +5253,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_264",
+      "id": "ec3_265",
       "type": "math",
       "x": 96,
       "y": 9464,
@@ -5254,7 +5277,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_265",
+      "id": "ec3_266",
       "type": "text",
       "x": 76,
       "y": 9676,
@@ -5270,7 +5293,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_266",
+      "id": "ec3_267",
       "type": "text",
       "x": 76,
       "y": 9708,
@@ -5286,7 +5309,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_267",
+      "id": "ec3_268",
       "type": "text",
       "x": 76,
       "y": 9740,
@@ -5302,7 +5325,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_268",
+      "id": "ec3_269",
       "type": "text",
       "x": 76,
       "y": 8617,
@@ -5319,7 +5342,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_269",
+      "id": "ec3_270",
       "type": "math",
       "x": 96,
       "y": 8667,
@@ -5341,7 +5364,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_270",
+      "id": "ec3_271",
       "type": "math",
       "x": 96,
       "y": 8693,
@@ -5363,7 +5386,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_271",
+      "id": "ec3_272",
       "type": "math",
       "x": 96,
       "y": 8719,
@@ -5385,7 +5408,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_272",
+      "id": "ec3_273",
       "type": "math",
       "x": 96,
       "y": 8771,
@@ -5407,7 +5430,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_273",
+      "id": "ec3_274",
       "type": "math",
       "x": 96,
       "y": 8797,
@@ -5429,7 +5452,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_274",
+      "id": "ec3_275",
       "type": "math",
       "x": 96,
       "y": 8823,
@@ -5451,7 +5474,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_275",
+      "id": "ec3_276",
       "type": "math",
       "x": 96,
       "y": 8849,
@@ -5473,7 +5496,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_276",
+      "id": "ec3_277",
       "type": "math",
       "x": 96,
       "y": 8875,
@@ -5495,7 +5518,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_277",
+      "id": "ec3_278",
       "type": "math",
       "x": 96,
       "y": 8901,
@@ -5517,7 +5540,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_278",
+      "id": "ec3_279",
       "type": "math",
       "x": 96,
       "y": 8927,
@@ -5539,7 +5562,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_279",
+      "id": "ec3_280",
       "type": "math",
       "x": 96,
       "y": 8953,
@@ -5561,7 +5584,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_280",
+      "id": "ec3_281",
       "type": "text",
       "x": 76,
       "y": 8997,
@@ -5577,7 +5600,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_281",
+      "id": "ec3_282",
       "type": "text",
       "x": 76,
       "y": 9025,
@@ -5593,7 +5616,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_282",
+      "id": "ec3_283",
       "type": "text",
       "x": 76,
       "y": 9053,
@@ -5609,7 +5632,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_283",
+      "id": "ec3_284",
       "type": "math",
       "x": 76,
       "y": 9101,
@@ -5631,7 +5654,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_284",
+      "id": "ec3_285",
       "type": "math",
       "x": 236,
       "y": 9101,
@@ -5653,7 +5676,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_285",
+      "id": "ec3_286",
       "type": "math",
       "x": 396,
       "y": 9101,
@@ -5675,7 +5698,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_286",
+      "id": "ec3_287",
       "type": "math",
       "x": 556,
       "y": 9101,
@@ -5697,7 +5720,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_287",
+      "id": "ec3_288",
       "type": "math",
       "x": 76,
       "y": 9137,
@@ -5719,7 +5742,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_288",
+      "id": "ec3_289",
       "type": "math",
       "x": 236,
       "y": 9137,
@@ -5741,7 +5764,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_289",
+      "id": "ec3_290",
       "type": "math",
       "x": 396,
       "y": 9137,
@@ -5763,7 +5786,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_290",
+      "id": "ec3_291",
       "type": "math",
       "x": 556,
       "y": 9137,
@@ -5785,7 +5808,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_291",
+      "id": "ec3_292",
       "type": "math",
       "x": 76,
       "y": 9161,
@@ -5807,7 +5830,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_292",
+      "id": "ec3_293",
       "type": "math",
       "x": 236,
       "y": 9161,
@@ -5829,7 +5852,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_293",
+      "id": "ec3_294",
       "type": "math",
       "x": 396,
       "y": 9161,
@@ -5851,7 +5874,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_294",
+      "id": "ec3_295",
       "type": "math",
       "x": 556,
       "y": 9161,
@@ -5873,7 +5896,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_295",
+      "id": "ec3_296",
       "type": "math",
       "x": 76,
       "y": 9185,
@@ -5895,7 +5918,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_296",
+      "id": "ec3_297",
       "type": "math",
       "x": 236,
       "y": 9185,
@@ -5917,7 +5940,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_297",
+      "id": "ec3_298",
       "type": "math",
       "x": 396,
       "y": 9185,
@@ -5939,7 +5962,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_298",
+      "id": "ec3_299",
       "type": "math",
       "x": 556,
       "y": 9185,
@@ -5961,7 +5984,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_299",
+      "id": "ec3_300",
       "type": "text",
       "x": 76,
       "y": 10599,
@@ -5981,7 +6004,7 @@
       "printGroupId": "ec3-sheet-9"
     },
     {
-      "id": "ec3_300",
+      "id": "ec3_301",
       "type": "text",
       "x": 76,
       "y": 10631,
@@ -5997,7 +6020,7 @@
       "printGroupId": "ec3-sheet-9"
     },
     {
-      "id": "ec3_301",
+      "id": "ec3_302",
       "type": "math",
       "x": 76,
       "y": 10655,
@@ -6020,7 +6043,7 @@
       "printGroupId": "ec3-sheet-9"
     },
     {
-      "id": "ec3_302",
+      "id": "ec3_303",
       "type": "text",
       "x": 76,
       "y": 11375,
@@ -6036,7 +6059,7 @@
       "printGroupId": "ec3-sheet-9"
     },
     {
-      "id": "ec3_303",
+      "id": "ec3_304",
       "type": "text",
       "x": 76,
       "y": 11407,
@@ -6052,7 +6075,7 @@
       "printGroupId": "ec3-sheet-9"
     },
     {
-      "id": "ec3_304",
+      "id": "ec3_305",
       "type": "text",
       "x": 76,
       "y": 11439,
@@ -6068,7 +6091,7 @@
       "printGroupId": "ec3-sheet-9"
     },
     {
-      "id": "ec3_305",
+      "id": "ec3_306",
       "type": "text",
       "x": 76,
       "y": 11471,
@@ -6084,7 +6107,7 @@
       "printGroupId": "ec3-sheet-9"
     },
     {
-      "id": "ec3_306",
+      "id": "ec3_307",
       "type": "text",
       "x": 76,
       "y": 11503,
@@ -6100,7 +6123,7 @@
       "printGroupId": "ec3-sheet-9"
     },
     {
-      "id": "ec3_307",
+      "id": "ec3_308",
       "type": "text",
       "x": 76,
       "y": 11770,
@@ -6117,7 +6140,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_308",
+      "id": "ec3_309",
       "type": "text",
       "x": 76,
       "y": 11802,
@@ -6133,7 +6156,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_309",
+      "id": "ec3_310",
       "type": "text",
       "x": 76,
       "y": 11850,
@@ -6149,7 +6172,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_310",
+      "id": "ec3_311",
       "type": "text",
       "x": 138,
       "y": 11850,
@@ -6165,7 +6188,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_311",
+      "id": "ec3_312",
       "type": "text",
       "x": 496,
       "y": 11850,
@@ -6181,7 +6204,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_312",
+      "id": "ec3_313",
       "type": "text",
       "x": 580,
       "y": 11850,
@@ -6197,7 +6220,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_313",
+      "id": "ec3_314",
       "type": "text",
       "x": 76,
       "y": 11894,
@@ -6213,7 +6236,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_314",
+      "id": "ec3_315",
       "type": "text",
       "x": 138,
       "y": 11894,
@@ -6229,7 +6252,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_315",
+      "id": "ec3_316",
       "type": "text",
       "x": 496,
       "y": 11894,
@@ -6245,7 +6268,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_316",
+      "id": "ec3_317",
       "type": "text",
       "x": 580,
       "y": 11894,
@@ -6261,7 +6284,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_317",
+      "id": "ec3_318",
       "type": "text",
       "x": 76,
       "y": 11924.4,
@@ -6277,7 +6300,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_318",
+      "id": "ec3_319",
       "type": "text",
       "x": 138,
       "y": 11924.4,
@@ -6293,7 +6316,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_319",
+      "id": "ec3_320",
       "type": "text",
       "x": 496,
       "y": 11924.4,
@@ -6309,7 +6332,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_320",
+      "id": "ec3_321",
       "type": "text",
       "x": 580,
       "y": 11924.4,
@@ -6325,7 +6348,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_321",
+      "id": "ec3_322",
       "type": "text",
       "x": 76,
       "y": 11954.8,
@@ -6341,7 +6364,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_322",
+      "id": "ec3_323",
       "type": "text",
       "x": 138,
       "y": 11954.8,
@@ -6357,7 +6380,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_323",
+      "id": "ec3_324",
       "type": "text",
       "x": 496,
       "y": 11954.8,
@@ -6373,7 +6396,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_324",
+      "id": "ec3_325",
       "type": "text",
       "x": 580,
       "y": 11954.8,
@@ -6389,7 +6412,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_325",
+      "id": "ec3_326",
       "type": "text",
       "x": 76,
       "y": 11985.2,
@@ -6405,7 +6428,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_326",
+      "id": "ec3_327",
       "type": "text",
       "x": 138,
       "y": 11985.2,
@@ -6421,7 +6444,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_327",
+      "id": "ec3_328",
       "type": "text",
       "x": 496,
       "y": 11985.2,
@@ -6437,7 +6460,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_328",
+      "id": "ec3_329",
       "type": "text",
       "x": 580,
       "y": 11985.2,
@@ -6453,7 +6476,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_329",
+      "id": "ec3_330",
       "type": "text",
       "x": 76,
       "y": 12015.6,
@@ -6469,7 +6492,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_330",
+      "id": "ec3_331",
       "type": "text",
       "x": 138,
       "y": 12015.6,
@@ -6485,7 +6508,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_331",
+      "id": "ec3_332",
       "type": "text",
       "x": 496,
       "y": 12015.6,
@@ -6501,7 +6524,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_332",
+      "id": "ec3_333",
       "type": "text",
       "x": 580,
       "y": 12015.6,
@@ -6517,7 +6540,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_333",
+      "id": "ec3_334",
       "type": "text",
       "x": 76,
       "y": 12046,
@@ -6533,7 +6556,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_334",
+      "id": "ec3_335",
       "type": "text",
       "x": 138,
       "y": 12046,
@@ -6549,7 +6572,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_335",
+      "id": "ec3_336",
       "type": "text",
       "x": 496,
       "y": 12046,
@@ -6565,7 +6588,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_336",
+      "id": "ec3_337",
       "type": "text",
       "x": 580,
       "y": 12046,
@@ -6581,7 +6604,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_337",
+      "id": "ec3_338",
       "type": "text",
       "x": 76,
       "y": 12076.4,
@@ -6597,7 +6620,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_338",
+      "id": "ec3_339",
       "type": "text",
       "x": 138,
       "y": 12076.4,
@@ -6613,7 +6636,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_339",
+      "id": "ec3_340",
       "type": "text",
       "x": 496,
       "y": 12076.4,
@@ -6629,7 +6652,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_340",
+      "id": "ec3_341",
       "type": "text",
       "x": 580,
       "y": 12076.4,
@@ -6645,7 +6668,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_341",
+      "id": "ec3_342",
       "type": "text",
       "x": 76,
       "y": 12106.8,
@@ -6661,7 +6684,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_342",
+      "id": "ec3_343",
       "type": "text",
       "x": 138,
       "y": 12106.8,
@@ -6677,7 +6700,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_343",
+      "id": "ec3_344",
       "type": "text",
       "x": 496,
       "y": 12106.8,
@@ -6693,7 +6716,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_344",
+      "id": "ec3_345",
       "type": "text",
       "x": 580,
       "y": 12106.8,
@@ -6709,7 +6732,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_345",
+      "id": "ec3_346",
       "type": "text",
       "x": 76,
       "y": 12137.2,
@@ -6725,7 +6748,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_346",
+      "id": "ec3_347",
       "type": "text",
       "x": 138,
       "y": 12137.2,
@@ -6741,7 +6764,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_347",
+      "id": "ec3_348",
       "type": "text",
       "x": 496,
       "y": 12137.2,
@@ -6757,7 +6780,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_348",
+      "id": "ec3_349",
       "type": "text",
       "x": 580,
       "y": 12137.2,
@@ -6773,7 +6796,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_349",
+      "id": "ec3_350",
       "type": "text",
       "x": 76,
       "y": 12167.6,
@@ -6789,7 +6812,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_350",
+      "id": "ec3_351",
       "type": "text",
       "x": 138,
       "y": 12167.6,
@@ -6805,7 +6828,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_351",
+      "id": "ec3_352",
       "type": "text",
       "x": 496,
       "y": 12167.6,
@@ -6821,7 +6844,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_352",
+      "id": "ec3_353",
       "type": "text",
       "x": 580,
       "y": 12167.6,
@@ -6837,7 +6860,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_353",
+      "id": "ec3_354",
       "type": "text",
       "x": 76,
       "y": 12198,
@@ -6853,7 +6876,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_354",
+      "id": "ec3_355",
       "type": "text",
       "x": 138,
       "y": 12198,
@@ -6869,7 +6892,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_355",
+      "id": "ec3_356",
       "type": "text",
       "x": 496,
       "y": 12198,
@@ -6885,7 +6908,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_356",
+      "id": "ec3_357",
       "type": "text",
       "x": 580,
       "y": 12198,
@@ -6901,7 +6924,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_357",
+      "id": "ec3_358",
       "type": "text",
       "x": 76,
       "y": 12228.4,
@@ -6917,7 +6940,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_358",
+      "id": "ec3_359",
       "type": "text",
       "x": 138,
       "y": 12228.4,
@@ -6933,7 +6956,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_359",
+      "id": "ec3_360",
       "type": "text",
       "x": 496,
       "y": 12228.4,
@@ -6949,7 +6972,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_360",
+      "id": "ec3_361",
       "type": "text",
       "x": 580,
       "y": 12228.4,
@@ -6965,7 +6988,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_361",
+      "id": "ec3_362",
       "type": "text",
       "x": 76,
       "y": 12258.8,
@@ -6981,7 +7004,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_362",
+      "id": "ec3_363",
       "type": "text",
       "x": 138,
       "y": 12258.8,
@@ -6997,7 +7020,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_363",
+      "id": "ec3_364",
       "type": "text",
       "x": 496,
       "y": 12258.8,
@@ -7013,7 +7036,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_364",
+      "id": "ec3_365",
       "type": "text",
       "x": 580,
       "y": 12258.8,
@@ -7029,7 +7052,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_365",
+      "id": "ec3_366",
       "type": "text",
       "x": 76,
       "y": 12338,
@@ -7045,7 +7068,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_366",
+      "id": "ec3_367",
       "type": "text",
       "x": 76,
       "y": 12370,
@@ -7061,7 +7084,7 @@
       "printGroupId": "ec3-sheet-10"
     },
     {
-      "id": "ec3_367",
+      "id": "ec3_368",
       "type": "text",
       "x": 76,
       "y": 12402,
@@ -7148,17 +7171,17 @@
       {
         "id": "zg",
         "label": "zg",
-        "regionId": "ec3_240"
+        "regionId": "ec3_241"
       },
       {
         "id": "k",
         "label": "k",
-        "regionId": "ec3_241"
+        "regionId": "ec3_242"
       },
       {
         "id": "kw",
         "label": "kw",
-        "regionId": "ec3_242"
+        "regionId": "ec3_243"
       }
     ],
     "outputs": [
@@ -7190,32 +7213,32 @@
       {
         "id": "kyy",
         "label": "kyy",
-        "regionId": "ec3_198"
+        "regionId": "ec3_199"
       },
       {
         "id": "kyz",
         "label": "kyz",
-        "regionId": "ec3_200"
+        "regionId": "ec3_201"
       },
       {
         "id": "kzy",
         "label": "kzy",
-        "regionId": "ec3_201"
+        "regionId": "ec3_202"
       },
       {
         "id": "kzz",
         "label": "kzz",
-        "regionId": "ec3_199"
+        "regionId": "ec3_200"
       },
       {
         "id": "UR",
         "label": "UR",
-        "regionId": "ec3_283"
+        "regionId": "ec3_284"
       },
       {
         "id": "State",
         "label": "State: 1 PASS / 0 FAIL / −1 NOT VERIFIED",
-        "regionId": "ec3_284",
+        "regionId": "ec3_285",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7225,7 +7248,7 @@
       {
         "id": "Governing",
         "label": "Governing",
-        "regionId": "ec3_285",
+        "regionId": "ec3_286",
         "valueLabels": {
           "0": "Compression / tension",
           "1": "Major bending",
@@ -7244,7 +7267,7 @@
       {
         "id": "SectionOut",
         "label": "SectionOut",
-        "regionId": "ec3_286",
+        "regionId": "ec3_287",
         "valueLabels": {
           "0": "User-defined",
           "1000": "IPE 80",
@@ -7631,7 +7654,7 @@
       {
         "id": "State0",
         "label": "State0",
-        "regionId": "ec3_287",
+        "regionId": "ec3_288",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7641,7 +7664,7 @@
       {
         "id": "State1",
         "label": "State1",
-        "regionId": "ec3_288",
+        "regionId": "ec3_289",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7651,7 +7674,7 @@
       {
         "id": "State2",
         "label": "State2",
-        "regionId": "ec3_289",
+        "regionId": "ec3_290",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7661,7 +7684,7 @@
       {
         "id": "State3",
         "label": "State3",
-        "regionId": "ec3_290",
+        "regionId": "ec3_291",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7671,7 +7694,7 @@
       {
         "id": "State4",
         "label": "State4",
-        "regionId": "ec3_291",
+        "regionId": "ec3_292",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7681,7 +7704,7 @@
       {
         "id": "State5",
         "label": "State5",
-        "regionId": "ec3_292",
+        "regionId": "ec3_293",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7691,7 +7714,7 @@
       {
         "id": "State6",
         "label": "State6",
-        "regionId": "ec3_293",
+        "regionId": "ec3_294",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7701,7 +7724,7 @@
       {
         "id": "State7",
         "label": "State7",
-        "regionId": "ec3_294",
+        "regionId": "ec3_295",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7711,7 +7734,7 @@
       {
         "id": "State8",
         "label": "State8",
-        "regionId": "ec3_295",
+        "regionId": "ec3_296",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7721,7 +7744,7 @@
       {
         "id": "State9",
         "label": "State9",
-        "regionId": "ec3_296",
+        "regionId": "ec3_297",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7731,7 +7754,7 @@
       {
         "id": "State10",
         "label": "State10",
-        "regionId": "ec3_297",
+        "regionId": "ec3_298",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7741,7 +7764,7 @@
       {
         "id": "State11",
         "label": "State11",
-        "regionId": "ec3_298",
+        "regionId": "ec3_299",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
