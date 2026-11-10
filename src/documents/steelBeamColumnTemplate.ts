@@ -21,7 +21,30 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
     shapes.push({ id, type: 'math', x, y: y(p,row), props: { ...DEFAULT_MATH_PROPS, latex, fontSize: 13, w: 600, h: 32, baseline: 20, displayMode: 'formulaResult', ...props } });
     return id;
   };
+  const calculationLabels: Record<string,string> = {
+    epsilon:'Material factor ε = √(235 MPa / fy)',
+    webLimit1:'Web limit for Class 1', webLimit2:'Web limit for Class 2', webBendLimit3:'Web limit for Class 3 (bending)',
+    sectionClass:'Governing cross-section class',
+    NcRd:'Compression resistance of the gross section (6.2.4)', rho:'Reduction for high shear (6.2.8)',
+    MyRd:'Major-axis bending resistance (6.2.5)', MzRd:'Minor-axis bending resistance (6.2.5)',
+    NAxRd:'Axial resistance after shear reduction', URsection:'Combined section utilisation (6.2.1(7))',
+    NcrY:'Euler critical load about y–y', chiY:'Buckling reduction factor χy', NbY:'Design buckling resistance about y–y',
+    NcrZ:'Euler critical load about z–z', chiZ:'Buckling reduction factor χz', NbZ:'Design buckling resistance about z–z',
+    iZero:'Polar radius of gyration for torsional buckling', NcrT:'Elastic torsional critical load',
+    chiT:'Torsional buckling reduction factor χT', NbT:'Design torsional buckling resistance',
+    Tcr:'Elastic lateral bending term', Bcr:'Torsional and warping term', McrCalc:'Elastic critical moment Mcr',
+    lambdaLT:'Relative LTB slenderness', Mb:'LTB design resistance moment (6.3.2.2)',
+    kyyAuto:'Interaction factor kyy (Annex B, Method 2)', kzzAuto:'Interaction factor kzz (Annex B, Method 2)',
+    Jy:'Interaction check about y–y (6.61)', Jz:'Interaction check about z–z (6.62)',
+    deltaSimple:'Simply supported beam deflection', deltaCantilever:'Cantilever beam deflection',
+  };
   const calc = (p: number, row: number, key: string, rhs: string, props: Partial<MathProps> = {}, x = 96) => {
+    const label=calculationLabels[key];
+    if(label&&x===96){
+      note(p,row,label,0,undefined,76,210);
+      props={...props,w:Math.min(props.w??410,410),fontSize:props.fontSize??12};
+      x=300;
+    }
     const id = math(p,row,definition(key)+' '+rhs,x,props); bound.set(key,id); return id;
   };
   const input = (p: number, row: number, key: string, rhs: string, x = 96) => calc(p,row,key,rhs,{displayMode:'formula',w:280},x);
@@ -40,14 +63,14 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(1,1.5,'Design basis: compression positive; y major / z minor. Actions include relevant analysis effects.');
   input(1,2.3,'Section','1211');
   note(1,3.1,'Steel section source: licensed offline catalogue; designation and dataset shown beside Section ID');
-  note(1,4,'1  MATERIAL AND MEMBER GEOMETRY',2);
+  note(1,4,'1  DESIGN INPUTS',2);
   pair(1,5,['fy',q(355,'MPa')],['fu',q(510,'MPa')]);
   pair(1,6,['E',q(210,'GPa')],['G',q(80.76923,'GPa')]);
   pair(1,7,['gamma0','1'],['gamma1','1']);
   pair(1,8,['gamma2','1.25'],['L',q(5,'m')]);
   pair(1,9,['Ky','1'],['Kz','1']);
   pair(1,10,['Llt',q(5,'m')],['LTBmode','0']);
-  note(1,11,'2  SIMULTANEOUS ULS DESIGN ACTIONS — SAME COMBINATION / POSITION',2);
+  note(1,11,'1.2 Simultaneous ULS actions — same combination and member position',2);
   pair(1,12,['N',q(100,'kN')],['My',q(50,'kN')+t`\cdot\mathrm{m}`]);
   pair(1,13,['Mz',q(5,'kN')+t`\cdot\mathrm{m}`],['Vy',q(0,'kN')]);
   input(1,14,'Vz',q(0,'kN'));
@@ -174,23 +197,23 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   // 6 — Coefficient choice and full Mcr expression are visible; unsupported selections remain guarded.
   note(6,0,'6  LATERAL-TORSIONAL BUCKLING',1);
   note(6,0.9,'EN 1993-1-1 §6.3.2.2 (general method); elastic Mcr from SCI NCCI SN003b §2.');
-  calc(6,1.6,'LTBmodel',t`\operatorname{stack}(${v('LoadCase')},${v('zg')}/\mathrm{mm},${v('Llt')}/\mathrm{mm},${v('k')},${v('kw')})`,{steelFigure:'ltb',w:620,h:284});
-  note(6,8.9,'LTB reference: NCCI SN003b; uniform I/H; fork ends / free warping');
-  calc(6,9.7,'Cused1',get('C1'),{displayMode:'result',w:280});
-  calc(6,9.7,'Cused2',get('C2'),{displayMode:'result',w:290},396);
-  note(6,10.6,'Auto cases: uniform moment 1/0; UDL 1.127/0.454; central point 1.348/0.630 (C1/C2).');
-  calc(6,11.5,'Tcr',t`\frac{\pi^2${v('E')}${v('Iz')}}{(${v('k')}${v('Llt')})^2}`);
-  calc(6,12.8,'Bcr',t`\left(\frac{${v('k')}}{${v('kw')}}\right)^2\frac{${v('Iw')}}{${v('Iz')}}+\frac{${v('G')}${v('It')}}{${v('Tcr')}}+(${v('Cused2')}${v('zg')})^2`,{fontSize:12});
-  calc(6,14,'McrCalc',t`${v('Cused1')}${v('Tcr')}\left(\sqrt{${v('Bcr')}}-${v('Cused2')}${v('zg')}\right)`,{displayMode:'full',h:86});
-  calc(6,16.3,'Mcr',get('Mcr'),{displayMode:'result'});
-  note(6,17.2,'Mcr uses the formula only for verified configurations; external mode uses supplied Mcr directly.');
-  calc(6,18.1,'lambdaLT',t`\operatorname{if}(${v('Mcr')}>${zeroMoment},\sqrt{${v('Wy')}${v('fy')}/${v('Mcr')}},0)`,{fontSize:12});
-  calc(6,19.4,'phiLT',reduction('lambdaLT','alphaLT'),{w:280,fontSize:12});
-  calc(6,19.4,'chiLT',t`\operatorname{if}(${v('Mcr')}>${zeroMoment},${chi('phiLT','lambdaLT')},0)`,{displayMode:'result',w:290},396);
-  calc(6,20.6,'Mb',t`\frac{${v('chiLT')}${v('Wy')}${v('fy')}}{${v('gamma1')}}`);
-  note(6,22,'Relative LTB slenderness λLT = √(Wy fy / Mcr); no valid Mcr means NOT VERIFIED, not zero demand.');
-  note(6,22.9,'External mode bypasses coefficient calculation. McrCalc is an indicative coefficient-mode equation only.');
-  note(6,23.8,'Top/bottom load level and end restraints must match the diagram and coefficient source.');
+  note(6,1.6,'Loading arrangement, moment diagram and load level are shown with the design actions on page 1.');
+  calc(6,2.8,'Cused1',get('C1'),{displayMode:'result',w:280});
+  calc(6,2.8,'Cused2',get('C2'),{displayMode:'result',w:290},396);
+  note(6,3.7,'Verified cases: uniform moment 1/0; UDL 1.127/0.454; central point 1.348/0.630 (C1/C2).');
+  calc(6,4.6,'Tcr',t`\frac{\pi^2${v('E')}${v('Iz')}}{(${v('k')}${v('Llt')})^2}`);
+  calc(6,5.9,'Bcr',t`\left(\frac{${v('k')}}{${v('kw')}}\right)^2\frac{${v('Iw')}}{${v('Iz')}}+\frac{${v('G')}${v('It')}}{${v('Tcr')}}+(${v('Cused2')}${v('zg')})^2`,{fontSize:12});
+  calc(6,7.1,'McrCalc',t`${v('Cused1')}${v('Tcr')}\left(\sqrt{${v('Bcr')}}-${v('Cused2')}${v('zg')}\right)`,{displayMode:'full',h:86});
+  calc(6,9.4,'Mcr',get('Mcr'),{displayMode:'result'});
+  note(6,10.3,'Use this expression only for verified configurations; external mode uses the supplied Mcr.');
+  calc(6,11.2,'lambdaLT',t`\operatorname{if}(${v('Mcr')}>${zeroMoment},\sqrt{${v('Wy')}${v('fy')}/${v('Mcr')}},0)`,{fontSize:12});
+  calc(6,12.5,'phiLT',reduction('lambdaLT','alphaLT'),{w:280,fontSize:12});
+  calc(6,12.5,'chiLT',t`\operatorname{if}(${v('Mcr')}>${zeroMoment},${chi('phiLT','lambdaLT')},0)`,{displayMode:'result',w:290},396);
+  calc(6,13.7,'Mb',t`\frac{${v('chiLT')}${v('Wy')}${v('fy')}}{${v('gamma1')}}`);
+  note(6,15.1,'λLT = √(Wy fy / Mcr). Without a verified Mcr, LTB is NOT VERIFIED.');
+  note(6,16,'External-Mcr mode bypasses the coefficient calculation.');
+  note(6,16.9,'The entered load height and end restraints must match the selected reference case.');
+  note(6,19,'Reference: SCI NCCI SN003b; uniform rolled I/H sections, fork-end restraint and free warping.');
 
   // 7 — Both Annex B equations are evaluated explicitly. SLS has a distinct physical load case.
   note(7,0,'7  COMPRESSION AND BIAXIAL BENDING',1);

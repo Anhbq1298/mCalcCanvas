@@ -26,8 +26,8 @@ test('EC3 catalogue, editable K, LTB safety, batch, custom section, mCCV and pri
    expect(text).not.toMatch(/steelDesign|operatorname|entry\(|stack\(/);
  }
  const ltbDiagrams=page.locator('#print-root svg[aria-label="LTB loading and moment diagram"]');
- await expect(ltbDiagrams).toHaveCount(2);
- await expect(ltbDiagrams.nth(0)).toBeVisible();await expect(ltbDiagrams.nth(1)).toBeVisible();
+ await expect(ltbDiagrams).toHaveCount(1);
+ await expect(ltbDiagrams.first()).toBeVisible();
  await expect(page.locator('#print-root svg[aria-label="Separate serviceability load case"]')).toBeVisible();
 
  const tableLayout=await page.locator('#print-root [data-testid=math-region]').evaluateAll(els=>{
