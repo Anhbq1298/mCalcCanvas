@@ -6003,7 +6003,7 @@
       "y": 10655,
       "props": {
         "w": 634,
-        "h": 680,
+        "h": 520,
         "latex": "\\mathrm{LTBcatalog}\\coloneq \\operatorname{stack}(\\mathrm{LTBcase})",
         "displayMode": "formulaResult",
         "displayUnit": "",
@@ -6023,7 +6023,7 @@
       "id": "ec3_302",
       "type": "text",
       "x": 76,
-      "y": 11375,
+      "y": 11199,
       "props": {
         "w": 640,
         "h": 24,
@@ -6039,7 +6039,7 @@
       "id": "ec3_303",
       "type": "text",
       "x": 76,
-      "y": 11407,
+      "y": 11231,
       "props": {
         "w": 640,
         "h": 24,
@@ -6055,7 +6055,7 @@
       "id": "ec3_304",
       "type": "text",
       "x": 76,
-      "y": 11439,
+      "y": 11263,
       "props": {
         "w": 640,
         "h": 24,
@@ -6071,7 +6071,7 @@
       "id": "ec3_305",
       "type": "text",
       "x": 76,
-      "y": 11471,
+      "y": 11295,
       "props": {
         "w": 640,
         "h": 24,
@@ -6087,7 +6087,7 @@
       "id": "ec3_306",
       "type": "text",
       "x": 76,
-      "y": 11503,
+      "y": 11327,
       "props": {
         "w": 640,
         "h": 24,
