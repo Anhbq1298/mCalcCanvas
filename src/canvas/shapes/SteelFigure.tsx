@@ -17,7 +17,8 @@ export function SteelFigure({kind,value}: {kind:'section'|'ltb'|'buckling'|'stat
   if(kind==='buckling')return <svg role="img" aria-label="Idealized buckling end conditions" viewBox="0 0 630 170" width="610" height="170">
     {['Pin–pin','Fixed–fixed','Fixed–pin','Fixed–free','Fixed–guided'].map((t,i)=><g key={t} transform={`translate(${i*126},0)`}>
       <path d="M55 30V120" stroke="#475569" strokeWidth="2"/>
-      <path d={i===3?'M55 120Q90 65 105 30':i===1?'M55 30C25 55 85 95 55 120':'M55 30Q95 75 55 120'} fill="none" stroke="#2563eb" strokeDasharray="4 3"/>
+      <path d={i===3?'M105 30C75 60 55 85 55 120':i===1?'M55 30C55 45 90 55 90 75C90 95 55 105 55 120':i===2?'M55 30C100 60 55 100 55 120':i===4?'M105 30C105 60 55 85 55 120':'M55 30Q95 75 55 120'} fill="none" stroke="#2563eb" strokeDasharray="4 3"/>
+      {i===4&&<text x="78" y="24" fontSize="18">↔</text>}
       {i===0||i===2?<path d="M55 30l-8-10h16Z" stroke="#475569" fill="none"/>:i!==3?<path d="M40 25h30m-30-5h30" stroke="#475569"/>:null}
       {i===0?<path d="M55 120l-8 10h16Z" stroke="#475569" fill="none"/>:<path d="M40 125h30m-30 5h30" stroke="#475569"/>}
       <text x="4" y="150" fontSize="12">{t}</text><text x="27" y="167" fontSize="12">K={['1.0','0.5','≈0.7','2.0','1.0'][i]}</text>

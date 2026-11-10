@@ -19,7 +19,8 @@ export const checkNames = ['Compression / tension','Major bending','Minor bendin
 export const stateNumber = { 'NOT VERIFIED': -1, FAIL: 0, PASS: 1 } as const;
 
 export const symbol = (name: string): string => {
-  if(name==='N') return 'N_{Ed}';
+  const standard:Record<string,string>={N:'N_{Ed}',fy:'f_{y}',fu:'f_{u}',gamma0:'\\gamma_{M0}',gamma1:'\\gamma_{M1}',gamma2:'\\gamma_{M2}',My:'M_{y.Ed}',Mz:'M_{z.Ed}',Vy:'V_{y.Ed}',Vz:'V_{z.Ed}',alphaY:'\\alpha_{y}',alphaZ:'\\alpha_{z}',alphaLT:'\\alpha_{LT}',chiY:'\\chi_{y}',chiZ:'\\chi_{z}',chiLT:'\\chi_{LT}',kyy:'k_{yy}',kyz:'k_{yz}',kzy:'k_{zy}',kzz:'k_{zz}'};
+  if(standard[name])return standard[name];
   const m=/^([A-Za-z]+)(.*)$/.exec(name)!;
   return `\\mathrm{${m[1]}}${m[2]?'_{'+m[2].replace(/^_/, '')+'}':''}`;
 };

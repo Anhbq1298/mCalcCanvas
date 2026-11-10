@@ -112,7 +112,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{fy}\\coloneq355\\,\\mathrm{MPa}",
+        "latex": "f_{y}\\coloneq355\\,\\mathrm{MPa}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -133,7 +133,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{fu}\\coloneq510\\,\\mathrm{MPa}",
+        "latex": "f_{u}\\coloneq510\\,\\mathrm{MPa}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -196,7 +196,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{gamma}_{0}\\coloneq1",
+        "latex": "\\gamma_{M0}\\coloneq1",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -217,7 +217,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{gamma}_{1}\\coloneq1",
+        "latex": "\\gamma_{M1}\\coloneq1",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -238,7 +238,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{gamma}_{2}\\coloneq1.25",
+        "latex": "\\gamma_{M2}\\coloneq1.25",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -396,7 +396,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{My}\\coloneq50\\,\\mathrm{kN}\\cdot\\mathrm{m}",
+        "latex": "M_{y.Ed}\\coloneq50\\,\\mathrm{kN}\\cdot\\mathrm{m}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -417,7 +417,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{Mz}\\coloneq5\\,\\mathrm{kN}\\cdot\\mathrm{m}",
+        "latex": "M_{z.Ed}\\coloneq5\\,\\mathrm{kN}\\cdot\\mathrm{m}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -438,7 +438,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{Vy}\\coloneq0\\,\\mathrm{kN}",
+        "latex": "V_{y.Ed}\\coloneq0\\,\\mathrm{kN}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -459,7 +459,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{Vz}\\coloneq30\\,\\mathrm{kN}",
+        "latex": "V_{z.Ed}\\coloneq30\\,\\mathrm{kN}",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -1002,7 +1002,7 @@
       "props": {
         "w": 120,
         "h": 32,
-        "latex": "\\mathrm{d}_{1}\\coloneq\\operatorname{abs}(\\mathrm{My})",
+        "latex": "\\mathrm{d}_{1}\\coloneq\\operatorname{abs}(M_{y.Ed})",
         "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
@@ -1117,7 +1117,7 @@
       "props": {
         "w": 120,
         "h": 32,
-        "latex": "\\mathrm{d}_{2}\\coloneq\\operatorname{abs}(\\mathrm{Mz})",
+        "latex": "\\mathrm{d}_{2}\\coloneq\\operatorname{abs}(M_{z.Ed})",
         "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
@@ -1232,7 +1232,7 @@
       "props": {
         "w": 120,
         "h": 32,
-        "latex": "\\mathrm{d}_{3}\\coloneq\\operatorname{abs}(\\mathrm{Vy})",
+        "latex": "\\mathrm{d}_{3}\\coloneq\\operatorname{abs}(V_{y.Ed})",
         "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
@@ -1347,7 +1347,7 @@
       "props": {
         "w": 120,
         "h": 32,
-        "latex": "\\mathrm{d}_{4}\\coloneq\\operatorname{abs}(\\mathrm{Vz})",
+        "latex": "\\mathrm{d}_{4}\\coloneq\\operatorname{abs}(V_{z.Ed})",
         "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
@@ -1922,7 +1922,7 @@
       "props": {
         "w": 120,
         "h": 32,
-        "latex": "\\mathrm{d}_{9}\\coloneq\\operatorname{abs}(\\mathrm{My})",
+        "latex": "\\mathrm{d}_{9}\\coloneq\\operatorname{abs}(M_{y.Ed})",
         "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
@@ -2410,7 +2410,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{chiY}\\coloneq\\operatorname{entry}(\\mathrm{R},18)",
+        "latex": "\\chi_{y}\\coloneq\\operatorname{entry}(\\mathrm{R},18)",
         "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
@@ -2431,7 +2431,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{chiZ}\\coloneq\\operatorname{entry}(\\mathrm{R},19)",
+        "latex": "\\chi_{z}\\coloneq\\operatorname{entry}(\\mathrm{R},19)",
         "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
@@ -2473,7 +2473,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{chiLT}\\coloneq\\operatorname{entry}(\\mathrm{R},26)",
+        "latex": "\\chi_{LT}\\coloneq\\operatorname{entry}(\\mathrm{R},26)",
         "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
@@ -2494,7 +2494,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{kyy}\\coloneq\\operatorname{entry}(\\mathrm{R},30)",
+        "latex": "k_{yy}\\coloneq\\operatorname{entry}(\\mathrm{R},30)",
         "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
@@ -2515,7 +2515,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{kyz}\\coloneq\\operatorname{entry}(\\mathrm{R},31)",
+        "latex": "k_{yz}\\coloneq\\operatorname{entry}(\\mathrm{R},31)",
         "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
@@ -2536,7 +2536,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{kzy}\\coloneq\\operatorname{entry}(\\mathrm{R},32)",
+        "latex": "k_{zy}\\coloneq\\operatorname{entry}(\\mathrm{R},32)",
         "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
@@ -2557,7 +2557,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{kzz}\\coloneq\\operatorname{entry}(\\mathrm{R},33)",
+        "latex": "k_{zz}\\coloneq\\operatorname{entry}(\\mathrm{R},33)",
         "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
@@ -3068,7 +3068,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{alphaY}\\coloneq0.34",
+        "latex": "\\alpha_{y}\\coloneq0.34",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -3089,7 +3089,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{alphaZ}\\coloneq0.49",
+        "latex": "\\alpha_{z}\\coloneq0.49",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -3110,7 +3110,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{alphaLT}\\coloneq0.21",
+        "latex": "\\alpha_{LT}\\coloneq0.21",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -3708,7 +3708,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{I}_{0}\\coloneq\\operatorname{stack}(\\mathrm{fy},\\mathrm{fu},\\mathrm{E},\\mathrm{G},\\mathrm{gamma}_{0},\\mathrm{gamma}_{1})",
+        "latex": "\\mathrm{I}_{0}\\coloneq\\operatorname{stack}(f_{y},f_{u},\\mathrm{E},\\mathrm{G},\\gamma_{M0},\\gamma_{M1})",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -3729,7 +3729,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{I}_{1}\\coloneq\\operatorname{stack}(\\mathrm{gamma}_{2},\\mathrm{L},\\mathrm{Ky},\\mathrm{Kz},\\mathrm{Llt},\\mathrm{Lt})",
+        "latex": "\\mathrm{I}_{1}\\coloneq\\operatorname{stack}(\\gamma_{M2},\\mathrm{L},\\mathrm{Ky},\\mathrm{Kz},\\mathrm{Llt},\\mathrm{Lt})",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -3750,7 +3750,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{I}_{2}\\coloneq\\operatorname{stack}(N_{Ed},\\mathrm{My},\\mathrm{Mz},\\mathrm{Vy},\\mathrm{Vz},\\mathrm{alphaY})",
+        "latex": "\\mathrm{I}_{2}\\coloneq\\operatorname{stack}(N_{Ed},M_{y.Ed},M_{z.Ed},V_{y.Ed},V_{z.Ed},\\alpha_{y})",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -3771,7 +3771,7 @@
       "props": {
         "w": 250,
         "h": 32,
-        "latex": "\\mathrm{I}_{3}\\coloneq\\operatorname{stack}(\\mathrm{alphaZ},\\mathrm{alphaLT},\\mathrm{LTBmode},\\mathrm{LoadCase},\\mathrm{zg},\\mathrm{k})",
+        "latex": "\\mathrm{I}_{3}\\coloneq\\operatorname{stack}(\\alpha_{z},\\alpha_{LT},\\mathrm{LTBmode},\\mathrm{LoadCase},\\mathrm{zg},\\mathrm{k})",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -3949,6 +3949,63 @@
     },
     {
       "id": "ec3_200",
+      "type": "math",
+      "x": 96,
+      "y": 4461,
+      "props": {
+        "w": 250,
+        "h": 32,
+        "latex": "\\mathrm{Cused}_{1}\\coloneq\\operatorname{entry}(\\mathrm{R},28)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "baseline": 20
+      }
+    },
+    {
+      "id": "ec3_201",
+      "type": "math",
+      "x": 396,
+      "y": 4461,
+      "props": {
+        "w": 250,
+        "h": 32,
+        "latex": "\\mathrm{Cused}_{2}\\coloneq\\operatorname{entry}(\\mathrm{R},29)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "baseline": 20
+      }
+    },
+    {
+      "id": "ec3_202",
+      "type": "text",
+      "x": 76,
+      "y": 4501,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "Cused1 / Cused2 apply to coefficient modes only; external Mcr bypasses them.",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "ec3_203",
       "type": "text",
       "x": 76,
       "y": 4744,
@@ -3968,7 +4025,7 @@
       }
     },
     {
-      "id": "ec3_201",
+      "id": "ec3_204",
       "type": "math",
       "x": 76,
       "y": 4784,
@@ -3990,7 +4047,7 @@
       }
     },
     {
-      "id": "ec3_202",
+      "id": "ec3_205",
       "type": "text",
       "x": 76,
       "y": 4992,
@@ -4005,7 +4062,7 @@
       }
     },
     {
-      "id": "ec3_203",
+      "id": "ec3_206",
       "type": "text",
       "x": 76,
       "y": 5024,
@@ -4020,7 +4077,7 @@
       }
     },
     {
-      "id": "ec3_204",
+      "id": "ec3_207",
       "type": "text",
       "x": 76,
       "y": 5064,
@@ -4035,7 +4092,7 @@
       }
     },
     {
-      "id": "ec3_205",
+      "id": "ec3_208",
       "type": "text",
       "x": 76,
       "y": 5104,
@@ -4050,7 +4107,7 @@
       }
     },
     {
-      "id": "ec3_206",
+      "id": "ec3_209",
       "type": "text",
       "x": 76,
       "y": 5184,
@@ -4066,59 +4123,14 @@
       }
     },
     {
-      "id": "ec3_207",
+      "id": "ec3_210",
       "type": "text",
       "x": 76,
       "y": 5224,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Class 4 effective sections; plated shear buckling; arbitrary LTB loading; Annex A not implemented.",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "ec3_208",
-      "type": "text",
-      "x": 76,
-      "y": 5264,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "Annex B automatic: Class 1/2 I/H, λz ≥ 0.4, verified Cm factors; other branches need verified kij.",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "ec3_209",
-      "type": "text",
-      "x": 76,
-      "y": 5304,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "High shear: conservative global yield reduction; beam-column stability requires separate verification.",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "ec3_210",
-      "type": "text",
-      "x": 76,
-      "y": 5344,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "Cross-section N–M uses conservative §6.2.1(7) summation with class-appropriate moduli.",
+        "html": "Class 4, shear buckling, biaxial shear, arbitrary LTB and Annex A require separate verification.",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -4129,11 +4141,11 @@
       "id": "ec3_211",
       "type": "text",
       "x": 76,
-      "y": 5384,
+      "y": 5256,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Torsion: doubly symmetric uncoupled critical load, Lt specified independently; no applied torsion.",
+        "html": "Annex B auto: Class 1/2, λz ≥ 0.4; other cases require independently verified manual kij.",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -4144,11 +4156,11 @@
       "id": "ec3_212",
       "type": "text",
       "x": 76,
-      "y": 5424,
+      "y": 5288,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Tension: gross/net resistance only. Biaxial shear interaction needs separate verification.",
+        "html": "No applied torsion. Connections, block tearing and fatigue excluded; Lt specified independently.",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -4159,11 +4171,11 @@
       "id": "ec3_213",
       "type": "text",
       "x": 76,
-      "y": 5464,
+      "y": 5320,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "National Annex: select partial factors, curves and η; general LTB method §6.3.2.2 only.",
+        "html": "High-shear member interaction needs a separate check; use external SLS for other loading.",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -4174,11 +4186,11 @@
       "id": "ec3_214",
       "type": "text",
       "x": 76,
-      "y": 5504,
+      "y": 5352,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "SLS: elastic major-axis prismatic beam; enter external displacement for other loading or shear effects.",
+        "html": "NA: designer-selected factors / curves / η. General LTB §6.3.2.2; 2022 edition not used.",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -4189,11 +4201,132 @@
       "id": "ec3_215",
       "type": "text",
       "x": 76,
-      "y": 5584,
+      "y": 5392,
+      "props": {
+        "w": 640,
+        "h": 28,
+        "html": "COMPRESSION INTERACTION — §6.3.3; main summary governs verification",
+        "fontFamily": "Inter",
+        "fontSize": 15,
+        "color": "#1e3a5f",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "ec3_216",
+      "type": "math",
+      "x": 96,
+      "y": 5432,
+      "props": {
+        "w": 250,
+        "h": 32,
+        "latex": "\\mathrm{NRk}\\coloneq\\mathrm{A}f_{y}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "baseline": 20
+      }
+    },
+    {
+      "id": "ec3_217",
+      "type": "math",
+      "x": 96,
+      "y": 5472,
+      "props": {
+        "w": 250,
+        "h": 32,
+        "latex": "\\mathrm{MyRk}\\coloneq\\operatorname{if}(\\mathrm{sectionClass}<3,\\mathrm{Wpl}_{y},\\mathrm{Wel}_{y})f_{y}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "baseline": 20
+      }
+    },
+    {
+      "id": "ec3_218",
+      "type": "math",
+      "x": 96,
+      "y": 5512,
+      "props": {
+        "w": 250,
+        "h": 32,
+        "latex": "\\mathrm{MzRk}\\coloneq\\operatorname{if}(\\mathrm{sectionClass}<3,\\mathrm{Wpl}_{z},\\mathrm{Wel}_{z})f_{y}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "baseline": 20
+      }
+    },
+    {
+      "id": "ec3_219",
+      "type": "math",
+      "x": 96,
+      "y": 5564,
+      "props": {
+        "w": 250,
+        "h": 44,
+        "latex": "J_{y}(n,m_{y},m_{z})\\coloneq\\frac{n}{\\chi_{y}\\mathrm{NRk}/\\gamma_{M1}}+k_{yy}\\frac{m_{y}}{\\chi_{LT}\\mathrm{MyRk}/\\gamma_{M1}}+k_{yz}\\frac{m_{z}}{\\mathrm{MzRk}/\\gamma_{M1}}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "baseline": 20
+      }
+    },
+    {
+      "id": "ec3_220",
+      "type": "math",
+      "x": 96,
+      "y": 5624,
+      "props": {
+        "w": 250,
+        "h": 44,
+        "latex": "J_{z}(n,m_{y},m_{z})\\coloneq\\frac{n}{\\chi_{z}\\mathrm{NRk}/\\gamma_{M1}}+k_{zy}\\frac{m_{y}}{\\chi_{LT}\\mathrm{MyRk}/\\gamma_{M1}}+k_{zz}\\frac{m_{z}}{\\mathrm{MzRk}/\\gamma_{M1}}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "baseline": 20
+      }
+    },
+    {
+      "id": "ec3_221",
+      "type": "text",
+      "x": 76,
+      "y": 5684,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Sources: EN 1993-1-1:2005+A1:2014 §§5.5, 6.2, 6.3; NCCI SN003b; JRC 2014 Simões.",
+        "html": "Check both J_y and J_z ≤ 1 with absolute simultaneous moments; coefficient validity is separate.",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -4201,14 +4334,14 @@
       }
     },
     {
-      "id": "ec3_216",
+      "id": "ec3_222",
       "type": "text",
       "x": 76,
-      "y": 5624,
+      "y": 5716,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Audit, coefficient restrictions and independent numerical references: docs/steel-design/TECHNICAL.md",
+        "html": "Sources and validation: EN 1993-1-1 §§5.5 / 6.2 / 6.3; SCI SN003b; JRC 2014 Simões.",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
