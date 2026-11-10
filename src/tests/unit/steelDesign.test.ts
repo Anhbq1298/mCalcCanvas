@@ -5,7 +5,7 @@ import {sections,sectionById,validateSection} from '../../engineering/steel/sect
 import {CalculationEngine} from '../../engine/CalculationEngine';
 import {steelBeamColumnTemplate} from '../../documents/steelBeamColumnTemplate';
 import {calcKey} from '../../canvas/engineBridge';
-import {definition} from '../../engineering/steel/contract';
+import {definition,symbol,outputFields} from '../../engineering/steel/contract';
 import {runBatchJob} from '../../engine/batch';
 import {parseDocument,serializeDocument} from '../../documents/DocumentSerializer';
 import {DEFAULT_SETTINGS,DOCUMENT_VERSION} from '../../documents/DocumentTypes';
@@ -89,6 +89,24 @@ describe('steel worksheet engine, workers contract, batch and serialization',()=
    const errors=regions.flatMap(r=>engine.getResult(r.id)?.error?.message??[]);expect(errors).toEqual([]);
    const state=shapes.find(s=>s.type==='math'&&s.props.latex.startsWith(definition('State')))!;
    expect(engine.getResult(state.id)?.value?.number).toBe(1);
+  });
+  step('readable equations independently reproduce the guarded kernel before and after a K edit',()=>{
+   const pairs=[['NcRd','Nc'],['NtRd','Nt'],['MyRd','My'],['MzRd','Mz'],['VyRd','Vy'],['VzRd','Vz'],['NcrY','NcrY'],['NcrZ','NcrZ'],['NcrT','NcrT'],['lambdaY','ly'],['lambdaZ','lz'],['chiY','chiY'],['chiZ','chiZ'],['chiT','chiT'],['NbY','NbY'],['NbZ','NbZ'],['NbT','NbT'],['McrCalc','Mcr'],['lambdaLT','lambdaLT'],['chiLT','chiLT'],['Mb','Mb'],['kyy','kyy'],['kyz','kyz'],['kzy','kzy'],['kzz','kzz'],['Jy','iy'],['Jz','iz'],['delta','delta'],['URsection','sectionUr']];
+   const compare=()=>{
+    for(const [key,output] of pairs){
+     const ref=`\\operatorname{entry}(${symbol('R')},${outputFields.findIndex(([n])=>n===output)})`;
+     engine.setRegion('report-comparison',{latex:`(${symbol(key)}-${ref})/${ref}=`,order:1e8});
+     expect(engine.getResult('report-comparison')?.error,key).toBeUndefined();
+     expect(engine.getResult('report-comparison')?.value?.number,key).toBeCloseTo(0,10);
+    }
+   };
+   compare();
+   const ky=regions.find(r=>r.input.latex.startsWith(definition('Ky')))!;
+   engine.setRegion(ky.id,{...ky.input,latex:definition('Ky')+'2'});compare();
+   engine.setRegion(ky.id,ky.input);
+   const full=shapes.filter(s=>s.type==='math'&&s.props.displayMode==='full');
+   expect(full.length).toBeGreaterThanOrEqual(6);
+   for(const shape of full)expect(engine.getResult(shape.id)?.substitutionLatex,shape.id).toBeTruthy();
   });
   step('lookup functions reject missing and dimensionally incorrect inputs',()=>{
    engine.setRegion('bad',{latex:'\\operatorname{sectionProp}(1,0)=',order:10000});expect(engine.getResult('bad')?.error?.message).toMatch(/Unknown steel/);

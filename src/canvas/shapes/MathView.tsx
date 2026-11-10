@@ -146,7 +146,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         ) : (
           <div className="flex items-center gap-2">
             <span className="math-baseline">
-              {shape.props.steelFigure && ['state','mode','issues'].includes(shape.props.steelFigure) ? <SteelFigure kind={shape.props.steelFigure} value={result?.value}/> : seen ? <MathRenderer latex={display.latex} /> : <span style={{ display: 'inline-block', width: Math.max(0, w - 2 * PAD_X), height: Math.max(0, h - 2 * PAD_Y) }} />}
+              {shape.props.steelFigure ? <SteelFigure kind={shape.props.steelFigure} value={result?.value}/> : seen ? <MathRenderer latex={display.latex} /> : <span style={{ display: 'inline-block', width: Math.max(0, w - 2 * PAD_X), height: Math.max(0, h - 2 * PAD_Y) }} />}
               <span ref={probeRef} className="baseline-probe" aria-hidden />
             </span>
             {display.check && (
@@ -170,7 +170,6 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         {!isStatic && result?.warnings.map((w) => <StatusIcon key={w} kind="warning" message={w} />)}
         {editing && result?.draftError && <StatusIcon kind="draft" message="Incomplete – dependent regions use the last valid expression." />}
       </div>
-      {shape.props.steelFigure && !['state','mode','issues'].includes(shape.props.steelFigure) && <SteelFigure kind={shape.props.steelFigure} value={result?.value}/>}
     </div>
   );
 }

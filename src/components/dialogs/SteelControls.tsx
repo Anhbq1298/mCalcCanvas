@@ -1,3 +1,5 @@
+import { LtbDiagram, SectionProfile } from './SteelDiagrams';
+export { LtbDiagram, SectionProfile } from './SteelDiagrams';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { sections, sectionById, sectionUnits, propertyKeys, validateSection, type SteelSection } from '../../engineering/steel/sections';
@@ -10,32 +12,17 @@ import { rolledCurves } from '../../engineering/steel/ec3';
 
 const fieldClass='rounded border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-900';
 const buttonClass='rounded bg-slate-800 px-3 py-1.5 text-sm text-white hover:bg-slate-700';
+function inputPrefix(latex:string,key:string):string|undefined {
+  const m=/^([A-Za-z]+)(.*)$/.exec(key);
+  const old=m?`\\mathrm{${m[1]}}${m[2]?'_{'+m[2].replace(/^_/, '')+'}':''}\\coloneq`:definition(key);
+  return [definition(key),old].find(prefix=>latex.startsWith(prefix));
+}
 function replaceInputs(values: Record<string,string>) {
   const patches: Record<string,ShapePatch>={};
   for(const s of Object.values(useCanvasStore.getState().shapes)) if(s.type==='math') {
-    for(const [name,rhs] of Object.entries(values)) if(s.props.latex.startsWith(definition(name))) patches[s.id]={props:{latex:definition(name)+rhs}};
+    for(const [name,rhs] of Object.entries(values)) if(inputPrefix(s.props.latex,name)) patches[s.id]={props:{latex:definition(name)+' '+rhs}};
   }
   transaction(()=>updateShapes(patches));
-}
-export function SectionProfile({h,b,tw,tf}: {h:number;b:number;tw:number;tf:number}) {
-  const scale=140/Math.max(h,b), w=b*scale, d=h*scale, t=tf*scale, web=tw*scale, x=(200-w)/2,y=(170-d)/2;
-  return <svg role="img" aria-label="Doubly symmetric I/H section profile" viewBox="0 0 240 190" width="240" height="190">
-    <path d={`M${x},${y}h${w}v${t}h${-(w-web)/2}v${d-2*t}h${(w-web)/2}v${t}h${-w}v${-t}h${(w-web)/2}v${-(d-2*t)}h${-(w-web)/2}z`} fill="#dbeafe" stroke="#334155" strokeWidth="1.5"/>
-    <text x="185" y="90" fontSize="12">h={h.toFixed(1)}</text><text x="55" y="183" fontSize="12">b={b.toFixed(1)} mm</text>
-    <path d="M15 90h170M100 10v155" stroke="#94a3b8" strokeDasharray="4 4"/><text x="180" y="85" fontSize="12">y</text><text x="105" y="15" fontSize="12">z</text>
-  </svg>;
-}
-export function LtbDiagram({loadCase=1,height=0,length=5000,k=1,kw=1}: {loadCase?:number;height?:number;length?:number;k?:number;kw?:number}) {
-  const shape=loadCase===0?'M40,110L480,110L480,155L40,155Z':loadCase===1?'M40,110Q260,200 480,110Z':loadCase===2?'M40,110L260,165L480,110Z':'M40,125L150,150L310,105L480,135';
-  return <svg role="img" aria-label="LTB loading and moment diagram" viewBox="0 0 560 210" width="550" height="206">
-    <text x="40" y="14" fontSize="12">{['Uniform moment','UDL','Central point load','End moments / linear gradient','Custom moment diagram','Combined loading'][loadCase]??'External analysis'} · L={length} mm · k={k}, kw={kw}</text>
-    <path d="M40 65H480M40 65l-10 18h20ZM480 65l-10 18h20Z" fill="none" stroke="#334155" strokeWidth="2"/>
-    {(loadCase===1? [65,120,175,230,285,340,395,450]:loadCase===2?[260]:[]).map(x=><path key={x} d={`M${x} 28v31m-5-6l5 6 5-6`} stroke="#2563eb" fill="none"/>)}
-    {loadCase===0&&<text x="210" y="48" fontSize="14">↶ M        M ↷</text>}
-    {loadCase<=2?<path d={shape} fill="#dbeafe" stroke="#2563eb" strokeWidth="1.5"/>:<text x="40" y="145" fontSize="12">Use the moment diagram in the referenced external analysis.</text>}
-    <text x="40" y="100" fontSize="11">Moment diagram (schematic)</text>
-    <text x="40" y="192" fontSize="11">zg={height} mm; positive destabilizing. Fork ends / free warping if k=kw=1.</text>
-  </svg>;
 }
 function readCustom(): SteelSection[] {
   try { const raw: unknown=JSON.parse(localStorage.getItem('mccv-steel-sections-v1')??'[]');
@@ -83,7 +70,7 @@ function SectionPicker({id,close}: {id:string;close:()=>void}) {
       </div></div><p role="alert" className="mt-3 text-sm text-red-700">{error}</p><div className="mt-3 flex items-center justify-between"><p className="text-xs text-slate-500">Individual property definitions remain editable. Ky / Kz remain unchanged.</p><button className={buttonClass} disabled={!custom && selected.family!==family} onClick={apply}>Select Section</button></div></>;
 }
 function LtbPicker({close}: {close:()=>void}) {
-  const rhs=(key:string,fallback:string)=>{const s=Object.values(useCanvasStore.getState().shapes).find(s=>s.type==='math'&&s.props.latex.startsWith(definition(key)));return s?.type==='math'?s.props.latex.slice(definition(key).length):fallback;};
+  const rhs=(key:string,fallback:string)=>{const s=Object.values(useCanvasStore.getState().shapes).find(s=>s.type==='math'&&s.props.latex.startsWith(definition(key)));return s?.type==='math'?s.props.latex.slice(definition(key).length).trimStart():fallback;};
   const literal=(key:string,fallback:string)=>/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)/.exec(rhs(key,fallback))?.[0]??fallback;
   const priorHeight=rhs('zg','0');
   const initialHeight=/^0(?:\\|$)/.test(priorHeight)?'0':/^1\\cdot/.test(priorHeight)?'1':/^-1\\cdot/.test(priorHeight)?'-1':'custom';

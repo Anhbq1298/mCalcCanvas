@@ -1,3 +1,4 @@
+import {definition} from '../../engineering/steel/contract.js';
 import {expect,test} from '@playwright/test';
 import {mkdir,readFile} from 'node:fs/promises';
 import {openFresh,region,resultOf,waitReady} from './helpers.js';
@@ -17,6 +18,13 @@ test('EC3 catalogue, editable K, LTB safety, batch, custom section, mCCV and pri
  await page.getByTestId('export-pdf').click();await expect(page.locator('#print-root .print-page').first()).toBeAttached();
  await page.emulateMedia({media:'print'});
  const baselinePages=page.locator('#print-root .print-page');
+ await expect(baselinePages).toHaveCount(9);
+ for(let i=0;i<7;i++){
+   const text=await baselinePages.nth(i).innerText();
+   expect(text).not.toMatch(/steelDesign|operatorname|entry\(|stack\(/);
+ }
+ await expect(baselinePages.first().getByRole('img',{name:'LTB loading and moment diagram'})).toBeVisible();
+ await expect(baselinePages.nth(6).getByRole('img',{name:'Separate serviceability load case'})).toBeVisible();
  for(let i=0;i<await baselinePages.count();i++)await baselinePages.nth(i).screenshot({path:`${out}/reference-page-${i+1}.png`});
  await page.pdf({path:`${out}/Steel_Beam_Column_EC3.pdf`,preferCSSPageSize:true,printBackground:true});
  const tableLayout=await page.locator('#print-root [data-testid=math-region]').evaluateAll(els=>{
@@ -37,12 +45,12 @@ test('EC3 catalogue, editable K, LTB safety, batch, custom section, mCCV and pri
 
 
  const revealInput=async(name:string)=>{await page.getByTestId('parameters-panel').locator(`[data-testid=param-row][data-name="${name}"]`).click();};
- const initial=(await region(page,'\\mathrm{NcrY}'))!.result;
+ const initial=(await region(page,definition('NcrY')))!.result;
  await page.getByRole('tab',{name:'Parameters',exact:true}).click();
  await page.getByTestId('param-input-Ky').fill('2');await page.getByTestId('param-input-Ky').press('Enter');await idle();
- await resultOf(page,'\\mathrm{NcrY}').not.toBe(initial);
+ await resultOf(page,definition('NcrY')).not.toBe(initial);
  await page.getByTestId('param-input-Ky').fill('1');await page.getByTestId('param-input-Ky').press('Enter');await idle();
- await resultOf(page,'\\mathrm{NcrY}').toBe(initial);
+ await resultOf(page,definition('NcrY')).toBe(initial);
  await revealInput('Section');await page.getByTestId('browse-steel').click();
  await expect(page.getByRole('dialog',{name:'Steel Section Library'})).toBeVisible();
  await page.getByLabel('Section family',{exact:true}).selectOption('W');await page.getByLabel('Search sections').fill('W14X90');
@@ -63,11 +71,11 @@ test('EC3 catalogue, editable K, LTB safety, batch, custom section, mCCV and pri
  await page.getByLabel('Manual C1',{exact:true}).fill('1.127');await page.getByLabel('Manual C2',{exact:true}).fill('0.454');
  await page.getByLabel('Independently verified',{exact:true}).check();await page.getByLabel('LTB source',{exact:true}).fill('NCCI SN003b verified fork-end coefficients');
  await page.getByRole('button',{name:'Apply LTB Configuration'}).click();await idle();
- await resultOf(page,'\\mathrm{Mcr}\\coloneq').not.toBe('0 kN·m');
+ await resultOf(page,definition('Mcr')).not.toBe('0 kN·m');
  await revealInput('LTBmode');await page.getByTestId('configure-ltb').click();await page.getByLabel('Mcr mode',{exact:true}).selectOption('2');
  await page.getByLabel('External Mcr',{exact:true}).fill('400');await page.getByLabel('LTB source',{exact:true}).fill('Browser test — independently supplied Mcr');
  await page.getByRole('button',{name:'Apply LTB Configuration'}).click();await idle();
- await resultOf(page,'\\mathrm{Mcr}\\coloneq').toBe('400 kN·m');
+ await resultOf(page,definition('Mcr')).toBe('400 kN·m');
  await revealInput('LTBmode');await page.getByTestId('configure-ltb').click();
  await expect(page.getByLabel('Mcr mode',{exact:true})).toHaveValue('2');await expect(page.getByLabel('External Mcr',{exact:true})).toHaveValue('400');
  await page.getByRole('button',{name:'Close steel dialog'}).click();

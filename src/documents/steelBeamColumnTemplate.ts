@@ -1,4 +1,6 @@
-/** Editable EC3 worksheet. Numeric contracts are documented in steel/contract.ts. */
+/** Human-readable EC3 report. Every design step uses ordinary editable math regions.
+ * The existing steel kernel remains an independent guarded audit in the technical annex.
+ */
 import { newShapeId } from '../canvas/model/canvasStore';
 import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, type Shape, type MathProps, type AnnexRole } from '../canvas/model/types';
 import { escapeHtml } from '../canvas/sanitize';
@@ -7,127 +9,258 @@ import { propertyKeys, sectionUnits, sections } from '../engineering/steel/secti
 import { checkNames, definition, inputFields, outputFields, symbol } from '../engineering/steel/contract';
 import type { InputResultConfig } from './DocumentTypes';
 
-export function steelBeamColumnTemplate(): {shapes:Shape[];inputResult:InputResultConfig} {
-  const shapes:Shape[]=[], bound=new Map<string,string>();
-  const Y=(p:number,r:number)=>(p-1)*(A4.h+PAGE_GAP)+60+r*40;
-  const text=(p:number,r:number,html:string,heading:0|1|2=0,x=76,w=640,annex?:AnnexRole)=>{
-    shapes.push({id:newShapeId(),type:'text',x,y:Y(p,r),props:{...DEFAULT_TEXT_PROPS,w,h:heading?28:24,html:escapeHtml(html),fontSize:heading===1?19:heading===2?15:12,color:heading?'#1e3a5f':'#475569',...(heading?{heading}:{}),...(annex?{annex}:{})}});
+export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: InputResultConfig } {
+  const shapes: Shape[] = [], bound = new Map<string, string>();
+  const t = String.raw, v = symbol;
+  const y = (p: number, row: number) => (p - 1) * (A4.h + PAGE_GAP) + 60 + row * 40;
+  const note = (p: number, row: number, content: string, heading: 0|1|2 = 0, annex?: AnnexRole, x = 76, w = 640) => {
+    shapes.push({ id: newShapeId(), type: 'text', x, y: y(p,row), props: { ...DEFAULT_TEXT_PROPS, w, h: heading ? 28 : 24, html: escapeHtml(content), fontSize: heading === 1 ? 19 : heading === 2 ? 14 : 11, color: heading ? '#1e3a5f' : '#475569', ...(heading ? {heading} : {}), ...(annex ? {annex} : {}) } });
   };
-  const math=(p:number,r:number,latex:string,x=96,extra:Partial<MathProps>={})=>{
-    const id=newShapeId(); shapes.push({id,type:'math',x,y:Y(p,r),props:{...DEFAULT_MATH_PROPS,latex,fontSize:14,w:250,h:32,baseline:20,displayMode:'formulaResult',...extra}});return id;
+  const math = (p: number, row: number, latex: string, x = 96, props: Partial<MathProps> = {}) => {
+    const id = newShapeId();
+    shapes.push({ id, type: 'math', x, y: y(p,row), props: { ...DEFAULT_MATH_PROPS, latex, fontSize: 13, w: 600, h: 32, baseline: 20, displayMode: 'formulaResult', ...props } });
+    return id;
   };
-  const input=(p:number,r:number,key:string,rhs:string,x=96)=>{const id=math(p,r,definition(key)+rhs,x,{displayMode:'formula'});bound.set(key,id);return id;};
-  const pair=(p:number,r:number,a:[string,string],b:[string,string])=>{input(p,r,...a);input(p,r,...b,396);};
-  const q=(n:number,u:string)=>`${n}\\,\\mathrm{${u}}`;
-  text(1,0,'STEEL BEAM & BEAM-COLUMN DESIGN',1);
-  text(1,0.8,'EN 1993-1-1:2005 + A1:2014 · Doubly symmetric rolled I/H · prismatic member');
-  input(1,2,'Section','1211');
-  text(1,2.8,'Steel section source: licensed offline catalogue; designation and dataset shown beside Section ID');
-  text(1,3.7,'1  MATERIAL / NATIONAL ANNEX — designer-selected values',2);
-  pair(1,4.7,['fy',q(355,'MPa')],['fu',q(510,'MPa')]);
-  pair(1,5.7,['E',q(210,'GPa')],['G',q(80.76923,'GPa')]);
-  pair(1,6.7,['gamma0','1'],['gamma1','1']);
-  input(1,7.7,'gamma2','1.25');
-  text(1,8.7,'2  LENGTHS / FLEXURAL BUCKLING — Ky and Kz are editable',2);
-  pair(1,9.7,['L',q(5,'m')],['Llt',q(5,'m')]);
-  pair(1,10.7,['Ky','1'],['Kz','1']);
-  text(1,11.7,'3  SIMULTANEOUS ULS ACTIONS — one combination and member position',2);
-  pair(1,12.7,['N',q(100,'kN')],['My',q(50,'kN')+'\\cdot\\mathrm{m}']);
-  pair(1,13.7,['Mz',q(5,'kN')+'\\cdot\\mathrm{m}'],['Vy',q(0,'kN')]);
-  input(1,14.7,'Vz',q(30,'kN'));
-  text(1,15.7,'Compression N positive; y major, z minor. Moment/shear signs retained; checks use |demand|.');
-  text(1,16.7,'4  SERVICEABILITY — separate unfactored loads / project limit',2);
-  pair(1,17.7,['q',q(5,'kN')+'/\\mathrm{m}'],['P',q(0,'kN')]);
-  pair(1,18.7,['SLSmode','0'],['LimitRatio','250']);
-  text(1,19.7,'SLS mode: 0 simple beam, UDL + central point; 1 cantilever, UDL + tip; 2 external.');
-  input(1,21,'LTBmode','0');
-  text(1,22,'Calculate section, stability and SLS — editable properties and factors',0,76,640,{kind:'link',target:'ec3'});
-  text(1,23,'Assumptions: no holes; uniform moments for interaction; fork ends; free warping.');
-  text(1,23.8,'Specify actual segment lengths/restraints. Presence of a slab does not establish lateral restraint.');
+  const calc = (p: number, row: number, key: string, rhs: string, props: Partial<MathProps> = {}, x = 96) => {
+    const id = math(p,row,definition(key)+' '+rhs,x,props); bound.set(key,id); return id;
+  };
+  const input = (p: number, row: number, key: string, rhs: string, x = 96) => calc(p,row,key,rhs,{displayMode:'formula',w:280},x);
+  const pair = (p: number, row: number, a: [string,string], b: [string,string]) => { input(p,row,...a); input(p,row,...b,396); };
+  const q = (n: number, unit: string) => `${n}\\,\\mathrm{${unit}}`;
+  const abs = (key: string) => t`\operatorname{abs}(${v(key)})`;
+  const get = (key: string) => t`\operatorname{entry}(${v('R')},${outputFields.findIndex(([n])=>n===key)})`;
+  const zeroMoment = t`0\,\mathrm{N}\cdot\mathrm{mm}`;
+  const compression = t`\operatorname{max}(0\,\mathrm{N},${v('N')})`;
+  const reduction = (lambda: string, alpha: string) => t`0.5\left(1+${v(alpha)}(${v(lambda)}-0.2)+${v(lambda)}^2\right)`;
+  const chi = (phi: string, lambda: string) => t`\operatorname{min}\left(1,\frac{1}{${v(phi)}+\sqrt{\operatorname{max}(0,${v(phi)}^2-${v(lambda)}^2)}}\right)`;
 
-  text(2,0,'5  GOVERNING DESIGN SUMMARY',1);
-  math(2,1,definition('State')+'\\operatorname{entry}('+symbol('R')+',4)',96,{steelFigure:'state'});
-  math(2,1,definition('UR')+'\\operatorname{entry}('+symbol('R')+',3)',396,{displayMode:'result'});
-  math(2,2.5,definition('Issues')+`\\operatorname{entry}(${symbol('R')},${outputFields.findIndex(([n])=>n==='flags')})`,76,{steelFigure:'issues',displayMode:'result'});
-  text(2,3.5,'Check / clause',0,76,180);text(2,3.5,'Resistance',0,276,120);text(2,3.5,'Demand',0,416,100);text(2,3.5,'UR',0,536,60);text(2,3.5,'Status',0,616,100);
-  const resistances=[`\\operatorname{if}(${symbol('N')}<0\\,\\mathrm{N},\\operatorname{entry}(${symbol('R')},7),\\operatorname{entry}(${symbol('R')},6))`,...['My','Mz','Vy','Vz'].map(k=>`\\operatorname{entry}(${symbol('R')},${outputFields.findIndex(([n])=>n===k)})`),'1',...['NbY','NbZ','NbT','Mb'].map(k=>`\\operatorname{entry}(${symbol('R')},${outputFields.findIndex(([n])=>n===k)})`),'1','1',`${symbol('L')}/${symbol('LimitRatio')}`];
+  // 1 — One physically consistent example. Equal end couples => uniform moments and zero shear.
+  note(1,0,'STEEL BEAM–COLUMN DESIGN',1);
+  note(1,0.8,'EN 1993-1-1:2005 + A1:2014 · LC1 · Straight, prismatic rolled I/H member');
+  note(1,1.5,'Design basis: compression positive; y major / z minor. Actions include relevant analysis effects.');
+  input(1,2.3,'Section','1211');
+  note(1,3.1,'Steel section source: licensed offline catalogue; designation and dataset shown beside Section ID');
+  note(1,4,'1  MATERIAL AND MEMBER GEOMETRY',2);
+  pair(1,5,['fy',q(355,'MPa')],['fu',q(510,'MPa')]);
+  pair(1,6,['E',q(210,'GPa')],['G',q(80.76923,'GPa')]);
+  pair(1,7,['gamma0','1'],['gamma1','1']);
+  pair(1,8,['gamma2','1.25'],['L',q(5,'m')]);
+  pair(1,9,['Ky','1'],['Kz','1']);
+  pair(1,10,['Llt',q(5,'m')],['LTBmode','0']);
+  note(1,11,'2  SIMULTANEOUS ULS DESIGN ACTIONS — SAME COMBINATION / POSITION',2);
+  pair(1,12,['N',q(100,'kN')],['My',q(50,'kN')+t`\cdot\mathrm{m}`]);
+  pair(1,13,['Mz',q(5,'kN')+t`\cdot\mathrm{m}`],['Vy',q(0,'kN')]);
+  input(1,14,'Vz',q(0,'kN'));
+  calc(1,16,'ActionDiagram',t`\operatorname{stack}(${v('LoadCase')},${v('zg')}/\mathrm{mm},${v('Llt')}/\mathrm{mm},${v('k')},${v('kw')},${v('N')}/\mathrm{kN},${v('My')}/(\mathrm{kN}\cdot\mathrm{m}),${v('Mz')}/(\mathrm{kN}\cdot\mathrm{m}),${v('Vy')}/\mathrm{kN},${v('Vz')}/\mathrm{kN},${v('L')}/\mathrm{mm})`,{steelFigure:'ltb',w:626,h:246});
+  note(1,15,'Technical inputs and independent verification audit',0,{kind:'link',target:'ec3'});
+  note(1,23.3,'Fork restraints prevent lateral displacement and twist; warping is free. No slab restraint assumed.');
+  note(1,24,'SLS loads are separate from these ULS actions. See section 8 for its own load diagram.');
+
+  // 2 — Summary has no numerical vector formulas visible to the reader.
+  note(2,0,'DESIGN SUMMARY',1);
+  calc(2,1,'State',get('state'),{steelFigure:'state',w:260});
+  calc(2,1,'UR',get('governingUr'),{displayMode:'result',w:280},396);
+  calc(2,2,'Governing',get('governing'),{steelFigure:'mode'});
+  calc(2,2.8,'Issues',get('flags'),{steelFigure:'issues'});
+  ['Check / clause','Resistance','Demand','UR','Status'].forEach((s,i)=>note(2,4,s,0,undefined,[76,276,416,536,616][i],[190,120,100,60,100][i]));
+  const resistances=[t`\operatorname{if}(${v('N')}<0\,\mathrm{N},${get('Nt')},${get('Nc')})`,...['My','Mz','Vy','Vz'].map(get),'1',...['NbY','NbZ','NbT','Mb'].map(get),'1','1',`${v('L')}/${v('LimitRatio')}`];
   const demands=['N','My','Mz','Vy','Vz','sectionUr','N','N','N','My','iy','iz','delta'];
   const clauses=['6.2.3 / 6.2.4','6.2.5 / 6.2.8','6.2.5 / 6.2.8','6.2.6','6.2.6 / EN 1993-1-5','6.2.1(7) / 6.2.10','6.3.1.2','6.3.1.2','6.3.1.4','6.3.2.2','6.3.3 / Annex B','6.3.3 / Annex B','EN 1990 / project'];
   checkNames.forEach((name,i)=>{
-    const row=4.3+i;
-    text(2,row,name,0,76,190);const label=shapes.at(-1)!;if(label.type==='text'){label.props.html=escapeHtml(name)+'<br/>'+escapeHtml(clauses[i]);label.props.fontSize=11;label.props.h=34;}
-    math(2,row+0.2,definition('r'+i)+resistances[i],276,{displayMode:'value',constant:true,w:120,fontSize:12,h:28,...(i===12?{displayUnit:'mm'}:{})});
-    const demand=i===5||i>=10?`\\operatorname{entry}(${symbol('R')},${outputFields.findIndex(([n])=>n===demands[i])})`:`\\operatorname{abs}(${symbol(demands[i])})`;
-    math(2,row+0.2,definition('d'+i)+demand,416,{displayMode:'value',constant:true,w:120,fontSize:12,h:28,...(i===12?{displayUnit:'mm'}:{})});
-    const urIndex=outputFields.length+2*i;
-    math(2,row+0.2,definition('UR'+i)+`\\operatorname{entry}(${symbol('R')},${urIndex})`,536,{displayMode:'value',constant:true,w:70,fontSize:12,h:28});
-    const id=math(2,row+0.2,definition('State'+i)+`\\operatorname{entry}(${symbol('R')},${urIndex+1})`,616,{steelFigure:'state',w:100,h:28});bound.set('State'+i,id);
+    const row=4.8+i;
+    note(2,row,name,0,undefined,76,190);
+    const label=shapes.at(-1)!;if(label.type==='text'){label.props.html=escapeHtml(name)+'<br/>'+escapeHtml(clauses[i]);label.props.h=34;}
+    calc(2,row+0.2,'r'+i,resistances[i],{displayMode:'value',constant:true,w:120,fontSize:12,h:28,...(i===12?{displayUnit:'mm'}:{})},276);
+    calc(2,row+0.2,'d'+i,i===5||i>=10?get(demands[i]):abs(demands[i]),{displayMode:'value',constant:true,w:120,fontSize:12,h:28,...(i===12?{displayUnit:'mm'}:{})},416);
+    calc(2,row+0.2,'UR'+i,t`\operatorname{entry}(${v('R')},${outputFields.length+2*i})`,{displayMode:'value',constant:true,w:70,fontSize:12,h:28},536);
+    calc(2,row+0.2,'State'+i,t`\operatorname{entry}(${v('R')},${outputFields.length+2*i+1})`,{steelFigure:'state',w:100,h:28},616);
   });
-  text(2,18.2,'6  KEY INTERMEDIATE RESULTS — section class, Euler loads, reduction factors',2);
-  const intermediates=['sectionClass','NcrY','NcrZ','chiY','chiZ','Mcr','chiLT','kyy','kyz','kzy','kzz','rho'];
-  intermediates.forEach((key,i)=>{const index=outputFields.findIndex(([n])=>n===key);const id=math(2,19.2+Math.floor(i/2),definition(key)+`\\operatorname{entry}(${symbol('R')},${index})`,i%2?396:96,{displayMode:'result'});bound.set(key,id);});
-  math(2,1.8,definition('Governing')+`\\operatorname{entry}(${symbol('R')},5)`,96,{displayMode:'result',steelFigure:'mode'});
-  math(2,1.8,definition('SectionOut')+symbol('Section'),396,{displayMode:'result'});
-  text(2,17.3,'Batch: 1 PASS / 0 FAIL / −1 NOT VERIFIED. UR −1 means unverified.');
+  note(2,18.5,'READING THIS REPORT',2);
+  note(2,19.5,'3 — section geometry and classification; 4 — section resistance; 5 — compression buckling.');
+  note(2,20.3,'6 — lateral-torsional buckling; 7 — beam-column interaction; 8 — serviceability.');
+  note(2,21.3,'PASS applies only to checks within the declared scope. A missing required check is NOT VERIFIED.');
+  note(2,22.1,'The detailed equations are editable and recalculated. Summary states also use the guarded EC3 audit.');
+  note(2,23.1,'Unsupported branches remain NOT VERIFIED even when an indicative equation has a numerical value.');
+  calc(2,24,'SectionOut',v('Section'),{displayMode:'result'});
 
-  text(3,0,'ANNEX',1,76,640,{kind:'start'});
-  text(3,1,'Section data, calculation inputs and EC3 calculation',2,76,640,{kind:'heading',id:'ec3'});
-  text(3,2,'Properties have explicit units. Replace any lookup definition with a verified literal to override it.');
-  propertyKeys.slice(0,16).forEach((key,i)=>{const id=input(3,3+Math.floor(i/2),key,`\\operatorname{sectionProp}(${symbol('Section')},${i})`,i%2?396:96);const s=shapes.find(s=>s.id===id)!;if(s.type==='math'){s.props.displayMode='result';s.props.displayUnit=sectionUnits[key];}});
-  const advanced: [string,string][]=[
-    ['Lt',symbol('L')],['alphaY','0.34'],['alphaZ','0.49'],['alphaLT','0.21'],
-    ['LoadCase','0'],['zg',q(0,'mm')],['k','1'],['kw','1'],['C1','1'],['C2','0'],['McrExternal',q(0,'kN')+'\\cdot\\mathrm{m}'],
-    ['InteractionMode','0'],['Cmy','1'],['Cmz','1'],['CmLT','1'],['kyyManual','1'],['kyzManual','1'],['kzyManual','1'],['kzzManual','1'],
-    ['DeltaExternal',q(0,'mm')],['Anet',symbol('A')],['eta','1.2'],['FactorsVerified','1'],['LTBverified','0'],['CurvesVerified','1'],['ManualFactorsVerified','0'],
-  ];
-  advanced.forEach(([key,rhs],i)=>input(3,11.5+Math.floor(i/2),key,rhs,i%2?396:96));
-  text(3,24.4,'InteractionMode: 0 Annex B plastic I, λz ≥ 0.4; 1 independently verified manual kij.');
+  // 3 — Source properties are named; lookup indices are confined to the technical annex.
+  note(3,0,'3  SECTION AND CLASSIFICATION',1);
+  note(3,0.9,'HEB/I/H geometry and properties — selected section designation is shown on the first page.');
+  calc(3,1.5,'SectionDrawing',t`\operatorname{stack}(${v('h')}/\mathrm{mm},${v('b')}/\mathrm{mm},${v('tw')}/\mathrm{mm},${v('tf')}/\mathrm{mm})`,{steelFigure:'section',w:260,h:190});
+  (['h','b','tw','tf','A','Iy','Iz','Wpl_y','Wpl_z','It','Iw'] as const).forEach((key,i)=>math(3,1.5+i*0.43,`${v(key)}=`,396,{displayMode:'result',fontSize:12,w:290,h:18,displayUnit:sectionUnits[key]}));
+  note(3,6.4,'EN 1993-1-1 §5.5 / Table 5.2. Biaxial loading: uniform web compression is conservative.');
+  calc(3,7.2,'epsilon',t`\sqrt{\frac{235\,\mathrm{MPa}}{${v('fy')}}}`,{displayMode:'full',h:86});
+  calc(3,9.5,'cf',t`\frac{${v('b')}-${v('tw')}-2${v('r')}}{2}`);
+  calc(3,10.5,'lambdaF',`${v('cf')}/${v('tf')}`);
+  calc(3,11.5,'limitF',t`9${v('epsilon')}`);
+  calc(3,12.5,'flangeClass',t`\operatorname{if}(${v('lambdaF')}\le9${v('epsilon')},1,\operatorname{if}(${v('lambdaF')}\le10${v('epsilon')},2,\operatorname{if}(${v('lambdaF')}\le14${v('epsilon')},3,4)))`,{displayMode:'result',w:280});
+  note(3,12.5,'Class 1 / 2 / 3 limits: 9ε / 10ε / 14ε.',0,undefined,396,290);
+  calc(3,13.5,'cw',`${v('h')}-2(${v('tf')}+${v('r')})`);
+  calc(3,14.5,'lambdaW',`${v('cw')}/${v('tw')}`);
+  calc(3,15.5,'alphaWeb',t`\operatorname{min}(1,\operatorname{max}(0,(1+${v('N')}/(${v('cw')}${v('tw')}${v('fy')}))/2))`,{displayMode:'formulaResult',fontSize:12});
+  calc(3,16.5,'alphaUsed',t`\operatorname{if}(${v('Mz')}=${zeroMoment},\operatorname{if}(${abs('My')}>${zeroMoment},${v('alphaWeb')},1),1)`,{displayMode:'result'});
+  calc(3,17.5,'webLimit1',t`\operatorname{if}(${v('alphaUsed')}>0.5,396/(13${v('alphaUsed')}-1),36/\operatorname{max}(${v('alphaUsed')},10^{-12}))${v('epsilon')}`,{displayMode:'result',w:280});
+  calc(3,17.5,'webLimit2',t`\operatorname{if}(${v('alphaUsed')}>0.5,456/(13${v('alphaUsed')}-1),41.5/\operatorname{max}(${v('alphaUsed')},10^{-12}))${v('epsilon')}`,{displayMode:'result',w:290},396);
+  note(3,18.5,'For this biaxial example α=1: web Class 1 / 2 / 3 limits are 33ε / 38ε / 42ε.');
+  // Stress-ratio class-3 branch is audited by the kernel; named results keep all unsupported states guarded.
+  calc(3,19.5,'webClass',get('webClass'),{displayMode:'result',w:280});
+  calc(3,19.5,'sectionClass',t`\operatorname{max}(${v('flangeClass')},${v('webClass')})`,{w:290},396);
+  calc(3,21,'Wy',t`\operatorname{if}(${v('sectionClass')}<3,${v('Wpl_y')},${v('Wel_y')})`,{w:280});
+  calc(3,21,'Wz',t`\operatorname{if}(${v('sectionClass')}<3,${v('Wpl_z')},${v('Wel_z')})`,{w:290},396);
+  note(3,22.5,'Class 1/2: plastic section moduli. Class 3: elastic section moduli.');
+  note(3,23.3,'Class 4: effective-section verification is outside scope; capacities below are not a compliance claim.');
+  note(3,24.1,'Web stress-gradient classification for uniaxial bending follows Table 5.2 in the audit annex.');
 
+  // 4 — Transparent resistance equations, including the exact conservative high-shear method used.
+  note(4,0,'4  CROSS-SECTION RESISTANCE',1);
+  note(4,0.9,'EN 1993-1-1 §§6.2.3–6.2.10. Net area assumes no holes unless Anet is overridden.');
+  calc(4,1.8,'NcRd',t`\frac{${v('A')}${v('fy')}}{${v('gamma0')}}`,{displayMode:'full',h:86});
+  calc(4,4.1,'NuRd',t`\frac{0.9${v('Anet')}${v('fu')}}{${v('gamma2')}}`);
+  calc(4,5.1,'NtRd',t`\operatorname{min}(${v('NcRd')},${v('NuRd')})`);
+  calc(4,6.2,'VyRd',t`\frac{${v('Avy')}${v('fy')}}{\sqrt{3}${v('gamma0')}}`,{w:280});
+  calc(4,6.2,'VzRd',t`\frac{${v('Avz')}${v('fy')}}{\sqrt{3}${v('gamma0')}}`,{w:290},396);
+  calc(4,7.5,'vY',`${abs('Vy')}/${v('VyRd')}`,{w:280});
+  calc(4,7.5,'vZ',`${abs('Vz')}/${v('VzRd')}`,{w:290},396);
+  calc(4,8.6,'rhoY',t`\operatorname{if}(${v('vY')}>0.5,\operatorname{min}(1,(2${v('vY')}-1)^2),0)`,{w:280,displayMode:'result'});
+  calc(4,8.6,'rhoZ',t`\operatorname{if}(${v('vZ')}>0.5,\operatorname{min}(1,(2${v('vZ')}-1)^2),0)`,{w:290,displayMode:'result'},396);
+  calc(4,9.6,'rho',t`\operatorname{max}(${v('rhoY')},${v('rhoZ')})`);
+  note(4,10.6,'ρ=0 for V/Vpl ≤ 0.5; otherwise ρ=(2V/Vpl−1)². Global yield reduction is conservative.');
+  calc(4,11.6,'MyRd',t`\frac{(1-${v('rho')})${v('Wy')}${v('fy')}}{${v('gamma0')}}`,{displayMode:'full',h:86});
+  calc(4,13.9,'MzRd',t`\frac{(1-${v('rho')})${v('Wz')}${v('fy')}}{${v('gamma0')}}`);
+  calc(4,15.1,'NAxRd',t`\operatorname{if}(${v('N')}<0\,\mathrm{N},${v('NtRd')},${v('NcRd')})(1-${v('rho')})`);
+  calc(4,16.3,'URsection',t`\operatorname{if}(${v('rho')}<1,\frac{${abs('N')}}{${v('NAxRd')}}+\frac{${abs('My')}}{${v('MyRd')}}+\frac{${abs('Mz')}}{${v('MzRd')}},-1)`,{displayMode:'result'});
+  calc(4,17.6,'SectionResult',v('State5'),{steelFigure:'state',w:100});
+  note(4,17.6,'UR = |NEd|/NRd,V + |My,Ed|/My,Rd + |Mz,Ed|/Mz,Rd ≤ 1.',0,undefined,236,470);
+  note(4,18.8,'Conservative N–My–Mz summation explicitly permitted by §6.2.1(7); no plastic interaction credit.');
+  calc(4,20,'hwRatio',t`\frac{${v('h')}-2${v('tf')}}{${v('tw')}}`,{w:280});
+  calc(4,20,'shearLimit',t`\frac{72${v('epsilon')}}{${v('eta')}}`,{w:290},396);
+  note(4,21.4,'Web slenderness above 72ε/η with web shear requires EN 1993-1-5 shear-buckling verification.');
+  note(4,22.3,'Both shear directions acting together require a separate biaxial shear check.');
+  note(4,23.2,'The summary controls PASS / FAIL / NOT VERIFIED, including the checks not covered by these equations.');
 
-  text(4,0,'CALCULATION CONTRACT / REFERENCES',2);
-  const stack=(names:string[])=>`\\operatorname{stack}(${names.map(symbol).join(',')})`;
-  const chunks=(keys:string[],prefix:string,start:number)=>{
-    const groups:string[]=[];
-    for(let i=0;i<keys.length;i+=6){const key=prefix+groups.length;groups.push(key);math(4,start+groups.length-1,definition(key)+stack(keys.slice(i,i+6)),96,{displayMode:'formula'});}
-    math(4,start+groups.length,definition(prefix)+stack(groups),96,{displayMode:'formula'});return start+groups.length+1;
+  // 5 — No black-box extraction of Euler loads or reduction factors.
+  note(5,0,'5  COMPRESSION MEMBER BUCKLING',1);
+  note(5,0.9,'EN 1993-1-1 §6.3.1. Ky and Kz are independently editable; the K annex is reference only.');
+  calc(5,1.8,'LcrY',`${v('Ky')}${v('L')}`,{w:280});
+  calc(5,1.8,'LcrZ',`${v('Kz')}${v('L')}`,{w:290},396);
+  calc(5,3,'NcrY',t`\frac{\pi^2${v('E')}${v('Iy')}}{${v('LcrY')}^2}`,{displayMode:'full',h:86});
+  calc(5,5.3,'lambdaY',t`\sqrt{\frac{${v('A')}${v('fy')}}{${v('NcrY')}}}`,{w:280});
+  calc(5,5.3,'phiY',reduction('lambdaY','alphaY'),{w:290,fontSize:12},396);
+  calc(5,6.6,'chiY',chi('phiY','lambdaY'),{fontSize:12});
+  calc(5,7.8,'NbY',t`\frac{${v('chiY')}${v('A')}${v('fy')}}{${v('gamma1')}}`);
+  calc(5,9,'NcrZ',t`\frac{\pi^2${v('E')}${v('Iz')}}{${v('LcrZ')}^2}`,{displayMode:'full',h:86});
+  calc(5,11.3,'lambdaZ',t`\sqrt{\frac{${v('A')}${v('fy')}}{${v('NcrZ')}}}`,{w:280});
+  calc(5,11.3,'phiZ',reduction('lambdaZ','alphaZ'),{w:290,fontSize:12},396);
+  calc(5,12.6,'chiZ',chi('phiZ','lambdaZ'),{fontSize:12});
+  calc(5,13.8,'NbZ',t`\frac{${v('chiZ')}${v('A')}${v('fy')}}{${v('gamma1')}}`);
+  note(5,15,'Uncoupled torsional buckling — doubly symmetric I/H, §6.3.1.4; torsional length Lt independent.');
+  calc(5,16,'iZero',t`\frac{${v('Iy')}+${v('Iz')}}{${v('A')}}`);
+  calc(5,17,'NcrT',t`\frac{${v('G')}${v('It')}+\pi^2${v('E')}${v('Iw')}/${v('Lt')}^2}{${v('iZero')}}`,{fontSize:12});
+  calc(5,18.3,'lambdaT',t`\sqrt{${v('A')}${v('fy')}/${v('NcrT')}}`,{w:280});
+  calc(5,18.3,'phiT',reduction('lambdaT','alphaZ'),{w:290,fontSize:12},396);
+  calc(5,19.6,'chiT',chi('phiT','lambdaT'),{fontSize:12});
+  calc(5,20.8,'NbT',t`\frac{${v('chiT')}${v('A')}${v('fy')}}{${v('gamma1')}}`);
+  note(5,22.1,'Curves from Tables 6.1/6.2; selected αy, αz are listed in the input annex.');
+  note(5,23,'λ denotes relative slenderness throughout. Combined loading is unverified if torsional buckling governs.');
+
+  // 6 — Coefficient choice and full Mcr expression are visible; unsupported selections remain guarded.
+  note(6,0,'6  LATERAL-TORSIONAL BUCKLING',1);
+  note(6,0.9,'EN 1993-1-1 §6.3.2.2 (general method); elastic Mcr from SCI NCCI SN003b §2.');
+  calc(6,1.6,'LTBmodel',t`\operatorname{stack}(${v('LoadCase')},${v('zg')}/\mathrm{mm},${v('Llt')}/\mathrm{mm},${v('k')},${v('kw')})`,{steelFigure:'ltb',w:626,h:284});
+  note(6,8.9,'LTB reference: NCCI SN003b; uniform I/H; fork ends / free warping');
+  calc(6,9.7,'Cused1',get('C1'),{displayMode:'result',w:280});
+  calc(6,9.7,'Cused2',get('C2'),{displayMode:'result',w:290},396);
+  note(6,10.6,'Auto cases: uniform moment 1/0; UDL 1.127/0.454; central point 1.348/0.630 (C1/C2).');
+  calc(6,11.5,'Tcr',t`\frac{\pi^2${v('E')}${v('Iz')}}{(${v('k')}${v('Llt')})^2}`);
+  calc(6,12.8,'Bcr',t`\left(\frac{${v('k')}}{${v('kw')}}\right)^2\frac{${v('Iw')}}{${v('Iz')}}+\frac{${v('G')}${v('It')}}{${v('Tcr')}}+(${v('Cused2')}${v('zg')})^2`,{fontSize:12});
+  calc(6,14,'McrCalc',t`${v('Cused1')}${v('Tcr')}\left(\sqrt{${v('Bcr')}}-${v('Cused2')}${v('zg')}\right)`,{displayMode:'full',h:86});
+  calc(6,16.3,'Mcr',get('Mcr'),{displayMode:'result'});
+  note(6,17.2,'Mcr uses the formula only for verified configurations; external mode uses supplied Mcr directly.');
+  calc(6,18.1,'lambdaLT',t`\operatorname{if}(${v('Mcr')}>${zeroMoment},\sqrt{${v('Wy')}${v('fy')}/${v('Mcr')}},0)`,{displayMode:'result',w:280});
+  calc(6,18.1,'phiLT',reduction('lambdaLT','alphaLT'),{w:290,fontSize:12},396);
+  calc(6,19.4,'chiLT',t`\operatorname{if}(${v('Mcr')}>${zeroMoment},${chi('phiLT','lambdaLT')},0)`,{fontSize:12});
+  calc(6,20.6,'Mb',t`\operatorname{if}(${v('Mcr')}>${zeroMoment},${v('chiLT')}${v('Wy')}${v('fy')}/${v('gamma1')},${zeroMoment})`);
+  note(6,22,'Relative LTB slenderness λLT = √(Wy fy / Mcr); no valid Mcr means NOT VERIFIED, not zero demand.');
+  note(6,22.9,'External mode bypasses coefficient calculation. McrCalc is an indicative coefficient-mode equation only.');
+  note(6,23.8,'Top/bottom load level and end restraints must match the diagram and coefficient source.');
+
+  // 7 — Both Annex B equations are evaluated explicitly. SLS has a distinct physical load case.
+  note(7,0,'7  COMPRESSION AND BIAXIAL BENDING',1);
+  note(7,0.9,'EN 1993-1-1 §6.3.3, equations (6.61)/(6.62); Annex B Method 2, plastic I/H, λz ≥ 0.4.');
+  calc(7,1.8,'nY',`${compression}/${v('NbY')}`,{w:280});
+  calc(7,1.8,'nZ',`${compression}/${v('NbZ')}`,{w:290},396);
+  calc(7,2.8,'kyyAuto',t`${v('Cmy')}\left(1+\operatorname{min}(${v('lambdaY')}-0.2,0.8)${v('nY')}\right)`,{fontSize:12});
+  calc(7,3.9,'kzzAuto',t`${v('Cmz')}\left(1+\operatorname{min}(2${v('lambdaZ')}-0.6,1.4)${v('nZ')}\right)`,{fontSize:12});
+  calc(7,5,'kzyAuto',t`\operatorname{if}(${v('CmLT')}>0.25,\operatorname{max}\left(1-\frac{0.1${v('lambdaZ')}${v('nZ')}}{${v('CmLT')}-0.25},1-\frac{0.1${v('nZ')}}{${v('CmLT')}-0.25}\right),0)`,{fontSize:12,displayMode:'result'});
+  calc(7,6.2,'kyy',t`\operatorname{if}(${v('InteractionMode')}=1,${v('kyyManual')},${v('kyyAuto')})`,{displayMode:'result',w:280});
+  calc(7,6.2,'kzz',t`\operatorname{if}(${v('InteractionMode')}=1,${v('kzzManual')},${v('kzzAuto')})`,{displayMode:'result',w:290},396);
+  calc(7,7.2,'kyz',t`\operatorname{if}(${v('InteractionMode')}=1,${v('kyzManual')},0.6${v('kzz')})`,{w:280,fontSize:12});
+  calc(7,7.2,'kzy',t`\operatorname{if}(${v('InteractionMode')}=1,${v('kzyManual')},${v('kzyAuto')})`,{displayMode:'result',w:290},396);
+  calc(7,8.2,'MzStability',`${v('Wz')}${v('fy')}/${v('gamma1')}`,{w:280});
+  calc(7,8.2,'mZ',`${abs('Mz')}/${v('MzStability')}`,{w:290},396);
+  calc(7,9.2,'mY',t`\operatorname{if}(${abs('My')}=${zeroMoment},0,\operatorname{if}(${v('Mb')}>${zeroMoment},${abs('My')}/${v('Mb')},-1))`,{displayMode:'result',w:280});
+  note(7,9.2,'my = |My,Ed| / Mb,Rd (verified Mcr required).',0,undefined,396,290);
+  calc(7,10.2,'Jy',`${v('nY')}+${v('kyy')}${v('mY')}+${v('kyz')}${v('mZ')}`,{fontSize:12});
+  calc(7,11.2,'ResultY',v('State10'),{steelFigure:'state',w:100});
+  note(7,11.2,'Acceptance: Jy ≤ 1; equation (6.61).',0,undefined,256,400);
+  calc(7,12.2,'Jz',`${v('nZ')}+${v('kzy')}${v('mY')}+${v('kzz')}${v('mZ')}`,{fontSize:12});
+  calc(7,13.2,'ResultZ',v('State11'),{steelFigure:'state',w:100});
+  note(7,13.2,'Acceptance: Jz ≤ 1; equation (6.62).',0,undefined,256,400);
+  note(7,13.8,'Cm=1 corresponds to the uniform end-moment example. Other distributions need verified Cm factors.');
+  note(7,14.6,'Indicative equations alone do not verify an unsupported branch; summary states govern compliance.');
+  note(7,15.6,'8  SERVICEABILITY — SEPARATE UNFACTORED LOAD CASE',2);
+  calc(7,16.5,'SLSdiagram',t`\operatorname{stack}(${v('SLSmode')},${v('q')}/(\mathrm{kN}/\mathrm{m}),${v('P')}/\mathrm{kN},${v('L')}/\mathrm{mm})`,{steelFigure:'sls',w:626,h:116});
+  calc(7,19.6,'deltaSimple',t`\frac{5${abs('q')}${v('L')}^4}{384${v('E')}${v('Iy')}}+\frac{${abs('P')}${v('L')}^3}{48${v('E')}${v('Iy')}}`,{fontSize:12});
+  calc(7,20.9,'deltaCantilever',t`\frac{${abs('q')}${v('L')}^4}{8${v('E')}${v('Iy')}}+\frac{${abs('P')}${v('L')}^3}{3${v('E')}${v('Iy')}}`,{fontSize:12});
+  calc(7,22.2,'delta',t`\operatorname{if}(${v('SLSmode')}=0,${v('deltaSimple')},\operatorname{if}(${v('SLSmode')}=1,${v('deltaCantilever')},${abs('DeltaExternal')}))`,{displayMode:'result',w:280,displayUnit:'mm'});
+  calc(7,22.2,'deltaAllow',`${v('L')}/${v('LimitRatio')}`,{w:290,displayUnit:'mm'},396);
+  math(7,23.4,t`${v('delta')}\le${v('deltaAllow')}`);
+  note(7,24.2,'Limit ratio is project-specific; Euler–Bernoulli bending deflection only, no universal EC3 limit.');
+
+  // 8/9 — Optional detailed inputs and machine contract are kept out of the design narrative.
+  note(8,0,'ANNEX',1,{kind:'start'});
+  note(8,1,'Section data and advanced inputs',2,{kind:'heading',id:'ec3'});
+  note(8,2,'Properties are explicit quantities. Replace a lookup with a verified literal to override it.');
+  propertyKeys.slice(0,16).forEach((key,i)=>calc(8,3+Math.floor(i/4),key,t`\operatorname{sectionProp}(${v('Section')},${i})`,{displayMode:'result',displayUnit:sectionUnits[key],fontSize:11,w:145},[76,236,396,556][i%4]));
+  const advanced: [string,string][]=[['Lt',v('L')],['alphaY','0.34'],['alphaZ','0.49'],['alphaLT','0.21'],['LoadCase','0'],['zg',q(0,'mm')],['k','1'],['kw','1'],['C1','1'],['C2','0'],['McrExternal',q(0,'kN')+t`\cdot\mathrm{m}`],['InteractionMode','0'],['Cmy','1'],['Cmz','1'],['CmLT','1'],['kyyManual','1'],['kyzManual','1'],['kzyManual','1'],['kzzManual','1'],['DeltaExternal',q(0,'mm')],['Anet',v('A')],['eta','1.2'],['FactorsVerified','1'],['LTBverified','0'],['CurvesVerified','1'],['ManualFactorsVerified','0'],['q',q(5,'kN')+t`/\mathrm{m}`],['P',q(0,'kN')],['SLSmode','0'],['LimitRatio','250']];
+  advanced.forEach(([key,rhs],i)=>input(8,7.5+Math.floor(i/2),key,rhs,i%2?396:96));
+  note(8,23.4,'Modes: LTB 0 auto / 1 manual / 2 external; SLS 0 simple / 1 cantilever / 2 external.');
+  note(8,24.2,'Manual kij, Cm and curves require independent verification; acknowledgement flags persist in .mCCV.');
+
+  note(9,0,'BUCKLING K — REFERENCE ONLY',2,{kind:'heading',id:'buckling-k'});
+  calc(9,0.9,'Kreference','1',{steelFigure:'buckling',w:626,h:204,constant:true,displayMode:'formula'});
+  note(9,6.2,'Ideal elastic modes. Actual K depends on frame sway, connection stiffness and intermediate restraints.');
+  note(9,7,'Fixed–guided: rotations restrained, relative translation free. Viewing this annex never changes Ky/Kz.');
+  note(9,7.8,'LTB k/kw are separate lateral-bending / warping factors. Complex frames require stability analysis.');
+  note(9,9,'INDEPENDENT ENGINE AUDIT — DATA CONTRACT, NOT THE DESIGN EXPLANATION',2);
+  const stack=(keys:string[])=>t`\operatorname{stack}(${keys.map(v).join(',')})`;
+  const chunks=(keys:string[],prefix:string,row:number)=>{
+    const names:string[]=[];
+    for(let i=0;i<keys.length;i+=8){const key=prefix+names.length;names.push(key);calc(9,row+names.length*0.65,key,stack(keys.slice(i,i+8)),{displayMode:'formula',fontSize:10,h:25});}
+    calc(9,row+(names.length+1)*0.65,prefix,stack(names),{displayMode:'formula',fontSize:10,h:25});return row+(names.length+2)*0.65;
   };
-  let row=chunks(propertyKeys.slice(0,16),'S',1);
-  const mapping: Record<string,string>={gamma0:'gamma0',gamma1:'gamma1',gamma2:'gamma2',ltbMode:'LTBmode',loadCase:'LoadCase',loadHeight:'zg',externalMcr:'McrExternal',interactionMode:'InteractionMode',kyy:'kyyManual',kyz:'kyzManual',kzy:'kzyManual',kzz:'kzzManual',slsMode:'SLSmode',displacement:'DeltaExternal',limitRatio:'LimitRatio',netArea:'Anet',verifiedFactors:'FactorsVerified',ltbVerified:'LTBverified',curveVerified:'CurvesVerified',manualVerified:'ManualFactorsVerified'};
+  let row=chunks(propertyKeys.slice(0,16),'S',9.6);
+  const mapping:Record<string,string>={ltbMode:'LTBmode',loadCase:'LoadCase',loadHeight:'zg',externalMcr:'McrExternal',interactionMode:'InteractionMode',kyy:'kyyManual',kyz:'kyzManual',kzy:'kzyManual',kzz:'kzzManual',slsMode:'SLSmode',displacement:'DeltaExternal',limitRatio:'LimitRatio',netArea:'Anet',verifiedFactors:'FactorsVerified',ltbVerified:'LTBverified',curveVerified:'CurvesVerified',manualVerified:'ManualFactorsVerified'};
   row=chunks(inputFields.map(([n])=>mapping[n]??n),'I',row);
-  math(4,row,definition('R')+`\\operatorname{steelDesign}(${symbol('S')},${symbol('I')})`,96,{displayMode:'formula'});
-  text(4,row+1,'LTB reference: NCCI SN003b; uniform I/H; fork ends / free warping');
-  math(4,row+2,definition('LTBmodel')+`\\operatorname{stack}(${symbol('LoadCase')},${symbol('zg')}/\\mathrm{mm},${symbol('Llt')}/\\mathrm{mm},${symbol('k')},${symbol('kw')})`,96,{displayMode:'formula',steelFigure:'ltb',w:566,h:242});
-  math(4,row+8.2,definition('Cused1')+`\\operatorname{entry}(${symbol('R')},28)`,96,{displayMode:'result'});
-  math(4,row+8.2,definition('Cused2')+`\\operatorname{entry}(${symbol('R')},29)`,396,{displayMode:'result'});
-  text(4,row+9.2,'Cused1 / Cused2 apply to coefficient modes only; external Mcr bypasses them.');
-  // Reference diagrams are unlinked and never modify Ky / Kz.
-  text(5,0,'BUCKLING K — REFERENCE ONLY',2,76,640,{kind:'heading',id:'buckling-k'});
-  math(5,1,definition('Kreference')+'1',76,{steelFigure:'buckling',displayMode:'formula',w:626,h:204,constant:true});
-  text(5,6.2,'Ideal elastic members only. Fixed–guided: end rotations restrained, relative translation free.');
-  text(5,7,'Actual K depends on frame sway, connection stiffness and intermediate restraints.');
-  text(5,8,'Complex frames may require a separate stability analysis. Viewing this annex never changes Ky/Kz.');
-  text(5,9,'LTB k / kw are lateral-bending / warping boundary factors, separate from flexural Ky / Kz.');
-  text(5,11,'TECHNICAL SCOPE / NOT VERIFIED',2);
-  text(5,12,'Class 4, shear buckling, biaxial shear, arbitrary LTB and Annex A require separate verification.');
-  text(5,12.8,'Annex B auto: Class 1/2, λz ≥ 0.4; other cases require independently verified manual kij.');
-  text(5,13.6,'No applied torsion. Connections, block tearing and fatigue excluded; Lt specified independently.');
-  text(5,14.4,'High-shear member interaction needs a separate check; use external SLS for other loading.');
-  text(5,15.2,'NA: designer-selected factors / curves / η. General LTB §6.3.2.2; 2022 edition not used.');
-  text(5,16.2,'COMPRESSION INTERACTION — §6.3.3; main summary governs verification',2);
-  math(5,17.2,definition('NRk')+`${symbol('A')}${symbol('fy')}`,96);
-  math(5,18.2,definition('MyRk')+`\\operatorname{if}(${symbol('sectionClass')}<3,${symbol('Wpl_y')},${symbol('Wel_y')})${symbol('fy')}`,96,{displayMode:'formulaResult',fontSize:12});
-  math(5,19.2,definition('MzRk')+`\\operatorname{if}(${symbol('sectionClass')}<3,${symbol('Wpl_z')},${symbol('Wel_z')})${symbol('fy')}`,96,{displayMode:'formulaResult',fontSize:12});
-  const interaction=(axis:'y'|'z')=>`J_{${axis}}(n,m_{y},m_{z})\\coloneq\\frac{n}{${symbol(axis==='y'?'chiY':'chiZ')}${symbol('NRk')}/${symbol('gamma1')}}+${symbol(axis==='y'?'kyy':'kzy')}\\frac{m_{y}}{${symbol('chiLT')}${symbol('MyRk')}/${symbol('gamma1')}}+${symbol(axis==='y'?'kyz':'kzz')}\\frac{m_{z}}{${symbol('MzRk')}/${symbol('gamma1')}}`;
-  math(5,20.5,interaction('y'),96,{displayMode:'formula',fontSize:12,h:44});
-  math(5,22,interaction('z'),96,{displayMode:'formula',fontSize:12,h:44});
-  text(5,23.5,'Check both J_y and J_z ≤ 1 with absolute simultaneous moments; coefficient validity is separate.');
-  text(5,24.3,'Sources and validation: EN 1993-1-1 §§5.5 / 6.2 / 6.3; SCI SN003b; JRC 2014 Simões.');
+  calc(9,row,'R',t`\operatorname{steelDesign}(${v('S')},${v('I')})`,{displayMode:'formula',fontSize:11});
+  note(9,19.3,'SCOPE / NOT VERIFIED',2);
+  note(9,20.2,'Class 4, plated shear buckling, biaxial shear, arbitrary LTB and Annex A require separate verification.');
+  note(9,21,'Automatic Annex B: Class 1/2, λz ≥ 0.4. Other branches need independently verified manual kij.');
+  note(9,21.8,'No applied torsion, fatigue, connections or block tearing. High-shear member interaction is unverified.');
+  note(9,22.6,'Catalogue properties include source approximations; review project tables. UB/UC: custom entry only.');
+  note(9,23.4,'References: EN 1993-1-1 §§5.5 / 6.2 / 6.3; SCI NCCI SN003b; JRC 2014 Simões.');
+
+  for (const shape of shapes) {
+    const row = (shape.y - y(9,0)) / 40;
+    if (row >= 0 && row < 8) shape.y += 10.5 * 40;
+    else if (row >= 9 && row < 19) shape.y -= 9 * 40;
+  }
+
   const inputs=['Section','fy','fu','L','Ky','Kz','Llt','N','My','Mz','Vy','Vz','LTBmode','LoadCase'];
-  const outputs=['sectionClass','Mcr','chiY','chiZ','chiLT','kyy','kyz','kzy','kzz'];
-  const find=(prefix:string)=>shapes.find(s=>s.type==='math'&&s.props.latex.startsWith(definition(prefix)))!.id;
-  const inputResult:InputResultConfig={title:'EC3 members — simultaneous combinations',inputs:inputs.map(key=>({id:key,label:key==='Section'?'Section ID (library)':key,regionId:bound.get(key)!})),outputs:[...outputs,'UR','State','Governing','SectionOut',...checkNames.map((_,i)=>'State'+i)].map(key=>({id:key,label:key==='State'?'State: 1 PASS / 0 FAIL / −1 NOT VERIFIED':key,regionId:bound.get(key)??find(key), ...(key.startsWith('State')?{valueLabels:{'1':'PASS','0':'FAIL','-1':'NOT VERIFIED'}}:key==='Governing'?{valueLabels:Object.fromEntries(checkNames.map((n,i)=>[String(i),n]))}:key==='SectionOut'?{valueLabels:{'0':'User-defined',...Object.fromEntries(sections.map(s=>[String(s.id),s.name]))}}:{})})),rows:[{id:'LC1',name:'Member 1 / ULS 1',values:{N:100,My:50,Mz:5,Vy:0,Vz:30}},{id:'LC2',name:'Member 1 / ULS 2',values:{N:200,My:100,Mz:10,Vy:0,Vz:60}}]};
+  const outputs=['sectionClass','Mcr','chiY','chiZ','chiLT','kyy','kyz','kzy','kzz','UR','State','Governing','SectionOut',...checkNames.map((_,i)=>'State'+i)];
+  const inputResult:InputResultConfig={title:'EC3 members — simultaneous combinations',inputs:inputs.map(key=>({id:key,label:key==='Section'?'Section ID (library)':key,regionId:bound.get(key)!})),outputs:outputs.map(key=>({id:key,label:key==='State'?'State: 1 PASS / 0 FAIL / −1 NOT VERIFIED':key,regionId:bound.get(key)!,...(key.startsWith('State')?{valueLabels:{'1':'PASS','0':'FAIL','-1':'NOT VERIFIED'}}:key==='Governing'?{valueLabels:Object.fromEntries(checkNames.map((n,i)=>[String(i),n]))}:key==='SectionOut'?{valueLabels:{'0':'User-defined',...Object.fromEntries(sections.map(s=>[String(s.id),s.name]))}}:{})})),rows:[{id:'LC1',name:'Member 1 / ULS 1',values:{N:100,My:50,Mz:5,Vy:0,Vz:0}},{id:'LC2',name:'Member 1 / ULS 2',values:{N:200,My:100,Mz:10,Vy:0,Vz:0}}]};
   for(const shape of shapes)shape.printGroupId=`ec3-sheet-${Math.floor(shape.y/(A4.h+PAGE_GAP))}`;
-  for(const row of inputResult.rows) row.values={...Object.fromEntries(inputs.map(k=>[k,null])),...row.values};
+  for(const row of inputResult.rows)row.values={...Object.fromEntries(inputs.map(k=>[k,null])),...row.values};
   return {shapes,inputResult};
 }
-export function steelBeamColumnShapes():Shape[]{return steelBeamColumnTemplate().shapes;}
+export function steelBeamColumnShapes(): Shape[] { return steelBeamColumnTemplate().shapes; }

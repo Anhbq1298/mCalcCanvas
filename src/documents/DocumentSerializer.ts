@@ -91,7 +91,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           w: bounded(p.w, 60, 1, SIZE_LIMIT),
           h: bounded(p.h, 32, 1, SIZE_LIMIT),
           latex: str(p.latex).slice(0, 4000),
-          ...(['section','ltb','buckling','state','mode','issues'].includes(p.steelFigure as string) ? {steelFigure: p.steelFigure as 'section'|'ltb'|'buckling'|'state'|'mode'|'issues'} : {}),
+          ...(['section','ltb','sls','buckling','state','mode','issues'].includes(p.steelFigure as string) ? {steelFigure: p.steelFigure as 'section'|'ltb'|'sls'|'buckling'|'state'|'mode'|'issues'} : {}),
           displayMode: (modes.includes(p.displayMode as string) ? p.displayMode : 'auto') as never,
           displayUnit: str(p.displayUnit).slice(0, 60),
           precision: Math.round(bounded(p.precision, -1, -1, 8)),
