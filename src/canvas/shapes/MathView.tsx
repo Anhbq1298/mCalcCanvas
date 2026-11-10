@@ -38,6 +38,10 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   // Auto-size: the box follows the rendered equation unless resized manually.
   useEffect(() => {
     if (isStatic) return;
+    // The LTB catalogue is a fixed-size, multi-case SVG. Measuring its internal
+    // stack/result markup as an equation changes its reserved box and pushes the
+    // following annex across pages; its worksheet dimensions are intentional.
+    if (shape.props.steelFigure === 'ltbCatalog') return;
     const el = contentRef.current;
     if (!el) return;
     // A loaded region with a measured size waits for its first result: measuring the bare
@@ -73,7 +77,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     });
     ro.observe(el);
     return () => { ro.disconnect(); cancelAnimationFrame(measurementFrame.current); };
-  }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, isStatic, editing, display.latex, textFont, equationFont, fontStyle, hasResult, seen]);
+  }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, shape.props.steelFigure, isStatic, editing, display.latex, textFont, equationFont, fontStyle, hasResult, seen]);
 
   useSeparateAfterEditing(shape.id, editing, isStatic);
 
