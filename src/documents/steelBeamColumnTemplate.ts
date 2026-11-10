@@ -6,13 +6,16 @@ import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, type Shape, type MathProps, typ
 import { escapeHtml } from '../canvas/sanitize';
 import { A4, PAGE_GAP } from '../export/pageGeometry';
 import { propertyKeys, sectionUnits, sections } from '../engineering/steel/sections';
+import { ltbCoefficientCases } from '../engineering/steel/ltbCases';
 import { checkNames, definition, inputFields, outputFields, symbol } from '../engineering/steel/contract';
 import type { InputResultConfig } from './DocumentTypes';
 
 export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: InputResultConfig } {
   const shapes: Shape[] = [], bound = new Map<string, string>();
   const t = String.raw, v = symbol;
-  const y = (p: number, row: number) => (p - 1) * (A4.h + PAGE_GAP) + 60 + row * 40;
+  // Page 2 is intentionally omitted: each check is shown in its own worked section.
+  const page = (p:number) => p > 2 ? p - 1 : p;
+  const y = (p: number, row: number) => (page(p) - 1) * (A4.h + PAGE_GAP) + 60 + row * 40;
   const note = (p: number, row: number, content: string, heading: 0|1|2 = 0, annex?: AnnexRole, x = 76, w = 640) => {
     shapes.push({ id: newShapeId(), type: 'text', x, y: y(p,row), props: { ...DEFAULT_TEXT_PROPS, w, h: heading ? 28 : 24, html: escapeHtml(content), fontSize: heading === 1 ? 19 : heading === 2 ? 14 : 11, color: heading ? '#1e3a5f' : '#475569', ...(heading ? {heading} : {}), ...(annex ? {annex} : {}) } });
   };
@@ -91,36 +94,9 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(1,22.5,'For other restraints, use independently verified manual coefficients or external Mcr in Annex A.');
   note(1,23.3,'No slab restraint is assumed.');
 
-  // 2 — Summary has no numerical vector formulas visible to the reader.
-  note(2,0,'DESIGN SUMMARY',1);
-  calc(2,1,'State',get('state'),{steelFigure:'state',w:260});
-  calc(2,1,'UR',get('governingUr'),{displayMode:'result',w:280},396);
-  calc(2,2,'Governing',get('governing'),{steelFigure:'mode'});
-  calc(2,2.8,'Issues',get('flags'),{steelFigure:'issues'});
-  ['Check / clause','Resistance','Demand','UR','Status'].forEach((s,i)=>note(2,4,s,0,undefined,[76,276,416,536,616][i],[190,120,100,60,100][i]));
-  const resistances=[t`\operatorname{if}(${v('N')}<0\,\mathrm{N},${get('Nt')},${get('Nc')})`,...['My','Mz','Vy','Vz'].map(get),'1',...['NbY','NbZ','NbT','Mb'].map(get),'1','1'];
-  const demands=['N','My','Mz','Vy','Vz','sectionUr','N','N','N','My','iy','iz'];
-  const clauses=['6.2.3 / 6.2.4','6.2.5 / 6.2.8','6.2.5 / 6.2.8','6.2.6','6.2.6 / EN 1993-1-5','6.2.1(7) / 6.2.10','6.3.1.2','6.3.1.2','6.3.1.4','6.3.2.2','6.3.3 / Annex B','6.3.3 / Annex B'];
-  checkNames.forEach((name,i)=>{
-    const row=4.8+i;
-    note(2,row,name,0,undefined,76,190);
-    const label=shapes.at(-1)!;if(label.type==='text'){label.props.html=escapeHtml(name)+'<br/>'+escapeHtml(clauses[i]);label.props.h=34;}
-    calc(2,row+0.2,'r'+i,resistances[i],{displayMode:'value',constant:true,w:120,fontSize:12,h:28},276);
-    calc(2,row+0.2,'d'+i,i===5||i>=10?get(demands[i]):abs(demands[i]),{displayMode:'value',constant:true,w:120,fontSize:12,h:28},416);
-    calc(2,row+0.2,'UR'+i,t`\operatorname{entry}(${v('R')},${outputFields.length+2*i})`,{displayMode:'value',constant:true,w:70,fontSize:12,h:28},536);
-    calc(2,row+0.2,'State'+i,t`\operatorname{entry}(${v('R')},${outputFields.length+2*i+1})`,{steelFigure:'state',w:100,h:28},616);
-  });
-  note(2,18.5,'READING THIS REPORT',2);
-  note(2,19.5,'3 — section geometry and classification; 4 — section resistance; 5 — compression buckling.');
-  note(2,20.3,'6 — lateral-torsional buckling; 7 — beam-column interaction.');
-  note(2,21.3,'PASS applies only to checks within the declared scope. A missing required check is NOT VERIFIED.');
-  note(2,22.1,'The detailed equations are editable and recalculated. Summary states also use the guarded EC3 audit.');
-  note(2,23.1,'Unsupported branches remain NOT VERIFIED even when an indicative equation has a numerical value.');
-  calc(2,24,'SectionOut',v('Section'),{displayMode:'result'});
-
   // 3 — Source properties are named; lookup indices are confined to the technical annex.
-  note(3,0,'3  SECTION AND CLASSIFICATION',1);
-  note(3,0.9,'Steel section source: licensed offline catalogue; designation and dataset shown beside Section ID.');
+  note(3,0,'2  SECTION AND CLASSIFICATION',1);
+  note(3,0.9,'HEB/I/H geometry and properties for the selected section.');
   calc(3,1.5,'SectionDrawing',t`\operatorname{stack}(${v('h')}/\mathrm{mm},${v('b')}/\mathrm{mm},${v('tw')}/\mathrm{mm},${v('tf')}/\mathrm{mm})`,{steelFigure:'section',w:260,h:190});
   (['h','b','tw','tf','A','Iy','Iz','Wpl_y','Wpl_z','It','Iw'] as const).forEach((key,i)=>math(3,1.5+i*0.43,`${v(key)}=`,396,{displayMode:'result',fontSize:12,w:290,h:18,displayUnit:sectionUnits[key]}));
   note(3,6.4,'EN 1993-1-1 §5.5 / Table 5.2. Biaxial loading: uniform web compression is conservative.');
@@ -150,7 +126,7 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(3,23.8,'For the uniform-compression web, the limits above reduce to 33ε / 38ε / 42ε.');
 
   // 4 — Transparent resistance equations, including the exact conservative high-shear method used.
-  note(4,0,'4  CROSS-SECTION RESISTANCE',1);
+  note(4,0,'3  CROSS-SECTION RESISTANCE',1);
   note(4,0.9,'EN 1993-1-1 §§6.2.3–6.2.10. Net area assumes no holes unless Anet is overridden.');
   calc(4,1.8,'NcRd',t`\frac{${v('A')}${v('fy')}}{${v('gamma0')}}`,{displayMode:'full',h:86});
   calc(4,4.1,'NuRd',t`\frac{0.9${v('Anet')}${v('fu')}}{${v('gamma2')}}`,{w:280});
@@ -182,7 +158,7 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(4,23.2,'The summary controls PASS / FAIL / NOT VERIFIED, including the checks not covered by these equations.');
 
   // 5 — No black-box extraction of Euler loads or reduction factors.
-  note(5,0,'5  COMPRESSION MEMBER BUCKLING',1);
+  note(5,0,'4  COMPRESSION MEMBER BUCKLING',1);
   note(5,0.9,'EN 1993-1-1 §6.3.1. Ky and Kz are independently editable; the K annex is reference only.');
   calc(5,1.8,'LcrY',`${v('Ky')}${v('L')}`,{w:280});
   calc(5,1.8,'LcrZ',`${v('Kz')}${v('L')}`,{w:290},396);
@@ -207,7 +183,7 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(5,23,'λ denotes relative slenderness throughout. Combined loading is unverified if torsional buckling governs.');
 
   // 6 — Coefficient choice and full Mcr expression are visible; unsupported selections remain guarded.
-  note(6,0,'6  LATERAL-TORSIONAL BUCKLING',1);
+  note(6,0,'5  LATERAL-TORSIONAL BUCKLING',1);
   note(6,0.9,'EN 1993-1-1 §6.3.2.2 (general method); elastic Mcr from SCI NCCI SN003b §2.');
   note(6,1.6,'Enter a case number on page 1. The matching diagram and C1/C2 are highlighted in Annex B.');
   calc(6,2.8,'Cused1',get('C1'),{displayMode:'result',w:280});
@@ -228,7 +204,7 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(6,19,'Reference: SCI NCCI SN003b; uniform rolled I/H sections, fork-end restraint and free warping.');
 
   // 7 — Both Annex B equations are evaluated explicitly.
-  note(7,0,'7  COMPRESSION AND BIAXIAL BENDING',1);
+  note(7,0,'6  COMPRESSION AND BIAXIAL BENDING',1);
   note(7,0.9,'EN 1993-1-1 §6.3.3, equations (6.61)/(6.62); Annex B Method 2, plastic I/H, λz ≥ 0.4.');
   calc(7,1.8,'nY',`${compression}/${v('NbY')}`,{w:280});
   calc(7,1.8,'nZ',`${compression}/${v('NbZ')}`,{w:290},396);
@@ -250,7 +226,7 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   calc(7,13.2,'ResultZ',v('State11'),{steelFigure:'state',w:100});
   note(7,13.2,'Acceptance: Jz ≤ 1; equation (6.62).',0,undefined,256,400);
   note(7,13.8,'Cm=1 corresponds to the uniform end-moment example. Other distributions need verified Cm factors.');
-  note(7,14.6,'Indicative equations alone do not verify an unsupported branch; summary states govern compliance.');
+  note(7,14.6,'Indicative equations do not verify an unsupported branch; check all applicable limits.');
   // 8/9 — Optional detailed inputs and machine contract are kept out of the design narrative.
   note(8,0,'ANNEX',1,{kind:'start'});
   note(8,1,'Section data and advanced inputs',2,{kind:'heading',id:'ec3'});
@@ -278,12 +254,15 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   const mapping:Record<string,string>={ltbMode:'LTBmode',loadCase:'LoadCase',loadHeight:'zg',externalMcr:'McrExternal',interactionMode:'InteractionMode',kyy:'kyyManual',kyz:'kyzManual',kzy:'kzyManual',kzz:'kzzManual',netArea:'Anet',verifiedFactors:'FactorsVerified',ltbVerified:'LTBverified',curveVerified:'CurvesVerified',manualVerified:'ManualFactorsVerified'};
   row=chunks(inputFields.map(([n])=>mapping[n]??n),'I',row);
   calc(9,row,'R',t`\operatorname{steelDesign}(${v('S')},${v('I')})`,{displayMode:'formula',fontSize:11});
-  note(9,19.3,'SCOPE / NOT VERIFIED',2);
-  note(9,20.2,'Class 4, plated shear buckling, biaxial shear, arbitrary LTB and Annex A require separate verification.');
-  note(9,21,'Automatic Annex B: Class 1/2, λz ≥ 0.4. Other branches need independently verified manual kij.');
-  note(9,21.8,'No applied torsion, fatigue, connections or block tearing. High-shear member interaction is unverified.');
-  note(9,22.6,'Catalogue properties include source approximations; review project tables. UB/UC: custom entry only.');
-  note(9,23.4,'References: EN 1993-1-1 §§5.5 / 6.2 / 6.3; SCI NCCI SN003b; JRC 2014 Simões.');
+  note(9,18.5,'SCOPE / NOT VERIFIED — Class 4, plated or biaxial shear, arbitrary LTB and Annex A need separate verification.',0,undefined,76,640);
+  note(9,19.2,'No applied torsion, fatigue, connections or block tearing. Confirm catalogue properties against project tables.',0,undefined,76,640);
+  note(9,19.9,'References: EN 1993-1-1 §§5.5 / 6.2 / 6.3; SCI NCCI SN003b; JRC 2014 Simões.',0,undefined,76,640);
+  // Batch-only fields stay available in the worksheet contract, compactly below the audit.
+  calc(9,21.1,'UR',get('governingUr'),{displayMode:'result',w:125},76);
+  calc(9,21.1,'State',get('state'),{displayMode:'result',w:125},236);
+  calc(9,21.1,'Governing',get('governing'),{displayMode:'result',w:145},396);
+  calc(9,21.1,'SectionOut',v('Section'),{displayMode:'result',w:125},556);
+  checkNames.forEach((_,i)=>calc(9,22+Math.floor(i/4)*0.6,'State'+i,t`\operatorname{entry}(${v('R')},${outputFields.length+2*i+1})`,{displayMode:'result',w:125,fontSize:10},[76,236,396,556][i%4]));
 
   note(11,0,'ANNEX B — LTB LOAD CASES AND COEFFICIENTS',1,{kind:'heading',id:'ltb-cases'});
   note(11,0.8,'Enter the case number shown below. Coefficients are for k = kw = 1; load-height zg is entered on page 1.');
@@ -293,6 +272,23 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(11,21,'Combined end moments plus transverse loading require SN003b §3.4 curves and ψ/μ. They are not silently interpolated here.');
   note(11,21.8,'Outside cases 1–13, or k/kw ≠ 1, returns NOT VERIFIED unless verified manual coefficients or external Mcr are supplied.');
   note(11,22.6,'Reference: SCI NCCI SN003b, Tables 3.1/3.2, §§2–3.3. End restraints and load position must match.');
+
+  note(12,0,'ANNEX C — LTB COEFFICIENT TABLE',1);
+  note(12,0.8,'Use the case number beside the matching diagram in Annex B. Coefficients are not interchangeable.');
+  note(12,2,'Case',0,undefined,76,48);
+  note(12,2,'Loading / moment case',0,undefined,138,330);
+  note(12,2,'C1',0,undefined,496,70);
+  note(12,2,'C2',0,undefined,580,70);
+  ltbCoefficientCases.forEach((c,i)=>{
+    const row=3.1+i*0.76;
+    note(12,row,String(c.id),0,undefined,76,48);
+    note(12,row,c.name,0,undefined,138,330);
+    note(12,row,c.c1.toFixed(c.c1%1===0?2:3),0,undefined,496,70);
+    note(12,row,c.c2.toFixed(3),0,undefined,580,70);
+  });
+  note(12,14.2,'Cases 1–9: SN003b Table 3.1; C2 = 0. Cases 10–13: Table 3.2 transverse loading.');
+  note(12,15,'k = kw = 1. For other restraints, use verified manual coefficients or external Mcr.');
+  note(12,15.8,'Source: SCI NCCI SN003b, Tables 3.1 and 3.2. Do not interpolate between cases.');
 
   const inputs=['Section','fy','fu','L','Ky','Kz','Llt','N','My','Mz','Vy','Vz','LTBcase','zg','k','kw'];
   const outputs=['sectionClass','Mcr','chiY','chiZ','chiLT','kyy','kyz','kzy','kzz','UR','State','Governing','SectionOut',...checkNames.map((_,i)=>'State'+i)];
