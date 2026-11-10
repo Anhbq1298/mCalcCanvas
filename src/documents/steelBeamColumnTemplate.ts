@@ -76,15 +76,21 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   pairWithLabels(1,7,'Section factor γM0',['gamma0','1'],'Buckling factor γM1',['gamma1','1']);
   pairWithLabels(1,8,'Tension factor γM2',['gamma2','1.25'],'Member length L',['L',q(5,'m')]);
   pairWithLabels(1,9,'Ky (effective length)',['Ky','1'],'Kz (effective length)',['Kz','1']);
-  pairWithLabels(1,10,'LTB length Lb',['Llt',q(5,'m')],'LTB model',['LTBmode','0']);
-  note(1,11,'2.1  DESIGN ACTIONS — LC1, simultaneous at same position',2);
-  pairWithLabels(1,12,'Compression NEd',['N',q(100,'kN')],'Major-axis My,Ed',['My',q(50,'kN')+t`\cdot\mathrm{m}`]);
-  pairWithLabels(1,13,'Minor-axis Mz,Ed',['Mz',q(5,'kN')+t`\cdot\mathrm{m}`],'Shear Vy,Ed',['Vy',q(0,'kN')]);
-  note(1,14,'Shear Vz,Ed',0,undefined,76,136);
-  input(1,14,'Vz',q(0,'kN'),220);
-  calc(1,16,'ActionDiagram',t`\operatorname{stack}(${v('LoadCase')},${v('zg')}/\mathrm{mm},${v('Llt')}/\mathrm{mm},${v('k')},${v('kw')},${v('N')}/\mathrm{kN},${v('My')}/(\mathrm{kN}\cdot\mathrm{m}),${v('Mz')}/(\mathrm{kN}\cdot\mathrm{m}),${v('Vy')}/\mathrm{kN},${v('Vz')}/\mathrm{kN},${v('L')}/\mathrm{mm})`,{steelFigure:'ltb',w:620,h:246});
-  note(1,15,'Technical inputs and independent verification audit',0,{kind:'link',target:'ec3'});
-  note(1,23.3,'Fork restraints prevent lateral displacement and twist; warping is free. No slab restraint assumed.');
+  pairWithLabels(1,10,'LTB length Lb',['Llt',q(5,'m')],'LTB case no. — Annex B',['LTBcase','1']);
+  pairWithLabels(1,11,'Load height zg',['zg',q(0,'mm')],'Lateral factor k',['k','1']);
+  note(1,12,'Warping factor kw',0,undefined,76,136);
+  input(1,12,'kw','1',220);
+  note(1,12,'See Annex B for the selected case diagram and its C1/C2 coefficients.',0,undefined,76,640);
+  note(1,13,'The LTB case selects coefficients only; it does not change the ULS actions. Use cases 1–13.',0,undefined,76,640);
+  note(1,14,'2.1  DESIGN ACTIONS — LC1, simultaneous at same position',2);
+  pairWithLabels(1,15,'Compression NEd',['N',q(100,'kN')],'Major-axis My,Ed',['My',q(50,'kN')+t`\cdot\mathrm{m}`]);
+  pairWithLabels(1,16,'Minor-axis Mz,Ed',['Mz',q(5,'kN')+t`\cdot\mathrm{m}`],'Shear Vy,Ed',['Vy',q(0,'kN')]);
+  note(1,17,'Shear Vz,Ed',0,undefined,76,136);
+  input(1,17,'Vz',q(0,'kN'),220);
+  note(1,19,'Technical inputs and independent verification audit',0,{kind:'link',target:'ec3'});
+  note(1,21.7,'Automatic table cases assume fork-end lateral / twist restraint, free warping, k = kw = 1.');
+  note(1,22.5,'For other restraints, use independently verified manual coefficients or external Mcr in Annex A.');
+  note(1,23.3,'No slab restraint is assumed.');
   note(1,24,'SLS loads are separate from these ULS actions. See section 8 for its own load diagram.');
 
   // 2 — Summary has no numerical vector formulas visible to the reader.
@@ -205,10 +211,10 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   // 6 — Coefficient choice and full Mcr expression are visible; unsupported selections remain guarded.
   note(6,0,'6  LATERAL-TORSIONAL BUCKLING',1);
   note(6,0.9,'EN 1993-1-1 §6.3.2.2 (general method); elastic Mcr from SCI NCCI SN003b §2.');
-  note(6,1.6,'Loading arrangement, moment diagram and load level are shown with the design actions on page 1.');
+  note(6,1.6,'Enter a case number on page 1. The matching diagram and C1/C2 are highlighted in Annex B.');
   calc(6,2.8,'Cused1',get('C1'),{displayMode:'result',w:280});
   calc(6,2.8,'Cused2',get('C2'),{displayMode:'result',w:290},396);
-  note(6,3.7,'Verified cases: uniform moment 1/0; UDL 1.127/0.454; central point 1.348/0.630 (C1/C2).');
+  note(6,3.7,'Coefficients are looked up from SCI NCCI SN003b Tables 3.1/3.2; no interpolation is used.');
   calc(6,4.6,'Tcr',t`\frac{\pi^2${v('E')}${v('Iz')}}{(${v('k')}${v('Llt')})^2}`);
   calc(6,5.9,'Bcr',t`\left(\frac{${v('k')}}{${v('kw')}}\right)^2\frac{${v('Iw')}}{${v('Iz')}}+\frac{${v('G')}${v('It')}}{${v('Tcr')}}+(${v('Cused2')}${v('zg')})^2`,{fontSize:12});
   calc(6,7.1,'McrCalc',t`${v('Cused1')}${v('Tcr')}\left(\sqrt{${v('Bcr')}}-${v('Cused2')}${v('zg')}\right)`,{displayMode:'full',h:86});
@@ -220,7 +226,7 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   calc(6,13.7,'Mb',t`\frac{${v('chiLT')}${v('Wy')}${v('fy')}}{${v('gamma1')}}`);
   note(6,15.1,'λLT = √(Wy fy / Mcr). Without a verified Mcr, LTB is NOT VERIFIED.');
   note(6,16,'External-Mcr mode bypasses the coefficient calculation.');
-  note(6,16.9,'The entered load height and end restraints must match the selected reference case.');
+  note(6,16.9,'The selected reference case, restraint and signed load height must match the member.');
   note(6,19,'Reference: SCI NCCI SN003b; uniform rolled I/H sections, fork-end restraint and free warping.');
 
   // 7 — Both Annex B equations are evaluated explicitly. SLS has a distinct physical load case.
@@ -261,8 +267,9 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(8,1,'Section data and advanced inputs',2,{kind:'heading',id:'ec3'});
   note(8,2,'Properties are explicit quantities. Replace a lookup with a verified literal to override it.');
   propertyKeys.slice(0,16).forEach((key,i)=>calc(8,3+Math.floor(i/4),key,t`\operatorname{sectionProp}(${v('Section')},${i})`,{displayMode:'result',displayUnit:sectionUnits[key],fontSize:11,w:145},[76,236,396,556][i%4]));
-  const advanced: [string,string][]=[['Lt',v('L')],['alphaY','0.34'],['alphaZ','0.49'],['alphaLT','0.21'],['LoadCase','0'],['zg',q(0,'mm')],['k','1'],['kw','1'],['C1','1'],['C2','0'],['McrExternal',q(0,'kN')+t`\cdot\mathrm{m}`],['InteractionMode','0'],['Cmy','1'],['Cmz','1'],['CmLT','1'],['kyyManual','1'],['kyzManual','1'],['kzyManual','1'],['kzzManual','1'],['DeltaExternal',q(0,'mm')],['Anet',v('A')],['eta','1.2'],['FactorsVerified','1'],['LTBverified','0'],['CurvesVerified','1'],['ManualFactorsVerified','0'],['q',q(5,'kN')+t`/\mathrm{m}`],['P',q(0,'kN')],['SLSmode','0'],['LimitRatio','250']];
+  const advanced: [string,string][]=[['Lt',v('L')],['alphaY','0.34'],['alphaZ','0.49'],['alphaLT','0.21'],['LTBmode','0'],['zg',q(0,'mm')],['k','1'],['kw','1'],['C1','1'],['C2','0'],['McrExternal',q(0,'kN')+t`\cdot\mathrm{m}`],['InteractionMode','0'],['Cmy','1'],['Cmz','1'],['CmLT','1'],['kyyManual','1'],['kyzManual','1'],['kzyManual','1'],['kzzManual','1'],['DeltaExternal',q(0,'mm')],['Anet',v('A')],['eta','1.2'],['FactorsVerified','1'],['LTBverified','0'],['CurvesVerified','1'],['ManualFactorsVerified','0'],['q',q(5,'kN')+t`/\mathrm{m}`],['P',q(0,'kN')],['SLSmode','0'],['LimitRatio','250']];
   advanced.forEach(([key,rhs],i)=>input(8,7.5+Math.floor(i/2),key,rhs,i%2?396:96));
+  calc(8,21.7,'LoadCase',t`${v('LTBcase')}-1`,{displayMode:'result',fontSize:10});
   note(8,23.4,'Modes: LTB 0 auto / 1 manual / 2 external; SLS 0 simple / 1 cantilever / 2 external.');
   note(8,24.2,'Manual kij, Cm and curves require independent verification; acknowledgement flags persist in .mCCV.');
 
@@ -289,13 +296,22 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(9,22.6,'Catalogue properties include source approximations; review project tables. UB/UC: custom entry only.');
   note(9,23.4,'References: EN 1993-1-1 §§5.5 / 6.2 / 6.3; SCI NCCI SN003b; JRC 2014 Simões.');
 
+  note(10,0,'ANNEX B — LTB LOAD CASES AND COEFFICIENTS',1,{kind:'heading',id:'ltb-cases'});
+  note(10,0.8,'Enter the case number shown below. Coefficients are for k = kw = 1; load-height zg is entered on page 1.');
+  calc(10,1.4,'LTBcatalog',t`\operatorname{stack}(${v('LTBcase')})`,{steelFigure:'ltbCatalog',w:634,h:720});
+  note(10,19.4,'Cases 1–9: SCI NCCI SN003b Table 3.1, end-moment ratio ψ = smaller / larger end moment; C2 = 0.');
+  note(10,20.2,'Cases 10–13: Table 3.2 transverse loading. Fixed-end cases use their own coefficients; do not substitute pin-ended values.');
+  note(10,21,'Combined end moments plus transverse loading require SN003b §3.4 curves and ψ/μ. They are not silently interpolated here.');
+  note(10,21.8,'Outside cases 1–13, or k/kw ≠ 1, returns NOT VERIFIED unless verified manual coefficients or external Mcr are supplied.');
+  note(10,22.6,'Reference: SCI NCCI SN003b, Tables 3.1/3.2, §§2–3.3. End restraints and load position must match.');
+
   for (const shape of shapes) {
     const row = (shape.y - y(9,0)) / 40;
     if (row >= 0 && row < 8) shape.y += 10.5 * 40;
     else if (row >= 9 && row < 19) shape.y -= 9 * 40;
   }
 
-  const inputs=['Section','fy','fu','L','Ky','Kz','Llt','N','My','Mz','Vy','Vz','LTBmode','LoadCase'];
+  const inputs=['Section','fy','fu','L','Ky','Kz','Llt','N','My','Mz','Vy','Vz','LTBcase','zg','k','kw'];
   const outputs=['sectionClass','Mcr','chiY','chiZ','chiLT','kyy','kyz','kzy','kzz','UR','State','Governing','SectionOut',...checkNames.map((_,i)=>'State'+i)];
   const inputResult:InputResultConfig={title:'EC3 members — simultaneous combinations',inputs:inputs.map(key=>({id:key,label:key==='Section'?'Section ID (library)':key,regionId:bound.get(key)!})),outputs:outputs.map(key=>({id:key,label:key==='State'?'State: 1 PASS / 0 FAIL / −1 NOT VERIFIED':key,regionId:bound.get(key)!,...(key.startsWith('State')?{valueLabels:{'1':'PASS','0':'FAIL','-1':'NOT VERIFIED'}}:key==='Governing'?{valueLabels:Object.fromEntries(checkNames.map((n,i)=>[String(i),n]))}:key==='SectionOut'?{valueLabels:{'0':'User-defined',...Object.fromEntries(sections.map(s=>[String(s.id),s.name]))}}:{})})),rows:[{id:'LC1',name:'Member 1 / ULS 1',values:{N:100,My:50,Mz:5,Vy:0,Vz:0}},{id:'LC2',name:'Member 1 / ULS 2',values:{N:200,My:100,Mz:10,Vy:0,Vz:0}}]};
   for(const shape of shapes)shape.printGroupId=`ec3-sheet-${Math.floor(shape.y/(A4.h+PAGE_GAP))}`;

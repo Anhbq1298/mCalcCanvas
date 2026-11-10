@@ -1,6 +1,7 @@
 /** Engineering sketches use separate axes, loads, restraints and diagrams.
  * Blue moment diagrams are drawn on the tension side; no arbitrary curve is shown for unknown cases.
  */
+import { ltbCoefficientCases, type LtbCoefficientCase } from '../../engineering/steel/ltbCases';
 const ink='#334155', blue='#2563eb';
 const number=(n:number)=>Number.isFinite(n)?Number(n.toPrecision(4)).toString():'—';
 function PinRoller({left=70,right=470,y=70}:{left?:number;right?:number;y?:number}) {
@@ -57,6 +58,48 @@ export function LtbDiagram({loadCase=0,height=0,length=5000,k=1,kw=1,actions}:{l
     </g>
     <text x="492" y="229" fontSize="9">{loadCase===0?'no transverse load':'zg signed; inset schematic'}</text>
     {!actual&&<text x="15" y="264" fontSize="9">Positive zg is destabilizing only for loading towards the shear centre. Reverse load: review its sign.</text>}
+  </svg>;
+}
+function ltbPanelDiagram(c:LtbCoefficientCase) {
+  const left=25,right=177,beamY=31,base=83;
+  const fixed=c.diagram==='udl-fixed'||c.diagram==='point-fixed';
+  const psi=c.psi??1;
+  const momentPath=c.diagram==='end-moments'
+    ? 'M'+left+' '+base+'L'+left+' '+(base+24)+'L'+right+' '+(base+24*psi)+'L'+right+' '+base+'Z'
+    : c.diagram==='udl-simple'?'M25 83Q101 123 177 83Z'
+    : c.diagram==='point-simple'?'M25 83L101 108L177 83Z'
+    : c.diagram==='udl-fixed'?'M25 83L25 69C59 69 79 90 101 90C123 90 143 69 177 69L177 83Z'
+    :'M25 83L25 69L101 98L177 69L177 83Z';
+  return <g>
+    {fixed?<g stroke={ink} fill="none"><path d="M20 20V44m-6-24 6 5 6-5m-12 8 12 0m-12 6 12 0m-12 6 12 0M182 20V44m-6-24 6 5 6-5m-12 8 12 0m-12 6 12 0m-12 6 12 0" strokeWidth="1"/></g>
+      :<g stroke={ink} fill="white"><path d="M25 31l-8 12h16ZM177 31l-8 12h16Z"/><path d="M13 45h24m152 0h-24"/></g>}
+    <path d={'M'+left+' '+beamY+'H'+right} stroke={ink} strokeWidth="2.5"/>
+    {c.diagram==='end-moments'?<g stroke={blue} fill="none" strokeWidth="1.1">
+      <path d="M31 29a7 7 0 1 1 10 1m-10-1 4-4m-4 4 5 1M171 29a7 7 0 1 0-10 1m10-1-4-4m4 4-5 1"/>
+      <text x="25" y="18" fill={ink} stroke="none" fontSize="7">M</text><text x="165" y="18" fill={ink} stroke="none" fontSize="7">ψM</text>
+    </g>:c.diagram==='udl-simple'||c.diagram==='udl-fixed'?<g stroke={blue} fill="none" strokeWidth="1">
+      <path d="M31 13H171"/>{[40,62,84,106,128,150,170].map(x=><path key={x} d={'M'+x+' 14v12m-3-4 3 4 3-4'}/>)}
+    </g>:<g stroke={blue} fill="none" strokeWidth="1.1"><path d="M101 10v17m-4-5 4 5 4-5"/><text x="95" y="9" fill={ink} stroke="none" fontSize="7">P</text></g>}
+    <path d={'M25 '+base+'H177M25 '+(base-3)+'v6m152-6v6'} stroke="#94a3b8" strokeWidth=".8"/>
+    <path d={momentPath} fill="#dbeafe" stroke={blue} strokeWidth="1.1"/>
+  </g>;
+}
+
+/** One-page, numbered selection sheet for every discrete SN003b Table 3.1/3.2 case. */
+export function LtbCoefficientCatalog({selectedCase=1}:{selectedCase?:number}) {
+  const cols=3,cellW=208,cellH=142;
+  return <svg role="img" aria-label="LTB coefficient cases 1 to 13" data-selected-case={Math.round(selectedCase)} viewBox="0 0 634 720" width="634" height="720">
+    {ltbCoefficientCases.map((c,i)=>{
+      const x=6+(i%cols)*cellW,y=6+Math.floor(i/cols)*cellH;
+      const selected=c.id===Math.round(selectedCase);
+      const title=c.id<=9?'End moments  ψ='+c.psi!.toFixed(2):c.name.replace('Simply supported, ','SS · ').replace('Fixed-ended, ','Fixed · ');
+      return <g key={c.id} transform={'translate('+x+','+y+')'}>
+        <rect width="202" height="134" rx="2" fill={selected?'#eff6ff':'white'} stroke={selected?blue:'#cbd5e1'} strokeWidth={selected?2:1}/>
+        <text x="7" y="13" fontSize="9" fontWeight="600" fill={selected?'#1d4ed8':ink}>{c.id}. {title}</text>
+        {ltbPanelDiagram(c)}
+        <text x="12" y="126" fontSize="8.5" fill={ink}>C1 = {c.c1.toFixed(c.c1%1===0?2:3)}   C2 = {c.c2.toFixed(3)}</text>
+      </g>;
+    })}
   </svg>;
 }
 export function SlsDiagram({mode,q,P,length}:{mode:number;q:number;P:number;length:number}) {

@@ -20,14 +20,15 @@ test('EC3 catalogue, editable K, LTB safety, batch, custom section, mCCV and pri
  const baselinePages=page.locator('#print-root .print-page');
  for(let i=0;i<await baselinePages.count();i++)await baselinePages.nth(i).screenshot({path:`${out}/reference-page-${i+1}.png`});
  await page.pdf({path:`${out}/Steel_Beam_Column_EC3.pdf`,preferCSSPageSize:true,printBackground:true});
- await expect(baselinePages).toHaveCount(9);
+ await expect(baselinePages).toHaveCount(10);
  for(let i=0;i<7;i++){
    const text=await baselinePages.nth(i).innerText();
    expect(text).not.toMatch(/steelDesign|operatorname|entry\(|stack\(/);
  }
- const ltbDiagrams=page.locator('#print-root svg[aria-label="LTB loading and moment diagram"]');
- await expect(ltbDiagrams).toHaveCount(1);
- await expect(ltbDiagrams.first()).toBeVisible();
+ const ltbCatalog=page.locator('#print-root svg[aria-label="LTB coefficient cases 1 to 13"]');
+ await expect(ltbCatalog).toHaveCount(1);
+ await expect(ltbCatalog.first()).toBeVisible();
+ await expect(ltbCatalog).toHaveAttribute('data-selected-case','1');
  await expect(page.locator('#print-root svg[aria-label="Separate serviceability load case"]')).toBeVisible();
 
  const tableLayout=await page.locator('#print-root [data-testid=math-region]').evaluateAll(els=>{
@@ -66,22 +67,14 @@ test('EC3 catalogue, editable K, LTB safety, batch, custom section, mCCV and pri
  await revealInput('Section');await page.getByTestId('browse-steel').click();
  await page.getByLabel('Section family',{exact:true}).selectOption('HEB');await page.getByLabel('Search sections').fill('HEB 320');
  await page.getByRole('button',{name:/HEB 320/}).click();await page.getByRole('button',{name:'Select Section',exact:true}).click();await idle();
- await revealInput('LTBmode');await page.getByTestId('configure-ltb').click();await page.getByRole('button',{name:'Combined loading',exact:true}).click();
- await page.screenshot({path:`${out}/03-ltb-picker.png`});
- await page.getByRole('button',{name:'Apply LTB Configuration'}).click();await idle();
+ await expect(page.getByTestId('configure-ltb')).toHaveCount(0);
+ await revealInput('LTBcase');
+ await page.getByTestId('param-input-LTBcase').fill('10');await page.getByTestId('param-input-LTBcase').press('Enter');await idle();
+ await expect(page.locator('svg[aria-label="LTB coefficient cases 1 to 13"]').first()).toHaveAttribute('data-selected-case','10');
+ await page.screenshot({path:`${out}/03-ltb-case-lookup.png`});
+ await page.getByTestId('param-input-LTBcase').fill('14');await page.getByTestId('param-input-LTBcase').press('Enter');await idle();
  await expect(page.getByTestId('steel-state').first()).toHaveText('NOT VERIFIED');
- await revealInput('LTBmode');await page.getByTestId('configure-ltb').click();await page.getByLabel('Mcr mode',{exact:true}).selectOption('1');
- await page.getByLabel('Manual C1',{exact:true}).fill('1.127');await page.getByLabel('Manual C2',{exact:true}).fill('0.454');
- await page.getByLabel('Independently verified',{exact:true}).check();await page.getByLabel('LTB source',{exact:true}).fill('NCCI SN003b verified fork-end coefficients');
- await page.getByRole('button',{name:'Apply LTB Configuration'}).click();await idle();
- await resultOf(page,definition('Mcr')).not.toBe('0 kN·m');
- await revealInput('LTBmode');await page.getByTestId('configure-ltb').click();await page.getByLabel('Mcr mode',{exact:true}).selectOption('2');
- await page.getByLabel('External Mcr',{exact:true}).fill('400');await page.getByLabel('LTB source',{exact:true}).fill('Browser test — independently supplied Mcr');
- await page.getByRole('button',{name:'Apply LTB Configuration'}).click();await idle();
- await resultOf(page,definition('Mcr')).toBe('400 kN·m');
- await revealInput('LTBmode');await page.getByTestId('configure-ltb').click();
- await expect(page.getByLabel('Mcr mode',{exact:true})).toHaveValue('2');await expect(page.getByLabel('External Mcr',{exact:true})).toHaveValue('400');
- await page.getByRole('button',{name:'Close steel dialog'}).click();
+ await page.getByTestId('param-input-LTBcase').fill('1');await page.getByTestId('param-input-LTBcase').press('Enter');await idle();
  // Custom profile is embedded as literal quantities, without a lookup/global storage dependency.
  await revealInput('Section');await page.getByTestId('browse-steel').click();await page.getByRole('button',{name:'User-Defined Section',exact:true}).click();
  await page.getByLabel('Custom section name',{exact:true}).fill('Verified custom H320');

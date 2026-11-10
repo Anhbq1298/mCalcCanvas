@@ -1,6 +1,7 @@
 import {describe,expect,it} from 'vitest';
 import {step} from '../step';
 import {designSteel,criticalMoment,method2,type SteelInput} from '../../engineering/steel/ec3';
+import {ltbCoefficientCases} from '../../engineering/steel/ltbCases';
 import {sections,sectionById,validateSection} from '../../engineering/steel/sections';
 import {CalculationEngine} from '../../engine/CalculationEngine';
 import {steelBeamColumnTemplate} from '../../documents/steelBeamColumnTemplate';
@@ -26,6 +27,20 @@ describe('EC3 2005 engineering and catalogue',()=>{
    const center=criticalMoment(s,{...a,C1:1.127,C2:0.454,loadHeight:0});
    expect(criticalMoment(s,{...a,C1:1.127,C2:0.454,loadHeight:180})).toBeLessThan(center);
    expect(criticalMoment(s,{...a,C1:1.127,C2:0.454,loadHeight:-180})).toBeGreaterThan(center);
+  });
+  step('numbered LTB annex cases look up the published coefficient pairs without interpolation',()=>{
+   expect(ltbCoefficientCases).toHaveLength(13);
+   expect(ltbCoefficientCases.map(c=>[c.id,c.c1,c.c2])).toEqual([
+    [1,1,0],[2,1.14,0],[3,1.31,0],[4,1.52,0],[5,1.77,0],[6,2.05,0],[7,2.33,0],[8,2.57,0],[9,2.55,0],
+    [10,1.127,0.454],[11,2.578,1.554],[12,1.348,0.63],[13,1.683,1.645],
+   ]);
+   for(let index=0;index<13;index++){
+    const result=designSteel(s,{...a,loadCase:index});
+    expect(result.values.C1).toBe(ltbCoefficientCases[index].c1);
+    expect(result.values.C2).toBe(ltbCoefficientCases[index].c2);
+    expect(result.values.Mcr).toBeGreaterThan(0);
+   }
+   expect(designSteel(s,{...a,loadCase:13}).state).toBe('NOT VERIFIED');
   });
   step('JRC 2014 Simoes HEB320 example 3, independent buckling and Annex B factors',()=>{
    const r=designSteel({...s,h:320,b:300,tw:11.5,tf:20.5,r:27,A:16130,Iy:308200000,Iz:92390000,Wpl_y:2149000,Wpl_z:939100,Wel_y:1926250,Wel_z:615933.333}, {...a,fy:355,L:4335,Lt:4335,Llt:4335,N:1704000,My:24.8e6,Mz:0,Vy:0,Vz:0,netArea:16130,alphaY:0.34,alphaZ:0.49,ltbMode:2,externalMcr:5045.1e6,Cmy:0.428,CmLT:0.428});
@@ -60,7 +75,7 @@ describe('EC3 2005 engineering and catalogue',()=>{
    expect(designSteel(s,{...a,curveVerified:0}).state).toBe('NOT VERIFIED');
    expect(designSteel(s,{...a,Vy:10000,Vz:30000}).state).toBe('NOT VERIFIED');
    expect(designSteel(s,{...a,verifiedFactors:0}).state).toBe('NOT VERIFIED');
-   expect(designSteel(s,{...a,loadCase:5}).state).toBe('NOT VERIFIED');
+   expect(designSteel(s,{...a,loadCase:13}).state).toBe('NOT VERIFIED');
    expect(designSteel(s,{...a,kw:0.5}).state).toBe('NOT VERIFIED');
    expect(designSteel(s,{...a,ltbMode:1,ltbVerified:0}).state).toBe('NOT VERIFIED');
    expect(designSteel(s,{...a,ltbMode:1,ltbVerified:1}).checks.find(c=>c.name==='LTB')?.state).toBe('PASS');

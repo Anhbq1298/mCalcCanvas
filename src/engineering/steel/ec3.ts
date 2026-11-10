@@ -1,3 +1,5 @@
+import { ltbCoefficientForIndex } from './ltbCases';
+
 /**
  * EN 1993-1-1:2005 + A1:2014 only. N in N, lengths in mm, stresses in MPa.
  * No React, hidden worksheet state, rounding or relaxed acceptance comparisons.
@@ -121,9 +123,10 @@ export function designSteel(s: SectionGeometry, a: SteelInput): SteelResult {
   let Mcr: number | null = null, C1 = a.C1, C2 = a.C2;
   if (a.ltbMode === 2) { if (positive(a.externalMcr)) Mcr = a.externalMcr; }
   else if (a.ltbMode === 1) { if (a.ltbVerified === 1 && positive(C1)) Mcr = criticalMoment(s,a); }
-  else if (a.ltbMode === 0 && a.k === 1 && a.kw === 1 && [0,1,2].includes(a.loadCase)) {
-    // SN003b uniform moment, UDL and central point load, fork ends and free warping only.
-    [C1,C2] = [[1,0],[1.127,0.454],[1.348,0.630]][a.loadCase];
+  else if (a.ltbMode === 0 && a.k === 1 && a.kw === 1 && ltbCoefficientForIndex(a.loadCase)) {
+    // SN003b Tables 3.1/3.2: worksheet case numbers 1..13 map to this zero-based index.
+    const selectedCase=ltbCoefficientForIndex(a.loadCase)!;
+    C1=selectedCase.c1; C2=selectedCase.c2;
     Mcr = criticalMoment(s,{...a,C1,C2});
   }
   const lambdaLT = Mcr ? Math.sqrt(Wy * a.fy / Mcr) : null;
