@@ -54,7 +54,10 @@ test.describe('Page layout keeps content inside the margins', () => {
   test('dragging a region past the margin stops at the margin', async ({ page }) => {
     const w = await writable(page);
     await page.mouse.click(w.left + 100, w.top + 100);
-    await page.keyboard.type('y:3', { delay: 15 });
+    // The first key creates the editor; wait for it to take focus so Enter is not lost on a slow machine (CI flake).
+    await page.keyboard.type('y', { delay: 15 });
+    await expect(page.locator('math-field')).toBeFocused();
+    await page.keyboard.type(':3', { delay: 15 });
     await page.keyboard.press('Enter');
     await expect(page.locator('math-field')).toHaveCount(0);
     const region = page.locator('.math-region').first();
