@@ -10,7 +10,7 @@ import { parseDocument } from './DocumentSerializer';
 import rcCircularColumn from '../../templates/RC_Circular_Column_Check.mCCV?raw';
 import rcRectangularColumn from '../../templates/RC_Rectangular_Column_Check.mCCV?raw';
 import { escapeHtml } from '../canvas/sanitize';
-import { demoWorksheetShapes } from './demoWorksheet';
+import { steelBeamColumnShapes } from './steelBeamColumnTemplate';
 import { A4, PAGE_GAP } from '../export/pageGeometry';
 import { compactTemplate } from './templatePresentation';
 
@@ -196,12 +196,12 @@ export const TEMPLATES: WorksheetTemplate[] = [
   },
   {
     id: 'steel-beam',
-    name: 'Steel beam – simply supported',
-    description: 'One-page sample: loads, bending moment, shear and a capacity check.',
-    title: 'Simply Supported Steel Beam Calculation',
+    name: 'Steel beam-column (EN 1993-1-1) — working draft',
+    description: 'Working draft: axial compression, biaxial bending, flexural buckling and LTB with designer-verified factors.',
+    title: 'Steel Beam-Column Design — Preliminary',
     metadata: { project: 'Demonstration project', calculationReference: 'CALC-001', preparedBy: '', checkedBy: '', revision: 'A' },
     settings: { optimizePrintLayout: true },
-    shapes: () => compactTemplate('steel-beam', demoWorksheetShapes()),
+    shapes: () => steelBeamColumnShapes(),
   },
 ];
 
