@@ -52,9 +52,9 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
     note(p,row,leftLabel,0,undefined,76,136);
     calc(p,row,left[0],left[1],{displayMode:'formula',w:160,fontSize:12},220);
     const rightLabelIndex=shapes.length;
-    note(p,row,rightLabel,0,undefined,400,145);
+    note(p,row,rightLabel,0,undefined,400,125);
     if(shapes[rightLabelIndex]?.type==='text')shapes[rightLabelIndex].props.fontSize=11;
-    calc(p,row,right[0],right[1],{displayMode:'formula',w:158,fontSize:12},555);
+    calc(p,row,right[0],right[1],{displayMode:'formula',w:150,fontSize:12},530);
   };
   const q = (n: number, unit: string) => `${n}\\,\\mathrm{${unit}}`;
   const abs = (key: string) => t`\operatorname{abs}(${v(key)})`;
@@ -75,7 +75,7 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   pairWithLabels(1,6,'Elastic modulus E',['E',q(210,'GPa')],'Shear modulus G',['G',q(80.76923,'GPa')]);
   pairWithLabels(1,7,'Section factor γM0',['gamma0','1'],'Buckling factor γM1',['gamma1','1']);
   pairWithLabels(1,8,'Tension factor γM2',['gamma2','1.25'],'Member length L',['L',q(5,'m')]);
-  pairWithLabels(1,9,'Effective length factor Ky',['Ky','1'],'Effective length factor Kz',['Kz','1']);
+  pairWithLabels(1,9,'Effective length factor Ky',['Ky','1'],'Effective Kz',['Kz','1']);
   pairWithLabels(1,10,'LTB unrestrained length',['Llt',q(5,'m')],'LTB model — use picker',['LTBmode','0']);
   note(1,11,'2.1  DESIGN ACTIONS — LC1, simultaneous at same position',2);
   pairWithLabels(1,12,'Compression NEd',['N',q(100,'kN')],'Major-axis My,Ed',['My',q(50,'kN')+t`\cdot\mathrm{m}`]);
