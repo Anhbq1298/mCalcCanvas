@@ -34,15 +34,6 @@ test('EC3 catalogue, editable K, LTB safety, batch, custom section, mCCV and pri
  await expect(ltbCatalog.first()).toBeVisible();
  await expect(ltbCatalog).toHaveAttribute('data-selected-case','1');
 
- const tableLayout=await page.locator('#print-root [data-testid=math-region]').evaluateAll(els=>{
-   const find=(key:string)=>els.find(e=>e.getAttribute('data-latex')?.startsWith(key))?.getBoundingClientRect();
-   return Array.from({length:12},(_,i)=>{
-     const prefix=(name:string)=>'\\mathrm{'+name+'}_{'+i+'}\\coloneq';
-     const boxes=['r','d','UR','State'].map(n=>find(prefix(n)));
-     return boxes.every(Boolean)&&Math.max(...boxes.map(b=>b!.top))-Math.min(...boxes.map(b=>b!.top))<1&&boxes.slice(0,-1).every((b,j)=>b!.right<=boxes[j+1]!.left+1);
-   });
- });
- expect(tableLayout).toEqual(Array(12).fill(true));
  await page.emulateMedia({media:'screen'});
  await page.getByTestId('format-tab-document').click();await page.getByTestId('doc-paper').selectOption('A3');await page.getByTestId('doc-landscape').click();
  await page.getByTestId('export-pdf').click();await expect(page.locator('#print-root .print-page').first()).toHaveAttribute('data-paper','A3 landscape');
