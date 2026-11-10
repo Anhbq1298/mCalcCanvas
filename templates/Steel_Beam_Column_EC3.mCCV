@@ -1010,7 +1010,7 @@
       "props": {
         "w": 640,
         "h": 28,
-        "html": "DESIGN SUMMARY",
+        "html": "2  SECTION AND CLASSIFICATION",
         "fontFamily": "Inter",
         "fontSize": 19,
         "color": "#1e3a5f",
@@ -1021,1628 +1021,25 @@
     },
     {
       "id": "ec3_54",
-      "type": "math",
-      "x": 96,
-      "y": 1271,
+      "type": "text",
+      "x": 76,
+      "y": 1267,
       "props": {
-        "w": 260,
-        "h": 32,
-        "latex": "\\mathrm{State}\\coloneq \\operatorname{entry}(\\mathrm{R},4)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "state"
+        "w": 640,
+        "h": 24,
+        "html": "HEB/I/H geometry and properties for the selected section.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
       },
       "printGroupId": "ec3-sheet-1"
     },
     {
       "id": "ec3_55",
       "type": "math",
-      "x": 396,
-      "y": 1271,
-      "props": {
-        "w": 280,
-        "h": 32,
-        "latex": "\\mathrm{UR}\\coloneq \\operatorname{entry}(\\mathrm{R},3)",
-        "displayMode": "result",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_56",
-      "type": "math",
       "x": 96,
-      "y": 1311,
-      "props": {
-        "w": 600,
-        "h": 32,
-        "latex": "\\mathrm{Governing}\\coloneq \\operatorname{entry}(\\mathrm{R},5)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "mode"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_57",
-      "type": "math",
-      "x": 96,
-      "y": 1343,
-      "props": {
-        "w": 600,
-        "h": 32,
-        "latex": "\\mathrm{Issues}\\coloneq \\operatorname{entry}(\\mathrm{R},38)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "issues"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_58",
-      "type": "text",
-      "x": 76,
-      "y": 1391,
-      "props": {
-        "w": 190,
-        "h": 24,
-        "html": "Check / clause",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_59",
-      "type": "text",
-      "x": 276,
-      "y": 1391,
-      "props": {
-        "w": 120,
-        "h": 24,
-        "html": "Resistance",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_60",
-      "type": "text",
-      "x": 416,
-      "y": 1391,
-      "props": {
-        "w": 100,
-        "h": 24,
-        "html": "Demand",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_61",
-      "type": "text",
-      "x": 536,
-      "y": 1391,
-      "props": {
-        "w": 60,
-        "h": 24,
-        "html": "UR",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_62",
-      "type": "text",
-      "x": 616,
-      "y": 1391,
-      "props": {
-        "w": 100,
-        "h": 24,
-        "html": "Status",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_63",
-      "type": "text",
-      "x": 76,
-      "y": 1423,
-      "props": {
-        "w": 190,
-        "h": 34,
-        "html": "Compression / tension<br/>6.2.3 / 6.2.4",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_64",
-      "type": "math",
-      "x": 276,
-      "y": 1431,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{r}_{0}\\coloneq \\operatorname{if}(N_{Ed}<0\\,\\mathrm{N},\\operatorname{entry}(\\mathrm{R},7),\\operatorname{entry}(\\mathrm{R},6))",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_65",
-      "type": "math",
-      "x": 416,
-      "y": 1431,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{d}_{0}\\coloneq \\operatorname{abs}(N_{Ed})",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_66",
-      "type": "math",
-      "x": 536,
-      "y": 1431,
-      "props": {
-        "w": 70,
-        "h": 28,
-        "latex": "\\mathrm{UR}_{0}\\coloneq \\operatorname{entry}(\\mathrm{R},39)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_67",
-      "type": "math",
-      "x": 616,
-      "y": 1431,
-      "props": {
-        "w": 100,
-        "h": 28,
-        "latex": "\\mathrm{State}_{0}\\coloneq \\operatorname{entry}(\\mathrm{R},40)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "state"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_68",
-      "type": "text",
-      "x": 76,
-      "y": 1463,
-      "props": {
-        "w": 190,
-        "h": 34,
-        "html": "Major bending<br/>6.2.5 / 6.2.8",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_69",
-      "type": "math",
-      "x": 276,
-      "y": 1471,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{r}_{1}\\coloneq \\operatorname{entry}(\\mathrm{R},8)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_70",
-      "type": "math",
-      "x": 416,
-      "y": 1471,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{d}_{1}\\coloneq \\operatorname{abs}(M_{y.Ed})",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_71",
-      "type": "math",
-      "x": 536,
-      "y": 1471,
-      "props": {
-        "w": 70,
-        "h": 28,
-        "latex": "\\mathrm{UR}_{1}\\coloneq \\operatorname{entry}(\\mathrm{R},41)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_72",
-      "type": "math",
-      "x": 616,
-      "y": 1471,
-      "props": {
-        "w": 100,
-        "h": 28,
-        "latex": "\\mathrm{State}_{1}\\coloneq \\operatorname{entry}(\\mathrm{R},42)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "state"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_73",
-      "type": "text",
-      "x": 76,
-      "y": 1503,
-      "props": {
-        "w": 190,
-        "h": 34,
-        "html": "Minor bending<br/>6.2.5 / 6.2.8",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_74",
-      "type": "math",
-      "x": 276,
-      "y": 1511,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{r}_{2}\\coloneq \\operatorname{entry}(\\mathrm{R},9)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_75",
-      "type": "math",
-      "x": 416,
-      "y": 1511,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{d}_{2}\\coloneq \\operatorname{abs}(M_{z.Ed})",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_76",
-      "type": "math",
-      "x": 536,
-      "y": 1511,
-      "props": {
-        "w": 70,
-        "h": 28,
-        "latex": "\\mathrm{UR}_{2}\\coloneq \\operatorname{entry}(\\mathrm{R},43)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_77",
-      "type": "math",
-      "x": 616,
-      "y": 1511,
-      "props": {
-        "w": 100,
-        "h": 28,
-        "latex": "\\mathrm{State}_{2}\\coloneq \\operatorname{entry}(\\mathrm{R},44)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "state"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_78",
-      "type": "text",
-      "x": 76,
-      "y": 1543,
-      "props": {
-        "w": 190,
-        "h": 34,
-        "html": "Shear Y<br/>6.2.6",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_79",
-      "type": "math",
-      "x": 276,
-      "y": 1551,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{r}_{3}\\coloneq \\operatorname{entry}(\\mathrm{R},10)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_80",
-      "type": "math",
-      "x": 416,
-      "y": 1551,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{d}_{3}\\coloneq \\operatorname{abs}(V_{y.Ed})",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_81",
-      "type": "math",
-      "x": 536,
-      "y": 1551,
-      "props": {
-        "w": 70,
-        "h": 28,
-        "latex": "\\mathrm{UR}_{3}\\coloneq \\operatorname{entry}(\\mathrm{R},45)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_82",
-      "type": "math",
-      "x": 616,
-      "y": 1551,
-      "props": {
-        "w": 100,
-        "h": 28,
-        "latex": "\\mathrm{State}_{3}\\coloneq \\operatorname{entry}(\\mathrm{R},46)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "state"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_83",
-      "type": "text",
-      "x": 76,
-      "y": 1583,
-      "props": {
-        "w": 190,
-        "h": 34,
-        "html": "Shear Z<br/>6.2.6 / EN 1993-1-5",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_84",
-      "type": "math",
-      "x": 276,
-      "y": 1591,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{r}_{4}\\coloneq \\operatorname{entry}(\\mathrm{R},11)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_85",
-      "type": "math",
-      "x": 416,
-      "y": 1591,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{d}_{4}\\coloneq \\operatorname{abs}(V_{z.Ed})",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_86",
-      "type": "math",
-      "x": 536,
-      "y": 1591,
-      "props": {
-        "w": 70,
-        "h": 28,
-        "latex": "\\mathrm{UR}_{4}\\coloneq \\operatorname{entry}(\\mathrm{R},47)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_87",
-      "type": "math",
-      "x": 616,
-      "y": 1591,
-      "props": {
-        "w": 100,
-        "h": 28,
-        "latex": "\\mathrm{State}_{4}\\coloneq \\operatorname{entry}(\\mathrm{R},48)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "state"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_88",
-      "type": "text",
-      "x": 76,
-      "y": 1623,
-      "props": {
-        "w": 190,
-        "h": 34,
-        "html": "Section interaction<br/>6.2.1(7) / 6.2.10",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_89",
-      "type": "math",
-      "x": 276,
-      "y": 1631,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{r}_{5}\\coloneq 1",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_90",
-      "type": "math",
-      "x": 416,
-      "y": 1631,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{d}_{5}\\coloneq \\operatorname{entry}(\\mathrm{R},37)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_91",
-      "type": "math",
-      "x": 536,
-      "y": 1631,
-      "props": {
-        "w": 70,
-        "h": 28,
-        "latex": "\\mathrm{UR}_{5}\\coloneq \\operatorname{entry}(\\mathrm{R},49)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_92",
-      "type": "math",
-      "x": 616,
-      "y": 1631,
-      "props": {
-        "w": 100,
-        "h": 28,
-        "latex": "\\mathrm{State}_{5}\\coloneq \\operatorname{entry}(\\mathrm{R},50)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "state"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_93",
-      "type": "text",
-      "x": 76,
-      "y": 1663,
-      "props": {
-        "w": 190,
-        "h": 34,
-        "html": "Buckling Y<br/>6.3.1.2",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_94",
-      "type": "math",
-      "x": 276,
-      "y": 1671,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{r}_{6}\\coloneq \\operatorname{entry}(\\mathrm{R},21)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_95",
-      "type": "math",
-      "x": 416,
-      "y": 1671,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{d}_{6}\\coloneq \\operatorname{abs}(N_{Ed})",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_96",
-      "type": "math",
-      "x": 536,
-      "y": 1671,
-      "props": {
-        "w": 70,
-        "h": 28,
-        "latex": "\\mathrm{UR}_{6}\\coloneq \\operatorname{entry}(\\mathrm{R},51)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_97",
-      "type": "math",
-      "x": 616,
-      "y": 1671,
-      "props": {
-        "w": 100,
-        "h": 28,
-        "latex": "\\mathrm{State}_{6}\\coloneq \\operatorname{entry}(\\mathrm{R},52)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "state"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_98",
-      "type": "text",
-      "x": 76,
-      "y": 1703,
-      "props": {
-        "w": 190,
-        "h": 34,
-        "html": "Buckling Z<br/>6.3.1.2",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_99",
-      "type": "math",
-      "x": 276,
-      "y": 1711,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{r}_{7}\\coloneq \\operatorname{entry}(\\mathrm{R},22)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_100",
-      "type": "math",
-      "x": 416,
-      "y": 1711,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{d}_{7}\\coloneq \\operatorname{abs}(N_{Ed})",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_101",
-      "type": "math",
-      "x": 536,
-      "y": 1711,
-      "props": {
-        "w": 70,
-        "h": 28,
-        "latex": "\\mathrm{UR}_{7}\\coloneq \\operatorname{entry}(\\mathrm{R},53)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_102",
-      "type": "math",
-      "x": 616,
-      "y": 1711,
-      "props": {
-        "w": 100,
-        "h": 28,
-        "latex": "\\mathrm{State}_{7}\\coloneq \\operatorname{entry}(\\mathrm{R},54)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "state"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_103",
-      "type": "text",
-      "x": 76,
-      "y": 1743,
-      "props": {
-        "w": 190,
-        "h": 34,
-        "html": "Torsional buckling<br/>6.3.1.4",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_104",
-      "type": "math",
-      "x": 276,
-      "y": 1751,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{r}_{8}\\coloneq \\operatorname{entry}(\\mathrm{R},23)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_105",
-      "type": "math",
-      "x": 416,
-      "y": 1751,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{d}_{8}\\coloneq \\operatorname{abs}(N_{Ed})",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_106",
-      "type": "math",
-      "x": 536,
-      "y": 1751,
-      "props": {
-        "w": 70,
-        "h": 28,
-        "latex": "\\mathrm{UR}_{8}\\coloneq \\operatorname{entry}(\\mathrm{R},55)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_107",
-      "type": "math",
-      "x": 616,
-      "y": 1751,
-      "props": {
-        "w": 100,
-        "h": 28,
-        "latex": "\\mathrm{State}_{8}\\coloneq \\operatorname{entry}(\\mathrm{R},56)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "state"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_108",
-      "type": "text",
-      "x": 76,
-      "y": 1783,
-      "props": {
-        "w": 190,
-        "h": 34,
-        "html": "LTB<br/>6.3.2.2",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_109",
-      "type": "math",
-      "x": 276,
-      "y": 1791,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{r}_{9}\\coloneq \\operatorname{entry}(\\mathrm{R},27)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_110",
-      "type": "math",
-      "x": 416,
-      "y": 1791,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{d}_{9}\\coloneq \\operatorname{abs}(M_{y.Ed})",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_111",
-      "type": "math",
-      "x": 536,
-      "y": 1791,
-      "props": {
-        "w": 70,
-        "h": 28,
-        "latex": "\\mathrm{UR}_{9}\\coloneq \\operatorname{entry}(\\mathrm{R},57)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_112",
-      "type": "math",
-      "x": 616,
-      "y": 1791,
-      "props": {
-        "w": 100,
-        "h": 28,
-        "latex": "\\mathrm{State}_{9}\\coloneq \\operatorname{entry}(\\mathrm{R},58)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "state"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_113",
-      "type": "text",
-      "x": 76,
-      "y": 1823,
-      "props": {
-        "w": 190,
-        "h": 34,
-        "html": "Interaction 6.61<br/>6.3.3 / Annex B",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_114",
-      "type": "math",
-      "x": 276,
-      "y": 1831,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{r}_{10}\\coloneq 1",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_115",
-      "type": "math",
-      "x": 416,
-      "y": 1831,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{d}_{10}\\coloneq \\operatorname{entry}(\\mathrm{R},34)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_116",
-      "type": "math",
-      "x": 536,
-      "y": 1831,
-      "props": {
-        "w": 70,
-        "h": 28,
-        "latex": "\\mathrm{UR}_{10}\\coloneq \\operatorname{entry}(\\mathrm{R},59)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_117",
-      "type": "math",
-      "x": 616,
-      "y": 1831,
-      "props": {
-        "w": 100,
-        "h": 28,
-        "latex": "\\mathrm{State}_{10}\\coloneq \\operatorname{entry}(\\mathrm{R},60)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "state"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_118",
-      "type": "text",
-      "x": 76,
-      "y": 1863,
-      "props": {
-        "w": 190,
-        "h": 34,
-        "html": "Interaction 6.62<br/>6.3.3 / Annex B",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_119",
-      "type": "math",
-      "x": 276,
-      "y": 1871,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{r}_{11}\\coloneq 1",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_120",
-      "type": "math",
-      "x": 416,
-      "y": 1871,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{d}_{11}\\coloneq \\operatorname{entry}(\\mathrm{R},35)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_121",
-      "type": "math",
-      "x": 536,
-      "y": 1871,
-      "props": {
-        "w": 70,
-        "h": 28,
-        "latex": "\\mathrm{UR}_{11}\\coloneq \\operatorname{entry}(\\mathrm{R},61)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_122",
-      "type": "math",
-      "x": 616,
-      "y": 1871,
-      "props": {
-        "w": 100,
-        "h": 28,
-        "latex": "\\mathrm{State}_{11}\\coloneq \\operatorname{entry}(\\mathrm{R},62)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "state"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_123",
-      "type": "text",
-      "x": 76,
-      "y": 1971,
-      "props": {
-        "w": 640,
-        "h": 28,
-        "html": "READING THIS REPORT",
-        "fontFamily": "Inter",
-        "fontSize": 14,
-        "color": "#1e3a5f",
-        "align": "left",
-        "heading": 2
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_124",
-      "type": "text",
-      "x": 76,
-      "y": 2011,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "3 — section geometry and classification; 4 — section resistance; 5 — compression buckling.",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_125",
-      "type": "text",
-      "x": 76,
-      "y": 2043,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "6 — lateral-torsional buckling; 7 — beam-column interaction.",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_126",
-      "type": "text",
-      "x": 76,
-      "y": 2083,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "PASS applies only to checks within the declared scope. A missing required check is NOT VERIFIED.",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_127",
-      "type": "text",
-      "x": 76,
-      "y": 2115,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "The detailed equations are editable and recalculated. Summary states also use the guarded EC3 audit.",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_128",
-      "type": "text",
-      "x": 76,
-      "y": 2155,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "Unsupported branches remain NOT VERIFIED even when an indicative equation has a numerical value.",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_129",
-      "type": "math",
-      "x": 96,
-      "y": 2191,
-      "props": {
-        "w": 600,
-        "h": 32,
-        "latex": "\\mathrm{SectionOut}\\coloneq \\mathrm{Section}",
-        "displayMode": "result",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_130",
-      "type": "text",
-      "x": 76,
-      "y": 2402,
-      "props": {
-        "w": 640,
-        "h": 28,
-        "html": "3  SECTION AND CLASSIFICATION",
-        "fontFamily": "Inter",
-        "fontSize": 19,
-        "color": "#1e3a5f",
-        "align": "left",
-        "heading": 1
-      },
-      "printGroupId": "ec3-sheet-2"
-    },
-    {
-      "id": "ec3_131",
-      "type": "text",
-      "x": 76,
-      "y": 2438,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "Steel section source: licensed offline catalogue; designation and dataset shown beside Section ID.",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-2"
-    },
-    {
-      "id": "ec3_132",
-      "type": "math",
-      "x": 96,
-      "y": 2462,
+      "y": 1291,
       "props": {
         "w": 260,
         "h": 190,
@@ -2659,13 +1056,13 @@
         "baseline": 20,
         "steelFigure": "section"
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_133",
+      "id": "ec3_56",
       "type": "math",
       "x": 396,
-      "y": 2462,
+      "y": 1291,
       "props": {
         "w": 290,
         "h": 18,
@@ -2681,13 +1078,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_134",
+      "id": "ec3_57",
       "type": "math",
       "x": 396,
-      "y": 2479.2,
+      "y": 1308.2,
       "props": {
         "w": 290,
         "h": 18,
@@ -2703,13 +1100,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_135",
+      "id": "ec3_58",
       "type": "math",
       "x": 396,
-      "y": 2496.4,
+      "y": 1325.4,
       "props": {
         "w": 290,
         "h": 18,
@@ -2725,13 +1122,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_136",
+      "id": "ec3_59",
       "type": "math",
       "x": 396,
-      "y": 2513.6,
+      "y": 1342.6,
       "props": {
         "w": 290,
         "h": 18,
@@ -2747,13 +1144,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_137",
+      "id": "ec3_60",
       "type": "math",
       "x": 396,
-      "y": 2530.8,
+      "y": 1359.8,
       "props": {
         "w": 290,
         "h": 18,
@@ -2769,13 +1166,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_138",
+      "id": "ec3_61",
       "type": "math",
       "x": 396,
-      "y": 2548,
+      "y": 1377,
       "props": {
         "w": 290,
         "h": 18,
@@ -2791,13 +1188,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_139",
+      "id": "ec3_62",
       "type": "math",
       "x": 396,
-      "y": 2565.2,
+      "y": 1394.2,
       "props": {
         "w": 290,
         "h": 18,
@@ -2813,13 +1210,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_140",
+      "id": "ec3_63",
       "type": "math",
       "x": 396,
-      "y": 2582.4,
+      "y": 1411.4,
       "props": {
         "w": 290,
         "h": 18,
@@ -2835,13 +1232,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_141",
+      "id": "ec3_64",
       "type": "math",
       "x": 396,
-      "y": 2599.6,
+      "y": 1428.6,
       "props": {
         "w": 290,
         "h": 18,
@@ -2857,13 +1254,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_142",
+      "id": "ec3_65",
       "type": "math",
       "x": 396,
-      "y": 2616.8,
+      "y": 1445.8,
       "props": {
         "w": 290,
         "h": 18,
@@ -2879,13 +1276,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_143",
+      "id": "ec3_66",
       "type": "math",
       "x": 396,
-      "y": 2634,
+      "y": 1463,
       "props": {
         "w": 290,
         "h": 18,
@@ -2901,13 +1298,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_144",
+      "id": "ec3_67",
       "type": "text",
       "x": 76,
-      "y": 2658,
+      "y": 1487,
       "props": {
         "w": 640,
         "h": 24,
@@ -2917,13 +1314,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_145",
+      "id": "ec3_68",
       "type": "text",
       "x": 76,
-      "y": 2670,
+      "y": 1499,
       "props": {
         "w": 210,
         "h": 24,
@@ -2933,13 +1330,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_146",
+      "id": "ec3_69",
       "type": "math",
       "x": 300,
-      "y": 2670,
+      "y": 1499,
       "props": {
         "w": 410,
         "h": 86,
@@ -2955,13 +1352,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_147",
+      "id": "ec3_70",
       "type": "math",
       "x": 96,
-      "y": 2762,
+      "y": 1591,
       "props": {
         "w": 280,
         "h": 32,
@@ -2977,13 +1374,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_148",
+      "id": "ec3_71",
       "type": "math",
       "x": 396,
-      "y": 2762,
+      "y": 1591,
       "props": {
         "w": 290,
         "h": 32,
@@ -2999,13 +1396,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_149",
+      "id": "ec3_72",
       "type": "math",
       "x": 96,
-      "y": 2806,
+      "y": 1635,
       "props": {
         "w": 280,
         "h": 32,
@@ -3021,13 +1418,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_150",
+      "id": "ec3_73",
       "type": "math",
       "x": 396,
-      "y": 2806,
+      "y": 1635,
       "props": {
         "w": 290,
         "h": 32,
@@ -3043,13 +1440,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_151",
+      "id": "ec3_74",
       "type": "text",
       "x": 76,
-      "y": 2850,
+      "y": 1679,
       "props": {
         "w": 640,
         "h": 24,
@@ -3059,13 +1456,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_152",
+      "id": "ec3_75",
       "type": "math",
       "x": 96,
-      "y": 2890,
+      "y": 1719,
       "props": {
         "w": 280,
         "h": 32,
@@ -3081,13 +1478,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_153",
+      "id": "ec3_76",
       "type": "math",
       "x": 396,
-      "y": 2890,
+      "y": 1719,
       "props": {
         "w": 290,
         "h": 32,
@@ -3103,13 +1500,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_154",
+      "id": "ec3_77",
       "type": "math",
       "x": 96,
-      "y": 2934,
+      "y": 1763,
       "props": {
         "w": 280,
         "h": 32,
@@ -3125,13 +1522,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_155",
+      "id": "ec3_78",
       "type": "math",
       "x": 396,
-      "y": 2934,
+      "y": 1763,
       "props": {
         "w": 290,
         "h": 32,
@@ -3147,13 +1544,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_156",
+      "id": "ec3_79",
       "type": "math",
       "x": 96,
-      "y": 2978,
+      "y": 1807,
       "props": {
         "w": 280,
         "h": 32,
@@ -3169,13 +1566,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_157",
+      "id": "ec3_80",
       "type": "math",
       "x": 396,
-      "y": 2978,
+      "y": 1807,
       "props": {
         "w": 290,
         "h": 32,
@@ -3191,13 +1588,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_158",
+      "id": "ec3_81",
       "type": "text",
       "x": 76,
-      "y": 3018,
+      "y": 1847,
       "props": {
         "w": 640,
         "h": 24,
@@ -3207,13 +1604,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_159",
+      "id": "ec3_82",
       "type": "math",
       "x": 96,
-      "y": 3058,
+      "y": 1887,
       "props": {
         "w": 280,
         "h": 32,
@@ -3229,13 +1626,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_160",
+      "id": "ec3_83",
       "type": "text",
       "x": 396,
-      "y": 3058,
+      "y": 1887,
       "props": {
         "w": 290,
         "h": 24,
@@ -3245,13 +1642,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_161",
+      "id": "ec3_84",
       "type": "text",
       "x": 76,
-      "y": 3098,
+      "y": 1927,
       "props": {
         "w": 210,
         "h": 24,
@@ -3261,13 +1658,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_162",
+      "id": "ec3_85",
       "type": "math",
       "x": 300,
-      "y": 3098,
+      "y": 1927,
       "props": {
         "w": 410,
         "h": 32,
@@ -3283,13 +1680,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_163",
+      "id": "ec3_86",
       "type": "text",
       "x": 76,
-      "y": 3142,
+      "y": 1971,
       "props": {
         "w": 210,
         "h": 24,
@@ -3299,13 +1696,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_164",
+      "id": "ec3_87",
       "type": "math",
       "x": 300,
-      "y": 3142,
+      "y": 1971,
       "props": {
         "w": 410,
         "h": 32,
@@ -3321,13 +1718,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_165",
+      "id": "ec3_88",
       "type": "text",
       "x": 76,
-      "y": 3186,
+      "y": 2015,
       "props": {
         "w": 210,
         "h": 24,
@@ -3337,13 +1734,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_166",
+      "id": "ec3_89",
       "type": "math",
       "x": 300,
-      "y": 3186,
+      "y": 2015,
       "props": {
         "w": 410,
         "h": 32,
@@ -3359,13 +1756,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_167",
+      "id": "ec3_90",
       "type": "math",
       "x": 96,
-      "y": 3230,
+      "y": 2059,
       "props": {
         "w": 280,
         "h": 32,
@@ -3381,13 +1778,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_168",
+      "id": "ec3_91",
       "type": "math",
       "x": 396,
-      "y": 3230,
+      "y": 2059,
       "props": {
         "w": 290,
         "h": 32,
@@ -3403,13 +1800,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_169",
+      "id": "ec3_92",
       "type": "text",
       "x": 76,
-      "y": 3274,
+      "y": 2103,
       "props": {
         "w": 210,
         "h": 24,
@@ -3419,13 +1816,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_170",
+      "id": "ec3_93",
       "type": "math",
       "x": 300,
-      "y": 3274,
+      "y": 2103,
       "props": {
         "w": 410,
         "h": 32,
@@ -3441,13 +1838,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_171",
+      "id": "ec3_94",
       "type": "text",
       "x": 76,
-      "y": 3322,
+      "y": 2151,
       "props": {
         "w": 640,
         "h": 24,
@@ -3457,13 +1854,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_172",
+      "id": "ec3_95",
       "type": "text",
       "x": 76,
-      "y": 3354,
+      "y": 2183,
       "props": {
         "w": 640,
         "h": 24,
@@ -3473,30 +1870,30 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-2"
+      "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_173",
+      "id": "ec3_96",
       "type": "text",
       "x": 76,
-      "y": 3573,
+      "y": 2402,
       "props": {
         "w": 640,
         "h": 28,
-        "html": "4  CROSS-SECTION RESISTANCE",
+        "html": "3  CROSS-SECTION RESISTANCE",
         "fontFamily": "Inter",
         "fontSize": 19,
         "color": "#1e3a5f",
         "align": "left",
         "heading": 1
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_174",
+      "id": "ec3_97",
       "type": "text",
       "x": 76,
-      "y": 3609,
+      "y": 2438,
       "props": {
         "w": 640,
         "h": 24,
@@ -3506,13 +1903,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_175",
+      "id": "ec3_98",
       "type": "text",
       "x": 76,
-      "y": 3645,
+      "y": 2474,
       "props": {
         "w": 210,
         "h": 24,
@@ -3522,13 +1919,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_176",
+      "id": "ec3_99",
       "type": "math",
       "x": 300,
-      "y": 3645,
+      "y": 2474,
       "props": {
         "w": 410,
         "h": 86,
@@ -3544,13 +1941,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_177",
+      "id": "ec3_100",
       "type": "math",
       "x": 96,
-      "y": 3737,
+      "y": 2566,
       "props": {
         "w": 280,
         "h": 32,
@@ -3566,13 +1963,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_178",
+      "id": "ec3_101",
       "type": "math",
       "x": 396,
-      "y": 3737,
+      "y": 2566,
       "props": {
         "w": 290,
         "h": 32,
@@ -3588,13 +1985,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_179",
+      "id": "ec3_102",
       "type": "math",
       "x": 96,
-      "y": 3777,
+      "y": 2606,
       "props": {
         "w": 280,
         "h": 32,
@@ -3610,13 +2007,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_180",
+      "id": "ec3_103",
       "type": "math",
       "x": 396,
-      "y": 3777,
+      "y": 2606,
       "props": {
         "w": 290,
         "h": 32,
@@ -3632,13 +2029,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_181",
+      "id": "ec3_104",
       "type": "math",
       "x": 96,
-      "y": 3821,
+      "y": 2650,
       "props": {
         "w": 280,
         "h": 32,
@@ -3654,13 +2051,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_182",
+      "id": "ec3_105",
       "type": "math",
       "x": 396,
-      "y": 3821,
+      "y": 2650,
       "props": {
         "w": 290,
         "h": 32,
@@ -3676,13 +2073,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_183",
+      "id": "ec3_106",
       "type": "math",
       "x": 96,
-      "y": 3873,
+      "y": 2702,
       "props": {
         "w": 280,
         "h": 32,
@@ -3698,13 +2095,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_184",
+      "id": "ec3_107",
       "type": "math",
       "x": 396,
-      "y": 3873,
+      "y": 2702,
       "props": {
         "w": 290,
         "h": 32,
@@ -3720,13 +2117,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_185",
+      "id": "ec3_108",
       "type": "math",
       "x": 96,
-      "y": 3917,
+      "y": 2746,
       "props": {
         "w": 280,
         "h": 32,
@@ -3742,13 +2139,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_186",
+      "id": "ec3_109",
       "type": "math",
       "x": 396,
-      "y": 3917,
+      "y": 2746,
       "props": {
         "w": 290,
         "h": 32,
@@ -3764,13 +2161,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_187",
+      "id": "ec3_110",
       "type": "text",
       "x": 76,
-      "y": 3957,
+      "y": 2786,
       "props": {
         "w": 210,
         "h": 24,
@@ -3780,13 +2177,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_188",
+      "id": "ec3_111",
       "type": "math",
       "x": 300,
-      "y": 3957,
+      "y": 2786,
       "props": {
         "w": 410,
         "h": 32,
@@ -3802,13 +2199,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_189",
+      "id": "ec3_112",
       "type": "text",
       "x": 76,
-      "y": 3997,
+      "y": 2826,
       "props": {
         "w": 640,
         "h": 24,
@@ -3818,13 +2215,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_190",
+      "id": "ec3_113",
       "type": "text",
       "x": 76,
-      "y": 4037,
+      "y": 2866,
       "props": {
         "w": 210,
         "h": 24,
@@ -3834,13 +2231,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_191",
+      "id": "ec3_114",
       "type": "math",
       "x": 300,
-      "y": 4037,
+      "y": 2866,
       "props": {
         "w": 410,
         "h": 86,
@@ -3856,13 +2253,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_192",
+      "id": "ec3_115",
       "type": "text",
       "x": 76,
-      "y": 4129,
+      "y": 2958,
       "props": {
         "w": 210,
         "h": 24,
@@ -3872,13 +2269,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_193",
+      "id": "ec3_116",
       "type": "math",
       "x": 300,
-      "y": 4129,
+      "y": 2958,
       "props": {
         "w": 410,
         "h": 32,
@@ -3894,13 +2291,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_194",
+      "id": "ec3_117",
       "type": "text",
       "x": 76,
-      "y": 4177,
+      "y": 3006,
       "props": {
         "w": 210,
         "h": 24,
@@ -3910,13 +2307,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_195",
+      "id": "ec3_118",
       "type": "math",
       "x": 300,
-      "y": 4177,
+      "y": 3006,
       "props": {
         "w": 410,
         "h": 32,
@@ -3932,13 +2329,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_196",
+      "id": "ec3_119",
       "type": "math",
       "x": 96,
-      "y": 4221,
+      "y": 3050,
       "props": {
         "w": 180,
         "h": 32,
@@ -3954,13 +2351,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_197",
+      "id": "ec3_120",
       "type": "math",
       "x": 296,
-      "y": 4221,
+      "y": 3050,
       "props": {
         "w": 180,
         "h": 32,
@@ -3976,13 +2373,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_198",
+      "id": "ec3_121",
       "type": "math",
       "x": 496,
-      "y": 4221,
+      "y": 3050,
       "props": {
         "w": 180,
         "h": 32,
@@ -3998,13 +2395,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_199",
+      "id": "ec3_122",
       "type": "text",
       "x": 76,
-      "y": 4261,
+      "y": 3090,
       "props": {
         "w": 210,
         "h": 24,
@@ -4014,13 +2411,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_200",
+      "id": "ec3_123",
       "type": "math",
       "x": 300,
-      "y": 4261,
+      "y": 3090,
       "props": {
         "w": 410,
         "h": 32,
@@ -4036,13 +2433,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_201",
+      "id": "ec3_124",
       "type": "math",
       "x": 96,
-      "y": 4301,
+      "y": 3130,
       "props": {
         "w": 100,
         "h": 32,
@@ -4059,13 +2456,13 @@
         "baseline": 20,
         "steelFigure": "state"
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_202",
+      "id": "ec3_125",
       "type": "text",
       "x": 236,
-      "y": 4301,
+      "y": 3130,
       "props": {
         "w": 470,
         "h": 24,
@@ -4075,13 +2472,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_203",
+      "id": "ec3_126",
       "type": "text",
       "x": 76,
-      "y": 4325,
+      "y": 3154,
       "props": {
         "w": 640,
         "h": 24,
@@ -4091,13 +2488,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_204",
+      "id": "ec3_127",
       "type": "math",
       "x": 96,
-      "y": 4373,
+      "y": 3202,
       "props": {
         "w": 280,
         "h": 32,
@@ -4113,13 +2510,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_205",
+      "id": "ec3_128",
       "type": "math",
       "x": 396,
-      "y": 4373,
+      "y": 3202,
       "props": {
         "w": 290,
         "h": 32,
@@ -4135,13 +2532,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_206",
+      "id": "ec3_129",
       "type": "text",
       "x": 76,
-      "y": 4429,
+      "y": 3258,
       "props": {
         "w": 640,
         "h": 24,
@@ -4151,13 +2548,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_207",
+      "id": "ec3_130",
       "type": "text",
       "x": 76,
-      "y": 4465,
+      "y": 3294,
       "props": {
         "w": 640,
         "h": 24,
@@ -4167,13 +2564,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_208",
+      "id": "ec3_131",
       "type": "text",
       "x": 76,
-      "y": 4501,
+      "y": 3330,
       "props": {
         "w": 640,
         "h": 24,
@@ -4183,30 +2580,30 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-3"
+      "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_209",
+      "id": "ec3_132",
       "type": "text",
       "x": 76,
-      "y": 4744,
+      "y": 3573,
       "props": {
         "w": 640,
         "h": 28,
-        "html": "5  COMPRESSION MEMBER BUCKLING",
+        "html": "4  COMPRESSION MEMBER BUCKLING",
         "fontFamily": "Inter",
         "fontSize": 19,
         "color": "#1e3a5f",
         "align": "left",
         "heading": 1
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_210",
+      "id": "ec3_133",
       "type": "text",
       "x": 76,
-      "y": 4780,
+      "y": 3609,
       "props": {
         "w": 640,
         "h": 24,
@@ -4216,13 +2613,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_211",
+      "id": "ec3_134",
       "type": "math",
       "x": 96,
-      "y": 4816,
+      "y": 3645,
       "props": {
         "w": 280,
         "h": 32,
@@ -4238,13 +2635,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_212",
+      "id": "ec3_135",
       "type": "math",
       "x": 396,
-      "y": 4816,
+      "y": 3645,
       "props": {
         "w": 290,
         "h": 32,
@@ -4260,13 +2657,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_213",
+      "id": "ec3_136",
       "type": "text",
       "x": 76,
-      "y": 4864,
+      "y": 3693,
       "props": {
         "w": 210,
         "h": 24,
@@ -4276,13 +2673,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_214",
+      "id": "ec3_137",
       "type": "math",
       "x": 300,
-      "y": 4864,
+      "y": 3693,
       "props": {
         "w": 410,
         "h": 86,
@@ -4298,13 +2695,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_215",
+      "id": "ec3_138",
       "type": "math",
       "x": 96,
-      "y": 4956,
+      "y": 3785,
       "props": {
         "w": 280,
         "h": 32,
@@ -4320,13 +2717,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_216",
+      "id": "ec3_139",
       "type": "math",
       "x": 396,
-      "y": 4956,
+      "y": 3785,
       "props": {
         "w": 290,
         "h": 32,
@@ -4342,13 +2739,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_217",
+      "id": "ec3_140",
       "type": "text",
       "x": 76,
-      "y": 5008,
+      "y": 3837,
       "props": {
         "w": 210,
         "h": 24,
@@ -4358,13 +2755,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_218",
+      "id": "ec3_141",
       "type": "math",
       "x": 300,
-      "y": 5008,
+      "y": 3837,
       "props": {
         "w": 410,
         "h": 32,
@@ -4380,13 +2777,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_219",
+      "id": "ec3_142",
       "type": "text",
       "x": 76,
-      "y": 5056,
+      "y": 3885,
       "props": {
         "w": 210,
         "h": 24,
@@ -4396,13 +2793,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_220",
+      "id": "ec3_143",
       "type": "math",
       "x": 300,
-      "y": 5056,
+      "y": 3885,
       "props": {
         "w": 410,
         "h": 32,
@@ -4418,13 +2815,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_221",
+      "id": "ec3_144",
       "type": "text",
       "x": 76,
-      "y": 5104,
+      "y": 3933,
       "props": {
         "w": 210,
         "h": 24,
@@ -4434,13 +2831,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_222",
+      "id": "ec3_145",
       "type": "math",
       "x": 300,
-      "y": 5104,
+      "y": 3933,
       "props": {
         "w": 410,
         "h": 86,
@@ -4456,13 +2853,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_223",
+      "id": "ec3_146",
       "type": "math",
       "x": 96,
-      "y": 5196,
+      "y": 4025,
       "props": {
         "w": 280,
         "h": 32,
@@ -4478,13 +2875,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_224",
+      "id": "ec3_147",
       "type": "math",
       "x": 396,
-      "y": 5196,
+      "y": 4025,
       "props": {
         "w": 290,
         "h": 32,
@@ -4500,13 +2897,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_225",
+      "id": "ec3_148",
       "type": "text",
       "x": 76,
-      "y": 5248,
+      "y": 4077,
       "props": {
         "w": 210,
         "h": 24,
@@ -4516,13 +2913,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_226",
+      "id": "ec3_149",
       "type": "math",
       "x": 300,
-      "y": 5248,
+      "y": 4077,
       "props": {
         "w": 410,
         "h": 32,
@@ -4538,13 +2935,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_227",
+      "id": "ec3_150",
       "type": "text",
       "x": 76,
-      "y": 5296,
+      "y": 4125,
       "props": {
         "w": 210,
         "h": 24,
@@ -4554,13 +2951,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_228",
+      "id": "ec3_151",
       "type": "math",
       "x": 300,
-      "y": 5296,
+      "y": 4125,
       "props": {
         "w": 410,
         "h": 32,
@@ -4576,13 +2973,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_229",
+      "id": "ec3_152",
       "type": "text",
       "x": 76,
-      "y": 5344,
+      "y": 4173,
       "props": {
         "w": 640,
         "h": 24,
@@ -4592,13 +2989,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_230",
+      "id": "ec3_153",
       "type": "text",
       "x": 76,
-      "y": 5384,
+      "y": 4213,
       "props": {
         "w": 210,
         "h": 24,
@@ -4608,13 +3005,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_231",
+      "id": "ec3_154",
       "type": "math",
       "x": 300,
-      "y": 5384,
+      "y": 4213,
       "props": {
         "w": 410,
         "h": 32,
@@ -4630,13 +3027,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_232",
+      "id": "ec3_155",
       "type": "text",
       "x": 76,
-      "y": 5424,
+      "y": 4253,
       "props": {
         "w": 210,
         "h": 24,
@@ -4646,13 +3043,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_233",
+      "id": "ec3_156",
       "type": "math",
       "x": 300,
-      "y": 5424,
+      "y": 4253,
       "props": {
         "w": 410,
         "h": 32,
@@ -4668,13 +3065,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_234",
+      "id": "ec3_157",
       "type": "math",
       "x": 96,
-      "y": 5476,
+      "y": 4305,
       "props": {
         "w": 280,
         "h": 32,
@@ -4690,13 +3087,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_235",
+      "id": "ec3_158",
       "type": "math",
       "x": 396,
-      "y": 5476,
+      "y": 4305,
       "props": {
         "w": 290,
         "h": 32,
@@ -4712,13 +3109,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_236",
+      "id": "ec3_159",
       "type": "text",
       "x": 76,
-      "y": 5528,
+      "y": 4357,
       "props": {
         "w": 210,
         "h": 24,
@@ -4728,13 +3125,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_237",
+      "id": "ec3_160",
       "type": "math",
       "x": 300,
-      "y": 5528,
+      "y": 4357,
       "props": {
         "w": 410,
         "h": 32,
@@ -4750,13 +3147,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_238",
+      "id": "ec3_161",
       "type": "text",
       "x": 76,
-      "y": 5576,
+      "y": 4405,
       "props": {
         "w": 210,
         "h": 24,
@@ -4766,13 +3163,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_239",
+      "id": "ec3_162",
       "type": "math",
       "x": 300,
-      "y": 5576,
+      "y": 4405,
       "props": {
         "w": 410,
         "h": 32,
@@ -4788,13 +3185,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_240",
+      "id": "ec3_163",
       "type": "text",
       "x": 76,
-      "y": 5628,
+      "y": 4457,
       "props": {
         "w": 640,
         "h": 24,
@@ -4804,13 +3201,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_241",
+      "id": "ec3_164",
       "type": "text",
       "x": 76,
-      "y": 5664,
+      "y": 4493,
       "props": {
         "w": 640,
         "h": 24,
@@ -4820,30 +3217,30 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-4"
+      "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_242",
+      "id": "ec3_165",
       "type": "text",
       "x": 76,
-      "y": 5915,
+      "y": 4744,
       "props": {
         "w": 640,
         "h": 28,
-        "html": "6  LATERAL-TORSIONAL BUCKLING",
+        "html": "5  LATERAL-TORSIONAL BUCKLING",
         "fontFamily": "Inter",
         "fontSize": 19,
         "color": "#1e3a5f",
         "align": "left",
         "heading": 1
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_243",
+      "id": "ec3_166",
       "type": "text",
       "x": 76,
-      "y": 5951,
+      "y": 4780,
       "props": {
         "w": 640,
         "h": 24,
@@ -4853,13 +3250,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_244",
+      "id": "ec3_167",
       "type": "text",
       "x": 76,
-      "y": 5979,
+      "y": 4808,
       "props": {
         "w": 640,
         "h": 24,
@@ -4869,13 +3266,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_245",
+      "id": "ec3_168",
       "type": "math",
       "x": 96,
-      "y": 6027,
+      "y": 4856,
       "props": {
         "w": 280,
         "h": 32,
@@ -4891,13 +3288,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_246",
+      "id": "ec3_169",
       "type": "math",
       "x": 396,
-      "y": 6027,
+      "y": 4856,
       "props": {
         "w": 290,
         "h": 32,
@@ -4913,13 +3310,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_247",
+      "id": "ec3_170",
       "type": "text",
       "x": 76,
-      "y": 6063,
+      "y": 4892,
       "props": {
         "w": 640,
         "h": 24,
@@ -4929,13 +3326,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_248",
+      "id": "ec3_171",
       "type": "text",
       "x": 76,
-      "y": 6099,
+      "y": 4928,
       "props": {
         "w": 210,
         "h": 24,
@@ -4945,13 +3342,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_249",
+      "id": "ec3_172",
       "type": "math",
       "x": 300,
-      "y": 6099,
+      "y": 4928,
       "props": {
         "w": 410,
         "h": 32,
@@ -4967,13 +3364,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_250",
+      "id": "ec3_173",
       "type": "text",
       "x": 76,
-      "y": 6151,
+      "y": 4980,
       "props": {
         "w": 210,
         "h": 24,
@@ -4983,13 +3380,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_251",
+      "id": "ec3_174",
       "type": "math",
       "x": 300,
-      "y": 6151,
+      "y": 4980,
       "props": {
         "w": 410,
         "h": 32,
@@ -5005,13 +3402,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_252",
+      "id": "ec3_175",
       "type": "text",
       "x": 76,
-      "y": 6199,
+      "y": 5028,
       "props": {
         "w": 210,
         "h": 24,
@@ -5021,13 +3418,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_253",
+      "id": "ec3_176",
       "type": "math",
       "x": 300,
-      "y": 6199,
+      "y": 5028,
       "props": {
         "w": 410,
         "h": 86,
@@ -5043,13 +3440,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_254",
+      "id": "ec3_177",
       "type": "math",
       "x": 96,
-      "y": 6291,
+      "y": 5120,
       "props": {
         "w": 600,
         "h": 32,
@@ -5065,13 +3462,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_255",
+      "id": "ec3_178",
       "type": "text",
       "x": 76,
-      "y": 6327,
+      "y": 5156,
       "props": {
         "w": 640,
         "h": 24,
@@ -5081,13 +3478,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_256",
+      "id": "ec3_179",
       "type": "text",
       "x": 76,
-      "y": 6363,
+      "y": 5192,
       "props": {
         "w": 210,
         "h": 24,
@@ -5097,13 +3494,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_257",
+      "id": "ec3_180",
       "type": "math",
       "x": 300,
-      "y": 6363,
+      "y": 5192,
       "props": {
         "w": 410,
         "h": 32,
@@ -5119,13 +3516,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_258",
+      "id": "ec3_181",
       "type": "math",
       "x": 96,
-      "y": 6415,
+      "y": 5244,
       "props": {
         "w": 280,
         "h": 32,
@@ -5141,13 +3538,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_259",
+      "id": "ec3_182",
       "type": "math",
       "x": 396,
-      "y": 6415,
+      "y": 5244,
       "props": {
         "w": 290,
         "h": 32,
@@ -5163,13 +3560,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_260",
+      "id": "ec3_183",
       "type": "text",
       "x": 76,
-      "y": 6463,
+      "y": 5292,
       "props": {
         "w": 210,
         "h": 24,
@@ -5179,13 +3576,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_261",
+      "id": "ec3_184",
       "type": "math",
       "x": 300,
-      "y": 6463,
+      "y": 5292,
       "props": {
         "w": 410,
         "h": 32,
@@ -5201,13 +3598,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_262",
+      "id": "ec3_185",
       "type": "text",
       "x": 76,
-      "y": 6519,
+      "y": 5348,
       "props": {
         "w": 640,
         "h": 24,
@@ -5217,13 +3614,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_263",
+      "id": "ec3_186",
       "type": "text",
       "x": 76,
-      "y": 6555,
+      "y": 5384,
       "props": {
         "w": 640,
         "h": 24,
@@ -5233,13 +3630,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_264",
+      "id": "ec3_187",
       "type": "text",
       "x": 76,
-      "y": 6591,
+      "y": 5420,
       "props": {
         "w": 640,
         "h": 24,
@@ -5249,13 +3646,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_265",
+      "id": "ec3_188",
       "type": "text",
       "x": 76,
-      "y": 6675,
+      "y": 5504,
       "props": {
         "w": 640,
         "h": 24,
@@ -5265,30 +3662,30 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-5"
+      "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_266",
+      "id": "ec3_189",
       "type": "text",
       "x": 76,
-      "y": 7086,
+      "y": 5915,
       "props": {
         "w": 640,
         "h": 28,
-        "html": "7  COMPRESSION AND BIAXIAL BENDING",
+        "html": "6  COMPRESSION AND BIAXIAL BENDING",
         "fontFamily": "Inter",
         "fontSize": 19,
         "color": "#1e3a5f",
         "align": "left",
         "heading": 1
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_267",
+      "id": "ec3_190",
       "type": "text",
       "x": 76,
-      "y": 7122,
+      "y": 5951,
       "props": {
         "w": 640,
         "h": 24,
@@ -5298,13 +3695,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_268",
+      "id": "ec3_191",
       "type": "math",
       "x": 96,
-      "y": 7158,
+      "y": 5987,
       "props": {
         "w": 280,
         "h": 32,
@@ -5320,13 +3717,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_269",
+      "id": "ec3_192",
       "type": "math",
       "x": 396,
-      "y": 7158,
+      "y": 5987,
       "props": {
         "w": 290,
         "h": 32,
@@ -5342,13 +3739,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_270",
+      "id": "ec3_193",
       "type": "text",
       "x": 76,
-      "y": 7198,
+      "y": 6027,
       "props": {
         "w": 210,
         "h": 24,
@@ -5358,13 +3755,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_271",
+      "id": "ec3_194",
       "type": "math",
       "x": 300,
-      "y": 7198,
+      "y": 6027,
       "props": {
         "w": 410,
         "h": 32,
@@ -5380,13 +3777,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_272",
+      "id": "ec3_195",
       "type": "text",
       "x": 76,
-      "y": 7242,
+      "y": 6071,
       "props": {
         "w": 210,
         "h": 24,
@@ -5396,13 +3793,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_273",
+      "id": "ec3_196",
       "type": "math",
       "x": 300,
-      "y": 7242,
+      "y": 6071,
       "props": {
         "w": 410,
         "h": 32,
@@ -5418,13 +3815,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_274",
+      "id": "ec3_197",
       "type": "math",
       "x": 96,
-      "y": 7286,
+      "y": 6115,
       "props": {
         "w": 600,
         "h": 32,
@@ -5440,13 +3837,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_275",
+      "id": "ec3_198",
       "type": "math",
       "x": 96,
-      "y": 7334,
+      "y": 6163,
       "props": {
         "w": 280,
         "h": 32,
@@ -5462,13 +3859,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_276",
+      "id": "ec3_199",
       "type": "math",
       "x": 396,
-      "y": 7334,
+      "y": 6163,
       "props": {
         "w": 290,
         "h": 32,
@@ -5484,13 +3881,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_277",
+      "id": "ec3_200",
       "type": "math",
       "x": 96,
-      "y": 7374,
+      "y": 6203,
       "props": {
         "w": 280,
         "h": 32,
@@ -5506,13 +3903,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_278",
+      "id": "ec3_201",
       "type": "math",
       "x": 396,
-      "y": 7374,
+      "y": 6203,
       "props": {
         "w": 290,
         "h": 32,
@@ -5528,13 +3925,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_279",
+      "id": "ec3_202",
       "type": "math",
       "x": 96,
-      "y": 7414,
+      "y": 6243,
       "props": {
         "w": 280,
         "h": 32,
@@ -5550,13 +3947,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_280",
+      "id": "ec3_203",
       "type": "math",
       "x": 396,
-      "y": 7414,
+      "y": 6243,
       "props": {
         "w": 290,
         "h": 32,
@@ -5572,13 +3969,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_281",
+      "id": "ec3_204",
       "type": "math",
       "x": 96,
-      "y": 7454,
+      "y": 6283,
       "props": {
         "w": 280,
         "h": 32,
@@ -5594,13 +3991,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_282",
+      "id": "ec3_205",
       "type": "text",
       "x": 396,
-      "y": 7454,
+      "y": 6283,
       "props": {
         "w": 290,
         "h": 24,
@@ -5610,13 +4007,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_283",
+      "id": "ec3_206",
       "type": "text",
       "x": 76,
-      "y": 7494,
+      "y": 6323,
       "props": {
         "w": 210,
         "h": 24,
@@ -5626,13 +4023,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_284",
+      "id": "ec3_207",
       "type": "math",
       "x": 300,
-      "y": 7494,
+      "y": 6323,
       "props": {
         "w": 410,
         "h": 32,
@@ -5648,13 +4045,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_285",
+      "id": "ec3_208",
       "type": "math",
       "x": 96,
-      "y": 7534,
+      "y": 6363,
       "props": {
         "w": 100,
         "h": 32,
@@ -5671,13 +4068,13 @@
         "baseline": 20,
         "steelFigure": "state"
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_286",
+      "id": "ec3_209",
       "type": "text",
       "x": 256,
-      "y": 7534,
+      "y": 6363,
       "props": {
         "w": 400,
         "h": 24,
@@ -5687,13 +4084,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_287",
+      "id": "ec3_210",
       "type": "text",
       "x": 76,
-      "y": 7574,
+      "y": 6403,
       "props": {
         "w": 210,
         "h": 24,
@@ -5703,13 +4100,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_288",
+      "id": "ec3_211",
       "type": "math",
       "x": 300,
-      "y": 7574,
+      "y": 6403,
       "props": {
         "w": 410,
         "h": 32,
@@ -5725,13 +4122,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_289",
+      "id": "ec3_212",
       "type": "math",
       "x": 96,
-      "y": 7614,
+      "y": 6443,
       "props": {
         "w": 100,
         "h": 32,
@@ -5748,13 +4145,13 @@
         "baseline": 20,
         "steelFigure": "state"
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_290",
+      "id": "ec3_213",
       "type": "text",
       "x": 256,
-      "y": 7614,
+      "y": 6443,
       "props": {
         "w": 400,
         "h": 24,
@@ -5764,13 +4161,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_291",
+      "id": "ec3_214",
       "type": "text",
       "x": 76,
-      "y": 7638,
+      "y": 6467,
       "props": {
         "w": 640,
         "h": 24,
@@ -5780,29 +4177,29 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_292",
+      "id": "ec3_215",
       "type": "text",
       "x": 76,
-      "y": 7670,
+      "y": 6499,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Indicative equations alone do not verify an unsupported branch; summary states govern compliance.",
+        "html": "Indicative equations do not verify an unsupported branch; check all applicable limits.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-6"
+      "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_293",
+      "id": "ec3_216",
       "type": "text",
       "x": 76,
-      "y": 8257,
+      "y": 7086,
       "props": {
         "w": 640,
         "h": 28,
@@ -5816,13 +4213,13 @@
           "kind": "start"
         }
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_294",
+      "id": "ec3_217",
       "type": "text",
       "x": 76,
-      "y": 8297,
+      "y": 7126,
       "props": {
         "w": 640,
         "h": 28,
@@ -5837,13 +4234,13 @@
           "id": "ec3"
         }
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_295",
+      "id": "ec3_218",
       "type": "text",
       "x": 76,
-      "y": 8337,
+      "y": 7166,
       "props": {
         "w": 640,
         "h": 24,
@@ -5853,13 +4250,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_296",
+      "id": "ec3_219",
       "type": "math",
       "x": 76,
-      "y": 8377,
+      "y": 7206,
       "props": {
         "w": 145,
         "h": 32,
@@ -5875,13 +4272,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_297",
+      "id": "ec3_220",
       "type": "math",
       "x": 236,
-      "y": 8377,
+      "y": 7206,
       "props": {
         "w": 145,
         "h": 32,
@@ -5897,13 +4294,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_298",
+      "id": "ec3_221",
       "type": "math",
       "x": 396,
-      "y": 8377,
+      "y": 7206,
       "props": {
         "w": 145,
         "h": 32,
@@ -5919,13 +4316,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_299",
+      "id": "ec3_222",
       "type": "math",
       "x": 556,
-      "y": 8377,
+      "y": 7206,
       "props": {
         "w": 145,
         "h": 32,
@@ -5941,13 +4338,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_300",
+      "id": "ec3_223",
       "type": "math",
       "x": 76,
-      "y": 8417,
+      "y": 7246,
       "props": {
         "w": 145,
         "h": 32,
@@ -5963,13 +4360,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_301",
+      "id": "ec3_224",
       "type": "math",
       "x": 236,
-      "y": 8417,
+      "y": 7246,
       "props": {
         "w": 145,
         "h": 32,
@@ -5985,13 +4382,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_302",
+      "id": "ec3_225",
       "type": "math",
       "x": 396,
-      "y": 8417,
+      "y": 7246,
       "props": {
         "w": 145,
         "h": 32,
@@ -6007,13 +4404,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_303",
+      "id": "ec3_226",
       "type": "math",
       "x": 556,
-      "y": 8417,
+      "y": 7246,
       "props": {
         "w": 145,
         "h": 32,
@@ -6029,13 +4426,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_304",
+      "id": "ec3_227",
       "type": "math",
       "x": 76,
-      "y": 8457,
+      "y": 7286,
       "props": {
         "w": 145,
         "h": 32,
@@ -6051,13 +4448,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_305",
+      "id": "ec3_228",
       "type": "math",
       "x": 236,
-      "y": 8457,
+      "y": 7286,
       "props": {
         "w": 145,
         "h": 32,
@@ -6073,13 +4470,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_306",
+      "id": "ec3_229",
       "type": "math",
       "x": 396,
-      "y": 8457,
+      "y": 7286,
       "props": {
         "w": 145,
         "h": 32,
@@ -6095,13 +4492,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_307",
+      "id": "ec3_230",
       "type": "math",
       "x": 556,
-      "y": 8457,
+      "y": 7286,
       "props": {
         "w": 145,
         "h": 32,
@@ -6117,13 +4514,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_308",
+      "id": "ec3_231",
       "type": "math",
       "x": 76,
-      "y": 8497,
+      "y": 7326,
       "props": {
         "w": 145,
         "h": 32,
@@ -6139,13 +4536,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_309",
+      "id": "ec3_232",
       "type": "math",
       "x": 236,
-      "y": 8497,
+      "y": 7326,
       "props": {
         "w": 145,
         "h": 32,
@@ -6161,13 +4558,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_310",
+      "id": "ec3_233",
       "type": "math",
       "x": 396,
-      "y": 8497,
+      "y": 7326,
       "props": {
         "w": 145,
         "h": 32,
@@ -6183,13 +4580,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_311",
+      "id": "ec3_234",
       "type": "math",
       "x": 556,
-      "y": 8497,
+      "y": 7326,
       "props": {
         "w": 145,
         "h": 32,
@@ -6205,13 +4602,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_312",
+      "id": "ec3_235",
       "type": "math",
       "x": 96,
-      "y": 8557,
+      "y": 7386,
       "props": {
         "w": 280,
         "h": 32,
@@ -6227,13 +4624,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_313",
+      "id": "ec3_236",
       "type": "math",
       "x": 396,
-      "y": 8557,
+      "y": 7386,
       "props": {
         "w": 280,
         "h": 32,
@@ -6249,13 +4646,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_314",
+      "id": "ec3_237",
       "type": "math",
       "x": 96,
-      "y": 8597,
+      "y": 7426,
       "props": {
         "w": 280,
         "h": 32,
@@ -6271,13 +4668,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_315",
+      "id": "ec3_238",
       "type": "math",
       "x": 396,
-      "y": 8597,
+      "y": 7426,
       "props": {
         "w": 280,
         "h": 32,
@@ -6293,13 +4690,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_316",
+      "id": "ec3_239",
       "type": "math",
       "x": 96,
-      "y": 8637,
+      "y": 7466,
       "props": {
         "w": 280,
         "h": 32,
@@ -6315,13 +4712,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_317",
+      "id": "ec3_240",
       "type": "math",
       "x": 396,
-      "y": 8637,
+      "y": 7466,
       "props": {
         "w": 280,
         "h": 32,
@@ -6337,13 +4734,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_318",
+      "id": "ec3_241",
       "type": "math",
       "x": 96,
-      "y": 8677,
+      "y": 7506,
       "props": {
         "w": 280,
         "h": 32,
@@ -6359,13 +4756,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_319",
+      "id": "ec3_242",
       "type": "math",
       "x": 396,
-      "y": 8677,
+      "y": 7506,
       "props": {
         "w": 280,
         "h": 32,
@@ -6381,13 +4778,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_320",
+      "id": "ec3_243",
       "type": "math",
       "x": 96,
-      "y": 8717,
+      "y": 7546,
       "props": {
         "w": 280,
         "h": 32,
@@ -6403,13 +4800,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_321",
+      "id": "ec3_244",
       "type": "math",
       "x": 396,
-      "y": 8717,
+      "y": 7546,
       "props": {
         "w": 280,
         "h": 32,
@@ -6425,13 +4822,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_322",
+      "id": "ec3_245",
       "type": "math",
       "x": 96,
-      "y": 8757,
+      "y": 7586,
       "props": {
         "w": 280,
         "h": 32,
@@ -6447,13 +4844,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_323",
+      "id": "ec3_246",
       "type": "math",
       "x": 396,
-      "y": 8757,
+      "y": 7586,
       "props": {
         "w": 280,
         "h": 32,
@@ -6469,13 +4866,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_324",
+      "id": "ec3_247",
       "type": "math",
       "x": 96,
-      "y": 8797,
+      "y": 7626,
       "props": {
         "w": 280,
         "h": 32,
@@ -6491,13 +4888,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_325",
+      "id": "ec3_248",
       "type": "math",
       "x": 396,
-      "y": 8797,
+      "y": 7626,
       "props": {
         "w": 280,
         "h": 32,
@@ -6513,13 +4910,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_326",
+      "id": "ec3_249",
       "type": "math",
       "x": 96,
-      "y": 8837,
+      "y": 7666,
       "props": {
         "w": 280,
         "h": 32,
@@ -6535,13 +4932,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_327",
+      "id": "ec3_250",
       "type": "math",
       "x": 396,
-      "y": 8837,
+      "y": 7666,
       "props": {
         "w": 280,
         "h": 32,
@@ -6557,13 +4954,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_328",
+      "id": "ec3_251",
       "type": "math",
       "x": 96,
-      "y": 8877,
+      "y": 7706,
       "props": {
         "w": 280,
         "h": 32,
@@ -6579,13 +4976,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_329",
+      "id": "ec3_252",
       "type": "math",
       "x": 396,
-      "y": 8877,
+      "y": 7706,
       "props": {
         "w": 280,
         "h": 32,
@@ -6601,13 +4998,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_330",
+      "id": "ec3_253",
       "type": "math",
       "x": 96,
-      "y": 8917,
+      "y": 7746,
       "props": {
         "w": 280,
         "h": 32,
@@ -6623,13 +5020,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_331",
+      "id": "ec3_254",
       "type": "math",
       "x": 396,
-      "y": 8917,
+      "y": 7746,
       "props": {
         "w": 280,
         "h": 32,
@@ -6645,13 +5042,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_332",
+      "id": "ec3_255",
       "type": "math",
       "x": 96,
-      "y": 8957,
+      "y": 7786,
       "props": {
         "w": 280,
         "h": 32,
@@ -6667,13 +5064,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_333",
+      "id": "ec3_256",
       "type": "math",
       "x": 396,
-      "y": 8957,
+      "y": 7786,
       "props": {
         "w": 280,
         "h": 32,
@@ -6689,13 +5086,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_334",
+      "id": "ec3_257",
       "type": "math",
       "x": 96,
-      "y": 8997,
+      "y": 7826,
       "props": {
         "w": 280,
         "h": 32,
@@ -6711,13 +5108,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_335",
+      "id": "ec3_258",
       "type": "math",
       "x": 396,
-      "y": 8997,
+      "y": 7826,
       "props": {
         "w": 280,
         "h": 32,
@@ -6733,13 +5130,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_336",
+      "id": "ec3_259",
       "type": "math",
       "x": 96,
-      "y": 9037,
+      "y": 7866,
       "props": {
         "w": 280,
         "h": 32,
@@ -6755,13 +5152,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_337",
+      "id": "ec3_260",
       "type": "math",
       "x": 96,
-      "y": 9125,
+      "y": 7954,
       "props": {
         "w": 600,
         "h": 32,
@@ -6777,13 +5174,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_338",
+      "id": "ec3_261",
       "type": "text",
       "x": 76,
-      "y": 9193,
+      "y": 8022,
       "props": {
         "w": 640,
         "h": 24,
@@ -6793,13 +5190,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_339",
+      "id": "ec3_262",
       "type": "text",
       "x": 76,
-      "y": 9225,
+      "y": 8054,
       "props": {
         "w": 640,
         "h": 24,
@@ -6809,13 +5206,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-7"
+      "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_340",
+      "id": "ec3_263",
       "type": "text",
       "x": 76,
-      "y": 10599,
+      "y": 9428,
       "props": {
         "w": 640,
         "h": 28,
@@ -6830,13 +5227,13 @@
           "id": "buckling-k"
         }
       },
-      "printGroupId": "ec3-sheet-9"
+      "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_341",
+      "id": "ec3_264",
       "type": "math",
       "x": 96,
-      "y": 10635,
+      "y": 9464,
       "props": {
         "w": 620,
         "h": 204,
@@ -6854,13 +5251,13 @@
         "steelFigure": "buckling",
         "constant": true
       },
-      "printGroupId": "ec3-sheet-9"
+      "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_342",
+      "id": "ec3_265",
       "type": "text",
       "x": 76,
-      "y": 10847,
+      "y": 9676,
       "props": {
         "w": 640,
         "h": 24,
@@ -6870,13 +5267,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-9"
+      "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_343",
+      "id": "ec3_266",
       "type": "text",
       "x": 76,
-      "y": 10879,
+      "y": 9708,
       "props": {
         "w": 640,
         "h": 24,
@@ -6886,13 +5283,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-9"
+      "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_344",
+      "id": "ec3_267",
       "type": "text",
       "x": 76,
-      "y": 10911,
+      "y": 9740,
       "props": {
         "w": 640,
         "h": 24,
@@ -6902,13 +5299,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-9"
+      "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_345",
+      "id": "ec3_268",
       "type": "text",
       "x": 76,
-      "y": 9788,
+      "y": 8617,
       "props": {
         "w": 640,
         "h": 28,
@@ -6919,13 +5316,13 @@
         "align": "left",
         "heading": 2
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_346",
+      "id": "ec3_269",
       "type": "math",
       "x": 96,
-      "y": 9838,
+      "y": 8667,
       "props": {
         "w": 600,
         "h": 25,
@@ -6941,13 +5338,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_347",
+      "id": "ec3_270",
       "type": "math",
       "x": 96,
-      "y": 9864,
+      "y": 8693,
       "props": {
         "w": 600,
         "h": 25,
@@ -6963,13 +5360,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_348",
+      "id": "ec3_271",
       "type": "math",
       "x": 96,
-      "y": 9890,
+      "y": 8719,
       "props": {
         "w": 600,
         "h": 25,
@@ -6985,13 +5382,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_349",
+      "id": "ec3_272",
       "type": "math",
       "x": 96,
-      "y": 9942,
+      "y": 8771,
       "props": {
         "w": 600,
         "h": 25,
@@ -7007,13 +5404,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_350",
+      "id": "ec3_273",
       "type": "math",
       "x": 96,
-      "y": 9968,
+      "y": 8797,
       "props": {
         "w": 600,
         "h": 25,
@@ -7029,13 +5426,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_351",
+      "id": "ec3_274",
       "type": "math",
       "x": 96,
-      "y": 9994,
+      "y": 8823,
       "props": {
         "w": 600,
         "h": 25,
@@ -7051,13 +5448,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_352",
+      "id": "ec3_275",
       "type": "math",
       "x": 96,
-      "y": 10020,
+      "y": 8849,
       "props": {
         "w": 600,
         "h": 25,
@@ -7073,13 +5470,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_353",
+      "id": "ec3_276",
       "type": "math",
       "x": 96,
-      "y": 10046,
+      "y": 8875,
       "props": {
         "w": 600,
         "h": 25,
@@ -7095,13 +5492,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_354",
+      "id": "ec3_277",
       "type": "math",
       "x": 96,
-      "y": 10072,
+      "y": 8901,
       "props": {
         "w": 600,
         "h": 25,
@@ -7117,13 +5514,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_355",
+      "id": "ec3_278",
       "type": "math",
       "x": 96,
-      "y": 10098,
+      "y": 8927,
       "props": {
         "w": 600,
         "h": 25,
@@ -7139,13 +5536,13 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_356",
+      "id": "ec3_279",
       "type": "math",
       "x": 96,
-      "y": 10124,
+      "y": 8953,
       "props": {
         "w": 600,
         "h": 32,
@@ -7161,94 +5558,45 @@
         "color": "#0f172a",
         "baseline": 20
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_357",
+      "id": "ec3_280",
       "type": "text",
       "x": 76,
-      "y": 10200,
-      "props": {
-        "w": 640,
-        "h": 28,
-        "html": "SCOPE / NOT VERIFIED",
-        "fontFamily": "Inter",
-        "fontSize": 14,
-        "color": "#1e3a5f",
-        "align": "left",
-        "heading": 2
-      },
-      "printGroupId": "ec3-sheet-8"
-    },
-    {
-      "id": "ec3_358",
-      "type": "text",
-      "x": 76,
-      "y": 10236,
+      "y": 8997,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Class 4, plated shear buckling, biaxial shear, arbitrary LTB and Annex A require separate verification.",
+        "html": "SCOPE / NOT VERIFIED — Class 4, plated or biaxial shear, arbitrary LTB and Annex A need separate verification.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_359",
+      "id": "ec3_281",
       "type": "text",
       "x": 76,
-      "y": 10268,
+      "y": 9025,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Automatic Annex B: Class 1/2, λz ≥ 0.4. Other branches need independently verified manual kij.",
+        "html": "No applied torsion, fatigue, connections or block tearing. Confirm catalogue properties against project tables.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_360",
+      "id": "ec3_282",
       "type": "text",
       "x": 76,
-      "y": 10300,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "No applied torsion, fatigue, connections or block tearing. High-shear member interaction is unverified.",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-8"
-    },
-    {
-      "id": "ec3_361",
-      "type": "text",
-      "x": 76,
-      "y": 10332,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "Catalogue properties include source approximations; review project tables. UB/UC: custom entry only.",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-8"
-    },
-    {
-      "id": "ec3_362",
-      "type": "text",
-      "x": 76,
-      "y": 10364,
+      "y": 9053,
       "props": {
         "w": 640,
         "h": 24,
@@ -7258,13 +5606,365 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_363",
+      "id": "ec3_283",
+      "type": "math",
+      "x": 76,
+      "y": 9101,
+      "props": {
+        "w": 125,
+        "h": 32,
+        "latex": "\\mathrm{UR}\\coloneq \\operatorname{entry}(\\mathrm{R},3)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 13,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-7"
+    },
+    {
+      "id": "ec3_284",
+      "type": "math",
+      "x": 236,
+      "y": 9101,
+      "props": {
+        "w": 125,
+        "h": 32,
+        "latex": "\\mathrm{State}\\coloneq \\operatorname{entry}(\\mathrm{R},4)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 13,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-7"
+    },
+    {
+      "id": "ec3_285",
+      "type": "math",
+      "x": 396,
+      "y": 9101,
+      "props": {
+        "w": 145,
+        "h": 32,
+        "latex": "\\mathrm{Governing}\\coloneq \\operatorname{entry}(\\mathrm{R},5)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 13,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-7"
+    },
+    {
+      "id": "ec3_286",
+      "type": "math",
+      "x": 556,
+      "y": 9101,
+      "props": {
+        "w": 125,
+        "h": 32,
+        "latex": "\\mathrm{SectionOut}\\coloneq \\mathrm{Section}",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 13,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-7"
+    },
+    {
+      "id": "ec3_287",
+      "type": "math",
+      "x": 76,
+      "y": 9137,
+      "props": {
+        "w": 125,
+        "h": 32,
+        "latex": "\\mathrm{State}_{0}\\coloneq \\operatorname{entry}(\\mathrm{R},40)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 10,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-7"
+    },
+    {
+      "id": "ec3_288",
+      "type": "math",
+      "x": 236,
+      "y": 9137,
+      "props": {
+        "w": 125,
+        "h": 32,
+        "latex": "\\mathrm{State}_{1}\\coloneq \\operatorname{entry}(\\mathrm{R},42)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 10,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-7"
+    },
+    {
+      "id": "ec3_289",
+      "type": "math",
+      "x": 396,
+      "y": 9137,
+      "props": {
+        "w": 125,
+        "h": 32,
+        "latex": "\\mathrm{State}_{2}\\coloneq \\operatorname{entry}(\\mathrm{R},44)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 10,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-7"
+    },
+    {
+      "id": "ec3_290",
+      "type": "math",
+      "x": 556,
+      "y": 9137,
+      "props": {
+        "w": 125,
+        "h": 32,
+        "latex": "\\mathrm{State}_{3}\\coloneq \\operatorname{entry}(\\mathrm{R},46)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 10,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-7"
+    },
+    {
+      "id": "ec3_291",
+      "type": "math",
+      "x": 76,
+      "y": 9161,
+      "props": {
+        "w": 125,
+        "h": 32,
+        "latex": "\\mathrm{State}_{4}\\coloneq \\operatorname{entry}(\\mathrm{R},48)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 10,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-7"
+    },
+    {
+      "id": "ec3_292",
+      "type": "math",
+      "x": 236,
+      "y": 9161,
+      "props": {
+        "w": 125,
+        "h": 32,
+        "latex": "\\mathrm{State}_{5}\\coloneq \\operatorname{entry}(\\mathrm{R},50)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 10,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-7"
+    },
+    {
+      "id": "ec3_293",
+      "type": "math",
+      "x": 396,
+      "y": 9161,
+      "props": {
+        "w": 125,
+        "h": 32,
+        "latex": "\\mathrm{State}_{6}\\coloneq \\operatorname{entry}(\\mathrm{R},52)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 10,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-7"
+    },
+    {
+      "id": "ec3_294",
+      "type": "math",
+      "x": 556,
+      "y": 9161,
+      "props": {
+        "w": 125,
+        "h": 32,
+        "latex": "\\mathrm{State}_{7}\\coloneq \\operatorname{entry}(\\mathrm{R},54)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 10,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-7"
+    },
+    {
+      "id": "ec3_295",
+      "type": "math",
+      "x": 76,
+      "y": 9185,
+      "props": {
+        "w": 125,
+        "h": 32,
+        "latex": "\\mathrm{State}_{8}\\coloneq \\operatorname{entry}(\\mathrm{R},56)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 10,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-7"
+    },
+    {
+      "id": "ec3_296",
+      "type": "math",
+      "x": 236,
+      "y": 9185,
+      "props": {
+        "w": 125,
+        "h": 32,
+        "latex": "\\mathrm{State}_{9}\\coloneq \\operatorname{entry}(\\mathrm{R},58)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 10,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-7"
+    },
+    {
+      "id": "ec3_297",
+      "type": "math",
+      "x": 396,
+      "y": 9185,
+      "props": {
+        "w": 125,
+        "h": 32,
+        "latex": "\\mathrm{State}_{10}\\coloneq \\operatorname{entry}(\\mathrm{R},60)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 10,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-7"
+    },
+    {
+      "id": "ec3_298",
+      "type": "math",
+      "x": 556,
+      "y": 9185,
+      "props": {
+        "w": 125,
+        "h": 32,
+        "latex": "\\mathrm{State}_{11}\\coloneq \\operatorname{entry}(\\mathrm{R},62)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 10,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-7"
+    },
+    {
+      "id": "ec3_299",
       "type": "text",
       "x": 76,
-      "y": 11770,
+      "y": 10599,
       "props": {
         "w": 640,
         "h": 28,
@@ -7279,13 +5979,13 @@
           "id": "ltb-cases"
         }
       },
-      "printGroupId": "ec3-sheet-10"
+      "printGroupId": "ec3-sheet-9"
     },
     {
-      "id": "ec3_364",
+      "id": "ec3_300",
       "type": "text",
       "x": 76,
-      "y": 11802,
+      "y": 10631,
       "props": {
         "w": 640,
         "h": 24,
@@ -7295,13 +5995,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-10"
+      "printGroupId": "ec3-sheet-9"
     },
     {
-      "id": "ec3_365",
+      "id": "ec3_301",
       "type": "math",
       "x": 76,
-      "y": 11826,
+      "y": 10655,
       "props": {
         "w": 634,
         "h": 680,
@@ -7318,17 +6018,1042 @@
         "baseline": 20,
         "steelFigure": "ltbCatalog"
       },
+      "printGroupId": "ec3-sheet-9"
+    },
+    {
+      "id": "ec3_302",
+      "type": "text",
+      "x": 76,
+      "y": 11375,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "Cases 1–9: SCI NCCI SN003b Table 3.1, end-moment ratio ψ = smaller / larger end moment; C2 = 0.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-9"
+    },
+    {
+      "id": "ec3_303",
+      "type": "text",
+      "x": 76,
+      "y": 11407,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "Cases 10–13: Table 3.2 transverse loading. Fixed-end cases use their own coefficients; do not substitute pin-ended values.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-9"
+    },
+    {
+      "id": "ec3_304",
+      "type": "text",
+      "x": 76,
+      "y": 11439,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "Combined end moments plus transverse loading require SN003b §3.4 curves and ψ/μ. They are not silently interpolated here.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-9"
+    },
+    {
+      "id": "ec3_305",
+      "type": "text",
+      "x": 76,
+      "y": 11471,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "Outside cases 1–13, or k/kw ≠ 1, returns NOT VERIFIED unless verified manual coefficients or external Mcr are supplied.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-9"
+    },
+    {
+      "id": "ec3_306",
+      "type": "text",
+      "x": 76,
+      "y": 11503,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "Reference: SCI NCCI SN003b, Tables 3.1/3.2, §§2–3.3. End restraints and load position must match.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-9"
+    },
+    {
+      "id": "ec3_307",
+      "type": "text",
+      "x": 76,
+      "y": 11770,
+      "props": {
+        "w": 640,
+        "h": 28,
+        "html": "ANNEX C — LTB COEFFICIENT TABLE",
+        "fontFamily": "Inter",
+        "fontSize": 19,
+        "color": "#1e3a5f",
+        "align": "left",
+        "heading": 1
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_308",
+      "type": "text",
+      "x": 76,
+      "y": 11802,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "Use the case number beside the matching diagram in Annex B. Coefficients are not interchangeable.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_309",
+      "type": "text",
+      "x": 76,
+      "y": 11850,
+      "props": {
+        "w": 48,
+        "h": 24,
+        "html": "Case",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_310",
+      "type": "text",
+      "x": 138,
+      "y": 11850,
+      "props": {
+        "w": 330,
+        "h": 24,
+        "html": "Loading / moment case",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_311",
+      "type": "text",
+      "x": 496,
+      "y": 11850,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "C1",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_312",
+      "type": "text",
+      "x": 580,
+      "y": 11850,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "C2",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_313",
+      "type": "text",
+      "x": 76,
+      "y": 11894,
+      "props": {
+        "w": 48,
+        "h": 24,
+        "html": "1",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_314",
+      "type": "text",
+      "x": 138,
+      "y": 11894,
+      "props": {
+        "w": 330,
+        "h": 24,
+        "html": "End moments, ψ = +1.00",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_315",
+      "type": "text",
+      "x": 496,
+      "y": 11894,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "1.00",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_316",
+      "type": "text",
+      "x": 580,
+      "y": 11894,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "0.000",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_317",
+      "type": "text",
+      "x": 76,
+      "y": 11924.4,
+      "props": {
+        "w": 48,
+        "h": 24,
+        "html": "2",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_318",
+      "type": "text",
+      "x": 138,
+      "y": 11924.4,
+      "props": {
+        "w": 330,
+        "h": 24,
+        "html": "End moments, ψ = +0.75",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_319",
+      "type": "text",
+      "x": 496,
+      "y": 11924.4,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "1.140",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_320",
+      "type": "text",
+      "x": 580,
+      "y": 11924.4,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "0.000",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_321",
+      "type": "text",
+      "x": 76,
+      "y": 11954.8,
+      "props": {
+        "w": 48,
+        "h": 24,
+        "html": "3",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_322",
+      "type": "text",
+      "x": 138,
+      "y": 11954.8,
+      "props": {
+        "w": 330,
+        "h": 24,
+        "html": "End moments, ψ = +0.50",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_323",
+      "type": "text",
+      "x": 496,
+      "y": 11954.8,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "1.310",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_324",
+      "type": "text",
+      "x": 580,
+      "y": 11954.8,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "0.000",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_325",
+      "type": "text",
+      "x": 76,
+      "y": 11985.2,
+      "props": {
+        "w": 48,
+        "h": 24,
+        "html": "4",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_326",
+      "type": "text",
+      "x": 138,
+      "y": 11985.2,
+      "props": {
+        "w": 330,
+        "h": 24,
+        "html": "End moments, ψ = +0.25",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_327",
+      "type": "text",
+      "x": 496,
+      "y": 11985.2,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "1.520",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_328",
+      "type": "text",
+      "x": 580,
+      "y": 11985.2,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "0.000",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_329",
+      "type": "text",
+      "x": 76,
+      "y": 12015.6,
+      "props": {
+        "w": 48,
+        "h": 24,
+        "html": "5",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_330",
+      "type": "text",
+      "x": 138,
+      "y": 12015.6,
+      "props": {
+        "w": 330,
+        "h": 24,
+        "html": "End moments, ψ = 0.00",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_331",
+      "type": "text",
+      "x": 496,
+      "y": 12015.6,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "1.770",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_332",
+      "type": "text",
+      "x": 580,
+      "y": 12015.6,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "0.000",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_333",
+      "type": "text",
+      "x": 76,
+      "y": 12046,
+      "props": {
+        "w": 48,
+        "h": 24,
+        "html": "6",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_334",
+      "type": "text",
+      "x": 138,
+      "y": 12046,
+      "props": {
+        "w": 330,
+        "h": 24,
+        "html": "End moments, ψ = −0.25",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_335",
+      "type": "text",
+      "x": 496,
+      "y": 12046,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "2.050",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_336",
+      "type": "text",
+      "x": 580,
+      "y": 12046,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "0.000",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_337",
+      "type": "text",
+      "x": 76,
+      "y": 12076.4,
+      "props": {
+        "w": 48,
+        "h": 24,
+        "html": "7",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_338",
+      "type": "text",
+      "x": 138,
+      "y": 12076.4,
+      "props": {
+        "w": 330,
+        "h": 24,
+        "html": "End moments, ψ = −0.50",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_339",
+      "type": "text",
+      "x": 496,
+      "y": 12076.4,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "2.330",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_340",
+      "type": "text",
+      "x": 580,
+      "y": 12076.4,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "0.000",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_341",
+      "type": "text",
+      "x": 76,
+      "y": 12106.8,
+      "props": {
+        "w": 48,
+        "h": 24,
+        "html": "8",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_342",
+      "type": "text",
+      "x": 138,
+      "y": 12106.8,
+      "props": {
+        "w": 330,
+        "h": 24,
+        "html": "End moments, ψ = −0.75",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_343",
+      "type": "text",
+      "x": 496,
+      "y": 12106.8,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "2.570",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_344",
+      "type": "text",
+      "x": 580,
+      "y": 12106.8,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "0.000",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_345",
+      "type": "text",
+      "x": 76,
+      "y": 12137.2,
+      "props": {
+        "w": 48,
+        "h": 24,
+        "html": "9",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_346",
+      "type": "text",
+      "x": 138,
+      "y": 12137.2,
+      "props": {
+        "w": 330,
+        "h": 24,
+        "html": "End moments, ψ = −1.00",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_347",
+      "type": "text",
+      "x": 496,
+      "y": 12137.2,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "2.550",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_348",
+      "type": "text",
+      "x": 580,
+      "y": 12137.2,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "0.000",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_349",
+      "type": "text",
+      "x": 76,
+      "y": 12167.6,
+      "props": {
+        "w": 48,
+        "h": 24,
+        "html": "10",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_350",
+      "type": "text",
+      "x": 138,
+      "y": 12167.6,
+      "props": {
+        "w": 330,
+        "h": 24,
+        "html": "Simply supported, full-span UDL",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_351",
+      "type": "text",
+      "x": 496,
+      "y": 12167.6,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "1.127",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_352",
+      "type": "text",
+      "x": 580,
+      "y": 12167.6,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "0.454",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_353",
+      "type": "text",
+      "x": 76,
+      "y": 12198,
+      "props": {
+        "w": 48,
+        "h": 24,
+        "html": "11",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_354",
+      "type": "text",
+      "x": 138,
+      "y": 12198,
+      "props": {
+        "w": 330,
+        "h": 24,
+        "html": "Fixed-ended, full-span UDL",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_355",
+      "type": "text",
+      "x": 496,
+      "y": 12198,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "2.578",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_356",
+      "type": "text",
+      "x": 580,
+      "y": 12198,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "1.554",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_357",
+      "type": "text",
+      "x": 76,
+      "y": 12228.4,
+      "props": {
+        "w": 48,
+        "h": 24,
+        "html": "12",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_358",
+      "type": "text",
+      "x": 138,
+      "y": 12228.4,
+      "props": {
+        "w": 330,
+        "h": 24,
+        "html": "Simply supported, mid-span point load",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_359",
+      "type": "text",
+      "x": 496,
+      "y": 12228.4,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "1.348",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_360",
+      "type": "text",
+      "x": 580,
+      "y": 12228.4,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "0.630",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_361",
+      "type": "text",
+      "x": 76,
+      "y": 12258.8,
+      "props": {
+        "w": 48,
+        "h": 24,
+        "html": "13",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_362",
+      "type": "text",
+      "x": 138,
+      "y": 12258.8,
+      "props": {
+        "w": 330,
+        "h": 24,
+        "html": "Fixed-ended, mid-span point load",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_363",
+      "type": "text",
+      "x": 496,
+      "y": 12258.8,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "1.683",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_364",
+      "type": "text",
+      "x": 580,
+      "y": 12258.8,
+      "props": {
+        "w": 70,
+        "h": 24,
+        "html": "1.645",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_365",
+      "type": "text",
+      "x": 76,
+      "y": 12338,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "Cases 1–9: SN003b Table 3.1; C2 = 0. Cases 10–13: Table 3.2 transverse loading.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
       "printGroupId": "ec3-sheet-10"
     },
     {
       "id": "ec3_366",
       "type": "text",
       "x": 76,
-      "y": 12546,
+      "y": 12370,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Cases 1–9: SCI NCCI SN003b Table 3.1, end-moment ratio ψ = smaller / larger end moment; C2 = 0.",
+        "html": "k = kw = 1. For other restraints, use verified manual coefficients or external Mcr.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -7340,59 +7065,11 @@
       "id": "ec3_367",
       "type": "text",
       "x": 76,
-      "y": 12578,
+      "y": 12402,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Cases 10–13: Table 3.2 transverse loading. Fixed-end cases use their own coefficients; do not substitute pin-ended values.",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-10"
-    },
-    {
-      "id": "ec3_368",
-      "type": "text",
-      "x": 76,
-      "y": 12610,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "Combined end moments plus transverse loading require SN003b §3.4 curves and ψ/μ. They are not silently interpolated here.",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-10"
-    },
-    {
-      "id": "ec3_369",
-      "type": "text",
-      "x": 76,
-      "y": 12642,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "Outside cases 1–13, or k/kw ≠ 1, returns NOT VERIFIED unless verified manual coefficients or external Mcr are supplied.",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-10"
-    },
-    {
-      "id": "ec3_370",
-      "type": "text",
-      "x": 76,
-      "y": 12674,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "Reference: SCI NCCI SN003b, Tables 3.1/3.2, §§2–3.3. End restraints and load position must match.",
+        "html": "Source: SCI NCCI SN003b, Tables 3.1 and 3.2. Do not interpolate between cases.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -7472,74 +7149,74 @@
       {
         "id": "zg",
         "label": "zg",
-        "regionId": "ec3_317"
+        "regionId": "ec3_240"
       },
       {
         "id": "k",
         "label": "k",
-        "regionId": "ec3_318"
+        "regionId": "ec3_241"
       },
       {
         "id": "kw",
         "label": "kw",
-        "regionId": "ec3_319"
+        "regionId": "ec3_242"
       }
     ],
     "outputs": [
       {
         "id": "sectionClass",
         "label": "sectionClass",
-        "regionId": "ec3_170"
+        "regionId": "ec3_93"
       },
       {
         "id": "Mcr",
         "label": "Mcr",
-        "regionId": "ec3_254"
+        "regionId": "ec3_177"
       },
       {
         "id": "chiY",
         "label": "chiY",
-        "regionId": "ec3_218"
+        "regionId": "ec3_141"
       },
       {
         "id": "chiZ",
         "label": "chiZ",
-        "regionId": "ec3_226"
+        "regionId": "ec3_149"
       },
       {
         "id": "chiLT",
         "label": "chiLT",
-        "regionId": "ec3_259"
+        "regionId": "ec3_182"
       },
       {
         "id": "kyy",
         "label": "kyy",
-        "regionId": "ec3_275"
+        "regionId": "ec3_198"
       },
       {
         "id": "kyz",
         "label": "kyz",
-        "regionId": "ec3_277"
+        "regionId": "ec3_200"
       },
       {
         "id": "kzy",
         "label": "kzy",
-        "regionId": "ec3_278"
+        "regionId": "ec3_201"
       },
       {
         "id": "kzz",
         "label": "kzz",
-        "regionId": "ec3_276"
+        "regionId": "ec3_199"
       },
       {
         "id": "UR",
         "label": "UR",
-        "regionId": "ec3_55"
+        "regionId": "ec3_283"
       },
       {
         "id": "State",
         "label": "State: 1 PASS / 0 FAIL / −1 NOT VERIFIED",
-        "regionId": "ec3_54",
+        "regionId": "ec3_284",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7549,7 +7226,7 @@
       {
         "id": "Governing",
         "label": "Governing",
-        "regionId": "ec3_56",
+        "regionId": "ec3_285",
         "valueLabels": {
           "0": "Compression / tension",
           "1": "Major bending",
@@ -7568,7 +7245,7 @@
       {
         "id": "SectionOut",
         "label": "SectionOut",
-        "regionId": "ec3_129",
+        "regionId": "ec3_286",
         "valueLabels": {
           "0": "User-defined",
           "1000": "IPE 80",
@@ -7955,7 +7632,7 @@
       {
         "id": "State0",
         "label": "State0",
-        "regionId": "ec3_67",
+        "regionId": "ec3_287",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7965,7 +7642,7 @@
       {
         "id": "State1",
         "label": "State1",
-        "regionId": "ec3_72",
+        "regionId": "ec3_288",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7975,7 +7652,7 @@
       {
         "id": "State2",
         "label": "State2",
-        "regionId": "ec3_77",
+        "regionId": "ec3_289",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7985,7 +7662,7 @@
       {
         "id": "State3",
         "label": "State3",
-        "regionId": "ec3_82",
+        "regionId": "ec3_290",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7995,7 +7672,7 @@
       {
         "id": "State4",
         "label": "State4",
-        "regionId": "ec3_87",
+        "regionId": "ec3_291",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -8005,7 +7682,7 @@
       {
         "id": "State5",
         "label": "State5",
-        "regionId": "ec3_92",
+        "regionId": "ec3_292",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -8015,7 +7692,7 @@
       {
         "id": "State6",
         "label": "State6",
-        "regionId": "ec3_97",
+        "regionId": "ec3_293",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -8025,7 +7702,7 @@
       {
         "id": "State7",
         "label": "State7",
-        "regionId": "ec3_102",
+        "regionId": "ec3_294",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -8035,7 +7712,7 @@
       {
         "id": "State8",
         "label": "State8",
-        "regionId": "ec3_107",
+        "regionId": "ec3_295",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -8045,7 +7722,7 @@
       {
         "id": "State9",
         "label": "State9",
-        "regionId": "ec3_112",
+        "regionId": "ec3_296",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -8055,7 +7732,7 @@
       {
         "id": "State10",
         "label": "State10",
-        "regionId": "ec3_117",
+        "regionId": "ec3_297",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -8065,7 +7742,7 @@
       {
         "id": "State11",
         "label": "State11",
-        "regionId": "ec3_122",
+        "regionId": "ec3_298",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
