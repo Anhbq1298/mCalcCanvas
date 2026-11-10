@@ -273,11 +273,11 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(8,23.4,'Modes: LTB 0 auto / 1 manual / 2 external; SLS 0 simple / 1 cantilever / 2 external.');
   note(8,24.2,'Manual kij, Cm and curves require independent verification; acknowledgement flags persist in .mCCV.');
 
-  note(9,0,'BUCKLING K — REFERENCE ONLY',2,{kind:'heading',id:'buckling-k'});
-  calc(9,0.9,'Kreference','1',{steelFigure:'buckling',w:620,h:204,constant:true,displayMode:'formula'});
-  note(9,6.2,'Ideal elastic modes. Actual K depends on frame sway, connection stiffness and intermediate restraints.');
-  note(9,7,'Fixed–guided: rotations restrained, relative translation free. Viewing this annex never changes Ky/Kz.');
-  note(9,7.8,'LTB k/kw are separate lateral-bending / warping factors. Complex frames require stability analysis.');
+  note(10,0,'BUCKLING K — REFERENCE ONLY',2,{kind:'heading',id:'buckling-k'});
+  calc(10,0.9,'Kreference','1',{steelFigure:'buckling',w:620,h:204,constant:true,displayMode:'formula'});
+  note(10,6.2,'Ideal elastic modes. Actual K depends on frame sway, connection stiffness and intermediate restraints.');
+  note(10,7,'Fixed–guided: rotations restrained, relative translation free. Viewing this annex never changes Ky/Kz.');
+  note(10,7.8,'LTB k/kw are separate lateral-bending / warping factors. Complex frames require stability analysis.');
   note(9,9,'INDEPENDENT ENGINE AUDIT — DATA CONTRACT, NOT THE DESIGN EXPLANATION',2);
   const stack=(keys:string[])=>t`\operatorname{stack}(${keys.map(v).join(',')})`;
   const chunks=(keys:string[],prefix:string,row:number)=>{
@@ -296,20 +296,14 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(9,22.6,'Catalogue properties include source approximations; review project tables. UB/UC: custom entry only.');
   note(9,23.4,'References: EN 1993-1-1 §§5.5 / 6.2 / 6.3; SCI NCCI SN003b; JRC 2014 Simões.');
 
-  note(10,0,'ANNEX B — LTB LOAD CASES AND COEFFICIENTS',1,{kind:'heading',id:'ltb-cases'});
-  note(10,0.8,'Enter the case number shown below. Coefficients are for k = kw = 1; load-height zg is entered on page 1.');
-  calc(10,1.4,'LTBcatalog',t`\operatorname{stack}(${v('LTBcase')})`,{steelFigure:'ltbCatalog',w:634,h:680},76);
-  note(10,19.4,'Cases 1–9: SCI NCCI SN003b Table 3.1, end-moment ratio ψ = smaller / larger end moment; C2 = 0.');
-  note(10,20.2,'Cases 10–13: Table 3.2 transverse loading. Fixed-end cases use their own coefficients; do not substitute pin-ended values.');
-  note(10,21,'Combined end moments plus transverse loading require SN003b §3.4 curves and ψ/μ. They are not silently interpolated here.');
-  note(10,21.8,'Outside cases 1–13, or k/kw ≠ 1, returns NOT VERIFIED unless verified manual coefficients or external Mcr are supplied.');
-  note(10,22.6,'Reference: SCI NCCI SN003b, Tables 3.1/3.2, §§2–3.3. End restraints and load position must match.');
-
-  for (const shape of shapes) {
-    const row = (shape.y - y(9,0)) / 40;
-    if (row >= 0 && row < 8) shape.y += 10.5 * 40;
-    else if (row >= 9 && row < 19) shape.y -= 9 * 40;
-  }
+  note(11,0,'ANNEX B — LTB LOAD CASES AND COEFFICIENTS',1,{kind:'heading',id:'ltb-cases'});
+  note(11,0.8,'Enter the case number shown below. Coefficients are for k = kw = 1; load-height zg is entered on page 1.');
+  calc(11,1.4,'LTBcatalog',t`\operatorname{stack}(${v('LTBcase')})`,{steelFigure:'ltbCatalog',w:634,h:680},76);
+  note(11,19.4,'Cases 1–9: SCI NCCI SN003b Table 3.1, end-moment ratio ψ = smaller / larger end moment; C2 = 0.');
+  note(11,20.2,'Cases 10–13: Table 3.2 transverse loading. Fixed-end cases use their own coefficients; do not substitute pin-ended values.');
+  note(11,21,'Combined end moments plus transverse loading require SN003b §3.4 curves and ψ/μ. They are not silently interpolated here.');
+  note(11,21.8,'Outside cases 1–13, or k/kw ≠ 1, returns NOT VERIFIED unless verified manual coefficients or external Mcr are supplied.');
+  note(11,22.6,'Reference: SCI NCCI SN003b, Tables 3.1/3.2, §§2–3.3. End restraints and load position must match.');
 
   const inputs=['Section','fy','fu','L','Ky','Kz','Llt','N','My','Mz','Vy','Vz','LTBcase','zg','k','kw'];
   const outputs=['sectionClass','Mcr','chiY','chiZ','chiLT','kyy','kyz','kzy','kzz','UR','State','Governing','SectionOut',...checkNames.map((_,i)=>'State'+i)];

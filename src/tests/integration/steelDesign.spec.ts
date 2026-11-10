@@ -20,7 +20,7 @@ test('EC3 catalogue, editable K, LTB safety, batch, custom section, mCCV and pri
  const baselinePages=page.locator('#print-root .print-page');
  for(let i=0;i<await baselinePages.count();i++)await baselinePages.nth(i).screenshot({path:`${out}/reference-page-${i+1}.png`});
  await page.pdf({path:`${out}/Steel_Beam_Column_EC3.pdf`,preferCSSPageSize:true,printBackground:true});
- await expect(baselinePages).toHaveCount(10);
+ await expect(baselinePages).toHaveCount(11);
  for(let i=0;i<7;i++){
    const text=await baselinePages.nth(i).innerText();
    expect(text).not.toMatch(/steelDesign|operatorname|entry\(|stack\(/);
