@@ -80,3 +80,13 @@ export function caseShapes(config: InputResultConfig, row: InputResultConfig['ro
   const values = new Map(config.inputs.flatMap((c) => (row.values[c.id] === null || row.values[c.id] === undefined ? [] : [[c.regionId, row.values[c.id]!] as const])));
   return shapes.map((s) => (s.type === 'math' && values.has(s.id) ? { ...s, props: { ...s.props, latex: withInputValue(s.props.latex, values.get(s.id)!) } } : s));
 }
+
+/** Blank cells explicitly inherit the current worksheet input; the worker clears the override. */
+export function canRunBatch(config: InputResultConfig, fields: Map<string,AvailableField>): boolean {
+  return config.inputs.length>0 && config.outputs.length>0 && config.rows.length>0
+    && config.outputs.every(c=>fields.has(c.regionId))
+    && config.rows.every(row=>config.inputs.every(c=>{
+      const field=fields.get(c.regionId);
+      return field?.kind==='input' && Number.isFinite(row.values[c.id] ?? field.inputValue);
+    }));
+}

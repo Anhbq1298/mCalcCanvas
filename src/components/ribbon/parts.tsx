@@ -278,6 +278,7 @@ export function DisplayModeSelect() {
         ['auto', 'Auto display'],
         ['formula', 'Formula only'],
         ['result', 'Result only'],
+        ['value', 'Value only (table)'],
         ['formulaResult', 'Formula = result'],
         ['full', 'Full calculation'],
       ]}

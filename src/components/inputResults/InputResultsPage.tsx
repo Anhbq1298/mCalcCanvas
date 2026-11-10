@@ -20,7 +20,7 @@ import type { CalculationResult } from '../../engine';
 import type { InputResultColumn, InputResultConfig, InputResultRow } from '../../documents/DocumentTypes';
 import { useAppStore } from '../../store/appStore';
 import { useCalculationStore } from '../../store/calculationStore';
-import { startBatch, withInputValue, type AvailableField, type BatchResults } from './batchCalculation';
+import { canRunBatch, startBatch, withInputValue, type AvailableField, type BatchResults } from './batchCalculation';
 import { CancelledError, type BatchHandle } from '../../store/batchClient';
 import { printCaseReports } from '../../export/caseReports';
 
@@ -86,7 +86,7 @@ function useAvailableFields(): AvailableField[] {
   }, [shapes, results]);
 }
 
-function NumericCell({ value, label, onCommit }: { value: number | null; label: string; onCommit(value: number | null): void }) {
+function NumericCell({ value, label, onCommit, fallback }: { value: number | null; label: string; onCommit(value: number | null): void; fallback?:number|null }) {
   const [draft, setDraft] = useState<string | null>(null);
   const commit = () => {
     if (draft === null) return;
@@ -99,6 +99,8 @@ function NumericCell({ value, label, onCommit }: { value: number | null; label: 
     <input
       aria-label={label}
       inputMode="decimal"
+      placeholder={fallback!=null ? String(fallback) : '—'}
+      title={fallback!=null ? `Blank inherits worksheet value ${fallback}` : undefined}
       value={draft ?? (value ?? '')}
       onChange={(event) => setDraft(event.target.value)}
       onBlur={commit}
@@ -128,10 +130,12 @@ function nextRow(config: InputResultConfig, fields: Map<string, AvailableField>)
   return { id: `case-${Date.now().toString(36)}-${index}`, name: `Case ${index}`, values };
 }
 
-function outputText(result: CalculationResult | undefined): { text: string; status: 'normal' | 'pass' | 'fail' | 'error' } {
+function outputText(result: CalculationResult | undefined, labels?: Record<string,string>): { text: string; status: 'normal' | 'pass' | 'fail' | 'error' } {
   if (!result) return { text: '—', status: 'normal' };
   if (result.status === 'error') return { text: 'Error', status: 'error' };
   if (result.check) return { text: result.check.pass ? 'PASS' : 'FAIL', status: result.check.pass ? 'pass' : 'fail' };
+  const label=result.value && labels?.[String(result.value.number)];
+  if(label) return {text:label,status:label==='PASS'?'pass':label==='FAIL'?'fail':'normal'};
   const value = result.value;
   if (!value) return { text: '—', status: 'normal' };
   const suffix = value.unitText === '°' ? '°' : value.unitText ? ` ${value.unitText}` : '';
@@ -345,7 +349,7 @@ export function InputResultsPage() {
     useAppStore.getState().showToast('info', `${row.name}: its input values are now on the worksheet (Ctrl+Z to undo).`);
   };
 
-  const canCalculate = config.inputs.length > 0 && config.outputs.length > 0 && config.rows.length > 0 && config.rows.every((row) => config.inputs.every((column) => row.values[column.id] !== null));
+  const canCalculate = canRunBatch(config,fieldsMap);
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-background" data-testid="input-results-page">
@@ -357,7 +361,7 @@ export function InputResultsPage() {
             onChange={(event) => updateConfig({ ...config, title: event.target.value })}
             className="h-8 max-w-[420px] rounded border border-transparent bg-transparent px-2 text-[15px] font-semibold text-foreground hover:border-border focus:border-docs-blue focus:outline-none"
           />
-          <p className="px-2 text-[11px] text-muted-foreground">Edit numeric inputs, then run the complete table explicitly.</p>
+          <p className="px-2 text-[11px] text-muted-foreground">Blank cells inherit worksheet inputs. Edit values, then run the table.</p>
         </div>
         <div className="flex items-center gap-2">
           {runState === 'stale' && <span className="inline-flex items-center gap-1 text-[12px] font-medium text-warning"><AlertTriangle size={14} aria-hidden /> Results outdated</span>}
@@ -448,9 +452,9 @@ export function InputResultsPage() {
                           className="ir-case-input"
                         />
                       </td>
-                      {config.inputs.map((column) => <td key={column.id} className="ir-input-cell"><NumericCell value={row.values[column.id] ?? null} label={`${row.name}, ${column.label}`} onCommit={(value) => setInput(row.id, column.id, value)} /></td>)}
+                      {config.inputs.map((column) => <td key={column.id} className="ir-input-cell"><NumericCell value={row.values[column.id] ?? null} fallback={fieldsMap.get(column.regionId)?.inputValue} label={`${row.name}, ${column.label}`} onCommit={(value) => setInput(row.id, column.id, value)} /></td>)}
                       {config.outputs.map((column) => {
-                        const result = outputText(rowResults[column.id]);
+                        const result = outputText(rowResults[column.id],column.valueLabels);
                         const outdated = runState === 'stale';
                         return <td key={column.id} className={`ir-output-cell ${outdated ? 'is-outdated' : ''}`} title={rowResults[column.id]?.error?.message}><span className={`ir-result ir-result--${result.status}`}>{runState === 'not-run' ? '—' : result.text}</span></td>;
                       })}

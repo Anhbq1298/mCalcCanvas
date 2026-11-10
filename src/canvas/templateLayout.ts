@@ -29,7 +29,7 @@ export function optimizeTemplateLayout(input: Shape[], options: TemplateLayoutOp
   const gap = options.mode === 'print' ? 4 : 6;
   const groups = new Map<string, Shape[]>();
   for (const shape of input) {
-    const key = shape.groupId ?? shape.id;
+    const key = shape.printGroupId ?? shape.groupId ?? shape.id;
     const list = groups.get(key) ?? [];
     list.push(shape);
     groups.set(key, list);

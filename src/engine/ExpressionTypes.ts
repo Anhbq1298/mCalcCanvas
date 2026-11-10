@@ -7,7 +7,7 @@
 
 export type BinaryOp = '+' | '-' | '*' | '/' | '^';
 
-export type FunctionName =
+export type FunctionName = import('./steelFunctions').SteelFunctionName
   | 'sin' | 'cos' | 'tan'
   | 'asin' | 'acos' | 'atan'
   /** angle(x, y): direction of the vector (x, y), 0 … 2π (Mathcad angle). */

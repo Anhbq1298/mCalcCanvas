@@ -19,9 +19,12 @@ async function buildPrintView(): Promise<{ pages: number; outside: number }> {
   const source = orderedShapes();
   const size = pageSize(settings.pageOrientation);
   const plan = settings.optimizePrintLayout ? optimizeTemplateLayout(source, { width: size.w, height: size.h, margins: marginPx(), mode: 'print' }) : null;
-  if (plan?.issues.length) throw new Error(`Print layout cannot fit: ${plan.issues.join(', ')}`);
-  const shapes = plan?.shapes ?? source;
-  const n = plan?.pages ?? pageCount(shapes, settings.pageOrientation, settings.pages);
+  // Preserve manually positioned reports when reflow cannot pack their groups.
+  // If the source itself crosses a printable margin, keep the explicit error.
+  const canUseSourceLayout = !!plan?.issues.length && shapesOutsidePrintArea(source, settings.pageOrientation).length === 0;
+  if (plan?.issues.length && !canUseSourceLayout) throw new Error(`Print layout cannot fit: ${plan.issues.join(', ')}`);
+  const shapes = plan && !canUseSourceLayout ? plan.shapes : source;
+  const n = plan && !canUseSourceLayout ? plan.pages : pageCount(shapes, settings.pageOrientation, settings.pages);
   const pages = Array.from({ length: n }, (_, i) => ({ index: i, shapes: shapesOnPage(shapes, i, settings.pageOrientation) }));
   await renderPrint(<PrintView pages={pages} />);
   return { pages: n, outside: shapesOutsidePrintArea(shapes, settings.pageOrientation).length };

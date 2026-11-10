@@ -42,7 +42,18 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: UI_SNAPSHOTS=1 npm run test:e2e
+      - name: Validate EC3 worksheet and capture report artifacts
+        run: UI_SNAPSHOTS=1 npx playwright test src/tests/integration/steelDesign.spec.ts
+      - name: Preserve EC3 screenshots and calculation reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ec3-calculation-artifacts
+          path: test-results/ui-snapshots/steel-design
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Run remaining browser regressions
+        run: UI_SNAPSHOTS=1 npm run test:e2e -- --grep-invert 'EC3 catalogue'
       - name: Upload UI snapshots
         if: always()
         uses: actions/upload-artifact@v4

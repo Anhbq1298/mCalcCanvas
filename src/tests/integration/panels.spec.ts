@@ -229,6 +229,7 @@ test.describe('Templates', () => {
     await expect(page.getByLabel('Worksheet title')).toHaveValue('RC Beam Bending Design');
     await page.getByLabel('Worksheet title').fill('My beam');
     await page.keyboard.press('Control+s');
+    await expect(page.getByTestId('save-state')).toHaveText('Saved');
     await page.reload();
     await expect(page.getByLabel('Worksheet title')).toHaveValue('My beam');
   });

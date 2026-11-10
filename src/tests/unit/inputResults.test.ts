@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { step } from '../step';
 import type { MathShape } from '../../canvas/model/types';
-import { calculateBatch, caseShapes, unitToLatex, withInputValue, type AvailableField } from '../../components/inputResults/batchCalculation';
+import { canRunBatch, calculateBatch, caseShapes, unitToLatex, withInputValue, type AvailableField } from '../../components/inputResults/batchCalculation';
 import type { InputResultConfig } from '../../documents/DocumentTypes';
 
 const math = (id: string, y: number, latex: string): MathShape => ({
@@ -64,6 +64,12 @@ describe('Input & Results batch calculation', () => {
         ],
       };
 
+      expect(canRunBatch(config,fields)).toBe(true);
+      const inherited={...config,rows:[{id:'blank',name:'Worksheet values',values:{span:null,'line-load':null}}]};
+      expect(canRunBatch(inherited,fields)).toBe(true);
+      expect(canRunBatch(inherited,new Map())).toBe(false);
+      const defaults=await calculateBatch(inherited,fields,shapes,{unitSystem:'SI',precision:2});
+      expect(defaults.blank.outputs['moment-result']?.value?.number).toBe(112.5);
       const results = await calculateBatch(config, fields, shapes, { unitSystem: 'SI', precision: 2 }, { detail: true });
 
       expect(results.b1?.outputs['moment-result']?.value?.number).toBe(62.5);

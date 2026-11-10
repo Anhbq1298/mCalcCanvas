@@ -102,6 +102,7 @@ const DISPLAY_MODES: { value: MathDisplayMode; label: string }[] = [
   { value: 'auto', label: 'Automatic' },
   { value: 'formula', label: 'Formula only' },
   { value: 'result', label: 'Result only' },
+  { value: 'value', label: 'Value only (table)' },
   { value: 'formulaResult', label: 'Formula and result' },
   { value: 'full', label: 'Full calculation' },
 ];

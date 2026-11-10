@@ -79,10 +79,11 @@ export function sanitizeShape(raw: unknown): Shape | null {
     x: bounded(r.x, 0, -COORD_LIMIT, COORD_LIMIT),
     y: bounded(r.y, 0, -COORD_LIMIT, COORD_LIMIT),
     ...(typeof r.groupId === 'string' ? { groupId: r.groupId.slice(0, 100) } : {}),
+    ...(typeof r.printGroupId === 'string' && /^[\w-]{1,80}$/.test(r.printGroupId) ? {printGroupId:r.printGroupId} : {}),
   };
   switch (r.type) {
     case 'math': {
-      const modes = ['auto', 'formula', 'result', 'formulaResult', 'full'];
+      const modes = ['auto', 'formula', 'result', 'formulaResult', 'full', 'value'];
       return {
         ...base,
         type: 'math',
@@ -90,6 +91,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           w: bounded(p.w, 60, 1, SIZE_LIMIT),
           h: bounded(p.h, 32, 1, SIZE_LIMIT),
           latex: str(p.latex).slice(0, 4000),
+          ...(['section','ltb','ltbCatalog','sls','buckling','state','mode','issues'].includes(p.steelFigure as string) ? {steelFigure: p.steelFigure as 'section'|'ltb'|'ltbCatalog'|'sls'|'buckling'|'state'|'mode'|'issues'} : {}),
           displayMode: (modes.includes(p.displayMode as string) ? p.displayMode : 'auto') as never,
           displayUnit: str(p.displayUnit).slice(0, 60),
           precision: Math.round(bounded(p.precision, -1, -1, 8)),
@@ -293,7 +295,8 @@ function sanitizeInputResult(value: unknown, mathRegionIds: Set<string>): InputR
       const regionId = str(r.regionId).slice(0, 100);
       if (!id || seen.has(id) || !mathRegionIds.has(regionId)) return [];
       seen.add(id);
-      return [{ id, regionId, label: (str(r.label).trim() || id).slice(0, 120) }];
+      const entries=r.valueLabels && typeof r.valueLabels === 'object' && !Array.isArray(r.valueLabels) ? Object.entries(r.valueLabels as Raw).slice(0,1000).filter(([k,v])=>/^-?\d+$/.test(k)&&typeof v==='string').map(([k,v])=>[k,str(v).slice(0,160)]) : [];
+      return [{ id, regionId, label: (str(r.label).trim() || id).slice(0, 120), ...(entries.length ? {valueLabels:Object.fromEntries(entries)} : {}) }];
     });
   };
   const inputs = columns(src.inputs);

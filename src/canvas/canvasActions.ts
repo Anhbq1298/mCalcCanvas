@@ -345,6 +345,7 @@ function cloneShapes(list: Shape[], times: number): Shape[] {
   const dy = GRID_MAJOR * times;
   return list.map((s) => {
     const clone: Shape = { ...s, id: newShapeId(), x: s.x + dx, y: s.y + dy } as Shape;
+    if (s.printGroupId) clone.printGroupId = `print-${clone.id}`;
     if (s.groupId) {
       if (!groupMap.has(s.groupId)) groupMap.set(s.groupId, newShapeId());
       clone.groupId = groupMap.get(s.groupId);
