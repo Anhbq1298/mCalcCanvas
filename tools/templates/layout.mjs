@@ -74,7 +74,7 @@ const XM = 296;
 const XM_WIDE = 96;
 const SIZES = fs.existsSync(path.join(HERE, sizesFile)) ? JSON.parse(fs.readFileSync(path.join(HERE, sizesFile), 'utf8')) : {};
 const CATALOG = JSON.parse(fs.readFileSync(path.resolve(HERE, '../../src/documents/templateMetrics.json'), 'utf8'));
-const METRICS = CATALOG[sizesFile.includes('rect') ? 'rc-rectangular-column' : 'rc-circular-column'];
+const METRICS = CATALOG[sizesFile.includes('rect') ? 'rc-rectangular-column' : sizesFile.includes('col') ? 'rc-circular-column' : ''] ?? {};
 /** Parameter: description to the left and the region on the same row; long formulas get the description above. */
 const P = (desc, latex, o = {}) => {
   const size = SIZES[latex];

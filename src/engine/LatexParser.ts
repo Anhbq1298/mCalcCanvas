@@ -52,7 +52,7 @@ const FUNCTION_COMMANDS: Record<string, FunctionName> = {
 
 /** Plain-letter runs that MathLive may leave un-converted. */
 const FUNCTION_WORDS: Record<string, FunctionName> = {
-  sectionProp: 'sectionProp', steelDesign: 'steelDesign', entry: 'entry',
+  sectionProp: 'sectionProp',
   ...FUNCTION_COMMANDS,
   asin: 'asin', acos: 'acos', atan: 'atan', sqrt: 'sqrt', abs: 'abs',
   sum: 'sum', len: 'len', seq: 'seq', angle: 'angle', map: 'map', floor: 'floor', ceil: 'ceil', linterp: 'linterp', stack: 'stack',
@@ -764,7 +764,7 @@ class Parser {
     }
     if (this.isSym('(') || this.isCmd('lparen')) {
       const args = this.readArgumentTokens().map((p) => this.subParse(p));
-      const arity = fn === 'min' || fn === 'max' || fn === 'sum' || fn === 'seq' || fn === 'map' || fn === 'stack' ? null : fn === 'linterp' ? 3 : fn === 'angle' || fn === 'sectionProp' || fn === 'steelDesign' || fn === 'entry' ? 2 : 1;
+      const arity = fn === 'min' || fn === 'max' || fn === 'sum' || fn === 'seq' || fn === 'map' || fn === 'stack' ? null : fn === 'linterp' ? 3 : fn === 'angle' || fn === 'sectionProp' ? 2 : 1;
       if (arity !== null && args.length !== arity) {
         throw new CalculationError('syntax', arity === 1 ? `${fn} takes exactly one argument.` : `${fn} takes ${arity} arguments.`);
       }

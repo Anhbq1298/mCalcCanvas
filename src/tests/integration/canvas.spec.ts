@@ -139,6 +139,10 @@ test.describe('own canvas engine', () => {
     expect(new Set(parts.map((p) => p.groupId)).size).toBe(1);
     expect(parts[0].groupId).toBeTruthy();
     expect((await state(page)).selection).toHaveLength(4);
+    // Steel section outlines are in the same gallery.
+    await page.getByTestId('insert-shapes').click();
+    await page.getByTestId('shape-steel-i').click();
+    expect(await shapesOf(page, 'draw')).toHaveLength(4);
     // Nothing being edited: a new text region holding the character.
     await page.keyboard.press('Escape');
     await page.getByTestId('insert-charmap').click();

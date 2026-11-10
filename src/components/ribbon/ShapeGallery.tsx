@@ -43,7 +43,7 @@ function Thumb({ item }: { item: LibraryShape }) {
 }
 
 export function ShapeGallery() {
-  const groups = ['Basic', 'Structural'] as const;
+  const groups = ['Basic', 'Structural', 'Steel'] as const;
   return (
     <Popover title="Insert a ready-made shape" testId="insert-shapes" big="Shapes" width={356} trigger={<Shapes size={24} strokeWidth={1.6} aria-hidden />}>
       {(close) => (

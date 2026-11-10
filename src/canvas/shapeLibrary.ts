@@ -1,6 +1,6 @@
 /**
- * Ready-made shapes for the Insert tab: plain outlines and common structural
- * sketch symbols. Each is built from the existing primitives (draw polylines,
+ * Ready-made shapes for the Insert tab: plain outlines, common structural
+ * sketch symbols and steel section outlines. Each is built from the existing primitives (draw polylines,
  * lines/arrows, rectangles) relative to (0, 0) and inserted as one group, so it
  * moves and copies as a unit and prints like any other shape.
  */
@@ -17,7 +17,7 @@ type Part =
 export interface LibraryShape {
   id: string;
   label: string;
-  group: 'Basic' | 'Structural';
+  group: 'Basic' | 'Structural' | 'Steel';
   parts: Part[];
 }
 
@@ -42,6 +42,9 @@ function arc(cx: number, cy: number, r: number, a0: number, a1: number, n = 20):
 }
 
 const round = (v: number) => Math.round(v * 10) / 10;
+
+/** Closed outline through the given corners. */
+const outline = (...pts: [number, number][]): Part => ({ type: 'draw', points: [...pts, pts[0]] });
 
 export const SHAPE_LIBRARY: LibraryShape[] = [
   { id: 'rectangle', label: 'Rectangle', group: 'Basic', parts: [{ type: 'rect', x: 0, y: 0, w: 120, h: 80 }] },
@@ -124,6 +127,15 @@ export const SHAPE_LIBRARY: LibraryShape[] = [
       { type: 'line', x: 160, y: 0, x2: 0, y2: 24 },
     ],
   },
+  // Steel section outlines (sharp corners, proportions of common rolled sections).
+  { id: 'steel-i', label: 'I-section', group: 'Steel', parts: [outline([0, 0], [60, 0], [60, 9], [34, 9], [34, 111], [60, 111], [60, 120], [0, 120], [0, 111], [26, 111], [26, 9], [0, 9])] },
+  { id: 'steel-h', label: 'H-section', group: 'Steel', parts: [outline([0, 0], [100, 0], [100, 14], [55, 14], [55, 86], [100, 86], [100, 100], [0, 100], [0, 86], [45, 86], [45, 14], [0, 14])] },
+  { id: 'steel-channel', label: 'Channel', group: 'Steel', parts: [outline([0, 0], [50, 0], [50, 10], [8, 10], [8, 110], [50, 110], [50, 120], [0, 120])] },
+  { id: 'steel-angle', label: 'Angle', group: 'Steel', parts: [outline([0, 0], [10, 0], [10, 80], [90, 80], [90, 90], [0, 90])] },
+  { id: 'steel-tee', label: 'T-section', group: 'Steel', parts: [outline([0, 0], [100, 0], [100, 12], [56, 12], [56, 100], [44, 100], [44, 12], [0, 12])] },
+  { id: 'steel-rhs', label: 'Hollow box', group: 'Steel', parts: [{ type: 'rect', x: 0, y: 0, w: 80, h: 120 }, { type: 'rect', x: 8, y: 8, w: 64, h: 104 }] },
+  { id: 'steel-chs', label: 'Hollow circle', group: 'Steel', parts: [{ type: 'draw', points: ellipse(50, 50, 50, 50) }, { type: 'draw', points: ellipse(50, 50, 42, 42) }] },
+  { id: 'steel-plate', label: 'Plate', group: 'Steel', parts: [{ type: 'rect', x: 0, y: 0, w: 140, h: 12 }] },
 ];
 
 /** The shapes of a library item placed at (x, y), sharing one group id when there is more than one part. */

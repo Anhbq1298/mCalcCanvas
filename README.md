@@ -56,7 +56,7 @@ The left side panel has the **Outline** (headings, click to jump) and **Paramete
 - **Math**: Clipboard (paste, cut, copy, duplicate); Regions (math, text, check, heading, sub-heading, annex link); Operators and Symbols (operator, symbol, constant and unit palettes); Selection (select all, group, ungroup).
 - **Insert**:
   - Free Shapes: select, pan, freehand, line, arrow, rectangle.
-  - Shapes: ready-made outlines (rectangle, circle, ellipse, triangle, diamond, arrows) and structural symbols (pin, roller and fixed supports, point load, distributed load, moment, dimension), placed at the + cross as one group.
+  - Shapes: ready-made outlines (rectangle, circle, ellipse, triangle, diamond, arrows) and steel section outlines (I, H, channel, angle, T, hollow box and circle, plate) and structural symbols (pin, roller and fixed supports, point load, distributed load, moment, dimension), placed at the + cross as one group.
   - Image, and a Character Map (Greek, math, unit and arrow characters) that types into the text or equation being edited, or starts a new text region.
 - **Matrices/Tables**: insert a matrix (sized on a grid or typed) or an editable table; matrix operators and functions; insert or delete rows and columns of the selected matrix or table; result format (indices, collapse nested). The engine does not evaluate matrices yet.
 - **Plots**: X-Y plot with title, axis units, equal axes, grid lines, axes at origin, and series.
@@ -85,6 +85,7 @@ Scrolling stops a little above the first page and below the last, so the view ne
 - *RC beam – bending (EN 1992-1-1)*.
 - *Steel beam – simply supported*.
 - *RC rectangular column check (EN 1992-1-1)* and *RC circular column check (EN 1992-1-1)*. These cover a P–Mθ interaction curve from fibres, shear to EN 1992-1-1:2023 §8.2.3, and an annex with the derivations. The rectangular column comes with 5 load cases.
+- *Steel beam-column check (EN 1993-1-1)*: a rolled I/H section from the built-in library (379 sections: IPE, HEA, HEB, HEM, W; **Browse** on the Section input), classification, cross-section resistance, flexural, torsional and lateral-torsional buckling (Mcr from SCI SN003b, 13 tabulated moment cases or user C1/C2), Annex B interaction, all as worksheet equations with `UR ≤ 1` checks. Its default data is the HEB 320 beam-column of the JRC 2014 worked examples, and the results are pinned against that example and two more (see `docs/steel-design/TECHNICAL.md`). Buckling curves are chosen on the sheet from h/b and tf, so they follow the section in Table In&Out as well.
 - The templates are laid out compactly from measured region sizes and print with **Optimize print layout** on: 26 A4 pages for all four, down from 36.
 
 **Table In&Out** (workspace tab):
@@ -115,7 +116,7 @@ src/
     worker/               the calculation Web Worker and its message protocol
   canvas/        Own canvas engine (no third-party canvas SDK)
     model/              shape types, geometry, document store with snapshot undo/redo
-    shapeLibrary.ts     ready-made shapes and structural symbols (Insert tab)
+    shapeLibrary.ts     ready-made shapes, steel outlines and structural symbols (Insert tab)
     matrixTableCommands matrix/table insertion and row/column commands
     templateLayout.ts   compact print layout planner (Optimize print layout)
     CanvasView.tsx      pan/zoom viewport, select/marquee/move/resize, drawing tools, rulers

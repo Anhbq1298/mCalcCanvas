@@ -31,9 +31,9 @@ interface CalcDB extends DBSchema {
 
 export const DB_NAME = 'calccanvas';
 /** IndexedDB schema: 1 = documents + meta, 2 = + versions. */
-export const DB_VERSION = 2;
+const DB_VERSION = 2;
 /** Autosaves keep a snapshot at most this often. */
-export const VERSION_INTERVAL_MS = 5 * 60_000;
+const VERSION_INTERVAL_MS = 5 * 60_000;
 /** Snapshots kept per worksheet (migration backups are not counted or pruned). */
 export const MAX_VERSIONS = 25;
 

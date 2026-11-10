@@ -9,9 +9,9 @@ import type { DocumentMetadata, DocumentSettings, InputResultConfig } from './Do
 import { parseDocument } from './DocumentSerializer';
 import rcCircularColumn from '../../templates/RC_Circular_Column_Check.mCCV?raw';
 import rcRectangularColumn from '../../templates/RC_Rectangular_Column_Check.mCCV?raw';
+import steelBeamColumn from '../../templates/Steel_Beam_Column_EC3.mCCV?raw';
 import { escapeHtml } from '../canvas/sanitize';
 import { demoWorksheetShapes } from './demoWorksheet';
-import { steelBeamColumnShapes, steelBeamColumnTemplate } from './steelBeamColumnTemplate';
 import { A4, PAGE_GAP } from '../export/pageGeometry';
 import { compactTemplate } from './templatePresentation';
 
@@ -51,6 +51,7 @@ function fileTemplate(raw: string) {
 }
 const circular = fileTemplate(rcCircularColumn);
 const rectangular = fileTemplate(rcRectangularColumn);
+const steelColumn = fileTemplate(steelBeamColumn);
 
 function builder() {
   const out: Shape[] = [];
@@ -206,13 +207,9 @@ export const TEMPLATES: WorksheetTemplate[] = [
   },
   {
     id: 'steel-beam-column',
-    name: 'Steel beam-column (EN 1993-1-1)',
-    description: 'Section library, classification, resistance, flexural buckling, LTB, Annex B interaction, SLS and batch checks.',
-    title: 'Steel Beam-Column Design',
-    metadata: { project: 'Demonstration project', calculationReference: 'CALC-001', preparedBy: '', checkedBy: '', revision: 'A' },
-    settings: { optimizePrintLayout: true },
-    shapes: () => steelBeamColumnShapes(),
-    instantiate: steelBeamColumnTemplate,
+    name: 'Steel beam-column check (EN 1993-1-1)',
+    description: 'Rolled I/H section from the built-in library: classification, section resistance, flexural, torsional and lateral-torsional buckling, Annex B interaction, UR checks. Default data: JRC worked example (HEB 320).',
+    ...steelColumn,
   },
 ];
 

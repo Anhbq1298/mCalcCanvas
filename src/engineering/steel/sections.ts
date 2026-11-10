@@ -12,6 +12,8 @@ export interface SteelSection {
   source: string; version: string; values: Record<SectionProperty, number>;
 }
 export const sections: readonly SteelSection[] = data;
+/** Start of the worksheet input that holds the library ID; the section picker attaches to it. */
+export const SECTION_DEF = '\\mathrm{Section}\\coloneq';
 const byId = new Map(sections.map(s => [s.id, s]));
 export function sectionById(id: number): SteelSection {
   const s = byId.get(id);

@@ -9,8 +9,6 @@ export type MathFontStyle = 'normal' | 'bold' | 'italic' | 'bold-italic';
 export type VectorLayout = 'row' | 'column';
 
 export interface MathProps {
-  /** Optional engineering presentation; calculations remain ordinary math regions. */
-  steelFigure?: 'section' | 'ltb' | 'ltbCatalog' | 'sls' | 'buckling' | 'state' | 'mode' | 'issues';
   w: number;
   h: number;
   /** Source of truth for the calculation: MathLive LaTeX. */

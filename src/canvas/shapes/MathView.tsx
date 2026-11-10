@@ -1,6 +1,5 @@
 import { SteelControls, SteelSectionLabel } from '../../components/dialogs/SteelControls';
-import { definition } from '../../engineering/steel/contract';
-import { SteelFigure } from './SteelFigure';
+import { SECTION_DEF } from '../../engineering/steel/sections';
 import { AlertCircle, AlertTriangle, CheckCircle2, CircleDashed, XCircle } from 'lucide-react';
 import { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { ReportShapes } from '../../store/reportResults';
@@ -38,10 +37,6 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   // Auto-size: the box follows the rendered equation unless resized manually.
   useEffect(() => {
     if (isStatic) return;
-    // The LTB catalogue is a fixed-size, multi-case SVG. Measuring its internal
-    // stack/result markup as an equation changes its reserved box and pushes the
-    // following annex across pages; its worksheet dimensions are intentional.
-    if (shape.props.steelFigure === 'ltbCatalog') return;
     const el = contentRef.current;
     if (!el) return;
     // A loaded region with a measured size waits for its first result: measuring the bare
@@ -77,7 +72,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     });
     ro.observe(el);
     return () => { ro.disconnect(); cancelAnimationFrame(measurementFrame.current); };
-  }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, shape.props.steelFigure, isStatic, editing, display.latex, textFont, equationFont, fontStyle, hasResult, seen]);
+  }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, isStatic, editing, display.latex, textFont, equationFont, fontStyle, hasResult, seen]);
 
   useSeparateAfterEditing(shape.id, editing, isStatic);
 
@@ -150,7 +145,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         ) : (
           <div className="flex items-center gap-2">
             <span className="math-baseline">
-              {shape.props.steelFigure ? <SteelFigure kind={shape.props.steelFigure} value={result?.value}/> : seen ? <MathRenderer latex={display.latex} /> : <span style={{ display: 'inline-block', width: Math.max(0, w - 2 * PAD_X), height: Math.max(0, h - 2 * PAD_Y) }} />}
+              {seen ? <MathRenderer latex={display.latex} /> : <span style={{ display: 'inline-block', width: Math.max(0, w - 2 * PAD_X), height: Math.max(0, h - 2 * PAD_Y) }} />}
               <span ref={probeRef} className="baseline-probe" aria-hidden />
             </span>
             {display.check && (
@@ -167,7 +162,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
             )}
           </div>
         )}
-        {latex.startsWith(definition('Section')) && <SteelSectionLabel sectionId={result?.value?.number}/>}
+        {latex.startsWith(SECTION_DEF) && <SteelSectionLabel sectionId={result?.value?.number}/>}
         {!isStatic && <SteelControls id={shape.id} latex={latex}/>}
         {/* Status as compact symbols; the explanation appears on hover. */}
         {error && !empty && !(editing && result?.draftError) && <StatusIcon kind="error" message={errorMessage ?? error.message} />}

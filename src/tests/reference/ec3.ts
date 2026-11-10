@@ -1,6 +1,7 @@
 import { ltbCoefficientForIndex } from './ltbCases';
 
 /**
+ * Independent reference kernel for the tests of the steel beam-column template (not used by the app).
  * EN 1993-1-1:2005 + A1:2014 only. N in N, lengths in mm, stresses in MPa.
  * No React, hidden worksheet state, rounding or relaxed acceptance comparisons.
  * Sources/applicability: docs/steel-design/TECHNICAL.md.
@@ -40,7 +41,7 @@ function reduction(lambda: number, alpha: number): number {
   return Math.min(1, 1 / (phi + Math.sqrt(Math.max(0, phi ** 2 - lambda ** 2))));
 }
 /** NCCI SN003b, doubly symmetric sections, fork ends; zg positive destabilizing. */
-export function criticalMoment(s: SectionGeometry, a: Pick<SteelInput, 'E'|'G'|'Llt'|'k'|'kw'|'C1'|'C2'|'loadHeight'>): number {
+function criticalMoment(s: SectionGeometry, a: Pick<SteelInput, 'E'|'G'|'Llt'|'k'|'kw'|'C1'|'C2'|'loadHeight'>): number {
   for (const v of [a.E, a.G, a.Llt, a.k, a.kw, a.C1, s.Iz, s.It, s.Iw]) if (!positive(v)) throw new Error('Mcr requires positive stiffness, lengths, C1 and boundary factors');
   const t = Math.PI ** 2 * a.E * s.Iz / (a.k * a.Llt) ** 2;
   const z = a.C2 * a.loadHeight;
@@ -53,7 +54,7 @@ export function rolledCurves(s: SectionGeometry): [number, number, number] | nul
   return [...yz, s.h / s.b <= 2 ? 0.21 : 0.34];
 }
 /** Annex B Tables B.1/B.2 plastic I sections, lambdaZ >= 0.4 branch. */
-export function method2(ny: number, nz: number, ly: number, lz: number, cmy: number, cmz: number, cmLT: number): [number, number, number, number] | null {
+function method2(ny: number, nz: number, ly: number, lz: number, cmy: number, cmz: number, cmLT: number): [number, number, number, number] | null {
   if (lz < 0.4 || cmLT <= 0.25 || [cmy, cmz, cmLT].some(v => v < 0.4 || v > 1)) return null;
   const kyy = cmy * (1 + Math.min(ly - 0.2, 0.8) * ny);
   const kzz = cmz * (1 + Math.min(2 * lz - 0.6, 1.4) * nz);

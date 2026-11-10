@@ -282,8 +282,8 @@ function firstRunTemplate(): TemplateId {
  * envelope: they still open (drag & drop, or "All files" in the picker),
  * are migrated by `parseDocument`, and are written back as .mCCV.
  */
-export const FILE_EXT = '.mCCV';
-export const FILE_MIME = 'application/vnd.mccv+json';
+const FILE_EXT = '.mCCV';
+const FILE_MIME = 'application/vnd.mccv+json';
 /** Small .mCCV document icon (public/icons, made by tools/icons/build-file-icon.mjs). */
 export const FILE_ICON = `${import.meta.env.BASE_URL}icons/mccv-file-small.svg`;
 /** File picker filter (.mCCV only). */
@@ -295,7 +295,7 @@ export function isWorksheetFile(f: File): boolean {
 }
 
 /** `Title.mCCV` with characters Windows does not allow in file names replaced. */
-export function worksheetFileName(title: string): string {
+function worksheetFileName(title: string): string {
   return (title.trim().replace(/[\\/:*?"<>|]+/g, '-').replace(/\s+/g, ' ').slice(0, 120) || 'calculation') + FILE_EXT;
 }
 

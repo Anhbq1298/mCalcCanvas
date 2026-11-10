@@ -1,8 +1,8 @@
 /** Discrete coefficient cases transcribed from SCI NCCI SN003b, Tables 3.1 and 3.2.
  * All coefficients use k = 1 and fork-end lateral/twist restraint. Do not interpolate.
  */
-export type LtbDiagramKind = 'end-moments' | 'udl-simple' | 'udl-fixed' | 'point-simple' | 'point-fixed';
-export interface LtbCoefficientCase {
+type LtbDiagramKind = 'end-moments' | 'udl-simple' | 'udl-fixed' | 'point-simple' | 'point-fixed';
+interface LtbCoefficientCase {
   id: number;
   name: string;
   c1: number;

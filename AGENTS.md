@@ -56,15 +56,15 @@ CI (`.github/workflows/ci.yml`) runs all of these; GitHub Pages deploys only aft
 
 Never weaken an assertion to make a test pass.
 
-## 4. Calculation templates (column checks)
+## 4. Calculation templates (column checks, steel beam-column)
 
-The files are `templates/RC_Rectangular_Column_Check.mCCV` and `templates/RC_Circular_Column_Check.mCCV` (`.mCCV` is the only worksheet/template extension; the content is the JSON document).
+The files are `templates/RC_Rectangular_Column_Check.mCCV`, `templates/RC_Circular_Column_Check.mCCV` and `templates/Steel_Beam_Column_EC3.mCCV` (generator `gen_steel.mjs`, test `steelTemplate.test.ts`, notes `docs/steel-design/TECHNICAL.md`; `-- --only=steel` regenerates just this one) (`.mCCV` is the only worksheet/template extension; the content is the JSON document).
 
 **Never hand-edit the `.mCCV` JSON.** It is generated.
 
 To change a template:
 
-1. Edit `tools/templates/gen_rect.mjs` or `tools/templates/gen_col.mjs`.
+1. Edit `tools/templates/gen_rect.mjs`, `gen_col.mjs` or `gen_steel.mjs`. New templates follow the same format: every result is a worksheet equation (no calculation hidden in an engine function), checks are `UR ≤ 1`, scope limits are visible checks, and key results are pinned against a published worked example.
 2. Run `npm run build && npm run templates:columns`. This generates the file, measures the real region sizes in the built app (into `sizes_*.json`), and generates it again.
    - It must print no "regions moved by the app" warning. A warning means regions overlapped, or snapped away from where the generator put them.
 3. Run `npm run templates:columns -- --pdf`, then look at the PDF pages (`tools/templates/*.pdf`, git-ignored).
