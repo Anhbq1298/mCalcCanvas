@@ -36,10 +36,10 @@ export const symbol = (name: string): string => {
     lambdaY:'\\lambda_y', lambdaZ:'\\lambda_z', lambdaT:'\\lambda_T', lambdaLT:'\\lambda_{LT}',
     phiY:'\\Phi_y', phiZ:'\\Phi_z', phiT:'\\Phi_T', phiLT:'\\Phi_{LT}',
     chiT:'\\chi_T', NbY:'N_{b.y.Rd}', NbZ:'N_{b.z.Rd}', NbT:'N_{b.T.Rd}',
-    iZero:'i_{0.sq}', Mcr:'M_{cr}', McrCalc:'M_{cr.calc}', Tcr:'T_{cr}', Bcr:'B_{cr}', Mb:'M_{b.Rd}',
+    iZero:'i_0', Mcr:'M_{cr}', McrCalc:'M_{cr.calc}', Tcr:'T_{cr}', Bcr:'B_{cr}', Mb:'M_{b.Rd}',
     Cused1:'C_{1.used}', Cused2:'C_{2.used}', nY:'n_y', nZ:'n_z',
     kyyAuto:'k_{yy.B}', kzzAuto:'k_{zz.B}', kzyAuto:'k_{zy.B}', MzRk:'M_{z.Rk}', MzStability:'M_{z.Rd.1}',
-    mY:'m_y', mZ:'m_z', Jy:'J_y', Jz:'J_z',
+    uN:'u_N', uMy:'u_{My}', uMz:'u_{Mz}', mY:'m_y', mZ:'m_z', Jy:'J_y', Jz:'J_z',
     deltaSimple:'\\delta_{SS}', deltaCantilever:'\\delta_{cant}', delta:'\\delta', deltaAllow:'\\delta_{lim}',
   });
   if(standard[name])return standard[name];

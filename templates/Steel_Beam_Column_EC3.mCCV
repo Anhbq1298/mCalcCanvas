@@ -522,7 +522,7 @@
       "x": 96,
       "y": 700,
       "props": {
-        "w": 626,
+        "w": 620,
         "h": 246,
         "latex": "\\mathrm{ActionDiagram}\\coloneq \\operatorname{stack}(\\mathrm{LoadCase},\\mathrm{zg}/\\mathrm{mm},\\mathrm{Llt}/\\mathrm{mm},\\mathrm{k},\\mathrm{kw},N_{Ed}/\\mathrm{kN},M_{y.Ed}/(\\mathrm{kN}\\cdot\\mathrm{m}),M_{z.Ed}/(\\mathrm{kN}\\cdot\\mathrm{m}),V_{y.Ed}/\\mathrm{kN},V_{z.Ed}/\\mathrm{kN},\\mathrm{L}/\\mathrm{mm})",
         "displayMode": "formulaResult",
@@ -2620,7 +2620,7 @@
       "id": "ec3_125",
       "type": "math",
       "x": 96,
-      "y": 2690,
+      "y": 2670,
       "props": {
         "w": 600,
         "h": 86,
@@ -2642,9 +2642,9 @@
       "id": "ec3_126",
       "type": "math",
       "x": 96,
-      "y": 2782,
+      "y": 2762,
       "props": {
-        "w": 600,
+        "w": 280,
         "h": 32,
         "latex": "c_f\\coloneq \\frac{b-t_w-2r}{2}",
         "displayMode": "formulaResult",
@@ -2663,10 +2663,10 @@
     {
       "id": "ec3_127",
       "type": "math",
-      "x": 96,
-      "y": 2822,
+      "x": 396,
+      "y": 2762,
       "props": {
-        "w": 600,
+        "w": 290,
         "h": 32,
         "latex": "\\lambda_f\\coloneq c_f/t_f",
         "displayMode": "formulaResult",
@@ -2686,9 +2686,9 @@
       "id": "ec3_128",
       "type": "math",
       "x": 96,
-      "y": 2862,
+      "y": 2806,
       "props": {
-        "w": 600,
+        "w": 280,
         "h": 32,
         "latex": "c_{f.1}\\coloneq 9\\epsilon",
         "displayMode": "formulaResult",
@@ -2707,10 +2707,10 @@
     {
       "id": "ec3_129",
       "type": "math",
-      "x": 96,
-      "y": 2902,
+      "x": 396,
+      "y": 2806,
       "props": {
-        "w": 280,
+        "w": 290,
         "h": 32,
         "latex": "\\mathrm{Class}_f\\coloneq \\operatorname{if}(\\lambda_f\\le9\\epsilon,1,\\operatorname{if}(\\lambda_f\\le10\\epsilon,2,\\operatorname{if}(\\lambda_f\\le14\\epsilon,3,4)))",
         "displayMode": "result",
@@ -2729,12 +2729,12 @@
     {
       "id": "ec3_130",
       "type": "text",
-      "x": 396,
-      "y": 2902,
+      "x": 76,
+      "y": 2850,
       "props": {
-        "w": 290,
+        "w": 640,
         "h": 24,
-        "html": "Class 1 / 2 / 3 limits: 9ε / 10ε / 14ε.",
+        "html": "Flange Class 1 / 2 / 3 limits: 9ε / 10ε / 14ε. Uniform compression is conservative.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -2746,9 +2746,9 @@
       "id": "ec3_131",
       "type": "math",
       "x": 96,
-      "y": 2942,
+      "y": 2890,
       "props": {
-        "w": 600,
+        "w": 280,
         "h": 32,
         "latex": "c_w\\coloneq h-2(t_f+r)",
         "displayMode": "formulaResult",
@@ -2767,10 +2767,10 @@
     {
       "id": "ec3_132",
       "type": "math",
-      "x": 96,
-      "y": 2982,
+      "x": 396,
+      "y": 2890,
       "props": {
-        "w": 600,
+        "w": 290,
         "h": 32,
         "latex": "\\lambda_w\\coloneq c_w/t_w",
         "displayMode": "formulaResult",
@@ -2790,11 +2790,33 @@
       "id": "ec3_133",
       "type": "math",
       "x": 96,
-      "y": 3022,
+      "y": 2934,
       "props": {
-        "w": 600,
+        "w": 280,
         "h": 32,
-        "latex": "\\alpha_w\\coloneq \\operatorname{min}(1,\\operatorname{max}(0,(1+N_{Ed}/(c_wt_wf_{y}))/2))",
+        "latex": "\\sigma_N\\coloneq N_{Ed}/A",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 13,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-2"
+    },
+    {
+      "id": "ec3_134",
+      "type": "math",
+      "x": 396,
+      "y": 2934,
+      "props": {
+        "w": 290,
+        "h": 32,
+        "latex": "\\sigma_M\\coloneq \\operatorname{abs}(M_{y.Ed})c_w/(2I_y)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -2809,36 +2831,14 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_134",
-      "type": "math",
-      "x": 96,
-      "y": 3062,
-      "props": {
-        "w": 600,
-        "h": 32,
-        "latex": "\\alpha_{w.used}\\coloneq \\operatorname{if}(M_{z.Ed}=0\\,\\mathrm{N}\\cdot\\mathrm{mm},\\operatorname{if}(\\operatorname{abs}(M_{y.Ed})>0\\,\\mathrm{N}\\cdot\\mathrm{mm},\\alpha_w,1),1)",
-        "displayMode": "result",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-2"
-    },
-    {
       "id": "ec3_135",
       "type": "math",
       "x": 96,
-      "y": 3102,
+      "y": 2978,
       "props": {
         "w": 280,
         "h": 32,
-        "latex": "c_{w.1}\\coloneq \\operatorname{if}(\\alpha_{w.used}>0.5,396/(13\\alpha_{w.used}-1),36/\\operatorname{max}(\\alpha_{w.used},10^{-12}))\\epsilon",
+        "latex": "\\psi_w\\coloneq \\operatorname{if}(\\sigma_N+\\sigma_M>0\\,\\mathrm{MPa},\\operatorname{max}(-3,(\\sigma_N-\\sigma_M)/(\\sigma_N+\\sigma_M)),-3)",
         "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
@@ -2856,11 +2856,11 @@
       "id": "ec3_136",
       "type": "math",
       "x": 396,
-      "y": 3102,
+      "y": 2978,
       "props": {
         "w": 290,
         "h": 32,
-        "latex": "c_{w.2}\\coloneq \\operatorname{if}(\\alpha_{w.used}>0.5,456/(13\\alpha_{w.used}-1),41.5/\\operatorname{max}(\\alpha_{w.used},10^{-12}))\\epsilon",
+        "latex": "\\alpha_w\\coloneq \\operatorname{min}(1,\\operatorname{max}(0,(1+N_{Ed}/(c_wt_wf_{y}))/2))",
         "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
@@ -2878,11 +2878,11 @@
       "id": "ec3_137",
       "type": "text",
       "x": 76,
-      "y": 3142,
+      "y": 3018,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "For this biaxial example α=1: web Class 1 / 2 / 3 limits are 33ε / 38ε / 42ε.",
+        "html": "ψ=(σN−σM)/(σN+σM); α=min[1,max(0,(1+NEd/(cw tw fy))/2)].",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -2894,11 +2894,11 @@
       "id": "ec3_138",
       "type": "math",
       "x": 96,
-      "y": 3182,
+      "y": 3058,
       "props": {
         "w": 280,
         "h": 32,
-        "latex": "\\mathrm{Class}_w\\coloneq \\operatorname{entry}(\\mathrm{R},2)",
+        "latex": "\\alpha_{w.used}\\coloneq \\operatorname{if}(M_{z.Ed}=0\\,\\mathrm{N}\\cdot\\mathrm{mm},\\operatorname{if}(\\operatorname{abs}(M_{y.Ed})>0\\,\\mathrm{N}\\cdot\\mathrm{mm},\\alpha_w,1),1)",
         "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
@@ -2914,11 +2914,137 @@
     },
     {
       "id": "ec3_139",
-      "type": "math",
+      "type": "text",
       "x": 396,
-      "y": 3182,
+      "y": 3058,
       "props": {
         "w": 290,
+        "h": 24,
+        "html": "Biaxial case: use α=1 (uniform compression).",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-2"
+    },
+    {
+      "id": "ec3_140",
+      "type": "math",
+      "x": 96,
+      "y": 3098,
+      "props": {
+        "w": 600,
+        "h": 32,
+        "latex": "c_{w.1}\\coloneq \\operatorname{if}(\\alpha_{w.used}>0.5,396/(13\\alpha_{w.used}-1),36/\\operatorname{max}(\\alpha_{w.used},10^{-12}))\\epsilon",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 11,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-2"
+    },
+    {
+      "id": "ec3_141",
+      "type": "math",
+      "x": 96,
+      "y": 3142,
+      "props": {
+        "w": 600,
+        "h": 32,
+        "latex": "c_{w.2}\\coloneq \\operatorname{if}(\\alpha_{w.used}>0.5,456/(13\\alpha_{w.used}-1),41.5/\\operatorname{max}(\\alpha_{w.used},10^{-12}))\\epsilon",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 11,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-2"
+    },
+    {
+      "id": "ec3_142",
+      "type": "math",
+      "x": 96,
+      "y": 3186,
+      "props": {
+        "w": 600,
+        "h": 32,
+        "latex": "\\mathrm{webBendLimit}_{3}\\coloneq \\operatorname{if}(\\psi_w>-1,42/(0.67+0.33\\psi_w),62(1-\\psi_w)\\sqrt{-\\psi_w})\\epsilon",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 11,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-2"
+    },
+    {
+      "id": "ec3_143",
+      "type": "math",
+      "x": 96,
+      "y": 3230,
+      "props": {
+        "w": 280,
+        "h": 32,
+        "latex": "c_{w.3}\\coloneq \\operatorname{if}(M_{z.Ed}=0\\,\\mathrm{N}\\cdot\\mathrm{mm},\\operatorname{if}(\\operatorname{abs}(M_{y.Ed})>0\\,\\mathrm{N}\\cdot\\mathrm{mm},\\mathrm{webBendLimit}_{3},42\\epsilon),42\\epsilon)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 13,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-2"
+    },
+    {
+      "id": "ec3_144",
+      "type": "math",
+      "x": 396,
+      "y": 3230,
+      "props": {
+        "w": 290,
+        "h": 32,
+        "latex": "\\mathrm{Class}_w\\coloneq \\operatorname{if}(M_{z.Ed}=0\\,\\mathrm{N}\\cdot\\mathrm{mm},\\operatorname{if}(\\sigma_N+\\sigma_M\\le0\\,\\mathrm{MPa},1,\\operatorname{if}(\\lambda_w\\le c_{w.1},1,\\operatorname{if}(\\lambda_w\\le c_{w.2},2,\\operatorname{if}(\\lambda_w\\le c_{w.3},3,4)))),\\operatorname{if}(\\lambda_w\\le c_{w.1},1,\\operatorname{if}(\\lambda_w\\le c_{w.2},2,\\operatorname{if}(\\lambda_w\\le c_{w.3},3,4))))",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 13,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-2"
+    },
+    {
+      "id": "ec3_145",
+      "type": "math",
+      "x": 96,
+      "y": 3274,
+      "props": {
+        "w": 600,
         "h": 32,
         "latex": "\\mathrm{Class}\\coloneq \\operatorname{max}(\\mathrm{Class}_f,\\mathrm{Class}_w)",
         "displayMode": "formulaResult",
@@ -2935,58 +3061,14 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_140",
-      "type": "math",
-      "x": 96,
-      "y": 3242,
-      "props": {
-        "w": 280,
-        "h": 32,
-        "latex": "W_y\\coloneq \\operatorname{if}(\\mathrm{Class}<3,W_{pl.y},W_{el.y})",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-2"
-    },
-    {
-      "id": "ec3_141",
-      "type": "math",
-      "x": 396,
-      "y": 3242,
-      "props": {
-        "w": 290,
-        "h": 32,
-        "latex": "W_z\\coloneq \\operatorname{if}(\\mathrm{Class}<3,W_{pl.z},W_{el.z})",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-2"
-    },
-    {
-      "id": "ec3_142",
+      "id": "ec3_146",
       "type": "text",
       "x": 76,
-      "y": 3302,
+      "y": 3322,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Class 1/2: plastic section moduli. Class 3: elastic section moduli.",
+        "html": "Class 1/2 → Wpl; Class 3 → Wel. Class 4 requires a separate effective-section verification.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -2995,14 +3077,14 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_143",
+      "id": "ec3_147",
       "type": "text",
       "x": 76,
-      "y": 3334,
+      "y": 3354,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Class 4: effective-section verification is outside scope; capacities below are not a compliance claim.",
+        "html": "For the uniform-compression web, the limits above reduce to 33ε / 38ε / 42ε.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -3011,23 +3093,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_144",
-      "type": "text",
-      "x": 76,
-      "y": 3366,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "Web stress-gradient classification for uniaxial bending follows Table 5.2 in the audit annex.",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-2"
-    },
-    {
-      "id": "ec3_145",
+      "id": "ec3_148",
       "type": "text",
       "x": 76,
       "y": 3573,
@@ -3044,7 +3110,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_146",
+      "id": "ec3_149",
       "type": "text",
       "x": 76,
       "y": 3609,
@@ -3060,7 +3126,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_147",
+      "id": "ec3_150",
       "type": "math",
       "x": 96,
       "y": 3645,
@@ -3082,12 +3148,12 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_148",
+      "id": "ec3_151",
       "type": "math",
       "x": 96,
       "y": 3737,
       "props": {
-        "w": 600,
+        "w": 280,
         "h": 32,
         "latex": "N_{u.Rd}\\coloneq \\frac{0.9\\mathrm{Anet}f_{u}}{\\gamma_{M2}}",
         "displayMode": "formulaResult",
@@ -3104,12 +3170,34 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_149",
+      "id": "ec3_152",
+      "type": "math",
+      "x": 396,
+      "y": 3737,
+      "props": {
+        "w": 290,
+        "h": 32,
+        "latex": "W_z\\coloneq \\operatorname{if}(\\mathrm{Class}<3,W_{pl.z},W_{el.z})",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-3"
+    },
+    {
+      "id": "ec3_153",
       "type": "math",
       "x": 96,
       "y": 3777,
       "props": {
-        "w": 600,
+        "w": 280,
         "h": 32,
         "latex": "N_{t.Rd}\\coloneq \\operatorname{min}(N_{c.Rd},N_{u.Rd})",
         "displayMode": "formulaResult",
@@ -3119,14 +3207,36 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_150",
+      "id": "ec3_154",
+      "type": "math",
+      "x": 396,
+      "y": 3777,
+      "props": {
+        "w": 290,
+        "h": 32,
+        "latex": "W_y\\coloneq \\operatorname{if}(\\mathrm{Class}<3,W_{pl.y},W_{el.y})",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-3"
+    },
+    {
+      "id": "ec3_155",
       "type": "math",
       "x": 96,
       "y": 3821,
@@ -3148,7 +3258,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_151",
+      "id": "ec3_156",
       "type": "math",
       "x": 396,
       "y": 3821,
@@ -3170,7 +3280,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_152",
+      "id": "ec3_157",
       "type": "math",
       "x": 96,
       "y": 3873,
@@ -3192,7 +3302,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_153",
+      "id": "ec3_158",
       "type": "math",
       "x": 396,
       "y": 3873,
@@ -3214,7 +3324,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_154",
+      "id": "ec3_159",
       "type": "math",
       "x": 96,
       "y": 3917,
@@ -3236,7 +3346,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_155",
+      "id": "ec3_160",
       "type": "math",
       "x": 396,
       "y": 3917,
@@ -3258,7 +3368,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_156",
+      "id": "ec3_161",
       "type": "math",
       "x": 96,
       "y": 3957,
@@ -3280,7 +3390,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_157",
+      "id": "ec3_162",
       "type": "text",
       "x": 76,
       "y": 3997,
@@ -3296,7 +3406,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_158",
+      "id": "ec3_163",
       "type": "math",
       "x": 96,
       "y": 4037,
@@ -3318,7 +3428,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_159",
+      "id": "ec3_164",
       "type": "math",
       "x": 96,
       "y": 4129,
@@ -3340,7 +3450,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_160",
+      "id": "ec3_165",
       "type": "math",
       "x": 96,
       "y": 4177,
@@ -3362,14 +3472,14 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_161",
+      "id": "ec3_166",
       "type": "math",
       "x": 96,
-      "y": 4225,
+      "y": 4221,
       "props": {
-        "w": 600,
+        "w": 180,
         "h": 32,
-        "latex": "\\mathrm{UR}_{section}\\coloneq \\operatorname{if}(\\rho<1,\\frac{\\operatorname{abs}(N_{Ed})}{N_{Rd.V}}+\\frac{\\operatorname{abs}(M_{y.Ed})}{M_{y.Rd}}+\\frac{\\operatorname{abs}(M_{z.Ed})}{M_{z.Rd}},-1)",
+        "latex": "u_N\\coloneq \\operatorname{if}(N_{Rd.V}>0\\,\\mathrm{N},\\operatorname{abs}(N_{Ed})/N_{Rd.V},-1)",
         "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
@@ -3384,10 +3494,76 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_162",
+      "id": "ec3_167",
+      "type": "math",
+      "x": 296,
+      "y": 4221,
+      "props": {
+        "w": 180,
+        "h": 32,
+        "latex": "u_{My}\\coloneq \\operatorname{if}(M_{y.Rd}>0\\,\\mathrm{N}\\cdot\\mathrm{mm},\\operatorname{abs}(M_{y.Ed})/M_{y.Rd},-1)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 13,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-3"
+    },
+    {
+      "id": "ec3_168",
+      "type": "math",
+      "x": 496,
+      "y": 4221,
+      "props": {
+        "w": 180,
+        "h": 32,
+        "latex": "u_{Mz}\\coloneq \\operatorname{if}(M_{z.Rd}>0\\,\\mathrm{N}\\cdot\\mathrm{mm},\\operatorname{abs}(M_{z.Ed})/M_{z.Rd},-1)",
+        "displayMode": "result",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 13,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-3"
+    },
+    {
+      "id": "ec3_169",
       "type": "math",
       "x": 96,
-      "y": 4277,
+      "y": 4261,
+      "props": {
+        "w": 600,
+        "h": 32,
+        "latex": "\\mathrm{UR}_{section}\\coloneq u_N+u_{My}+u_{Mz}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 13,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-3"
+    },
+    {
+      "id": "ec3_170",
+      "type": "math",
+      "x": 96,
+      "y": 4301,
       "props": {
         "w": 100,
         "h": 32,
@@ -3407,14 +3583,14 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_163",
+      "id": "ec3_171",
       "type": "text",
       "x": 236,
-      "y": 4277,
+      "y": 4301,
       "props": {
         "w": 470,
         "h": 24,
-        "html": "UR = |NEd|/NRd,V + |My,Ed|/My,Rd + |Mz,Ed|/Mz,Rd ≤ 1.",
+        "html": "uN=|NEd|/NRd,V; uMy=|My,Ed|/My,Rd; uMz=|Mz,Ed|/Mz,Rd; sum ≤ 1.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -3423,7 +3599,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_164",
+      "id": "ec3_172",
       "type": "text",
       "x": 76,
       "y": 4325,
@@ -3439,7 +3615,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_165",
+      "id": "ec3_173",
       "type": "math",
       "x": 96,
       "y": 4373,
@@ -3461,7 +3637,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_166",
+      "id": "ec3_174",
       "type": "math",
       "x": 396,
       "y": 4373,
@@ -3483,7 +3659,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_167",
+      "id": "ec3_175",
       "type": "text",
       "x": 76,
       "y": 4429,
@@ -3499,7 +3675,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_168",
+      "id": "ec3_176",
       "type": "text",
       "x": 76,
       "y": 4465,
@@ -3515,7 +3691,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_169",
+      "id": "ec3_177",
       "type": "text",
       "x": 76,
       "y": 4501,
@@ -3531,7 +3707,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_170",
+      "id": "ec3_178",
       "type": "text",
       "x": 76,
       "y": 4744,
@@ -3548,7 +3724,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_171",
+      "id": "ec3_179",
       "type": "text",
       "x": 76,
       "y": 4780,
@@ -3564,7 +3740,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_172",
+      "id": "ec3_180",
       "type": "math",
       "x": 96,
       "y": 4816,
@@ -3586,7 +3762,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_173",
+      "id": "ec3_181",
       "type": "math",
       "x": 396,
       "y": 4816,
@@ -3608,7 +3784,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_174",
+      "id": "ec3_182",
       "type": "math",
       "x": 96,
       "y": 4864,
@@ -3630,7 +3806,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_175",
+      "id": "ec3_183",
       "type": "math",
       "x": 96,
       "y": 4956,
@@ -3652,7 +3828,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_176",
+      "id": "ec3_184",
       "type": "math",
       "x": 396,
       "y": 4956,
@@ -3674,7 +3850,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_177",
+      "id": "ec3_185",
       "type": "math",
       "x": 96,
       "y": 5008,
@@ -3696,7 +3872,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_178",
+      "id": "ec3_186",
       "type": "math",
       "x": 96,
       "y": 5056,
@@ -3718,7 +3894,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_179",
+      "id": "ec3_187",
       "type": "math",
       "x": 96,
       "y": 5104,
@@ -3740,7 +3916,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_180",
+      "id": "ec3_188",
       "type": "math",
       "x": 96,
       "y": 5196,
@@ -3762,7 +3938,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_181",
+      "id": "ec3_189",
       "type": "math",
       "x": 396,
       "y": 5196,
@@ -3784,7 +3960,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_182",
+      "id": "ec3_190",
       "type": "math",
       "x": 96,
       "y": 5248,
@@ -3806,7 +3982,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_183",
+      "id": "ec3_191",
       "type": "math",
       "x": 96,
       "y": 5296,
@@ -3828,7 +4004,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_184",
+      "id": "ec3_192",
       "type": "text",
       "x": 76,
       "y": 5344,
@@ -3844,14 +4020,14 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_185",
+      "id": "ec3_193",
       "type": "math",
       "x": 96,
       "y": 5384,
       "props": {
         "w": 600,
         "h": 32,
-        "latex": "i_{0.sq}\\coloneq \\frac{I_y+I_z}{A}",
+        "latex": "i_0\\coloneq \\sqrt{\\frac{I_y+I_z}{A}}",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -3866,14 +4042,14 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_186",
+      "id": "ec3_194",
       "type": "math",
       "x": 96,
       "y": 5424,
       "props": {
         "w": 600,
         "h": 32,
-        "latex": "N_{cr.T}\\coloneq \\frac{\\mathrm{G}I_t+\\pi^2\\mathrm{E}I_w/\\mathrm{Lt}^2}{i_{0.sq}}",
+        "latex": "N_{cr.T}\\coloneq \\frac{\\mathrm{G}I_t+\\pi^2\\mathrm{E}I_w/\\mathrm{Lt}^2}{i_0^2}",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -3888,7 +4064,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_187",
+      "id": "ec3_195",
       "type": "math",
       "x": 96,
       "y": 5476,
@@ -3910,7 +4086,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_188",
+      "id": "ec3_196",
       "type": "math",
       "x": 396,
       "y": 5476,
@@ -3932,7 +4108,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_189",
+      "id": "ec3_197",
       "type": "math",
       "x": 96,
       "y": 5528,
@@ -3954,7 +4130,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_190",
+      "id": "ec3_198",
       "type": "math",
       "x": 96,
       "y": 5576,
@@ -3976,7 +4152,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_191",
+      "id": "ec3_199",
       "type": "text",
       "x": 76,
       "y": 5628,
@@ -3992,7 +4168,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_192",
+      "id": "ec3_200",
       "type": "text",
       "x": 76,
       "y": 5664,
@@ -4008,7 +4184,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_193",
+      "id": "ec3_201",
       "type": "text",
       "x": 76,
       "y": 5915,
@@ -4025,7 +4201,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_194",
+      "id": "ec3_202",
       "type": "text",
       "x": 76,
       "y": 5951,
@@ -4041,12 +4217,12 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_195",
+      "id": "ec3_203",
       "type": "math",
       "x": 96,
       "y": 5979,
       "props": {
-        "w": 626,
+        "w": 620,
         "h": 284,
         "latex": "\\mathrm{LTBmodel}\\coloneq \\operatorname{stack}(\\mathrm{LoadCase},\\mathrm{zg}/\\mathrm{mm},\\mathrm{Llt}/\\mathrm{mm},\\mathrm{k},\\mathrm{kw})",
         "displayMode": "formulaResult",
@@ -4064,7 +4240,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_196",
+      "id": "ec3_204",
       "type": "text",
       "x": 76,
       "y": 6271,
@@ -4080,7 +4256,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_197",
+      "id": "ec3_205",
       "type": "math",
       "x": 96,
       "y": 6303,
@@ -4102,7 +4278,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_198",
+      "id": "ec3_206",
       "type": "math",
       "x": 396,
       "y": 6303,
@@ -4124,7 +4300,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_199",
+      "id": "ec3_207",
       "type": "text",
       "x": 76,
       "y": 6339,
@@ -4140,7 +4316,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_200",
+      "id": "ec3_208",
       "type": "math",
       "x": 96,
       "y": 6375,
@@ -4162,7 +4338,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_201",
+      "id": "ec3_209",
       "type": "math",
       "x": 96,
       "y": 6427,
@@ -4184,7 +4360,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_202",
+      "id": "ec3_210",
       "type": "math",
       "x": 96,
       "y": 6475,
@@ -4206,7 +4382,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_203",
+      "id": "ec3_211",
       "type": "math",
       "x": 96,
       "y": 6567,
@@ -4228,7 +4404,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_204",
+      "id": "ec3_212",
       "type": "text",
       "x": 76,
       "y": 6603,
@@ -4244,34 +4420,34 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_205",
+      "id": "ec3_213",
       "type": "math",
       "x": 96,
       "y": 6639,
       "props": {
-        "w": 280,
+        "w": 600,
         "h": 32,
         "latex": "\\lambda_{LT}\\coloneq \\operatorname{if}(M_{cr}>0\\,\\mathrm{N}\\cdot\\mathrm{mm},\\sqrt{W_yf_{y}/M_{cr}},0)",
-        "displayMode": "result",
+        "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_206",
+      "id": "ec3_214",
       "type": "math",
-      "x": 396,
-      "y": 6639,
+      "x": 96,
+      "y": 6691,
       "props": {
-        "w": 290,
+        "w": 280,
         "h": 32,
         "latex": "\\Phi_{LT}\\coloneq 0.5\\left(1+\\alpha_{LT}(\\lambda_{LT}-0.2)+\\lambda_{LT}^2\\right)",
         "displayMode": "formulaResult",
@@ -4288,36 +4464,36 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_207",
+      "id": "ec3_215",
       "type": "math",
-      "x": 96,
+      "x": 396,
       "y": 6691,
       "props": {
-        "w": 600,
+        "w": 290,
         "h": 32,
         "latex": "\\chi_{LT}\\coloneq \\operatorname{if}(M_{cr}>0\\,\\mathrm{N}\\cdot\\mathrm{mm},\\operatorname{min}\\left(1,\\frac{1}{\\Phi_{LT}+\\sqrt{\\operatorname{max}(0,\\Phi_{LT}^2-\\lambda_{LT}^2)}}\\right),0)",
-        "displayMode": "formulaResult",
+        "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 12,
+        "fontSize": 13,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_208",
+      "id": "ec3_216",
       "type": "math",
       "x": 96,
       "y": 6739,
       "props": {
         "w": 600,
         "h": 32,
-        "latex": "M_{b.Rd}\\coloneq \\operatorname{if}(M_{cr}>0\\,\\mathrm{N}\\cdot\\mathrm{mm},\\chi_{LT}W_yf_{y}/\\gamma_{M1},0\\,\\mathrm{N}\\cdot\\mathrm{mm})",
+        "latex": "M_{b.Rd}\\coloneq \\frac{\\chi_{LT}W_yf_{y}}{\\gamma_{M1}}",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -4332,7 +4508,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_209",
+      "id": "ec3_217",
       "type": "text",
       "x": 76,
       "y": 6795,
@@ -4348,7 +4524,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_210",
+      "id": "ec3_218",
       "type": "text",
       "x": 76,
       "y": 6831,
@@ -4364,7 +4540,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_211",
+      "id": "ec3_219",
       "type": "text",
       "x": 76,
       "y": 6867,
@@ -4380,7 +4556,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_212",
+      "id": "ec3_220",
       "type": "text",
       "x": 76,
       "y": 7086,
@@ -4397,7 +4573,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_213",
+      "id": "ec3_221",
       "type": "text",
       "x": 76,
       "y": 7122,
@@ -4413,7 +4589,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_214",
+      "id": "ec3_222",
       "type": "math",
       "x": 96,
       "y": 7158,
@@ -4435,7 +4611,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_215",
+      "id": "ec3_223",
       "type": "math",
       "x": 396,
       "y": 7158,
@@ -4457,7 +4633,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_216",
+      "id": "ec3_224",
       "type": "math",
       "x": 96,
       "y": 7198,
@@ -4479,7 +4655,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_217",
+      "id": "ec3_225",
       "type": "math",
       "x": 96,
       "y": 7242,
@@ -4501,7 +4677,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_218",
+      "id": "ec3_226",
       "type": "math",
       "x": 96,
       "y": 7286,
@@ -4523,7 +4699,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_219",
+      "id": "ec3_227",
       "type": "math",
       "x": 96,
       "y": 7334,
@@ -4545,7 +4721,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_220",
+      "id": "ec3_228",
       "type": "math",
       "x": 396,
       "y": 7334,
@@ -4567,7 +4743,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_221",
+      "id": "ec3_229",
       "type": "math",
       "x": 96,
       "y": 7374,
@@ -4589,7 +4765,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_222",
+      "id": "ec3_230",
       "type": "math",
       "x": 396,
       "y": 7374,
@@ -4611,7 +4787,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_223",
+      "id": "ec3_231",
       "type": "math",
       "x": 96,
       "y": 7414,
@@ -4633,7 +4809,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_224",
+      "id": "ec3_232",
       "type": "math",
       "x": 396,
       "y": 7414,
@@ -4655,7 +4831,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_225",
+      "id": "ec3_233",
       "type": "math",
       "x": 96,
       "y": 7454,
@@ -4677,7 +4853,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_226",
+      "id": "ec3_234",
       "type": "text",
       "x": 396,
       "y": 7454,
@@ -4693,7 +4869,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_227",
+      "id": "ec3_235",
       "type": "math",
       "x": 96,
       "y": 7494,
@@ -4715,7 +4891,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_228",
+      "id": "ec3_236",
       "type": "math",
       "x": 96,
       "y": 7534,
@@ -4738,7 +4914,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_229",
+      "id": "ec3_237",
       "type": "text",
       "x": 256,
       "y": 7534,
@@ -4754,7 +4930,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_230",
+      "id": "ec3_238",
       "type": "math",
       "x": 96,
       "y": 7574,
@@ -4776,7 +4952,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_231",
+      "id": "ec3_239",
       "type": "math",
       "x": 96,
       "y": 7614,
@@ -4799,7 +4975,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_232",
+      "id": "ec3_240",
       "type": "text",
       "x": 256,
       "y": 7614,
@@ -4815,7 +4991,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_233",
+      "id": "ec3_241",
       "type": "text",
       "x": 76,
       "y": 7638,
@@ -4831,7 +5007,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_234",
+      "id": "ec3_242",
       "type": "text",
       "x": 76,
       "y": 7670,
@@ -4847,7 +5023,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_235",
+      "id": "ec3_243",
       "type": "text",
       "x": 76,
       "y": 7710,
@@ -4864,12 +5040,12 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_236",
+      "id": "ec3_244",
       "type": "math",
       "x": 96,
       "y": 7746,
       "props": {
-        "w": 626,
+        "w": 620,
         "h": 116,
         "latex": "\\mathrm{SLSdiagram}\\coloneq \\operatorname{stack}(\\mathrm{SLSmode},\\mathrm{q}/(\\mathrm{kN}/\\mathrm{m}),\\mathrm{P}/\\mathrm{kN},\\mathrm{L}/\\mathrm{mm})",
         "displayMode": "formulaResult",
@@ -4887,7 +5063,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_237",
+      "id": "ec3_245",
       "type": "math",
       "x": 96,
       "y": 7870,
@@ -4909,7 +5085,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_238",
+      "id": "ec3_246",
       "type": "math",
       "x": 96,
       "y": 7922,
@@ -4931,7 +5107,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_239",
+      "id": "ec3_247",
       "type": "math",
       "x": 96,
       "y": 7974,
@@ -4953,7 +5129,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_240",
+      "id": "ec3_248",
       "type": "math",
       "x": 396,
       "y": 7974,
@@ -4975,14 +5151,14 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_241",
+      "id": "ec3_249",
       "type": "math",
       "x": 96,
       "y": 8022,
       "props": {
         "w": 600,
         "h": 32,
-        "latex": "\\delta\\le\\delta_{lim}",
+        "latex": "\\delta\\le \\delta_{lim}",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -4997,7 +5173,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_242",
+      "id": "ec3_250",
       "type": "text",
       "x": 76,
       "y": 8054,
@@ -5013,7 +5189,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_243",
+      "id": "ec3_251",
       "type": "text",
       "x": 76,
       "y": 8257,
@@ -5033,7 +5209,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_244",
+      "id": "ec3_252",
       "type": "text",
       "x": 76,
       "y": 8297,
@@ -5054,7 +5230,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_245",
+      "id": "ec3_253",
       "type": "text",
       "x": 76,
       "y": 8337,
@@ -5070,7 +5246,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_246",
+      "id": "ec3_254",
       "type": "math",
       "x": 76,
       "y": 8377,
@@ -5092,7 +5268,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_247",
+      "id": "ec3_255",
       "type": "math",
       "x": 236,
       "y": 8377,
@@ -5114,7 +5290,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_248",
+      "id": "ec3_256",
       "type": "math",
       "x": 396,
       "y": 8377,
@@ -5136,7 +5312,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_249",
+      "id": "ec3_257",
       "type": "math",
       "x": 556,
       "y": 8377,
@@ -5158,7 +5334,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_250",
+      "id": "ec3_258",
       "type": "math",
       "x": 76,
       "y": 8417,
@@ -5180,7 +5356,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_251",
+      "id": "ec3_259",
       "type": "math",
       "x": 236,
       "y": 8417,
@@ -5202,7 +5378,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_252",
+      "id": "ec3_260",
       "type": "math",
       "x": 396,
       "y": 8417,
@@ -5224,7 +5400,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_253",
+      "id": "ec3_261",
       "type": "math",
       "x": 556,
       "y": 8417,
@@ -5246,7 +5422,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_254",
+      "id": "ec3_262",
       "type": "math",
       "x": 76,
       "y": 8457,
@@ -5268,7 +5444,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_255",
+      "id": "ec3_263",
       "type": "math",
       "x": 236,
       "y": 8457,
@@ -5290,7 +5466,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_256",
+      "id": "ec3_264",
       "type": "math",
       "x": 396,
       "y": 8457,
@@ -5312,7 +5488,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_257",
+      "id": "ec3_265",
       "type": "math",
       "x": 556,
       "y": 8457,
@@ -5334,7 +5510,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_258",
+      "id": "ec3_266",
       "type": "math",
       "x": 76,
       "y": 8497,
@@ -5356,7 +5532,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_259",
+      "id": "ec3_267",
       "type": "math",
       "x": 236,
       "y": 8497,
@@ -5378,7 +5554,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_260",
+      "id": "ec3_268",
       "type": "math",
       "x": 396,
       "y": 8497,
@@ -5400,7 +5576,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_261",
+      "id": "ec3_269",
       "type": "math",
       "x": 556,
       "y": 8497,
@@ -5422,7 +5598,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_262",
+      "id": "ec3_270",
       "type": "math",
       "x": 96,
       "y": 8557,
@@ -5444,7 +5620,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_263",
+      "id": "ec3_271",
       "type": "math",
       "x": 396,
       "y": 8557,
@@ -5466,7 +5642,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_264",
+      "id": "ec3_272",
       "type": "math",
       "x": 96,
       "y": 8597,
@@ -5488,7 +5664,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_265",
+      "id": "ec3_273",
       "type": "math",
       "x": 396,
       "y": 8597,
@@ -5510,7 +5686,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_266",
+      "id": "ec3_274",
       "type": "math",
       "x": 96,
       "y": 8637,
@@ -5532,7 +5708,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_267",
+      "id": "ec3_275",
       "type": "math",
       "x": 396,
       "y": 8637,
@@ -5554,7 +5730,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_268",
+      "id": "ec3_276",
       "type": "math",
       "x": 96,
       "y": 8677,
@@ -5576,7 +5752,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_269",
+      "id": "ec3_277",
       "type": "math",
       "x": 396,
       "y": 8677,
@@ -5598,7 +5774,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_270",
+      "id": "ec3_278",
       "type": "math",
       "x": 96,
       "y": 8717,
@@ -5620,7 +5796,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_271",
+      "id": "ec3_279",
       "type": "math",
       "x": 396,
       "y": 8717,
@@ -5642,7 +5818,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_272",
+      "id": "ec3_280",
       "type": "math",
       "x": 96,
       "y": 8757,
@@ -5664,7 +5840,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_273",
+      "id": "ec3_281",
       "type": "math",
       "x": 396,
       "y": 8757,
@@ -5686,7 +5862,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_274",
+      "id": "ec3_282",
       "type": "math",
       "x": 96,
       "y": 8797,
@@ -5708,7 +5884,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_275",
+      "id": "ec3_283",
       "type": "math",
       "x": 396,
       "y": 8797,
@@ -5730,7 +5906,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_276",
+      "id": "ec3_284",
       "type": "math",
       "x": 96,
       "y": 8837,
@@ -5752,7 +5928,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_277",
+      "id": "ec3_285",
       "type": "math",
       "x": 396,
       "y": 8837,
@@ -5774,7 +5950,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_278",
+      "id": "ec3_286",
       "type": "math",
       "x": 96,
       "y": 8877,
@@ -5796,7 +5972,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_279",
+      "id": "ec3_287",
       "type": "math",
       "x": 396,
       "y": 8877,
@@ -5818,7 +5994,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_280",
+      "id": "ec3_288",
       "type": "math",
       "x": 96,
       "y": 8917,
@@ -5840,7 +6016,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_281",
+      "id": "ec3_289",
       "type": "math",
       "x": 396,
       "y": 8917,
@@ -5862,7 +6038,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_282",
+      "id": "ec3_290",
       "type": "math",
       "x": 96,
       "y": 8957,
@@ -5884,7 +6060,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_283",
+      "id": "ec3_291",
       "type": "math",
       "x": 396,
       "y": 8957,
@@ -5906,7 +6082,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_284",
+      "id": "ec3_292",
       "type": "math",
       "x": 96,
       "y": 8997,
@@ -5928,7 +6104,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_285",
+      "id": "ec3_293",
       "type": "math",
       "x": 396,
       "y": 8997,
@@ -5950,7 +6126,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_286",
+      "id": "ec3_294",
       "type": "math",
       "x": 96,
       "y": 9037,
@@ -5972,7 +6148,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_287",
+      "id": "ec3_295",
       "type": "math",
       "x": 396,
       "y": 9037,
@@ -5994,7 +6170,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_288",
+      "id": "ec3_296",
       "type": "math",
       "x": 96,
       "y": 9077,
@@ -6016,7 +6192,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_289",
+      "id": "ec3_297",
       "type": "math",
       "x": 396,
       "y": 9077,
@@ -6038,7 +6214,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_290",
+      "id": "ec3_298",
       "type": "math",
       "x": 96,
       "y": 9117,
@@ -6060,7 +6236,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_291",
+      "id": "ec3_299",
       "type": "math",
       "x": 396,
       "y": 9117,
@@ -6082,7 +6258,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_292",
+      "id": "ec3_300",
       "type": "text",
       "x": 76,
       "y": 9193,
@@ -6098,7 +6274,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_293",
+      "id": "ec3_301",
       "type": "text",
       "x": 76,
       "y": 9225,
@@ -6114,7 +6290,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_294",
+      "id": "ec3_302",
       "type": "text",
       "x": 76,
       "y": 9848,
@@ -6135,12 +6311,12 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_295",
+      "id": "ec3_303",
       "type": "math",
       "x": 96,
       "y": 9884,
       "props": {
-        "w": 626,
+        "w": 620,
         "h": 204,
         "latex": "\\mathrm{Kreference}\\coloneq 1",
         "displayMode": "formula",
@@ -6159,7 +6335,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_296",
+      "id": "ec3_304",
       "type": "text",
       "x": 76,
       "y": 10096,
@@ -6175,7 +6351,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_297",
+      "id": "ec3_305",
       "type": "text",
       "x": 76,
       "y": 10128,
@@ -6191,7 +6367,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_298",
+      "id": "ec3_306",
       "type": "text",
       "x": 76,
       "y": 10160,
@@ -6207,7 +6383,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_299",
+      "id": "ec3_307",
       "type": "text",
       "x": 76,
       "y": 9428,
@@ -6224,7 +6400,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_300",
+      "id": "ec3_308",
       "type": "math",
       "x": 96,
       "y": 9478,
@@ -6246,7 +6422,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_301",
+      "id": "ec3_309",
       "type": "math",
       "x": 96,
       "y": 9504,
@@ -6268,7 +6444,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_302",
+      "id": "ec3_310",
       "type": "math",
       "x": 96,
       "y": 9530,
@@ -6290,7 +6466,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_303",
+      "id": "ec3_311",
       "type": "math",
       "x": 96,
       "y": 9582,
@@ -6312,7 +6488,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_304",
+      "id": "ec3_312",
       "type": "math",
       "x": 96,
       "y": 9608,
@@ -6334,7 +6510,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_305",
+      "id": "ec3_313",
       "type": "math",
       "x": 96,
       "y": 9634,
@@ -6356,7 +6532,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_306",
+      "id": "ec3_314",
       "type": "math",
       "x": 96,
       "y": 9660,
@@ -6378,7 +6554,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_307",
+      "id": "ec3_315",
       "type": "math",
       "x": 96,
       "y": 9686,
@@ -6400,7 +6576,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_308",
+      "id": "ec3_316",
       "type": "math",
       "x": 96,
       "y": 9712,
@@ -6422,7 +6598,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_309",
+      "id": "ec3_317",
       "type": "math",
       "x": 96,
       "y": 9738,
@@ -6444,7 +6620,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_310",
+      "id": "ec3_318",
       "type": "math",
       "x": 96,
       "y": 9764,
@@ -6466,7 +6642,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_311",
+      "id": "ec3_319",
       "type": "text",
       "x": 76,
       "y": 10200,
@@ -6483,7 +6659,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_312",
+      "id": "ec3_320",
       "type": "text",
       "x": 76,
       "y": 10236,
@@ -6499,7 +6675,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_313",
+      "id": "ec3_321",
       "type": "text",
       "x": 76,
       "y": 10268,
@@ -6515,7 +6691,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_314",
+      "id": "ec3_322",
       "type": "text",
       "x": 76,
       "y": 10300,
@@ -6531,7 +6707,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_315",
+      "id": "ec3_323",
       "type": "text",
       "x": 76,
       "y": 10332,
@@ -6547,7 +6723,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_316",
+      "id": "ec3_324",
       "type": "text",
       "x": 76,
       "y": 10364,
@@ -6634,54 +6810,54 @@
       {
         "id": "LoadCase",
         "label": "LoadCase",
-        "regionId": "ec3_266"
+        "regionId": "ec3_274"
       }
     ],
     "outputs": [
       {
         "id": "sectionClass",
         "label": "sectionClass",
-        "regionId": "ec3_139"
+        "regionId": "ec3_145"
       },
       {
         "id": "Mcr",
         "label": "Mcr",
-        "regionId": "ec3_203"
+        "regionId": "ec3_211"
       },
       {
         "id": "chiY",
         "label": "chiY",
-        "regionId": "ec3_177"
+        "regionId": "ec3_185"
       },
       {
         "id": "chiZ",
         "label": "chiZ",
-        "regionId": "ec3_182"
+        "regionId": "ec3_190"
       },
       {
         "id": "chiLT",
         "label": "chiLT",
-        "regionId": "ec3_207"
+        "regionId": "ec3_215"
       },
       {
         "id": "kyy",
         "label": "kyy",
-        "regionId": "ec3_219"
+        "regionId": "ec3_227"
       },
       {
         "id": "kyz",
         "label": "kyz",
-        "regionId": "ec3_221"
+        "regionId": "ec3_229"
       },
       {
         "id": "kzy",
         "label": "kzy",
-        "regionId": "ec3_222"
+        "regionId": "ec3_230"
       },
       {
         "id": "kzz",
         "label": "kzz",
-        "regionId": "ec3_220"
+        "regionId": "ec3_228"
       },
       {
         "id": "UR",

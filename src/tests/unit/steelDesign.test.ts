@@ -91,7 +91,7 @@ describe('steel worksheet engine, workers contract, batch and serialization',()=
    expect(engine.getResult(state.id)?.value?.number).toBe(1);
   });
   step('readable equations independently reproduce the guarded kernel before and after a K edit',()=>{
-   const pairs=[['NcRd','Nc'],['NtRd','Nt'],['MyRd','My'],['MzRd','Mz'],['VyRd','Vy'],['VzRd','Vz'],['NcrY','NcrY'],['NcrZ','NcrZ'],['NcrT','NcrT'],['lambdaY','ly'],['lambdaZ','lz'],['chiY','chiY'],['chiZ','chiZ'],['chiT','chiT'],['NbY','NbY'],['NbZ','NbZ'],['NbT','NbT'],['McrCalc','Mcr'],['lambdaLT','lambdaLT'],['chiLT','chiLT'],['Mb','Mb'],['kyy','kyy'],['kyz','kyz'],['kzy','kzy'],['kzz','kzz'],['Jy','iy'],['Jz','iz'],['delta','delta'],['URsection','sectionUr']];
+   const pairs=[['sectionClass','sectionClass'],['flangeClass','flangeClass'],['webClass','webClass'],['NcRd','Nc'],['NtRd','Nt'],['MyRd','My'],['MzRd','Mz'],['VyRd','Vy'],['VzRd','Vz'],['NcrY','NcrY'],['NcrZ','NcrZ'],['NcrT','NcrT'],['lambdaY','ly'],['lambdaZ','lz'],['chiY','chiY'],['chiZ','chiZ'],['chiT','chiT'],['NbY','NbY'],['NbZ','NbZ'],['NbT','NbT'],['McrCalc','Mcr'],['lambdaLT','lambdaLT'],['chiLT','chiLT'],['Mb','Mb'],['kyy','kyy'],['kyz','kyz'],['kzy','kzy'],['kzz','kzz'],['Jy','iy'],['Jz','iz'],['delta','delta'],['URsection','sectionUr']];
    const compare=()=>{
     for(const [key,output] of pairs){
      const ref=`\\operatorname{entry}(${symbol('R')},${outputFields.findIndex(([n])=>n===output)})`;
@@ -104,6 +104,9 @@ describe('steel worksheet engine, workers contract, batch and serialization',()=
    const ky=regions.find(r=>r.input.latex.startsWith(definition('Ky')))!;
    engine.setRegion(ky.id,{...ky.input,latex:definition('Ky')+'2'});compare();
    engine.setRegion(ky.id,ky.input);
+   const mz=regions.find(r=>r.input.latex.startsWith(definition('Mz')))!;
+   engine.setRegion(mz.id,{...mz.input,latex:definition('Mz')+'0\\,\\mathrm{kN}\\cdot\\mathrm{m}'});compare();
+   engine.setRegion(mz.id,mz.input);
    const full=shapes.filter(s=>s.type==='math'&&s.props.displayMode==='full');
    expect(full.length).toBeGreaterThanOrEqual(6);
    for(const shape of full)expect(engine.getResult(shape.id)?.substitutionLatex,shape.id).toBeTruthy();

@@ -18,6 +18,8 @@ test('EC3 catalogue, editable K, LTB safety, batch, custom section, mCCV and pri
  await page.getByTestId('export-pdf').click();await expect(page.locator('#print-root .print-page').first()).toBeAttached();
  await page.emulateMedia({media:'print'});
  const baselinePages=page.locator('#print-root .print-page');
+ for(let i=0;i<await baselinePages.count();i++)await baselinePages.nth(i).screenshot({path:`${out}/reference-page-${i+1}.png`});
+ await page.pdf({path:`${out}/Steel_Beam_Column_EC3.pdf`,preferCSSPageSize:true,printBackground:true});
  await expect(baselinePages).toHaveCount(9);
  for(let i=0;i<7;i++){
    const text=await baselinePages.nth(i).innerText();
@@ -25,8 +27,7 @@ test('EC3 catalogue, editable K, LTB safety, batch, custom section, mCCV and pri
  }
  await expect(baselinePages.first().getByRole('img',{name:'LTB loading and moment diagram'})).toBeVisible();
  await expect(baselinePages.nth(6).getByRole('img',{name:'Separate serviceability load case'})).toBeVisible();
- for(let i=0;i<await baselinePages.count();i++)await baselinePages.nth(i).screenshot({path:`${out}/reference-page-${i+1}.png`});
- await page.pdf({path:`${out}/Steel_Beam_Column_EC3.pdf`,preferCSSPageSize:true,printBackground:true});
+
  const tableLayout=await page.locator('#print-root [data-testid=math-region]').evaluateAll(els=>{
    const find=(key:string)=>els.find(e=>e.getAttribute('data-latex')?.startsWith(key))?.getBoundingClientRect();
    return Array.from({length:13},(_,i)=>{

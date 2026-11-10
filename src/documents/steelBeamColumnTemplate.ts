@@ -51,7 +51,7 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   pair(1,12,['N',q(100,'kN')],['My',q(50,'kN')+t`\cdot\mathrm{m}`]);
   pair(1,13,['Mz',q(5,'kN')+t`\cdot\mathrm{m}`],['Vy',q(0,'kN')]);
   input(1,14,'Vz',q(0,'kN'));
-  calc(1,16,'ActionDiagram',t`\operatorname{stack}(${v('LoadCase')},${v('zg')}/\mathrm{mm},${v('Llt')}/\mathrm{mm},${v('k')},${v('kw')},${v('N')}/\mathrm{kN},${v('My')}/(\mathrm{kN}\cdot\mathrm{m}),${v('Mz')}/(\mathrm{kN}\cdot\mathrm{m}),${v('Vy')}/\mathrm{kN},${v('Vz')}/\mathrm{kN},${v('L')}/\mathrm{mm})`,{steelFigure:'ltb',w:626,h:246});
+  calc(1,16,'ActionDiagram',t`\operatorname{stack}(${v('LoadCase')},${v('zg')}/\mathrm{mm},${v('Llt')}/\mathrm{mm},${v('k')},${v('kw')},${v('N')}/\mathrm{kN},${v('My')}/(\mathrm{kN}\cdot\mathrm{m}),${v('Mz')}/(\mathrm{kN}\cdot\mathrm{m}),${v('Vy')}/\mathrm{kN},${v('Vz')}/\mathrm{kN},${v('L')}/\mathrm{mm})`,{steelFigure:'ltb',w:620,h:246});
   note(1,15,'Technical inputs and independent verification audit',0,{kind:'link',target:'ec3'});
   note(1,23.3,'Fork restraints prevent lateral displacement and twist; warping is free. No slab restraint assumed.');
   note(1,24,'SLS loads are separate from these ULS actions. See section 8 for its own load diagram.');
@@ -89,34 +89,39 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   calc(3,1.5,'SectionDrawing',t`\operatorname{stack}(${v('h')}/\mathrm{mm},${v('b')}/\mathrm{mm},${v('tw')}/\mathrm{mm},${v('tf')}/\mathrm{mm})`,{steelFigure:'section',w:260,h:190});
   (['h','b','tw','tf','A','Iy','Iz','Wpl_y','Wpl_z','It','Iw'] as const).forEach((key,i)=>math(3,1.5+i*0.43,`${v(key)}=`,396,{displayMode:'result',fontSize:12,w:290,h:18,displayUnit:sectionUnits[key]}));
   note(3,6.4,'EN 1993-1-1 §5.5 / Table 5.2. Biaxial loading: uniform web compression is conservative.');
-  calc(3,7.2,'epsilon',t`\sqrt{\frac{235\,\mathrm{MPa}}{${v('fy')}}}`,{displayMode:'full',h:86});
-  calc(3,9.5,'cf',t`\frac{${v('b')}-${v('tw')}-2${v('r')}}{2}`);
-  calc(3,10.5,'lambdaF',`${v('cf')}/${v('tf')}`);
-  calc(3,11.5,'limitF',t`9${v('epsilon')}`);
-  calc(3,12.5,'flangeClass',t`\operatorname{if}(${v('lambdaF')}\le9${v('epsilon')},1,\operatorname{if}(${v('lambdaF')}\le10${v('epsilon')},2,\operatorname{if}(${v('lambdaF')}\le14${v('epsilon')},3,4)))`,{displayMode:'result',w:280});
-  note(3,12.5,'Class 1 / 2 / 3 limits: 9ε / 10ε / 14ε.',0,undefined,396,290);
-  calc(3,13.5,'cw',`${v('h')}-2(${v('tf')}+${v('r')})`);
-  calc(3,14.5,'lambdaW',`${v('cw')}/${v('tw')}`);
-  calc(3,15.5,'alphaWeb',t`\operatorname{min}(1,\operatorname{max}(0,(1+${v('N')}/(${v('cw')}${v('tw')}${v('fy')}))/2))`,{displayMode:'formulaResult',fontSize:12});
-  calc(3,16.5,'alphaUsed',t`\operatorname{if}(${v('Mz')}=${zeroMoment},\operatorname{if}(${abs('My')}>${zeroMoment},${v('alphaWeb')},1),1)`,{displayMode:'result'});
-  calc(3,17.5,'webLimit1',t`\operatorname{if}(${v('alphaUsed')}>0.5,396/(13${v('alphaUsed')}-1),36/\operatorname{max}(${v('alphaUsed')},10^{-12}))${v('epsilon')}`,{displayMode:'result',w:280});
-  calc(3,17.5,'webLimit2',t`\operatorname{if}(${v('alphaUsed')}>0.5,456/(13${v('alphaUsed')}-1),41.5/\operatorname{max}(${v('alphaUsed')},10^{-12}))${v('epsilon')}`,{displayMode:'result',w:290},396);
-  note(3,18.5,'For this biaxial example α=1: web Class 1 / 2 / 3 limits are 33ε / 38ε / 42ε.');
-  // Stress-ratio class-3 branch is audited by the kernel; named results keep all unsupported states guarded.
-  calc(3,19.5,'webClass',get('webClass'),{displayMode:'result',w:280});
-  calc(3,19.5,'sectionClass',t`\operatorname{max}(${v('flangeClass')},${v('webClass')})`,{w:290},396);
-  calc(3,21,'Wy',t`\operatorname{if}(${v('sectionClass')}<3,${v('Wpl_y')},${v('Wel_y')})`,{w:280});
-  calc(3,21,'Wz',t`\operatorname{if}(${v('sectionClass')}<3,${v('Wpl_z')},${v('Wel_z')})`,{w:290},396);
-  note(3,22.5,'Class 1/2: plastic section moduli. Class 3: elastic section moduli.');
-  note(3,23.3,'Class 4: effective-section verification is outside scope; capacities below are not a compliance claim.');
-  note(3,24.1,'Web stress-gradient classification for uniaxial bending follows Table 5.2 in the audit annex.');
+  calc(3,6.7,'epsilon',t`\sqrt{\frac{235\,\mathrm{MPa}}{${v('fy')}}}`,{displayMode:'full',h:86});
+  calc(3,9,'cf',t`\frac{${v('b')}-${v('tw')}-2${v('r')}}{2}`,{w:280});
+  calc(3,9,'lambdaF',`${v('cf')}/${v('tf')}`,{w:290},396);
+  calc(3,10.1,'limitF',t`9${v('epsilon')}`,{w:280});
+  calc(3,10.1,'flangeClass',t`\operatorname{if}(${v('lambdaF')}\le9${v('epsilon')},1,\operatorname{if}(${v('lambdaF')}\le10${v('epsilon')},2,\operatorname{if}(${v('lambdaF')}\le14${v('epsilon')},3,4)))`,{displayMode:'result',w:290},396);
+  note(3,11.2,'Flange Class 1 / 2 / 3 limits: 9ε / 10ε / 14ε. Uniform compression is conservative.');
+  calc(3,12.2,'cw',`${v('h')}-2(${v('tf')}+${v('r')})`,{w:280});
+  calc(3,12.2,'lambdaW',`${v('cw')}/${v('tw')}`,{w:290},396);
+  calc(3,13.3,'stressMean',`${v('N')}/${v('A')}`,{w:280});
+  calc(3,13.3,'stressBend',`${abs('My')}${v('cw')}/(2${v('Iy')})`,{w:290,fontSize:12},396);
+  calc(3,14.4,'psiW',t`\operatorname{if}(${v('stressMean')}+${v('stressBend')}>0\,\mathrm{MPa},\operatorname{max}(-3,(${v('stressMean')}-${v('stressBend')})/(${v('stressMean')}+${v('stressBend')})),-3)`,{displayMode:'result',w:280});
+  calc(3,14.4,'alphaWeb',t`\operatorname{min}(1,\operatorname{max}(0,(1+${v('N')}/(${v('cw')}${v('tw')}${v('fy')}))/2))`,{displayMode:'result',w:290},396);
+  note(3,15.4,'ψ=(σN−σM)/(σN+σM); α=min[1,max(0,(1+NEd/(cw tw fy))/2)].');
+  calc(3,16.4,'alphaUsed',t`\operatorname{if}(${v('Mz')}=${zeroMoment},\operatorname{if}(${abs('My')}>${zeroMoment},${v('alphaWeb')},1),1)`,{displayMode:'result',w:280});
+  note(3,16.4,'Biaxial case: use α=1 (uniform compression).',0,undefined,396,290);
+  calc(3,17.4,'webLimit1',t`\operatorname{if}(${v('alphaUsed')}>0.5,396/(13${v('alphaUsed')}-1),36/\operatorname{max}(${v('alphaUsed')},10^{-12}))${v('epsilon')}`,{fontSize:11});
+  calc(3,18.5,'webLimit2',t`\operatorname{if}(${v('alphaUsed')}>0.5,456/(13${v('alphaUsed')}-1),41.5/\operatorname{max}(${v('alphaUsed')},10^{-12}))${v('epsilon')}`,{fontSize:11});
+  calc(3,19.6,'webBendLimit3',t`\operatorname{if}(${v('psiW')}>-1,42/(0.67+0.33${v('psiW')}),62(1-${v('psiW')})\sqrt{-${v('psiW')}})${v('epsilon')}`,{fontSize:11});
+  calc(3,20.7,'webLimit3',t`\operatorname{if}(${v('Mz')}=${zeroMoment},\operatorname{if}(${abs('My')}>${zeroMoment},${v('webBendLimit3')},42${v('epsilon')}),42${v('epsilon')})`,{displayMode:'result',w:280});
+  const webClass=t`\operatorname{if}(${v('lambdaW')}\le ${v('webLimit1')},1,\operatorname{if}(${v('lambdaW')}\le ${v('webLimit2')},2,\operatorname{if}(${v('lambdaW')}\le ${v('webLimit3')},3,4)))`;
+  calc(3,20.7,'webClass',t`\operatorname{if}(${v('Mz')}=${zeroMoment},\operatorname{if}(${v('stressMean')}+${v('stressBend')}\le0\,\mathrm{MPa},1,${webClass}),${webClass})`,{displayMode:'result',w:290},396);
+  calc(3,21.8,'sectionClass',t`\operatorname{max}(${v('flangeClass')},${v('webClass')})`);
+  note(3,23,'Class 1/2 → Wpl; Class 3 → Wel. Class 4 requires a separate effective-section verification.');
+  note(3,23.8,'For the uniform-compression web, the limits above reduce to 33ε / 38ε / 42ε.');
 
   // 4 — Transparent resistance equations, including the exact conservative high-shear method used.
   note(4,0,'4  CROSS-SECTION RESISTANCE',1);
   note(4,0.9,'EN 1993-1-1 §§6.2.3–6.2.10. Net area assumes no holes unless Anet is overridden.');
   calc(4,1.8,'NcRd',t`\frac{${v('A')}${v('fy')}}{${v('gamma0')}}`,{displayMode:'full',h:86});
-  calc(4,4.1,'NuRd',t`\frac{0.9${v('Anet')}${v('fu')}}{${v('gamma2')}}`);
-  calc(4,5.1,'NtRd',t`\operatorname{min}(${v('NcRd')},${v('NuRd')})`);
+  calc(4,4.1,'NuRd',t`\frac{0.9${v('Anet')}${v('fu')}}{${v('gamma2')}}`,{w:280});
+  calc(4,4.1,'Wz',t`\operatorname{if}(${v('sectionClass')}<3,${v('Wpl_z')},${v('Wel_z')})`,{w:290,fontSize:12},396);
+  calc(4,5.1,'NtRd',t`\operatorname{min}(${v('NcRd')},${v('NuRd')})`,{w:280,fontSize:12});
+  calc(4,5.1,'Wy',t`\operatorname{if}(${v('sectionClass')}<3,${v('Wpl_y')},${v('Wel_y')})`,{w:290,fontSize:12},396);
   calc(4,6.2,'VyRd',t`\frac{${v('Avy')}${v('fy')}}{\sqrt{3}${v('gamma0')}}`,{w:280});
   calc(4,6.2,'VzRd',t`\frac{${v('Avz')}${v('fy')}}{\sqrt{3}${v('gamma0')}}`,{w:290},396);
   calc(4,7.5,'vY',`${abs('Vy')}/${v('VyRd')}`,{w:280});
@@ -128,9 +133,12 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   calc(4,11.6,'MyRd',t`\frac{(1-${v('rho')})${v('Wy')}${v('fy')}}{${v('gamma0')}}`,{displayMode:'full',h:86});
   calc(4,13.9,'MzRd',t`\frac{(1-${v('rho')})${v('Wz')}${v('fy')}}{${v('gamma0')}}`);
   calc(4,15.1,'NAxRd',t`\operatorname{if}(${v('N')}<0\,\mathrm{N},${v('NtRd')},${v('NcRd')})(1-${v('rho')})`);
-  calc(4,16.3,'URsection',t`\operatorname{if}(${v('rho')}<1,\frac{${abs('N')}}{${v('NAxRd')}}+\frac{${abs('My')}}{${v('MyRd')}}+\frac{${abs('Mz')}}{${v('MzRd')}},-1)`,{displayMode:'result'});
-  calc(4,17.6,'SectionResult',v('State5'),{steelFigure:'state',w:100});
-  note(4,17.6,'UR = |NEd|/NRd,V + |My,Ed|/My,Rd + |Mz,Ed|/Mz,Rd ≤ 1.',0,undefined,236,470);
+  calc(4,16.2,'uN',t`\operatorname{if}(${v('NAxRd')}>0\,\mathrm{N},${abs('N')}/${v('NAxRd')},-1)`,{displayMode:'result',w:180});
+  calc(4,16.2,'uMy',t`\operatorname{if}(${v('MyRd')}>${zeroMoment},${abs('My')}/${v('MyRd')},-1)`,{displayMode:'result',w:180},296);
+  calc(4,16.2,'uMz',t`\operatorname{if}(${v('MzRd')}>${zeroMoment},${abs('Mz')}/${v('MzRd')},-1)`,{displayMode:'result',w:180},496);
+  calc(4,17.2,'URsection',`${v('uN')}+${v('uMy')}+${v('uMz')}`);
+  calc(4,18.2,'SectionResult',v('State5'),{steelFigure:'state',w:100});
+  note(4,18.2,'uN=|NEd|/NRd,V; uMy=|My,Ed|/My,Rd; uMz=|Mz,Ed|/Mz,Rd; sum ≤ 1.',0,undefined,236,470);
   note(4,18.8,'Conservative N–My–Mz summation explicitly permitted by §6.2.1(7); no plastic interaction credit.');
   calc(4,20,'hwRatio',t`\frac{${v('h')}-2${v('tf')}}{${v('tw')}}`,{w:280});
   calc(4,20,'shearLimit',t`\frac{72${v('epsilon')}}{${v('eta')}}`,{w:290},396);
@@ -154,8 +162,8 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   calc(5,12.6,'chiZ',chi('phiZ','lambdaZ'),{fontSize:12});
   calc(5,13.8,'NbZ',t`\frac{${v('chiZ')}${v('A')}${v('fy')}}{${v('gamma1')}}`);
   note(5,15,'Uncoupled torsional buckling — doubly symmetric I/H, §6.3.1.4; torsional length Lt independent.');
-  calc(5,16,'iZero',t`\frac{${v('Iy')}+${v('Iz')}}{${v('A')}}`);
-  calc(5,17,'NcrT',t`\frac{${v('G')}${v('It')}+\pi^2${v('E')}${v('Iw')}/${v('Lt')}^2}{${v('iZero')}}`,{fontSize:12});
+  calc(5,16,'iZero',t`\sqrt{\frac{${v('Iy')}+${v('Iz')}}{${v('A')}}}`);
+  calc(5,17,'NcrT',t`\frac{${v('G')}${v('It')}+\pi^2${v('E')}${v('Iw')}/${v('Lt')}^2}{${v('iZero')}^2}`,{fontSize:12});
   calc(5,18.3,'lambdaT',t`\sqrt{${v('A')}${v('fy')}/${v('NcrT')}}`,{w:280});
   calc(5,18.3,'phiT',reduction('lambdaT','alphaZ'),{w:290,fontSize:12},396);
   calc(5,19.6,'chiT',chi('phiT','lambdaT'),{fontSize:12});
@@ -166,7 +174,7 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   // 6 — Coefficient choice and full Mcr expression are visible; unsupported selections remain guarded.
   note(6,0,'6  LATERAL-TORSIONAL BUCKLING',1);
   note(6,0.9,'EN 1993-1-1 §6.3.2.2 (general method); elastic Mcr from SCI NCCI SN003b §2.');
-  calc(6,1.6,'LTBmodel',t`\operatorname{stack}(${v('LoadCase')},${v('zg')}/\mathrm{mm},${v('Llt')}/\mathrm{mm},${v('k')},${v('kw')})`,{steelFigure:'ltb',w:626,h:284});
+  calc(6,1.6,'LTBmodel',t`\operatorname{stack}(${v('LoadCase')},${v('zg')}/\mathrm{mm},${v('Llt')}/\mathrm{mm},${v('k')},${v('kw')})`,{steelFigure:'ltb',w:620,h:284});
   note(6,8.9,'LTB reference: NCCI SN003b; uniform I/H; fork ends / free warping');
   calc(6,9.7,'Cused1',get('C1'),{displayMode:'result',w:280});
   calc(6,9.7,'Cused2',get('C2'),{displayMode:'result',w:290},396);
@@ -176,10 +184,10 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   calc(6,14,'McrCalc',t`${v('Cused1')}${v('Tcr')}\left(\sqrt{${v('Bcr')}}-${v('Cused2')}${v('zg')}\right)`,{displayMode:'full',h:86});
   calc(6,16.3,'Mcr',get('Mcr'),{displayMode:'result'});
   note(6,17.2,'Mcr uses the formula only for verified configurations; external mode uses supplied Mcr directly.');
-  calc(6,18.1,'lambdaLT',t`\operatorname{if}(${v('Mcr')}>${zeroMoment},\sqrt{${v('Wy')}${v('fy')}/${v('Mcr')}},0)`,{displayMode:'result',w:280});
-  calc(6,18.1,'phiLT',reduction('lambdaLT','alphaLT'),{w:290,fontSize:12},396);
-  calc(6,19.4,'chiLT',t`\operatorname{if}(${v('Mcr')}>${zeroMoment},${chi('phiLT','lambdaLT')},0)`,{fontSize:12});
-  calc(6,20.6,'Mb',t`\operatorname{if}(${v('Mcr')}>${zeroMoment},${v('chiLT')}${v('Wy')}${v('fy')}/${v('gamma1')},${zeroMoment})`);
+  calc(6,18.1,'lambdaLT',t`\operatorname{if}(${v('Mcr')}>${zeroMoment},\sqrt{${v('Wy')}${v('fy')}/${v('Mcr')}},0)`,{fontSize:12});
+  calc(6,19.4,'phiLT',reduction('lambdaLT','alphaLT'),{w:280,fontSize:12});
+  calc(6,19.4,'chiLT',t`\operatorname{if}(${v('Mcr')}>${zeroMoment},${chi('phiLT','lambdaLT')},0)`,{displayMode:'result',w:290},396);
+  calc(6,20.6,'Mb',t`\frac{${v('chiLT')}${v('Wy')}${v('fy')}}{${v('gamma1')}}`);
   note(6,22,'Relative LTB slenderness λLT = √(Wy fy / Mcr); no valid Mcr means NOT VERIFIED, not zero demand.');
   note(6,22.9,'External mode bypasses coefficient calculation. McrCalc is an indicative coefficient-mode equation only.');
   note(6,23.8,'Top/bottom load level and end restraints must match the diagram and coefficient source.');
@@ -209,12 +217,12 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(7,13.8,'Cm=1 corresponds to the uniform end-moment example. Other distributions need verified Cm factors.');
   note(7,14.6,'Indicative equations alone do not verify an unsupported branch; summary states govern compliance.');
   note(7,15.6,'8  SERVICEABILITY — SEPARATE UNFACTORED LOAD CASE',2);
-  calc(7,16.5,'SLSdiagram',t`\operatorname{stack}(${v('SLSmode')},${v('q')}/(\mathrm{kN}/\mathrm{m}),${v('P')}/\mathrm{kN},${v('L')}/\mathrm{mm})`,{steelFigure:'sls',w:626,h:116});
+  calc(7,16.5,'SLSdiagram',t`\operatorname{stack}(${v('SLSmode')},${v('q')}/(\mathrm{kN}/\mathrm{m}),${v('P')}/\mathrm{kN},${v('L')}/\mathrm{mm})`,{steelFigure:'sls',w:620,h:116});
   calc(7,19.6,'deltaSimple',t`\frac{5${abs('q')}${v('L')}^4}{384${v('E')}${v('Iy')}}+\frac{${abs('P')}${v('L')}^3}{48${v('E')}${v('Iy')}}`,{fontSize:12});
   calc(7,20.9,'deltaCantilever',t`\frac{${abs('q')}${v('L')}^4}{8${v('E')}${v('Iy')}}+\frac{${abs('P')}${v('L')}^3}{3${v('E')}${v('Iy')}}`,{fontSize:12});
   calc(7,22.2,'delta',t`\operatorname{if}(${v('SLSmode')}=0,${v('deltaSimple')},\operatorname{if}(${v('SLSmode')}=1,${v('deltaCantilever')},${abs('DeltaExternal')}))`,{displayMode:'result',w:280,displayUnit:'mm'});
   calc(7,22.2,'deltaAllow',`${v('L')}/${v('LimitRatio')}`,{w:290,displayUnit:'mm'},396);
-  math(7,23.4,t`${v('delta')}\le${v('deltaAllow')}`);
+  math(7,23.4,t`${v('delta')}\le ${v('deltaAllow')}`);
   note(7,24.2,'Limit ratio is project-specific; Euler–Bernoulli bending deflection only, no universal EC3 limit.');
 
   // 8/9 — Optional detailed inputs and machine contract are kept out of the design narrative.
@@ -228,7 +236,7 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(8,24.2,'Manual kij, Cm and curves require independent verification; acknowledgement flags persist in .mCCV.');
 
   note(9,0,'BUCKLING K — REFERENCE ONLY',2,{kind:'heading',id:'buckling-k'});
-  calc(9,0.9,'Kreference','1',{steelFigure:'buckling',w:626,h:204,constant:true,displayMode:'formula'});
+  calc(9,0.9,'Kreference','1',{steelFigure:'buckling',w:620,h:204,constant:true,displayMode:'formula'});
   note(9,6.2,'Ideal elastic modes. Actual K depends on frame sway, connection stiffness and intermediate restraints.');
   note(9,7,'Fixed–guided: rotations restrained, relative translation free. Viewing this annex never changes Ky/Kz.');
   note(9,7.8,'LTB k/kw are separate lateral-bending / warping factors. Complex frames require stability analysis.');
