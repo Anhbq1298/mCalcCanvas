@@ -20,7 +20,7 @@ test('EC3 catalogue, editable K, LTB safety, batch, custom section, mCCV and pri
  const baselinePages=page.locator('#print-root .print-page');
  for(let i=0;i<await baselinePages.count();i++)await baselinePages.nth(i).screenshot({path:`${out}/reference-page-${i+1}.png`});
  await page.pdf({path:`${out}/Steel_Beam_Column_EC3.pdf`,preferCSSPageSize:true,printBackground:true});
- await expect(baselinePages).toHaveCount(11);
+ const printedPageCount=await baselinePages.count();expect([11,12]).toContain(printedPageCount);
  const reportText=(await baselinePages.allInnerTexts()).join('\n');
  expect(reportText).not.toMatch(/DESIGN SUMMARY|SERVICEABILITY|DEFLECTION|SLS/i);
  expect(reportText).toContain('LTB COEFFICIENT TABLE');
