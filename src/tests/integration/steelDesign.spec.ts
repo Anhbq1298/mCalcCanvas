@@ -25,6 +25,7 @@ test('EC3 catalogue, editable K, LTB safety, batch, custom section, mCCV and pri
    const text=await baselinePages.nth(i).innerText();
    expect(text).not.toMatch(/steelDesign|operatorname|entry\(|stack\(/);
  }
+ console.log('LTB_EXPORT_REGION',await page.locator('#print-root [data-testid=math-region]').filter({has:page.locator('[data-latex*=ActionDiagram]')}).count(),await page.locator('#print-root [data-latex*=ActionDiagram]').evaluateAll(es=>es.map(e=>e.outerHTML)));
  await expect(page.locator('#print-root').getByRole('img',{name:'LTB loading and moment diagram'})).toHaveCount(1);
  await expect(page.locator('#print-root').getByRole('img',{name:'Separate serviceability load case'})).toHaveCount(1);
 
