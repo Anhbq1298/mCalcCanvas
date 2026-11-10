@@ -1027,7 +1027,7 @@
       "props": {
         "w": 640,
         "h": 24,
-        "html": "HEB/I/H geometry and properties for the selected section.",
+        "html": "Steel section source: licensed offline catalogue; designation and dataset shown beside Section ID.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
