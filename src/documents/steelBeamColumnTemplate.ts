@@ -36,7 +36,6 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
     lambdaLT:'Relative LTB slenderness λLT', Mb:'LTB resistance Mb,Rd (6.3.2.2)',
     kyyAuto:'Interaction factor kyy (Annex B, Method 2)', kzzAuto:'Interaction factor kzz (Annex B, Method 2)',
     Jy:'Interaction check about y–y (6.61)', Jz:'Interaction check about z–z (6.62)',
-    deltaSimple:'Simply supported beam deflection', deltaCantilever:'Cantilever beam deflection',
   };
   const calc = (p: number, row: number, key: string, rhs: string, props: Partial<MathProps> = {}, x = 96) => {
     const label=calculationLabels[key];
@@ -91,7 +90,6 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(1,21.7,'Automatic table cases assume fork-end lateral / twist restraint, free warping, k = kw = 1.');
   note(1,22.5,'For other restraints, use independently verified manual coefficients or external Mcr in Annex A.');
   note(1,23.3,'No slab restraint is assumed.');
-  note(1,24,'SLS loads are separate from these ULS actions. See section 8 for its own load diagram.');
 
   // 2 — Summary has no numerical vector formulas visible to the reader.
   note(2,0,'DESIGN SUMMARY',1);
@@ -100,21 +98,21 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   calc(2,2,'Governing',get('governing'),{steelFigure:'mode'});
   calc(2,2.8,'Issues',get('flags'),{steelFigure:'issues'});
   ['Check / clause','Resistance','Demand','UR','Status'].forEach((s,i)=>note(2,4,s,0,undefined,[76,276,416,536,616][i],[190,120,100,60,100][i]));
-  const resistances=[t`\operatorname{if}(${v('N')}<0\,\mathrm{N},${get('Nt')},${get('Nc')})`,...['My','Mz','Vy','Vz'].map(get),'1',...['NbY','NbZ','NbT','Mb'].map(get),'1','1',`${v('L')}/${v('LimitRatio')}`];
-  const demands=['N','My','Mz','Vy','Vz','sectionUr','N','N','N','My','iy','iz','delta'];
-  const clauses=['6.2.3 / 6.2.4','6.2.5 / 6.2.8','6.2.5 / 6.2.8','6.2.6','6.2.6 / EN 1993-1-5','6.2.1(7) / 6.2.10','6.3.1.2','6.3.1.2','6.3.1.4','6.3.2.2','6.3.3 / Annex B','6.3.3 / Annex B','EN 1990 / project'];
+  const resistances=[t`\operatorname{if}(${v('N')}<0\,\mathrm{N},${get('Nt')},${get('Nc')})`,...['My','Mz','Vy','Vz'].map(get),'1',...['NbY','NbZ','NbT','Mb'].map(get),'1','1'];
+  const demands=['N','My','Mz','Vy','Vz','sectionUr','N','N','N','My','iy','iz'];
+  const clauses=['6.2.3 / 6.2.4','6.2.5 / 6.2.8','6.2.5 / 6.2.8','6.2.6','6.2.6 / EN 1993-1-5','6.2.1(7) / 6.2.10','6.3.1.2','6.3.1.2','6.3.1.4','6.3.2.2','6.3.3 / Annex B','6.3.3 / Annex B'];
   checkNames.forEach((name,i)=>{
     const row=4.8+i;
     note(2,row,name,0,undefined,76,190);
     const label=shapes.at(-1)!;if(label.type==='text'){label.props.html=escapeHtml(name)+'<br/>'+escapeHtml(clauses[i]);label.props.h=34;}
-    calc(2,row+0.2,'r'+i,resistances[i],{displayMode:'value',constant:true,w:120,fontSize:12,h:28,...(i===12?{displayUnit:'mm'}:{})},276);
-    calc(2,row+0.2,'d'+i,i===5||i>=10?get(demands[i]):abs(demands[i]),{displayMode:'value',constant:true,w:120,fontSize:12,h:28,...(i===12?{displayUnit:'mm'}:{})},416);
+    calc(2,row+0.2,'r'+i,resistances[i],{displayMode:'value',constant:true,w:120,fontSize:12,h:28},276);
+    calc(2,row+0.2,'d'+i,i===5||i>=10?get(demands[i]):abs(demands[i]),{displayMode:'value',constant:true,w:120,fontSize:12,h:28},416);
     calc(2,row+0.2,'UR'+i,t`\operatorname{entry}(${v('R')},${outputFields.length+2*i})`,{displayMode:'value',constant:true,w:70,fontSize:12,h:28},536);
     calc(2,row+0.2,'State'+i,t`\operatorname{entry}(${v('R')},${outputFields.length+2*i+1})`,{steelFigure:'state',w:100,h:28},616);
   });
   note(2,18.5,'READING THIS REPORT',2);
   note(2,19.5,'3 — section geometry and classification; 4 — section resistance; 5 — compression buckling.');
-  note(2,20.3,'6 — lateral-torsional buckling; 7 — beam-column interaction; 8 — serviceability.');
+  note(2,20.3,'6 — lateral-torsional buckling; 7 — beam-column interaction.');
   note(2,21.3,'PASS applies only to checks within the declared scope. A missing required check is NOT VERIFIED.');
   note(2,22.1,'The detailed equations are editable and recalculated. Summary states also use the guarded EC3 audit.');
   note(2,23.1,'Unsupported branches remain NOT VERIFIED even when an indicative equation has a numerical value.');
@@ -229,7 +227,7 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(6,16.9,'The selected reference case, restraint and signed load height must match the member.');
   note(6,19,'Reference: SCI NCCI SN003b; uniform rolled I/H sections, fork-end restraint and free warping.');
 
-  // 7 — Both Annex B equations are evaluated explicitly. SLS has a distinct physical load case.
+  // 7 — Both Annex B equations are evaluated explicitly.
   note(7,0,'7  COMPRESSION AND BIAXIAL BENDING',1);
   note(7,0.9,'EN 1993-1-1 §6.3.3, equations (6.61)/(6.62); Annex B Method 2, plastic I/H, λz ≥ 0.4.');
   calc(7,1.8,'nY',`${compression}/${v('NbY')}`,{w:280});
@@ -253,24 +251,15 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   note(7,13.2,'Acceptance: Jz ≤ 1; equation (6.62).',0,undefined,256,400);
   note(7,13.8,'Cm=1 corresponds to the uniform end-moment example. Other distributions need verified Cm factors.');
   note(7,14.6,'Indicative equations alone do not verify an unsupported branch; summary states govern compliance.');
-  note(7,15.6,'8  SERVICEABILITY — SEPARATE UNFACTORED LOAD CASE',2);
-  calc(7,16.5,'SLSdiagram',t`\operatorname{stack}(${v('SLSmode')},${v('q')}/(\mathrm{kN}/\mathrm{m}),${v('P')}/\mathrm{kN},${v('L')}/\mathrm{mm})`,{steelFigure:'sls',w:620,h:116});
-  calc(7,19.6,'deltaSimple',t`\frac{5${abs('q')}${v('L')}^4}{384${v('E')}${v('Iy')}}+\frac{${abs('P')}${v('L')}^3}{48${v('E')}${v('Iy')}}`,{fontSize:12});
-  calc(7,20.9,'deltaCantilever',t`\frac{${abs('q')}${v('L')}^4}{8${v('E')}${v('Iy')}}+\frac{${abs('P')}${v('L')}^3}{3${v('E')}${v('Iy')}}`,{fontSize:12});
-  calc(7,22.2,'delta',t`\operatorname{if}(${v('SLSmode')}=0,${v('deltaSimple')},\operatorname{if}(${v('SLSmode')}=1,${v('deltaCantilever')},${abs('DeltaExternal')}))`,{displayMode:'result',w:280,displayUnit:'mm'});
-  calc(7,22.2,'deltaAllow',`${v('L')}/${v('LimitRatio')}`,{w:290,displayUnit:'mm'},396);
-  math(7,23.4,t`${v('delta')}\le ${v('deltaAllow')}`);
-  note(7,24.2,'Limit ratio is project-specific; Euler–Bernoulli bending deflection only, no universal EC3 limit.');
-
   // 8/9 — Optional detailed inputs and machine contract are kept out of the design narrative.
   note(8,0,'ANNEX',1,{kind:'start'});
   note(8,1,'Section data and advanced inputs',2,{kind:'heading',id:'ec3'});
   note(8,2,'Properties are explicit quantities. Replace a lookup with a verified literal to override it.');
   propertyKeys.slice(0,16).forEach((key,i)=>calc(8,3+Math.floor(i/4),key,t`\operatorname{sectionProp}(${v('Section')},${i})`,{displayMode:'result',displayUnit:sectionUnits[key],fontSize:11,w:145},[76,236,396,556][i%4]));
-  const advanced: [string,string][]=[['Lt',v('L')],['alphaY','0.34'],['alphaZ','0.49'],['alphaLT','0.21'],['LTBmode','0'],['zg',q(0,'mm')],['k','1'],['kw','1'],['C1','1'],['C2','0'],['McrExternal',q(0,'kN')+t`\cdot\mathrm{m}`],['InteractionMode','0'],['Cmy','1'],['Cmz','1'],['CmLT','1'],['kyyManual','1'],['kyzManual','1'],['kzyManual','1'],['kzzManual','1'],['DeltaExternal',q(0,'mm')],['Anet',v('A')],['eta','1.2'],['FactorsVerified','1'],['LTBverified','0'],['CurvesVerified','1'],['ManualFactorsVerified','0'],['q',q(5,'kN')+t`/\mathrm{m}`],['P',q(0,'kN')],['SLSmode','0'],['LimitRatio','250']];
+  const advanced: [string,string][]=[['Lt',v('L')],['alphaY','0.34'],['alphaZ','0.49'],['alphaLT','0.21'],['LTBmode','0'],['zg',q(0,'mm')],['k','1'],['kw','1'],['C1','1'],['C2','0'],['McrExternal',q(0,'kN')+t`\cdot\mathrm{m}`],['InteractionMode','0'],['Cmy','1'],['Cmz','1'],['CmLT','1'],['kyyManual','1'],['kyzManual','1'],['kzyManual','1'],['kzzManual','1'],['Anet',v('A')],['eta','1.2'],['FactorsVerified','1'],['LTBverified','0'],['CurvesVerified','1'],['ManualFactorsVerified','0']];
   advanced.forEach(([key,rhs],i)=>input(8,7.5+Math.floor(i/2),key,rhs,i%2?396:96));
   calc(8,21.7,'LoadCase',t`${v('LTBcase')}-1`,{displayMode:'result',fontSize:10});
-  note(8,23.4,'Modes: LTB 0 auto / 1 manual / 2 external; SLS 0 simple / 1 cantilever / 2 external.');
+  note(8,23.4,'Modes: LTB 0 auto / 1 manual / 2 external.');
   note(8,24.2,'Manual kij, Cm and curves require independent verification; acknowledgement flags persist in .mCCV.');
 
   note(10,0,'BUCKLING K — REFERENCE ONLY',2,{kind:'heading',id:'buckling-k'});
@@ -286,7 +275,7 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
     calc(9,row+(names.length+1)*0.65,prefix,stack(names),{displayMode:'formula',fontSize:10,h:25});return row+(names.length+2)*0.65;
   };
   let row=chunks(propertyKeys.slice(0,16),'S',9.6);
-  const mapping:Record<string,string>={ltbMode:'LTBmode',loadCase:'LoadCase',loadHeight:'zg',externalMcr:'McrExternal',interactionMode:'InteractionMode',kyy:'kyyManual',kyz:'kyzManual',kzy:'kzyManual',kzz:'kzzManual',slsMode:'SLSmode',displacement:'DeltaExternal',limitRatio:'LimitRatio',netArea:'Anet',verifiedFactors:'FactorsVerified',ltbVerified:'LTBverified',curveVerified:'CurvesVerified',manualVerified:'ManualFactorsVerified'};
+  const mapping:Record<string,string>={ltbMode:'LTBmode',loadCase:'LoadCase',loadHeight:'zg',externalMcr:'McrExternal',interactionMode:'InteractionMode',kyy:'kyyManual',kyz:'kyzManual',kzy:'kzyManual',kzz:'kzzManual',netArea:'Anet',verifiedFactors:'FactorsVerified',ltbVerified:'LTBverified',curveVerified:'CurvesVerified',manualVerified:'ManualFactorsVerified'};
   row=chunks(inputFields.map(([n])=>mapping[n]??n),'I',row);
   calc(9,row,'R',t`\operatorname{steelDesign}(${v('S')},${v('I')})`,{displayMode:'formula',fontSize:11});
   note(9,19.3,'SCOPE / NOT VERIFIED',2);

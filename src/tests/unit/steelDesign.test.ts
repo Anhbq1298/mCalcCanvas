@@ -13,7 +13,7 @@ import {optimizeTemplateLayout} from '../../canvas/templateLayout';
 import {marginPx,pageCount,pageSize,shapesOutsidePrintArea} from '../../export/pageGeometry';
 import {DEFAULT_SETTINGS,DOCUMENT_VERSION} from '../../documents/DocumentTypes';
 const s=sectionById(1211).values;
-const a:SteelInput={fy:355,fu:510,E:210000,G:80769.23,gamma0:1,gamma1:1,gamma2:1.25,L:5000,Ky:1,Kz:1,Llt:5000,Lt:5000,N:100000,My:50e6,Mz:5e6,Vy:0,Vz:30000,alphaY:0.21,alphaZ:0.34,alphaLT:0.34,ltbMode:0,loadCase:0,loadHeight:0,k:1,kw:1,C1:1,C2:0,externalMcr:0,interactionMode:0,Cmy:1,Cmz:1,CmLT:1,kyy:1,kyz:1,kzy:1,kzz:1,slsMode:0,q:5,P:0,displacement:0,limitRatio:250,netArea:s.A,eta:1.2,verifiedFactors:1,ltbVerified:0,curveVerified:1,manualVerified:0};
+const a:SteelInput={fy:355,fu:510,E:210000,G:80769.23,gamma0:1,gamma1:1,gamma2:1.25,L:5000,Ky:1,Kz:1,Llt:5000,Lt:5000,N:100000,My:50e6,Mz:5e6,Vy:0,Vz:30000,alphaY:0.21,alphaZ:0.34,alphaLT:0.34,ltbMode:0,loadCase:0,loadHeight:0,k:1,kw:1,C1:1,C2:0,externalMcr:0,interactionMode:0,Cmy:1,Cmz:1,CmLT:1,kyy:1,kyz:1,kzy:1,kzz:1,netArea:s.A,eta:1.2,verifiedFactors:1,ltbVerified:0,curveVerified:1,manualVerified:0};
 
 describe('EC3 2005 engineering and catalogue',()=>{
  it('validates sources, independent references and bounded design scope',()=>{
@@ -86,13 +86,6 @@ describe('EC3 2005 engineering and catalogue',()=>{
    expect(designSteel(s,{...a,Vz:2*s.Avz*a.fy/Math.sqrt(3)}).state).toBe('FAIL');
    expect(()=>designSteel(s,{...a,L:0})).toThrow(/Positive L/);
   });
-  step('classical SLS closed form and project-specific limits',()=>{
-   // Independent prismatic I=308235000 mm4, E=210000 MPa, L=5000 mm, w=5 N/mm.
-   expect(designSteel(s,a).values.delta).toBeCloseTo(0.6286190756846263,7);
-   expect(designSteel(s,{...a,slsMode:1}).values.delta).toBeCloseTo(6.034743126572412,7);
-   const external=designSteel(s,{...a,slsMode:2,displacement:21,limitRatio:250});
-   expect(external.checks.at(-1)?.state).toBe('FAIL');
-  });
  });
 });
 
@@ -112,7 +105,7 @@ describe('steel worksheet engine, workers contract, batch and serialization',()=
    expect(engine.getResult(state.id)?.value?.number).toBe(1);
   });
   step('readable equations independently reproduce the guarded kernel before and after a K edit',()=>{
-   const pairs=[['sectionClass','sectionClass'],['flangeClass','flangeClass'],['webClass','webClass'],['NcRd','Nc'],['NtRd','Nt'],['MyRd','My'],['MzRd','Mz'],['VyRd','Vy'],['VzRd','Vz'],['NcrY','NcrY'],['NcrZ','NcrZ'],['NcrT','NcrT'],['lambdaY','ly'],['lambdaZ','lz'],['chiY','chiY'],['chiZ','chiZ'],['chiT','chiT'],['NbY','NbY'],['NbZ','NbZ'],['NbT','NbT'],['McrCalc','Mcr'],['lambdaLT','lambdaLT'],['chiLT','chiLT'],['Mb','Mb'],['kyy','kyy'],['kyz','kyz'],['kzy','kzy'],['kzz','kzz'],['Jy','iy'],['Jz','iz'],['delta','delta'],['URsection','sectionUr']];
+ const pairs=[['sectionClass','sectionClass'],['flangeClass','flangeClass'],['webClass','webClass'],['NcRd','Nc'],['NtRd','Nt'],['MyRd','My'],['MzRd','Mz'],['VyRd','Vy'],['VzRd','Vz'],['NcrY','NcrY'],['NcrZ','NcrZ'],['NcrT','NcrT'],['lambdaY','ly'],['lambdaZ','lz'],['chiY','chiY'],['chiZ','chiZ'],['chiT','chiT'],['NbY','NbY'],['NbZ','NbZ'],['NbT','NbT'],['McrCalc','Mcr'],['lambdaLT','lambdaLT'],['chiLT','chiLT'],['Mb','Mb'],['kyy','kyy'],['kyz','kyz'],['kzy','kzy'],['kzz','kzz'],['Jy','iy'],['Jz','iz'],['URsection','sectionUr']];
    const compare=()=>{
     for(const [key,output] of pairs){
      const ref=`\\operatorname{entry}(${symbol('R')},${outputFields.findIndex(([n])=>n===output)})`;

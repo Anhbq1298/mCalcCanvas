@@ -20,7 +20,6 @@ export interface SteelInput {
   C1: number; C2: number; externalMcr: number;
   interactionMode: number; Cmy: number; Cmz: number; CmLT: number;
   kyy: number; kyz: number; kzy: number; kzz: number;
-  slsMode: number; q: number; P: number; displacement: number; limitRatio: number;
   netArea: number; eta: number; verifiedFactors: number; ltbVerified: number; curveVerified: number; manualVerified: number;
 }
 interface DesignCheck {
@@ -64,7 +63,7 @@ export function method2(ny: number, nz: number, ly: number, lz: number, cmy: num
 export function designSteel(s: SectionGeometry, a: SteelInput): SteelResult {
   for (const [k, v] of Object.entries({...s, ...a})) if (!Number.isFinite(v)) throw new Error(`Non-finite steel input ${k}`);
   for (const k of ['h','b','tw','tf','A','Iy','Iz','Wel_y','Wel_z','Wpl_y','Wpl_z','It','Iw','Avy','Avz'] as const) if (!positive(s[k])) throw new Error(`Positive ${k} required`);
-  for (const k of ['fy','fu','E','G','gamma0','gamma1','gamma2','L','Ky','Kz','Llt','Lt','alphaY','alphaZ','alphaLT','limitRatio','eta'] as const) if (!positive(a[k])) throw new Error(`Positive ${k} required`);
+  for (const k of ['fy','fu','E','G','gamma0','gamma1','gamma2','L','Ky','Kz','Llt','Lt','alphaY','alphaZ','alphaLT','eta'] as const) if (!positive(a[k])) throw new Error(`Positive ${k} required`);
   if (s.r < 0 || s.h <= 2 * (s.tf + s.r) || s.b <= s.tw + 2 * s.r || a.netArea <= 0 || a.netArea > s.A) throw new Error('Invalid section geometry or net area');
   if (a.fy > a.fu || a.fy > 460) throw new Error('fy must not exceed fu or the steel strength scope (460 MPa)');
   const checks: DesignCheck[] = [], limitations: string[] = [], values: Record<string, number> = {};
@@ -145,14 +144,10 @@ export function designSteel(s: SectionGeometry, a: SteelInput): SteelResult {
   const iz = ratio(Math.max(0,a.N),NbZ) + kzy * ratio(a.My,Mb ?? 0) + kzz * ratio(a.Mz,Wz*a.fy/a.gamma1);
   check('Interaction 6.61','6.3.3 / Annex B',needsInteraction ? iy : 0,1,interactionReason);
   check('Interaction 6.62','6.3.3 / Annex B',needsInteraction ? iz : 0,1,interactionReason);
-  // SLS loads are separate from ULS simultaneous actions. Euler-Bernoulli prismatic beams.
-  const q=Math.abs(a.q), P=Math.abs(a.P), L=a.L, EI=a.E*s.Iy;
-  const delta = a.slsMode === 0 ? 5*q*L**4/(384*EI)+P*L**3/(48*EI) : a.slsMode === 1 ? q*L**4/(8*EI)+P*L**3/(3*EI) : Math.abs(a.displacement);
-  check('Deflection','EN 1990 serviceability; project limit',delta,L/a.limitRatio,![0,1,2].includes(a.slsMode) ? 'Unknown SLS loading model' : undefined);
-  Object.assign(values,{Nc,Nt,My,Mz,Vy,Vz,NcrY,NcrZ,NcrT,ly,lz,lt,chiY,chiZ,chiT,NbY,NbZ,NbT,Mcr:Mcr??0,lambdaLT:lambdaLT??0,chiLT:chiLT??0,Mb:Mb??0,C1,C2,kyy,kyz,kzy,kzz,iy,iz,delta,rho,sectionUr});
+  Object.assign(values,{Nc,Nt,My,Mz,Vy,Vz,NcrY,NcrZ,NcrT,ly,lz,lt,chiY,chiZ,chiT,NbY,NbZ,NbT,Mcr:Mcr??0,lambdaLT:lambdaLT??0,chiLT:chiLT??0,Mb:Mb??0,C1,C2,kyy,kyz,kzy,kzz,iy,iz,rho,sectionUr});
   const known=checks.filter(c=>c.ur!==null);
   const governing=known.reduce((m,c)=>c.ur!>m.ur! ? c : m,known[0]);
-  values.flags=(biaxialShear?256:0)|(unsupported?1:0)|(shearReason?2:0)|(!Mcr&&a.My!==0?4:0)|(curveReason?8:0)|(needsInteraction&&!factors?16:0)|(needsInteraction&&rho>0?32:0)|(needsInteraction&&NbT<Math.min(NbY,NbZ)?64:0)|(![0,1,2].includes(a.slsMode)?128:0);
+  values.flags=(biaxialShear?256:0)|(unsupported?1:0)|(shearReason?2:0)|(!Mcr&&a.My!==0?4:0)|(curveReason?8:0)|(needsInteraction&&!factors?16:0)|(needsInteraction&&rho>0?32:0)|(needsInteraction&&NbT<Math.min(NbY,NbZ)?64:0);
   const state: DesignState = checks.some(c=>c.state==='FAIL') ? 'FAIL' : checks.some(c=>c.state==='NOT VERIFIED') ? 'NOT VERIFIED' : 'PASS';
   return {checks,state,governing:governing.name,governingUr:governing.ur!,sectionClass,flangeClass,webClass,values,limitations};
 }

@@ -62,7 +62,7 @@
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Design basis: compression positive; y major / z minor. Actions include relevant analysis effects.",
+        "html": "1  DESIGN BASIS — EN 1993-1-1:2005 + A1:2014; compression positive; y major / z minor.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -100,7 +100,7 @@
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Steel section source: licensed offline catalogue; designation and dataset shown beside Section ID",
+        "html": "Section properties and data source are listed in Annex A.1.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -116,7 +116,7 @@
       "props": {
         "w": 640,
         "h": 28,
-        "html": "1  MATERIAL AND MEMBER GEOMETRY",
+        "html": "2  INPUTS",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#1e3a5f",
@@ -127,11 +127,27 @@
     },
     {
       "id": "ec3_6",
-      "type": "math",
-      "x": 96,
+      "type": "text",
+      "x": 76,
       "y": 260,
       "props": {
-        "w": 280,
+        "w": 136,
+        "h": 24,
+        "html": "Yield strength fy",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_7",
+      "type": "math",
+      "x": 220,
+      "y": 260,
+      "props": {
+        "w": 160,
         "h": 32,
         "latex": "f_{y}\\coloneq 355\\,\\mathrm{MPa}",
         "displayMode": "formula",
@@ -141,19 +157,35 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-0"
     },
     {
-      "id": "ec3_7",
-      "type": "math",
-      "x": 396,
+      "id": "ec3_8",
+      "type": "text",
+      "x": 400,
       "y": 260,
       "props": {
-        "w": 280,
+        "w": 125,
+        "h": 24,
+        "html": "Ultimate strength fu",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_9",
+      "type": "math",
+      "x": 530,
+      "y": 260,
+      "props": {
+        "w": 150,
         "h": 32,
         "latex": "f_{u}\\coloneq 510\\,\\mathrm{MPa}",
         "displayMode": "formula",
@@ -163,19 +195,35 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-0"
     },
     {
-      "id": "ec3_8",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_10",
+      "type": "text",
+      "x": 76,
       "y": 300,
       "props": {
-        "w": 280,
+        "w": 136,
+        "h": 24,
+        "html": "Elastic modulus E",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_11",
+      "type": "math",
+      "x": 220,
+      "y": 300,
+      "props": {
+        "w": 160,
         "h": 32,
         "latex": "\\mathrm{E}\\coloneq 210\\,\\mathrm{GPa}",
         "displayMode": "formula",
@@ -185,19 +233,35 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-0"
     },
     {
-      "id": "ec3_9",
-      "type": "math",
-      "x": 396,
+      "id": "ec3_12",
+      "type": "text",
+      "x": 400,
       "y": 300,
       "props": {
-        "w": 280,
+        "w": 125,
+        "h": 24,
+        "html": "Shear modulus G",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_13",
+      "type": "math",
+      "x": 530,
+      "y": 300,
+      "props": {
+        "w": 150,
         "h": 32,
         "latex": "\\mathrm{G}\\coloneq 80.76923\\,\\mathrm{GPa}",
         "displayMode": "formula",
@@ -207,19 +271,35 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-0"
     },
     {
-      "id": "ec3_10",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_14",
+      "type": "text",
+      "x": 76,
       "y": 340,
       "props": {
-        "w": 280,
+        "w": 136,
+        "h": 24,
+        "html": "Section factor γM0",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_15",
+      "type": "math",
+      "x": 220,
+      "y": 340,
+      "props": {
+        "w": 160,
         "h": 32,
         "latex": "\\gamma_{M0}\\coloneq 1",
         "displayMode": "formula",
@@ -229,19 +309,35 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-0"
     },
     {
-      "id": "ec3_11",
-      "type": "math",
-      "x": 396,
+      "id": "ec3_16",
+      "type": "text",
+      "x": 400,
       "y": 340,
       "props": {
-        "w": 280,
+        "w": 125,
+        "h": 24,
+        "html": "Buckling factor γM1",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_17",
+      "type": "math",
+      "x": 530,
+      "y": 340,
+      "props": {
+        "w": 150,
         "h": 32,
         "latex": "\\gamma_{M1}\\coloneq 1",
         "displayMode": "formula",
@@ -251,139 +347,7 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-0"
-    },
-    {
-      "id": "ec3_12",
-      "type": "math",
-      "x": 96,
-      "y": 380,
-      "props": {
-        "w": 280,
-        "h": 32,
-        "latex": "\\gamma_{M2}\\coloneq 1.25",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-0"
-    },
-    {
-      "id": "ec3_13",
-      "type": "math",
-      "x": 396,
-      "y": 380,
-      "props": {
-        "w": 280,
-        "h": 32,
-        "latex": "\\mathrm{L}\\coloneq 5\\,\\mathrm{m}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-0"
-    },
-    {
-      "id": "ec3_14",
-      "type": "math",
-      "x": 96,
-      "y": 420,
-      "props": {
-        "w": 280,
-        "h": 32,
-        "latex": "\\mathrm{Ky}\\coloneq 1",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-0"
-    },
-    {
-      "id": "ec3_15",
-      "type": "math",
-      "x": 396,
-      "y": 420,
-      "props": {
-        "w": 280,
-        "h": 32,
-        "latex": "\\mathrm{Kz}\\coloneq 1",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-0"
-    },
-    {
-      "id": "ec3_16",
-      "type": "math",
-      "x": 96,
-      "y": 460,
-      "props": {
-        "w": 280,
-        "h": 32,
-        "latex": "\\mathrm{Llt}\\coloneq 5\\,\\mathrm{m}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-0"
-    },
-    {
-      "id": "ec3_17",
-      "type": "math",
-      "x": 396,
-      "y": 460,
-      "props": {
-        "w": 280,
-        "h": 32,
-        "latex": "\\mathrm{LTBmode}\\coloneq 0",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
@@ -393,11 +357,385 @@
       "id": "ec3_18",
       "type": "text",
       "x": 76,
+      "y": 380,
+      "props": {
+        "w": 136,
+        "h": 24,
+        "html": "Tension factor γM2",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_19",
+      "type": "math",
+      "x": 220,
+      "y": 380,
+      "props": {
+        "w": 160,
+        "h": 32,
+        "latex": "\\gamma_{M2}\\coloneq 1.25",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_20",
+      "type": "text",
+      "x": 400,
+      "y": 380,
+      "props": {
+        "w": 125,
+        "h": 24,
+        "html": "Member length L",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_21",
+      "type": "math",
+      "x": 530,
+      "y": 380,
+      "props": {
+        "w": 150,
+        "h": 32,
+        "latex": "\\mathrm{L}\\coloneq 5\\,\\mathrm{m}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_22",
+      "type": "text",
+      "x": 76,
+      "y": 420,
+      "props": {
+        "w": 136,
+        "h": 24,
+        "html": "Ky (effective length)",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_23",
+      "type": "math",
+      "x": 220,
+      "y": 420,
+      "props": {
+        "w": 160,
+        "h": 32,
+        "latex": "\\mathrm{Ky}\\coloneq 1",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_24",
+      "type": "text",
+      "x": 400,
+      "y": 420,
+      "props": {
+        "w": 125,
+        "h": 24,
+        "html": "Kz (effective length)",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_25",
+      "type": "math",
+      "x": 530,
+      "y": 420,
+      "props": {
+        "w": 150,
+        "h": 32,
+        "latex": "\\mathrm{Kz}\\coloneq 1",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_26",
+      "type": "text",
+      "x": 76,
+      "y": 460,
+      "props": {
+        "w": 136,
+        "h": 24,
+        "html": "LTB length Lb",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_27",
+      "type": "math",
+      "x": 220,
+      "y": 460,
+      "props": {
+        "w": 160,
+        "h": 32,
+        "latex": "\\mathrm{Llt}\\coloneq 5\\,\\mathrm{m}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_28",
+      "type": "text",
+      "x": 400,
+      "y": 460,
+      "props": {
+        "w": 125,
+        "h": 24,
+        "html": "LTB case no. — Annex B",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_29",
+      "type": "math",
+      "x": 530,
+      "y": 460,
+      "props": {
+        "w": 150,
+        "h": 32,
+        "latex": "\\mathrm{LTBcase}\\coloneq 1",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_30",
+      "type": "text",
+      "x": 76,
       "y": 500,
+      "props": {
+        "w": 136,
+        "h": 24,
+        "html": "Load height zg",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_31",
+      "type": "math",
+      "x": 220,
+      "y": 500,
+      "props": {
+        "w": 160,
+        "h": 32,
+        "latex": "\\mathrm{zg}\\coloneq 0\\,\\mathrm{mm}",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_32",
+      "type": "text",
+      "x": 400,
+      "y": 500,
+      "props": {
+        "w": 125,
+        "h": 24,
+        "html": "Lateral factor k",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_33",
+      "type": "math",
+      "x": 530,
+      "y": 500,
+      "props": {
+        "w": 150,
+        "h": 32,
+        "latex": "\\mathrm{k}\\coloneq 1",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 12,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_34",
+      "type": "text",
+      "x": 76,
+      "y": 540,
+      "props": {
+        "w": 136,
+        "h": 24,
+        "html": "Warping factor kw",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_35",
+      "type": "math",
+      "x": 220,
+      "y": 540,
+      "props": {
+        "w": 280,
+        "h": 32,
+        "latex": "\\mathrm{kw}\\coloneq 1",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 13,
+        "color": "#0f172a",
+        "baseline": 20
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_36",
+      "type": "text",
+      "x": 76,
+      "y": 540,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "See Annex B for the selected case diagram and its C1/C2 coefficients.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_37",
+      "type": "text",
+      "x": 76,
+      "y": 580,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "The LTB case selects coefficients only; it does not change the ULS actions. Use cases 1–13.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_38",
+      "type": "text",
+      "x": 76,
+      "y": 620,
       "props": {
         "w": 640,
         "h": 28,
-        "html": "2  SIMULTANEOUS ULS DESIGN ACTIONS — SAME COMBINATION / POSITION",
+        "html": "2.1  DESIGN ACTIONS — LC1, simultaneous at same position",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#1e3a5f",
@@ -407,12 +745,28 @@
       "printGroupId": "ec3-sheet-0"
     },
     {
-      "id": "ec3_19",
-      "type": "math",
-      "x": 96,
-      "y": 540,
+      "id": "ec3_39",
+      "type": "text",
+      "x": 76,
+      "y": 660,
       "props": {
-        "w": 280,
+        "w": 136,
+        "h": 24,
+        "html": "Compression NEd",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_40",
+      "type": "math",
+      "x": 220,
+      "y": 660,
+      "props": {
+        "w": 160,
         "h": 32,
         "latex": "N_{Ed}\\coloneq 100\\,\\mathrm{kN}",
         "displayMode": "formula",
@@ -422,19 +776,35 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-0"
     },
     {
-      "id": "ec3_20",
-      "type": "math",
-      "x": 396,
-      "y": 540,
+      "id": "ec3_41",
+      "type": "text",
+      "x": 400,
+      "y": 660,
       "props": {
-        "w": 280,
+        "w": 125,
+        "h": 24,
+        "html": "Major-axis My,Ed",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_42",
+      "type": "math",
+      "x": 530,
+      "y": 660,
+      "props": {
+        "w": 150,
         "h": 32,
         "latex": "M_{y.Ed}\\coloneq 50\\,\\mathrm{kN}\\cdot\\mathrm{m}",
         "displayMode": "formula",
@@ -444,19 +814,35 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-0"
     },
     {
-      "id": "ec3_21",
-      "type": "math",
-      "x": 96,
-      "y": 580,
+      "id": "ec3_43",
+      "type": "text",
+      "x": 76,
+      "y": 700,
       "props": {
-        "w": 280,
+        "w": 136,
+        "h": 24,
+        "html": "Minor-axis Mz,Ed",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_44",
+      "type": "math",
+      "x": 220,
+      "y": 700,
+      "props": {
+        "w": 160,
         "h": 32,
         "latex": "M_{z.Ed}\\coloneq 5\\,\\mathrm{kN}\\cdot\\mathrm{m}",
         "displayMode": "formula",
@@ -466,19 +852,35 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-0"
     },
     {
-      "id": "ec3_22",
-      "type": "math",
-      "x": 396,
-      "y": 580,
+      "id": "ec3_45",
+      "type": "text",
+      "x": 400,
+      "y": 700,
       "props": {
-        "w": 280,
+        "w": 125,
+        "h": 24,
+        "html": "Shear Vy,Ed",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_46",
+      "type": "math",
+      "x": 530,
+      "y": 700,
+      "props": {
+        "w": 150,
         "h": 32,
         "latex": "V_{y.Ed}\\coloneq 0\\,\\mathrm{kN}",
         "displayMode": "formula",
@@ -488,17 +890,33 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-0"
     },
     {
-      "id": "ec3_23",
+      "id": "ec3_47",
+      "type": "text",
+      "x": 76,
+      "y": 740,
+      "props": {
+        "w": 136,
+        "h": 24,
+        "html": "Shear Vz,Ed",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_48",
       "type": "math",
-      "x": 96,
-      "y": 620,
+      "x": 220,
+      "y": 740,
       "props": {
         "w": 280,
         "h": 32,
@@ -517,33 +935,10 @@
       "printGroupId": "ec3-sheet-0"
     },
     {
-      "id": "ec3_24",
-      "type": "math",
-      "x": 96,
-      "y": 700,
-      "props": {
-        "w": 620,
-        "h": 246,
-        "latex": "\\mathrm{ActionDiagram}\\coloneq \\operatorname{stack}(\\mathrm{LoadCase},\\mathrm{zg}/\\mathrm{mm},\\mathrm{Llt}/\\mathrm{mm},\\mathrm{k},\\mathrm{kw},N_{Ed}/\\mathrm{kN},M_{y.Ed}/(\\mathrm{kN}\\cdot\\mathrm{m}),M_{z.Ed}/(\\mathrm{kN}\\cdot\\mathrm{m}),V_{y.Ed}/\\mathrm{kN},V_{z.Ed}/\\mathrm{kN},\\mathrm{L}/\\mathrm{mm})",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "ltb"
-      },
-      "printGroupId": "ec3-sheet-0"
-    },
-    {
-      "id": "ec3_25",
+      "id": "ec3_49",
       "type": "text",
       "x": 76,
-      "y": 660,
+      "y": 820,
       "props": {
         "w": 640,
         "h": 24,
@@ -560,14 +955,46 @@
       "printGroupId": "ec3-sheet-0"
     },
     {
-      "id": "ec3_26",
+      "id": "ec3_50",
+      "type": "text",
+      "x": 76,
+      "y": 928,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "Automatic table cases assume fork-end lateral / twist restraint, free warping, k = kw = 1.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_51",
+      "type": "text",
+      "x": 76,
+      "y": 960,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "For other restraints, use independently verified manual coefficients or external Mcr in Annex A.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-0"
+    },
+    {
+      "id": "ec3_52",
       "type": "text",
       "x": 76,
       "y": 992,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Fork restraints prevent lateral displacement and twist; warping is free. No slab restraint assumed.",
+        "html": "No slab restraint is assumed.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -576,23 +1003,7 @@
       "printGroupId": "ec3-sheet-0"
     },
     {
-      "id": "ec3_27",
-      "type": "text",
-      "x": 76,
-      "y": 1020,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "SLS loads are separate from these ULS actions. See section 8 for its own load diagram.",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-0"
-    },
-    {
-      "id": "ec3_28",
+      "id": "ec3_53",
       "type": "text",
       "x": 76,
       "y": 1231,
@@ -609,7 +1020,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_29",
+      "id": "ec3_54",
       "type": "math",
       "x": 96,
       "y": 1271,
@@ -632,7 +1043,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_30",
+      "id": "ec3_55",
       "type": "math",
       "x": 396,
       "y": 1271,
@@ -654,7 +1065,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_31",
+      "id": "ec3_56",
       "type": "math",
       "x": 96,
       "y": 1311,
@@ -677,14 +1088,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_32",
+      "id": "ec3_57",
       "type": "math",
       "x": 96,
       "y": 1343,
       "props": {
         "w": 600,
         "h": 32,
-        "latex": "\\mathrm{Issues}\\coloneq \\operatorname{entry}(\\mathrm{R},39)",
+        "latex": "\\mathrm{Issues}\\coloneq \\operatorname{entry}(\\mathrm{R},38)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -700,7 +1111,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_33",
+      "id": "ec3_58",
       "type": "text",
       "x": 76,
       "y": 1391,
@@ -716,7 +1127,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_34",
+      "id": "ec3_59",
       "type": "text",
       "x": 276,
       "y": 1391,
@@ -732,7 +1143,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_35",
+      "id": "ec3_60",
       "type": "text",
       "x": 416,
       "y": 1391,
@@ -748,7 +1159,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_36",
+      "id": "ec3_61",
       "type": "text",
       "x": 536,
       "y": 1391,
@@ -764,7 +1175,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_37",
+      "id": "ec3_62",
       "type": "text",
       "x": 616,
       "y": 1391,
@@ -780,7 +1191,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_38",
+      "id": "ec3_63",
       "type": "text",
       "x": 76,
       "y": 1423,
@@ -796,7 +1207,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_39",
+      "id": "ec3_64",
       "type": "math",
       "x": 276,
       "y": 1431,
@@ -819,7 +1230,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_40",
+      "id": "ec3_65",
       "type": "math",
       "x": 416,
       "y": 1431,
@@ -842,14 +1253,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_41",
+      "id": "ec3_66",
       "type": "math",
       "x": 536,
       "y": 1431,
       "props": {
         "w": 70,
         "h": 28,
-        "latex": "\\mathrm{UR}_{0}\\coloneq \\operatorname{entry}(\\mathrm{R},40)",
+        "latex": "\\mathrm{UR}_{0}\\coloneq \\operatorname{entry}(\\mathrm{R},39)",
         "displayMode": "value",
         "displayUnit": "",
         "precision": -1,
@@ -865,14 +1276,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_42",
+      "id": "ec3_67",
       "type": "math",
       "x": 616,
       "y": 1431,
       "props": {
         "w": 100,
         "h": 28,
-        "latex": "\\mathrm{State}_{0}\\coloneq \\operatorname{entry}(\\mathrm{R},41)",
+        "latex": "\\mathrm{State}_{0}\\coloneq \\operatorname{entry}(\\mathrm{R},40)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -888,7 +1299,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_43",
+      "id": "ec3_68",
       "type": "text",
       "x": 76,
       "y": 1463,
@@ -904,7 +1315,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_44",
+      "id": "ec3_69",
       "type": "math",
       "x": 276,
       "y": 1471,
@@ -927,7 +1338,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_45",
+      "id": "ec3_70",
       "type": "math",
       "x": 416,
       "y": 1471,
@@ -950,14 +1361,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_46",
+      "id": "ec3_71",
       "type": "math",
       "x": 536,
       "y": 1471,
       "props": {
         "w": 70,
         "h": 28,
-        "latex": "\\mathrm{UR}_{1}\\coloneq \\operatorname{entry}(\\mathrm{R},42)",
+        "latex": "\\mathrm{UR}_{1}\\coloneq \\operatorname{entry}(\\mathrm{R},41)",
         "displayMode": "value",
         "displayUnit": "",
         "precision": -1,
@@ -973,14 +1384,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_47",
+      "id": "ec3_72",
       "type": "math",
       "x": 616,
       "y": 1471,
       "props": {
         "w": 100,
         "h": 28,
-        "latex": "\\mathrm{State}_{1}\\coloneq \\operatorname{entry}(\\mathrm{R},43)",
+        "latex": "\\mathrm{State}_{1}\\coloneq \\operatorname{entry}(\\mathrm{R},42)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -996,7 +1407,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_48",
+      "id": "ec3_73",
       "type": "text",
       "x": 76,
       "y": 1503,
@@ -1012,7 +1423,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_49",
+      "id": "ec3_74",
       "type": "math",
       "x": 276,
       "y": 1511,
@@ -1035,7 +1446,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_50",
+      "id": "ec3_75",
       "type": "math",
       "x": 416,
       "y": 1511,
@@ -1058,14 +1469,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_51",
+      "id": "ec3_76",
       "type": "math",
       "x": 536,
       "y": 1511,
       "props": {
         "w": 70,
         "h": 28,
-        "latex": "\\mathrm{UR}_{2}\\coloneq \\operatorname{entry}(\\mathrm{R},44)",
+        "latex": "\\mathrm{UR}_{2}\\coloneq \\operatorname{entry}(\\mathrm{R},43)",
         "displayMode": "value",
         "displayUnit": "",
         "precision": -1,
@@ -1081,14 +1492,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_52",
+      "id": "ec3_77",
       "type": "math",
       "x": 616,
       "y": 1511,
       "props": {
         "w": 100,
         "h": 28,
-        "latex": "\\mathrm{State}_{2}\\coloneq \\operatorname{entry}(\\mathrm{R},45)",
+        "latex": "\\mathrm{State}_{2}\\coloneq \\operatorname{entry}(\\mathrm{R},44)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -1104,7 +1515,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_53",
+      "id": "ec3_78",
       "type": "text",
       "x": 76,
       "y": 1543,
@@ -1120,7 +1531,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_54",
+      "id": "ec3_79",
       "type": "math",
       "x": 276,
       "y": 1551,
@@ -1143,7 +1554,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_55",
+      "id": "ec3_80",
       "type": "math",
       "x": 416,
       "y": 1551,
@@ -1166,14 +1577,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_56",
+      "id": "ec3_81",
       "type": "math",
       "x": 536,
       "y": 1551,
       "props": {
         "w": 70,
         "h": 28,
-        "latex": "\\mathrm{UR}_{3}\\coloneq \\operatorname{entry}(\\mathrm{R},46)",
+        "latex": "\\mathrm{UR}_{3}\\coloneq \\operatorname{entry}(\\mathrm{R},45)",
         "displayMode": "value",
         "displayUnit": "",
         "precision": -1,
@@ -1189,14 +1600,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_57",
+      "id": "ec3_82",
       "type": "math",
       "x": 616,
       "y": 1551,
       "props": {
         "w": 100,
         "h": 28,
-        "latex": "\\mathrm{State}_{3}\\coloneq \\operatorname{entry}(\\mathrm{R},47)",
+        "latex": "\\mathrm{State}_{3}\\coloneq \\operatorname{entry}(\\mathrm{R},46)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -1212,7 +1623,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_58",
+      "id": "ec3_83",
       "type": "text",
       "x": 76,
       "y": 1583,
@@ -1228,7 +1639,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_59",
+      "id": "ec3_84",
       "type": "math",
       "x": 276,
       "y": 1591,
@@ -1251,7 +1662,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_60",
+      "id": "ec3_85",
       "type": "math",
       "x": 416,
       "y": 1591,
@@ -1274,14 +1685,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_61",
+      "id": "ec3_86",
       "type": "math",
       "x": 536,
       "y": 1591,
       "props": {
         "w": 70,
         "h": 28,
-        "latex": "\\mathrm{UR}_{4}\\coloneq \\operatorname{entry}(\\mathrm{R},48)",
+        "latex": "\\mathrm{UR}_{4}\\coloneq \\operatorname{entry}(\\mathrm{R},47)",
         "displayMode": "value",
         "displayUnit": "",
         "precision": -1,
@@ -1297,14 +1708,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_62",
+      "id": "ec3_87",
       "type": "math",
       "x": 616,
       "y": 1591,
       "props": {
         "w": 100,
         "h": 28,
-        "latex": "\\mathrm{State}_{4}\\coloneq \\operatorname{entry}(\\mathrm{R},49)",
+        "latex": "\\mathrm{State}_{4}\\coloneq \\operatorname{entry}(\\mathrm{R},48)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -1320,7 +1731,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_63",
+      "id": "ec3_88",
       "type": "text",
       "x": 76,
       "y": 1623,
@@ -1336,7 +1747,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_64",
+      "id": "ec3_89",
       "type": "math",
       "x": 276,
       "y": 1631,
@@ -1359,14 +1770,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_65",
+      "id": "ec3_90",
       "type": "math",
       "x": 416,
       "y": 1631,
       "props": {
         "w": 120,
         "h": 28,
-        "latex": "\\mathrm{d}_{5}\\coloneq \\operatorname{entry}(\\mathrm{R},38)",
+        "latex": "\\mathrm{d}_{5}\\coloneq \\operatorname{entry}(\\mathrm{R},37)",
         "displayMode": "value",
         "displayUnit": "",
         "precision": -1,
@@ -1382,14 +1793,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_66",
+      "id": "ec3_91",
       "type": "math",
       "x": 536,
       "y": 1631,
       "props": {
         "w": 70,
         "h": 28,
-        "latex": "\\mathrm{UR}_{5}\\coloneq \\operatorname{entry}(\\mathrm{R},50)",
+        "latex": "\\mathrm{UR}_{5}\\coloneq \\operatorname{entry}(\\mathrm{R},49)",
         "displayMode": "value",
         "displayUnit": "",
         "precision": -1,
@@ -1405,14 +1816,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_67",
+      "id": "ec3_92",
       "type": "math",
       "x": 616,
       "y": 1631,
       "props": {
         "w": 100,
         "h": 28,
-        "latex": "\\mathrm{State}_{5}\\coloneq \\operatorname{entry}(\\mathrm{R},51)",
+        "latex": "\\mathrm{State}_{5}\\coloneq \\operatorname{entry}(\\mathrm{R},50)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -1428,7 +1839,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_68",
+      "id": "ec3_93",
       "type": "text",
       "x": 76,
       "y": 1663,
@@ -1444,7 +1855,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_69",
+      "id": "ec3_94",
       "type": "math",
       "x": 276,
       "y": 1671,
@@ -1467,7 +1878,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_70",
+      "id": "ec3_95",
       "type": "math",
       "x": 416,
       "y": 1671,
@@ -1490,14 +1901,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_71",
+      "id": "ec3_96",
       "type": "math",
       "x": 536,
       "y": 1671,
       "props": {
         "w": 70,
         "h": 28,
-        "latex": "\\mathrm{UR}_{6}\\coloneq \\operatorname{entry}(\\mathrm{R},52)",
+        "latex": "\\mathrm{UR}_{6}\\coloneq \\operatorname{entry}(\\mathrm{R},51)",
         "displayMode": "value",
         "displayUnit": "",
         "precision": -1,
@@ -1513,14 +1924,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_72",
+      "id": "ec3_97",
       "type": "math",
       "x": 616,
       "y": 1671,
       "props": {
         "w": 100,
         "h": 28,
-        "latex": "\\mathrm{State}_{6}\\coloneq \\operatorname{entry}(\\mathrm{R},53)",
+        "latex": "\\mathrm{State}_{6}\\coloneq \\operatorname{entry}(\\mathrm{R},52)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -1536,7 +1947,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_73",
+      "id": "ec3_98",
       "type": "text",
       "x": 76,
       "y": 1703,
@@ -1552,7 +1963,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_74",
+      "id": "ec3_99",
       "type": "math",
       "x": 276,
       "y": 1711,
@@ -1575,7 +1986,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_75",
+      "id": "ec3_100",
       "type": "math",
       "x": 416,
       "y": 1711,
@@ -1598,14 +2009,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_76",
+      "id": "ec3_101",
       "type": "math",
       "x": 536,
       "y": 1711,
       "props": {
         "w": 70,
         "h": 28,
-        "latex": "\\mathrm{UR}_{7}\\coloneq \\operatorname{entry}(\\mathrm{R},54)",
+        "latex": "\\mathrm{UR}_{7}\\coloneq \\operatorname{entry}(\\mathrm{R},53)",
         "displayMode": "value",
         "displayUnit": "",
         "precision": -1,
@@ -1621,14 +2032,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_77",
+      "id": "ec3_102",
       "type": "math",
       "x": 616,
       "y": 1711,
       "props": {
         "w": 100,
         "h": 28,
-        "latex": "\\mathrm{State}_{7}\\coloneq \\operatorname{entry}(\\mathrm{R},55)",
+        "latex": "\\mathrm{State}_{7}\\coloneq \\operatorname{entry}(\\mathrm{R},54)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -1644,7 +2055,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_78",
+      "id": "ec3_103",
       "type": "text",
       "x": 76,
       "y": 1743,
@@ -1660,7 +2071,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_79",
+      "id": "ec3_104",
       "type": "math",
       "x": 276,
       "y": 1751,
@@ -1683,7 +2094,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_80",
+      "id": "ec3_105",
       "type": "math",
       "x": 416,
       "y": 1751,
@@ -1706,14 +2117,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_81",
+      "id": "ec3_106",
       "type": "math",
       "x": 536,
       "y": 1751,
       "props": {
         "w": 70,
         "h": 28,
-        "latex": "\\mathrm{UR}_{8}\\coloneq \\operatorname{entry}(\\mathrm{R},56)",
+        "latex": "\\mathrm{UR}_{8}\\coloneq \\operatorname{entry}(\\mathrm{R},55)",
         "displayMode": "value",
         "displayUnit": "",
         "precision": -1,
@@ -1729,14 +2140,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_82",
+      "id": "ec3_107",
       "type": "math",
       "x": 616,
       "y": 1751,
       "props": {
         "w": 100,
         "h": 28,
-        "latex": "\\mathrm{State}_{8}\\coloneq \\operatorname{entry}(\\mathrm{R},57)",
+        "latex": "\\mathrm{State}_{8}\\coloneq \\operatorname{entry}(\\mathrm{R},56)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -1752,7 +2163,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_83",
+      "id": "ec3_108",
       "type": "text",
       "x": 76,
       "y": 1783,
@@ -1768,7 +2179,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_84",
+      "id": "ec3_109",
       "type": "math",
       "x": 276,
       "y": 1791,
@@ -1791,7 +2202,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_85",
+      "id": "ec3_110",
       "type": "math",
       "x": 416,
       "y": 1791,
@@ -1814,14 +2225,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_86",
+      "id": "ec3_111",
       "type": "math",
       "x": 536,
       "y": 1791,
       "props": {
         "w": 70,
         "h": 28,
-        "latex": "\\mathrm{UR}_{9}\\coloneq \\operatorname{entry}(\\mathrm{R},58)",
+        "latex": "\\mathrm{UR}_{9}\\coloneq \\operatorname{entry}(\\mathrm{R},57)",
         "displayMode": "value",
         "displayUnit": "",
         "precision": -1,
@@ -1837,14 +2248,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_87",
+      "id": "ec3_112",
       "type": "math",
       "x": 616,
       "y": 1791,
       "props": {
         "w": 100,
         "h": 28,
-        "latex": "\\mathrm{State}_{9}\\coloneq \\operatorname{entry}(\\mathrm{R},59)",
+        "latex": "\\mathrm{State}_{9}\\coloneq \\operatorname{entry}(\\mathrm{R},58)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -1860,7 +2271,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_88",
+      "id": "ec3_113",
       "type": "text",
       "x": 76,
       "y": 1823,
@@ -1876,7 +2287,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_89",
+      "id": "ec3_114",
       "type": "math",
       "x": 276,
       "y": 1831,
@@ -1899,7 +2310,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_90",
+      "id": "ec3_115",
       "type": "math",
       "x": 416,
       "y": 1831,
@@ -1922,14 +2333,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_91",
+      "id": "ec3_116",
       "type": "math",
       "x": 536,
       "y": 1831,
       "props": {
         "w": 70,
         "h": 28,
-        "latex": "\\mathrm{UR}_{10}\\coloneq \\operatorname{entry}(\\mathrm{R},60)",
+        "latex": "\\mathrm{UR}_{10}\\coloneq \\operatorname{entry}(\\mathrm{R},59)",
         "displayMode": "value",
         "displayUnit": "",
         "precision": -1,
@@ -1945,14 +2356,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_92",
+      "id": "ec3_117",
       "type": "math",
       "x": 616,
       "y": 1831,
       "props": {
         "w": 100,
         "h": 28,
-        "latex": "\\mathrm{State}_{10}\\coloneq \\operatorname{entry}(\\mathrm{R},61)",
+        "latex": "\\mathrm{State}_{10}\\coloneq \\operatorname{entry}(\\mathrm{R},60)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -1968,7 +2379,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_93",
+      "id": "ec3_118",
       "type": "text",
       "x": 76,
       "y": 1863,
@@ -1984,7 +2395,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_94",
+      "id": "ec3_119",
       "type": "math",
       "x": 276,
       "y": 1871,
@@ -2007,7 +2418,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_95",
+      "id": "ec3_120",
       "type": "math",
       "x": 416,
       "y": 1871,
@@ -2030,14 +2441,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_96",
+      "id": "ec3_121",
       "type": "math",
       "x": 536,
       "y": 1871,
       "props": {
         "w": 70,
         "h": 28,
-        "latex": "\\mathrm{UR}_{11}\\coloneq \\operatorname{entry}(\\mathrm{R},62)",
+        "latex": "\\mathrm{UR}_{11}\\coloneq \\operatorname{entry}(\\mathrm{R},61)",
         "displayMode": "value",
         "displayUnit": "",
         "precision": -1,
@@ -2053,14 +2464,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_97",
+      "id": "ec3_122",
       "type": "math",
       "x": 616,
       "y": 1871,
       "props": {
         "w": 100,
         "h": 28,
-        "latex": "\\mathrm{State}_{11}\\coloneq \\operatorname{entry}(\\mathrm{R},63)",
+        "latex": "\\mathrm{State}_{11}\\coloneq \\operatorname{entry}(\\mathrm{R},62)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": -1,
@@ -2076,115 +2487,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_98",
-      "type": "text",
-      "x": 76,
-      "y": 1903,
-      "props": {
-        "w": 190,
-        "h": 34,
-        "html": "Deflection<br/>EN 1990 / project",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_99",
-      "type": "math",
-      "x": 276,
-      "y": 1911,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{r}_{12}\\coloneq \\mathrm{L}/\\mathrm{LimitRatio}",
-        "displayMode": "value",
-        "displayUnit": "mm",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_100",
-      "type": "math",
-      "x": 416,
-      "y": 1911,
-      "props": {
-        "w": 120,
-        "h": 28,
-        "latex": "\\mathrm{d}_{12}\\coloneq \\operatorname{entry}(\\mathrm{R},36)",
-        "displayMode": "value",
-        "displayUnit": "mm",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_101",
-      "type": "math",
-      "x": 536,
-      "y": 1911,
-      "props": {
-        "w": 70,
-        "h": 28,
-        "latex": "\\mathrm{UR}_{12}\\coloneq \\operatorname{entry}(\\mathrm{R},64)",
-        "displayMode": "value",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20,
-        "constant": true
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_102",
-      "type": "math",
-      "x": 616,
-      "y": 1911,
-      "props": {
-        "w": 100,
-        "h": 28,
-        "latex": "\\mathrm{State}_{12}\\coloneq \\operatorname{entry}(\\mathrm{R},65)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "state"
-      },
-      "printGroupId": "ec3-sheet-1"
-    },
-    {
-      "id": "ec3_103",
+      "id": "ec3_123",
       "type": "text",
       "x": 76,
       "y": 1971,
@@ -2201,7 +2504,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_104",
+      "id": "ec3_124",
       "type": "text",
       "x": 76,
       "y": 2011,
@@ -2217,14 +2520,14 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_105",
+      "id": "ec3_125",
       "type": "text",
       "x": 76,
       "y": 2043,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "6 — lateral-torsional buckling; 7 — beam-column interaction; 8 — serviceability.",
+        "html": "6 — lateral-torsional buckling; 7 — beam-column interaction.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -2233,7 +2536,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_106",
+      "id": "ec3_126",
       "type": "text",
       "x": 76,
       "y": 2083,
@@ -2249,7 +2552,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_107",
+      "id": "ec3_127",
       "type": "text",
       "x": 76,
       "y": 2115,
@@ -2265,7 +2568,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_108",
+      "id": "ec3_128",
       "type": "text",
       "x": 76,
       "y": 2155,
@@ -2281,7 +2584,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_109",
+      "id": "ec3_129",
       "type": "math",
       "x": 96,
       "y": 2191,
@@ -2303,7 +2606,7 @@
       "printGroupId": "ec3-sheet-1"
     },
     {
-      "id": "ec3_110",
+      "id": "ec3_130",
       "type": "text",
       "x": 76,
       "y": 2402,
@@ -2320,7 +2623,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_111",
+      "id": "ec3_131",
       "type": "text",
       "x": 76,
       "y": 2438,
@@ -2336,7 +2639,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_112",
+      "id": "ec3_132",
       "type": "math",
       "x": 96,
       "y": 2462,
@@ -2359,7 +2662,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_113",
+      "id": "ec3_133",
       "type": "math",
       "x": 396,
       "y": 2462,
@@ -2381,7 +2684,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_114",
+      "id": "ec3_134",
       "type": "math",
       "x": 396,
       "y": 2479.2,
@@ -2403,7 +2706,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_115",
+      "id": "ec3_135",
       "type": "math",
       "x": 396,
       "y": 2496.4,
@@ -2425,7 +2728,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_116",
+      "id": "ec3_136",
       "type": "math",
       "x": 396,
       "y": 2513.6,
@@ -2447,7 +2750,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_117",
+      "id": "ec3_137",
       "type": "math",
       "x": 396,
       "y": 2530.8,
@@ -2469,7 +2772,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_118",
+      "id": "ec3_138",
       "type": "math",
       "x": 396,
       "y": 2548,
@@ -2491,7 +2794,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_119",
+      "id": "ec3_139",
       "type": "math",
       "x": 396,
       "y": 2565.2,
@@ -2513,7 +2816,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_120",
+      "id": "ec3_140",
       "type": "math",
       "x": 396,
       "y": 2582.4,
@@ -2535,7 +2838,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_121",
+      "id": "ec3_141",
       "type": "math",
       "x": 396,
       "y": 2599.6,
@@ -2557,7 +2860,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_122",
+      "id": "ec3_142",
       "type": "math",
       "x": 396,
       "y": 2616.8,
@@ -2579,7 +2882,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_123",
+      "id": "ec3_143",
       "type": "math",
       "x": 396,
       "y": 2634,
@@ -2601,7 +2904,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_124",
+      "id": "ec3_144",
       "type": "text",
       "x": 76,
       "y": 2658,
@@ -2617,12 +2920,28 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_125",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_145",
+      "type": "text",
+      "x": 76,
       "y": 2670,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Material factor ε = √(235 MPa / fy)",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-2"
+    },
+    {
+      "id": "ec3_146",
+      "type": "math",
+      "x": 300,
+      "y": 2670,
+      "props": {
+        "w": 410,
         "h": 86,
         "latex": "\\epsilon\\coloneq \\sqrt{\\frac{235\\,\\mathrm{MPa}}{f_{y}}}",
         "displayMode": "full",
@@ -2632,14 +2951,14 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_126",
+      "id": "ec3_147",
       "type": "math",
       "x": 96,
       "y": 2762,
@@ -2661,7 +2980,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_127",
+      "id": "ec3_148",
       "type": "math",
       "x": 396,
       "y": 2762,
@@ -2683,7 +3002,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_128",
+      "id": "ec3_149",
       "type": "math",
       "x": 96,
       "y": 2806,
@@ -2705,7 +3024,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_129",
+      "id": "ec3_150",
       "type": "math",
       "x": 396,
       "y": 2806,
@@ -2727,7 +3046,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_130",
+      "id": "ec3_151",
       "type": "text",
       "x": 76,
       "y": 2850,
@@ -2743,7 +3062,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_131",
+      "id": "ec3_152",
       "type": "math",
       "x": 96,
       "y": 2890,
@@ -2765,7 +3084,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_132",
+      "id": "ec3_153",
       "type": "math",
       "x": 396,
       "y": 2890,
@@ -2787,7 +3106,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_133",
+      "id": "ec3_154",
       "type": "math",
       "x": 96,
       "y": 2934,
@@ -2809,7 +3128,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_134",
+      "id": "ec3_155",
       "type": "math",
       "x": 396,
       "y": 2934,
@@ -2831,7 +3150,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_135",
+      "id": "ec3_156",
       "type": "math",
       "x": 96,
       "y": 2978,
@@ -2853,7 +3172,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_136",
+      "id": "ec3_157",
       "type": "math",
       "x": 396,
       "y": 2978,
@@ -2875,7 +3194,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_137",
+      "id": "ec3_158",
       "type": "text",
       "x": 76,
       "y": 3018,
@@ -2891,7 +3210,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_138",
+      "id": "ec3_159",
       "type": "math",
       "x": 96,
       "y": 3058,
@@ -2913,7 +3232,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_139",
+      "id": "ec3_160",
       "type": "text",
       "x": 396,
       "y": 3058,
@@ -2929,12 +3248,28 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_140",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_161",
+      "type": "text",
+      "x": 76,
       "y": 3098,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Web limit for Class 1",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-2"
+    },
+    {
+      "id": "ec3_162",
+      "type": "math",
+      "x": 300,
+      "y": 3098,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "c_{w.1}\\coloneq \\operatorname{if}(\\alpha_{w.used}>0.5,396/(13\\alpha_{w.used}-1),36/\\operatorname{max}(\\alpha_{w.used},10^{-12}))\\epsilon",
         "displayMode": "formulaResult",
@@ -2951,12 +3286,28 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_141",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_163",
+      "type": "text",
+      "x": 76,
       "y": 3142,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Web limit for Class 2",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-2"
+    },
+    {
+      "id": "ec3_164",
+      "type": "math",
+      "x": 300,
+      "y": 3142,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "c_{w.2}\\coloneq \\operatorname{if}(\\alpha_{w.used}>0.5,456/(13\\alpha_{w.used}-1),41.5/\\operatorname{max}(\\alpha_{w.used},10^{-12}))\\epsilon",
         "displayMode": "formulaResult",
@@ -2973,12 +3324,28 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_142",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_165",
+      "type": "text",
+      "x": 76,
       "y": 3186,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Web limit for Class 3 (bending)",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-2"
+    },
+    {
+      "id": "ec3_166",
+      "type": "math",
+      "x": 300,
+      "y": 3186,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "\\mathrm{webBendLimit}_{3}\\coloneq \\operatorname{if}(\\psi_w>-1,42/(0.67+0.33\\psi_w),62(1-\\psi_w)\\sqrt{-\\psi_w})\\epsilon",
         "displayMode": "formulaResult",
@@ -2995,7 +3362,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_143",
+      "id": "ec3_167",
       "type": "math",
       "x": 96,
       "y": 3230,
@@ -3017,7 +3384,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_144",
+      "id": "ec3_168",
       "type": "math",
       "x": 396,
       "y": 3230,
@@ -3039,12 +3406,28 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_145",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_169",
+      "type": "text",
+      "x": 76,
       "y": 3274,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Governing cross-section class",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-2"
+    },
+    {
+      "id": "ec3_170",
+      "type": "math",
+      "x": 300,
+      "y": 3274,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "\\mathrm{Class}\\coloneq \\operatorname{max}(\\mathrm{Class}_f,\\mathrm{Class}_w)",
         "displayMode": "formulaResult",
@@ -3054,14 +3437,14 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_146",
+      "id": "ec3_171",
       "type": "text",
       "x": 76,
       "y": 3322,
@@ -3077,7 +3460,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_147",
+      "id": "ec3_172",
       "type": "text",
       "x": 76,
       "y": 3354,
@@ -3093,7 +3476,7 @@
       "printGroupId": "ec3-sheet-2"
     },
     {
-      "id": "ec3_148",
+      "id": "ec3_173",
       "type": "text",
       "x": 76,
       "y": 3573,
@@ -3110,7 +3493,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_149",
+      "id": "ec3_174",
       "type": "text",
       "x": 76,
       "y": 3609,
@@ -3126,12 +3509,28 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_150",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_175",
+      "type": "text",
+      "x": 76,
       "y": 3645,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Compression resistance Nc,Rd",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-3"
+    },
+    {
+      "id": "ec3_176",
+      "type": "math",
+      "x": 300,
+      "y": 3645,
+      "props": {
+        "w": 410,
         "h": 86,
         "latex": "N_{c.Rd}\\coloneq \\frac{Af_{y}}{\\gamma_{M0}}",
         "displayMode": "full",
@@ -3141,14 +3540,14 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_151",
+      "id": "ec3_177",
       "type": "math",
       "x": 96,
       "y": 3737,
@@ -3170,7 +3569,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_152",
+      "id": "ec3_178",
       "type": "math",
       "x": 396,
       "y": 3737,
@@ -3192,7 +3591,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_153",
+      "id": "ec3_179",
       "type": "math",
       "x": 96,
       "y": 3777,
@@ -3214,7 +3613,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_154",
+      "id": "ec3_180",
       "type": "math",
       "x": 396,
       "y": 3777,
@@ -3236,7 +3635,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_155",
+      "id": "ec3_181",
       "type": "math",
       "x": 96,
       "y": 3821,
@@ -3258,7 +3657,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_156",
+      "id": "ec3_182",
       "type": "math",
       "x": 396,
       "y": 3821,
@@ -3280,7 +3679,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_157",
+      "id": "ec3_183",
       "type": "math",
       "x": 96,
       "y": 3873,
@@ -3302,7 +3701,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_158",
+      "id": "ec3_184",
       "type": "math",
       "x": 396,
       "y": 3873,
@@ -3324,7 +3723,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_159",
+      "id": "ec3_185",
       "type": "math",
       "x": 96,
       "y": 3917,
@@ -3346,7 +3745,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_160",
+      "id": "ec3_186",
       "type": "math",
       "x": 396,
       "y": 3917,
@@ -3368,12 +3767,28 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_161",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_187",
+      "type": "text",
+      "x": 76,
       "y": 3957,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "High-shear reduction ρ (6.2.8)",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-3"
+    },
+    {
+      "id": "ec3_188",
+      "type": "math",
+      "x": 300,
+      "y": 3957,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "\\rho\\coloneq \\operatorname{max}(\\rho_y,\\rho_z)",
         "displayMode": "formulaResult",
@@ -3383,14 +3798,14 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_162",
+      "id": "ec3_189",
       "type": "text",
       "x": 76,
       "y": 3997,
@@ -3406,12 +3821,28 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_163",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_190",
+      "type": "text",
+      "x": 76,
       "y": 4037,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Major-axis resistance My,Rd",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-3"
+    },
+    {
+      "id": "ec3_191",
+      "type": "math",
+      "x": 300,
+      "y": 4037,
+      "props": {
+        "w": 410,
         "h": 86,
         "latex": "M_{y.Rd}\\coloneq \\frac{(1-\\rho)W_yf_{y}}{\\gamma_{M0}}",
         "displayMode": "full",
@@ -3421,19 +3852,35 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_164",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_192",
+      "type": "text",
+      "x": 76,
       "y": 4129,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Minor-axis resistance Mz,Rd",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-3"
+    },
+    {
+      "id": "ec3_193",
+      "type": "math",
+      "x": 300,
+      "y": 4129,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "M_{z.Rd}\\coloneq \\frac{(1-\\rho)W_zf_{y}}{\\gamma_{M0}}",
         "displayMode": "formulaResult",
@@ -3443,19 +3890,35 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_165",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_194",
+      "type": "text",
+      "x": 76,
       "y": 4177,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Axial resistance after shear reduction",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-3"
+    },
+    {
+      "id": "ec3_195",
+      "type": "math",
+      "x": 300,
+      "y": 4177,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "N_{Rd.V}\\coloneq \\operatorname{if}(N_{Ed}<0\\,\\mathrm{N},N_{t.Rd},N_{c.Rd})(1-\\rho)",
         "displayMode": "formulaResult",
@@ -3465,14 +3928,14 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_166",
+      "id": "ec3_196",
       "type": "math",
       "x": 96,
       "y": 4221,
@@ -3494,7 +3957,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_167",
+      "id": "ec3_197",
       "type": "math",
       "x": 296,
       "y": 4221,
@@ -3516,7 +3979,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_168",
+      "id": "ec3_198",
       "type": "math",
       "x": 496,
       "y": 4221,
@@ -3538,12 +4001,28 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_169",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_199",
+      "type": "text",
+      "x": 76,
       "y": 4261,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Section interaction (6.2.1(7))",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-3"
+    },
+    {
+      "id": "ec3_200",
+      "type": "math",
+      "x": 300,
+      "y": 4261,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "\\mathrm{UR}_{section}\\coloneq u_N+u_{My}+u_{Mz}",
         "displayMode": "formulaResult",
@@ -3553,14 +4032,14 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_170",
+      "id": "ec3_201",
       "type": "math",
       "x": 96,
       "y": 4301,
@@ -3583,7 +4062,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_171",
+      "id": "ec3_202",
       "type": "text",
       "x": 236,
       "y": 4301,
@@ -3599,7 +4078,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_172",
+      "id": "ec3_203",
       "type": "text",
       "x": 76,
       "y": 4325,
@@ -3615,7 +4094,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_173",
+      "id": "ec3_204",
       "type": "math",
       "x": 96,
       "y": 4373,
@@ -3637,7 +4116,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_174",
+      "id": "ec3_205",
       "type": "math",
       "x": 396,
       "y": 4373,
@@ -3659,7 +4138,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_175",
+      "id": "ec3_206",
       "type": "text",
       "x": 76,
       "y": 4429,
@@ -3675,7 +4154,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_176",
+      "id": "ec3_207",
       "type": "text",
       "x": 76,
       "y": 4465,
@@ -3691,7 +4170,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_177",
+      "id": "ec3_208",
       "type": "text",
       "x": 76,
       "y": 4501,
@@ -3707,7 +4186,7 @@
       "printGroupId": "ec3-sheet-3"
     },
     {
-      "id": "ec3_178",
+      "id": "ec3_209",
       "type": "text",
       "x": 76,
       "y": 4744,
@@ -3724,7 +4203,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_179",
+      "id": "ec3_210",
       "type": "text",
       "x": 76,
       "y": 4780,
@@ -3740,7 +4219,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_180",
+      "id": "ec3_211",
       "type": "math",
       "x": 96,
       "y": 4816,
@@ -3762,7 +4241,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_181",
+      "id": "ec3_212",
       "type": "math",
       "x": 396,
       "y": 4816,
@@ -3784,12 +4263,28 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_182",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_213",
+      "type": "text",
+      "x": 76,
       "y": 4864,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Euler load Ncr,y",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-4"
+    },
+    {
+      "id": "ec3_214",
+      "type": "math",
+      "x": 300,
+      "y": 4864,
+      "props": {
+        "w": 410,
         "h": 86,
         "latex": "N_{cr.y}\\coloneq \\frac{\\pi^2\\mathrm{E}I_y}{L_{cr.y}^2}",
         "displayMode": "full",
@@ -3799,14 +4294,14 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_183",
+      "id": "ec3_215",
       "type": "math",
       "x": 96,
       "y": 4956,
@@ -3828,7 +4323,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_184",
+      "id": "ec3_216",
       "type": "math",
       "x": 396,
       "y": 4956,
@@ -3850,12 +4345,28 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_185",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_217",
+      "type": "text",
+      "x": 76,
       "y": 5008,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Buckling reduction χy",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-4"
+    },
+    {
+      "id": "ec3_218",
+      "type": "math",
+      "x": 300,
+      "y": 5008,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "\\chi_{y}\\coloneq \\operatorname{min}\\left(1,\\frac{1}{\\Phi_y+\\sqrt{\\operatorname{max}(0,\\Phi_y^2-\\lambda_y^2)}}\\right)",
         "displayMode": "formulaResult",
@@ -3872,12 +4383,28 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_186",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_219",
+      "type": "text",
+      "x": 76,
       "y": 5056,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Buckling resistance Nb,y,Rd",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-4"
+    },
+    {
+      "id": "ec3_220",
+      "type": "math",
+      "x": 300,
+      "y": 5056,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "N_{b.y.Rd}\\coloneq \\frac{\\chi_{y}Af_{y}}{\\gamma_{M1}}",
         "displayMode": "formulaResult",
@@ -3887,19 +4414,35 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_187",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_221",
+      "type": "text",
+      "x": 76,
       "y": 5104,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Euler load Ncr,z",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-4"
+    },
+    {
+      "id": "ec3_222",
+      "type": "math",
+      "x": 300,
+      "y": 5104,
+      "props": {
+        "w": 410,
         "h": 86,
         "latex": "N_{cr.z}\\coloneq \\frac{\\pi^2\\mathrm{E}I_z}{L_{cr.z}^2}",
         "displayMode": "full",
@@ -3909,14 +4452,14 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_188",
+      "id": "ec3_223",
       "type": "math",
       "x": 96,
       "y": 5196,
@@ -3938,7 +4481,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_189",
+      "id": "ec3_224",
       "type": "math",
       "x": 396,
       "y": 5196,
@@ -3960,12 +4503,28 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_190",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_225",
+      "type": "text",
+      "x": 76,
       "y": 5248,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Buckling reduction χz",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-4"
+    },
+    {
+      "id": "ec3_226",
+      "type": "math",
+      "x": 300,
+      "y": 5248,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "\\chi_{z}\\coloneq \\operatorname{min}\\left(1,\\frac{1}{\\Phi_z+\\sqrt{\\operatorname{max}(0,\\Phi_z^2-\\lambda_z^2)}}\\right)",
         "displayMode": "formulaResult",
@@ -3982,12 +4541,28 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_191",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_227",
+      "type": "text",
+      "x": 76,
       "y": 5296,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Buckling resistance Nb,z,Rd",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-4"
+    },
+    {
+      "id": "ec3_228",
+      "type": "math",
+      "x": 300,
+      "y": 5296,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "N_{b.z.Rd}\\coloneq \\frac{\\chi_{z}Af_{y}}{\\gamma_{M1}}",
         "displayMode": "formulaResult",
@@ -3997,14 +4572,14 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_192",
+      "id": "ec3_229",
       "type": "text",
       "x": 76,
       "y": 5344,
@@ -4020,12 +4595,28 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_193",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_230",
+      "type": "text",
+      "x": 76,
       "y": 5384,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Polar radius i0",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-4"
+    },
+    {
+      "id": "ec3_231",
+      "type": "math",
+      "x": 300,
+      "y": 5384,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "i_0\\coloneq \\sqrt{\\frac{I_y+I_z}{A}}",
         "displayMode": "formulaResult",
@@ -4035,19 +4626,35 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_194",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_232",
+      "type": "text",
+      "x": 76,
       "y": 5424,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Torsional critical load Ncr,T",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-4"
+    },
+    {
+      "id": "ec3_233",
+      "type": "math",
+      "x": 300,
+      "y": 5424,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "N_{cr.T}\\coloneq \\frac{\\mathrm{G}I_t+\\pi^2\\mathrm{E}I_w/\\mathrm{Lt}^2}{i_0^2}",
         "displayMode": "formulaResult",
@@ -4064,7 +4671,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_195",
+      "id": "ec3_234",
       "type": "math",
       "x": 96,
       "y": 5476,
@@ -4086,7 +4693,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_196",
+      "id": "ec3_235",
       "type": "math",
       "x": 396,
       "y": 5476,
@@ -4108,12 +4715,28 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_197",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_236",
+      "type": "text",
+      "x": 76,
       "y": 5528,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Torsional reduction χT",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-4"
+    },
+    {
+      "id": "ec3_237",
+      "type": "math",
+      "x": 300,
+      "y": 5528,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "\\chi_T\\coloneq \\operatorname{min}\\left(1,\\frac{1}{\\Phi_T+\\sqrt{\\operatorname{max}(0,\\Phi_T^2-\\lambda_T^2)}}\\right)",
         "displayMode": "formulaResult",
@@ -4130,12 +4753,28 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_198",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_238",
+      "type": "text",
+      "x": 76,
       "y": 5576,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Torsional resistance Nb,T,Rd",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-4"
+    },
+    {
+      "id": "ec3_239",
+      "type": "math",
+      "x": 300,
+      "y": 5576,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "N_{b.T.Rd}\\coloneq \\frac{\\chi_TAf_{y}}{\\gamma_{M1}}",
         "displayMode": "formulaResult",
@@ -4145,14 +4784,14 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_199",
+      "id": "ec3_240",
       "type": "text",
       "x": 76,
       "y": 5628,
@@ -4168,7 +4807,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_200",
+      "id": "ec3_241",
       "type": "text",
       "x": 76,
       "y": 5664,
@@ -4184,7 +4823,7 @@
       "printGroupId": "ec3-sheet-4"
     },
     {
-      "id": "ec3_201",
+      "id": "ec3_242",
       "type": "text",
       "x": 76,
       "y": 5915,
@@ -4201,7 +4840,7 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_202",
+      "id": "ec3_243",
       "type": "text",
       "x": 76,
       "y": 5951,
@@ -4217,37 +4856,14 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_203",
-      "type": "math",
-      "x": 96,
-      "y": 5979,
-      "props": {
-        "w": 620,
-        "h": 284,
-        "latex": "\\mathrm{LTBmodel}\\coloneq \\operatorname{stack}(\\mathrm{LoadCase},\\mathrm{zg}/\\mathrm{mm},\\mathrm{Llt}/\\mathrm{mm},\\mathrm{k},\\mathrm{kw})",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "ltb"
-      },
-      "printGroupId": "ec3-sheet-5"
-    },
-    {
-      "id": "ec3_204",
+      "id": "ec3_244",
       "type": "text",
       "x": 76,
-      "y": 6271,
+      "y": 5979,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "LTB reference: NCCI SN003b; uniform I/H; fork ends / free warping",
+        "html": "Enter a case number on page 1. The matching diagram and C1/C2 are highlighted in Annex B.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -4256,10 +4872,10 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_205",
+      "id": "ec3_245",
       "type": "math",
       "x": 96,
-      "y": 6303,
+      "y": 6027,
       "props": {
         "w": 280,
         "h": 32,
@@ -4278,10 +4894,10 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_206",
+      "id": "ec3_246",
       "type": "math",
       "x": 396,
-      "y": 6303,
+      "y": 6027,
       "props": {
         "w": 290,
         "h": 32,
@@ -4300,14 +4916,14 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_207",
+      "id": "ec3_247",
       "type": "text",
       "x": 76,
-      "y": 6339,
+      "y": 6063,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Auto cases: uniform moment 1/0; UDL 1.127/0.454; central point 1.348/0.630 (C1/C2).",
+        "html": "Coefficients are looked up from SCI NCCI SN003b Tables 3.1/3.2; no interpolation is used.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -4316,12 +4932,28 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_208",
-      "type": "math",
-      "x": 96,
-      "y": 6375,
+      "id": "ec3_248",
+      "type": "text",
+      "x": 76,
+      "y": 6099,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Elastic bending term Tcr",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-5"
+    },
+    {
+      "id": "ec3_249",
+      "type": "math",
+      "x": 300,
+      "y": 6099,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "T_{cr}\\coloneq \\frac{\\pi^2\\mathrm{E}I_z}{(\\mathrm{k}\\mathrm{Llt})^2}",
         "displayMode": "formulaResult",
@@ -4331,19 +4963,35 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_209",
-      "type": "math",
-      "x": 96,
-      "y": 6427,
+      "id": "ec3_250",
+      "type": "text",
+      "x": 76,
+      "y": 6151,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Torsion and warping term Bcr",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-5"
+    },
+    {
+      "id": "ec3_251",
+      "type": "math",
+      "x": 300,
+      "y": 6151,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "B_{cr}\\coloneq \\left(\\frac{\\mathrm{k}}{\\mathrm{kw}}\\right)^2\\frac{I_w}{I_z}+\\frac{\\mathrm{G}I_t}{T_{cr}}+(C_{2.used}\\mathrm{zg})^2",
         "displayMode": "formulaResult",
@@ -4360,12 +5008,28 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_210",
-      "type": "math",
-      "x": 96,
-      "y": 6475,
+      "id": "ec3_252",
+      "type": "text",
+      "x": 76,
+      "y": 6199,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Elastic critical moment Mcr",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-5"
+    },
+    {
+      "id": "ec3_253",
+      "type": "math",
+      "x": 300,
+      "y": 6199,
+      "props": {
+        "w": 410,
         "h": 86,
         "latex": "M_{cr.calc}\\coloneq C_{1.used}T_{cr}\\left(\\sqrt{B_{cr}}-C_{2.used}\\mathrm{zg}\\right)",
         "displayMode": "full",
@@ -4375,17 +5039,17 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_211",
+      "id": "ec3_254",
       "type": "math",
       "x": 96,
-      "y": 6567,
+      "y": 6291,
       "props": {
         "w": 600,
         "h": 32,
@@ -4404,14 +5068,14 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_212",
+      "id": "ec3_255",
       "type": "text",
       "x": 76,
-      "y": 6603,
+      "y": 6327,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Mcr uses the formula only for verified configurations; external mode uses supplied Mcr directly.",
+        "html": "Use this expression only for verified configurations; external mode uses the supplied Mcr.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -4420,12 +5084,28 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_213",
-      "type": "math",
-      "x": 96,
-      "y": 6639,
+      "id": "ec3_256",
+      "type": "text",
+      "x": 76,
+      "y": 6363,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Relative LTB slenderness λLT",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-5"
+    },
+    {
+      "id": "ec3_257",
+      "type": "math",
+      "x": 300,
+      "y": 6363,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "\\lambda_{LT}\\coloneq \\operatorname{if}(M_{cr}>0\\,\\mathrm{N}\\cdot\\mathrm{mm},\\sqrt{W_yf_{y}/M_{cr}},0)",
         "displayMode": "formulaResult",
@@ -4442,10 +5122,10 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_214",
+      "id": "ec3_258",
       "type": "math",
       "x": 96,
-      "y": 6691,
+      "y": 6415,
       "props": {
         "w": 280,
         "h": 32,
@@ -4464,10 +5144,10 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_215",
+      "id": "ec3_259",
       "type": "math",
       "x": 396,
-      "y": 6691,
+      "y": 6415,
       "props": {
         "w": 290,
         "h": 32,
@@ -4486,12 +5166,28 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_216",
-      "type": "math",
-      "x": 96,
-      "y": 6739,
+      "id": "ec3_260",
+      "type": "text",
+      "x": 76,
+      "y": 6463,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "LTB resistance Mb,Rd (6.3.2.2)",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-5"
+    },
+    {
+      "id": "ec3_261",
+      "type": "math",
+      "x": 300,
+      "y": 6463,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "M_{b.Rd}\\coloneq \\frac{\\chi_{LT}W_yf_{y}}{\\gamma_{M1}}",
         "displayMode": "formulaResult",
@@ -4501,21 +5197,21 @@
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 12,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_217",
+      "id": "ec3_262",
       "type": "text",
       "x": 76,
-      "y": 6795,
+      "y": 6519,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Relative LTB slenderness λLT = √(Wy fy / Mcr); no valid Mcr means NOT VERIFIED, not zero demand.",
+        "html": "λLT = √(Wy fy / Mcr). Without a verified Mcr, LTB is NOT VERIFIED.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -4524,14 +5220,14 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_218",
+      "id": "ec3_263",
       "type": "text",
       "x": 76,
-      "y": 6831,
+      "y": 6555,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "External mode bypasses coefficient calculation. McrCalc is an indicative coefficient-mode equation only.",
+        "html": "External-Mcr mode bypasses the coefficient calculation.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -4540,14 +5236,14 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_219",
+      "id": "ec3_264",
       "type": "text",
       "x": 76,
-      "y": 6867,
+      "y": 6591,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Top/bottom load level and end restraints must match the diagram and coefficient source.",
+        "html": "The selected reference case, restraint and signed load height must match the member.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -4556,7 +5252,23 @@
       "printGroupId": "ec3-sheet-5"
     },
     {
-      "id": "ec3_220",
+      "id": "ec3_265",
+      "type": "text",
+      "x": 76,
+      "y": 6675,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "Reference: SCI NCCI SN003b; uniform rolled I/H sections, fork-end restraint and free warping.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-5"
+    },
+    {
+      "id": "ec3_266",
       "type": "text",
       "x": 76,
       "y": 7086,
@@ -4573,7 +5285,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_221",
+      "id": "ec3_267",
       "type": "text",
       "x": 76,
       "y": 7122,
@@ -4589,7 +5301,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_222",
+      "id": "ec3_268",
       "type": "math",
       "x": 96,
       "y": 7158,
@@ -4611,7 +5323,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_223",
+      "id": "ec3_269",
       "type": "math",
       "x": 396,
       "y": 7158,
@@ -4633,12 +5345,28 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_224",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_270",
+      "type": "text",
+      "x": 76,
       "y": 7198,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Interaction factor kyy (Annex B, Method 2)",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-6"
+    },
+    {
+      "id": "ec3_271",
+      "type": "math",
+      "x": 300,
+      "y": 7198,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "k_{yy.B}\\coloneq \\mathrm{Cmy}\\left(1+\\operatorname{min}(\\lambda_y-0.2,0.8)n_y\\right)",
         "displayMode": "formulaResult",
@@ -4655,12 +5383,28 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_225",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_272",
+      "type": "text",
+      "x": 76,
       "y": 7242,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Interaction factor kzz (Annex B, Method 2)",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-6"
+    },
+    {
+      "id": "ec3_273",
+      "type": "math",
+      "x": 300,
+      "y": 7242,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "k_{zz.B}\\coloneq \\mathrm{Cmz}\\left(1+\\operatorname{min}(2\\lambda_z-0.6,1.4)n_z\\right)",
         "displayMode": "formulaResult",
@@ -4677,7 +5421,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_226",
+      "id": "ec3_274",
       "type": "math",
       "x": 96,
       "y": 7286,
@@ -4699,7 +5443,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_227",
+      "id": "ec3_275",
       "type": "math",
       "x": 96,
       "y": 7334,
@@ -4721,7 +5465,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_228",
+      "id": "ec3_276",
       "type": "math",
       "x": 396,
       "y": 7334,
@@ -4743,7 +5487,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_229",
+      "id": "ec3_277",
       "type": "math",
       "x": 96,
       "y": 7374,
@@ -4765,7 +5509,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_230",
+      "id": "ec3_278",
       "type": "math",
       "x": 396,
       "y": 7374,
@@ -4787,7 +5531,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_231",
+      "id": "ec3_279",
       "type": "math",
       "x": 96,
       "y": 7414,
@@ -4809,7 +5553,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_232",
+      "id": "ec3_280",
       "type": "math",
       "x": 396,
       "y": 7414,
@@ -4831,7 +5575,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_233",
+      "id": "ec3_281",
       "type": "math",
       "x": 96,
       "y": 7454,
@@ -4853,7 +5597,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_234",
+      "id": "ec3_282",
       "type": "text",
       "x": 396,
       "y": 7454,
@@ -4869,12 +5613,28 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_235",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_283",
+      "type": "text",
+      "x": 76,
       "y": 7494,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Interaction check about y–y (6.61)",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-6"
+    },
+    {
+      "id": "ec3_284",
+      "type": "math",
+      "x": 300,
+      "y": 7494,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "J_y\\coloneq n_y+k_{yy}m_y+k_{yz}m_z",
         "displayMode": "formulaResult",
@@ -4891,7 +5651,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_236",
+      "id": "ec3_285",
       "type": "math",
       "x": 96,
       "y": 7534,
@@ -4914,7 +5674,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_237",
+      "id": "ec3_286",
       "type": "text",
       "x": 256,
       "y": 7534,
@@ -4930,12 +5690,28 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_238",
-      "type": "math",
-      "x": 96,
+      "id": "ec3_287",
+      "type": "text",
+      "x": 76,
       "y": 7574,
       "props": {
-        "w": 600,
+        "w": 210,
+        "h": 24,
+        "html": "Interaction check about z–z (6.62)",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-6"
+    },
+    {
+      "id": "ec3_288",
+      "type": "math",
+      "x": 300,
+      "y": 7574,
+      "props": {
+        "w": 410,
         "h": 32,
         "latex": "J_z\\coloneq n_z+k_{zy}m_y+k_{zz}m_z",
         "displayMode": "formulaResult",
@@ -4952,7 +5728,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_239",
+      "id": "ec3_289",
       "type": "math",
       "x": 96,
       "y": 7614,
@@ -4975,7 +5751,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_240",
+      "id": "ec3_290",
       "type": "text",
       "x": 256,
       "y": 7614,
@@ -4991,7 +5767,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_241",
+      "id": "ec3_291",
       "type": "text",
       "x": 76,
       "y": 7638,
@@ -5007,7 +5783,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_242",
+      "id": "ec3_292",
       "type": "text",
       "x": 76,
       "y": 7670,
@@ -5023,173 +5799,7 @@
       "printGroupId": "ec3-sheet-6"
     },
     {
-      "id": "ec3_243",
-      "type": "text",
-      "x": 76,
-      "y": 7710,
-      "props": {
-        "w": 640,
-        "h": 28,
-        "html": "8  SERVICEABILITY — SEPARATE UNFACTORED LOAD CASE",
-        "fontFamily": "Inter",
-        "fontSize": 14,
-        "color": "#1e3a5f",
-        "align": "left",
-        "heading": 2
-      },
-      "printGroupId": "ec3-sheet-6"
-    },
-    {
-      "id": "ec3_244",
-      "type": "math",
-      "x": 96,
-      "y": 7746,
-      "props": {
-        "w": 620,
-        "h": 116,
-        "latex": "\\mathrm{SLSdiagram}\\coloneq \\operatorname{stack}(\\mathrm{SLSmode},\\mathrm{q}/(\\mathrm{kN}/\\mathrm{m}),\\mathrm{P}/\\mathrm{kN},\\mathrm{L}/\\mathrm{mm})",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20,
-        "steelFigure": "sls"
-      },
-      "printGroupId": "ec3-sheet-6"
-    },
-    {
-      "id": "ec3_245",
-      "type": "math",
-      "x": 96,
-      "y": 7870,
-      "props": {
-        "w": 600,
-        "h": 32,
-        "latex": "\\delta_{SS}\\coloneq \\frac{5\\operatorname{abs}(\\mathrm{q})\\mathrm{L}^4}{384\\mathrm{E}I_y}+\\frac{\\operatorname{abs}(\\mathrm{P})\\mathrm{L}^3}{48\\mathrm{E}I_y}",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-6"
-    },
-    {
-      "id": "ec3_246",
-      "type": "math",
-      "x": 96,
-      "y": 7922,
-      "props": {
-        "w": 600,
-        "h": 32,
-        "latex": "\\delta_{cant}\\coloneq \\frac{\\operatorname{abs}(\\mathrm{q})\\mathrm{L}^4}{8\\mathrm{E}I_y}+\\frac{\\operatorname{abs}(\\mathrm{P})\\mathrm{L}^3}{3\\mathrm{E}I_y}",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 12,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-6"
-    },
-    {
-      "id": "ec3_247",
-      "type": "math",
-      "x": 96,
-      "y": 7974,
-      "props": {
-        "w": 280,
-        "h": 32,
-        "latex": "\\delta\\coloneq \\operatorname{if}(\\mathrm{SLSmode}=0,\\delta_{SS},\\operatorname{if}(\\mathrm{SLSmode}=1,\\delta_{cant},\\operatorname{abs}(\\mathrm{DeltaExternal})))",
-        "displayMode": "result",
-        "displayUnit": "mm",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-6"
-    },
-    {
-      "id": "ec3_248",
-      "type": "math",
-      "x": 396,
-      "y": 7974,
-      "props": {
-        "w": 290,
-        "h": 32,
-        "latex": "\\delta_{lim}\\coloneq \\mathrm{L}/\\mathrm{LimitRatio}",
-        "displayMode": "formulaResult",
-        "displayUnit": "mm",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-6"
-    },
-    {
-      "id": "ec3_249",
-      "type": "math",
-      "x": 96,
-      "y": 8022,
-      "props": {
-        "w": 600,
-        "h": 32,
-        "latex": "\\delta\\le \\delta_{lim}",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-6"
-    },
-    {
-      "id": "ec3_250",
-      "type": "text",
-      "x": 76,
-      "y": 8054,
-      "props": {
-        "w": 640,
-        "h": 24,
-        "html": "Limit ratio is project-specific; Euler–Bernoulli bending deflection only, no universal EC3 limit.",
-        "fontFamily": "Inter",
-        "fontSize": 11,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "ec3-sheet-6"
-    },
-    {
-      "id": "ec3_251",
+      "id": "ec3_293",
       "type": "text",
       "x": 76,
       "y": 8257,
@@ -5209,7 +5819,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_252",
+      "id": "ec3_294",
       "type": "text",
       "x": 76,
       "y": 8297,
@@ -5230,7 +5840,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_253",
+      "id": "ec3_295",
       "type": "text",
       "x": 76,
       "y": 8337,
@@ -5246,7 +5856,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_254",
+      "id": "ec3_296",
       "type": "math",
       "x": 76,
       "y": 8377,
@@ -5268,7 +5878,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_255",
+      "id": "ec3_297",
       "type": "math",
       "x": 236,
       "y": 8377,
@@ -5290,7 +5900,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_256",
+      "id": "ec3_298",
       "type": "math",
       "x": 396,
       "y": 8377,
@@ -5312,7 +5922,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_257",
+      "id": "ec3_299",
       "type": "math",
       "x": 556,
       "y": 8377,
@@ -5334,7 +5944,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_258",
+      "id": "ec3_300",
       "type": "math",
       "x": 76,
       "y": 8417,
@@ -5356,7 +5966,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_259",
+      "id": "ec3_301",
       "type": "math",
       "x": 236,
       "y": 8417,
@@ -5378,7 +5988,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_260",
+      "id": "ec3_302",
       "type": "math",
       "x": 396,
       "y": 8417,
@@ -5400,7 +6010,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_261",
+      "id": "ec3_303",
       "type": "math",
       "x": 556,
       "y": 8417,
@@ -5422,7 +6032,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_262",
+      "id": "ec3_304",
       "type": "math",
       "x": 76,
       "y": 8457,
@@ -5444,7 +6054,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_263",
+      "id": "ec3_305",
       "type": "math",
       "x": 236,
       "y": 8457,
@@ -5466,7 +6076,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_264",
+      "id": "ec3_306",
       "type": "math",
       "x": 396,
       "y": 8457,
@@ -5488,7 +6098,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_265",
+      "id": "ec3_307",
       "type": "math",
       "x": 556,
       "y": 8457,
@@ -5510,7 +6120,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_266",
+      "id": "ec3_308",
       "type": "math",
       "x": 76,
       "y": 8497,
@@ -5532,7 +6142,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_267",
+      "id": "ec3_309",
       "type": "math",
       "x": 236,
       "y": 8497,
@@ -5554,7 +6164,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_268",
+      "id": "ec3_310",
       "type": "math",
       "x": 396,
       "y": 8497,
@@ -5576,7 +6186,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_269",
+      "id": "ec3_311",
       "type": "math",
       "x": 556,
       "y": 8497,
@@ -5598,7 +6208,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_270",
+      "id": "ec3_312",
       "type": "math",
       "x": 96,
       "y": 8557,
@@ -5620,7 +6230,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_271",
+      "id": "ec3_313",
       "type": "math",
       "x": 396,
       "y": 8557,
@@ -5642,7 +6252,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_272",
+      "id": "ec3_314",
       "type": "math",
       "x": 96,
       "y": 8597,
@@ -5664,7 +6274,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_273",
+      "id": "ec3_315",
       "type": "math",
       "x": 396,
       "y": 8597,
@@ -5686,14 +6296,14 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_274",
+      "id": "ec3_316",
       "type": "math",
       "x": 96,
       "y": 8637,
       "props": {
         "w": 280,
         "h": 32,
-        "latex": "\\mathrm{LoadCase}\\coloneq 0",
+        "latex": "\\mathrm{LTBmode}\\coloneq 0",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -5708,7 +6318,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_275",
+      "id": "ec3_317",
       "type": "math",
       "x": 396,
       "y": 8637,
@@ -5730,7 +6340,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_276",
+      "id": "ec3_318",
       "type": "math",
       "x": 96,
       "y": 8677,
@@ -5752,7 +6362,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_277",
+      "id": "ec3_319",
       "type": "math",
       "x": 396,
       "y": 8677,
@@ -5774,7 +6384,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_278",
+      "id": "ec3_320",
       "type": "math",
       "x": 96,
       "y": 8717,
@@ -5796,7 +6406,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_279",
+      "id": "ec3_321",
       "type": "math",
       "x": 396,
       "y": 8717,
@@ -5818,7 +6428,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_280",
+      "id": "ec3_322",
       "type": "math",
       "x": 96,
       "y": 8757,
@@ -5840,7 +6450,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_281",
+      "id": "ec3_323",
       "type": "math",
       "x": 396,
       "y": 8757,
@@ -5862,7 +6472,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_282",
+      "id": "ec3_324",
       "type": "math",
       "x": 96,
       "y": 8797,
@@ -5884,7 +6494,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_283",
+      "id": "ec3_325",
       "type": "math",
       "x": 396,
       "y": 8797,
@@ -5906,7 +6516,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_284",
+      "id": "ec3_326",
       "type": "math",
       "x": 96,
       "y": 8837,
@@ -5928,7 +6538,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_285",
+      "id": "ec3_327",
       "type": "math",
       "x": 396,
       "y": 8837,
@@ -5950,7 +6560,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_286",
+      "id": "ec3_328",
       "type": "math",
       "x": 96,
       "y": 8877,
@@ -5972,7 +6582,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_287",
+      "id": "ec3_329",
       "type": "math",
       "x": 396,
       "y": 8877,
@@ -5994,7 +6604,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_288",
+      "id": "ec3_330",
       "type": "math",
       "x": 96,
       "y": 8917,
@@ -6016,32 +6626,10 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_289",
+      "id": "ec3_331",
       "type": "math",
       "x": 396,
       "y": 8917,
-      "props": {
-        "w": 280,
-        "h": 32,
-        "latex": "\\mathrm{DeltaExternal}\\coloneq 0\\,\\mathrm{mm}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-7"
-    },
-    {
-      "id": "ec3_290",
-      "type": "math",
-      "x": 96,
-      "y": 8957,
       "props": {
         "w": 280,
         "h": 32,
@@ -6060,9 +6648,9 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_291",
+      "id": "ec3_332",
       "type": "math",
-      "x": 396,
+      "x": 96,
       "y": 8957,
       "props": {
         "w": 280,
@@ -6082,10 +6670,10 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_292",
+      "id": "ec3_333",
       "type": "math",
-      "x": 96,
-      "y": 8997,
+      "x": 396,
+      "y": 8957,
       "props": {
         "w": 280,
         "h": 32,
@@ -6104,9 +6692,9 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_293",
+      "id": "ec3_334",
       "type": "math",
-      "x": 396,
+      "x": 96,
       "y": 8997,
       "props": {
         "w": 280,
@@ -6126,10 +6714,10 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_294",
+      "id": "ec3_335",
       "type": "math",
-      "x": 96,
-      "y": 9037,
+      "x": 396,
+      "y": 8997,
       "props": {
         "w": 280,
         "h": 32,
@@ -6148,9 +6736,9 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_295",
+      "id": "ec3_336",
       "type": "math",
-      "x": 396,
+      "x": 96,
       "y": 9037,
       "props": {
         "w": 280,
@@ -6170,102 +6758,36 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_296",
+      "id": "ec3_337",
       "type": "math",
       "x": 96,
-      "y": 9077,
+      "y": 9125,
       "props": {
-        "w": 280,
+        "w": 600,
         "h": 32,
-        "latex": "\\mathrm{q}\\coloneq 5\\,\\mathrm{kN}/\\mathrm{m}",
-        "displayMode": "formula",
+        "latex": "\\mathrm{LoadCase}\\coloneq \\mathrm{LTBcase}-1",
+        "displayMode": "result",
         "displayUnit": "",
         "precision": -1,
         "textFont": "Inter",
         "equationFont": "Math",
         "fontStyle": "normal",
         "autoSize": true,
-        "fontSize": 13,
+        "fontSize": 10,
         "color": "#0f172a",
         "baseline": 20
       },
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_297",
-      "type": "math",
-      "x": 396,
-      "y": 9077,
-      "props": {
-        "w": 280,
-        "h": 32,
-        "latex": "\\mathrm{P}\\coloneq 0\\,\\mathrm{kN}",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-7"
-    },
-    {
-      "id": "ec3_298",
-      "type": "math",
-      "x": 96,
-      "y": 9117,
-      "props": {
-        "w": 280,
-        "h": 32,
-        "latex": "\\mathrm{SLSmode}\\coloneq 0",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-7"
-    },
-    {
-      "id": "ec3_299",
-      "type": "math",
-      "x": 396,
-      "y": 9117,
-      "props": {
-        "w": 280,
-        "h": 32,
-        "latex": "\\mathrm{LimitRatio}\\coloneq 250",
-        "displayMode": "formula",
-        "displayUnit": "",
-        "precision": -1,
-        "textFont": "Inter",
-        "equationFont": "Math",
-        "fontStyle": "normal",
-        "autoSize": true,
-        "fontSize": 13,
-        "color": "#0f172a",
-        "baseline": 20
-      },
-      "printGroupId": "ec3-sheet-7"
-    },
-    {
-      "id": "ec3_300",
+      "id": "ec3_338",
       "type": "text",
       "x": 76,
       "y": 9193,
       "props": {
         "w": 640,
         "h": 24,
-        "html": "Modes: LTB 0 auto / 1 manual / 2 external; SLS 0 simple / 1 cantilever / 2 external.",
+        "html": "Modes: LTB 0 auto / 1 manual / 2 external.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
@@ -6274,7 +6796,7 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_301",
+      "id": "ec3_339",
       "type": "text",
       "x": 76,
       "y": 9225,
@@ -6290,10 +6812,10 @@
       "printGroupId": "ec3-sheet-7"
     },
     {
-      "id": "ec3_302",
+      "id": "ec3_340",
       "type": "text",
       "x": 76,
-      "y": 9848,
+      "y": 10599,
       "props": {
         "w": 640,
         "h": 28,
@@ -6308,13 +6830,13 @@
           "id": "buckling-k"
         }
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-9"
     },
     {
-      "id": "ec3_303",
+      "id": "ec3_341",
       "type": "math",
       "x": 96,
-      "y": 9884,
+      "y": 10635,
       "props": {
         "w": 620,
         "h": 204,
@@ -6332,13 +6854,13 @@
         "steelFigure": "buckling",
         "constant": true
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-9"
     },
     {
-      "id": "ec3_304",
+      "id": "ec3_342",
       "type": "text",
       "x": 76,
-      "y": 10096,
+      "y": 10847,
       "props": {
         "w": 640,
         "h": 24,
@@ -6348,13 +6870,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-9"
     },
     {
-      "id": "ec3_305",
+      "id": "ec3_343",
       "type": "text",
       "x": 76,
-      "y": 10128,
+      "y": 10879,
       "props": {
         "w": 640,
         "h": 24,
@@ -6364,13 +6886,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-9"
     },
     {
-      "id": "ec3_306",
+      "id": "ec3_344",
       "type": "text",
       "x": 76,
-      "y": 10160,
+      "y": 10911,
       "props": {
         "w": 640,
         "h": 24,
@@ -6380,13 +6902,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "ec3-sheet-8"
+      "printGroupId": "ec3-sheet-9"
     },
     {
-      "id": "ec3_307",
+      "id": "ec3_345",
       "type": "text",
       "x": 76,
-      "y": 9428,
+      "y": 9788,
       "props": {
         "w": 640,
         "h": 28,
@@ -6400,10 +6922,10 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_308",
+      "id": "ec3_346",
       "type": "math",
       "x": 96,
-      "y": 9478,
+      "y": 9838,
       "props": {
         "w": 600,
         "h": 25,
@@ -6422,10 +6944,10 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_309",
+      "id": "ec3_347",
       "type": "math",
       "x": 96,
-      "y": 9504,
+      "y": 9864,
       "props": {
         "w": 600,
         "h": 25,
@@ -6444,10 +6966,10 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_310",
+      "id": "ec3_348",
       "type": "math",
       "x": 96,
-      "y": 9530,
+      "y": 9890,
       "props": {
         "w": 600,
         "h": 25,
@@ -6466,10 +6988,10 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_311",
+      "id": "ec3_349",
       "type": "math",
       "x": 96,
-      "y": 9582,
+      "y": 9942,
       "props": {
         "w": 600,
         "h": 25,
@@ -6488,10 +7010,10 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_312",
+      "id": "ec3_350",
       "type": "math",
       "x": 96,
-      "y": 9608,
+      "y": 9968,
       "props": {
         "w": 600,
         "h": 25,
@@ -6510,10 +7032,10 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_313",
+      "id": "ec3_351",
       "type": "math",
       "x": 96,
-      "y": 9634,
+      "y": 9994,
       "props": {
         "w": 600,
         "h": 25,
@@ -6532,10 +7054,10 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_314",
+      "id": "ec3_352",
       "type": "math",
       "x": 96,
-      "y": 9660,
+      "y": 10020,
       "props": {
         "w": 600,
         "h": 25,
@@ -6554,14 +7076,14 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_315",
+      "id": "ec3_353",
       "type": "math",
       "x": 96,
-      "y": 9686,
+      "y": 10046,
       "props": {
         "w": 600,
         "h": 25,
-        "latex": "\\mathrm{I}_{4}\\coloneq \\operatorname{stack}(\\mathrm{kyyManual},\\mathrm{kyzManual},\\mathrm{kzyManual},\\mathrm{kzzManual},\\mathrm{SLSmode},\\mathrm{q},\\mathrm{P},\\mathrm{DeltaExternal})",
+        "latex": "\\mathrm{I}_{4}\\coloneq \\operatorname{stack}(\\mathrm{kyyManual},\\mathrm{kyzManual},\\mathrm{kzyManual},\\mathrm{kzzManual},\\mathrm{Anet},\\mathrm{eta},\\mathrm{FactorsVerified},\\mathrm{LTBverified})",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -6576,14 +7098,14 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_316",
+      "id": "ec3_354",
       "type": "math",
       "x": 96,
-      "y": 9712,
+      "y": 10072,
       "props": {
         "w": 600,
         "h": 25,
-        "latex": "\\mathrm{I}_{5}\\coloneq \\operatorname{stack}(\\mathrm{LimitRatio},\\mathrm{Anet},\\mathrm{eta},\\mathrm{FactorsVerified},\\mathrm{LTBverified},\\mathrm{CurvesVerified},\\mathrm{ManualFactorsVerified})",
+        "latex": "\\mathrm{I}_{5}\\coloneq \\operatorname{stack}(\\mathrm{CurvesVerified},\\mathrm{ManualFactorsVerified})",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
@@ -6598,10 +7120,10 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_317",
+      "id": "ec3_355",
       "type": "math",
       "x": 96,
-      "y": 9738,
+      "y": 10098,
       "props": {
         "w": 600,
         "h": 25,
@@ -6620,10 +7142,10 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_318",
+      "id": "ec3_356",
       "type": "math",
       "x": 96,
-      "y": 9764,
+      "y": 10124,
       "props": {
         "w": 600,
         "h": 32,
@@ -6642,7 +7164,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_319",
+      "id": "ec3_357",
       "type": "text",
       "x": 76,
       "y": 10200,
@@ -6659,7 +7181,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_320",
+      "id": "ec3_358",
       "type": "text",
       "x": 76,
       "y": 10236,
@@ -6675,7 +7197,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_321",
+      "id": "ec3_359",
       "type": "text",
       "x": 76,
       "y": 10268,
@@ -6691,7 +7213,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_322",
+      "id": "ec3_360",
       "type": "text",
       "x": 76,
       "y": 10300,
@@ -6707,7 +7229,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_323",
+      "id": "ec3_361",
       "type": "text",
       "x": 76,
       "y": 10332,
@@ -6723,7 +7245,7 @@
       "printGroupId": "ec3-sheet-8"
     },
     {
-      "id": "ec3_324",
+      "id": "ec3_362",
       "type": "text",
       "x": 76,
       "y": 10364,
@@ -6737,6 +7259,146 @@
         "align": "left"
       },
       "printGroupId": "ec3-sheet-8"
+    },
+    {
+      "id": "ec3_363",
+      "type": "text",
+      "x": 76,
+      "y": 11770,
+      "props": {
+        "w": 640,
+        "h": 28,
+        "html": "ANNEX B — LTB LOAD CASES AND COEFFICIENTS",
+        "fontFamily": "Inter",
+        "fontSize": 19,
+        "color": "#1e3a5f",
+        "align": "left",
+        "heading": 1,
+        "annex": {
+          "kind": "heading",
+          "id": "ltb-cases"
+        }
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_364",
+      "type": "text",
+      "x": 76,
+      "y": 11802,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "Enter the case number shown below. Coefficients are for k = kw = 1; load-height zg is entered on page 1.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_365",
+      "type": "math",
+      "x": 76,
+      "y": 11826,
+      "props": {
+        "w": 634,
+        "h": 680,
+        "latex": "\\mathrm{LTBcatalog}\\coloneq \\operatorname{stack}(\\mathrm{LTBcase})",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": -1,
+        "textFont": "Inter",
+        "equationFont": "Math",
+        "fontStyle": "normal",
+        "autoSize": true,
+        "fontSize": 13,
+        "color": "#0f172a",
+        "baseline": 20,
+        "steelFigure": "ltbCatalog"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_366",
+      "type": "text",
+      "x": 76,
+      "y": 12546,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "Cases 1–9: SCI NCCI SN003b Table 3.1, end-moment ratio ψ = smaller / larger end moment; C2 = 0.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_367",
+      "type": "text",
+      "x": 76,
+      "y": 12578,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "Cases 10–13: Table 3.2 transverse loading. Fixed-end cases use their own coefficients; do not substitute pin-ended values.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_368",
+      "type": "text",
+      "x": 76,
+      "y": 12610,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "Combined end moments plus transverse loading require SN003b §3.4 curves and ψ/μ. They are not silently interpolated here.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_369",
+      "type": "text",
+      "x": 76,
+      "y": 12642,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "Outside cases 1–13, or k/kw ≠ 1, returns NOT VERIFIED unless verified manual coefficients or external Mcr are supplied.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
+    },
+    {
+      "id": "ec3_370",
+      "type": "text",
+      "x": 76,
+      "y": 12674,
+      "props": {
+        "w": 640,
+        "h": 24,
+        "html": "Reference: SCI NCCI SN003b, Tables 3.1/3.2, §§2–3.3. End restraints and load position must match.",
+        "fontFamily": "Inter",
+        "fontSize": 11,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "ec3-sheet-10"
     }
   ],
   "inputResult": {
@@ -6750,124 +7412,134 @@
       {
         "id": "fy",
         "label": "fy",
-        "regionId": "ec3_6"
+        "regionId": "ec3_7"
       },
       {
         "id": "fu",
         "label": "fu",
-        "regionId": "ec3_7"
+        "regionId": "ec3_9"
       },
       {
         "id": "L",
         "label": "L",
-        "regionId": "ec3_13"
+        "regionId": "ec3_21"
       },
       {
         "id": "Ky",
         "label": "Ky",
-        "regionId": "ec3_14"
+        "regionId": "ec3_23"
       },
       {
         "id": "Kz",
         "label": "Kz",
-        "regionId": "ec3_15"
+        "regionId": "ec3_25"
       },
       {
         "id": "Llt",
         "label": "Llt",
-        "regionId": "ec3_16"
+        "regionId": "ec3_27"
       },
       {
         "id": "N",
         "label": "N",
-        "regionId": "ec3_19"
+        "regionId": "ec3_40"
       },
       {
         "id": "My",
         "label": "My",
-        "regionId": "ec3_20"
+        "regionId": "ec3_42"
       },
       {
         "id": "Mz",
         "label": "Mz",
-        "regionId": "ec3_21"
+        "regionId": "ec3_44"
       },
       {
         "id": "Vy",
         "label": "Vy",
-        "regionId": "ec3_22"
+        "regionId": "ec3_46"
       },
       {
         "id": "Vz",
         "label": "Vz",
-        "regionId": "ec3_23"
+        "regionId": "ec3_48"
       },
       {
-        "id": "LTBmode",
-        "label": "LTBmode",
-        "regionId": "ec3_17"
+        "id": "LTBcase",
+        "label": "LTBcase",
+        "regionId": "ec3_29"
       },
       {
-        "id": "LoadCase",
-        "label": "LoadCase",
-        "regionId": "ec3_274"
+        "id": "zg",
+        "label": "zg",
+        "regionId": "ec3_317"
+      },
+      {
+        "id": "k",
+        "label": "k",
+        "regionId": "ec3_318"
+      },
+      {
+        "id": "kw",
+        "label": "kw",
+        "regionId": "ec3_319"
       }
     ],
     "outputs": [
       {
         "id": "sectionClass",
         "label": "sectionClass",
-        "regionId": "ec3_145"
+        "regionId": "ec3_170"
       },
       {
         "id": "Mcr",
         "label": "Mcr",
-        "regionId": "ec3_211"
+        "regionId": "ec3_254"
       },
       {
         "id": "chiY",
         "label": "chiY",
-        "regionId": "ec3_185"
+        "regionId": "ec3_218"
       },
       {
         "id": "chiZ",
         "label": "chiZ",
-        "regionId": "ec3_190"
+        "regionId": "ec3_226"
       },
       {
         "id": "chiLT",
         "label": "chiLT",
-        "regionId": "ec3_215"
+        "regionId": "ec3_259"
       },
       {
         "id": "kyy",
         "label": "kyy",
-        "regionId": "ec3_227"
+        "regionId": "ec3_275"
       },
       {
         "id": "kyz",
         "label": "kyz",
-        "regionId": "ec3_229"
+        "regionId": "ec3_277"
       },
       {
         "id": "kzy",
         "label": "kzy",
-        "regionId": "ec3_230"
+        "regionId": "ec3_278"
       },
       {
         "id": "kzz",
         "label": "kzz",
-        "regionId": "ec3_228"
+        "regionId": "ec3_276"
       },
       {
         "id": "UR",
         "label": "UR",
-        "regionId": "ec3_30"
+        "regionId": "ec3_55"
       },
       {
         "id": "State",
         "label": "State: 1 PASS / 0 FAIL / −1 NOT VERIFIED",
-        "regionId": "ec3_29",
+        "regionId": "ec3_54",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -6877,7 +7549,7 @@
       {
         "id": "Governing",
         "label": "Governing",
-        "regionId": "ec3_31",
+        "regionId": "ec3_56",
         "valueLabels": {
           "0": "Compression / tension",
           "1": "Major bending",
@@ -6890,14 +7562,13 @@
           "8": "Torsional buckling",
           "9": "LTB",
           "10": "Interaction 6.61",
-          "11": "Interaction 6.62",
-          "12": "Deflection"
+          "11": "Interaction 6.62"
         }
       },
       {
         "id": "SectionOut",
         "label": "SectionOut",
-        "regionId": "ec3_109",
+        "regionId": "ec3_129",
         "valueLabels": {
           "0": "User-defined",
           "1000": "IPE 80",
@@ -7284,7 +7955,7 @@
       {
         "id": "State0",
         "label": "State0",
-        "regionId": "ec3_42",
+        "regionId": "ec3_67",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7294,7 +7965,7 @@
       {
         "id": "State1",
         "label": "State1",
-        "regionId": "ec3_47",
+        "regionId": "ec3_72",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7304,7 +7975,7 @@
       {
         "id": "State2",
         "label": "State2",
-        "regionId": "ec3_52",
+        "regionId": "ec3_77",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7314,7 +7985,7 @@
       {
         "id": "State3",
         "label": "State3",
-        "regionId": "ec3_57",
+        "regionId": "ec3_82",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7324,7 +7995,7 @@
       {
         "id": "State4",
         "label": "State4",
-        "regionId": "ec3_62",
+        "regionId": "ec3_87",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7334,7 +8005,7 @@
       {
         "id": "State5",
         "label": "State5",
-        "regionId": "ec3_67",
+        "regionId": "ec3_92",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7344,7 +8015,7 @@
       {
         "id": "State6",
         "label": "State6",
-        "regionId": "ec3_72",
+        "regionId": "ec3_97",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7354,7 +8025,7 @@
       {
         "id": "State7",
         "label": "State7",
-        "regionId": "ec3_77",
+        "regionId": "ec3_102",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7364,7 +8035,7 @@
       {
         "id": "State8",
         "label": "State8",
-        "regionId": "ec3_82",
+        "regionId": "ec3_107",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7374,7 +8045,7 @@
       {
         "id": "State9",
         "label": "State9",
-        "regionId": "ec3_87",
+        "regionId": "ec3_112",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7384,7 +8055,7 @@
       {
         "id": "State10",
         "label": "State10",
-        "regionId": "ec3_92",
+        "regionId": "ec3_117",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7394,17 +8065,7 @@
       {
         "id": "State11",
         "label": "State11",
-        "regionId": "ec3_97",
-        "valueLabels": {
-          "0": "FAIL",
-          "1": "PASS",
-          "-1": "NOT VERIFIED"
-        }
-      },
-      {
-        "id": "State12",
-        "label": "State12",
-        "regionId": "ec3_102",
+        "regionId": "ec3_122",
         "valueLabels": {
           "0": "FAIL",
           "1": "PASS",
@@ -7429,8 +8090,10 @@
           "Mz": 5,
           "Vy": 0,
           "Vz": 0,
-          "LTBmode": null,
-          "LoadCase": null
+          "LTBcase": null,
+          "zg": null,
+          "k": null,
+          "kw": null
         }
       },
       {
@@ -7449,8 +8112,10 @@
           "Mz": 10,
           "Vy": 0,
           "Vz": 0,
-          "LTBmode": null,
-          "LoadCase": null
+          "LTBcase": null,
+          "zg": null,
+          "k": null,
+          "kw": null
         }
       }
     ]
