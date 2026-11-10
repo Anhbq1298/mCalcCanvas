@@ -6,9 +6,11 @@
  * access, and user functions are worksheet expression trees with a bounded
  * call depth, so untrusted input can only ever perform bounded arithmetic.
  */
+import { matrixFunctionNames, type MatrixFunctionName } from './matrixNames';
+import { evalMatrixFunction, matrixMultiply, matrixPower, joinMatrices, type ScalarOps } from './matrixFunctions';
 import { evalSteelFunction, steelFunctionNames, type SteelFunctionName } from './steelFunctions';
 import { CalculationError } from './CalculationErrors';
-import { QVector, broadcast1, broadcast2, broadcastN, flatten, isVector, requireScalar, withSi, type Value } from './Vector';
+import { isBundle, QMatrix, isMatrix, QVector, broadcast1, broadcast2, broadcastN, flatten, isVector, requireScalar, withSi, type Value } from './Vector';
 import type { Unit } from 'mathjs';
 export { type Value } from './Vector';
 import type { Condition, Expr } from './ExpressionTypes';
@@ -177,6 +179,7 @@ export function candidateNames(exprs: Expr[]): Set<string> {
 }
 
 export interface EvalContext extends ResolveContext {
+  vectorized?: boolean;
   getValue(name: string): Value;
   /** The user function a name refers to here, if it is one. */
   getFunction?(name: string): UserFunction | undefined;
@@ -213,6 +216,7 @@ function evalCondition(c: Condition, ctx: EvalContext): boolean | boolean[] {
   }
   const lv = evalNode(c.left, ctx);
   const rv = evalNode(c.right, ctx);
+  if (isMatrix(lv) || isMatrix(rv)) throw new CalculationError('vector', 'Matrix conditions require a scalar entry, row or column selection first.');
   if (!isVector(lv) && !isVector(rv)) return compareQuantities(lv, rv, c.op);
   const fast = fastCompare(lv, rv, c.op);
   if (fast) return fast;
@@ -467,6 +471,7 @@ function fastCall(fn: string, args: Value[]): Value | null {
 
 /** normalize() for a whole value: a packed vector is already normalised. */
 function normalizeValue(v: Value): Value {
+  if (isBundle(v)) return v;
   if (isVector(v)) {
     const p = v.pack();
     if (p) return v;
@@ -476,6 +481,7 @@ function normalizeValue(v: Value): Value {
 
 /** Reject complex, NaN and infinite intermediate results with a clear message. */
 function ensureFinite(v: Value): Value {
+  if (isBundle(v)) { v.factors.forEach(ensureFinite); return v; }
   if (isVector(v)) {
     const p = v.pack();
     if (p) {
@@ -603,8 +609,36 @@ const multiplyQ = (x: Quantity, y: Quantity): Quantity => {
   return normalize(math.multiply(x as never, y as never) as unknown as Quantity);
 };
 
+const scalarOps: ScalarOps = {
+  add: (a, b) => addOrSubtract(a, b, '+'),
+  sub: (a, b) => addOrSubtract(a, b, '-'),
+  mul: (a, b) => {
+    if (isAbsoluteTemperature(a) || isAbsoluteTemperature(b)) throw temperatureError('An absolute temperature (°C) cannot be multiplied.');
+    return multiplyQ(a, b);
+  },
+  div: (a, b) => {
+    if (isAbsoluteTemperature(a) || isAbsoluteTemperature(b)) throw temperatureError('An absolute temperature (°C) cannot be divided.');
+    if (siValue(b) === 0) throw new CalculationError('division-by-zero', 'Division by zero.');
+    return normalize(math.divide(a as never, b as never) as Quantity);
+  },
+  pow: (a, n) => {
+    if (isAbsoluteTemperature(a)) throw temperatureError('An absolute temperature (°C) cannot be raised to a power.');
+    return powQ(a, n);
+  },
+};
+
+function multiplyValues(a: Value, b: Value, ctx: EvalContext): Value {
+  if (isBundle(a) || isBundle(b)) throw new CalculationError('vector', 'Extract a factor with at(result, index) before arithmetic.');
+  if (!ctx.vectorized && (isMatrix(a) || isMatrix(b)) && isVector(a) && isVector(b)) return matrixMultiply(a, b, scalarOps);
+  return fastBinary('*', a, b) ?? broadcast2(a, b, multiplyQ);
+}
+
 function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
   switch (expr.type) {
+    case 'matrix':
+      return new QMatrix(expr.rows.length, expr.rows[0].length, expr.rows.flat().map((e) => requireScalar(evalNode(e, ctx), 'A matrix cell')));
+    case 'vectorize':
+      return evalNode(expr.body, { ...ctx, vectorized: true });
     case 'num':
       return expr.value;
 
@@ -618,7 +652,7 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
         const v: Value =
           p.kind === 'var' ? ctx.getValue(p.name) : p.kind === 'unit' ? unitValue(p.symbol) : p.value;
         if (r.parts.length > 1 && hasAbsoluteTemperature(v)) throw temperatureError('An absolute temperature (°C) cannot be multiplied.');
-        acc = acc === null ? v : (fastBinary('*', acc, v) ?? broadcast2(acc, v, multiplyQ));
+        acc = acc === null ? v : multiplyValues(acc, v, ctx);
       }
       return normalizeValue(acc as Value);
     }
@@ -628,6 +662,7 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
 
     case 'unary': {
       const v = evalNode(expr.arg, ctx);
+      if (isBundle(v)) throw new CalculationError('vector', 'Extract a factor with at(result, index) before arithmetic.');
       if (expr.op === '-' && hasAbsoluteTemperature(v) && !isTemperatureLiteral(expr.arg)) {
         throw temperatureError('An absolute temperature (°C) cannot be negated.');
       }
@@ -641,12 +676,19 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
     case 'binary': {
       const a = evalNode(expr.left, ctx);
       const b = evalNode(expr.right, ctx);
+      if (isBundle(a) || isBundle(b)) throw new CalculationError('vector', 'Extract a factor with at(result, index) before arithmetic.');
       if (expr.op !== '+' && expr.op !== '-' && (hasAbsoluteTemperature(a) || hasAbsoluteTemperature(b))) {
         // Only a literal "20 °C" (number × °C) is allowed; scaling an absolute temperature is meaningless.
         if (!(expr.op === '*' && isTemperatureLiteral(expr))) {
           const verb = expr.op === '*' ? 'multiplied' : expr.op === '/' ? 'divided' : 'raised to a power';
           throw temperatureError(`An absolute temperature (°C) cannot be ${verb}.`);
         }
+      }
+      if (expr.cross && !ctx.vectorized && isVector(a) && isVector(b)) return evalMatrixFunction('cross', [a, b], scalarOps);
+      if (!ctx.vectorized && (isMatrix(a) || isMatrix(b))) {
+        if (expr.op === '*' && isVector(a) && isVector(b)) return matrixMultiply(a, b, scalarOps);
+        if (expr.op === '^' && isMatrix(a)) return matrixPower(a, b, scalarOps);
+        if (expr.op === '/' && isVector(b)) throw new CalculationError('vector', 'Matrix division is ambiguous; use lsolve, inv or divideElements.');
       }
       if (expr.op !== '^') {
         const fast = fastBinary(expr.op, a, b);
@@ -659,7 +701,7 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
           return broadcast2(a, b, (x, y) => addOrSubtract(x, y, op));
         }
         case '*':
-          return broadcast2(a, b, multiplyQ);
+          return multiplyValues(a, b, ctx);
         case '/':
           return broadcast2(a, b, (x, y) => {
             if (siValue(y) === 0) throw new CalculationError('division-by-zero', 'Division by zero: the denominator is 0.');
@@ -685,7 +727,7 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
               );
               const last = values.pop()!;
               let acc: Value = broadcast2(last, b, (x, y) => powQ(x, exponent(y)));
-              for (const v of values) acc = broadcast2(v, acc, multiplyQ);
+              for (const v of values) acc = multiplyValues(v, acc, ctx);
               return acc;
             }
           }
@@ -700,7 +742,9 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
       if (f) {
         const r = callUserFunction(f, expr.args.map((a) => evalNode(a, ctx)));
         if (!expr.pow) return r;
-        return broadcast2(r, evalNode(expr.pow, ctx), (x, y) => {
+        const exponent = evalNode(expr.pow, ctx);
+        if (!ctx.vectorized && isMatrix(r)) return matrixPower(r, exponent, scalarOps);
+        return broadcast2(r, exponent, (x, y) => {
           if (!isDimensionless(y)) throw new CalculationError('unit-mismatch', `An exponent must be a dimensionless number (got ${describeQuantity(y)}).`);
           return powQ(x, requireDimensionless(y, 'An exponent'));
         });
@@ -713,10 +757,33 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
 
     case 'call': {
       if (expr.fn === 'map') return evalMap(expr.args, ctx);
+      if (expr.fn === 'matrix' && expr.args.length === 3 && expr.args[2].type === 'ident') {
+        const f = ctx.getFunction?.(expr.args[2].name);
+        if (f) {
+          const [r, c] = expr.args.slice(0, 2).map((e) => requireDimensionless(requireScalar(evalNode(e, ctx), 'Matrix dimension'), 'Matrix dimension'));
+          if (!Number.isSafeInteger(r) || !Number.isSafeInteger(c) || r < 1 || c < 1) throw new CalculationError('domain', 'Matrix dimensions must be positive integers.');
+          if (r * c > 10_000) throw new CalculationError('limit-exceeded', 'A matrix may have at most 10000 entries.');
+          return new QMatrix(r, c, Array.from({ length: r * c }, (_, i) => requireScalar(callUserFunction(f, [Math.floor(i / c), i % c]), 'A generated matrix cell')));
+        }
+      }
+      if (['lookup', 'hlookup', 'vlookup', 'vhlookup', 'match'].includes(expr.fn)) {
+        const count = expr.fn === 'match' ? 3 : 4;
+        const last = expr.args[expr.args.length - 1];
+        const f = expr.args.length === count && last?.type === 'ident' ? ctx.getFunction?.(last.name) : undefined;
+        if (f) {
+          const args = expr.args.slice(0, -1).map((a) => evalNode(a, ctx));
+          return evalMatrixFunction(expr.fn as MatrixFunctionName, args, scalarOps, (a, b) => requireDimensionless(requireScalar(callUserFunction(f, [a, b]), 'Lookup comparison result'), 'Lookup comparison result') !== 0);
+        }
+      }
       const args = expr.args.map((a) => evalNode(a, ctx));
       const fn = expr.fn;
+      if ((matrixFunctionNames as readonly string[]).includes(fn)) return evalMatrixFunction(fn as MatrixFunctionName, args, scalarOps);
+      if (args.some(isBundle)) throw new CalculationError('vector', 'Extract a factor with at(result, index) before calling this function.');
+      if (fn === 'abs' && args.length === 1 && isMatrix(args[0])) return evalMatrixFunction('det', args, scalarOps);
+      if (args.some(isMatrix) && fn === 'linterp') throw new CalculationError('vector', `${fn} requires vectors; select a matrix row or column first.`);
       if ((steelFunctionNames as readonly string[]).includes(fn)) return evalSteelFunction(fn as SteelFunctionName, args);
       if (fn === 'stack') {
+        if (args.some(isMatrix)) return joinMatrices(args, true);
         return new QVector(flatten(args));
       }
       if (fn === 'linterp') {
@@ -820,6 +887,8 @@ function evalMap(argExprs: Expr[], ctx: EvalContext): Value {
   const f = fExpr.type === 'ident' ? ctx.getFunction?.(fExpr.name) : undefined;
   if (!f) throw new CalculationError('syntax', 'The first argument of map must be the name of a user function, e.g. map(f, x).');
   const args = rest.map((a) => evalNode(a, ctx));
+  if (args.some(isBundle)) throw new CalculationError('vector', 'map requires scalar-entry arrays.');
+  if (args.some(isMatrix)) return broadcastN(args, (values) => requireScalar(callUserFunction(f, values), `Each result of map(${f.name}, …)`));
   const lengths = [...new Set(args.filter(isVector).map((v) => v.length))];
   if (lengths.length > 1) throw new CalculationError('vector', `map: the vectors have different lengths (${lengths.join(', ')}).`);
   if (lengths.length === 0) return callUserFunction(f, args);

@@ -1,4 +1,5 @@
 /** Matrices/Tables tab menus: dimension picker, operators and functions (the tab layout is in tabs.tsx). */
+import { matrixFunctionNames, matrixArgumentCounts } from '../../engine/light';
 import { Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { insertMatrix, insertTable } from '../../canvas/matrixTableCommands';
@@ -37,19 +38,23 @@ export function DimensionPicker({ kind, close }: { kind: 'matrix' | 'table'; clo
 
 /** Vector/matrix operator templates ([title, LaTeX]). */
 const MATRIX_OPERATORS = [
-  ['Matrix multiplication', '#@\\cdot #?'], ['Matrix power', '#@^{#?}'], ['Subscript / index', '#@_{#?}'],
+  ['Matrix multiplication', '#@\\cdot #?'], ['Matrix power', '#@^{#?}'], ['Subscript / index', '\\operatorname{at}\\left(#@,#?,#?\\right)'],
   ['Matrix inverse', '#@^{-1}'], ['Transpose', '#@^{T}'], ['Determinant', '\\det\\left(#@\\right)'],
   ['Vector norm', '\\left\\lVert#@\\right\\rVert'], ['Vectorize', '\\operatorname{vec}\\left(#@\\right)'], ['Cross product', '#@\\times #?'],
 ] as const;
 
-const functions = ['abs','augment','Cholesky','cols','cond1','cond2','conde','condi','convolve','crosscorr','deconvolve','det','diag','eigenvals','eigenvec','eigenvecs','geninv','genvals','genvecs','hlookup','identity','IsArray','IsScalar','kronecker','last','length','logpts','logspace','lookup','lsolve','LU','match','matrix','max','min','norm','norm1','norm2','norme','normi','QR','rank','Rank','rows','rref','stack','submatrix','svd','svds','tr','vhlookup','vlookup'];
-const engineFunctions = new Set(['abs', 'max', 'min']);
+const functions = [...matrixFunctionNames, 'stack', 'abs', 'max', 'min'].sort();
 
-/** Searchable vector/matrix function list; functions the engine does not support yet are shown disabled. */
+function functionTemplate(name: string): string {
+  const count = name === 'stack' ? 2 : matrixArgumentCounts[name as keyof typeof matrixArgumentCounts] ?? 1;
+  return `\\operatorname{${name}}\\left(${Array<string>(count).fill('#?').join(',')}\\right)`;
+}
+
+/** Searchable vector/matrix function list; every listed function is implemented by the engine. */
 export function FunctionsMenu() {
   const [query, setQuery] = useState('');
   const shown = useMemo(() => functions.filter((name) => name.toLowerCase().includes(query.toLowerCase())), [query]);
-  return <div><label className="mb-2 flex items-center gap-1 rounded border border-docs-border px-2"><Search size={14}/><input autoFocus aria-label="Search matrix functions" value={query} onChange={(e) => setQuery(e.target.value)} className="h-7 min-w-0 flex-1 outline-none" /></label><div className="grid grid-cols-5 gap-0.5">{shown.map((name) => { const enabled = engineFunctions.has(name); return <button key={name} type="button" disabled={!enabled} title={enabled ? `Insert ${name}` : `${name} — calculation engine support is planned`} className="rounded px-2 py-1 text-left text-xs hover:bg-docs-hover disabled:cursor-not-allowed disabled:text-docs-muted/45" onClick={() => insertTemplate(`\\operatorname{${name}}\\left(#?\\right)`)}>{name}</button>; })}</div></div>;
+  return <div><label className="mb-2 flex items-center gap-1 rounded border border-docs-border px-2"><Search size={14}/><input autoFocus aria-label="Search matrix functions" value={query} onChange={(e) => setQuery(e.target.value)} className="h-7 min-w-0 flex-1 outline-none" /></label><div className="grid grid-cols-5 gap-0.5">{shown.map((name) => <button key={name} type="button" title={`Insert ${name}`} className="rounded px-2 py-1 text-left text-xs hover:bg-docs-hover" onMouseDown={(e) => e.preventDefault()} onClick={() => insertTemplate(functionTemplate(name))}>{name}</button>)}</div></div>;
 }
 
 /** Vector/matrix operators: each inserts its template into the open equation (or a new one). */

@@ -1,10 +1,15 @@
 // @vitest-environment happy-dom
-import { describe, expect, it } from 'vitest';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { FunctionsMenu } from '../../components/ribbon/MatrixMenus';
+import { describe, expect, it, vi } from 'vitest';
 import { applyGridCommand, matrixLatex } from '../../canvas/matrixTableCommands';
 import { loadShapes, useCanvasStore } from '../../canvas/model/canvasStore';
 import { defaultTableProps } from '../../canvas/model/types';
 import { sanitizeShape } from '../../documents/DocumentSerializer';
 import { step } from '../step';
+
+vi.mock('../../math/insertTemplate', () => ({ insertTemplate: vi.fn() }));
 
 describe('matrix and table regions', () => {
   it('matrix and table regions', () => {
@@ -13,6 +18,17 @@ describe('matrix and table regions', () => {
       expect(latex).toContain('\\begin{bmatrix}');
       expect(latex).toContain('\\end{bmatrix}');
       expect(latex.match(/\\placeholder\{\}/g)).toHaveLength(6);
+    });
+
+    step('all advertised matrix functions are enabled in the rendered menu', () => {
+      const root = document.createElement('div');
+      root.innerHTML = renderToStaticMarkup(createElement(FunctionsMenu));
+      const buttons = [...root.querySelectorAll('button')];
+      expect(buttons.length).toBeGreaterThan(50);
+      expect(buttons.filter((b) => b.disabled)).toHaveLength(0);
+      for (const name of ['Cholesky', 'LU', 'QR', 'svd', 'geninv', 'genvecs', 'lookup', 'deconvolve']) {
+        expect(buttons.some((b) => b.textContent === name), name).toBe(true);
+      }
     });
 
     step('sanitizes table cells and dimensions', () => {

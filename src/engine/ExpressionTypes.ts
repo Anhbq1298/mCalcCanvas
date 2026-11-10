@@ -7,7 +7,8 @@
 
 export type BinaryOp = '+' | '-' | '*' | '/' | '^';
 
-export type FunctionName = import('./steelFunctions').SteelFunctionName
+export type FunctionName = import('./matrixNames').MatrixFunctionName
+  | import('./steelFunctions').SteelFunctionName
   | 'sin' | 'cos' | 'tan'
   | 'asin' | 'acos' | 'atan'
   /** angle(x, y): direction of the vector (x, y), 0 … 2π (Mathcad angle). */
@@ -31,6 +32,8 @@ export type FunctionName = import('./steelFunctions').SteelFunctionName
   | 'ceil';
 
 export type Expr =
+  | { type: 'matrix'; rows: Expr[][] }
+  | { type: 'vectorize'; body: Expr }
   | { type: 'num'; value: number; raw: string }
   /**
    * An identifier as typed.
@@ -40,7 +43,7 @@ export type Expr =
    *   convention, means "unit" when the name is a registered unit.
    */
   | { type: 'ident'; name: string; splittable: boolean; roman: boolean }
-  | { type: 'binary'; op: BinaryOp; left: Expr; right: Expr; implicit?: boolean; frac?: boolean }
+  | { type: 'binary'; op: BinaryOp; left: Expr; right: Expr; implicit?: boolean; frac?: boolean; cross?: boolean }
   | { type: 'unary'; op: '-' | '+'; arg: Expr }
   | { type: 'call'; fn: FunctionName; args: Expr[] }
   | { type: 'group'; body: Expr; visible: boolean }
@@ -91,6 +94,12 @@ export type Statement =
 export function walkExpr(expr: Expr, visit: (e: Expr) => void): void {
   visit(expr);
   switch (expr.type) {
+    case 'matrix':
+      expr.rows.flat().forEach((e) => walkExpr(e, visit));
+      break;
+    case 'vectorize':
+      walkExpr(expr.body, visit);
+      break;
     case 'binary':
       walkExpr(expr.left, visit);
       walkExpr(expr.right, visit);
@@ -131,6 +140,12 @@ export function walkScoped(expr: Expr, visit: (e: Expr, locals: ReadonlySet<stri
   visit(expr, locals);
   const w = (e: Expr) => walkScoped(e, visit, locals);
   switch (expr.type) {
+    case 'matrix':
+      expr.rows.flat().forEach(w);
+      break;
+    case 'vectorize':
+      w(expr.body);
+      break;
     case 'binary':
       w(expr.left);
       w(expr.right);

@@ -115,3 +115,7 @@ An annex block (an annex heading and everything below it up to the next annex he
 ## Extending the value model (planned)
 
 Matrices, user functions and solvers need a richer value type. Vectors (above) are the first step; matrices extend `Value` with a 2-D type. Matrices in structural engineering can mix units per entry (translational and rotational DOFs), so a matrix must not assume one common unit.
+
+## Matrices
+
+`QMatrix` extends scalar-entry vector storage with row/column dimensions. Its packed-vector fast path is disabled so no operation can accidentally discard the shape. Matrix arithmetic uses fixed scalar unit operations; numeric factorizations stay inside the worker. The parser/function registry stays lightweight for UI imports through `engine/light.ts`. See [MATRICES.md](MATRICES.md) for operators, units, numerical methods and limits.

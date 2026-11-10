@@ -88,7 +88,7 @@ describe('if(condition, value if true, value if false)', () => {
       expect(res(e, 'z').value?.number).toBe(4);
       expect(() => parseLatex('y\\coloneq\\begin{array}{|ll}1 & \\mathrm{if}\\ a>0\\\\2 & \\mathrm{if}\\ a<0\\end{array}')).toThrow(/last row/);
       expect(() => parseLatex('y\\coloneq\\begin{array}{|ll}1 & \\mathrm{otherwise}\\\\2 & \\mathrm{if}\\ a<0\\end{array}')).toThrow(/otherwise/);
-      expect(() => parseLatex('y\\coloneq\\begin{matrix}1\\end{matrix}')).toThrow(/environment/);
+      expect(() => parseLatex('y\\coloneq\\begin{unsupported}1\\end{unsupported}')).toThrow(/environment/);
     });
     step('Mathcad Prime layout: if c / value / else if c / value / else / value', () => {
       const blk = (x: string) =>

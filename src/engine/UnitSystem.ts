@@ -7,6 +7,10 @@
  */
 import {
   absDependencies,
+  eigsDependencies,
+  detDependencies,
+  invDependencies,
+  lusolveDependencies,
   addDependencies,
   cosDependencies,
   create,
@@ -32,6 +36,10 @@ export { UNITS, isUnitSymbol, parseDisplayUnit, type UnitSystemName } from './un
 export const math = create(
   {
     absDependencies,
+    eigsDependencies,
+    detDependencies,
+    invDependencies,
+    lusolveDependencies,
     addDependencies,
     cosDependencies,
     createUnitDependencies,
@@ -322,6 +330,9 @@ export interface FormattedQuantity {
   dimension: string;
   /** Vectors only: every entry in the shown unit (absent when entries have different dimensions). */
   items?: number[];
+  /** Matrix shape; items are row-major. */
+  rows?: number;
+  cols?: number;
   /** Vectors only: number of entries. */
   length?: number;
   /** A vector shown shortened (first … last entries). */

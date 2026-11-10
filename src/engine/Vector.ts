@@ -65,6 +65,46 @@ export class QVector {
   }
 }
 
+/** Row-major rectangular value. Inherits scalar-entry storage, never the vector fast path. */
+export class QMatrix extends QVector {
+  readonly rows: number;
+  readonly cols: number;
+  constructor(rows: number, cols: number, items: readonly Quantity[]) {
+    if (!Number.isInteger(rows) || !Number.isInteger(cols) || rows < 1 || cols < 1 || rows * cols !== items.length) {
+      throw new CalculationError('vector', 'A matrix needs positive dimensions and equally sized rows.');
+    }
+    super(items);
+    this.rows = rows;
+    this.cols = cols;
+  }
+  override pack(): null { return null; }
+}
+
+/** Factorizations return nested arrays; extract a factor with at(result, index). */
+export class QBundle extends QVector {
+  readonly factors: readonly QVector[];
+  constructor(factors: readonly QVector[]) {
+    super([]);
+    if (factors.reduce((n, a) => n + a.length, 0) > MAX_VECTOR_LENGTH) throw new CalculationError('limit-exceeded', 'Nested factors exceed 10000 entries.');
+    this.factors = factors;
+  }
+  override get length(): number { return this.factors.length; }
+  override pack(): null { return null; }
+}
+export function isBundle(v: unknown): v is QBundle { return v instanceof QBundle; }
+
+export function isMatrix(v: unknown): v is QMatrix { return v instanceof QMatrix; }
+
+function shaped(items: Quantity[], args: Value[]): QVector {
+  if (args.some(isBundle)) throw new CalculationError('vector', 'Extract a factor with at(result, index) before arithmetic.');
+  const matrices = args.filter(isMatrix);
+  const m = matrices[0];
+  if (m && (matrices.some((x) => x.rows !== m.rows || x.cols !== m.cols) || args.some((x) => isVector(x) && !isMatrix(x)))) {
+    throw new CalculationError('vector', 'Matrix dimensions must agree; a vector is not a matrix.');
+  }
+  return m ? new QMatrix(m.rows, m.cols, items) : new QVector(items);
+}
+
 interface Packed {
   si: Float64Array;
   unit: Unit | null;
@@ -128,11 +168,11 @@ export function broadcast2(a: Value, b: Value, f: (x: Quantity, y: Quantity) => 
   for (let i = 0; i < n; i++) {
     items[i] = f(va ? (a as QVector).items[i] : (a as Quantity), vb ? (b as QVector).items[i] : (b as Quantity));
   }
-  return new QVector(items);
+  return shaped(items, [a, b]);
 }
 
 export function broadcast1(a: Value, f: (x: Quantity) => Quantity): Value {
-  return isVector(a) ? new QVector(a.items.map(f)) : f(a);
+  return isVector(a) ? shaped(a.items.map(f), [a]) : f(a);
 }
 
 /** Applies f across any number of arguments, broadcasting vectors of equal length. */
@@ -145,7 +185,7 @@ export function broadcastN(args: Value[], f: (xs: Quantity[]) => Quantity): Valu
   }
   const items: Quantity[] = new Array(n);
   for (let i = 0; i < n; i++) items[i] = f(args.map((a) => (isVector(a) ? a.items[i] : a)));
-  return new QVector(items);
+  return shaped(items, args);
 }
 
 /** All entries of the arguments, flattened (for min, max, sum). */
@@ -178,6 +218,24 @@ export function formatVector(
     expanded?: boolean;
   },
 ): FormattedQuantity {
+  if (isBundle(v)) {
+    const fs = v.factors.map((a) => formatVector(a, { ...opts, targetUnit: null }));
+    return { text: fs.map((f) => f.text).join('; '), latex: `\\begin{bmatrix}${fs.map((f) => f.latex).join('\\\\')}\\end{bmatrix}`, number: Number.NaN, unitText: '', unitLatex: '', dimension: 'nested', length: v.length };
+  }
+  if (isMatrix(v)) {
+    const base = formatVector(new QVector(v.items), opts);
+    const bound = opts.expanded || opts.limit === 0 ? 32 : Math.max(2, Math.min(32, opts.limit ?? 10));
+    const indices = (n: number) => n <= bound ? Array.from({ length: n }, (_, i) => i) : [...Array.from({ length: Math.ceil(bound / 2) }, (_, i) => i), -1, ...Array.from({ length: Math.floor(bound / 2) }, (_, i) => n - Math.floor(bound / 2) + i)];
+    const rs = indices(v.rows), cs = indices(v.cols);
+    const cell = (r: number, c: number) => {
+      if (r < 0) return '\\class{vec-more}{\\vdots}';
+      if (c < 0) return '\\class{vec-more}{\\cdots}';
+      const index = r * v.cols + c;
+      return base.items ? formatNumber(base.items[index], opts.decimals, opts.style).latex : formatQuantity(v.items[index], { ...opts, targetUnit: null }).latex;
+    };
+    const latex = `\\begin{bmatrix}${rs.map((r) => cs.map((c) => cell(r, c)).join('&')).join('\\\\')}\\end{bmatrix}`;
+    return { ...base, text: `${v.rows} × ${v.cols}: ${base.text}`, latex: latex + (base.unitLatex ? `\\,${base.unitLatex}` : ''), rows: v.rows, cols: v.cols, truncated: rs.includes(-1) || cs.includes(-1) };
+  }
   const column = opts.layout === 'column';
   const n = v.length;
   if (n === 0) {

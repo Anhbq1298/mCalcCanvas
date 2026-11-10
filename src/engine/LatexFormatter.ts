@@ -6,6 +6,7 @@
  * engine evaluated, so intermediate steps are never invented.
  */
 import type { Condition, Expr, Relation } from './ExpressionTypes';
+import { matrixFunctionNames } from './matrixNames';
 import { GREEK } from './LatexParser';
 import { applyAsProduct, resolveIdent, type EvalContext, type ResolveContext } from './ExpressionEvaluator';
 import { UNITS } from './UnitSystem';
@@ -61,6 +62,10 @@ function wrap(p: Printed, minPrec: number, force = false): string {
 
 function print(expr: Expr, opts: PrintOptions): Printed {
   switch (expr.type) {
+    case 'matrix':
+      return { latex: `\\begin{bmatrix}${expr.rows.map((r) => r.map((e) => print(e, opts).latex).join('&')).join('\\\\')}\\end{bmatrix}`, prec: PREC.atom };
+    case 'vectorize':
+      return { latex: `\\overrightarrow{${print(expr.body, opts).latex}}`, prec: PREC.atom };
     case 'num':
       return { latex: expr.raw === 'e' ? '\\mathrm{e}' : expr.raw, prec: PREC.atom };
 
@@ -111,7 +116,7 @@ function print(expr: Expr, opts: PrintOptions): Printed {
           const lt = wrap(l, PREC.mul, anyQuantity && l.quantity && l.prec < PREC.atom);
           const rt = wrap(r, PREC.mul + (expr.implicit ? 1 : 0), anyQuantity && r.quantity && r.prec < PREC.atom);
           const implicitOk = expr.implicit && !anyQuantity && !/^[0-9.]/.test(rt);
-          return { latex: implicitOk ? `${lt}${rt}` : `${lt}\\cdot ${rt}`, prec: PREC.mul };
+          return { latex: implicitOk && !expr.cross ? `${lt}${rt}` : `${lt}${expr.cross ? '\\times' : '\\cdot'} ${rt}`, prec: PREC.mul };
         }
         case '/':
           if (expr.frac) return { latex: `\\frac{${l.latex}}{${r.latex}}`, prec: PREC.atom };
@@ -138,6 +143,7 @@ function print(expr: Expr, opts: PrintOptions): Printed {
 
     case 'call': {
       const args = expr.args.map((a) => print(a, opts).latex);
+      if ((matrixFunctionNames as readonly string[]).includes(expr.fn)) return { latex: `\\mathrm{${expr.fn}}\\left(${args.join(',')}\\right)`, prec: PREC.atom };
       switch (expr.fn) {
         case 'sqrt':
           return { latex: `\\sqrt{${args[0]}}`, prec: PREC.atom };

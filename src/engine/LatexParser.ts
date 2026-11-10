@@ -20,6 +20,7 @@
  *   - \mathrm{…} / \text{…} produce upright (roman) identifiers, the
  *     unambiguous way to write units.
  */
+import { matrixFunctionNames } from './matrixNames';
 import { CalculationError } from './CalculationErrors';
 import type { Comparison, Condition, Expr, FunctionName, Relation, Statement } from './ExpressionTypes';
 
@@ -44,6 +45,7 @@ export const GREEK: Record<string, string> = {
 };
 
 const FUNCTION_COMMANDS: Record<string, FunctionName> = {
+  det: 'det',
   sin: 'sin', cos: 'cos', tan: 'tan',
   arcsin: 'asin', arccos: 'acos', arctan: 'atan',
   sinh: 'sinh', cosh: 'cosh', tanh: 'tanh',
@@ -54,6 +56,7 @@ const FUNCTION_COMMANDS: Record<string, FunctionName> = {
 const FUNCTION_WORDS: Record<string, FunctionName> = {
   sectionProp: 'sectionProp',
   ...FUNCTION_COMMANDS,
+  ...Object.fromEntries(matrixFunctionNames.map((n) => [n, n])) as Record<import('./matrixNames').MatrixFunctionName, import('./matrixNames').MatrixFunctionName>,
   asin: 'asin', acos: 'acos', atan: 'atan', sqrt: 'sqrt', abs: 'abs',
   sum: 'sum', len: 'len', seq: 'seq', angle: 'angle', map: 'map', floor: 'floor', ceil: 'ceil', linterp: 'linterp', stack: 'stack',
 };
@@ -104,6 +107,7 @@ function tokenize(latex: string): Token[] {
   const s = latex;
   // Inside \begin{array}/\begin{cases} (an if block), & and \\ separate cells and rows.
   let blockDepth = 0;
+  let ifBlockDepth = 0;
   while (i < s.length) {
     const c = s[i];
     if (c === '&' && blockDepth > 0) {
@@ -155,9 +159,9 @@ function tokenize(latex: string): Token[] {
         }
         if (IGNORED_COMMANDS.has(name)) continue;
         // Inside an if block, \left\Vert … \right. only draws the bar beside a value (Mathcad Prime).
-        if (name === 'Vert' && blockDepth > 0) continue;
+        if (name === 'Vert' && ifBlockDepth > 0) continue;
         if (name === 'begin' || name === 'end') {
-          const m = /^\{(array|cases)\}/.exec(s.slice(i));
+          const m = /^\{(array|cases|bmatrix|pmatrix|matrix|vmatrix)\}/.exec(s.slice(i));
           if (!m) throw new CalculationError('syntax', `Unsupported LaTeX environment ${s.slice(i, i + 20)}`);
           i += m[0].length;
           if (name === 'begin' && m[1] === 'array') {
@@ -166,7 +170,9 @@ function tokenize(latex: string): Token[] {
             if (spec) i += spec[0].length;
           }
           blockDepth += name === 'begin' ? 1 : -1;
-          tokens.push({ t: 'cmd', v: name === 'begin' ? 'beginblock' : 'endblock' });
+          const matrix = !['array', 'cases'].includes(m[1]);
+          if (!matrix) ifBlockDepth += name === 'begin' ? 1 : -1;
+          tokens.push({ t: 'cmd', v: matrix ? (name === 'begin' ? `beginmatrix:${m[1]}` : 'endmatrix') : name === 'begin' ? 'beginblock' : 'endblock' });
           continue;
         }
         tokens.push({ t: 'cmd', v: name });
@@ -452,7 +458,8 @@ class Parser {
       const tok = this.peek();
       if ((tok.t === 'sym' && tok.v === '*') || (tok.t === 'cmd' && MUL_COMMANDS.has(tok.v))) {
         this.next();
-        left = this.node({ type: 'binary', op: '*', left, right: this.parseUnary() });
+        const right = this.parseUnary();
+        left = this.node({ type: 'binary', op: '*', left, right, ...(tok.t === 'cmd' && tok.v === 'times' ? { cross: true } : {}) });
       } else if ((tok.t === 'sym' && tok.v === '/') || (tok.t === 'cmd' && tok.v === 'div')) {
         this.next();
         left = this.node({ type: 'binary', op: '/', left, right: this.parseUnary() });
@@ -491,6 +498,7 @@ class Parser {
       return this.node({ type: 'binary', op: '*', left: base, right: this.degreeIdent(), implicit: true });
     }
     const exponent = this.parseScriptArg();
+    if (exponent.type === 'ident' && exponent.name === 'T') return this.node({ type: 'call', fn: 'transpose', args: [base] });
     return this.node({ type: 'binary', op: '^', left: base, right: exponent });
   }
 
@@ -539,10 +547,11 @@ class Parser {
         if (tok.v === '|') return this.absDepth === 0;
         return false;
       case 'cmd':
+        if (tok.v === 'lVert' || tok.v === 'Vert') return this.absDepth === 0 || tok.v === 'lVert';
         if (tok.v === 'vert' || tok.v === 'lvert') return this.absDepth === 0 || tok.v === 'lvert';
         return (
           tok.v in GREEK || tok.v === 'pi' || ROMAN_COMMANDS.has(tok.v) || FRAC_COMMANDS.has(tok.v) ||
-          tok.v === 'sqrt' || tok.v in FUNCTION_COMMANDS || tok.v === 'exponentialE' || tok.v === 'infty' ||
+          tok.v.startsWith('beginmatrix:') || tok.v === 'overrightarrow' || tok.v === 'sqrt' || tok.v in FUNCTION_COMMANDS || tok.v === 'exponentialE' || tok.v === 'infty' ||
           tok.v === 'placeholder' || tok.v === 'degree' || tok.v === 'deg' || tok.v === 'lparen' || tok.v === 'lbrack'
         );
       default:
@@ -560,6 +569,7 @@ class Parser {
     if (this.isSym('^') && !(this.isSym('{', 1) && this.isCmd('circ', 2)) && !this.isCmd('circ', 1)) {
       this.next();
       const pow = this.parseScriptArg();
+      if (pow.type === 'ident' && pow.name === 'T') return this.node({ type: 'call', fn: 'transpose', args: [this.node({ type: 'apply', head: e, args })] });
       return this.node({ type: 'apply', head: e, args, pow });
     }
     return this.node({ type: 'apply', head: e, args });
@@ -567,6 +577,11 @@ class Parser {
 
   private parsePrimaryAtom(): Expr {
     const tok = this.peek();
+    if (tok.t === 'cmd' && tok.v.startsWith('beginmatrix:')) return this.parseMatrix();
+    if (this.isCmd('overrightarrow')) {
+      this.next();
+      return this.node({ type: 'vectorize', body: this.parseBracedArg() });
+    }
     if (this.isCmd('beginblock')) return this.parseIfBlock();
     switch (tok.t) {
       case 'eof':
@@ -586,10 +601,30 @@ class Parser {
     }
   }
 
+  private parseMatrix(): Expr {
+    const determinant = this.next().v === 'beginmatrix:vmatrix';
+    const rows: Expr[][] = [[]];
+    while (!this.isCmd('endmatrix')) {
+      rows[rows.length - 1].push(this.parseExpr());
+      if (this.isSym('&')) this.next();
+      else if (this.isSym('row')) { this.next(); rows.push([]); }
+      else if (!this.isCmd('endmatrix')) throw new CalculationError('syntax', 'Expected a matrix cell or row separator.');
+    }
+    this.next();
+    if (!rows[0].length || rows.some((r) => r.length !== rows[0].length)) throw new CalculationError('vector', 'Matrix rows must have equal lengths.');
+    const matrix = this.node({ type: 'matrix', rows });
+    return determinant ? this.node({ type: 'call', fn: 'det', args: [matrix] }) : matrix;
+  }
+
   private parseLetterRun(): Expr {
     // Count the run of consecutive letters.
     let n = 0;
     while (this.peek(n).t === 'letter') n++;
+    const numbered = this.tokens.slice(this.pos, this.pos + n + 1).map((t) => t.v).join('');
+    if (this.peek(n).t === 'num' && FUNCTION_WORDS[numbered] && this.isSym('(', n + 1)) {
+      for (let i = 0; i <= n; i++) this.next();
+      return this.parseFunctionArgs(FUNCTION_WORDS[numbered]);
+    }
     const subscriptFollows = this.isSym('_', n);
     // A subscript binds only to the last letter: emit the prefix on its own.
     const take = subscriptFollows && n > 1 ? n - 1 : n;
@@ -711,6 +746,14 @@ class Parser {
       this.next();
       return this.node({ type: 'group', body, visible: true });
     }
+    if (v === 'lVert' || v === 'Vert') {
+      this.absDepth++;
+      const body = this.parseExpr();
+      this.absDepth--;
+      if (!this.isCmd('rVert') && !this.isCmd('Vert')) throw new CalculationError('syntax', 'Missing closing norm bar.');
+      this.next();
+      return this.node({ type: 'call', fn: 'norm', args: [body] });
+    }
     if (v === 'vert' || v === 'lvert') {
       return this.parseAbsBody(() => this.isCmd('rvert') || this.isCmd('vert') || this.isSym('|'));
     }
@@ -736,7 +779,12 @@ class Parser {
     }
     if (ROMAN_COMMANDS.has(v)) {
       const inner = this.readBalancedTokens('{', '}');
-      const word = inner.every((t) => t.t === 'letter') ? inner.map((t) => t.v).join('') : null;
+      const word = inner.every((t) => t.t === 'letter' || t.t === 'num') ? inner.map((t) => t.v).join('') : null;
+      if (word === 'vec' && (this.isSym('(') || this.isCmd('lparen'))) {
+        const parts = this.readArgumentTokens();
+        if (parts.length !== 1) throw new CalculationError('syntax', 'vec takes one expression.');
+        return this.node({ type: 'vectorize', body: this.subParse(parts[0]) });
+      }
       if (v === 'operatorname' && word && FUNCTION_WORDS[word]) {
         return this.parseFunctionArgs(FUNCTION_WORDS[word]);
       }
@@ -764,7 +812,15 @@ class Parser {
     }
     if (this.isSym('(') || this.isCmd('lparen')) {
       const args = this.readArgumentTokens().map((p) => this.subParse(p));
-      const arity = fn === 'min' || fn === 'max' || fn === 'sum' || fn === 'seq' || fn === 'map' || fn === 'stack' ? null : fn === 'linterp' ? 3 : fn === 'angle' || fn === 'sectionProp' ? 2 : 1;
+      if (['eigenvecs', 'genvecs', 'lookup', 'hlookup', 'vlookup', 'vhlookup', 'match'].includes(fn)) {
+        const last = args[args.length - 1];
+        const selectorIndex = fn === 'eigenvecs' ? 1 : fn === 'genvecs' || fn === 'match' ? 2 : 3;
+        if (args.length === selectorIndex + 1 && last?.type === 'ident' && last.roman) {
+          const selectors: Record<string, number> = fn === 'eigenvecs' || fn === 'genvecs' ? { L: 1, R: 0 } : { eq: 0, near: 1, gt: 2, lt: 3, geq: 4, leq: 5, not: 6, range: 7 };
+          if (last.name in selectors) args[args.length - 1] = this.node({ type: 'num', value: selectors[last.name], raw: String(selectors[last.name]) });
+        }
+      }
+      const arity = (matrixFunctionNames as readonly string[]).includes(fn) ? null : fn === 'min' || fn === 'max' || fn === 'sum' || fn === 'seq' || fn === 'map' || fn === 'stack' ? null : fn === 'linterp' ? 3 : fn === 'angle' || fn === 'sectionProp' ? 2 : 1;
       if (arity !== null && args.length !== arity) {
         throw new CalculationError('syntax', arity === 1 ? `${fn} takes exactly one argument.` : `${fn} takes ${arity} arguments.`);
       }
@@ -825,15 +881,15 @@ class Parser {
     for (;;) {
       const tok = this.next();
       if (tok.t === 'eof') throw new CalculationError('syntax', 'An if block is not closed.');
-      if (tok.t === 'cmd' && tok.v === 'beginblock') level++;
-      if (tok.t === 'cmd' && tok.v === 'endblock' && --level === 0) break;
+      if (tok.t === 'cmd' && (tok.v === 'beginblock' || tok.v.startsWith('beginmatrix:'))) level++;
+      if (tok.t === 'cmd' && (tok.v === 'endblock' || tok.v === 'endmatrix') && --level === 0) break;
       inner.push(tok);
     }
     const rows: Token[][][] = [[[]]];
     level = 0;
     for (const tok of inner) {
-      if (tok.t === 'cmd' && tok.v === 'beginblock') level++;
-      if (tok.t === 'cmd' && tok.v === 'endblock') level--;
+      if (tok.t === 'cmd' && (tok.v === 'beginblock' || tok.v.startsWith('beginmatrix:'))) level++;
+      if (tok.t === 'cmd' && (tok.v === 'endblock' || tok.v === 'endmatrix')) level--;
       if (level === 0 && tok.t === 'sym' && tok.v === 'row') rows.push([[]]);
       else if (level === 0 && tok.t === 'sym' && tok.v === '&') rows[rows.length - 1].push([]);
       else rows[rows.length - 1][rows[rows.length - 1].length - 1].push(tok);
