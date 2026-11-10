@@ -4,10 +4,12 @@ import type { BatchResults } from '../engine/batch';
 import type { CalculationResult } from '../engine/CalculationEngine';
 
 /** First page of the case reports: every case with its inputs and outputs. */
-function cellText(r: CalculationResult | undefined): { text: string; cls: string } {
+function cellText(r: CalculationResult | undefined, labels?: Record<string,string>): { text: string; cls: string } {
   if (!r) return { text: '—', cls: '' };
   if (r.status === 'error') return { text: 'Error', cls: 'is-fail' };
   if (r.check) return { text: r.check.pass ? 'PASS' : 'FAIL', cls: r.check.pass ? 'is-pass' : 'is-fail' };
+  const label=r.value && labels?.[String(r.value.number)];
+  if(label) return {text:label,cls:label==='PASS'?'is-pass':label==='FAIL'?'is-fail':''};
   return { text: r.value?.text ?? '—', cls: '' };
 }
 
@@ -41,7 +43,7 @@ export function CaseSummary({ config, fields, rows, results, stamp }: { config: 
                 </td>
               ))}
               {config.outputs.map((c) => {
-                const t = cellText(results[row.id]?.regions?.[c.regionId]);
+                const t = cellText(results[row.id]?.regions?.[c.regionId],c.valueLabels);
                 return (
                   <td key={c.id} className={`num ${t.cls}`}>
                     {t.text}

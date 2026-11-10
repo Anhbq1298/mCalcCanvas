@@ -1,3 +1,6 @@
+import { SteelControls, SteelSectionLabel } from '../../components/dialogs/SteelControls';
+import { definition } from '../../engineering/steel/contract';
+import { SteelFigure } from './SteelFigure';
 import { AlertCircle, AlertTriangle, CheckCircle2, CircleDashed, XCircle } from 'lucide-react';
 import { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { ReportShapes } from '../../store/reportResults';
@@ -143,7 +146,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         ) : (
           <div className="flex items-center gap-2">
             <span className="math-baseline">
-              {seen ? <MathRenderer latex={display.latex} /> : <span style={{ display: 'inline-block', width: Math.max(0, w - 2 * PAD_X), height: Math.max(0, h - 2 * PAD_Y) }} />}
+              {shape.props.steelFigure && ['state','mode','issues'].includes(shape.props.steelFigure) ? <SteelFigure kind={shape.props.steelFigure} value={result?.value}/> : seen ? <MathRenderer latex={display.latex} /> : <span style={{ display: 'inline-block', width: Math.max(0, w - 2 * PAD_X), height: Math.max(0, h - 2 * PAD_Y) }} />}
               <span ref={probeRef} className="baseline-probe" aria-hidden />
             </span>
             {display.check && (
@@ -160,11 +163,14 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
             )}
           </div>
         )}
+        {latex.startsWith(definition('Section')) && <SteelSectionLabel sectionId={result?.value?.number}/>}
+        {!isStatic && <SteelControls id={shape.id} latex={latex}/>}
         {/* Status as compact symbols; the explanation appears on hover. */}
         {error && !empty && !(editing && result?.draftError) && <StatusIcon kind="error" message={errorMessage ?? error.message} />}
         {!isStatic && result?.warnings.map((w) => <StatusIcon key={w} kind="warning" message={w} />)}
         {editing && result?.draftError && <StatusIcon kind="draft" message="Incomplete – dependent regions use the last valid expression." />}
       </div>
+      {shape.props.steelFigure && !['state','mode','issues'].includes(shape.props.steelFigure) && <SteelFigure kind={shape.props.steelFigure} value={result?.value}/>}
     </div>
   );
 }

@@ -128,10 +128,12 @@ function nextRow(config: InputResultConfig, fields: Map<string, AvailableField>)
   return { id: `case-${Date.now().toString(36)}-${index}`, name: `Case ${index}`, values };
 }
 
-function outputText(result: CalculationResult | undefined): { text: string; status: 'normal' | 'pass' | 'fail' | 'error' } {
+function outputText(result: CalculationResult | undefined, labels?: Record<string,string>): { text: string; status: 'normal' | 'pass' | 'fail' | 'error' } {
   if (!result) return { text: '—', status: 'normal' };
   if (result.status === 'error') return { text: 'Error', status: 'error' };
   if (result.check) return { text: result.check.pass ? 'PASS' : 'FAIL', status: result.check.pass ? 'pass' : 'fail' };
+  const label=result.value && labels?.[String(result.value.number)];
+  if(label) return {text:label,status:label==='PASS'?'pass':label==='FAIL'?'fail':'normal'};
   const value = result.value;
   if (!value) return { text: '—', status: 'normal' };
   const suffix = value.unitText === '°' ? '°' : value.unitText ? ` ${value.unitText}` : '';
@@ -450,7 +452,7 @@ export function InputResultsPage() {
                       </td>
                       {config.inputs.map((column) => <td key={column.id} className="ir-input-cell"><NumericCell value={row.values[column.id] ?? null} label={`${row.name}, ${column.label}`} onCommit={(value) => setInput(row.id, column.id, value)} /></td>)}
                       {config.outputs.map((column) => {
-                        const result = outputText(rowResults[column.id]);
+                        const result = outputText(rowResults[column.id],column.valueLabels);
                         const outdated = runState === 'stale';
                         return <td key={column.id} className={`ir-output-cell ${outdated ? 'is-outdated' : ''}`} title={rowResults[column.id]?.error?.message}><span className={`ir-result ir-result--${result.status}`}>{runState === 'not-run' ? '—' : result.text}</span></td>;
                       })}

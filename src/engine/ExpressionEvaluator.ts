@@ -6,6 +6,7 @@
  * access, and user functions are worksheet expression trees with a bounded
  * call depth, so untrusted input can only ever perform bounded arithmetic.
  */
+import { evalSteelFunction, steelFunctionNames, type SteelFunctionName } from './steelFunctions';
 import { CalculationError } from './CalculationErrors';
 import { QVector, broadcast1, broadcast2, broadcastN, flatten, isVector, requireScalar, withSi, type Value } from './Vector';
 import type { Unit } from 'mathjs';
@@ -714,6 +715,7 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
       if (expr.fn === 'map') return evalMap(expr.args, ctx);
       const args = expr.args.map((a) => evalNode(a, ctx));
       const fn = expr.fn;
+      if ((steelFunctionNames as readonly string[]).includes(fn)) return evalSteelFunction(fn as SteelFunctionName, args);
       if (fn === 'stack') {
         return new QVector(flatten(args));
       }

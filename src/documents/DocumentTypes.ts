@@ -72,6 +72,8 @@ export interface DocumentSettings {
 
 /** A worksheet region exposed as a column in the Input & Results workspace. */
 export interface InputResultColumn {
+  /** Optional display labels for numeric categorical results; raw values remain numeric. */
+  valueLabels?: Record<string, string>;
   /** Stable id used by batch rows even if the display label changes. */
   id: string;
   /** Exact math region that owns the definition or result. */

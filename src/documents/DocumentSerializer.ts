@@ -90,6 +90,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           w: bounded(p.w, 60, 1, SIZE_LIMIT),
           h: bounded(p.h, 32, 1, SIZE_LIMIT),
           latex: str(p.latex).slice(0, 4000),
+          ...(['section','ltb','buckling','state','mode','issues'].includes(p.steelFigure as string) ? {steelFigure: p.steelFigure as 'section'|'ltb'|'buckling'|'state'|'mode'|'issues'} : {}),
           displayMode: (modes.includes(p.displayMode as string) ? p.displayMode : 'auto') as never,
           displayUnit: str(p.displayUnit).slice(0, 60),
           precision: Math.round(bounded(p.precision, -1, -1, 8)),
@@ -293,7 +294,8 @@ function sanitizeInputResult(value: unknown, mathRegionIds: Set<string>): InputR
       const regionId = str(r.regionId).slice(0, 100);
       if (!id || seen.has(id) || !mathRegionIds.has(regionId)) return [];
       seen.add(id);
-      return [{ id, regionId, label: (str(r.label).trim() || id).slice(0, 120) }];
+      const entries=r.valueLabels && typeof r.valueLabels === 'object' && !Array.isArray(r.valueLabels) ? Object.entries(r.valueLabels as Raw).slice(0,1000).filter(([k,v])=>/^-?\d+$/.test(k)&&typeof v==='string').map(([k,v])=>[k,str(v).slice(0,160)]) : [];
+      return [{ id, regionId, label: (str(r.label).trim() || id).slice(0, 120), ...(entries.length ? {valueLabels:Object.fromEntries(entries)} : {}) }];
     });
   };
   const inputs = columns(src.inputs);
