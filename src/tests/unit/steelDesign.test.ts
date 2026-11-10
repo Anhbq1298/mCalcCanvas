@@ -106,6 +106,9 @@ describe('steel worksheet engine, workers contract, batch and serialization',()=
    const parsed=parseDocument(JSON.parse(serializeDocument(doc)));
    expect(parsed.shapes.map(s=>s.type==='math'?s.props.steelFigure:undefined)).toEqual(shapes.map(s=>s.type==='math'?s.props.steelFigure:undefined));
    expect(parsed.inputResult).toEqual(inputResult);
+   expect(parsed.shapes.map(s=>s.printGroupId)).toEqual(shapes.map(s=>s.printGroupId));
+   const invalid=parseDocument({...doc,shapes:doc.shapes.map((s,i)=>i?s:{...s,printGroupId:'<script>'})});
+   expect(invalid.shapes[0].printGroupId).toBeUndefined();
   });
  });
 });

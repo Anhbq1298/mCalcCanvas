@@ -70,6 +70,8 @@ export function buildDisplay(sourceLatex: string, result: CalculationResult | un
   if (!value) return { latex: src };
   const m = resolvedMode(mode, result);
   const formula = stripTrailingEquals(src);
+  // Numeric table cells retain an editable definition but omit its name in the report.
+  if(m==='value')return {latex:value};
 
   switch (result.kind) {
     case 'definition': {

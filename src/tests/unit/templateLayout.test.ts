@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { step } from '../step';
 import { optimizeTemplateLayout } from '../../canvas/templateLayout';
-import { flowColumnVectors } from '../../math/MathFormatter';
+import { CalculationEngine } from '../../engine/CalculationEngine';
+import { buildDisplay, flowColumnVectors } from '../../math/MathFormatter';
 import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, type Shape } from '../../canvas/model/types';
 
 const math = (id: string, x: number, y: number, w = 180, h = 40): Shape => ({ id, type: 'math', x, y, props: { ...DEFAULT_MATH_PROPS, latex: id, w, h } });
@@ -36,6 +37,21 @@ describe('template and print layout', () => {
       expect(flowed.match(/\\begin\{bmatrix\}/g)).toHaveLength(2);
       expect(flowed).toContain(values.slice(28).join('\\\\'));
       expect(flowColumnVectors('\\begin{bmatrix}1&2\\\\3&4\\end{bmatrix}')).toBe('\\begin{bmatrix}1&2\\\\3&4\\end{bmatrix}');
+    });
+    step('value-only table presentation retains the editable formula and full calculation value', () => {
+      const e=new CalculationEngine();e.setRegion('span',{latex:'L\\coloneq6\\,\\mathrm{m}',order:0});
+      const result=e.getResult('span')!;
+      expect(buildDisplay('L\\coloneq6\\,\\mathrm{m}',result,'value').latex).toBe(result.value!.latex);
+      expect(buildDisplay('L\\coloneq6\\,\\mathrm{m}',result,'result').latex).toContain('L=');
+      expect(e.getResult('span')!.defines).toBe('L');
+    });
+    step('print atoms keep engineering table rows and diagrams intact', () => {
+      const shapes=[{...math('a',76,60,260,200),printGroupId:'panel'}, {...math('b',400,80,200,40),printGroupId:'panel'}];
+      const plan=optimizeTemplateLayout(shapes,{mode:'print'});
+      expect(plan.issues).toEqual([]);
+      expect(plan.shapes[1].x-plan.shapes[0].x).toBe(324);
+      expect(plan.shapes[1].y-plan.shapes[0].y).toBe(20);
+      expect(plan.shapes.every(s=>s.groupId===undefined)).toBe(true);
     });
     step('a table caption follows its grouped data onto the next page', () => {
       const caption: Shape = { id: 'caption', groupId: 'table', type: 'text', x: 76, y: 1200, props: { ...DEFAULT_TEXT_PROPS, html: 'Bar table', w: 300, h: 24 } };

@@ -79,10 +79,11 @@ export function sanitizeShape(raw: unknown): Shape | null {
     x: bounded(r.x, 0, -COORD_LIMIT, COORD_LIMIT),
     y: bounded(r.y, 0, -COORD_LIMIT, COORD_LIMIT),
     ...(typeof r.groupId === 'string' ? { groupId: r.groupId.slice(0, 100) } : {}),
+    ...(typeof r.printGroupId === 'string' && /^[\w-]{1,80}$/.test(r.printGroupId) ? {printGroupId:r.printGroupId} : {}),
   };
   switch (r.type) {
     case 'math': {
-      const modes = ['auto', 'formula', 'result', 'formulaResult', 'full'];
+      const modes = ['auto', 'formula', 'result', 'formulaResult', 'full', 'value'];
       return {
         ...base,
         type: 'math',

@@ -3,7 +3,7 @@
  * document can be snapshotted for undo, saved to IndexedDB and exported.
  */
 
-export type MathDisplayMode = 'auto' | 'formula' | 'result' | 'formulaResult' | 'full';
+export type MathDisplayMode = 'auto' | 'formula' | 'result' | 'formulaResult' | 'full' | 'value';
 export type MathFontStyle = 'normal' | 'bold' | 'italic' | 'bold-italic';
 
 export type VectorLayout = 'row' | 'column';
@@ -175,6 +175,8 @@ interface Base<T extends string, P> {
   x: number;
   y: number;
   groupId?: string;
+  /** Print-only atomic panel; never expands selection or changes editing. */
+  printGroupId?: string;
   props: P;
 }
 
