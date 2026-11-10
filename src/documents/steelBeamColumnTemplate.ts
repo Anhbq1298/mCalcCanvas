@@ -264,7 +264,9 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
   calc(9,21.1,'SectionOut',v('Section'),{displayMode:'result',w:125},556);
   checkNames.forEach((_,i)=>calc(9,22+Math.floor(i/4)*0.6,'State'+i,t`\operatorname{entry}(${v('R')},${outputFields.length+2*i+1})`,{displayMode:'result',w:125,fontSize:10},[76,236,396,556][i%4]));
 
-  note(11,0,'ANNEX B — LTB LOAD CASES AND COEFFICIENTS',1,{kind:'heading',id:'ltb-cases'});
+  note(11,0,'ANNEX B — LTB LOAD CASES AND COEFFICIENTS',0,{kind:'heading',id:'ltb-cases'});
+  const ltbHeading=shapes.at(-1)!;
+  if(ltbHeading.type==='text'){ltbHeading.props.fontSize=19;ltbHeading.props.color='#1e3a5f';ltbHeading.props.h=28;}
   note(11,0.8,'Enter the case number shown below. Coefficients are for k = kw = 1; load-height zg is entered on page 1.');
   calc(11,1.4,'LTBcatalog',t`\operatorname{stack}(${v('LTBcase')})`,{steelFigure:'ltbCatalog',w:634,h:680},76);
   note(11,19.4,'Cases 1–9: SCI NCCI SN003b Table 3.1, end-moment ratio ψ = smaller / larger end moment; C2 = 0.');
