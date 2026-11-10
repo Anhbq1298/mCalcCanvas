@@ -88,7 +88,7 @@ function ltbPanelDiagram(c:LtbCoefficientCase) {
 /** One-page, numbered selection sheet for every discrete SN003b Table 3.1/3.2 case. */
 export function LtbCoefficientCatalog({selectedCase=1}:{selectedCase?:number}) {
   const cols=3,cellW=208,cellH=142;
-  return <svg role="img" aria-label="LTB coefficient cases 1 to 13" data-selected-case={Math.round(selectedCase)} viewBox="0 0 634 720" width="634" height="720">
+  return <svg role="img" aria-label="LTB coefficient cases 1 to 13" data-selected-case={Math.round(selectedCase)} viewBox="0 0 634 720" width="634" height="680">
     {ltbCoefficientCases.map((c,i)=>{
       const x=6+(i%cols)*cellW,y=6+Math.floor(i/cols)*cellH;
       const selected=c.id===Math.round(selectedCase);

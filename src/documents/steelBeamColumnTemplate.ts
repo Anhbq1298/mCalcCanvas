@@ -298,7 +298,7 @@ export function steelBeamColumnTemplate(): { shapes: Shape[]; inputResult: Input
 
   note(10,0,'ANNEX B — LTB LOAD CASES AND COEFFICIENTS',1,{kind:'heading',id:'ltb-cases'});
   note(10,0.8,'Enter the case number shown below. Coefficients are for k = kw = 1; load-height zg is entered on page 1.');
-  calc(10,1.4,'LTBcatalog',t`\operatorname{stack}(${v('LTBcase')})`,{steelFigure:'ltbCatalog',w:634,h:720},76);
+  calc(10,1.4,'LTBcatalog',t`\operatorname{stack}(${v('LTBcase')})`,{steelFigure:'ltbCatalog',w:634,h:680},76);
   note(10,19.4,'Cases 1–9: SCI NCCI SN003b Table 3.1, end-moment ratio ψ = smaller / larger end moment; C2 = 0.');
   note(10,20.2,'Cases 10–13: Table 3.2 transverse loading. Fixed-end cases use their own coefficients; do not substitute pin-ended values.');
   note(10,21,'Combined end moments plus transverse loading require SN003b §3.4 curves and ψ/μ. They are not silently interpolated here.');
