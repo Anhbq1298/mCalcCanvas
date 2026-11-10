@@ -2630,7 +2630,7 @@
       "props": {
         "w": 640,
         "h": 24,
-        "html": "HEB/I/H geometry and properties — selected section designation is shown on the first page.",
+        "html": "Steel section source: licensed offline catalogue; designation and dataset shown beside Section ID.",
         "fontFamily": "Inter",
         "fontSize": 11,
         "color": "#475569",
