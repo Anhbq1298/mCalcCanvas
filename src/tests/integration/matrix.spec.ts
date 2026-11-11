@@ -34,6 +34,10 @@ test('matrix literals calculate in the worker, render, and survive reopening', a
 test('Matrices ribbon inserts working operators and multi-argument functions', async ({ page }) => {
   await openFresh(page);
   await newBlankWorksheet(page);
+  await page.getByTestId('palette-operators').click();
+  await expect(page.getByText('Vector and matrix', { exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Cross product (3-entry vectors)', exact: true })).toHaveCount(0);
+  await page.keyboard.press('Escape');
   await enterLatex(page, 'A\\coloneq\\begin{bmatrix}4&1\\\\2&3\\end{bmatrix}', 230);
   await page.getByTestId('format-tab-matrices').click();
   await page.getByTestId('matrix-functions').click();
@@ -50,6 +54,7 @@ test('Matrices ribbon inserts working operators and multi-argument functions', a
   await page.keyboard.press('ControlOrMeta+a');
   await page.getByTestId('format-tab-matrices').click();
   await page.getByTestId('matrix-operators').click();
+  for (const name of ['Insert 2 × 2 matrix', 'Matrix column (0-based)', 'Range (definition)', 'Stepped range (definition)', 'Element-wise arithmetic']) await expect(page.getByRole('button', { name, exact: true })).toBeEnabled();
   await page.getByRole('button', { name: 'Transpose', exact: true }).click();
   await page.keyboard.press('ArrowRight');
   await page.keyboard.type('=');

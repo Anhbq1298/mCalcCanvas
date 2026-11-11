@@ -95,21 +95,6 @@ export const OPERATORS: PaletteSection[] = [
     ],
   },
   {
-    title: 'Vector and matrix',
-    items: [
-      { label: '×', latex: '#@\\times #?', title: 'Cross product (3-entry vectors)' },
-      { label: '‖x‖', latex: '\\operatorname{norm}\\left(#@\\right)', title: 'Euclidean / Frobenius norm', math: true },
-      { label: '[▫]', latex: '\\begin{bmatrix}#?&#?\\\\#?&#?\\end{bmatrix}', title: 'Insert 2 × 2 matrix' },
-      { label: 'M⟨i⟩', latex: '\\operatorname{col}\\left(#@,#?\\right)', title: 'Matrix column (0-based)', math: true },
-      { label: 'Mᵢ', latex: '\\operatorname{at}\\left(#@,#?,#?\\right)', title: 'Matrix entry (row, column; 0-based)', math: true },
-      { label: 'Mᵀ', latex: '#@^{T}', title: 'Transpose', math: true },
-      { label: '|M|', latex: '\\det\\left(#@\\right)', title: 'Determinant', math: true },
-      { label: '1..n', latex: '1\\ldots #?', title: 'Range (definition)' },
-      { label: '1,3..n', latex: '1,3\\ldots #?', title: 'Stepped range (definition)' },
-      { label: 'V⃗', latex: '\\overrightarrow{#@}', title: 'Element-wise arithmetic', math: true },
-    ],
-  },
-  {
     title: 'Functions',
     items: [
       { label: 'sin', latex: '\\sin\\left(#?\\right)', title: 'Sine (radians, or degrees with °)' },

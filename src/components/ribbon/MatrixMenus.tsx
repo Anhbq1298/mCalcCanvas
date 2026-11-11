@@ -41,6 +41,10 @@ const MATRIX_OPERATORS = [
   ['Matrix multiplication', '#@\\cdot #?'], ['Matrix power', '#@^{#?}'], ['Subscript / index', '\\operatorname{at}\\left(#@,#?,#?\\right)'],
   ['Matrix inverse', '#@^{-1}'], ['Transpose', '#@^{T}'], ['Determinant', '\\det\\left(#@\\right)'],
   ['Vector norm', '\\left\\lVert#@\\right\\rVert'], ['Vectorize', '\\operatorname{vec}\\left(#@\\right)'], ['Cross product', '#@\\times #?'],
+  ['Insert 2 × 2 matrix', '\\begin{bmatrix}#?&#?\\\\#?&#?\\end{bmatrix}'],
+  ['Matrix column (0-based)', '\\operatorname{col}\\left(#@,#?\\right)'],
+  ['Range (definition)', '1\\ldots #?'], ['Stepped range (definition)', '1,3\\ldots #?'],
+  ['Element-wise arithmetic', '\\overrightarrow{#@}'],
 ] as const;
 
 const functions = [...matrixFunctionNames, 'stack', 'abs', 'max', 'min'].sort();
