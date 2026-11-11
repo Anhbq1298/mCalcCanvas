@@ -1,6 +1,6 @@
 /** Small bounded real-algebra simplifier. It transforms our AST, never executable strings. */
 import { CalculationError } from './CalculationErrors';
-import { walkExpr, walkScoped, type Expr } from './ExpressionTypes';
+import { walkExpr, walkScoped, type Expr, type Condition } from './ExpressionTypes';
 
 const num = (value: number): Expr => ({ type: 'num', value, raw: String(value) });
 const binary = (op: '+' | '-' | '*' | '/' | '^', left: Expr, right: Expr): Expr => ({ type: 'binary', op, left, right });
@@ -56,7 +56,10 @@ export function substituteSymbol(expr: Expr, name: string, value: Expr): Expr {
       const bindings = [{ name: binding, value: substituteSymbol(first.value, name, value) }];
       return tail.type === 'let' ? { ...tail, bindings: [...bindings, ...tail.bindings] } : { type: 'let', bindings, body: tail };
     }
-    case 'if': return expr; // Piecewise differentiation requires branch/domain analysis.
+    case 'if': {
+      const condition = (c: Condition): Condition => 'logic' in c ? { ...c, a: condition(c.a), b: condition(c.b) } : { ...c, left: substituteSymbol(c.left, name, value), right: substituteSymbol(c.right, name, value) };
+      return { ...expr, cond: condition(expr.cond), then: substituteSymbol(expr.then, name, value), else: substituteSymbol(expr.else, name, value) };
+    }
     case 'num': return expr;
   }
 }

@@ -111,6 +111,10 @@ describe('extended worksheet operators', () => {
       expect(evaluate('\\operatorname{derivative}(x^3,x)\\rightarrow').symbolicLatex).toMatch(/3.*x.*2/);
       expect(evaluate('\\operatorname{derivative}(x^3,x,2)\\rightarrow').symbolicLatex).toBe('12');
       expect(evaluate('f(x)\\rightarrow', undefined, ['f(t)\\coloneq t^2+1']).symbolicLatex).toMatch(/x.*2.*1/);
+      const piecewise = evaluate('f(x)\\rightarrow', undefined, ['f(t)\\coloneq\\mathrm{if}(t>0,t,-t)']);
+      expect(piecewise.status, piecewise.error?.message).toBe('valid');
+      expect(piecewise.symbolicLatex).toMatch(/x\s*>\s*0/);
+      expect(piecewise.symbolicLatex).not.toMatch(/t\s*>\s*0/);
       expect(evaluate('a\\rightarrow', undefined, ['a\\coloneq0.30000000000000004']).symbolicLatex).toContain('30000000000000004');
       expect(evaluate('missing\\rightarrow').status).toBe('valid');
       expect(evaluate('missing=').status).toBe('error');
