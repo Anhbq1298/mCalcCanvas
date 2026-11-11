@@ -61,6 +61,28 @@ const HELP_SECTIONS: { id: string; title: string; body: ReactNode; text: string 
     ),
   },
   {
+    id: 'operators',
+    title: 'Calculus, logic & symbolic',
+    text: 'factorial equation break derivative partial gradient integral limit summation product convolution convolve global definition symbolic simplify complex conjugate phasor compose real imag imaginary',
+    body: (
+      <>
+        <h4 className="help-h4">Choose an operator</h4>
+        <p>Math → Operators inserts working templates. Fill the highlighted boxes with Tab. Equation breaks wrap a selected arithmetic expression (for a definition, select its right-hand side) and continue it on a new line. Factorial accepts integers from 0 to 170. Vector/matrix operators, ranges and element-wise arithmetic are in Matrices/Tables → Operators.</p>
+        <h4 className="help-h4">Numerical calculus</h4>
+        <p><code>derivative(x^2,x,3)=</code> gives 6; <code>partial(x^2+y,x,3)</code> holds the worksheet value of y fixed. After defining <code>f(t):t^2</code>, use <code>f′(3)=</code>. For a gradient, enter the expression, a variable vector and a point vector of the same length.</p>
+        <p><code>integral(x^2,x,0,3)=</code> gives 9; the palette also inserts standard integral notation with an upright d and integration variable. Bounds must be finite and have matching units. <code>limit(sin(x)/x,x,0)=</code> approaches 1. Optional limit direction is −1 (left), 0 (both sides), or 1 (right); a literal infinity target is supported for finite-valued limits.</p>
+        <p>These are approximate numerical results for smooth real expressions, with convergence checks and evaluation limits. Split difficult integrals. Improper integrals, complex calculus and divergent limits are not supported. Strict engineering acceptance comparisons are unchanged.</p>
+        <p>Bounded sum/product templates bind their index locally and allow at most 10000 terms. <code>convolution(f,g,t,a,b)</code> integrates f(τ)·g(t−τ) over the explicit finite interval a…b; f and g must be declared one-argument functions. Discrete <code>convolve(S,K)</code> returns a same-size zero-padded convolution. <code>compose(f,g,x)</code> evaluates f(g(x)).</p>
+        <h4 className="help-h4">Logic, global definitions and symbolic expressions</h4>
+        <p>Membership tests a value against a vector/matrix. AND, OR, XOR and NOT return 1 or 0; scalar AND/OR short-circuit. They also work in if conditions.</p>
+        <p><code>global(a,7)</code> displays a≡7 and makes a visible throughout this worksheet, including above the definition. Only one global definition per name is allowed; global initializers may depend on other globals and built-in units/constants. Ordinary local definitions still take precedence below their own position.</p>
+        <p>The symbolic arrow simplifies real algebra with exact rational constants and elementary symbolic derivatives; for example <code>x+x → 2x</code> and <code>derivative(x^3,x) → 3x^2</code>. It is a bounded simplifier, not a general CAS, equation solver or proof of an expression’s domain.</p>
+        <h4 className="help-h4">Complex values</h4>
+        <p>Use <code>3+4i</code> or the Constants palette’s imaginary unit. Plain i remains a worksheet variable; use the explicit palette constant when a variable named i exists. Conjugate changes the imaginary sign. <code>phasor(2,90 deg)</code> uses an angle in degrees (plain numbers mean radians). Complex values are dimensionless; extract <code>real(z)</code>, <code>imag(z)</code> or <code>abs(z)</code> before a real graph or engineering ordering check.</p>
+      </>
+    ),
+  },
+  {
     id: 'matrices',
     title: 'Matrices & vectors',
     text: 'matrix matrices vectors Matrices Tables insert matrix dimensions cells calculate multiply determinant inverse transpose index rows columns solve lsolve dot cross norm hadamard divideElements powerElements functions',

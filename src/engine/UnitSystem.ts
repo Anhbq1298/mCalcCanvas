@@ -28,6 +28,7 @@ import {
   type Unit,
 } from 'mathjs';
 import { CalculationError } from './CalculationErrors';
+import { isComplex, QComplex } from './Complex';
 import { UNITS, parseDisplayUnit, type UnitSystemName } from './units';
 
 export { UNITS, isUnitSymbol, parseDisplayUnit, type UnitSystemName } from './units';
@@ -116,7 +117,7 @@ const DIMENSIONS = new Map<DimKey, DimensionInfo>([
   [key(0, 0, 0, 0, 1), { name: 'Angle', si: 'deg', imperial: 'deg' }],
 ]);
 
-export type Quantity = number | Unit;
+export type Quantity = number | Unit | QComplex;
 
 export function isUnit(q: unknown): q is Unit {
   return math.isUnit(q);
@@ -175,6 +176,7 @@ export function isAbsoluteTemperature(q: unknown): boolean {
 
 /** Value of a quantity in SI base units (mathjs internal representation). */
 export function siValue(q: Quantity): number {
+  if (isComplex(q)) throw new CalculationError('domain', 'A real value is required here; extract a component or magnitude of the complex value.');
   if (!isUnit(q)) return q;
   return q.value ?? 1;
 }
@@ -184,6 +186,7 @@ export function siValue(q: Quantity): number {
  * Angles are kept as units so that they display in degrees.
  */
 export function normalize(q: Quantity): Quantity {
+  if (isComplex(q) && q.im === 0) return q.re;
   if (isUnit(q) && isDimensionless(q)) return siValue(q);
   return q;
 }
@@ -321,6 +324,8 @@ function superscript(p: string): string {
 }
 
 export interface FormattedQuantity {
+  /** Explicit components; number is NaN so a complex value cannot enter a real graph/check. */
+  complex?: { re: number; im: number };
   text: string;
   latex: string;
   /** The value in the shown unit (a vector: its first entry, or NaN when empty). */
@@ -347,6 +352,13 @@ export function formatQuantity(
   q: Quantity,
   opts: { decimals: number; system: UnitSystemName; targetUnit?: string | null; style?: NumberStyle },
 ): FormattedQuantity {
+  if (isComplex(q)) {
+    if (opts.targetUnit) throw new Error('Complex values are dimensionless; a display unit cannot be applied.');
+    const re = formatNumber(q.re, opts.decimals, opts.style), im = formatNumber(Math.abs(q.im), opts.decimals, opts.style);
+    const imaginary = Math.abs(q.im) === 1 ? '' : im.text;
+    const imaginaryLatex = Math.abs(q.im) === 1 ? '' : im.latex;
+    return { text: `${q.re ? re.text : ''}${q.re ? q.im < 0 ? ' − ' : ' + ' : q.im < 0 ? '−' : ''}${imaginary}i`, latex: `${q.re ? re.latex : ''}${q.re ? q.im < 0 ? '-' : '+' : q.im < 0 ? '-' : ''}${imaginaryLatex}\\imaginaryI`, number: NaN, complex: { re: q.re, im: q.im }, unitText: '', unitLatex: '', dimension: 'Complex' };
+  }
   const dimension = dimensionName(q);
   let number: number;
   let unitStr = '';

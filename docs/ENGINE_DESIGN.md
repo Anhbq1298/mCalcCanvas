@@ -2,11 +2,12 @@
 
 ## Pipeline
 
-`LaTeX (MathLive) → LatexParser → Statement { definition | evaluation | expression | check | empty } with JSON Expr tree → resolve names → evaluate (mathjs numbers/Units) → FormattedQuantity`
+`LaTeX (MathLive) → LatexParser → Statement { definition | evaluation | expression | check | symbolic | empty } with JSON Expr tree → resolve names → evaluate (numbers/Units/explicit complex scalars) → FormattedQuantity or symbolicLatex`
 
 - **Expr**: `num | ident | binary(+ − * / ^) | unary | call(sin…max, sum, len, seq) | group | if | range | let`. It is JSON-serialisable and contains no mathjs objects.
 - **`if(condition, value if true, value if false)`**: written as letters, `\mathrm{if}` or `\operatorname{if}`. The condition is one comparison (`< ≤ > ≥ = ≠`) and uses the same rules as a check region: strict for `< ≤ > ≥`, the equality policy for `= ≠`, and both sides must have the same dimension. Only the chosen branch is evaluated, so the other may be undefined for the current inputs (e.g. √ of a negative). Branches may nest and may have different units. Dependencies include the names in both branches.
-- **Quantity** = `number | mathjs Unit`. Dimensionless results are normalised to plain numbers; angles stay as units.
+- **Quantity** = `number | mathjs Unit | QComplex`. Complex scalars are dimensionless and explicit; real ordering never coerces them. Dimensionless real results are normalised to plain numbers; angles stay as units.
+- **Extended operators:** scoped `calculus`, numeric `compare`/`logic`, exact-rational symbolic AST transforms and explicit global definitions are documented in [OPERATORS.md](OPERATORS.md), including numeric convergence bounds and supported symbolic/complex scope.
 - The parser bounds input length, node count and nesting depth. Unsupported syntax raises a `CalculationError` with an engineer-readable message.
 
 ## Name resolution
@@ -21,12 +22,12 @@
 ## Reading order and dependencies
 
 - Each region has an `order` key (`OrderKey`, compared lexicographically by `compareOrderKeys`). The canvas passes `[page, y, x, id]`. A plain number is also accepted.
-- A region may use only definitions that come before it, and it uses the nearest such definition (`definerBefore`). A redefinition is flagged (`redefines`, shown with a green outline).
+- Ordinary definitions resolve to the nearest preceding definition (`definerBefore`). Explicit `global(name,value)` definitions are the exception: a unique global is visible throughout the worksheet, and can depend only on other globals and built-ins. A preceding ordinary local definition overrides a global. A local redefinition is flagged (`redefines`, shown with a green outline).
 - `DependencyGraph` stores **edges to the exact defining region**, plus **watched names**: every identifier and, for letter runs, every letter.
   - When a definition of a watched name is added, removed, renamed or moved, only the watchers are re-resolved.
   - A region whose resolution fingerprint changes is recalculated, together with its transitive dependents.
 - Format-only changes (display unit, precision, unit system) re-format the region without recalculating its dependents.
-- In reading order, cycles cannot form. Self-reference without an earlier value is reported, and a cycle detector remains as a safety net.
+- Ordinary reading-order definitions cannot form cycles. Explicit globals can; the cycle detector reports these instead of recursing indefinitely. Self-reference without an earlier value is reported.
 - While a region is being edited (`draft`), a parse error keeps the last valid statement, so its dependents don't flicker.
 
 ## Numerics

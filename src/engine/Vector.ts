@@ -3,6 +3,7 @@
  * (i := 0..n−1) or by arithmetic on one. Entries carry their own units.
  */
 import { CalculationError } from './CalculationErrors';
+import { isComplex } from './Complex';
 import {
   isAbsoluteTemperature,
   isDimensionless,
@@ -242,7 +243,7 @@ export function formatVector(
     return { text: '[ ] (0)', latex: '\\left[\\;\\right]', number: Number.NaN, unitText: '', unitLatex: '', dimension: 'empty', items: [], length: 0 };
   }
   const first = formatQuantity(v.items[0], opts);
-  const common = v.items.every((q) => sameDimension(q, v.items[0]));
+  const common = !v.items.some(isComplex) && v.items.every((q) => sameDimension(q, v.items[0]));
   const limit = opts.expanded || opts.limit === 0 ? EXPANDED_MAX : Math.max(2, opts.limit ?? DEFAULT_VECTOR_LIMIT);
   const all = limit;
   const head = Math.ceil(limit / 2);

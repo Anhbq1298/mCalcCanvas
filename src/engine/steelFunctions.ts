@@ -1,7 +1,7 @@
 /** Built-in steel section library lookup for worksheets: sectionProp(sectionID, propertyIndex) → quantity. */
 import { CalculationError } from './CalculationErrors';
 import { requireScalar, type Value } from './Vector';
-import { isDimensionless, math, type Quantity } from './UnitSystem';
+import { isDimensionless, math, siValue, type Quantity } from './UnitSystem';
 import { propertyKeys, sectionById, sectionUnits } from '../engineering/steel/sections';
 
 export const steelFunctionNames = ['sectionProp'] as const;
@@ -10,7 +10,7 @@ export type SteelFunctionName = (typeof steelFunctionNames)[number];
 function plainNumber(v: Value, label: string): number {
   const q = requireScalar(v, label);
   if (!isDimensionless(q)) throw new CalculationError('unit-mismatch', `${label} must be dimensionless`);
-  return typeof q === 'number' ? q : q.value!;
+  return siValue(q);
 }
 
 export function evalSteelFunction(_fn: SteelFunctionName, args: Value[]): Value {

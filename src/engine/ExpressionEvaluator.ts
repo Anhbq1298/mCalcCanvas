@@ -7,6 +7,8 @@
  * call depth, so untrusted input can only ever perform bounded arithmetic.
  */
 import { matrixFunctionNames, type MatrixFunctionName } from './matrixNames';
+import { numericalDerivative, numericalIntegral, numericalLimit } from './calculus';
+import { isComplex, complex, complexBinary, QComplex } from './Complex';
 import { evalMatrixFunction, matrixMultiply, matrixPower, joinMatrices, type ScalarOps } from './matrixFunctions';
 import { evalSteelFunction, steelFunctionNames, type SteelFunctionName } from './steelFunctions';
 import { CalculationError } from './CalculationErrors';
@@ -98,6 +100,7 @@ export interface ResolveContext {
  * takes precedence (with a warning), exactly as in Mathcad.
  */
 export const BUILTIN_CONSTANTS: Record<string, { value: Quantity; description: string }> = {
+  'ⅈ': { value: new QComplex(0, 1), description: 'Explicit imaginary unit (\\imaginaryI), independent of a variable named i' },
   'π': { value: Math.PI, description: 'pi = 3.14159…' },
   e: { value: Math.E, description: 'Euler’s number = 2.71828…' },
   g: { value: math.unit(9.80665, 'm/s^2'), description: 'standard gravity = 9.80665 m/s²' },
@@ -118,6 +121,7 @@ export function resolveIdent(
   e: IdentExpr,
   ctx: ResolveContext,
 ): { ok: true; parts: Resolved[] } | { ok: false; undefinedNames: string[] } {
+  if (e.imaginaryLiteral && !ctx.isDefined(e.name)) return { ok: true, parts: [{ kind: 'const', name: 'ⅈ', value: BUILTIN_CONSTANTS['ⅈ'].value }] };
   const single = (name: string): Resolved | null => {
     if (ctx.isDefined(name)) return { kind: 'var', name };
     if (name in BUILTIN_CONSTANTS) return { kind: 'const', name, value: BUILTIN_CONSTANTS[name].value };
@@ -229,6 +233,7 @@ function scalarKey(args: Value[]): string | null {
   let key = '';
   for (const a of args) {
     if (isVector(a)) return null;
+    if (isComplex(a)) { key += `complex:${a.re},${a.im};`; continue; }
     key += typeof a === 'number' ? `${a};` : `${a.value}|${a.formatUnits()};`;
   }
   return key;
@@ -499,6 +504,10 @@ function ensureFinite(v: Value): Value {
 }
 
 function ensureFiniteQ(q: Quantity): Quantity {
+  if (isComplex(q)) {
+    if (!Number.isFinite(q.re) || !Number.isFinite(q.im)) throw new CalculationError('not-finite', 'Complex arithmetic overflowed or produced an undefined value.');
+    return q;
+  }
   if (!isUnit(q) && typeof q !== 'number') {
     throw new CalculationError('domain', 'The result is not a real number.');
   }
@@ -525,7 +534,7 @@ function describeQuantity(q: Quantity): string {
 // ---------------------------------------------------------------------------
 
 const absoluteC = (kelvin: number): Quantity => math.unit(kelvin, 'K').to('degC');
-const kelvinOf = (q: Quantity): number => (isUnit(q) ? q.toNumber('K') : q);
+const kelvinOf = (q: Quantity): number => (isUnit(q) ? q.toNumber('K') : siValue(q));
 
 const TEMP_HINT = 'Use a temperature difference in K (e.g. T₁ + 5 K, or ΔT := T₂ − T₁).';
 
@@ -549,10 +558,16 @@ function requireDimensionless(q: Quantity, what: string): number {
   if (!isDimensionless(q)) {
     throw new CalculationError('unit-mismatch', `${what} must be a dimensionless number (got ${describeQuantity(q)}).`);
   }
-  return isUnit(q) ? siValue(q) : q;
+  return siValue(q);
+}
+
+function complexOperand(q: Quantity): number | QComplex {
+  if (isComplex(q)) return q;
+  return requireDimensionless(q, 'A complex operand');
 }
 
 function addOrSubtract(a: Quantity, b: Quantity, op: '+' | '-'): Quantity {
+  if (isComplex(a) || isComplex(b)) return complexBinary(complexOperand(a), complexOperand(b), op);
   if (!sameDimension(a, b)) {
     const msg =
       op === '+'
@@ -584,8 +599,13 @@ function addOrSubtract(a: Quantity, b: Quantity, op: '+' | '-'): Quantity {
   return normalize(res as Quantity);
 }
 
+let operatorBudget = 100_000;
+const spendOperatorEvaluation = () => { if (--operatorBudget < 0) throw new CalculationError('limit-exceeded', 'Numerical operators exceed 100000 evaluations; split the calculation.'); };
 export function evaluateExpr(expr: Expr, ctx: EvalContext): Value {
-  return ensureFinite(normalizeValue(evalNode(expr, ctx)));
+  const previous = operatorBudget;
+  operatorBudget = 100_000;
+  try { return ensureFinite(normalizeValue(evalNode(expr, ctx))); }
+  finally { operatorBudget = previous; }
 }
 
 /** Every intermediate value is checked, so NaN/∞/complex never propagate. */
@@ -596,6 +616,7 @@ function evalNode(expr: Expr, ctx: EvalContext): Value {
 // A packed vector never holds °C (see Vector.pack).
 const hasAbsoluteTemperature = (v: Value): boolean => (isVector(v) ? !v.pack() && v.items.some(isAbsoluteTemperature) : isAbsoluteTemperature(v));
 const multiplyQ = (x: Quantity, y: Quantity): Quantity => {
+  if (isComplex(x) || isComplex(y)) return complexBinary(complexOperand(x), complexOperand(y), '*');
   if (typeof x === 'number' && typeof y === 'number') return x * y;
   // Fast path: a number scales a unit value (as math.multiply does).
   const scaled = (n: number, u: Quantity) => {
@@ -635,6 +656,47 @@ function multiplyValues(a: Value, b: Value, ctx: EvalContext): Value {
 
 function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
   switch (expr.type) {
+    case 'compare':
+      return broadcast2(evalNode(expr.left, ctx), evalNode(expr.right, ctx), (a, b) => compareQuantities(a, b, expr.op) ? 1 : 0);
+    case 'logic': {
+      const truth = (q: Quantity) => requireDimensionless(q, 'A logical operand') !== 0;
+      const a = evalNode(expr.left, ctx);
+      if (expr.op === 'not') return broadcast1(a, q => truth(q) ? 0 : 1);
+      if (!isVector(a) && (expr.op === 'and' && !truth(a) || expr.op === 'or' && truth(a))) return expr.op === 'and' ? 0 : 1;
+      return broadcast2(a, evalNode(expr.right!, ctx), (x, y) => ({ and: truth(x) && truth(y), or: truth(x) || truth(y), xor: truth(x) !== truth(y) }[expr.op as 'and' | 'or' | 'xor']) ? 1 : 0);
+    }
+    case 'calculus': {
+      const body = (values: Quantity[]) => {
+        spendOperatorEvaluation();
+        return requireScalar(evalNode(expr.body, { ...ctx, isDefined: n => expr.variables.includes(n) || ctx.isDefined(n), getValue: n => { const i = expr.variables.indexOf(n); return i >= 0 ? values[i] : ctx.getValue(n); } }), 'A calculus expression');
+      };
+      if (expr.op === 'gradient') {
+        const point = expr.args.length === 1 ? evalNode(expr.args[0], ctx) : null;
+        if (!isVector(point) || isBundle(point) || point.length !== expr.variables.length) throw new CalculationError('syntax', 'gradient(expression, variables, point) needs matching variable and point vectors.');
+        return new QVector(point.items.map((q, i) => numericalDerivative(x => body(point.items.map((v, j) => i === j ? x : v)), q)));
+      }
+      const infinitePoint = (e: Expr): number => e.type === 'ident' && e.name === '∞' && !ctx.isDefined(e.name) ? 1 : e.type === 'unary' && e.op === '-' ? -infinitePoint(e.arg) : e.type === 'group' ? infinitePoint(e.body) : 0;
+      const infinity = expr.op === 'limit' && expr.args[0] ? infinitePoint(expr.args[0]) : 0;
+      const args = expr.args.map((a, i) => infinity && i === 0 ? 0 : requireScalar(evalNode(a, ctx), 'A calculus point or bound'));
+      if (expr.op === 'derivative' || expr.op === 'partial') {
+        if (args.length !== 1) throw new CalculationError('syntax', `${expr.op}(expression, variable, point) takes three arguments.`);
+        return numericalDerivative(x => body([x]), args[0]);
+      }
+      if (expr.op === 'integral') {
+        if (args.length !== 2) throw new CalculationError('syntax', 'integral(expression, variable, lower, upper) takes four arguments.');
+        return numericalIntegral(x => body([x]), args[0], args[1]);
+      }
+      if (expr.op === 'limit') {
+        if (args.length < 1 || args.length > 2) throw new CalculationError('syntax', 'limit(expression, variable, point[, direction]) needs a point.');
+        return numericalLimit(x => body([x]), args[0], args[1] === undefined ? 0 : requireDimensionless(args[1], 'Limit direction'), infinity);
+      }
+      if (args.length !== 2) throw new CalculationError('syntax', `${expr.op}(expression, index, first, last) takes four arguments.`);
+      const [first, last] = args.map(q => requireDimensionless(q, 'A series bound'));
+      if (!Number.isSafeInteger(first) || !Number.isSafeInteger(last) || Math.max(Math.abs(first), Math.abs(last)) > 1e9 || last - first >= 10000) throw new CalculationError('limit-exceeded', 'A series needs integer bounds and at most 10000 terms.');
+      let value: Quantity = expr.op === 'product' ? 1 : 0;
+      for (let i = first; i <= last; i++) { const term = body([i]); value = expr.op === 'product' ? multiplyQ(value, term) : i === first ? term : addOrSubtract(value, term, '+'); }
+      return value;
+    }
     case 'matrix':
       return new QMatrix(expr.rows.length, expr.rows[0].length, expr.rows.flat().map((e) => requireScalar(evalNode(e, ctx), 'A matrix cell')));
     case 'vectorize':
@@ -704,12 +766,14 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
           return multiplyValues(a, b, ctx);
         case '/':
           return broadcast2(a, b, (x, y) => {
+            if (isComplex(x) || isComplex(y)) return complexBinary(complexOperand(x), complexOperand(y), '/');
             if (siValue(y) === 0) throw new CalculationError('division-by-zero', 'Division by zero: the denominator is 0.');
             if (typeof x === 'number' && typeof y === 'number') return x / y;
             if (typeof y === 'number') return multiplyQ(x, 1 / y);
             return normalize(math.divide(x as never, y as never) as Quantity);
           });
         case '^': {
+          if (isComplex(a) || isComplex(b)) return broadcast2(a, b, (x, y) => complexBinary(complexOperand(x), complexOperand(y), '^'));
           const exponent = (y: Quantity): number => {
             if (!isDimensionless(y)) {
               throw new CalculationError('unit-mismatch', `An exponent must be a dimensionless number (got ${describeQuantity(y)}).`);
@@ -756,6 +820,27 @@ function evalNodeRaw(expr: Expr, ctx: EvalContext): Value {
     }
 
     case 'call': {
+      if (expr.fn === 'prod') return flatten(expr.args.map(a => evalNode(a, ctx))).reduce(multiplyQ, 1 as Quantity);
+      if (expr.fn === 'compose' || expr.fn === 'convolution') {
+        const [f, g, ...rest] = expr.args;
+        const first = f?.type === 'ident' ? ctx.getFunction?.(f.name) : undefined;
+        const second = g?.type === 'ident' ? ctx.getFunction?.(g.name) : undefined;
+        if (!first || !second || first.params.length !== 1 || second.params.length !== 1) throw new CalculationError('syntax', `${expr.fn} needs two one-argument user functions.`);
+        const args = rest.map(a => requireScalar(evalNode(a, ctx), 'A function argument'));
+        if (expr.fn === 'compose') {
+          if (args.length !== 1) throw new CalculationError('syntax', 'compose(f, g, x) takes three arguments.');
+          return callUserFunction(first, [callUserFunction(second, args)]);
+        }
+        if (args.length !== 3) throw new CalculationError('syntax', 'convolution(f, g, t, lower, upper) takes five arguments.');
+        return numericalIntegral(x => { spendOperatorEvaluation(); return multiplyQ(requireScalar(callUserFunction(first, [x]), 'Convolution'), requireScalar(callUserFunction(second, [addOrSubtract(args[0], x, '-')]), 'Convolution')); }, args[1], args[2]);
+      }
+      if (expr.fn === 'contains') {
+        if (expr.args.length !== 2) throw new CalculationError('syntax', 'contains(value, array) takes two arguments.');
+        const needle = requireScalar(evalNode(expr.args[0], ctx), 'Membership value');
+        const array = evalNode(expr.args[1], ctx);
+        if (!isVector(array) || isBundle(array)) throw new CalculationError('vector', 'Membership needs a vector or matrix.');
+        return array.items.some(q => sameDimension(needle, q) && compareQuantities(needle, q, '==')) ? 1 : 0;
+      }
       if (expr.fn === 'map') return evalMap(expr.args, ctx);
       if (expr.fn === 'matrix' && expr.args.length === 3 && expr.args[2].type === 'ident') {
         const f = ctx.getFunction?.(expr.args[2].name);
@@ -943,6 +1028,7 @@ function makeRange(start: Quantity, end: Quantity, next: Quantity | null): QVect
 }
 
 function powQ(a: Quantity, p: number): Quantity {
+  if (isComplex(a)) return complexBinary(a, p, '^');
   if (Math.abs(p) > 1000) throw new CalculationError('limit-exceeded', 'Exponent is too large.');
   if (!Number.isFinite(p)) throw new CalculationError('not-finite', 'Invalid exponent.');
   if (siValue(a) < 0 && !Number.isInteger(p)) {
@@ -964,10 +1050,42 @@ function angleArgument(q: Quantity, fn: string): Quantity {
 
 function evalCall(fn: string, args: Quantity[]): Quantity {
   const [x] = args;
-  if (args.some(isAbsoluteTemperature) && fn !== 'min' && fn !== 'max') {
-    throw temperatureError(`${fn} cannot be applied to an absolute temperature (°C).`);
+  if (args.some(isAbsoluteTemperature) && fn !== 'min' && fn !== 'max') throw temperatureError(`${fn} cannot be applied to an absolute temperature (°C).`);
+  if (fn === 'real' || fn === 'imag') {
+    if (args.length !== 1) throw new CalculationError('syntax', `${fn} takes one argument.`);
+    return isComplex(x) ? fn === 'real' ? x.re : x.im : fn === 'real' ? x : isUnit(x) ? withSi(x, 0) : 0;
+  }
+  if (fn === 'conj') {
+    if (args.length !== 1) throw new CalculationError('syntax', 'conj takes one argument.');
+    return isComplex(x) ? complex(x.re, -x.im) : x;
+  }
+  if (fn === 'phasor') {
+    if (args.length !== 2) throw new CalculationError('syntax', 'phasor(magnitude, angle) takes two arguments.');
+    const magnitude = requireDimensionless(x, 'Phasor magnitude');
+    const angle = angleArgument(args[1], 'phasor');
+    const radians = isUnit(angle) ? angle.toNumber('rad') : siValue(angle);
+    return complex(magnitude * Math.cos(radians), magnitude * Math.sin(radians));
+  }
+  if (isComplex(x)) {
+    if (args.length !== 1) throw new CalculationError('syntax', `${fn} needs one complex argument.`);
+    if (fn === 'abs') return Math.hypot(x.re, x.im);
+    if (fn === 'sqrt') return complexBinary(x, 0.5, '^');
+    if (fn === 'exp') return complex(Math.exp(x.re) * Math.cos(x.im), Math.exp(x.re) * Math.sin(x.im));
+    if (fn === 'ln' || fn === 'log') { const divisor = fn === 'log' ? Math.LN10 : 1; return complex(Math.log(Math.hypot(x.re, x.im)) / divisor, Math.atan2(x.im, x.re) / divisor); }
+    if (fn === 'sin') return complex(Math.sin(x.re) * Math.cosh(x.im), Math.cos(x.re) * Math.sinh(x.im));
+    if (fn === 'cos') return complex(Math.cos(x.re) * Math.cosh(x.im), -Math.sin(x.re) * Math.sinh(x.im));
+    if (fn === 'tan') return complexBinary(evalCall('sin', args) as number | QComplex, evalCall('cos', args) as number | QComplex, '/');
+    throw new CalculationError('domain', `${fn} requires real values.`);
   }
   switch (fn) {
+    case 'factorial': {
+      if (args.length !== 1) throw new CalculationError('syntax', 'factorial takes one argument.');
+      const n = requireDimensionless(x, 'Factorial');
+      if (!Number.isInteger(n) || n < 0 || n > 170) throw new CalculationError('domain', 'Factorial requires an integer from 0 to 170.');
+      let value = 1;
+      for (let i = 2; i <= n; i++) value *= i;
+      return value;
+    }
     case 'sin':
       return math.sin(angleArgument(x, fn) as never) as number;
     case 'cos':
@@ -1054,6 +1172,16 @@ export function compareQuantities(
   op: string,
   policies: { check?: ComparisonPolicy; equality?: ComparisonPolicy } = {},
 ): boolean {
+  if (isComplex(a) || isComplex(b)) {
+    if (op !== '==' && op !== '!=') throw new CalculationError('domain', 'Complex values have no ordering; engineering checks require real values.');
+    const x = complexOperand(a), y = complexOperand(b);
+    const xr = typeof x === 'number' ? x : x.re, xi = typeof x === 'number' ? 0 : x.im;
+    const yr = typeof y === 'number' ? y : y.re, yi = typeof y === 'number' ? 0 : y.im;
+    const policy = policies.equality ?? EQUALITY_POLICY;
+    const scale = Math.max(Math.abs(xr), Math.abs(xi), Math.abs(yr), Math.abs(yi));
+    const equal = policy.mode === 'strict' ? xr === yr && xi === yi : scale === 0 || Math.hypot(xr / scale - yr / scale, xi / scale - yi / scale) <= Math.max((policy.absoluteTolerance ?? 0) / scale, (policy.relativeTolerance ?? 0) * Math.max(Math.hypot(xr / scale, xi / scale), Math.hypot(yr / scale, yi / scale)));
+    return op === '==' ? equal : !equal;
+  }
   if (!sameDimension(a, b)) {
     throw new CalculationError(
       'unit-mismatch',

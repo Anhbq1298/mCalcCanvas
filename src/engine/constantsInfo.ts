@@ -1,5 +1,6 @@
 /** Built-in constants as shown in the help (names and descriptions only; values live in ExpressionEvaluator). */
 export const BUILTIN_CONSTANT_INFO: readonly { name: string; description: string }[] = [
+  { name: '1i', description: 'imaginary unit; plain i stays a worksheet variable; \\imaginaryI is explicit' },
   { name: 'π', description: 'pi = 3.14159…' },
   { name: 'e', description: 'Euler’s number = 2.71828…' },
   { name: 'g', description: 'standard gravity = 9.80665 m/s²' },

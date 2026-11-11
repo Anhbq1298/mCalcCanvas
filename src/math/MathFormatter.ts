@@ -57,6 +57,7 @@ function resolvedMode(mode: MathDisplayMode, result: CalculationResult): Exclude
 export function buildDisplay(sourceLatex: string, result: CalculationResult | undefined, mode: MathDisplayMode): DisplayParts {
   const src = sanitizeLatex(sourceLatex);
   if (!result || result.status !== 'valid') return { latex: src };
+  if (result.symbolicLatex !== undefined) return { latex: `${result.expressionLatex ?? src.replace(/\\(long)?rightarrow\s*$/, '')}\\;\\rightarrow\\;${result.symbolicLatex}` };
 
   if (result.kind === 'check' && result.check) {
     const c = result.check;
@@ -69,7 +70,7 @@ export function buildDisplay(sourceLatex: string, result: CalculationResult | un
   const value = result.value?.latex;
   if (!value) return { latex: src };
   const m = resolvedMode(mode, result);
-  const formula = stripTrailingEquals(src);
+  const formula = result.globalDefinition && result.definesLatex && result.expressionLatex ? `${result.definesLatex}\\equiv ${result.expressionLatex}` : stripTrailingEquals(src);
   // Numeric table cells retain an editable definition but omit its name in the report.
   if(m==='value')return {latex:value};
 

@@ -7,6 +7,7 @@
  */
 import type { Condition, Expr, Relation } from './ExpressionTypes';
 import { matrixFunctionNames } from './matrixNames';
+import { operatorFunctionNames } from './operatorNames';
 import { GREEK } from './LatexParser';
 import { applyAsProduct, resolveIdent, type EvalContext, type ResolveContext } from './ExpressionEvaluator';
 import { UNITS } from './UnitSystem';
@@ -15,7 +16,7 @@ const GREEK_BY_CHAR: Record<string, string> = Object.fromEntries(
   Object.entries(GREEK).map(([cmd, ch]) => [ch, `\\${cmd}`]),
 );
 
-const SPECIAL: Record<string, string> = { 'π': '\\pi', '∞': '\\infty', '%': '\\%' };
+const SPECIAL: Record<string, string> = { 'π': '\\pi', '∞': '\\infty', '%': '\\%', 'ⅈ': '\\imaginaryI' };
 
 function symbolLatex(s: string): string {
   if (s.length === 1) return GREEK_BY_CHAR[s] ?? SPECIAL[s] ?? s;
@@ -62,6 +63,15 @@ function wrap(p: Printed, minPrec: number, force = false): string {
 
 function print(expr: Expr, opts: PrintOptions): Printed {
   switch (expr.type) {
+    case 'compare':
+      return { latex: `${print(expr.left, opts).latex}${RELATION_LATEX[expr.op]}${print(expr.right, opts).latex}`, prec: 0 };
+    case 'logic':
+      return { latex: expr.op === 'not' ? `\\neg\\left(${print(expr.left, opts).latex}\\right)` : `\\left(${print(expr.left, opts).latex}\\right)${{ and: '\\land', or: '\\lor', xor: '\\oplus' }[expr.op]}\\left(${print(expr.right!, opts).latex}\\right)`, prec: 0 };
+    case 'calculus': {
+      const local: PrintOptions = { ...opts, ctx: { ...opts.ctx, isDefined: n => expr.variables.includes(n) || opts.ctx.isDefined(n) }, substitute: n => expr.variables.includes(n) ? null : opts.substitute?.(n) ?? null };
+      const variables = expr.variables.length === 1 ? nameToLatex(expr.variables[0]) : `\\begin{bmatrix}${expr.variables.map(nameToLatex).join('\\\\')}\\end{bmatrix}`;
+      return { latex: `\\operatorname{${expr.op}}\\left(${print(expr.body, local).latex},${variables}${expr.args.map(a => ',' + print(a, opts).latex).join('')}\\right)`, prec: PREC.atom };
+    }
     case 'matrix':
       return { latex: `\\begin{bmatrix}${expr.rows.map((r) => r.map((e) => print(e, opts).latex).join('&')).join('\\\\')}\\end{bmatrix}`, prec: PREC.atom };
     case 'vectorize':
@@ -142,6 +152,7 @@ function print(expr: Expr, opts: PrintOptions): Printed {
     }
 
     case 'call': {
+      if ((operatorFunctionNames as readonly string[]).includes(expr.fn)) return { latex: `\\operatorname{${expr.fn}}\\left(${expr.args.map(a => print(a, opts).latex).join(',')}\\right)`, prec: PREC.atom };
       const args = expr.args.map((a) => print(a, opts).latex);
       if ((matrixFunctionNames as readonly string[]).includes(expr.fn)) return { latex: `\\mathrm{${expr.fn}}\\left(${args.join(',')}\\right)`, prec: PREC.atom };
       switch (expr.fn) {

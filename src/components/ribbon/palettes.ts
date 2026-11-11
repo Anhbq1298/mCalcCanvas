@@ -14,10 +14,6 @@ export interface PaletteSection {
   items: PaletteItem[];
 }
 
-/** Shown on operators the calculation engine cannot evaluate yet. */
-const SOON = 'Not supported by the calculation engine yet';
-const soon = (label: string, title: string, math = false): PaletteItem => ({ label, latex: '', title: `${title} – ${SOON}`, math, disabled: true });
-
 /** Laid out like Mathcad Prime's Operators gallery. */
 export const OPERATORS: PaletteSection[] = [
   {
@@ -32,7 +28,7 @@ export const OPERATORS: PaletteSection[] = [
       { label: '√x', latex: '\\sqrt{#?}', title: 'Square root  ( \\ )', math: true },
       { label: 'ⁿ√x', latex: '\\sqrt[#?]{#?}', title: 'Nth root  ( Ctrl+\\ )', math: true },
       { label: '|x|', latex: '\\left|#?\\right|', title: 'Absolute value  ( | )', math: true },
-      soon('x!', 'Factorial', true),
+      { label: 'x!', latex: '#@!', title: 'Factorial (integer 0 to 170)', math: true },
       { label: '%', latex: '\\%', title: 'Percent (= 0.01)' },
       { label: '( )', latex: '\\left(#@\\right)', title: "Parentheses  ( ' )" },
       { label: ',', latex: ',', title: 'Argument separator (min, max)' },
@@ -41,39 +37,42 @@ export const OPERATORS: PaletteSection[] = [
   },
   {
     title: 'Equation break',
-    items: [soon('+↲', 'Break after addition'), soon('−↲', 'Break after subtraction'), soon('·↲', 'Break after multiplication'), soon('÷↲', 'Break after division')],
+    items: [
+      { label: '+↲', latex: '\\begin{array}{l}#@+\\\\#?\\end{array}', title: 'Break after addition' },
+      { label: '−↲', latex: '\\begin{array}{l}#@-\\\\#?\\end{array}', title: 'Break after subtraction' },
+      { label: '·↲', latex: '\\begin{array}{l}#@\\cdot\\\\#?\\end{array}', title: 'Break after multiplication' },
+      { label: '÷↲', latex: '\\begin{array}{l}#@\\div\\\\#?\\end{array}', title: 'Break after division' },
+    ],
   },
   {
     title: 'Calculus',
     items: [
-      soon('⊛', 'Convolution'),
-      soon('∗', 'Discrete convolution'),
-      soon('d/dx', 'Derivative', true),
-      soon('∇', 'Gradient'),
-      soon('∫dx', 'Definite integral', true),
-      soon('lim', 'Limit'),
-      soon('∂/∂x', 'Partial derivative', true),
-      soon("x′", 'Prime derivative', true),
-      soon('∏', 'Product'),
-      soon('∑', 'Summation'),
+      { label: '⊛', latex: '\\operatorname{convolution}\\left(#?,#?,#?,#?,#?\\right)', title: 'Convolution: convolution(f, g, t, lower, upper), finite interval' },
+      { label: '∗', latex: '\\operatorname{convolve}\\left(#?,#?\\right)', title: 'Discrete convolution (same-size, zero-padded)' },
+      { label: 'd/dx', latex: '\\operatorname{derivative}\\left(#?,#?,#?\\right)', title: 'Derivative: derivative(expression, variable, point)', math: true },
+      { label: '∇', latex: '\\operatorname{gradient}\\left(#?,\\begin{bmatrix}#?\\\\#?\\end{bmatrix},\\begin{bmatrix}#?\\\\#?\\end{bmatrix}\\right)', title: 'Gradient: gradient(expression, variables, point)' },
+      { label: '∫dx', latex: '\\int_{#?}^{#?}\\left(#?\\right)\\,\\mathrm{d}#?', title: 'Definite integral (finite bounds; fill lower, upper, expression, variable)', math: true },
+      { label: 'lim', latex: '\\lim_{#?\\to#?}\\left(#?\\right)', title: 'Limit (numerical finite-valued limit; fill variable, point, expression)' },
+      { label: '∂/∂x', latex: '\\operatorname{partial}\\left(#?,#?,#?\\right)', title: 'Partial derivative: partial(expression, variable, point)', math: true },
+      { label: 'x′', latex: '#?^{\\prime}\\left(#?\\right)', title: 'Prime derivative: f′(point), for a declared one-argument function', math: true },
+      { label: '∏', latex: '\\prod_{#?=#?}^{#?}\\left(#?\\right)', title: 'Product (fill index, first, last, expression)' },
+      { label: '∑', latex: '\\sum_{#?=#?}^{#?}\\left(#?\\right)', title: 'Summation (fill index, first, last, expression)' },
     ],
   },
   {
     title: 'Comparison',
     items: [
-      soon('∈', 'Element of'),
+      { label: '∈', latex: '\\in ', title: 'Element of (value in a vector or matrix)' },
       { label: '=', latex: '\\equiv ', title: 'Equal to – comparison check  ( Ctrl+= )' },
-      soon('⊕', 'Exclusive or'),
+      { label: '⊕', latex: '\\oplus ', title: 'Exclusive or' },
       { label: '>', latex: '>', title: 'Greater than' },
       { label: '≥', latex: '\\ge ', title: 'Greater than or equal  ( Ctrl+0 )' },
       { label: '<', latex: '<', title: 'Less than' },
       { label: '≤', latex: '\\le ', title: 'Less than or equal  ( Ctrl+9 )' },
-      soon('∧', 'And'),
-      soon('¬', 'Not'),
-      soon('∨', 'Or'),
-      { label: '≠', latex: '\\ne ', title: 'Not equal  ( Ctrl+3 )' },
       { label: '∧', latex: '\\land ', title: 'And: both comparisons hold (in an if condition)' },
+      { label: '¬', latex: '\\neg\\left(#@\\right)', title: 'Not' },
       { label: '∨', latex: '\\lor ', title: 'Or: either comparison holds (in an if condition)' },
+      { label: '≠', latex: '\\ne ', title: 'Not equal  ( Ctrl+3 )' },
     ],
   },
   {
@@ -81,17 +80,17 @@ export const OPERATORS: PaletteSection[] = [
     items: [
       { label: '≔', latex: '\\coloneq ', title: 'Definition  ( : )' },
       { label: '=', latex: '=', title: 'Evaluate  ( = )' },
-      soon('≡', 'Global definition'),
-      soon('→', 'Symbolic evaluation'),
+      { label: '≡', latex: '\\operatorname{global}\\left(#?,#?\\right)', title: 'Global definition: global(name, value), visible throughout this worksheet' },
+      { label: '→', latex: '#@\\rightarrow ', title: 'Symbolic evaluation (bounded real algebra: simplify and differentiate)' },
     ],
   },
   {
     title: 'Engineering',
     items: [
-      soon('z̄', 'Complex conjugate', true),
+      { label: 'z̄', latex: '\\overline{#@}', title: 'Complex conjugate (dimensionless complex values)', math: true },
       { label: '°', latex: '\\degree ', title: 'Degree (angle)' },
-      soon('∠', 'Phasor angle'),
-      soon('∘', 'Composition'),
+      { label: '∠', latex: '\\operatorname{phasor}\\left(#?,#?\\right)', title: 'Phasor angle: phasor(dimensionless magnitude, angle)' },
+      { label: '∘', latex: '\\operatorname{compose}\\left(#?,#?,#?\\right)', title: 'Composition: compose(f, g, x)' },
     ],
   },
   {
@@ -144,6 +143,7 @@ export const CONSTANTS: PaletteSection[] = [
     items: [
       { label: 'π', latex: '\\pi ', title: 'π = 3.14159…  ( Ctrl+Shift+P )', math: true },
       { label: 'e', latex: 'e', title: 'Euler’s number = 2.71828…', math: true },
+      { label: 'i', latex: '\\imaginaryI ', title: 'Imaginary unit; plain i stays a worksheet variable', math: true },
       { label: 'g', latex: 'g', title: 'Standard gravity = 9.80665 m/s²', math: true },
       { label: '∞', latex: '\\infty ', title: 'Infinity = 10³⁰⁷', math: true },
       { label: '%', latex: '\\%', title: 'Percent = 0.01' },

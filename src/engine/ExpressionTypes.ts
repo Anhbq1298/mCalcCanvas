@@ -5,9 +5,12 @@
  * logged, posted to a worker or persisted without conversion.
  */
 
+import type { OperatorFunctionName, CalculusName } from './operatorNames';
+
 export type BinaryOp = '+' | '-' | '*' | '/' | '^';
 
 export type FunctionName = import('./matrixNames').MatrixFunctionName
+  | OperatorFunctionName
   | import('./steelFunctions').SteelFunctionName
   | 'sin' | 'cos' | 'tan'
   | 'asin' | 'acos' | 'atan'
@@ -32,6 +35,9 @@ export type FunctionName = import('./matrixNames').MatrixFunctionName
   | 'ceil';
 
 export type Expr =
+  | { type: 'compare'; op: Relation; left: Expr; right: Expr }
+  | { type: 'logic'; op: 'and' | 'or' | 'xor' | 'not'; left: Expr; right?: Expr }
+  | { type: 'calculus'; op: CalculusName; variables: string[]; body: Expr; args: Expr[] }
   | { type: 'matrix'; rows: Expr[][] }
   | { type: 'vectorize'; body: Expr }
   | { type: 'num'; value: number; raw: string }
@@ -42,7 +48,7 @@ export type Expr =
    * - `roman`: written upright (\mathrm, \text, \operatorname) which, by
    *   convention, means "unit" when the name is a registered unit.
    */
-  | { type: 'ident'; name: string; splittable: boolean; roman: boolean }
+  | { type: 'ident'; name: string; splittable: boolean; roman: boolean; imaginaryLiteral?: boolean }
   | { type: 'binary'; op: BinaryOp; left: Expr; right: Expr; implicit?: boolean; frac?: boolean; cross?: boolean }
   | { type: 'unary'; op: '-' | '+'; arg: Expr }
   | { type: 'call'; fn: FunctionName; args: Expr[] }
@@ -61,7 +67,7 @@ export type Expr =
    */
   | { type: 'apply'; head: IdentNode; args: Expr[]; pow?: Expr };
 
-export type IdentNode = { type: 'ident'; name: string; splittable: boolean; roman: boolean };
+export type IdentNode = { type: 'ident'; name: string; splittable: boolean; roman: boolean; imaginaryLiteral?: boolean };
 
 export type Relation = '<' | '<=' | '>' | '>=' | '==' | '!=';
 
@@ -82,7 +88,8 @@ function conditionExprs(c: Condition): Expr[] {
 
 export type Statement =
   /** `name := expr` – optional trailing `=` asks to display the result too. */
-  | { kind: 'definition'; name: string; expr: Expr; evaluate: boolean; params?: string[] }
+  | { kind: 'definition'; name: string; expr: Expr; evaluate: boolean; params?: string[]; global?: boolean }
+  | { kind: 'symbolic'; expr: Expr }
   /** `expr =` – display the value of an expression. */
   | { kind: 'evaluation'; expr: Expr }
   /** A bare expression with no operator; evaluated but not displayed. */
@@ -94,6 +101,15 @@ export type Statement =
 export function walkExpr(expr: Expr, visit: (e: Expr) => void): void {
   visit(expr);
   switch (expr.type) {
+    case 'compare':
+    case 'logic':
+      walkExpr(expr.left, visit);
+      if (expr.right) walkExpr(expr.right, visit);
+      break;
+    case 'calculus':
+      walkExpr(expr.body, visit);
+      expr.args.forEach(a => walkExpr(a, visit));
+      break;
     case 'matrix':
       expr.rows.flat().forEach((e) => walkExpr(e, visit));
       break;
@@ -140,6 +156,15 @@ export function walkScoped(expr: Expr, visit: (e: Expr, locals: ReadonlySet<stri
   visit(expr, locals);
   const w = (e: Expr) => walkScoped(e, visit, locals);
   switch (expr.type) {
+    case 'compare':
+    case 'logic':
+      w(expr.left);
+      if (expr.right) w(expr.right);
+      break;
+    case 'calculus':
+      walkScoped(expr.body, visit, new Set([...locals, ...expr.variables]));
+      expr.args.forEach(w);
+      break;
     case 'matrix':
       expr.rows.flat().forEach(w);
       break;
@@ -196,6 +221,7 @@ export function statementExprs(stmt: Statement): Expr[] {
     case 'definition':
     case 'evaluation':
     case 'expression':
+    case 'symbolic':
       return [stmt.expr];
     case 'check':
       return [stmt.left, stmt.right];

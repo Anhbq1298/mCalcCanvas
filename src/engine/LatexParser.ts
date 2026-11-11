@@ -21,6 +21,7 @@
  *     unambiguous way to write units.
  */
 import { matrixFunctionNames } from './matrixNames';
+import { operatorFunctionNames, calculusNames, type CalculusName } from './operatorNames';
 import { CalculationError } from './CalculationErrors';
 import type { Comparison, Condition, Expr, FunctionName, Relation, Statement } from './ExpressionTypes';
 
@@ -55,6 +56,7 @@ const FUNCTION_COMMANDS: Record<string, FunctionName> = {
 /** Plain-letter runs that MathLive may leave un-converted. */
 const FUNCTION_WORDS: Record<string, FunctionName> = {
   sectionProp: 'sectionProp',
+  ...Object.fromEntries(operatorFunctionNames.map(n => [n, n])) as Record<import('./operatorNames').OperatorFunctionName, import('./operatorNames').OperatorFunctionName>,
   ...FUNCTION_COMMANDS,
   ...Object.fromEntries(matrixFunctionNames.map((n) => [n, n])) as Record<import('./matrixNames').MatrixFunctionName, import('./matrixNames').MatrixFunctionName>,
   asin: 'asin', acos: 'acos', atan: 'atan', sqrt: 'sqrt', abs: 'abs',
@@ -356,6 +358,22 @@ class Parser {
     }
     const left = this.parseExpr();
 
+    if (left.type === 'apply' && left.head.name === 'global' && this.atEnd()) {
+      const [name, expr] = left.args;
+      if (left.args.length === 2 && name?.type === 'apply' && name.args.every(a => a.type === 'ident' && !a.roman)) {
+        const params = name.args.map(a => (a as Extract<Expr, { type: 'ident' }>).name);
+        if (new Set(params).size !== params.length) throw new CalculationError('invalid-definition', 'Global function parameters must be distinct.');
+        return { kind: 'definition', name: name.head.name, expr, params, evaluate: false, global: true };
+      }
+      if (left.args.length !== 2 || name?.type !== 'ident') throw new CalculationError('invalid-definition', 'global(name, value) needs a variable or function name and its value.');
+      return { kind: 'definition', name: name.name, expr, evaluate: false, global: true };
+    }
+    if (this.isCmd('rightarrow') || this.isCmd('longrightarrow') || this.isSym('→')) {
+      this.next();
+      if (!this.restIsEmpty()) throw new CalculationError('syntax', 'Symbolic evaluation is written expression →.');
+      return { kind: 'symbolic', expr: left };
+    }
+
     if (this.isAssign()) {
       this.consumeAssign();
       let params: string[] | undefined;
@@ -408,6 +426,7 @@ class Parser {
     }
 
     this.expectEnd();
+    if (left.type === 'compare') return { kind: 'check', left: left.left, op: left.op, right: left.right };
     return { kind: 'expression', expr: left };
   }
 
@@ -441,6 +460,38 @@ class Parser {
   // -- expressions -----------------------------------------------------------
 
   parseExpr(): Expr {
+    return this.parseLogic(0);
+  }
+
+  private parseLogic(level: number): Expr {
+    const names = [['lor', 'vee'], ['oplus'], ['land', 'wedge']];
+    if (level < names.length) {
+      let left = this.parseLogic(level + 1);
+      while (names[level].some(name => this.isCmd(name))) {
+        this.next();
+        left = this.node({ type: 'logic', op: (['or', 'xor', 'and'] as const)[level], left, right: this.parseLogic(level + 1) });
+      }
+      return left;
+    }
+    if (this.isCmd('neg') || this.isCmd('lnot') || this.isSym('¬')) {
+      this.next();
+      this.enter();
+      const left = this.parseLogic(level);
+      this.leave();
+      return this.node({ type: 'logic', op: 'not', left });
+    }
+    const left = this.parseArithmetic();
+    if (this.isCmd('in')) {
+      this.next();
+      return this.node({ type: 'call', fn: 'contains', args: [left, this.parseArithmetic()] });
+    }
+    const op = this.peekRelation();
+    if (!op) return left;
+    this.consumeRelation(op);
+    return this.node({ type: 'compare', op, left, right: this.parseArithmetic() });
+  }
+
+  private parseArithmetic(): Expr {
     this.enter();
     let left = this.parseTerm();
     while (this.isSym('+') || this.isSym('-')) {
@@ -463,8 +514,17 @@ class Parser {
       } else if ((tok.t === 'sym' && tok.v === '/') || (tok.t === 'cmd' && tok.v === 'div')) {
         this.next();
         left = this.node({ type: 'binary', op: '/', left, right: this.parseUnary() });
+      } else if (this.isCmd('angle')) {
+        this.next();
+        left = this.node({ type: 'call', fn: 'phasor', args: [left, this.parseUnary()] });
       } else if (this.startsPrimary()) {
-        left = this.node({ type: 'binary', op: '*', left, right: this.parsePower(), implicit: true });
+        let right = this.parsePower();
+        const literal = (e: Expr): boolean => e.type === 'num' || e.type === 'unary' && literal(e.arg);
+        if (literal(left)) {
+          const imaginary = (e: Expr): Expr => e.type === 'ident' && e.name === 'i' ? { ...e, imaginaryLiteral: true } : e;
+          right = right.type === 'binary' && right.op === '^' ? { ...right, left: imaginary(right.left) } : imaginary(right);
+        }
+        left = this.node({ type: 'binary', op: '*', left, right, implicit: true });
       } else {
         return left;
       }
@@ -483,7 +543,11 @@ class Parser {
   }
 
   private parsePower(): Expr {
-    const base = this.parsePrimary();
+    let base = this.parsePrimary();
+    while (this.isSym('!')) {
+      this.next();
+      base = this.node({ type: 'call', fn: 'factorial', args: [base] });
+    }
     if (!this.isSym('^')) return base;
     this.next();
     // x^{\circ} is the degree sign
@@ -551,7 +615,7 @@ class Parser {
         if (tok.v === 'vert' || tok.v === 'lvert') return this.absDepth === 0 || tok.v === 'lvert';
         return (
           tok.v in GREEK || tok.v === 'pi' || ROMAN_COMMANDS.has(tok.v) || FRAC_COMMANDS.has(tok.v) ||
-          tok.v.startsWith('beginmatrix:') || tok.v === 'overrightarrow' || tok.v === 'sqrt' || tok.v in FUNCTION_COMMANDS || tok.v === 'exponentialE' || tok.v === 'infty' ||
+          tok.v.startsWith('beginmatrix:') || ['sum', 'prod', 'int', 'lim', 'overline', 'bar'].includes(tok.v) || tok.v === 'overrightarrow' || tok.v === 'sqrt' || tok.v in FUNCTION_COMMANDS || tok.v === 'exponentialE' || tok.v === 'imaginaryI' || tok.v === 'infty' ||
           tok.v === 'placeholder' || tok.v === 'degree' || tok.v === 'deg' || tok.v === 'lparen' || tok.v === 'lbrack'
         );
       default:
@@ -561,6 +625,14 @@ class Parser {
 
   private parsePrimary(): Expr {
     const e = this.parsePrimaryAtom();
+    if (e.type === 'ident' && (this.isSym("'") || this.isCmd('prime') || this.isSym('^') && this.isSym('{', 1) && this.isCmd('prime', 2) && this.isSym('}', 3))) {
+      if (this.isSym('^')) for (let i = 0; i < 4; i++) this.next(); else this.next();
+      if (!this.isSym('(') && !this.isCmd('lparen')) throw new CalculationError('incomplete', 'A prime derivative needs a function and evaluation point, e.g. f′(2).');
+      const parts = this.readArgumentTokens();
+      if (parts.length !== 1) throw new CalculationError('syntax', 'A prime derivative needs one evaluation point.');
+      const variable: Expr = { type: 'ident', name: 'x', roman: false, splittable: false };
+      return this.node({ type: 'calculus', op: 'derivative', variables: ['x'], body: { type: 'apply', head: e, args: [variable] }, args: [this.subParse(parts[0])] });
+    }
     if (e.type !== 'ident' || !(this.isSym('(') || this.isCmd('lparen'))) return e;
     // name(args): a user-function call when "name" is one (decided at evaluation).
     // name(x)^2 is (name(x))² for a function, else the old reading name·(x)².
@@ -722,6 +794,47 @@ class Parser {
       throw new CalculationError('incomplete', 'Incomplete expression.');
     }
     this.next();
+    if (v === 'overline' || v === 'bar') return this.node({ type: 'call', fn: 'conj', args: [this.parseBracedArg()] });
+    if (v === 'sum' || v === 'prod') {
+      this.expectSym('_');
+      const lower = this.readBalancedTokens('{', '}');
+      const equality = lower.findIndex(t => t.t === 'sym' && t.v === '=');
+      if (equality < 0) throw new CalculationError('syntax', 'A bounded series needs index = first below the operator.');
+      const variable = this.subParse(lower.slice(0, equality));
+      if (variable.type !== 'ident') throw new CalculationError('syntax', 'A series index must be a variable name.');
+      const first = this.subParse(lower.slice(equality + 1));
+      this.expectSym('^');
+      const last = this.parseScriptArg(), body = this.parseBracedArg();
+      return this.node({ type: 'calculus', op: v === 'sum' ? 'summation' : 'product', variables: [variable.name], body, args: [first, last] });
+    }
+    if (v === 'int') {
+      this.expectSym('_'); const lower = this.parseScriptArg();
+      this.expectSym('^'); const upper = this.parseScriptArg();
+      const start = this.pos;
+      let depth = 0, differential = -1;
+      for (let k = start; k < this.tokens.length; k++) {
+        const t = this.tokens[k];
+        if (depth === 0 && t.t === 'cmd' && t.v === 'mathrm' && this.tokens[k + 1]?.v === '{' && this.tokens[k + 2]?.v === 'd' && this.tokens[k + 3]?.v === '}') { differential = k; break; }
+        if (t.t === 'sym' && ['(', '{', '['].includes(t.v)) depth++;
+        if (t.t === 'sym' && [')', '}', ']'].includes(t.v)) depth--;
+        if (depth < 0 || t.t === 'eof') break;
+      }
+      if (differential < 0) throw new CalculationError('incomplete', 'An integral needs a differential, e.g. \\int_{0}^{1}(x^2)\\,\\mathrm{d}x.');
+      const body = this.subParse(this.tokens.slice(start, differential));
+      this.pos = differential + 4;
+      const variable = this.parsePrimaryAtom();
+      if (variable.type !== 'ident') throw new CalculationError('syntax', 'The integration variable must be a variable name.');
+      return this.node({ type: 'calculus', op: 'integral', variables: [variable.name], body, args: [lower, upper] });
+    }
+    if (v === 'lim') {
+      this.expectSym('_');
+      const lower = this.readBalancedTokens('{', '}');
+      const arrow = lower.findIndex(t => t.t === 'cmd' && ['to', 'rightarrow'].includes(t.v));
+      if (arrow < 0) throw new CalculationError('syntax', 'A limit needs variable → point below the operator.');
+      const variable = this.subParse(lower.slice(0, arrow)), point = this.subParse(lower.slice(arrow + 1));
+      if (variable.type !== 'ident') throw new CalculationError('syntax', 'The limit variable must be a variable name.');
+      return this.node({ type: 'calculus', op: 'limit', variables: [variable.name], body: this.parseBracedArg(), args: [point] });
+    }
     if (GREEK[v]) {
       // ΔT, δx: a Δ/δ directly followed by letters is one name (as in Mathcad), e.g. \Delta T_{max}.
       if ((v === 'Delta' || v === 'delta') && this.peek().t === 'letter' && !this.roman) {
@@ -735,6 +848,7 @@ class Parser {
       return this.withOptionalSubscript(this.node({ type: 'ident', name: GREEK[v], splittable: false, roman: false }));
     }
     if (v === 'pi') return this.node({ type: 'ident', name: 'π', splittable: false, roman: false });
+    if (v === 'imaginaryI') return this.node({ type: 'ident', name: 'ⅈ', splittable: false, roman: false });
     if (v === 'infty' || v === 'infin') return this.node({ type: 'ident', name: '∞', splittable: false, roman: false });
     if (v === 'exponentialE') return this.node({ type: 'num', value: Math.E, raw: 'e' });
     if (v === 'degree' || v === 'deg') return this.degreeIdent();
@@ -812,6 +926,12 @@ class Parser {
     }
     if (this.isSym('(') || this.isCmd('lparen')) {
       const args = this.readArgumentTokens().map((p) => this.subParse(p));
+      if ((calculusNames as readonly string[]).includes(fn)) {
+        const [body, binding, ...rest] = args;
+        const names = binding?.type === 'ident' ? [binding.name] : binding?.type === 'matrix' ? binding.rows.flat().map(e => e.type === 'ident' ? e.name : '') : [];
+        if (!body || !names.length || names.some(n => !n) || new Set(names).size !== names.length || (fn !== 'gradient' && names.length !== 1)) throw new CalculationError('syntax', `${fn}(expression, variable, point/bounds) needs distinct variable names.`);
+        return this.node({ type: 'calculus', op: fn as CalculusName, variables: names, body, args: rest });
+      }
       if (['eigenvecs', 'genvecs', 'lookup', 'hlookup', 'vlookup', 'vhlookup', 'match'].includes(fn)) {
         const last = args[args.length - 1];
         const selectorIndex = fn === 'eigenvecs' ? 1 : fn === 'genvecs' || fn === 'match' ? 2 : 3;
@@ -820,7 +940,7 @@ class Parser {
           if (last.name in selectors) args[args.length - 1] = this.node({ type: 'num', value: selectors[last.name], raw: String(selectors[last.name]) });
         }
       }
-      const arity = (matrixFunctionNames as readonly string[]).includes(fn) ? null : fn === 'min' || fn === 'max' || fn === 'sum' || fn === 'seq' || fn === 'map' || fn === 'stack' ? null : fn === 'linterp' ? 3 : fn === 'angle' || fn === 'sectionProp' ? 2 : 1;
+      const arity = (matrixFunctionNames as readonly string[]).includes(fn) || (operatorFunctionNames as readonly string[]).includes(fn) ? null : fn === 'min' || fn === 'max' || fn === 'sum' || fn === 'seq' || fn === 'map' || fn === 'stack' ? null : fn === 'linterp' ? 3 : fn === 'angle' || fn === 'sectionProp' ? 2 : 1;
       if (arity !== null && args.length !== arity) {
         throw new CalculationError('syntax', arity === 1 ? `${fn} takes exactly one argument.` : `${fn} takes ${arity} arguments.`);
       }
@@ -895,6 +1015,14 @@ class Parser {
       else rows[rows.length - 1][rows[rows.length - 1].length - 1].push(tok);
     }
     const filled = rows.filter((r) => r.some((cell) => cell.length));
+    if (!filled.some(r => r.some(cell => ['if', 'else', 'otherwise'].includes(leadingWord(cell)?.word ?? '')))) {
+      for (let k = 0; k < inner.length; k++) if (inner[k].t === 'sym' && inner[k].v === 'row') {
+        const before = inner[k - 1], after = inner[k + 1];
+        const operation = (t: Token | undefined) => t && (['+', '-', '*', '/'].includes(t.v) || MUL_COMMANDS.has(t.v) || t.v === 'div');
+        if (!operation(before) && !operation(after)) throw new CalculationError('syntax', 'An equation break must continue an arithmetic operation.');
+      }
+      return this.subParse(inner.filter(t => !(t.t === 'sym' && (t.v === 'row' || t.v === '&'))));
+    }
     const usage = 'Write an if block as: if condition / value / else if condition / value / else / value (one per line).';
     type Branch = { value: Expr; cond: Condition | null };
     let branches: Branch[];
@@ -961,6 +1089,27 @@ class Parser {
 
   /** Condition with ∨ (or, \\lor/\\vee) and ∧ (and, \\land/\\wedge); ∧ binds tighter. */
   private subParseCondition(inner: Token[]): Condition {
+    try {
+      const expression = this.subParse(inner);
+      const condition = (e: Expr): Condition | null => {
+        if (e.type === 'group') return condition(e.body);
+        if (e.type === 'compare') return { left: e.left, op: e.op, right: e.right };
+        if (e.type === 'logic' && (e.op === 'and' || e.op === 'or')) {
+          const a = condition(e.left), b = condition(e.right!);
+          if (a && b) return { logic: e.op, a, b };
+        }
+        if (e.type === 'logic' || e.type === 'call' && e.fn === 'contains') return { left: e, op: '!=', right: this.node({ type: 'num', value: 0, raw: '0' }) };
+        return null;
+      };
+      const parsed = condition(expression);
+      if (parsed) return parsed;
+    } catch (error) {
+      if (!(error instanceof CalculationError) || !['syntax', 'incomplete'].includes(error.code)) throw error;
+      // A plain '=' inside if remains the supported equality spelling.
+    }
+    if (inner.some(t => t.t === 'cmd' && ['neg', 'lnot', 'oplus', 'in'].includes(t.v) || t.t === 'sym' && t.v === '¬')) {
+      return { left: this.subParse(inner), op: '!=', right: this.node({ type: 'num', value: 0, raw: '0' }) };
+    }
     const split = (toks: Token[], names: string[]): Token[][] => {
       const parts: Token[][] = [[]];
       let level = 0;
@@ -984,7 +1133,7 @@ class Parser {
     sub.nodes = this.nodes;
     sub.depth = this.depth;
     if (sub.atEnd()) throw new CalculationError('incomplete', 'Incomplete condition in if.');
-    const left = sub.parseExpr();
+    const left = sub.parseArithmetic();
     // Inside if, a plain "=" can only mean equality.
     const op: Relation | null = sub.isSym('=') ? '==' : sub.peekRelation();
     if (!op) {
@@ -993,7 +1142,7 @@ class Parser {
     if (op === '==' && sub.isSym('=')) sub.next();
     else sub.consumeRelation(op);
     if (sub.atEnd()) throw new CalculationError('incomplete', 'Incomplete condition in if: add the value to compare with.');
-    const right = sub.parseExpr();
+    const right = sub.parseArithmetic();
     if (!sub.atEnd()) throw new CalculationError('syntax', `Unexpected "${sub.peek().v}" in the condition of if.`);
     this.nodes = sub.nodes;
     return { left, op, right };

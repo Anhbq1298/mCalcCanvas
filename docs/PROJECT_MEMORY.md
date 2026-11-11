@@ -4,7 +4,7 @@
 - **Own canvas, not tldraw.** tldraw was replaced (licence/watermark constraints). Shapes are DOM elements in a transformed layer.
 - **Google Docs look.** Menus, one toolbar with Math/Text formatting tabs that follow the selection, an Outline/Parameters panel on the left, a Properties panel on the right, white A4 pages.
 - **Mathcad behaviour:**
-  - Calculations run top to bottom, then left to right.
+  - Ordinary calculations run top to bottom, then left to right. Explicit unique `global(name,value)` definitions are visible throughout their worksheet; local definitions still override them below their position. See `docs/OPERATORS.md` for scope and numerical/symbolic operator limits.
   - `:` defines, `=` evaluates.
   - Mathcad keyboard shortcuts.
   - The red + insertion cross: Enter inserts a line and pushes content down; Backspace removes the blank line above the cross, Delete the blank line the cross is on (content below moves up).

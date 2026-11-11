@@ -303,7 +303,7 @@ test.describe('Formatting tabs', () => {
     // Operators gallery (Math tab): unsupported operators are shown but disabled.
     await page.getByTestId('format-tab-math').click();
     await page.getByTestId('palette-operators').click();
-    await expect(page.getByRole('button', { name: /Summation – Not supported/ })).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Summation (fill index, first, last, expression)', exact: true })).toBeEnabled();
     await expect(page.getByRole('button', { name: 'Square root  ( \\ )' })).toBeEnabled();
     await page.keyboard.press('Escape');
     // Select a text region: the tab stays on Math until Text Formatting is chosen.

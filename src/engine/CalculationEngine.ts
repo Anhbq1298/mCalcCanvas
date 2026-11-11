@@ -24,9 +24,11 @@ import {
   type EvalContext,
   type UserFunction,
 } from './ExpressionEvaluator';
-import { statementExprs, statementLocals, type Relation, type Statement } from './ExpressionTypes';
+import { statementExprs, statementLocals, walkExpr, type Relation, type Statement } from './ExpressionTypes';
 import { exprToLatex, nameToLatex, RELATION_LATEX } from './LatexFormatter';
 import { parseLatex } from './LatexParser';
+import { simplifySymbolic, substituteSymbol } from './symbolic';
+import { isComplex } from './Complex';
 import { formatVector, isVector, requireScalar, type Value } from './Vector';
 import {
   formatQuantity,
@@ -126,6 +128,9 @@ export interface CalculationResult {
   warnings: string[];
   /** True when this definition was evaluated from a scenario override. */
   overridden?: boolean;
+  /** Explicit global definitions are visible throughout this worksheet. */
+  globalDefinition?: boolean;
+  symbolicLatex?: string;
   /** Parse problem in the text being edited; result reflects the last valid input. */
   draftError?: string;
 }
@@ -287,17 +292,23 @@ export class CalculationEngine {
    * The definition of `name` that a region at reading position `at` uses:
    * the nearest one before it (Mathcad top-to-bottom, left-to-right).
    */
-  private definerBefore(name: string, at: OrderKey): string | undefined {
+  private definerBefore(name: string, at: OrderKey, globalOnly = false): string | undefined {
     let best: string | undefined;
     let bestKey: OrderKey | undefined;
+    let global: string | undefined;
     for (const id of this.graph.definers(name)) {
+      const statement = this.regions.get(id)?.statement;
+      if (statement?.kind === 'definition' && statement.global) {
+        if (global === undefined || compareOrderKeys(this.keyOf(id), this.keyOf(global)) < 0) global = id;
+        continue;
+      }
       const k = this.keyOf(id);
-      if (compareOrderKeys(k, at) < 0 && (bestKey === undefined || compareOrderKeys(k, bestKey) > 0)) {
+      if (!globalOnly && compareOrderKeys(k, at) < 0 && (bestKey === undefined || compareOrderKeys(k, bestKey) > 0)) {
         best = id;
         bestKey = k;
       }
     }
-    return best;
+    return best ?? global;
   }
 
   setRegion(id: string, input: RegionInput): void {
@@ -359,7 +370,9 @@ export class CalculationEngine {
       const oldName = this.graph.definesOf(id);
       const newName = statement?.kind === 'definition' ? statement.name : undefined;
       this.graph.setDefinition(id, newName);
-      if (oldName !== newName || moved) {
+      const wasGlobal = prev?.statement?.kind === 'definition' && !!prev.statement.global;
+      const nowGlobal = statement?.kind === 'definition' && !!statement.global;
+      if (oldName !== newName || moved || wasGlobal !== nowGlobal) {
         if (oldName) this.touchedNames.add(oldName);
         if (newName) this.touchedNames.add(newName);
       }
@@ -422,17 +435,19 @@ export class CalculationEngine {
     if (!region) return false;
     const exprs = region.statement && !region.parseError ? statementExprs(region.statement) : [];
     const at = region.key;
+    const globalOnly = region.statement?.kind === 'definition' && !!region.statement.global;
+    const definer = (n: string) => this.definerBefore(n, at, globalOnly);
     const candidates = candidateNames(exprs);
     const locals = region.statement && !region.parseError ? statementLocals(region.statement) : new Set<string>();
-    const refs = collectReferences(exprs, { isDefined: (n) => this.definerBefore(n, at) !== undefined }, locals);
+    const refs = collectReferences(exprs, { isDefined: (n) => definer(n) !== undefined }, locals);
     const deps = new Map<string, string>();
-    for (const n of refs) deps.set(n, this.definerBefore(n, at)!);
+    for (const n of refs) deps.set(n, definer(n)!);
     this.graph.setResolution(id, deps, candidates);
     // Everything resolution depends on: which definer each candidate name
     // uses, and whether a name exists only further down (error message).
     const parts: string[] = [];
     for (const n of [...candidates].sort()) {
-      parts.push(`${n}\u0000${this.definerBefore(n, at) ?? ''}\u0000${this.graph.isDefined(n) ? 1 : 0}`);
+      parts.push(`${n}\u0000${definer(n) ?? ''}\u0000${this.graph.isDefined(n) ? 1 : 0}`);
     }
     const fingerprint = parts.join('\u0001');
     if (fingerprint === region.fingerprint) return false;
@@ -599,6 +614,11 @@ export class CalculationEngine {
       return { ...base, status: 'error', error: { code: region.parseError.code, message: region.parseError.message } };
     }
     if (!statement || statement.kind === 'empty') return { ...base, status: 'empty' };
+    if (statement.kind !== 'symbolic') {
+      let numerical = false;
+      for (const expression of statementExprs(statement)) walkExpr(expression, e => { if (e.type === 'calculus' && !['summation', 'product'].includes(e.op) || e.type === 'call' && e.fn === 'convolution') numerical = true; });
+      if (numerical) base.warnings.push('Numerical calculus is approximate and requires a smooth expression and convergence; acceptance comparisons still use strict full-precision values.');
+    }
 
     const fail = (code: CalculationErrorCode, message: string): CalculationResult => ({
       ...base,
@@ -610,7 +630,11 @@ export class CalculationEngine {
     // Definition-level checks.
     if (statement.kind === 'definition') {
       const definers = this.graph.definers(statement.name);
-      if (definers.length > 1 && this.definerBefore(statement.name, myKey) !== undefined) {
+      if (statement.global) {
+        base.globalDefinition = true;
+        if (definers.filter(id => { const s = this.regions.get(id)?.statement; return s?.kind === 'definition' && s.global; }).length > 1) return fail('invalid-definition', `Only one global definition of "${statement.name}" is allowed.`);
+      }
+      if (!statement.global && definers.length > 1 && this.definerBefore(statement.name, myKey) !== undefined) {
         base.redefines = { name: statement.name, count: definers.length };
       }
       if (statement.name in BUILTIN_CONSTANTS) {
@@ -638,9 +662,9 @@ export class CalculationEngine {
     }
 
     const ctx: EvalContext = {
-      isDefined: (n) => uses.has(n) || this.definerBefore(n, myKey) !== undefined,
+      isDefined: (n) => uses.has(n) || this.definerBefore(n, myKey, statement.kind === 'definition' && !!statement.global) !== undefined,
       getValue: (n) => {
-        const definer = uses.get(n) ?? this.definerBefore(n, myKey) ?? '';
+        const definer = uses.get(n) ?? this.definerBefore(n, myKey, statement.kind === 'definition' && !!statement.global) ?? '';
         const v = this.values.get(definer);
         if (v === undefined) {
           if (this.functions.has(definer)) throw new CalculationError('syntax', `${n} is a function: call it with arguments, e.g. ${n}(x).`);
@@ -648,7 +672,7 @@ export class CalculationEngine {
         }
         return v;
       },
-      getFunction: (n) => this.functions.get(uses.get(n) ?? this.definerBefore(n, myKey) ?? ''),
+      getFunction: (n) => this.functions.get(uses.get(n) ?? this.definerBefore(n, myKey, statement.kind === 'definition' && !!statement.global) ?? ''),
     };
 
     if (statement.kind === 'definition' && statement.params) {
@@ -678,6 +702,38 @@ export class CalculationEngine {
       isVector(v) ? formatVector(v, { decimals, system: this.settings.unitSystem, targetUnit: unit, style, layout: region.input.vectorLayout, limit: this.settings.vectorLimit, expanded: region.input.vectorExpanded }) : fmt(v, unit);
 
     try {
+      if (statement.kind === 'symbolic') {
+        const precision = (value: number) => String(value).replace(/e([+-]?\d+)/, '\\cdot10^{$1}');
+        const substituteValues = (expression: import('./ExpressionTypes').Expr, context: EvalContext, locals: ReadonlySet<string> = new Set()): import('./ExpressionTypes').Expr => {
+          let out = expression;
+          for (const name of collectReferences([expression], context, locals)) {
+            if (context.getFunction?.(name)) continue;
+            const value = context.getValue(name);
+            if (isVector(value)) continue;
+            if (isComplex(value)) {
+              const parsed = parseLatex(`${precision(value.re)}+(${precision(value.im)})\\imaginaryI`);
+              if (parsed.kind === 'expression') out = substituteSymbol(out, name, parsed.expr);
+              continue;
+            }
+            const fullPrecision = precision(siValue(value));
+            const unit = isUnit(value) ? formatUnitString(value.toSI().formatUnits()).latex : '';
+            const parsed = parseLatex(`${fullPrecision}${unit ? '\\,' + unit : ''}`);
+            if (parsed.kind === 'expression') out = substituteSymbol(out, name, parsed.expr);
+          }
+          return out;
+        };
+        const expression = substituteValues(statement.expr, ctx);
+        const simplified = simplifySymbolic(expression, (name, args) => {
+          const f = ctx.getFunction?.(name);
+          if (!f || f.params.length !== args.length) return null;
+          let body = substituteValues(f.body, f.env, new Set(f.params));
+          // Substitute simultaneously through temporary local names to avoid argument capture.
+          f.params.forEach((param, i) => { body = substituteSymbol(body, param, { type: 'ident', name: `__symbolic_${i}`, roman: false, splittable: false }); });
+          args.forEach((arg, i) => { body = substituteSymbol(body, `__symbolic_${i}`, arg); });
+          return body;
+        });
+        return { ...base, symbolicLatex: exprToLatex(simplified, { ctx: { isDefined: () => true } }), expressionLatex: exprToLatex(statement.expr, { ctx }) };
+      }
       if (statement.kind === 'definition' && override) {
         const value = quantityFromDisplayValue(override.value, override.unit ?? null);
         this.values.set(id, value);
@@ -735,7 +791,7 @@ export class CalculationEngine {
           // A vector is shown by name in the substituted line.
           if (v === undefined || isVector(v)) return null;
           const f = fmt(v);
-          return { latex: f.latex, hasUnit: !!f.unitText, negative: siValue(v) < 0 };
+          return { latex: f.latex, hasUnit: !!f.unitText || isComplex(v), negative: !isComplex(v) && siValue(v) < 0 };
         },
       });
       return {
@@ -746,6 +802,7 @@ export class CalculationEngine {
       };
     } catch (e) {
       if (isCalculationError(e)) {
+        if (statement.kind === 'definition' && statement.global && e.code === 'undefined-variable') return fail('invalid-definition', 'Global definitions may depend only on other globals, built-in units/constants and their function parameters.');
         // A name that exists only below this region: say so (Mathcad order).
         if (e.code === 'undefined-variable') {
           const names = e instanceof UndefinedNamesError ? e.names : [];
