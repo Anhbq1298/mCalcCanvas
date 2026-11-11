@@ -48,7 +48,7 @@ P('Partial factor, cross-section resistance (National Annex)', R`\gamma_{M0}\col
 P('Partial factor, member buckling (National Annex)', R`\gamma_{M1}\coloneq1.0`);
 P('Shear area factor η, EN 1993-1-5 §5.1 (National Annex)', R`\eta\coloneq1.2`);
 H(3, '2.2 Section');
-P('Section ID: library, or 0 for custom welded I/H (Browse)', R`${SEC}\coloneq1211`);
+P('Steel section (Browse)', R`${SEC}\coloneq1211`);
 H(3, '2.3 Member');
 P('Buckling length about y-y (major axis)', R`L_{cr.y}\coloneq4.335\,\mathrm{m}`);
 P('Buckling length about z-z (minor axis)', R`L_{cr.z}\coloneq4.335\,\mathrm{m}`);
@@ -72,7 +72,7 @@ P('Shear force along y (flanges)', R`V_{y.Ed}\coloneq0\,\mathrm{kN}`, M(kN));
 
 // ================= 3. Section properties =================
 H(2, '3. SECTION PROPERTIES');
-T('Library: Section ID. Custom: h, b, tf, tw from Browse; equations are stored in the worksheet.');
+T('Browse: choose a section by name, or enter custom h, b, tf, tw; properties update automatically.');
 T('Custom: r = 0, no weld metal; It / Iw: SCI P385 B.2.2 / B.3.1 thin-wall approximations.');
 T('Custom shear areas: EN 1993-1-1 §6.2.6(3), conservative η = 1.0. Check project section tables.');
 const PROPS = [['h', 'mm'], ['b', 'mm'], ['t_w', 'mm'], ['t_f', 'mm'], ['r', 'mm'], ['A', 'mm^2'], ['I_y', 'mm^4'], ['I_z', 'mm^4'],

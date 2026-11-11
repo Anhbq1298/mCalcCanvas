@@ -145,7 +145,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         ) : (
           <div className="flex items-center gap-2">
             <span className="math-baseline">
-              {seen ? <MathRenderer latex={display.latex} /> : <span style={{ display: 'inline-block', width: Math.max(0, w - 2 * PAD_X), height: Math.max(0, h - 2 * PAD_Y) }} />}
+              {seen ? latex.startsWith(SECTION_DEF) ? <SteelSectionLabel sectionId={result?.value?.number} /> : <MathRenderer latex={display.latex} /> : <span style={{ display: 'inline-block', width: Math.max(0, w - 2 * PAD_X), height: Math.max(0, h - 2 * PAD_Y) }} />}
               <span ref={probeRef} className="baseline-probe" aria-hidden />
             </span>
             {display.check && (
@@ -162,7 +162,6 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
             )}
           </div>
         )}
-        {latex.startsWith(SECTION_DEF) && <SteelSectionLabel sectionId={result?.value?.number}/>}
         {!isStatic && <SteelControls id={shape.id} latex={latex}/>}
         {/* Status as compact symbols; the explanation appears on hover. */}
         {error && !empty && !(editing && result?.draftError) && <StatusIcon kind="error" message={errorMessage ?? error.message} />}

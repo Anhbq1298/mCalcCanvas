@@ -35,6 +35,8 @@ Annex A.1 stores the 13 LTB cases in a table with loading/support sketches, norm
 
 `sectionProp(Section, i)` looks a property up in the built-in library (`src/engineering/steel/`, 379 records: IPE, HEA, HEB, HEM, W). The **Browse** button on the `Section` input opens the library and sets the ID. IDs are stable (1000+ IPE, 1100+ HEA, 1200+ HEB, 1300+ HEM, 2000+ W): never renumber.
 
+The worksheet and printed reports display the selected designation, e.g. `Section := HEB 320`, instead of the numeric lookup key. Browse lists sections by name. The underlying numeric definition is preserved for existing documents, property lookup and batch overrides.
+
 Data: IPE/HE from Steel_Section_Database (MIT), geometry-derived properties; W from steelpy (Apache-2.0), AISC values, r = 0. Licences and source files are in `src/engineering/steel/data/`; `tools/templates/import-steel-sections.mjs` rebuilds `catalogue.json`. Check properties against the project section tables.
 
 ### Custom welded I/H

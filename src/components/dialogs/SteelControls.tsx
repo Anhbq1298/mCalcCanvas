@@ -78,7 +78,7 @@ function SectionPicker({ id, close }: { id: string; close(): void }) {
         {mode === 'library' ? <div className="max-h-[420px] overflow-auto rounded border">
           {list.map((s) => (
             <button key={s.id} type="button" className={'block w-full cursor-pointer px-3 py-1.5 text-left text-sm ' + (selected.id === s.id ? 'bg-blue-100' : 'hover:bg-slate-50')} onClick={() => setSelected(s)}>
-              {s.name} <small className="float-right text-slate-400">{s.id}</small>
+              {s.name}
             </button>
           ))}
         </div> : <div className="space-y-3">
@@ -111,7 +111,7 @@ function SectionPicker({ id, close }: { id: string; close(): void }) {
       </div>
       {applyError && <p role="alert" className="mt-3 text-sm text-red-700">{applyError}</p>}
       <div className="mt-4 flex items-center justify-between">
-        <p className="max-w-[430px] text-xs text-slate-500">{mode === 'library' ? 'Sets the Section ID; the worksheet looks the properties up.' : 'Stores dimensions and equations in the worksheet. Section ID 0 = custom welded I/H.'}</p>
+        <p className="max-w-[430px] text-xs text-slate-500">{mode === 'library' ? 'Select a section by name; the worksheet looks its properties up automatically.' : 'Stores custom welded I/H dimensions and equations in the worksheet.'}</p>
         <button type="button" data-testid="select-steel" disabled={mode === 'custom' && !!geometryError} className="cursor-pointer rounded bg-slate-800 px-3 py-1.5 text-sm text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40" onClick={() => {
           try { applySteelSection(id, mode === 'library' ? selected.id : custom); close(); }
           catch (error) { setApplyError(error instanceof Error ? error.message : 'Unable to apply section.'); }
@@ -123,8 +123,8 @@ function SectionPicker({ id, close }: { id: string; close(): void }) {
   );
 }
 
-/** Designation shown beside the Section ID. */
+/** The worksheet and reports show the designation; the numeric lookup key stays internal. */
 export function SteelSectionLabel({ sectionId }: { sectionId?: number }) {
   const section = sections.find((s) => s.id === sectionId);
-  return <span className="ml-2 whitespace-nowrap font-sans text-[11px] text-slate-500">{sectionId === 0 ? `${CUSTOM_SECTION_NAME} (r = 0)` : section ? section.name : 'Unknown section'}</span>;
+  return <span data-testid="section-designation" className="whitespace-nowrap font-sans text-[13px]">Section := {sectionId === 0 ? CUSTOM_SECTION_NAME : section ? section.name : sectionId === undefined ? 'Loading…' : 'Unknown section'}</span>;
 }

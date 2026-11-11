@@ -75,6 +75,8 @@ export function planSteelSection(shapes: Record<string, Shape>, id: string, choi
   }
   // Older worksheets may still describe the whole check as rolled-only.
   const notes = [
+    ['Section ID: library, or 0 for custom welded I/H (Browse)', 'Steel section (Browse)'],
+    ['Library: Section ID. Custom: h, b, tf, tw from Browse; equations are stored in the worksheet.', 'Browse: choose a section by name, or enter custom h, b, tf, tw; properties update automatically.'],
     ['STEEL BEAM-COLUMN CHECK – ROLLED I/H SECTION (EC3)', 'STEEL BEAM-COLUMN CHECK – I/H SECTION (EC3)'],
     ['Doubly symmetric rolled I/H section', 'Doubly symmetric rolled or welded I/H'],
     ['Looked up from the built-in library by Section ID. Check against the project section tables.', 'Section ID: library; 0: welded I/H, r = 0. It/Iw: SCI P385 B.2.2/B.3.1 (approx.).'],

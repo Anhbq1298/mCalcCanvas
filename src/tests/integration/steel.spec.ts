@@ -11,6 +11,8 @@ test.describe('Steel beam-column template', () => {
     // Default data: JRC worked example (HEB 320): governing interaction (6.62) = 0.46.
     await resultOf(page, '\\mathrm{UR}\\coloneq').toBe('0.4571');
     await resultOf(page, '\\alpha_{LT}\\coloneq').toBe('0.21');
+    const designation = page.locator('[data-testid=section-designation]').filter({ visible: true });
+    await expect(designation).toHaveText('Section := HEB 320');
 
     await page.getByTestId('browse-steel').click();
     const dlg = page.getByRole('dialog', { name: 'Steel Section Library' });
@@ -21,6 +23,7 @@ test.describe('Steel beam-column template', () => {
     await expect(dlg).toBeHidden();
     await resultOf(page, '\\mathrm{Section}\\coloneq').toBe('1015');
     await resultOf(page, 'h\\coloneq').toBe('500 mm');
+    await expect(designation).toHaveText('Section := IPE 500');
     // h/b = 2.5 > 2: curve b for LTB, curves a / b for flexural buckling.
     await resultOf(page, '\\alpha_{LT}\\coloneq').toBe('0.34');
     await resultOf(page, '\\alpha_{y}\\coloneq').toBe('0.21');
@@ -42,6 +45,7 @@ test.describe('Steel beam-column template', () => {
       await dlg.getByTestId('select-steel').click();
       await resultOf(page, '\\mathrm{Section}\\coloneq').toBe('0');
       await resultOf(page, 'h\\coloneq').toBe('600 mm');
+      await expect(designation).toHaveText('Section := Custom welded I/H');
       await resultOf(page, '\\alpha_{LT}\\coloneq').toBe('0.76');
       await resultOf(page, '\\alpha_{y}\\coloneq').toBe('0.34');
       await expect(page.locator('[data-testid=math-region][data-status=error]')).toHaveCount(0);
@@ -67,6 +71,7 @@ test.describe('Steel beam-column template', () => {
       await page.reload();
       await resultOf(page, '\\mathrm{Section}\\coloneq').toBe('0');
       await resultOf(page, 'h\\coloneq').toBe('600 mm');
+      await expect(designation).toHaveText('Section := Custom welded I/H');
       await page.getByTestId('browse-steel').click();
       await expect(dlg.getByRole('tab', { name: 'Custom I/H', exact: true })).toHaveAttribute('aria-selected', 'true');
       for (const [key, value] of Object.entries({ h: '600', b: '200', tf: '20', tw: '10' })) await expect(dlg.getByLabel(`${key} [mm]`, { exact: true })).toHaveValue(value);
@@ -76,6 +81,7 @@ test.describe('Steel beam-column template', () => {
       await dlg.getByRole('button', { name: /^HEB 320/ }).click();
       await dlg.getByTestId('select-steel').click();
       await resultOf(page, '\\mathrm{Section}\\coloneq').toBe('1211');
+      await expect(designation).toHaveText('Section := HEB 320');
       await resultOf(page, '\\mathrm{UR}\\coloneq').toBe('0.4571');
     });
 
