@@ -166,8 +166,22 @@ describe('steel beam-column template (EN 1993-1-1)', () => {
       }
     });
 
-    step('default sheet = JRC 2014 (Simões) Example 3, HEB 320 S355 beam-column: printed values', () => {
+    step('default Cm factors are unity with a visible conservative note and independently checked interaction sums', () => {
       const t = evaluate();
+      expect(t.errors).toEqual([]);
+      for (const name of ['C_{my}', 'C_{mz}', 'C_{mLT}']) expect(t.si(name)).toBe(1);
+      const notes = templateById('steel-beam-column')!.shapes().filter(s => s.type === 'text').map(s => s.props.html).join(' ');
+      expect(notes).toContain('Conservative defaults: Cmy = Cmz = CmLT = 1.0');
+      expect(notes).toContain('Table B.3 for each relevant braced segment');
+      // Independent Python arithmetic with HEB 320 catalogue geometry, N / mm / MPa.
+      expect(t.si('k_{yy}')).toBeCloseTo(1.0679189408452014, 10);
+      expect(t.si('k_{zy}')).toBeCloseTo(0.957128477993407, 10);
+      expect(t.si(UR('6.61'))).toBeCloseTo(0.359413388769415, 10);
+      expect(t.si(UR('6.62'))).toBeCloseTo(0.4617630209645871, 10);
+    });
+
+    step('JRC 2014 (Simões) Example 3 with published Cm factors, HEB 320 S355 beam-column: printed values', () => {
+      const t = evaluate({ 'C_{my}': '0.43', 'C_{mLT}': '0.43' });
       expect(t.errors).toEqual([]);
       expect(t.si('\\mathrm{Class}')).toBe(1);
       expect(t.si('N_{c.Rd}', 'kN')).toBeCloseTo(5726, -1); // N_pl,Rd = 5726 kN

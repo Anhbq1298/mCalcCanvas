@@ -1,7 +1,8 @@
 // Steel beam-column (EN 1993-1-1:2005 + A1:2014): library or custom welded I/H section, classification,
 // cross-section resistance, flexural / torsional / lateral-torsional buckling, Annex B interaction.
 // Every result is a worksheet equation. Writes templates/Steel_Beam_Column_EC3.mCCV.
-// Default data: JRC "Design of steel buildings with worked examples" (2014), R. Simões, Example 3 (HEB 320, S355).
+// Default geometry/actions: JRC "Design of steel buildings with worked examples" (2014), R. Simões, Example 3 (HEB 320, S355).
+// Equivalent uniform moment factors default conservatively to unity instead of the example's 0.43.
 import { createLayout, R } from './layout.mjs';
 import { ltbCaseTable } from './ltbTable.mjs';
 import sectionFormulae from '../../src/engineering/steel/sectionFormulae.json' with { type: 'json' };
@@ -60,9 +61,11 @@ P('User C2 (only when the case is 0)', R`C_{2.u}\coloneq0`);
 P('Load height above the shear centre (destabilising positive)', R`z_{g}\coloneq0\,\mathrm{mm}`, M(mm));
 P('End rotation on plan factor k (1 = free)', R`k\coloneq1.0`);
 P('End warping factor kw (1 = free)', R`k_{w}\coloneq1.0`);
-P('Equivalent uniform moment factor Cmy (Table B.3)', R`C_{my}\coloneq0.43`);
+P('Equivalent uniform moment factor Cmy (Table B.3)', R`C_{my}\coloneq1.0`);
 P('Equivalent uniform moment factor Cmz (Table B.3)', R`C_{mz}\coloneq1.0`);
-P('Equivalent uniform moment factor CmLT (Table B.3)', R`C_{mLT}\coloneq0.43`);
+P('Equivalent uniform moment factor CmLT (Table B.3)', R`C_{mLT}\coloneq1.0`);
+T('Conservative defaults: Cmy = Cmz = CmLT = 1.0; no moment-gradient benefit is taken.');
+T('For refined values, use EN 1993-1-1:2005 Table B.3 for each relevant braced segment.');
 H(3, '2.4 Design actions (ULS)');
 P('Axial force, compression positive', R`N_{Ed}\coloneq1704\,\mathrm{kN}`, M(kN));
 P('Bending moment about y-y (maximum along the member)', R`M_{y.Ed}\coloneq24.8\,\mathrm{kN}\cdot\mathrm{m}`, M(kNm));

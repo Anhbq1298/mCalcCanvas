@@ -8,8 +8,10 @@ test.describe('Steel beam-column template', () => {
     await openFresh(page, 'steel-beam-column');
     await page.evaluate(() => (window as unknown as { __calccanvas: { idle(): Promise<void> } }).__calccanvas.idle());
     await expect(page.locator('[data-testid=math-region][data-status=error]')).toHaveCount(0);
-    // Default data: JRC worked example (HEB 320): governing interaction (6.62) = 0.46.
-    await resultOf(page, '\\mathrm{UR}\\coloneq').toBe('0.4571');
+    // JRC member geometry and actions, with conservative Cm = 1 (independent Python reference).
+    await resultOf(page, '\\mathrm{UR}\\coloneq').toBe('0.4618');
+    for (const name of ['C_{my}', 'C_{mz}', 'C_{mLT}']) await resultOf(page, `${name}\\coloneq`).toBe('1');
+    await expect(page.getByText('Conservative defaults: Cmy = Cmz = CmLT = 1.0; no moment-gradient benefit is taken.', { exact: true })).toBeAttached();
     await resultOf(page, '\\alpha_{LT}\\coloneq').toBe('0.21');
     const designation = page.locator('[data-testid=section-designation]').filter({ visible: true });
     await expect(designation).toHaveText('Section := HEB 320');
@@ -82,7 +84,7 @@ test.describe('Steel beam-column template', () => {
       await dlg.getByTestId('select-steel').click();
       await resultOf(page, '\\mathrm{Section}\\coloneq').toBe('1211');
       await expect(designation).toHaveText('Section := HEB 320');
-      await resultOf(page, '\\mathrm{UR}\\coloneq').toBe('0.4571');
+      await resultOf(page, '\\mathrm{UR}\\coloneq').toBe('0.4618');
     });
 
     await test.step('LTB table shows numeric coefficients and keeps their definitions editable', async () => {

@@ -25,7 +25,7 @@ EN 1993-1-1:2005 + A1:2014. Uniform, doubly symmetric rolled or custom welded I/
 | Buckling curves | Table 6.2, Table 6.4 | From h/b and tf on the sheet, so they follow the section (also in Table In&Out). S235–S420 curves; conservative for S460. |
 | Flexural, torsional buckling | §6.3.1 | Torsional buckling uses the z-z curve, §6.3.1.4(3). |
 | LTB | §6.3.2.2 (general case) | Mcr: SCI NCCI SN003b eq. (1) with k, kw, C1, C2, zg. Case 1–13 looks C1/C2 up in Tables 3.1/3.2 (annex A.1, no interpolation); case 0 uses the user's C1, C2. |
-| Interaction | §6.3.3, Annex B | Tables B.1/B.2, I-sections, Class 1–2, susceptible to torsional deformations. Cmy, Cmz, CmLT are inputs (Table B.3). |
+| Interaction | §6.3.3, Annex B | Tables B.1/B.2, I-sections, Class 1–2, susceptible to torsional deformations. Cmy, Cmz, CmLT default to 1.0 conservatively, with a visible input note; refined values follow Table B.3 for each relevant braced segment. |
 
 ## LTB case table
 
@@ -53,7 +53,8 @@ Welded flexural curves follow Table 6.2: b/c for tf ≤ 40 mm, c/d above 40 mm (
 
 | Reference | What is compared |
 |---|---|
-| JRC 2014 “Design of steel buildings with worked examples”, R. Simões, Example 3 (HEB 320 S355, N = 1704 kN, My = 24.8 kNm, L = 4.335 m). This is the default data of the sheet. | Npl, Mpl, λy 0.41, λz 0.75, χy 0.92, χz 0.69, kyy 0.46, kzy 0.82, (6.61) 0.34, (6.62) 0.46 |
+| JRC 2014 “Design of steel buildings with worked examples”, R. Simões, Example 3 (HEB 320 S355, N = 1704 kN, My = 24.8 kNm, L = 4.335 m). Geometry/actions are the defaults; this reference case restores the published Cmy = CmLT = 0.43. | Npl, Mpl, λy 0.41, λz 0.75, χy 0.92, χz 0.69, kyy 0.46, kzy 0.82, (6.61) 0.34, (6.62) 0.46 |
+| Same geometry/actions with conservative Cmy = Cmz = CmLT = 1.0 (default); independent Python arithmetic | kyy 1.0679189408, kzy 0.9571284780, (6.61) 0.3594133888, (6.62) 0.4617630210 |
 | Same, Example 1 (HEB 340 column, N = 3326 kN) | λy 0.39, λz 0.75, χz 0.69, Nb,Rd 4186 kN |
 | Same, Example 2 (IPE 400 beam, 6 m and 3 m between restraints) | Mcr 164.7 / 1778.8 kNm, λLT 1.68 / 0.51, χLT 0.28 / 0.89, Mb,Rd 129.9 / 412.9 kNm |
 | Dlubal KB 001622 | Mcr = 1153.10 kNm with load height |
