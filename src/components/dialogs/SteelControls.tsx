@@ -4,7 +4,8 @@ import { createPortal } from 'react-dom';
 import { SECTION_DEF, propertyKeys, sectionUnits, sections, type SteelSection } from '../../engineering/steel/sections';
 import { useCanvasStore } from '../../canvas/model/canvasStore';
 import { useCalculationStore } from '../../store/calculationStore';
-import { applySteelSection, savedCustomDimensions } from '../../canvas/steelSections';
+import { applySteelSection, insertSteelSection, nextSteelArrayName, savedCustomDimensions } from '../../canvas/steelSections';
+import { sectionArrayInfo, validArrayName } from '../../engineering/steel/sectionArray';
 import { CUSTOM_SECTION_NAME, customSectionValues, dimensionKeys, sectionDimensionError, type SectionDimensions } from '../../engineering/steel/customSection';
 
 const fieldClass = 'rounded border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-900';
@@ -24,37 +25,44 @@ function SectionProfile({ h, b, tw, tf }: { h: number; b: number; tw: number; tf
 
 export function SteelControls({ id, latex }: { id: string; latex: string }) {
   const [open, setOpen] = useState(false);
-  if (!latex.startsWith(SECTION_DEF)) return null;
+  if (!latex.startsWith(SECTION_DEF) && !sectionArrayInfo(latex)) return null;
   return (
     <>
       <button type="button" data-testid="browse-steel" className="ml-2 cursor-pointer whitespace-nowrap rounded border border-slate-300 bg-white px-2 py-1 font-sans text-[11px] text-slate-700 print:hidden" onPointerDown={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setOpen(true); }}>
         Browse
       </button>
-      {open && createPortal(
-        <div className="fixed inset-0 z-[500] flex items-center justify-center bg-black/30 p-6" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
-          <div role="dialog" aria-modal="true" aria-label="Steel Section Library" className="max-h-[90vh] w-[760px] overflow-auto rounded-xl border bg-white p-5 font-sans text-slate-800 shadow-xl" onKeyDown={(e) => { e.stopPropagation(); if (e.key === 'Escape') setOpen(false); }}>
-            <div className="mb-4 flex justify-between">
-              <h2 className="text-lg font-semibold">Steel Section Library</h2>
-              <button type="button" aria-label="Close" className="cursor-pointer" onClick={() => setOpen(false)}>✕</button>
-            </div>
-            <SectionPicker id={id} close={() => setOpen(false)} />
-          </div>
-        </div>,
-        document.body,
-      )}
+      {open && <SteelSectionDialog id={id} close={() => setOpen(false)} />}
     </>
   );
 }
 
-function SectionPicker({ id, close }: { id: string; close(): void }) {
-  const currentId = useCalculationStore.getState().results[id]?.value?.number;
+export function SteelSectionDialog({ id, close }: { id?: string; close(): void }) {
+  return createPortal(
+        <div className="fixed inset-0 z-[500] flex items-center justify-center bg-black/30 p-6" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
+          <div role="dialog" aria-modal="true" aria-label="Steel Section Library" className="max-h-[90vh] w-[760px] overflow-auto rounded-xl border bg-white p-5 font-sans text-slate-800 shadow-xl" onKeyDown={(e) => { e.stopPropagation(); if (e.key === 'Escape') close(); }}>
+            <div className="mb-4 flex justify-between">
+              <h2 className="text-lg font-semibold">Steel Section Library</h2>
+              <button type="button" aria-label="Close" className="cursor-pointer" onClick={close}>✕</button>
+            </div>
+            <SectionPicker id={id} close={close} />
+          </div>
+        </div>,
+        document.body,
+      );
+}
+
+function SectionPicker({ id, close }: { id?: string; close(): void }) {
+  const source = id ? useCanvasStore.getState().shapes[id] : undefined;
+  const array = source?.type === 'math' ? sectionArrayInfo(source.props.latex) : null;
+  const currentId = array ? typeof array.choice === 'number' ? array.choice : 0 : id ? useCalculationStore.getState().results[id]?.value?.number : 1211;
   const current = sections.find((s) => s.id === currentId) ?? sections[0];
+  const [arrayName, setArrayName] = useState(() => array?.name ?? nextSteelArrayName());
   const [mode, setMode] = useState<'library' | 'custom'>(currentId === 0 ? 'custom' : 'library');
   const [family, setFamily] = useState(current.family);
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<SteelSection>(current);
   const [dimensions, setDimensions] = useState(() => {
-    const saved = savedCustomDimensions(useCanvasStore.getState().shapes, id) ?? (currentId === 0 ? null : current.values);
+    const saved = (id ? savedCustomDimensions(useCanvasStore.getState().shapes, id) : null) ?? (currentId === 0 ? null : current.values);
     if (!saved) return { h: '', b: '', tf: '', tw: '' };
     return { h: String(saved.h), b: String(saved.b), tf: String(saved.tf), tw: String(saved.tw) };
   });
@@ -65,6 +73,13 @@ function SectionPicker({ id, close }: { id: string; close(): void }) {
   const list = sections.filter((s) => s.family === family && s.name.toLowerCase().includes(search.toLowerCase()));
   return (
     <>
+      {!id && <div className="mb-3 rounded bg-blue-50 p-3 text-sm">
+        <label className="flex items-center gap-3">Array name
+          <input aria-label="Section array name" className={fieldClass + ' w-28'} value={arrayName} onChange={e => { setArrayName(e.target.value); setApplyError(''); }} />
+        </label>
+        <p className="mt-2 text-xs text-slate-600">Choose a section, then insert its property array and linked variables. Each section has its own names.</p>
+        {!validArrayName(arrayName) && <p role="alert">Use letters with optional digits at the end (e.g. S1), up to 16 characters.</p>}
+      </div>}
       <div role="tablist" aria-label="Section source" className="mb-3 flex gap-2 border-b border-slate-200 pb-2">
         {(['library', 'custom'] as const).map(value => <button key={value} type="button" role="tab" aria-selected={mode === value} className={'cursor-pointer rounded px-3 py-1.5 text-sm ' + (mode === value ? 'bg-blue-100 text-blue-900' : 'text-slate-600 hover:bg-slate-50')} onClick={() => { setMode(value); setApplyError(''); }}>{value === 'library' ? 'Library' : 'Custom I/H'}</button>)}
       </div>
@@ -100,9 +115,9 @@ function SectionPicker({ id, close }: { id: string; close(): void }) {
             {values && <SectionProfile {...values} />}
           </div>
           {mode === 'custom' && geometryError ? <p role="alert" className="mt-4 text-sm text-red-700">{geometryError}</p> : values && <div className="grid grid-cols-3 gap-2">
-            {propertyKeys.map((key) => (
+            {propertyKeys.map((key, index) => (
               <div key={key} data-testid={`section-property-${key}`} className="text-xs">
-                {key} [{sectionUnits[key]}]
+                {array || !id ? `${index}: ` : ''}{key} [{sectionUnits[key]}]
                 <div className="font-mono text-sm">{values[key].toPrecision(6)}</div>
               </div>
             ))}
@@ -112,11 +127,11 @@ function SectionPicker({ id, close }: { id: string; close(): void }) {
       {applyError && <p role="alert" className="mt-3 text-sm text-red-700">{applyError}</p>}
       <div className="mt-4 flex items-center justify-between">
         <p className="max-w-[430px] text-xs text-slate-500">{mode === 'library' ? 'Select a section by name; the worksheet looks its properties up automatically.' : 'Stores custom welded I/H dimensions and equations in the worksheet.'}</p>
-        <button type="button" data-testid="select-steel" disabled={mode === 'custom' && !!geometryError} className="cursor-pointer rounded bg-slate-800 px-3 py-1.5 text-sm text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40" onClick={() => {
-          try { applySteelSection(id, mode === 'library' ? selected.id : custom); close(); }
+        <button type="button" data-testid="select-steel" disabled={(!id && !validArrayName(arrayName)) || mode === 'custom' && !!geometryError} className="cursor-pointer rounded bg-slate-800 px-3 py-1.5 text-sm text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40" onClick={() => {
+          try { const choice = mode === 'library' ? selected.id : custom; if (id) applySteelSection(id, choice); else insertSteelSection(choice, arrayName); close(); }
           catch (error) { setApplyError(error instanceof Error ? error.message : 'Unable to apply section.'); }
         }}>
-          {mode === 'library' ? 'Select Section' : 'Use Custom Section'}
+          {!id ? 'Insert Section' : mode === 'library' ? 'Select Section' : 'Use Custom Section'}
         </button>
       </div>
     </>
@@ -127,4 +142,11 @@ function SectionPicker({ id, close }: { id: string; close(): void }) {
 export function SteelSectionLabel({ sectionId }: { sectionId?: number }) {
   const section = sections.find((s) => s.id === sectionId);
   return <span data-testid="section-designation" className="whitespace-nowrap font-sans text-[13px]">Section := {sectionId === 0 ? CUSTOM_SECTION_NAME : section ? section.name : sectionId === undefined ? 'Loading…' : 'Unknown section'}</span>;
+}
+
+export function SteelArrayLabel({ latex }: { latex: string }) {
+  const array = sectionArrayInfo(latex);
+  if (!array) return null;
+  const name = typeof array.choice === 'number' ? sections.find(s => s.id === array.choice)?.name : CUSTOM_SECTION_NAME;
+  return <span data-testid="section-array" className="whitespace-nowrap font-sans text-[13px]">{array.name} := [{name} · 19 properties]</span>;
 }

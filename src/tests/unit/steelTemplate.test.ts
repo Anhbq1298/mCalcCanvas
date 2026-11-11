@@ -11,6 +11,7 @@ import { propertyKeys, sectionUnits } from '../../engineering/steel/sections';
 import { applySteelSection, insertSteelSection, planSteelSection, savedCustomDimensions } from '../../canvas/steelSections';
 import { loadShapes, undo, redo, useCanvasStore } from '../../canvas/model/canvasStore';
 import { DEFAULT_MATH_PROPS } from '../../canvas/model/types';
+import { sectionArrayDefinition, sectionArrayInfo } from '../../engineering/steel/sectionArray';
 import { designSteel, rolledCurves, type SectionGeometry, type SteelInput } from '../reference/ec3';
 import { ltbCoefficientCases } from '../reference/ltbCases';
 
@@ -82,9 +83,9 @@ describe('steel beam-column template (EN 1993-1-1)', () => {
       loadShapes([]);
       const id = insertSteelSection();
       const inserted = useCanvasStore.getState().shapes;
-      expect(Object.values(inserted).filter(s => s.type === 'math')).toHaveLength(23);
+      expect(Object.values(inserted).filter(s => s.type === 'math')).toHaveLength(20);
       expect(Object.values(inserted).every(s => Number.isFinite(s.x) && Number.isFinite(s.y))).toBe(true);
-      expect(inserted[id].type === 'math' && inserted[id].props.latex).toBe('\\mathrm{Section}\\coloneq1211');
+      expect(inserted[id].type === 'math' && sectionArrayInfo(inserted[id].props.latex)).toEqual({ name: 'S1', choice: 1211 });
       undo();
       expect(useCanvasStore.getState().shapes).toEqual({});
       redo();
@@ -92,11 +93,24 @@ describe('steel beam-column template (EN 1993-1-1)', () => {
       applySteelSection(id, { h: 600, b: 200, tf: 20, tw: 10 });
       const shapes = useCanvasStore.getState().shapes;
       const e = new CalculationEngine();
+      e.setRegion('outer-h', { latex: 'h\\coloneq999\\,\\mathrm{mm}', order: [-1e9] as never, displayUnit: 'mm' });
       const math = Object.values(shapes).filter(s => s.type === 'math');
       e.batch(() => math.forEach(s => e.setRegion(s.id, { latex: s.props.latex, order: calcKey(s, shapes), displayUnit: s.props.displayUnit })));
       expect(math.map(s => e.getResult(s.id)?.status)).toEqual(math.map(() => 'valid'));
-      const area = math.find(s => s.props.latex.startsWith('A\\coloneq'))!;
-      expect(e.getResult(area.id)?.value?.number).toBeCloseTo(13600, 8);
+      const area = math.find(s => s.props.latex.startsWith('A_{S1}\\coloneq'))!;
+      expect(area.props.latex).toBe('A_{S1}\\coloneq\\mathrm{at}\\left(\\mathrm{S}_{1},5\\right)');
+      expect(e.getResult(area.id)?.value?.number).toBeCloseTo(136, 8); // cm², from the same independent 13600 mm² reference
+      expect(e.getResult(id)?.value?.length).toBe(19);
+      e.setRegion('outer-h-value', { latex: 'h=', order: [1e9] as never, displayUnit: 'mm' });
+      expect(e.getResult('outer-h-value')?.value?.number).toBe(999);
+      expect(sectionArrayInfo(sectionArrayDefinition('S1', { h: 600, b: 200, tf: 20, tw: 10 }))).toEqual({ name: 'S1', choice: { h: 600, b: 200, tf: 20, tw: 10 } });
+      const secondId = insertSteelSection(1013);
+      const second = useCanvasStore.getState().shapes[secondId];
+      expect(second.type === 'math' && sectionArrayInfo(second.props.latex)).toEqual({ name: 'S2', choice: 1013 });
+      expect(() => insertSteelSection(1013, 'S1')).toThrow(/already exist/);
+      const refsBefore = Object.values(useCanvasStore.getState().shapes).filter(s => s.type === 'math' && s.id !== id && s.id !== secondId);
+      applySteelSection(id, 1212);
+      expect(refsBefore.every(s => JSON.stringify(useCanvasStore.getState().shapes[s.id]) === JSON.stringify(s))).toBe(true);
       loadShapes([{ id: 'tail', type: 'math', x: 96, y: 300, props: { ...DEFAULT_MATH_PROPS, latex: 'z\\coloneq1' } }]);
       const before = useCanvasStore.getState().shapes;
       useCanvasStore.setState({ crosshair: { x: 96, y: 120 } });

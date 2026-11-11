@@ -45,9 +45,21 @@ Annex A.1 stores the 13 LTB cases in a table with loading/support sketches, norm
 
 ## Section library
 
-**Insert → Steel Section** creates a ready-to-use Browse selector plus all section-property
-and buckling-curve equations on any worksheet. It supports library sections and Custom I/H
-without copying from a template. Insertion reserves space for the block and forms one undo step.
+**Insert → Steel Section** opens the picker before changing the worksheet. Choose a library
+section or Custom I/H, name its array (S1, S2, etc.), then insert. Cancel creates nothing.
+The result is a 19-entry array with units, in the stable `propertyKeys` order (indices 0–18).
+Linked variables have distinct names, e.g. `h_{S1} := at(S_1, 0)` and
+`A_{S1} := at(S_1, 5)`. Each alias reads the array; changing Browse updates only the array
+definition and all references recalculate. A second section gets S2 automatically;
+existing array/alias names are rejected. The picker labels every property with its index.
+
+Library arrays contain ordinary `stack(sectionProp(...), ...)` expressions. Custom arrays
+use an explicit `let` expression with four literal dimensions and the same rectangle/thin-wall
+formulas described below. These bindings are local, so they cannot overwrite worksheet h/b/A.
+No calculated properties or new shape metadata are saved. The compact array header shows the
+section name; an ordinary evaluation `S_1 =` displays the array values.
+Insertion reserves space for the block and forms one undo step. Existing legacy Section-ID
+controls and the beam-column template retain their original contract.
 
 `sectionProp(Section, i)` looks a property up in the built-in library (`src/engineering/steel/`, 379 records: IPE, HEA, HEB, HEM, W). The **Browse** button on the `Section` input opens the library and sets the ID. IDs are stable (1000+ IPE, 1100+ HEA, 1200+ HEB, 1300+ HEM, 2000+ W): never renumber.
 

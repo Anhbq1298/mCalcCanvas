@@ -1,4 +1,5 @@
-import { SteelControls, SteelSectionLabel } from '../../components/dialogs/SteelControls';
+import { SteelArrayLabel, SteelControls, SteelSectionLabel } from '../../components/dialogs/SteelControls';
+import { sectionArrayInfo } from '../../engineering/steel/sectionArray';
 import { SECTION_DEF } from '../../engineering/steel/sections';
 import { AlertCircle, AlertTriangle, CheckCircle2, CircleDashed, XCircle } from 'lucide-react';
 import { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
@@ -31,6 +32,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     return shape.props.vectorExpanded && shape.props.vectorLayout === 'column' ? { ...parts, latex: flowColumnVectors(parts.latex) } : parts;
   }, [latex, result, displayMode, shape.props.vectorExpanded, shape.props.vectorLayout]);
   const hasResult = !!result;
+  const steelArray = useMemo(() => sectionArrayInfo(latex), [latex]);
   // Off-screen regions with a measured size are typeset when they come near the view.
   const seen = useSeen(contentRef, editing || isStatic || shape.props.baseline === undefined);
 
@@ -145,7 +147,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         ) : (
           <div className="flex items-center gap-2">
             <span className="math-baseline">
-              {seen ? latex.startsWith(SECTION_DEF) ? <SteelSectionLabel sectionId={result?.value?.number} /> : <MathRenderer latex={display.latex} /> : <span style={{ display: 'inline-block', width: Math.max(0, w - 2 * PAD_X), height: Math.max(0, h - 2 * PAD_Y) }} />}
+              {seen ? steelArray ? <SteelArrayLabel latex={latex} /> : latex.startsWith(SECTION_DEF) ? <SteelSectionLabel sectionId={result?.value?.number} /> : <MathRenderer latex={display.latex} /> : <span style={{ display: 'inline-block', width: Math.max(0, w - 2 * PAD_X), height: Math.max(0, h - 2 * PAD_Y) }} />}
               <span ref={probeRef} className="baseline-probe" aria-hidden />
             </span>
             {display.check && (

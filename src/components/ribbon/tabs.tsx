@@ -54,7 +54,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { addHeading } from '../../canvas/headings';
-import { insertSteelSection } from '../../canvas/steelSections';
+import { SteelSectionDialog } from '../dialogs/SteelControls';
 import { insertAnnexLink, sortAnnexByLinkOrder } from '../../canvas/annexActions';
 import { useState } from 'react';
 import { commands, type ToolId } from '../../app/commands';
@@ -120,11 +120,13 @@ export function MathTab() {
 /** Insert tab: free drawing tools, ready-made shapes, images and special characters. */
 export function InsertTab() {
   const tool = useCanvasStore((s) => s.tool);
+  const [sectionOpen, setSectionOpen] = useState(false);
   const t = (id: ToolId, icon: LucideIcon, label: string) => <SmallButton icon={icon} label={label} active={tool === id} onClick={() => commands.setTool(id)} testId={`tool-${id}`} />;
   return (
     <>
       <Group label="Engineering">
-        <BigButton icon={RectangleVertical} label="Steel Section" title="Insert a steel section with Browse and calculated properties" onClick={() => insertSteelSection()} testId="insert-steel-section" />
+        <BigButton icon={RectangleVertical} label="Steel Section" title="Choose a steel section and insert its property array" onClick={() => setSectionOpen(true)} testId="insert-steel-section" />
+        {sectionOpen && <SteelSectionDialog close={() => setSectionOpen(false)} />}
       </Group>
       <Group label="Free Shapes">
         <Col>

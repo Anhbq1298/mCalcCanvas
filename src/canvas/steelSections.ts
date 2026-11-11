@@ -11,24 +11,39 @@ import type { MathShape, Shape } from './model/types';
 import { SECTION_DEF, propertyKeys, sectionById, sectionUnits } from '../engineering/steel/sections';
 import { customPropertyDefinition, dimensionKeys, libraryPropertyDefinition, sectionCurveDefinitions, sectionDimensionError, sectionSymbols, type SectionDimensions } from '../engineering/steel/customSection';
 import type { Expr } from '../engine/ExpressionTypes';
+import { arraySymbol, sectionAlias, sectionArrayDefinition, sectionArrayInfo, type SectionChoice } from '../engineering/steel/sectionArray';
+
+export function nextSteelArrayName(): string {
+  const names = new Set(Object.values(useCanvasStore.getState().shapes).flatMap(s => s.type === 'math' ? [definitionName(s.props.latex)] : []));
+  for (let i = 1; ; i++) {
+    const name = `S${i}`;
+    if (!names.has(nameOf(arraySymbol(name))) && propertyKeys.every(key => !names.has(nameOf(sectionAlias(key, name))))) return name;
+  }
+}
 
 /** Insert a ready-to-use selector and its worksheet equations, including custom I/H support. */
-export function insertSteelSection(): string {
+export function insertSteelSection(choice: SectionChoice = 1211, name = nextSteelArrayName()): string {
+  const latex = sectionArrayDefinition(name, choice);
+  const names = new Set(Object.values(useCanvasStore.getState().shapes).flatMap(s => s.type === 'math' ? [definitionName(s.props.latex)] : []));
+  if (names.has(nameOf(arraySymbol(name))) || propertyKeys.some(key => names.has(nameOf(sectionAlias(key, name))))) throw new Error('This array name or its property references already exist. Choose another name.');
   const at = insertionPoint();
   const id = newShapeId();
   const math = (shapeId: string, x: number, y: number, latex: string, unit = ''): MathShape => ({
     id: shapeId, type: 'math', x, y,
     props: { ...DEFAULT_MATH_PROPS, w: 250, baseline: 20, fontSize: 16, latex, displayMode: 'result', displayUnit: unit },
   });
-  const block: Shape[] = [math(id, at.x, at.y, SECTION_DEF + '1211')];
-  const equations = [
-    ...propertyKeys.map(key => ({ latex: libraryPropertyDefinition(key), unit: sectionUnits[key] })),
-    ...sectionCurveDefinitions.map(c => ({ latex: c.latex, unit: '' })),
-  ];
-  equations.forEach((e, i) => block.push(math(newShapeId(), at.x + (i % 2) * 280, at.y + 80 + Math.floor(i / 2) * 40, e.latex, e.unit)));
+  const block: Shape[] = [math(id, at.x, at.y, latex)];
+  propertyKeys.forEach((key, i) => {
+    const unit = sectionUnits[key].replace(/^mm\^/, 'cm^');
+    const ref = math(newShapeId(), at.x + (i % 2) * 280, at.y + 80 + Math.floor(i / 2) * 40,
+      `${sectionAlias(key, name)}\\coloneq\\mathrm{at}\\left(${arraySymbol(name)},${i}\\right)`, unit);
+    ref.props.fontSize = 14;
+    ref.props.displayMode = 'formulaResult';
+    block.push(ref);
+  });
   for (const [offset, html] of [
-    [40, 'Browse: choose a library section or enter custom h, b, tf, tw (mm).'],
-    [540, 'Custom It/Iw: SCI P385 B.2.2/B.3.1 approximations; confirm project section properties.'],
+    [40, `${name}: 19 properties with units. References use at(${name}, index), starting at 0.`],
+    [500, 'It/Iw may be approximate. Custom: SCI P385 B.2.2/B.3.1; confirm project section tables.'],
   ] as const) block.push({ id: newShapeId(), type: 'text', x: at.x, y: at.y + offset, props: { ...DEFAULT_TEXT_PROPS, w: 550, fontSize: 12, html } });
   const plan = planBlockInsertion(useCanvasStore.getState().shapes, block, constrained() ? printableAt(at) : null);
   transaction(() => {
@@ -62,6 +77,9 @@ function sectionPropertyRegions(shapes: Record<string, Shape>, id: string): Map<
 
 /** Recover the four literal inputs from the saved conditional definitions, without evaluating text. */
 export function savedCustomDimensions(shapes: Record<string, Shape>, id: string): SectionDimensions | null {
+  const source = shapes[id];
+  const array = source?.type === 'math' ? sectionArrayInfo(source.props.latex) : null;
+  if (array) return typeof array.choice === 'number' ? null : array.choice;
   const regions = sectionPropertyRegions(shapes, id);
   const dimensions: Partial<SectionDimensions> = {};
   for (const key of dimensionKeys) {
@@ -89,6 +107,8 @@ function literalMillimetres(e: Expr): number | null {
 
 export function planSteelSection(shapes: Record<string, Shape>, id: string, choice: number | SectionDimensions): Record<string, ShapePatch> {
   const source = shapes[id];
+  const array = source?.type === 'math' ? sectionArrayInfo(source.props.latex) : null;
+  if (array) return { [id]: { props: { latex: sectionArrayDefinition(array.name, choice) } } };
   if (source?.type !== 'math' || definitionName(source.props.latex) !== 'Section') throw new Error('The section input no longer exists.');
   const custom = typeof choice !== 'number';
   if (custom) {
