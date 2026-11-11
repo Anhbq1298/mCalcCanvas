@@ -1,11 +1,45 @@
 /** Section-picker changes are worksheet definitions, applied together as one undo step. */
 import { compareOrderKeys, parseLatex } from '../engine/light';
 import { calcKey } from './engineBridge';
-import { transaction, updateShapes, useCanvasStore, type ShapePatch } from './model/canvasStore';
+import { addShapes, newShapeId, transaction, updateShapes, useCanvasStore, type ShapePatch } from './model/canvasStore';
+import { insertionPoint, revealShape } from './canvasActions';
+import { constrained, printableAt } from './pageConstraint';
+import { planBlockInsertion } from './layout';
+import { useAppStore } from '../store/appStore';
+import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS } from './model/types';
 import type { MathShape, Shape } from './model/types';
-import { SECTION_DEF, propertyKeys, sectionById } from '../engineering/steel/sections';
+import { SECTION_DEF, propertyKeys, sectionById, sectionUnits } from '../engineering/steel/sections';
 import { customPropertyDefinition, dimensionKeys, libraryPropertyDefinition, sectionCurveDefinitions, sectionDimensionError, sectionSymbols, type SectionDimensions } from '../engineering/steel/customSection';
 import type { Expr } from '../engine/ExpressionTypes';
+
+/** Insert a ready-to-use selector and its worksheet equations, including custom I/H support. */
+export function insertSteelSection(): string {
+  const at = insertionPoint();
+  const id = newShapeId();
+  const math = (shapeId: string, x: number, y: number, latex: string, unit = ''): MathShape => ({
+    id: shapeId, type: 'math', x, y,
+    props: { ...DEFAULT_MATH_PROPS, w: 250, baseline: 20, fontSize: 16, latex, displayMode: 'result', displayUnit: unit },
+  });
+  const block: Shape[] = [math(id, at.x, at.y, SECTION_DEF + '1211')];
+  const equations = [
+    ...propertyKeys.map(key => ({ latex: libraryPropertyDefinition(key), unit: sectionUnits[key] })),
+    ...sectionCurveDefinitions.map(c => ({ latex: c.latex, unit: '' })),
+  ];
+  equations.forEach((e, i) => block.push(math(newShapeId(), at.x + (i % 2) * 280, at.y + 80 + Math.floor(i / 2) * 40, e.latex, e.unit)));
+  for (const [offset, html] of [
+    [40, 'Browse: choose a library section or enter custom h, b, tf, tw (mm).'],
+    [540, 'Custom It/Iw: SCI P385 B.2.2/B.3.1 approximations; confirm project section properties.'],
+  ] as const) block.push({ id: newShapeId(), type: 'text', x: at.x, y: at.y + offset, props: { ...DEFAULT_TEXT_PROPS, w: 550, fontSize: 12, html } });
+  const plan = planBlockInsertion(useCanvasStore.getState().shapes, block, constrained() ? printableAt(at) : null);
+  transaction(() => {
+    addShapes(plan.shapes, { select: true });
+    updateShapes(plan.patches);
+    if (plan.pagesNeeded) useAppStore.getState().updateSettings({ pages: Math.max(useAppStore.getState().settings.pages ?? 1, plan.pagesNeeded) });
+    useCanvasStore.setState({ editingId: null, tool: 'select', crosshair: null });
+  });
+  revealShape(id);
+  return id;
+}
 
 function definitionName(latex: string): string | null {
   try { const s = parseLatex(latex); return s.kind === 'definition' ? s.name : null; } catch { return null; }

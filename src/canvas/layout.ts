@@ -9,7 +9,7 @@
  */
 import { GRID_MAJOR } from './model/canvasStore';
 import { shapeBounds } from './model/geometry';
-import type { Shape } from './model/types';
+import type { Box, Shape } from './model/types';
 import { baselineOf, constrained } from './pageConstraint';
 import { printableBox } from '../export/pageGeometry';
 import { useAppStore } from '../store/appStore';
@@ -23,6 +23,24 @@ export interface LayoutPlan {
 }
 
 const EMPTY: LayoutPlan = { patches: {}, pagesNeeded: 0 };
+
+/** Place a newly inserted block inside the page, then separate it from existing content. */
+export function planBlockInsertion(existing: Record<string, Shape>, block: Shape[], box: Box | null) {
+  if (!block.length) return { shapes: [], ...EMPTY };
+  const bounds = block.map(shapeBounds);
+  const left = Math.min(...bounds.map(b => b.x)), top = Math.min(...bounds.map(b => b.y));
+  const width = Math.max(...bounds.map(b => b.x + b.w)) - left;
+  const height = Math.max(...bounds.map(b => b.y + b.h)) - top;
+  const dx = box ? Math.max(box.x, Math.min(left, box.x + box.w - width)) - left : 0;
+  const dy = box ? Math.max(box.y, Math.min(top, box.y + box.h - height)) - top : 0;
+  const shapes = block.map(s => ({ ...s, x: s.x + dx, y: s.y + dy }));
+  // Reserve the whole block, so existing equations cannot end up between its definitions.
+  const shift = planLineShift(existing, globalLine(anchorY(shapes[0])), Math.ceil(height / GRID_MAJOR) + 1);
+  const shifted = Object.fromEntries(Object.entries(existing).map(([id, s]) => [id, shift.patches[id] ? { ...s, y: shift.patches[id].y } : s]));
+  const all = { ...shifted, ...Object.fromEntries(shapes.map(s => [s.id, s])) };
+  const separate = planSeparation(all, shapes.map(s => s.id));
+  return { shapes, patches: { ...shift.patches, ...separate.patches }, pagesNeeded: Math.max(shift.pagesNeeded, separate.pagesNeeded) };
+}
 
 /** Overlap (px) tolerated between region boxes: their 4 px paddings may touch. */
 const OVERLAP_TOLERANCE = 8;

@@ -54,6 +54,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { addHeading } from '../../canvas/headings';
+import { insertSteelSection } from '../../canvas/steelSections';
 import { insertAnnexLink, sortAnnexByLinkOrder } from '../../canvas/annexActions';
 import { useState } from 'react';
 import { commands, type ToolId } from '../../app/commands';
@@ -122,6 +123,9 @@ export function InsertTab() {
   const t = (id: ToolId, icon: LucideIcon, label: string) => <SmallButton icon={icon} label={label} active={tool === id} onClick={() => commands.setTool(id)} testId={`tool-${id}`} />;
   return (
     <>
+      <Group label="Engineering">
+        <BigButton icon={RectangleVertical} label="Steel Section" title="Insert a steel section with Browse and calculated properties" onClick={() => insertSteelSection()} testId="insert-steel-section" />
+      </Group>
       <Group label="Free Shapes">
         <Col>
           {t('select', MousePointer2, 'Select')}

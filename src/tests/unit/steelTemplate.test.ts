@@ -8,8 +8,9 @@ import { templateById } from '../../documents/templates';
 import { sectionById, sections, validateSection } from '../../engineering/steel/sections';
 import { customSectionValues, sectionDimensionError, customPropertyDefinition, sectionSymbols, type SectionDimensions } from '../../engineering/steel/customSection';
 import { propertyKeys, sectionUnits } from '../../engineering/steel/sections';
-import { applySteelSection, planSteelSection, savedCustomDimensions } from '../../canvas/steelSections';
+import { applySteelSection, insertSteelSection, planSteelSection, savedCustomDimensions } from '../../canvas/steelSections';
 import { loadShapes, undo, redo, useCanvasStore } from '../../canvas/model/canvasStore';
+import { DEFAULT_MATH_PROPS } from '../../canvas/model/types';
 import { designSteel, rolledCurves, type SectionGeometry, type SteelInput } from '../reference/ec3';
 import { ltbCoefficientCases } from '../reference/ltbCases';
 
@@ -77,6 +78,34 @@ function reference(sectionId: number, a: { N: number; My: number; Mz: number; Vz
 
 describe('steel beam-column template (EN 1993-1-1)', () => {
   it('reproduces published worked examples and the reference kernel', () => {
+    step('Insert Steel Section creates a usable library/custom block and undoes as one action', () => {
+      loadShapes([]);
+      const id = insertSteelSection();
+      const inserted = useCanvasStore.getState().shapes;
+      expect(Object.values(inserted).filter(s => s.type === 'math')).toHaveLength(23);
+      expect(Object.values(inserted).every(s => Number.isFinite(s.x) && Number.isFinite(s.y))).toBe(true);
+      expect(inserted[id].type === 'math' && inserted[id].props.latex).toBe('\\mathrm{Section}\\coloneq1211');
+      undo();
+      expect(useCanvasStore.getState().shapes).toEqual({});
+      redo();
+      expect(useCanvasStore.getState().shapes).toEqual(inserted);
+      applySteelSection(id, { h: 600, b: 200, tf: 20, tw: 10 });
+      const shapes = useCanvasStore.getState().shapes;
+      const e = new CalculationEngine();
+      const math = Object.values(shapes).filter(s => s.type === 'math');
+      e.batch(() => math.forEach(s => e.setRegion(s.id, { latex: s.props.latex, order: calcKey(s, shapes), displayUnit: s.props.displayUnit })));
+      expect(math.map(s => e.getResult(s.id)?.status)).toEqual(math.map(() => 'valid'));
+      const area = math.find(s => s.props.latex.startsWith('A\\coloneq'))!;
+      expect(e.getResult(area.id)?.value?.number).toBeCloseTo(13600, 8);
+      loadShapes([{ id: 'tail', type: 'math', x: 96, y: 300, props: { ...DEFAULT_MATH_PROPS, latex: 'z\\coloneq1' } }]);
+      const before = useCanvasStore.getState().shapes;
+      useCanvasStore.setState({ crosshair: { x: 96, y: 120 } });
+      insertSteelSection();
+      const after = useCanvasStore.getState().shapes;
+      expect(after.tail.y).toBeGreaterThan(Math.max(...Object.values(after).flatMap(s => s.id !== 'tail' && (s.type === 'math' || s.type === 'text') ? [s.y + s.props.h] : [])));
+      undo();
+      expect(useCanvasStore.getState().shapes).toEqual(before);
+    });
     step('built-in section library: every record is consistent; IPE 360 against public tables', () => {
       expect(sections.flatMap((s) => validateSection(s).map((error) => `${s.name}: ${error}`))).toEqual([]);
       expect(new Set(sections.map((s) => s.id)).size).toBe(sections.length);

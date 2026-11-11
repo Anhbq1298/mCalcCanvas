@@ -45,6 +45,10 @@ Annex A.1 stores the 13 LTB cases in a table with loading/support sketches, norm
 
 ## Section library
 
+**Insert → Steel Section** creates a ready-to-use Browse selector plus all section-property
+and buckling-curve equations on any worksheet. It supports library sections and Custom I/H
+without copying from a template. Insertion reserves space for the block and forms one undo step.
+
 `sectionProp(Section, i)` looks a property up in the built-in library (`src/engineering/steel/`, 379 records: IPE, HEA, HEB, HEM, W). The **Browse** button on the `Section` input opens the library and sets the ID. IDs are stable (1000+ IPE, 1100+ HEA, 1200+ HEB, 1300+ HEM, 2000+ W): never renumber.
 
 The worksheet and printed reports display the selected designation, e.g. `Section := HEB 320`, instead of the numeric lookup key. Browse lists sections by name. The underlying numeric definition is preserved for existing documents, property lookup and batch overrides.

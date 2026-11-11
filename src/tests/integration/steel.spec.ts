@@ -1,8 +1,27 @@
 import { expect, test } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
-import { openFresh, region, resultOf } from './helpers.ts';
+import { newBlankWorksheet, openFresh, region, resultOf } from './helpers.ts';
 
 test.describe('Steel beam-column template', () => {
+  test('Insert Steel Section works on a blank worksheet, including custom I/H and one-step undo', async ({ page }) => {
+    await openFresh(page);
+    await newBlankWorksheet(page, 'page');
+    await page.getByTestId('format-tab-insert').click();
+    await page.getByTestId('insert-steel-section').click();
+    await expect(page.getByTestId('browse-steel')).toHaveCount(1);
+    await resultOf(page, 'A\\coloneq').toBe('16134.3 mm²');
+    await page.getByTestId('quick-undo').click();
+    await expect(page.getByTestId('math-region')).toHaveCount(0);
+    await page.getByTestId('quick-redo').click();
+    await page.getByTestId('browse-steel').click();
+    const dlg = page.getByRole('dialog', { name: 'Steel Section Library' });
+    await dlg.getByRole('tab', { name: 'Custom I/H', exact: true }).click();
+    for (const [key, value] of Object.entries({ h: '600', b: '200', tf: '20', tw: '10' })) await dlg.getByLabel(`${key} [mm]`, { exact: true }).fill(value);
+    await dlg.getByTestId('select-steel').click();
+    await expect(dlg).toBeHidden();
+    await resultOf(page, 'A\\coloneq').toBe('13600 mm²');
+    await expect(page.locator('[data-testid=math-region][data-status=error]')).toHaveCount(0);
+  });
   test('evaluates without errors; the section library sets the ID and the buckling curves follow', async ({ page }) => {
     test.setTimeout(90_000);
     await openFresh(page, 'steel-beam-column');
