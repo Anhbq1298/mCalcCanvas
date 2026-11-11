@@ -10,6 +10,7 @@ async function enterLatex(page: Page, latex: string, y: number) {
     (element as HTMLElement & { value: string }).value = value;
     element.dispatchEvent(new Event('input', { bubbles: true }));
   }, latex);
+  await expect(field).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(field).toHaveCount(0);
 }
@@ -41,10 +42,13 @@ test('Matrices ribbon inserts working operators and multi-argument functions', a
   // With no active editor the function becomes a new region; its arity must be correct.
   await expect.poll(async () => (await regions(page)).find((r) => r.latex.includes('lsolve'))?.latex).toMatch(/placeholder.*,.+placeholder/);
   await page.keyboard.press('Escape');
+  await page.getByTestId('format-tab-math').click();
   await page.getByTestId('tool-math').click();
   await page.mouse.click(350, 480);
+  await expect(page.locator('math-field')).toBeFocused();
   await page.keyboard.type('A');
   await page.keyboard.press('ControlOrMeta+a');
+  await page.getByTestId('format-tab-matrices').click();
   await page.getByTestId('matrix-operators').click();
   await page.getByRole('button', { name: 'Transpose', exact: true }).click();
   await page.keyboard.press('ArrowRight');
