@@ -229,6 +229,18 @@ describe('steel beam-column template (EN 1993-1-1)', () => {
         expect(t.si('C_{1}')).toBeCloseTo(c.c1, 10);
         expect(t.si('C_{2}')).toBeCloseTo(c.c2, 10);
       }
+      const shapes = templateById('steel-beam-column')!.shapes();
+      const diagrams = shapes.filter(s => s.type === 'image').map(s => Buffer.from(s.props.src.split(',')[1], 'base64').toString('utf8')).filter(svg => svg.includes('LTB cases'));
+      expect(diagrams).toHaveLength(2);
+      expect(diagrams.flatMap(svg => [...svg.matchAll(/id="ltb-case-(\d+)"/g)].map(match => Number(match[1])))).toEqual(ltbCoefficientCases.map(c => c.id));
+      const t = evaluate();
+      for (const [name, value] of [['C_{1.6}', '2.25'], ['C_{2.6}', '0.125']] as const) {
+        const cell = t.regions.find(r => r.latex.startsWith(`${name}\\coloneq`))!;
+        expect(cell).toBeDefined();
+        t.e.setRegion(cell.id, { ...cell, latex: `${name}\\coloneq${value}` });
+      }
+      expect(t.si('C_{1}')).toBe(2.25);
+      expect(t.si('C_{2}')).toBe(0.125);
     });
 
     step('buckling curves follow the section (regression: α was fixed at the HEB 320 values)', () => {

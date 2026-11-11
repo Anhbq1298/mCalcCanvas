@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
-import { openFresh, resultOf } from './helpers.ts';
+import { openFresh, region, resultOf } from './helpers.ts';
 
 test.describe('Steel beam-column template', () => {
   test('evaluates without errors; the section library sets the ID and the buckling curves follow', async ({ page }) => {
@@ -77,6 +77,26 @@ test.describe('Steel beam-column template', () => {
       await dlg.getByTestId('select-steel').click();
       await resultOf(page, '\\mathrm{Section}\\coloneq').toBe('1211');
       await resultOf(page, '\\mathrm{UR}\\coloneq').toBe('0.4571');
+    });
+
+    await test.step('LTB table shows numeric coefficients and keeps their definitions editable', async () => {
+      const info = await region(page, 'C_{1.6}\\coloneq');
+      expect(info).toBeDefined();
+      const coefficient = page.locator(`[data-testid=math-region][data-shape-id="${info!.id}"]`);
+      await expect(coefficient).toHaveCount(1);
+      await coefficient.evaluate(el => {
+        type Store = { getState(): { shapes: Record<string, { y: number }> }; setState(value: { camera: { x: number; y: number; z: number } }): void };
+        const store = (window as unknown as { __calccanvas: { store: Store } }).__calccanvas.store;
+        store.setState({ camera: { x: 0, y: store.getState().shapes[el.getAttribute('data-shape-id')!].y - 250, z: 1 } });
+      });
+      await expect(coefficient.locator('.math-baseline')).toHaveText('2.050');
+      await coefficient.dblclick();
+      await expect(page.locator('math-field')).toHaveCount(1);
+      await expect(page.locator('math-field')).toBeFocused();
+      await page.keyboard.press('Escape');
+      await expect(page.locator('math-field')).toHaveCount(0);
+      await expect(coefficient.locator('.math-baseline')).toHaveText('2.050');
+      await resultOf(page, 'C_{1}\\coloneq').toBe('2.05');
     });
   });
 });

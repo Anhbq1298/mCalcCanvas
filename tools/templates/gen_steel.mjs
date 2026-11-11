@@ -3,10 +3,11 @@
 // Every result is a worksheet equation. Writes templates/Steel_Beam_Column_EC3.mCCV.
 // Default data: JRC "Design of steel buildings with worked examples" (2014), R. Simões, Example 3 (HEB 320, S355).
 import { createLayout, R } from './layout.mjs';
+import { ltbCaseTable } from './ltbTable.mjs';
 import sectionFormulae from '../../src/engineering/steel/sectionFormulae.json' with { type: 'json' };
 
-const { gap, LINK, H, T, P, ROW, S, GRAPH, M, mm, kN, kNm, MPa, fr, fo, finish } =
-  createLayout({ idPrefix: 's_stl', sizesFile: 'sizes_steel.json' });
+const layout = createLayout({ idPrefix: 's_stl', sizesFile: 'sizes_steel.json' });
+const { gap, LINK, H, T, P, ROW, S, GRAPH, M, mm, kN, kNm, MPa, fr, finish } = layout;
 
 const IF = (...branches) => {
   const rows = branches.map(([c, v], i) => (c === null ? R`\mathrm{else}` : `${i ? R`\mathrm{else}\ ` : ''}\\mathrm{if}\\ ${c}`) + R`\\\quad\left\Vert\displaystyle ${v}\right.`);
@@ -168,15 +169,7 @@ UR('Torsional buckling', 'b.T', R`\frac{N_{Ed}}{N_{b.T.Rd}}`, '§6.3.1.1 (6.46)'
 // ================= 7. LTB =================
 H(2, '7. LATERAL-TORSIONAL BUCKLING (§6.3.2.2)');
 T('Mcr: SCI NCCI SN003b eq. (1), fork supports. Tabulated C1, C2 are for k = kw = 1 only.');
-LINK('ltb', 'LTB moment cases – C1 and C2 (SN003b Tables 3.1 and 3.2)', () => {
-  T('Cases 1 to 9: end moments M and ψM with ψ = +1, +0.75, +0.5, +0.25, 0, −0.25, −0.5, −0.75, −1.');
-  T('Case 10: pinned ends, uniform load. Case 11: fixed ends, uniform load.');
-  T('Case 12: pinned ends, point load at mid-span. Case 13: fixed ends, point load at mid-span.');
-  T('Values between cases are not interpolated: choose the lower C1 of the two neighbours.');
-  P('Case numbers', R`n_{t}\coloneq\mathrm{seq}\left(1,13\right)`, M(fo));
-  P('C1', R`C_{1.t}\coloneq\mathrm{stack}\left(1.00,1.14,1.31,1.52,1.77,2.05,2.33,2.57,2.55,1.127,2.578,1.348,1.683\right)`, M(fo));
-  P('C2', R`C_{2.t}\coloneq\mathrm{stack}\left(0,0,0,0,0,0,0,0,0,0.454,1.554,0.630,1.645\right)`, M(fo));
-});
+LINK('ltb', 'LTB moment cases – C1 and C2 (SN003b Tables 3.1 and 3.2)', () => ltbCaseTable(layout));
 P('Case valid (1 = yes): 0, or a whole number 1 to 13 with k = kw = 1', R`\delta_{LT}\coloneq${IF([R`n_{LT}=0`, '1'], [R`n_{LT}=\mathrm{floor}\left(n_{LT}\right)\land n_{LT}\ge1\land n_{LT}\le13\land k=1\land k_{w}=1`, '1'], [null, '0'])}`);
 P('Tabulated C1, C2 are for k = kw = 1', R`\delta_{LT}\ge1`);
 P('Moment distribution factor', R`C_{1}\coloneq${IF([R`n_{LT}=0`, 'C_{1.u}'], [null, R`\mathrm{linterp}\left(n_{t},C_{1.t},n_{LT}\right)`])}`, M(p3));

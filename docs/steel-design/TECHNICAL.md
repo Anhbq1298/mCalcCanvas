@@ -27,6 +27,10 @@ EN 1993-1-1:2005 + A1:2014. Uniform, doubly symmetric rolled or custom welded I/
 | LTB | §6.3.2.2 (general case) | Mcr: SCI NCCI SN003b eq. (1) with k, kw, C1, C2, zg. Case 1–13 looks C1/C2 up in Tables 3.1/3.2 (annex A.1, no interpolation); case 0 uses the user's C1, C2. |
 | Interaction | §6.3.3, Annex B | Tables B.1/B.2, I-sections, Class 1–2, susceptible to torsional deformations. Cmy, Cmz, CmLT are inputs (Table B.3). |
 
+## LTB case table
+
+Annex A.1 stores the 13 LTB cases in a table with loading/support sketches, normalized bending-moment diagrams and editable C1/C2 worksheet cells. The lookup vectors are assembled from those cells, so edits also change Mcr. Values follow [SCI NCCI SN003b Tables 3.1/3.2](https://www.steelconstruction.info/images/0/0f/SN003b.pdf), with k = kw = 1 and the conservative C1 column at κ = 0. Support symbols describe restraints in the bending plane; lateral movement and twist remain restrained at both ends. Case 0 remains available for other arrangements. The two table panels are grouped to print intact.
+
 ## Section library
 
 `sectionProp(Section, i)` looks a property up in the built-in library (`src/engineering/steel/`, 379 records: IPE, HEA, HEB, HEM, W). The **Browse** button on the `Section` input opens the library and sets the ID. IDs are stable (1000+ IPE, 1100+ HEA, 1200+ HEB, 1300+ HEM, 2000+ W): never renumber.

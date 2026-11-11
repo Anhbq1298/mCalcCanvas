@@ -20,7 +20,7 @@
     "baselineSnap": "minor",
     "snapToGrid": false,
     "optimizePrintLayout": true,
-    "pages": 9
+    "pages": 11
   },
   "inputResult": {
     "title": "Members and load cases",
@@ -1246,7 +1246,7 @@
       "x": 96,
       "y": 1529,
       "props": {
-        "w": 196,
+        "w": 101,
         "h": 26,
         "baseline": 18,
         "latex": "h\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},0)",
@@ -1264,7 +1264,7 @@
       "x": 396,
       "y": 1529,
       "props": {
-        "w": 194,
+        "w": 99,
         "h": 26,
         "baseline": 18,
         "latex": "b\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},1)",
@@ -1282,7 +1282,7 @@
       "x": 96,
       "y": 1561,
       "props": {
-        "w": 202,
+        "w": 111,
         "h": 26,
         "baseline": 18,
         "latex": "t_w\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},2)",
@@ -1300,7 +1300,7 @@
       "x": 396,
       "y": 1561,
       "props": {
-        "w": 200,
+        "w": 110,
         "h": 26,
         "baseline": 18,
         "latex": "t_f\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},3)",
@@ -1318,7 +1318,7 @@
       "x": 96,
       "y": 1593,
       "props": {
-        "w": 195,
+        "w": 92,
         "h": 26,
         "baseline": 18,
         "latex": "r\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},4)",
@@ -1336,7 +1336,7 @@
       "x": 396,
       "y": 1593,
       "props": {
-        "w": 199,
+        "w": 116,
         "h": 26,
         "baseline": 18,
         "latex": "A\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},5)",
@@ -1354,7 +1354,7 @@
       "x": 96,
       "y": 1625,
       "props": {
-        "w": 202,
+        "w": 123,
         "h": 26,
         "baseline": 18,
         "latex": "I_y\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},6)",
@@ -1372,7 +1372,7 @@
       "x": 396,
       "y": 1625,
       "props": {
-        "w": 202,
+        "w": 115,
         "h": 26,
         "baseline": 18,
         "latex": "I_z\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},7)",
@@ -1390,7 +1390,7 @@
       "x": 96,
       "y": 1657,
       "props": {
-        "w": 223,
+        "w": 136,
         "h": 26,
         "baseline": 18,
         "latex": "W_{el.y}\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},8)",
@@ -1408,7 +1408,7 @@
       "x": 396,
       "y": 1657,
       "props": {
-        "w": 223,
+        "w": 126,
         "h": 26,
         "baseline": 18,
         "latex": "W_{el.z}\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},9)",
@@ -1426,7 +1426,7 @@
       "x": 96,
       "y": 1689,
       "props": {
-        "w": 232,
+        "w": 137,
         "h": 26,
         "baseline": 18,
         "latex": "W_{pl.y}\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},10)",
@@ -1444,7 +1444,7 @@
       "x": 396,
       "y": 1689,
       "props": {
-        "w": 231,
+        "w": 128,
         "h": 26,
         "baseline": 18,
         "latex": "W_{pl.z}\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},11)",
@@ -1462,7 +1462,7 @@
       "x": 96,
       "y": 1721,
       "props": {
-        "w": 208,
+        "w": 105,
         "h": 26,
         "baseline": 18,
         "latex": "I_t\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},12)",
@@ -1480,7 +1480,7 @@
       "x": 396,
       "y": 1721,
       "props": {
-        "w": 213,
+        "w": 142,
         "h": 26,
         "baseline": 18,
         "latex": "I_w\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},13)",
@@ -1498,7 +1498,7 @@
       "x": 96,
       "y": 1753,
       "props": {
-        "w": 223,
+        "w": 120,
         "h": 26,
         "baseline": 18,
         "latex": "A_{v.y}\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},14)",
@@ -1516,7 +1516,7 @@
       "x": 396,
       "y": 1753,
       "props": {
-        "w": 223,
+        "w": 124,
         "h": 26,
         "baseline": 18,
         "latex": "A_{v.z}\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},15)",
@@ -1598,7 +1598,7 @@
       "x": 296,
       "y": 2087,
       "props": {
-        "w": 116,
+        "w": 188,
         "h": 43,
         "baseline": 24,
         "latex": "\\varepsilon\\coloneq\\sqrt{\\frac{235\\,\\mathrm{MPa}}{f_{y}}}",
@@ -1647,7 +1647,7 @@
       "x": 296,
       "y": 2169,
       "props": {
-        "w": 122,
+        "w": 205,
         "h": 35,
         "baseline": 22,
         "latex": "c_{f}\\coloneq\\frac{b-t_{w}-2r}{2}",
@@ -1680,7 +1680,7 @@
       "x": 376,
       "y": 2402,
       "props": {
-        "w": 69,
+        "w": 118,
         "h": 37,
         "baseline": 20,
         "latex": "\\beta_{f}\\coloneq\\frac{c_{f}}{t_{f}\\varepsilon}",
@@ -1713,7 +1713,7 @@
       "x": 296,
       "y": 2453,
       "props": {
-        "w": 187,
+        "w": 216,
         "h": 160,
         "baseline": 18,
         "latex": "\\mathrm{Class}_{f}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\beta_{f}\\le9\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\beta_{f}\\le10\\\\\\quad\\left\\Vert\\displaystyle 2\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\beta_{f}\\le14\\\\\\quad\\left\\Vert\\displaystyle 3\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 4\\right.\\end{array}",
@@ -1777,7 +1777,7 @@
       "x": 296,
       "y": 2677,
       "props": {
-        "w": 126,
+        "w": 209,
         "h": 26,
         "baseline": 18,
         "latex": "c_{w}\\coloneq h-2t_{f}-2r",
@@ -1810,7 +1810,7 @@
       "x": 76,
       "y": 2733,
       "props": {
-        "w": 354,
+        "w": 382,
         "h": 103,
         "baseline": 18,
         "latex": "\\alpha_{w}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ M_{y.Ed}>0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\land M_{z.Ed}=0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\\\\\quad\\left\\Vert\\displaystyle \\min\\left(1,0.5\\left(1+\\frac{N_{Ed}}{c_{w}t_{w}f_{y}}\\right)\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\end{array}",
@@ -1843,7 +1843,7 @@
       "x": 76,
       "y": 2866,
       "props": {
-        "w": 355,
+        "w": 419,
         "h": 122,
         "baseline": 18,
         "latex": "\\psi_{w}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ M_{y.Ed}>0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\land M_{z.Ed}=0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\\\\\quad\\left\\Vert\\displaystyle \\max\\left(-3,\\frac{\\frac{N_{Ed}}{A}-\\frac{M_{y.Ed}c_{w}}{2I_{y}}}{\\frac{N_{Ed}}{A}+\\frac{M_{y.Ed}c_{w}}{2I_{y}}}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\end{array}",
@@ -1876,7 +1876,7 @@
       "x": 296,
       "y": 2994,
       "props": {
-        "w": 196,
+        "w": 234,
         "h": 121,
         "baseline": 18,
         "latex": "\\beta_{w1}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\alpha_{w}>0.5\\\\\\quad\\left\\Vert\\displaystyle \\frac{396}{13\\alpha_{w}-1}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\frac{36}{\\max\\left(\\alpha_{w},0.01\\right)}\\right.\\end{array}",
@@ -1909,7 +1909,7 @@
       "x": 296,
       "y": 3121,
       "props": {
-        "w": 196,
+        "w": 234,
         "h": 121,
         "baseline": 18,
         "latex": "\\beta_{w2}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\alpha_{w}>0.5\\\\\\quad\\left\\Vert\\displaystyle \\frac{456}{13\\alpha_{w}-1}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\frac{41.5}{\\max\\left(\\alpha_{w},0.01\\right)}\\right.\\end{array}",
@@ -1942,7 +1942,7 @@
       "x": 296,
       "y": 3248,
       "props": {
-        "w": 219,
+        "w": 276,
         "h": 103,
         "baseline": 18,
         "latex": "\\beta_{w3}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\psi_{w}>-1\\\\\\quad\\left\\Vert\\displaystyle \\frac{42}{0.67+0.33\\psi_{w}}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 62\\left(1-\\psi_{w}\\right)\\sqrt{-\\psi_{w}}\\right.\\end{array}",
@@ -1975,7 +1975,7 @@
       "x": 296,
       "y": 3357,
       "props": {
-        "w": 72,
+        "w": 129,
         "h": 33,
         "baseline": 18,
         "latex": "\\beta_{w}\\coloneq\\frac{c_{w}}{t_{w}\\varepsilon}",
@@ -2008,7 +2008,7 @@
       "x": 296,
       "y": 3573,
       "props": {
-        "w": 199,
+        "w": 228,
         "h": 160,
         "baseline": 18,
         "latex": "\\mathrm{Class}_{w}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\beta_{w}\\le\\beta_{w1}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\beta_{w}\\le\\beta_{w2}\\\\\\quad\\left\\Vert\\displaystyle 2\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\beta_{w}\\le\\beta_{w3}\\\\\\quad\\left\\Vert\\displaystyle 3\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 4\\right.\\end{array}",
@@ -2057,7 +2057,7 @@
       "x": 296,
       "y": 3772,
       "props": {
-        "w": 203,
+        "w": 231,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{Class}\\coloneq\\max\\left(\\mathrm{Class}_{f},\\mathrm{Class}_{w}\\right)",
@@ -2090,7 +2090,7 @@
       "x": 356,
       "y": 3803,
       "props": {
-        "w": 74,
+        "w": 178,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{Class}\\le3",
@@ -2155,7 +2155,7 @@
       "x": 296,
       "y": 3903,
       "props": {
-        "w": 132,
+        "w": 216,
         "h": 41,
         "baseline": 24,
         "latex": "V_{pl.z.Rd}\\coloneq\\frac{A_{v.z}f_{y}}{\\sqrt{3}\\gamma_{M0}}",
@@ -2188,7 +2188,7 @@
       "x": 296,
       "y": 3950,
       "props": {
-        "w": 132,
+        "w": 217,
         "h": 41,
         "baseline": 24,
         "latex": "V_{pl.y.Rd}\\coloneq\\frac{A_{v.y}f_{y}}{\\sqrt{3}\\gamma_{M0}}",
@@ -2221,7 +2221,7 @@
       "x": 296,
       "y": 3997,
       "props": {
-        "w": 123,
+        "w": 151,
         "h": 39,
         "baseline": 21,
         "latex": "\\mathrm{UR}_{V.z}\\coloneq \\frac{V_{z.Ed}}{V_{pl.z.Rd}}",
@@ -2254,7 +2254,7 @@
       "x": 296,
       "y": 4049,
       "props": {
-        "w": 80,
+        "w": 182,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{UR}_{V.z}\\le1",
@@ -2287,7 +2287,7 @@
       "x": 296,
       "y": 4080,
       "props": {
-        "w": 123,
+        "w": 151,
         "h": 42,
         "baseline": 24,
         "latex": "\\mathrm{UR}_{V.y}\\coloneq \\frac{V_{y.Ed}}{V_{pl.y.Rd}}",
@@ -2320,7 +2320,7 @@
       "x": 296,
       "y": 4128,
       "props": {
-        "w": 80,
+        "w": 184,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{UR}_{V.y}\\le1",
@@ -2353,7 +2353,7 @@
       "x": 356,
       "y": 4159,
       "props": {
-        "w": 111,
+        "w": 285,
         "h": 40,
         "baseline": 24,
         "latex": "\\frac{h-2t_{f}}{t_{w}}\\le\\frac{72\\varepsilon}{\\eta}",
@@ -2386,7 +2386,7 @@
       "x": 416,
       "y": 4205,
       "props": {
-        "w": 235,
+        "w": 273,
         "h": 93,
         "baseline": 18,
         "latex": "\\rho_{z}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{UR}_{V.z}>0.5\\\\\\quad\\left\\Vert\\displaystyle \\min\\left(1,\\left(2\\mathrm{UR}_{V.z}-1\\right)^2\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
@@ -2419,7 +2419,7 @@
       "x": 296,
       "y": 4304,
       "props": {
-        "w": 235,
+        "w": 273,
         "h": 93,
         "baseline": 18,
         "latex": "\\rho_{y}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{UR}_{V.y}>0.5\\\\\\quad\\left\\Vert\\displaystyle \\min\\left(1,\\left(2\\mathrm{UR}_{V.y}-1\\right)^2\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
@@ -2452,7 +2452,7 @@
       "x": 296,
       "y": 4403,
       "props": {
-        "w": 114,
+        "w": 143,
         "h": 26,
         "baseline": 18,
         "latex": "\\rho\\coloneq\\max\\left(\\rho_{z},\\rho_{y}\\right)",
@@ -2516,7 +2516,7 @@
       "x": 296,
       "y": 4493,
       "props": {
-        "w": 97,
+        "w": 181,
         "h": 40,
         "baseline": 24,
         "latex": "N_{c.Rd}\\coloneq\\frac{Af_{y}}{\\gamma_{M0}}",
@@ -2532,9 +2532,9 @@
       "id": "s_stl_3y",
       "type": "text",
       "x": 76,
-      "y": 4789,
+      "y": 4539,
       "props": {
-        "w": 424,
+        "w": 630,
         "h": 18,
         "html": "Section modulus about y: plastic for Class 1, 2; elastic for Class 3",
         "fontFamily": "Inter",
@@ -2546,10 +2546,10 @@
     {
       "id": "s_stl_3z",
       "type": "math",
-      "x": 516,
+      "x": 76,
       "y": 4744,
       "props": {
-        "w": 149,
+        "w": 240,
         "h": 83,
         "baseline": 18,
         "latex": "W_{y}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le2\\\\\\quad\\left\\Vert\\displaystyle W_{pl.y}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle W_{el.y}\\right.\\end{array}",
@@ -2582,7 +2582,7 @@
       "x": 296,
       "y": 4833,
       "props": {
-        "w": 149,
+        "w": 232,
         "h": 83,
         "baseline": 18,
         "latex": "W_{z}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le2\\\\\\quad\\left\\Vert\\displaystyle W_{pl.z}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle W_{el.z}\\right.\\end{array}",
@@ -2598,9 +2598,9 @@
       "id": "s_stl_42",
       "type": "text",
       "x": 76,
-      "y": 4934,
+      "y": 4922,
       "props": {
-        "w": 384,
+        "w": 630,
         "h": 18,
         "html": "Bending resistance about y (6.13), (6.14), reduced for shear",
         "fontFamily": "Inter",
@@ -2612,10 +2612,10 @@
     {
       "id": "s_stl_43",
       "type": "math",
-      "x": 476,
-      "y": 4922,
+      "x": 96,
+      "y": 4946,
       "props": {
-        "w": 172,
+        "w": 274,
         "h": 41,
         "baseline": 25,
         "latex": "M_{c.y.Rd}\\coloneq\\frac{W_{y}f_{y}\\left(1-\\rho\\right)}{\\gamma_{M0}}",
@@ -2631,7 +2631,7 @@
       "id": "s_stl_44",
       "type": "text",
       "x": 76,
-      "y": 4981,
+      "y": 5005,
       "props": {
         "w": 204,
         "h": 18,
@@ -2646,9 +2646,9 @@
       "id": "s_stl_45",
       "type": "math",
       "x": 296,
-      "y": 4969,
+      "y": 4993,
       "props": {
-        "w": 171,
+        "w": 286,
         "h": 41,
         "baseline": 25,
         "latex": "M_{c.z.Rd}\\coloneq\\frac{W_{z}f_{y}\\left(1-\\rho\\right)}{\\gamma_{M0}}",
@@ -2664,7 +2664,7 @@
       "id": "s_stl_46",
       "type": "text",
       "x": 76,
-      "y": 5045,
+      "y": 5069,
       "props": {
         "w": 204,
         "h": 18,
@@ -2679,9 +2679,9 @@
       "id": "s_stl_47",
       "type": "math",
       "x": 296,
-      "y": 5016,
+      "y": 5040,
       "props": {
-        "w": 103,
+        "w": 168,
         "h": 37,
         "baseline": 22,
         "latex": "\\mathrm{UR}_{N}\\coloneq \\frac{N_{Ed}}{N_{c.Rd}}",
@@ -2697,7 +2697,7 @@
       "id": "s_stl_48",
       "type": "text",
       "x": 76,
-      "y": 5074,
+      "y": 5098,
       "props": {
         "w": 204,
         "h": 18,
@@ -2712,9 +2712,9 @@
       "id": "s_stl_49",
       "type": "math",
       "x": 296,
-      "y": 5069,
+      "y": 5093,
       "props": {
-        "w": 72,
+        "w": 212,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{UR}_{N}\\le1",
@@ -2730,7 +2730,7 @@
       "id": "s_stl_4a",
       "type": "text",
       "x": 76,
-      "y": 5111,
+      "y": 5135,
       "props": {
         "w": 204,
         "h": 18,
@@ -2745,9 +2745,9 @@
       "id": "s_stl_4b",
       "type": "math",
       "x": 296,
-      "y": 5100,
+      "y": 5124,
       "props": {
-        "w": 126,
+        "w": 191,
         "h": 42,
         "baseline": 24,
         "latex": "\\mathrm{UR}_{M.y}\\coloneq \\frac{M_{y.Ed}}{M_{c.y.Rd}}",
@@ -2763,7 +2763,7 @@
       "id": "s_stl_4c",
       "type": "text",
       "x": 76,
-      "y": 5153,
+      "y": 5177,
       "props": {
         "w": 204,
         "h": 18,
@@ -2778,9 +2778,9 @@
       "id": "s_stl_4d",
       "type": "math",
       "x": 296,
-      "y": 5148,
+      "y": 5172,
       "props": {
-        "w": 83,
+        "w": 222,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{UR}_{M.y}\\le1",
@@ -2796,7 +2796,7 @@
       "id": "s_stl_4e",
       "type": "text",
       "x": 76,
-      "y": 5208,
+      "y": 5232,
       "props": {
         "w": 204,
         "h": 18,
@@ -2811,9 +2811,9 @@
       "id": "s_stl_4f",
       "type": "math",
       "x": 296,
-      "y": 5179,
+      "y": 5203,
       "props": {
-        "w": 125,
+        "w": 154,
         "h": 37,
         "baseline": 22,
         "latex": "\\mathrm{UR}_{M.z}\\coloneq \\frac{M_{z.Ed}}{M_{c.z.Rd}}",
@@ -2829,7 +2829,7 @@
       "id": "s_stl_4g",
       "type": "text",
       "x": 76,
-      "y": 5237,
+      "y": 5261,
       "props": {
         "w": 204,
         "h": 18,
@@ -2844,9 +2844,9 @@
       "id": "s_stl_4h",
       "type": "math",
       "x": 296,
-      "y": 5232,
+      "y": 5256,
       "props": {
-        "w": 83,
+        "w": 184,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{UR}_{M.z}\\le1",
@@ -2862,7 +2862,7 @@
       "id": "s_stl_4i",
       "type": "text",
       "x": 76,
-      "y": 5292,
+      "y": 5316,
       "props": {
         "w": 244,
         "h": 18,
@@ -2877,9 +2877,9 @@
       "id": "s_stl_4j",
       "type": "math",
       "x": 336,
-      "y": 5263,
+      "y": 5287,
       "props": {
-        "w": 290,
+        "w": 339,
         "h": 39,
         "baseline": 22,
         "latex": "\\mathrm{UR}_{sec}\\coloneq \\frac{N_{Ed}}{N_{c.Rd}\\left(1-\\rho\\right)}+\\mathrm{UR}_{M.y}+\\mathrm{UR}_{M.z}",
@@ -2895,7 +2895,7 @@
       "id": "s_stl_4k",
       "type": "text",
       "x": 76,
-      "y": 5321,
+      "y": 5345,
       "props": {
         "w": 204,
         "h": 18,
@@ -2910,9 +2910,9 @@
       "id": "s_stl_4l",
       "type": "math",
       "x": 296,
-      "y": 5316,
+      "y": 5340,
       "props": {
-        "w": 77,
+        "w": 201,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{UR}_{sec}\\le1",
@@ -2928,7 +2928,7 @@
       "id": "s_stl_4m",
       "type": "text",
       "x": 76,
-      "y": 5353,
+      "y": 5377,
       "props": {
         "w": 630,
         "h": 24,
@@ -2944,7 +2944,7 @@
       "id": "s_stl_4n",
       "type": "text",
       "x": 76,
-      "y": 5389,
+      "y": 5413,
       "props": {
         "w": 630,
         "h": 21,
@@ -2960,7 +2960,7 @@
       "id": "s_stl_4o",
       "type": "text",
       "x": 76,
-      "y": 5416,
+      "y": 5440,
       "props": {
         "w": 630,
         "h": 18,
@@ -2975,9 +2975,9 @@
       "id": "s_stl_4p",
       "type": "math",
       "x": 76,
-      "y": 5440,
+      "y": 5464,
       "props": {
-        "w": 266,
+        "w": 316,
         "h": 199,
         "baseline": 18,
         "latex": "\\alpha_{y}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Section}=0\\land t_f\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 0.34\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\mathrm{Section}=0\\\\\\quad\\left\\Vert\\displaystyle 0.49\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\frac{h}{b}>1.2\\land t_f\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 0.21\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ t_f\\le100\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 0.34\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0.76\\right.\\end{array}",
@@ -2993,7 +2993,7 @@
       "id": "s_stl_4q",
       "type": "text",
       "x": 76,
-      "y": 5645,
+      "y": 5669,
       "props": {
         "w": 630,
         "h": 18,
@@ -3010,7 +3010,7 @@
       "x": 76,
       "y": 5915,
       "props": {
-        "w": 266,
+        "w": 316,
         "h": 199,
         "baseline": 18,
         "latex": "\\alpha_{z}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Section}=0\\land t_f\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 0.49\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\mathrm{Section}=0\\\\\\quad\\left\\Vert\\displaystyle 0.76\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\frac{h}{b}>1.2\\land t_f\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 0.34\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ t_f\\le100\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 0.49\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0.76\\right.\\end{array}",
@@ -3043,7 +3043,7 @@
       "x": 376,
       "y": 6120,
       "props": {
-        "w": 115,
+        "w": 280,
         "h": 26,
         "baseline": 18,
         "latex": "f_{y}\\le460\\,\\mathrm{MPa}",
@@ -3092,7 +3092,7 @@
       "x": 296,
       "y": 6185,
       "props": {
-        "w": 109,
+        "w": 202,
         "h": 45,
         "baseline": 26,
         "latex": "N_{cr.y}\\coloneq\\frac{\\pi^2EI_{y}}{L_{cr.y}^2}",
@@ -3125,7 +3125,7 @@
       "x": 296,
       "y": 6236,
       "props": {
-        "w": 90,
+        "w": 162,
         "h": 52,
         "baseline": 30,
         "latex": "\\lambda_{y}\\coloneq\\sqrt{\\frac{Af_{y}}{N_{cr.y}}}",
@@ -3158,7 +3158,7 @@
       "x": 296,
       "y": 6294,
       "props": {
-        "w": 228,
+        "w": 280,
         "h": 26,
         "baseline": 18,
         "latex": "\\Phi_{y}\\coloneq0.5\\left(1+\\alpha_{y}\\left(\\lambda_{y}-0.2\\right)+\\lambda_{y}^2\\right)",
@@ -3191,7 +3191,7 @@
       "x": 296,
       "y": 6326,
       "props": {
-        "w": 205,
+        "w": 289,
         "h": 64,
         "baseline": 35,
         "latex": "\\chi_{y}\\coloneq\\min\\left(1,\\frac{1}{\\Phi_{y}+\\sqrt{\\Phi_{y}^2-\\lambda_{y}^2}}\\right)",
@@ -3224,7 +3224,7 @@
       "x": 296,
       "y": 6396,
       "props": {
-        "w": 122,
+        "w": 207,
         "h": 40,
         "baseline": 24,
         "latex": "N_{b.y.Rd}\\coloneq\\frac{\\chi_{y}Af_{y}}{\\gamma_{M1}}",
@@ -3257,7 +3257,7 @@
       "x": 296,
       "y": 6442,
       "props": {
-        "w": 116,
+        "w": 181,
         "h": 39,
         "baseline": 21,
         "latex": "\\mathrm{UR}_{b.y}\\coloneq \\frac{N_{Ed}}{N_{b.y.Rd}}",
@@ -3290,7 +3290,7 @@
       "x": 296,
       "y": 6494,
       "props": {
-        "w": 76,
+        "w": 218,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{UR}_{b.y}\\le1",
@@ -3339,7 +3339,7 @@
       "x": 296,
       "y": 6558,
       "props": {
-        "w": 109,
+        "w": 202,
         "h": 41,
         "baseline": 24,
         "latex": "N_{cr.z}\\coloneq\\frac{\\pi^2EI_{z}}{L_{cr.z}^2}",
@@ -3372,7 +3372,7 @@
       "x": 296,
       "y": 6605,
       "props": {
-        "w": 90,
+        "w": 162,
         "h": 43,
         "baseline": 27,
         "latex": "\\lambda_{z}\\coloneq\\sqrt{\\frac{Af_{y}}{N_{cr.z}}}",
@@ -3405,7 +3405,7 @@
       "x": 296,
       "y": 6654,
       "props": {
-        "w": 227,
+        "w": 296,
         "h": 26,
         "baseline": 18,
         "latex": "\\Phi_{z}\\coloneq0.5\\left(1+\\alpha_{z}\\left(\\lambda_{z}-0.2\\right)+\\lambda_{z}^2\\right)",
@@ -3438,7 +3438,7 @@
       "x": 296,
       "y": 6686,
       "props": {
-        "w": 199,
+        "w": 285,
         "h": 52,
         "baseline": 30,
         "latex": "\\chi_{z}\\coloneq\\min\\left(1,\\frac{1}{\\Phi_{z}+\\sqrt{\\Phi_{z}^2-\\lambda_{z}^2}}\\right)",
@@ -3471,7 +3471,7 @@
       "x": 296,
       "y": 6744,
       "props": {
-        "w": 122,
+        "w": 207,
         "h": 40,
         "baseline": 24,
         "latex": "N_{b.z.Rd}\\coloneq\\frac{\\chi_{z}Af_{y}}{\\gamma_{M1}}",
@@ -3504,7 +3504,7 @@
       "x": 296,
       "y": 6790,
       "props": {
-        "w": 115,
+        "w": 180,
         "h": 37,
         "baseline": 22,
         "latex": "\\mathrm{UR}_{b.z}\\coloneq \\frac{N_{Ed}}{N_{b.z.Rd}}",
@@ -3537,7 +3537,7 @@
       "x": 296,
       "y": 6843,
       "props": {
-        "w": 76,
+        "w": 217,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{UR}_{b.z}\\le1",
@@ -3586,7 +3586,7 @@
       "x": 296,
       "y": 7113,
       "props": {
-        "w": 101,
+        "w": 191,
         "h": 43,
         "baseline": 28,
         "latex": "i_{0}\\coloneq\\sqrt{\\frac{I_{y}+I_{z}}{A}}",
@@ -3619,7 +3619,7 @@
       "x": 296,
       "y": 7162,
       "props": {
-        "w": 188,
+        "w": 293,
         "h": 43,
         "baseline": 25,
         "latex": "N_{cr.T}\\coloneq\\frac{1}{i_{0}^2}\\left(GI_{t}+\\frac{\\pi^2EI_{w}}{L_{cr.T}^2}\\right)",
@@ -3652,7 +3652,7 @@
       "x": 296,
       "y": 7211,
       "props": {
-        "w": 94,
+        "w": 167,
         "h": 43,
         "baseline": 27,
         "latex": "\\lambda_{T}\\coloneq\\sqrt{\\frac{Af_{y}}{N_{cr.T}}}",
@@ -3685,7 +3685,7 @@
       "x": 296,
       "y": 7260,
       "props": {
-        "w": 234,
+        "w": 303,
         "h": 26,
         "baseline": 18,
         "latex": "\\Phi_{T}\\coloneq0.5\\left(1+\\alpha_{z}\\left(\\lambda_{T}-0.2\\right)+\\lambda_{T}^2\\right)",
@@ -3718,7 +3718,7 @@
       "x": 296,
       "y": 7292,
       "props": {
-        "w": 208,
+        "w": 295,
         "h": 52,
         "baseline": 30,
         "latex": "\\chi_{T}\\coloneq\\min\\left(1,\\frac{1}{\\Phi_{T}+\\sqrt{\\Phi_{T}^2-\\lambda_{T}^2}}\\right)",
@@ -3751,7 +3751,7 @@
       "x": 296,
       "y": 7350,
       "props": {
-        "w": 127,
+        "w": 211,
         "h": 40,
         "baseline": 24,
         "latex": "N_{b.T.Rd}\\coloneq\\frac{\\chi_{T}Af_{y}}{\\gamma_{M1}}",
@@ -3784,7 +3784,7 @@
       "x": 296,
       "y": 7396,
       "props": {
-        "w": 120,
+        "w": 185,
         "h": 37,
         "baseline": 22,
         "latex": "\\mathrm{UR}_{b.T}\\coloneq \\frac{N_{Ed}}{N_{b.T.Rd}}",
@@ -3817,7 +3817,7 @@
       "x": 296,
       "y": 7449,
       "props": {
-        "w": 78,
+        "w": 220,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{UR}_{b.T}\\le1",
@@ -3900,7 +3900,7 @@
       "x": 76,
       "y": 7595,
       "props": {
-        "w": 511,
+        "w": 540,
         "h": 122,
         "baseline": 18,
         "latex": "\\delta_{LT}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ n_{LT}=0\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ n_{LT}=\\mathrm{floor}\\left(n_{LT}\\right)\\land n_{LT}\\ge1\\land n_{LT}\\le13\\land k=1\\land k_{w}=1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
@@ -3933,7 +3933,7 @@
       "x": 316,
       "y": 7723,
       "props": {
-        "w": 62,
+        "w": 165,
         "h": 26,
         "baseline": 18,
         "latex": "\\delta_{LT}\\ge1",
@@ -3966,7 +3966,7 @@
       "x": 296,
       "y": 7755,
       "props": {
-        "w": 232,
+        "w": 281,
         "h": 83,
         "baseline": 18,
         "latex": "C_{1}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ n_{LT}=0\\\\\\quad\\left\\Vert\\displaystyle C_{1.u}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{linterp}\\left(n_{t},C_{1.t},n_{LT}\\right)\\right.\\end{array}",
@@ -3999,7 +3999,7 @@
       "x": 296,
       "y": 7844,
       "props": {
-        "w": 232,
+        "w": 261,
         "h": 83,
         "baseline": 18,
         "latex": "C_{2}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ n_{LT}=0\\\\\\quad\\left\\Vert\\displaystyle C_{2.u}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{linterp}\\left(n_{t},C_{2.t},n_{LT}\\right)\\right.\\end{array}",
@@ -4032,7 +4032,7 @@
       "x": 376,
       "y": 7933,
       "props": {
-        "w": 130,
+        "w": 223,
         "h": 43,
         "baseline": 24,
         "latex": "N_{cr.LT}\\coloneq\\frac{\\pi^2EI_{z}}{\\left(kL_{LT}\\right)^2}",
@@ -4065,7 +4065,7 @@
       "x": 96,
       "y": 8006,
       "props": {
-        "w": 396,
+        "w": 553,
         "h": 54,
         "baseline": 32,
         "latex": "M_{cr}\\coloneq C_{1}N_{cr.LT}\\left(\\sqrt{\\left(\\frac{k}{k_{w}}\\right)^2\\frac{I_{w}}{I_{z}}+\\frac{GI_{t}}{N_{cr.LT}}+\\left(C_{2}z_{g}\\right)^2}-C_{2}z_{g}\\right)",
@@ -4098,7 +4098,7 @@
       "x": 296,
       "y": 8257,
       "props": {
-        "w": 106,
+        "w": 178,
         "h": 43,
         "baseline": 27,
         "latex": "\\lambda_{LT}\\coloneq\\sqrt{\\frac{W_{y}f_{y}}{M_{cr}}}",
@@ -4114,9 +4114,9 @@
       "id": "s_stl_6m",
       "type": "text",
       "x": 76,
-      "y": 8391,
+      "y": 8306,
       "props": {
-        "w": 384,
+        "w": 630,
         "h": 18,
         "html": "Imperfection factor, Table 6.4: rolled a/b; custom welded c/d",
         "fontFamily": "Inter",
@@ -4128,10 +4128,10 @@
     {
       "id": "s_stl_6n",
       "type": "math",
-      "x": 476,
-      "y": 8306,
+      "x": 76,
+      "y": 8330,
       "props": {
-        "w": 223,
+        "w": 273,
         "h": 161,
         "baseline": 18,
         "latex": "\\alpha_{LT}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Section}=0\\land\\frac{h}{b}\\le2\\\\\\quad\\left\\Vert\\displaystyle 0.49\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\mathrm{Section}=0\\\\\\quad\\left\\Vert\\displaystyle 0.76\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\frac{h}{b}\\le2\\\\\\quad\\left\\Vert\\displaystyle 0.21\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0.34\\right.\\end{array}",
@@ -4147,7 +4147,7 @@
       "id": "s_stl_6o",
       "type": "text",
       "x": 76,
-      "y": 8478,
+      "y": 8502,
       "props": {
         "w": 204,
         "h": 18,
@@ -4162,9 +4162,9 @@
       "id": "s_stl_6p",
       "type": "math",
       "x": 296,
-      "y": 8473,
+      "y": 8497,
       "props": {
-        "w": 267,
+        "w": 336,
         "h": 26,
         "baseline": 18,
         "latex": "\\Phi_{LT}\\coloneq0.5\\left(1+\\alpha_{LT}\\left(\\lambda_{LT}-0.2\\right)+\\lambda_{LT}^2\\right)",
@@ -4180,7 +4180,7 @@
       "id": "s_stl_6q",
       "type": "text",
       "x": 76,
-      "y": 8522,
+      "y": 8546,
       "props": {
         "w": 204,
         "h": 18,
@@ -4195,9 +4195,9 @@
       "id": "s_stl_6r",
       "type": "math",
       "x": 296,
-      "y": 8505,
+      "y": 8529,
       "props": {
-        "w": 238,
+        "w": 325,
         "h": 52,
         "baseline": 30,
         "latex": "\\chi_{LT}\\coloneq\\min\\left(1,\\frac{1}{\\Phi_{LT}+\\sqrt{\\Phi_{LT}^2-\\lambda_{LT}^2}}\\right)",
@@ -4213,7 +4213,7 @@
       "id": "s_stl_6s",
       "type": "text",
       "x": 76,
-      "y": 8574,
+      "y": 8598,
       "props": {
         "w": 224,
         "h": 18,
@@ -4228,9 +4228,9 @@
       "id": "s_stl_6t",
       "type": "math",
       "x": 316,
-      "y": 8563,
+      "y": 8587,
       "props": {
-        "w": 138,
+        "w": 252,
         "h": 40,
         "baseline": 24,
         "latex": "M_{b.Rd}\\coloneq\\frac{\\chi_{LT}W_{y}f_{y}}{\\gamma_{M1}}",
@@ -4246,7 +4246,7 @@
       "id": "s_stl_6u",
       "type": "text",
       "x": 76,
-      "y": 8620,
+      "y": 8644,
       "props": {
         "w": 204,
         "h": 18,
@@ -4261,9 +4261,9 @@
       "id": "s_stl_6v",
       "type": "math",
       "x": 296,
-      "y": 8609,
+      "y": 8633,
       "props": {
-        "w": 113,
+        "w": 186,
         "h": 39,
         "baseline": 24,
         "latex": "\\mathrm{UR}_{LT}\\coloneq \\frac{M_{y.Ed}}{M_{b.Rd}}",
@@ -4279,7 +4279,7 @@
       "id": "s_stl_6w",
       "type": "text",
       "x": 76,
-      "y": 8659,
+      "y": 8683,
       "props": {
         "w": 204,
         "h": 18,
@@ -4294,9 +4294,9 @@
       "id": "s_stl_6x",
       "type": "math",
       "x": 296,
-      "y": 8654,
+      "y": 8678,
       "props": {
-        "w": 78,
+        "w": 225,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{UR}_{LT}\\le1",
@@ -4312,7 +4312,7 @@
       "id": "s_stl_6y",
       "type": "text",
       "x": 76,
-      "y": 8691,
+      "y": 8715,
       "props": {
         "w": 630,
         "h": 24,
@@ -4328,7 +4328,7 @@
       "id": "s_stl_6z",
       "type": "text",
       "x": 76,
-      "y": 8721,
+      "y": 8745,
       "props": {
         "w": 630,
         "h": 19,
@@ -4343,7 +4343,7 @@
       "id": "s_stl_70",
       "type": "text",
       "x": 76,
-      "y": 8746,
+      "y": 8770,
       "props": {
         "w": 630,
         "h": 19,
@@ -4358,7 +4358,7 @@
       "id": "s_stl_71",
       "type": "text",
       "x": 76,
-      "y": 8776,
+      "y": 8800,
       "props": {
         "w": 324,
         "h": 18,
@@ -4373,9 +4373,9 @@
       "id": "s_stl_72",
       "type": "math",
       "x": 416,
-      "y": 8771,
+      "y": 8795,
       "props": {
-        "w": 74,
+        "w": 178,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{Class}\\le2",
@@ -4391,7 +4391,7 @@
       "id": "s_stl_73",
       "type": "text",
       "x": 76,
-      "y": 8807,
+      "y": 8831,
       "props": {
         "w": 244,
         "h": 18,
@@ -4406,9 +4406,9 @@
       "id": "s_stl_74",
       "type": "math",
       "x": 336,
-      "y": 8802,
+      "y": 8826,
       "props": {
-        "w": 66,
+        "w": 206,
         "h": 26,
         "baseline": 18,
         "latex": "\\lambda_{z}\\ge0.4",
@@ -4424,7 +4424,7 @@
       "id": "s_stl_75",
       "type": "text",
       "x": 76,
-      "y": 8862,
+      "y": 8886,
       "props": {
         "w": 204,
         "h": 18,
@@ -4439,9 +4439,9 @@
       "id": "s_stl_76",
       "type": "math",
       "x": 296,
-      "y": 8834,
+      "y": 8858,
       "props": {
-        "w": 94,
+        "w": 159,
         "h": 39,
         "baseline": 21,
         "latex": "n_{y}\\coloneq\\frac{N_{Ed}}{N_{b.y.Rd}}",
@@ -4457,7 +4457,7 @@
       "id": "s_stl_77",
       "type": "text",
       "x": 76,
-      "y": 8915,
+      "y": 8939,
       "props": {
         "w": 204,
         "h": 18,
@@ -4472,9 +4472,9 @@
       "id": "s_stl_78",
       "type": "math",
       "x": 296,
-      "y": 8886,
+      "y": 8910,
       "props": {
-        "w": 93,
+        "w": 158,
         "h": 37,
         "baseline": 22,
         "latex": "n_{z}\\coloneq\\frac{N_{Ed}}{N_{b.z.Rd}}",
@@ -4490,7 +4490,7 @@
       "id": "s_stl_79",
       "type": "text",
       "x": 76,
-      "y": 8944,
+      "y": 8968,
       "props": {
         "w": 204,
         "h": 18,
@@ -4505,9 +4505,9 @@
       "id": "s_stl_7a",
       "type": "math",
       "x": 296,
-      "y": 8939,
+      "y": 8963,
       "props": {
-        "w": 257,
+        "w": 322,
         "h": 26,
         "baseline": 18,
         "latex": "k_{yy}\\coloneq C_{my}\\left(1+\\min\\left(\\lambda_{y}-0.2,0.8\\right)n_{y}\\right)",
@@ -4523,7 +4523,7 @@
       "id": "s_stl_7b",
       "type": "text",
       "x": 76,
-      "y": 8976,
+      "y": 9000,
       "props": {
         "w": 204,
         "h": 18,
@@ -4538,9 +4538,9 @@
       "id": "s_stl_7c",
       "type": "math",
       "x": 296,
-      "y": 8971,
+      "y": 8995,
       "props": {
-        "w": 264,
+        "w": 321,
         "h": 26,
         "baseline": 18,
         "latex": "k_{zz}\\coloneq C_{mz}\\left(1+\\min\\left(2\\lambda_{z}-0.6,1.4\\right)n_{z}\\right)",
@@ -4556,7 +4556,7 @@
       "id": "s_stl_7d",
       "type": "text",
       "x": 76,
-      "y": 9008,
+      "y": 9032,
       "props": {
         "w": 204,
         "h": 18,
@@ -4571,9 +4571,9 @@
       "id": "s_stl_7e",
       "type": "math",
       "x": 296,
-      "y": 9003,
+      "y": 9027,
       "props": {
-        "w": 87,
+        "w": 152,
         "h": 26,
         "baseline": 18,
         "latex": "k_{yz}\\coloneq0.6k_{zz}",
@@ -4589,7 +4589,7 @@
       "id": "s_stl_7f",
       "type": "text",
       "x": 76,
-      "y": 9048,
+      "y": 9072,
       "props": {
         "w": 204,
         "h": 18,
@@ -4604,9 +4604,9 @@
       "id": "s_stl_7g",
       "type": "math",
       "x": 296,
-      "y": 9035,
+      "y": 9059,
       "props": {
-        "w": 336,
+        "w": 414,
         "h": 43,
         "baseline": 26,
         "latex": "k_{zy}\\coloneq\\max\\left(1-\\frac{0.1\\lambda_{z}n_{z}}{C_{mLT}-0.25},1-\\frac{0.1n_{z}}{C_{mLT}-0.25}\\right)",
@@ -4622,7 +4622,7 @@
       "id": "s_stl_7h",
       "type": "text",
       "x": 76,
-      "y": 9095,
+      "y": 9119,
       "props": {
         "w": 244,
         "h": 18,
@@ -4637,9 +4637,9 @@
       "id": "s_stl_7i",
       "type": "math",
       "x": 336,
-      "y": 9084,
+      "y": 9108,
       "props": {
-        "w": 118,
+        "w": 232,
         "h": 40,
         "baseline": 24,
         "latex": "M_{z.Rd1}\\coloneq\\frac{W_{z}f_{y}}{\\gamma_{M1}}",
@@ -4655,7 +4655,7 @@
       "id": "s_stl_7j",
       "type": "text",
       "x": 76,
-      "y": 9141,
+      "y": 9165,
       "props": {
         "w": 204,
         "h": 18,
@@ -4670,9 +4670,9 @@
       "id": "s_stl_7k",
       "type": "math",
       "x": 296,
-      "y": 9130,
+      "y": 9154,
       "props": {
-        "w": 269,
+        "w": 334,
         "h": 39,
         "baseline": 24,
         "latex": "\\mathrm{UR}_{6.61}\\coloneq n_{y}+k_{yy}\\frac{M_{y.Ed}}{M_{b.Rd}}+k_{yz}\\frac{M_{z.Ed}}{M_{z.Rd1}}",
@@ -4688,7 +4688,7 @@
       "id": "s_stl_7l",
       "type": "text",
       "x": 76,
-      "y": 9180,
+      "y": 9204,
       "props": {
         "w": 204,
         "h": 18,
@@ -4703,9 +4703,9 @@
       "id": "s_stl_7m",
       "type": "math",
       "x": 296,
-      "y": 9175,
+      "y": 9199,
       "props": {
-        "w": 82,
+        "w": 222,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{UR}_{6.61}\\le1",
@@ -4721,7 +4721,7 @@
       "id": "s_stl_7n",
       "type": "text",
       "x": 76,
-      "y": 9217,
+      "y": 9439,
       "props": {
         "w": 204,
         "h": 18,
@@ -4736,9 +4736,9 @@
       "id": "s_stl_7o",
       "type": "math",
       "x": 296,
-      "y": 9206,
+      "y": 9428,
       "props": {
-        "w": 269,
+        "w": 334,
         "h": 39,
         "baseline": 24,
         "latex": "\\mathrm{UR}_{6.62}\\coloneq n_{z}+k_{zy}\\frac{M_{y.Ed}}{M_{b.Rd}}+k_{zz}\\frac{M_{z.Ed}}{M_{z.Rd1}}",
@@ -4754,7 +4754,7 @@
       "id": "s_stl_7p",
       "type": "text",
       "x": 76,
-      "y": 9433,
+      "y": 9478,
       "props": {
         "w": 204,
         "h": 18,
@@ -4769,9 +4769,9 @@
       "id": "s_stl_7q",
       "type": "math",
       "x": 296,
-      "y": 9428,
+      "y": 9473,
       "props": {
-        "w": 82,
+        "w": 222,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{UR}_{6.62}\\le1",
@@ -4787,7 +4787,7 @@
       "id": "s_stl_7r",
       "type": "text",
       "x": 76,
-      "y": 9465,
+      "y": 9510,
       "props": {
         "w": 630,
         "h": 24,
@@ -4803,7 +4803,7 @@
       "id": "s_stl_7s",
       "type": "text",
       "x": 76,
-      "y": 9495,
+      "y": 9540,
       "props": {
         "w": 630,
         "h": 18,
@@ -4818,9 +4818,9 @@
       "id": "s_stl_7t",
       "type": "math",
       "x": 76,
-      "y": 9519,
+      "y": 9564,
       "props": {
-        "w": 522,
+        "w": 587,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{UR}\\coloneq\\max\\left(\\mathrm{UR}_{V.z},\\mathrm{UR}_{V.y},\\mathrm{UR}_{sec},\\mathrm{UR}_{b.y},\\mathrm{UR}_{b.z},\\mathrm{UR}_{b.T},\\mathrm{UR}_{LT},\\mathrm{UR}_{6.61},\\mathrm{UR}_{6.62}\\right)",
@@ -4836,7 +4836,7 @@
       "id": "s_stl_7u",
       "type": "text",
       "x": 76,
-      "y": 9555,
+      "y": 9600,
       "props": {
         "w": 204,
         "h": 18,
@@ -4851,9 +4851,9 @@
       "id": "s_stl_7v",
       "type": "math",
       "x": 296,
-      "y": 9550,
+      "y": 9595,
       "props": {
-        "w": 61,
+        "w": 201,
         "h": 25,
         "baseline": 18,
         "latex": "\\mathrm{UR}\\le1",
@@ -4869,7 +4869,7 @@
       "id": "s_stl_7w",
       "type": "text",
       "x": 76,
-      "y": 9593,
+      "y": 9638,
       "props": {
         "w": 630,
         "h": 29,
@@ -4888,7 +4888,7 @@
       "id": "s_stl_7x",
       "type": "text",
       "x": 76,
-      "y": 9634,
+      "y": 9679,
       "props": {
         "w": 630,
         "h": 24,
@@ -4908,11 +4908,11 @@
       "id": "s_stl_7y",
       "type": "text",
       "x": 76,
-      "y": 9664,
+      "y": 9709,
       "props": {
         "w": 630,
         "h": 19,
-        "html": "Cases 1 to 9: end moments M and ψM with ψ = +1, +0.75, +0.5, +0.25, 0, −0.25, −0.5, −0.75, −1.",
+        "html": "SN003b Tables 3.1 / 3.2; k = kw = 1 and κ = 0 (conservative C1). No interpolation of cases.",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -4923,11 +4923,11 @@
       "id": "s_stl_7z",
       "type": "text",
       "x": 76,
-      "y": 9689,
+      "y": 9734,
       "props": {
         "w": 630,
         "h": 19,
-        "html": "Case 10: pinned ends, uniform load. Case 11: fixed ends, uniform load.",
+        "html": "Support symbols show bending restraints; lateral movement and twist are restrained at both ends.",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -4938,11 +4938,11 @@
       "id": "s_stl_80",
       "type": "text",
       "x": 76,
-      "y": 9714,
+      "y": 9759,
       "props": {
         "w": 630,
         "h": 19,
-        "html": "Case 12: pinned ends, point load at mid-span. Case 13: fixed ends, point load at mid-span.",
+        "html": "Double-click a C1/C2 cell to edit. Lookup uses these cells; use case 0 for other arrangements.",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -4951,28 +4951,609 @@
     },
     {
       "id": "s_stl_81",
-      "type": "text",
+      "type": "image",
       "x": 76,
-      "y": 9739,
+      "y": 10599,
       "props": {
-        "w": 630,
-        "h": 19,
-        "html": "Values between cases are not interpolated: choose the lower C1 of the two neighbours.",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
+        "w": 640,
+        "h": 740,
+        "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iNzQwIiB2aWV3Qm94PSIwIDAgNjQwIDc0MCI+CiAgICA8dGl0bGU+TFRCIGNhc2VzIDEgdG8gNzsgU0NJIE5DQ0kgU04wMDNiIFRhYmxlcyAzLjEgYW5kIDMuMjwvdGl0bGU+CiAgICA8cmVjdCB4PSIwLjUiIHk9IjAuNSIgd2lkdGg9IjYzOSIgaGVpZ2h0PSI3MzkiIGZpbGw9IndoaXRlIiBzdHJva2U9IiM5NGEzYjgiLz4KICAgIDxyZWN0IHg9IjEiIHk9IjEiIHdpZHRoPSI2MzgiIGhlaWdodD0iMzkiIGZpbGw9IiNlZmY2ZmYiLz4KICAgIDxnIHN0cm9rZT0iI2NiZDVlMSIgc3Ryb2tlLXdpZHRoPSIxIj48bGluZSB4MT0iMCIgeTE9IjQwIiB4Mj0iNjQwIiB5Mj0iNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSIxNDAiIHgyPSI2NDAiIHkyPSIxNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSIyNDAiIHgyPSI2NDAiIHkyPSIyNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSIzNDAiIHgyPSI2NDAiIHkyPSIzNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSI0NDAiIHgyPSI2NDAiIHkyPSI0NDAiIC8+PGxpbmUgeDE9IjAiIHkxPSI1NDAiIHgyPSI2NDAiIHkyPSI1NDAiIC8+PGxpbmUgeDE9IjAiIHkxPSI2NDAiIHgyPSI2NDAiIHkyPSI2NDAiIC8+PGxpbmUgeDE9IjYwIiB5MT0iMCIgeDI9IjYwIiB5Mj0iNzQwIiAvPjxsaW5lIHgxPSIyODAiIHkxPSIwIiB4Mj0iMjgwIiB5Mj0iNzQwIiAvPjxsaW5lIHgxPSI0ODAiIHkxPSIwIiB4Mj0iNDgwIiB5Mj0iNzQwIiAvPjxsaW5lIHgxPSI1NjAiIHkxPSIwIiB4Mj0iNTYwIiB5Mj0iNzQwIiAvPjwvZz4KICAgIDxnIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMWUzYTVmIj4KICAgICAgPGcgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPjx0ZXh0IHg9IjMwIiB5PSIyNSIgPkNhc2U8L3RleHQ+PHRleHQgeD0iMTcwIiB5PSIyNSIgPkxvYWRpbmcgYW5kIHN1cHBvcnRzPC90ZXh0Pjx0ZXh0IHg9IjM4MCIgeT0iMjUiID5CZW5kaW5nIG1vbWVudCBkaWFncmFtPC90ZXh0Pjx0ZXh0IHg9IjUyMCIgeT0iMjUiID5DMTwvdGV4dD48dGV4dCB4PSI2MDAiIHk9IjI1IiA+QzI8L3RleHQ+PC9nPgogICAgICA8ZyBpZD0ibHRiLWNhc2UtMSI+PHRleHQgeD0iMzAiIHk9Ijk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+MTwvdGV4dD48bGluZSB4MT0iODgiIHkxPSI4MiIgeDI9IjI1NCIgeTI9IjgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCw4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxsaW5lIHgxPSIyNDYiIHkxPSI5NyIgeDI9IjI2MiIgeTI9Ijk3IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNODgsNTVBMTEsMTEgMCAxIDEgNzcsNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNNzQsNzFMNzcsNjZMODAsNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxMDMiIHk9IjYyIiA+TTwvdGV4dD48cGF0aCBkPSJNMjU0LDU1QTExLDExIDAgMSAwIDI2NSw2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yNjIsNzFMMjY1LDY2TDI2OCw3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjIyMCIgeT0iNjIiIHRleHQtYW5jaG9yPSJlbmQiPjEuMDBNPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iMTI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSArMS4wMDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iODciIHgyPSI0NjYiIHkyPSI4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDg3TDI5NC4wMCwxMTIuMDBMMjk4LjMwLDExMi4wMEwzMDIuNjAsMTEyLjAwTDMwNi45MCwxMTIuMDBMMzExLjIwLDExMi4wMEwzMTUuNTAsMTEyLjAwTDMxOS44MCwxMTIuMDBMMzI0LjEwLDExMi4wMEwzMjguNDAsMTEyLjAwTDMzMi43MCwxMTIuMDBMMzM3LjAwLDExMi4wMEwzNDEuMzAsMTEyLjAwTDM0NS42MCwxMTIuMDBMMzQ5LjkwLDExMi4wMEwzNTQuMjAsMTEyLjAwTDM1OC41MCwxMTIuMDBMMzYyLjgwLDExMi4wMEwzNjcuMTAsMTEyLjAwTDM3MS40MCwxMTIuMDBMMzc1LjcwLDExMi4wMEwzODAuMDAsMTEyLjAwTDM4NC4zMCwxMTIuMDBMMzg4LjYwLDExMi4wMEwzOTIuOTAsMTEyLjAwTDM5Ny4yMCwxMTIuMDBMNDAxLjUwLDExMi4wMEw0MDUuODAsMTEyLjAwTDQxMC4xMCwxMTIuMDBMNDE0LjQwLDExMi4wMEw0MTguNzAsMTEyLjAwTDQyMy4wMCwxMTIuMDBMNDI3LjMwLDExMi4wMEw0MzEuNjAsMTEyLjAwTDQzNS45MCwxMTIuMDBMNDQwLjIwLDExMi4wMEw0NDQuNTAsMTEyLjAwTDQ0OC44MCwxMTIuMDBMNDUzLjEwLDExMi4wMEw0NTcuNDAsMTEyLjAwTDQ2MS43MCwxMTIuMDBMNDY2LjAwLDExMi4wMEw0NjYsODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSIxMjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtMiI+PHRleHQgeD0iMzAiIHk9IjE5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjI8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iMTgyIiB4Mj0iMjU0IiB5Mj0iMTgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCwxODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCwxODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PGxpbmUgeDE9IjI0NiIgeTE9IjE5NyIgeDI9IjI2MiIgeTI9IjE5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTg4LDE1NUExMSwxMSAwIDEgMSA3NywxNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNNzQsMTcxTDc3LDE2Nkw4MCwxNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxMDMiIHk9IjE2MiIgPk08L3RleHQ+PHBhdGggZD0iTTI1NCwxNTVBMTEsMTEgMCAxIDAgMjY1LDE2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yNjIsMTcxTDI2NSwxNjZMMjY4LDE3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjIyMCIgeT0iMTYyIiB0ZXh0LWFuY2hvcj0iZW5kIj4wLjc1TTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjIyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+RW5kIG1vbWVudHM7IM+IID0gKzAuNzU8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9IjE4NyIgeDI9IjQ2NiIgeTI9IjE4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDE4N0wyOTQuMDAsMjEyLjAwTDI5OC4zMCwyMTEuODRMMzAyLjYwLDIxMS42OUwzMDYuOTAsMjExLjUzTDMxMS4yMCwyMTEuMzhMMzE1LjUwLDIxMS4yMkwzMTkuODAsMjExLjA2TDMyNC4xMCwyMTAuOTFMMzI4LjQwLDIxMC43NUwzMzIuNzAsMjEwLjU5TDMzNy4wMCwyMTAuNDRMMzQxLjMwLDIxMC4yOEwzNDUuNjAsMjEwLjEzTDM0OS45MCwyMDkuOTdMMzU0LjIwLDIwOS44MUwzNTguNTAsMjA5LjY2TDM2Mi44MCwyMDkuNTBMMzY3LjEwLDIwOS4zNEwzNzEuNDAsMjA5LjE5TDM3NS43MCwyMDkuMDNMMzgwLjAwLDIwOC44OEwzODQuMzAsMjA4LjcyTDM4OC42MCwyMDguNTZMMzkyLjkwLDIwOC40MUwzOTcuMjAsMjA4LjI1TDQwMS41MCwyMDguMDlMNDA1LjgwLDIwNy45NEw0MTAuMTAsMjA3Ljc4TDQxNC40MCwyMDcuNjNMNDE4LjcwLDIwNy40N0w0MjMuMDAsMjA3LjMxTDQyNy4zMCwyMDcuMTZMNDMxLjYwLDIwNy4wMEw0MzUuOTAsMjA2Ljg0TDQ0MC4yMCwyMDYuNjlMNDQ0LjUwLDIwNi41M0w0NDguODAsMjA2LjM4TDQ1My4xMCwyMDYuMjJMNDU3LjQwLDIwNi4wNkw0NjEuNzAsMjA1LjkxTDQ2Ni4wMCwyMDUuNzVMNDY2LDE4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjIyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPjxnIGlkPSJsdGItY2FzZS0zIj48dGV4dCB4PSIzMCIgeT0iMjk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+MzwvdGV4dD48bGluZSB4MT0iODgiIHkxPSIyODIiIHgyPSIyNTQiIHkyPSIyODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDI4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDI4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iMjk3IiB4Mj0iMjYyIiB5Mj0iMjk3IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNODgsMjU1QTExLDExIDAgMSAxIDc3LDI2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik03NCwyNzFMNzcsMjY2TDgwLDI3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjEwMyIgeT0iMjYyIiA+TTwvdGV4dD48cGF0aCBkPSJNMjU0LDI1NUExMSwxMSAwIDEgMCAyNjUsMjY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI2MiwyNzFMMjY1LDI2NkwyNjgsMjcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMjIwIiB5PSIyNjIiIHRleHQtYW5jaG9yPSJlbmQiPjAuNTBNPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iMzI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSArMC41MDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iMjg3IiB4Mj0iNDY2IiB5Mj0iMjg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsMjg3TDI5NC4wMCwzMTIuMDBMMjk4LjMwLDMxMS42OUwzMDIuNjAsMzExLjM4TDMwNi45MCwzMTEuMDZMMzExLjIwLDMxMC43NUwzMTUuNTAsMzEwLjQ0TDMxOS44MCwzMTAuMTNMMzI0LjEwLDMwOS44MUwzMjguNDAsMzA5LjUwTDMzMi43MCwzMDkuMTlMMzM3LjAwLDMwOC44OEwzNDEuMzAsMzA4LjU2TDM0NS42MCwzMDguMjVMMzQ5LjkwLDMwNy45NEwzNTQuMjAsMzA3LjYzTDM1OC41MCwzMDcuMzFMMzYyLjgwLDMwNy4wMEwzNjcuMTAsMzA2LjY5TDM3MS40MCwzMDYuMzhMMzc1LjcwLDMwNi4wNkwzODAuMDAsMzA1Ljc1TDM4NC4zMCwzMDUuNDRMMzg4LjYwLDMwNS4xM0wzOTIuOTAsMzA0LjgxTDM5Ny4yMCwzMDQuNTBMNDAxLjUwLDMwNC4xOUw0MDUuODAsMzAzLjg4TDQxMC4xMCwzMDMuNTZMNDE0LjQwLDMwMy4yNUw0MTguNzAsMzAyLjk0TDQyMy4wMCwzMDIuNjNMNDI3LjMwLDMwMi4zMUw0MzEuNjAsMzAyLjAwTDQzNS45MCwzMDEuNjlMNDQwLjIwLDMwMS4zOEw0NDQuNTAsMzAxLjA2TDQ0OC44MCwzMDAuNzVMNDUzLjEwLDMwMC40NEw0NTcuNDAsMzAwLjEzTDQ2MS43MCwyOTkuODFMNDY2LjAwLDI5OS41MEw0NjYsMjg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iMzI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTQiPjx0ZXh0IHg9IjMwIiB5PSIzOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij40PC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjM4MiIgeDI9IjI1NCIgeTI9IjM4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsMzg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxwYXRoIGQ9Ik0yNTQsMzg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxsaW5lIHgxPSIyNDYiIHkxPSIzOTciIHgyPSIyNjIiIHkyPSIzOTciIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik04OCwzNTVBMTEsMTEgMCAxIDEgNzcsMzY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDM3MUw3NywzNjZMODAsMzcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSIzNjIiID5NPC90ZXh0PjxwYXRoIGQ9Ik0yNTQsMzU1QTExLDExIDAgMSAwIDI2NSwzNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjYyLDM3MUwyNjUsMzY2TDI2OCwzNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIyMjAiIHk9IjM2MiIgdGV4dC1hbmNob3I9ImVuZCI+MC4yNU08L3RleHQ+PHRleHQgeD0iMTcxIiB5PSI0MjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkVuZCBtb21lbnRzOyDPiCA9ICswLjI1PC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSIzODciIHgyPSI0NjYiIHkyPSIzODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCwzODdMMjk0LjAwLDQxMi4wMEwyOTguMzAsNDExLjUzTDMwMi42MCw0MTEuMDZMMzA2LjkwLDQxMC41OUwzMTEuMjAsNDEwLjEzTDMxNS41MCw0MDkuNjZMMzE5LjgwLDQwOS4xOUwzMjQuMTAsNDA4LjcyTDMyOC40MCw0MDguMjVMMzMyLjcwLDQwNy43OEwzMzcuMDAsNDA3LjMxTDM0MS4zMCw0MDYuODRMMzQ1LjYwLDQwNi4zOEwzNDkuOTAsNDA1LjkxTDM1NC4yMCw0MDUuNDRMMzU4LjUwLDQwNC45N0wzNjIuODAsNDA0LjUwTDM2Ny4xMCw0MDQuMDNMMzcxLjQwLDQwMy41NkwzNzUuNzAsNDAzLjA5TDM4MC4wMCw0MDIuNjNMMzg0LjMwLDQwMi4xNkwzODguNjAsNDAxLjY5TDM5Mi45MCw0MDEuMjJMMzk3LjIwLDQwMC43NUw0MDEuNTAsNDAwLjI4TDQwNS44MCwzOTkuODFMNDEwLjEwLDM5OS4zNEw0MTQuNDAsMzk4Ljg4TDQxOC43MCwzOTguNDFMNDIzLjAwLDM5Ny45NEw0MjcuMzAsMzk3LjQ3TDQzMS42MCwzOTcuMDBMNDM1LjkwLDM5Ni41M0w0NDAuMjAsMzk2LjA2TDQ0NC41MCwzOTUuNTlMNDQ4LjgwLDM5NS4xM0w0NTMuMTAsMzk0LjY2TDQ1Ny40MCwzOTQuMTlMNDYxLjcwLDM5My43Mkw0NjYuMDAsMzkzLjI1TDQ2NiwzODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSI0MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtNSI+PHRleHQgeD0iMzAiIHk9IjQ5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjU8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iNDgyIiB4Mj0iMjU0IiB5Mj0iNDgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCw0ODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCw0ODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PGxpbmUgeDE9IjI0NiIgeTE9IjQ5NyIgeDI9IjI2MiIgeTI9IjQ5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTg4LDQ1NUExMSwxMSAwIDEgMSA3Nyw0NjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNNzQsNDcxTDc3LDQ2Nkw4MCw0NzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxMDMiIHk9IjQ2MiIgPk08L3RleHQ+PHRleHQgeD0iMTcxIiB5PSI1MjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkVuZCBtb21lbnRzOyDPiCA9IDAuMDA8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9IjQ4NyIgeDI9IjQ2NiIgeTI9IjQ4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDQ4N0wyOTQuMDAsNTEyLjAwTDI5OC4zMCw1MTEuMzhMMzAyLjYwLDUxMC43NUwzMDYuOTAsNTEwLjEzTDMxMS4yMCw1MDkuNTBMMzE1LjUwLDUwOC44OEwzMTkuODAsNTA4LjI1TDMyNC4xMCw1MDcuNjNMMzI4LjQwLDUwNy4wMEwzMzIuNzAsNTA2LjM4TDMzNy4wMCw1MDUuNzVMMzQxLjMwLDUwNS4xM0wzNDUuNjAsNTA0LjUwTDM0OS45MCw1MDMuODhMMzU0LjIwLDUwMy4yNUwzNTguNTAsNTAyLjYzTDM2Mi44MCw1MDIuMDBMMzY3LjEwLDUwMS4zOEwzNzEuNDAsNTAwLjc1TDM3NS43MCw1MDAuMTNMMzgwLjAwLDQ5OS41MEwzODQuMzAsNDk4Ljg4TDM4OC42MCw0OTguMjVMMzkyLjkwLDQ5Ny42M0wzOTcuMjAsNDk3LjAwTDQwMS41MCw0OTYuMzhMNDA1LjgwLDQ5NS43NUw0MTAuMTAsNDk1LjEzTDQxNC40MCw0OTQuNTBMNDE4LjcwLDQ5My44OEw0MjMuMDAsNDkzLjI1TDQyNy4zMCw0OTIuNjNMNDMxLjYwLDQ5Mi4wMEw0MzUuOTAsNDkxLjM4TDQ0MC4yMCw0OTAuNzVMNDQ0LjUwLDQ5MC4xM0w0NDguODAsNDg5LjUwTDQ1My4xMCw0ODguODhMNDU3LjQwLDQ4OC4yNUw0NjEuNzAsNDg3LjYzTDQ2Ni4wMCw0ODcuMDBMNDY2LDQ4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjUyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPjxnIGlkPSJsdGItY2FzZS02Ij48dGV4dCB4PSIzMCIgeT0iNTk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+NjwvdGV4dD48bGluZSB4MT0iODgiIHkxPSI1ODIiIHgyPSIyNTQiIHkyPSI1ODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDU4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDU4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iNTk3IiB4Mj0iMjYyIiB5Mj0iNTk3IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNODgsNTU1QTExLDExIDAgMSAxIDc3LDU2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik03NCw1NzFMNzcsNTY2TDgwLDU3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjEwMyIgeT0iNTYyIiA+TTwvdGV4dD48cGF0aCBkPSJNMjU0LDU1NUExMSwxMSAwIDEgMSAyNDMsNTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI0MCw1NzFMMjQzLDU2NkwyNDYsNTcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMjIwIiB5PSI1NjIiIHRleHQtYW5jaG9yPSJlbmQiPuKIkjAuMjVNPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iNjI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSAtMC4yNTwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iNTg3IiB4Mj0iNDY2IiB5Mj0iNTg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsNTg3TDI5NC4wMCw2MTIuMDBMMjk4LjMwLDYxMS4yMkwzMDIuNjAsNjEwLjQ0TDMwNi45MCw2MDkuNjZMMzExLjIwLDYwOC44OEwzMTUuNTAsNjA4LjA5TDMxOS44MCw2MDcuMzFMMzI0LjEwLDYwNi41M0wzMjguNDAsNjA1Ljc1TDMzMi43MCw2MDQuOTdMMzM3LjAwLDYwNC4xOUwzNDEuMzAsNjAzLjQxTDM0NS42MCw2MDIuNjNMMzQ5LjkwLDYwMS44NEwzNTQuMjAsNjAxLjA2TDM1OC41MCw2MDAuMjhMMzYyLjgwLDU5OS41MEwzNjcuMTAsNTk4LjcyTDM3MS40MCw1OTcuOTRMMzc1LjcwLDU5Ny4xNkwzODAuMDAsNTk2LjM4TDM4NC4zMCw1OTUuNTlMMzg4LjYwLDU5NC44MUwzOTIuOTAsNTk0LjAzTDM5Ny4yMCw1OTMuMjVMNDAxLjUwLDU5Mi40N0w0MDUuODAsNTkxLjY5TDQxMC4xMCw1OTAuOTFMNDE0LjQwLDU5MC4xM0w0MTguNzAsNTg5LjM0TDQyMy4wMCw1ODguNTZMNDI3LjMwLDU4Ny43OEw0MzEuNjAsNTg3LjAwTDQzNS45MCw1ODYuMjJMNDQwLjIwLDU4NS40NEw0NDQuNTAsNTg0LjY2TDQ0OC44MCw1ODMuODhMNDUzLjEwLDU4My4wOUw0NTcuNDAsNTgyLjMxTDQ2MS43MCw1ODEuNTNMNDY2LjAwLDU4MC43NUw0NjYsNTg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iNjI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTciPjx0ZXh0IHg9IjMwIiB5PSI2OTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij43PC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjY4MiIgeDI9IjI1NCIgeTI9IjY4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsNjg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxwYXRoIGQ9Ik0yNTQsNjg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxsaW5lIHgxPSIyNDYiIHkxPSI2OTciIHgyPSIyNjIiIHkyPSI2OTciIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik04OCw2NTVBMTEsMTEgMCAxIDEgNzcsNjY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDY3MUw3Nyw2NjZMODAsNjcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSI2NjIiID5NPC90ZXh0PjxwYXRoIGQ9Ik0yNTQsNjU1QTExLDExIDAgMSAxIDI0Myw2NjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjQwLDY3MUwyNDMsNjY2TDI0Niw2NzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIyMjAiIHk9IjY2MiIgdGV4dC1hbmNob3I9ImVuZCI+4oiSMC41ME08L3RleHQ+PHRleHQgeD0iMTcxIiB5PSI3MjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkVuZCBtb21lbnRzOyDPiCA9IC0wLjUwPC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSI2ODciIHgyPSI0NjYiIHkyPSI2ODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCw2ODdMMjk0LjAwLDcxMi4wMEwyOTguMzAsNzExLjA2TDMwMi42MCw3MTAuMTNMMzA2LjkwLDcwOS4xOUwzMTEuMjAsNzA4LjI1TDMxNS41MCw3MDcuMzFMMzE5LjgwLDcwNi4zOEwzMjQuMTAsNzA1LjQ0TDMyOC40MCw3MDQuNTBMMzMyLjcwLDcwMy41NkwzMzcuMDAsNzAyLjYzTDM0MS4zMCw3MDEuNjlMMzQ1LjYwLDcwMC43NUwzNDkuOTAsNjk5LjgxTDM1NC4yMCw2OTguODhMMzU4LjUwLDY5Ny45NEwzNjIuODAsNjk3LjAwTDM2Ny4xMCw2OTYuMDZMMzcxLjQwLDY5NS4xM0wzNzUuNzAsNjk0LjE5TDM4MC4wMCw2OTMuMjVMMzg0LjMwLDY5Mi4zMUwzODguNjAsNjkxLjM4TDM5Mi45MCw2OTAuNDRMMzk3LjIwLDY4OS41MEw0MDEuNTAsNjg4LjU2TDQwNS44MCw2ODcuNjNMNDEwLjEwLDY4Ni42OUw0MTQuNDAsNjg1Ljc1TDQxOC43MCw2ODQuODFMNDIzLjAwLDY4My44OEw0MjcuMzAsNjgyLjk0TDQzMS42MCw2ODIuMDBMNDM1LjkwLDY4MS4wNkw0NDAuMjAsNjgwLjEzTDQ0NC41MCw2NzkuMTlMNDQ4LjgwLDY3OC4yNUw0NTMuMTAsNjc3LjMxTDQ1Ny40MCw2NzYuMzhMNDYxLjcwLDY3NS40NEw0NjYuMDAsNjc0LjUwTDQ2Niw2ODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSI3MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz4KICAgIDwvZz4KICA8L3N2Zz4="
+      },
+      "groupId": "s_stl_group_81"
     },
     {
       "id": "s_stl_82",
+      "type": "math",
+      "x": 576,
+      "y": 10683,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{1.1}\\coloneq 1.00",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_81"
+    },
+    {
+      "id": "s_stl_83",
+      "type": "math",
+      "x": 656,
+      "y": 10683,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{2.1}\\coloneq 0",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_81"
+    },
+    {
+      "id": "s_stl_84",
+      "type": "math",
+      "x": 576,
+      "y": 10783,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{1.2}\\coloneq 1.14",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_81"
+    },
+    {
+      "id": "s_stl_85",
+      "type": "math",
+      "x": 656,
+      "y": 10783,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{2.2}\\coloneq 0",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_81"
+    },
+    {
+      "id": "s_stl_86",
+      "type": "math",
+      "x": 576,
+      "y": 10883,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{1.3}\\coloneq 1.31",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_81"
+    },
+    {
+      "id": "s_stl_87",
+      "type": "math",
+      "x": 656,
+      "y": 10883,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{2.3}\\coloneq 0",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_81"
+    },
+    {
+      "id": "s_stl_88",
+      "type": "math",
+      "x": 576,
+      "y": 10983,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{1.4}\\coloneq 1.52",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_81"
+    },
+    {
+      "id": "s_stl_89",
+      "type": "math",
+      "x": 656,
+      "y": 10983,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{2.4}\\coloneq 0",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_81"
+    },
+    {
+      "id": "s_stl_8a",
+      "type": "math",
+      "x": 576,
+      "y": 11083,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{1.5}\\coloneq 1.77",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_81"
+    },
+    {
+      "id": "s_stl_8b",
+      "type": "math",
+      "x": 656,
+      "y": 11083,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{2.5}\\coloneq 0",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_81"
+    },
+    {
+      "id": "s_stl_8c",
+      "type": "math",
+      "x": 576,
+      "y": 11183,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{1.6}\\coloneq 2.05",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_81"
+    },
+    {
+      "id": "s_stl_8d",
+      "type": "math",
+      "x": 656,
+      "y": 11183,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{2.6}\\coloneq 0",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_81"
+    },
+    {
+      "id": "s_stl_8e",
+      "type": "math",
+      "x": 576,
+      "y": 11283,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{1.7}\\coloneq 2.33",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_81"
+    },
+    {
+      "id": "s_stl_8f",
+      "type": "math",
+      "x": 656,
+      "y": 11283,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{2.7}\\coloneq 0",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_81"
+    },
+    {
+      "id": "s_stl_8g",
+      "type": "image",
+      "x": 76,
+      "y": 11770,
+      "props": {
+        "w": 640,
+        "h": 640,
+        "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgNjQwIDY0MCI+CiAgICA8dGl0bGU+TFRCIGNhc2VzIDggdG8gMTM7IFNDSSBOQ0NJIFNOMDAzYiBUYWJsZXMgMy4xIGFuZCAzLjI8L3RpdGxlPgogICAgPHJlY3QgeD0iMC41IiB5PSIwLjUiIHdpZHRoPSI2MzkiIGhlaWdodD0iNjM5IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjOTRhM2I4Ii8+CiAgICA8cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iNjM4IiBoZWlnaHQ9IjM5IiBmaWxsPSIjZWZmNmZmIi8+CiAgICA8ZyBzdHJva2U9IiNjYmQ1ZTEiIHN0cm9rZS13aWR0aD0iMSI+PGxpbmUgeDE9IjAiIHkxPSI0MCIgeDI9IjY0MCIgeTI9IjQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iMTQwIiB4Mj0iNjQwIiB5Mj0iMTQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iMjQwIiB4Mj0iNjQwIiB5Mj0iMjQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iMzQwIiB4Mj0iNjQwIiB5Mj0iMzQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iNDQwIiB4Mj0iNjQwIiB5Mj0iNDQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iNTQwIiB4Mj0iNjQwIiB5Mj0iNTQwIiAvPjxsaW5lIHgxPSI2MCIgeTE9IjAiIHgyPSI2MCIgeTI9IjY0MCIgLz48bGluZSB4MT0iMjgwIiB5MT0iMCIgeDI9IjI4MCIgeTI9IjY0MCIgLz48bGluZSB4MT0iNDgwIiB5MT0iMCIgeDI9IjQ4MCIgeTI9IjY0MCIgLz48bGluZSB4MT0iNTYwIiB5MT0iMCIgeDI9IjU2MCIgeTI9IjY0MCIgLz48L2c+CiAgICA8ZyBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzFlM2E1ZiI+CiAgICAgIDxnIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj48dGV4dCB4PSIzMCIgeT0iMjUiID5DYXNlPC90ZXh0Pjx0ZXh0IHg9IjE3MCIgeT0iMjUiID5Mb2FkaW5nIGFuZCBzdXBwb3J0czwvdGV4dD48dGV4dCB4PSIzODAiIHk9IjI1IiA+QmVuZGluZyBtb21lbnQgZGlhZ3JhbTwvdGV4dD48dGV4dCB4PSI1MjAiIHk9IjI1IiA+QzE8L3RleHQ+PHRleHQgeD0iNjAwIiB5PSIyNSIgPkMyPC90ZXh0PjwvZz4KICAgICAgPGcgaWQ9Imx0Yi1jYXNlLTgiPjx0ZXh0IHg9IjMwIiB5PSI5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjg8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iODIiIHgyPSIyNTQiIHkyPSI4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCw4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iOTciIHgyPSIyNjIiIHkyPSI5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTg4LDU1QTExLDExIDAgMSAxIDc3LDY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDcxTDc3LDY2TDgwLDcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSI2MiIgPk08L3RleHQ+PHBhdGggZD0iTTI1NCw1NUExMSwxMSAwIDEgMSAyNDMsNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjQwLDcxTDI0Myw2NkwyNDYsNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIyMjAiIHk9IjYyIiB0ZXh0LWFuY2hvcj0iZW5kIj7iiJIwLjc1TTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjEyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+RW5kIG1vbWVudHM7IM+IID0gLTAuNzU8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9Ijg3IiB4Mj0iNDY2IiB5Mj0iODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCw4N0wyOTQuMDAsMTEyLjAwTDI5OC4zMCwxMTAuOTFMMzAyLjYwLDEwOS44MUwzMDYuOTAsMTA4LjcyTDMxMS4yMCwxMDcuNjNMMzE1LjUwLDEwNi41M0wzMTkuODAsMTA1LjQ0TDMyNC4xMCwxMDQuMzRMMzI4LjQwLDEwMy4yNUwzMzIuNzAsMTAyLjE2TDMzNy4wMCwxMDEuMDZMMzQxLjMwLDk5Ljk3TDM0NS42MCw5OC44OEwzNDkuOTAsOTcuNzhMMzU0LjIwLDk2LjY5TDM1OC41MCw5NS41OUwzNjIuODAsOTQuNTBMMzY3LjEwLDkzLjQxTDM3MS40MCw5Mi4zMUwzNzUuNzAsOTEuMjJMMzgwLjAwLDkwLjEzTDM4NC4zMCw4OS4wM0wzODguNjAsODcuOTRMMzkyLjkwLDg2Ljg0TDM5Ny4yMCw4NS43NUw0MDEuNTAsODQuNjZMNDA1LjgwLDgzLjU2TDQxMC4xMCw4Mi40N0w0MTQuNDAsODEuMzhMNDE4LjcwLDgwLjI4TDQyMy4wMCw3OS4xOUw0MjcuMzAsNzguMDlMNDMxLjYwLDc3LjAwTDQzNS45MCw3NS45MUw0NDAuMjAsNzQuODFMNDQ0LjUwLDczLjcyTDQ0OC44MCw3Mi42M0w0NTMuMTAsNzEuNTNMNDU3LjQwLDcwLjQ0TDQ2MS43MCw2OS4zNEw0NjYuMDAsNjguMjVMNDY2LDg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iMTI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTkiPjx0ZXh0IHg9IjMwIiB5PSIxOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij45PC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjE4MiIgeDI9IjI1NCIgeTI9IjE4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsMTg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxwYXRoIGQ9Ik0yNTQsMTg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxsaW5lIHgxPSIyNDYiIHkxPSIxOTciIHgyPSIyNjIiIHkyPSIxOTciIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik04OCwxNTVBMTEsMTEgMCAxIDEgNzcsMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDE3MUw3NywxNjZMODAsMTcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSIxNjIiID5NPC90ZXh0PjxwYXRoIGQ9Ik0yNTQsMTU1QTExLDExIDAgMSAxIDI0MywxNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjQwLDE3MUwyNDMsMTY2TDI0NiwxNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIyMjAiIHk9IjE2MiIgdGV4dC1hbmNob3I9ImVuZCI+4oiSMS4wME08L3RleHQ+PHRleHQgeD0iMTcxIiB5PSIyMjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkVuZCBtb21lbnRzOyDPiCA9IC0xLjAwPC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSIxODciIHgyPSI0NjYiIHkyPSIxODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCwxODdMMjk0LjAwLDIxMi4wMEwyOTguMzAsMjEwLjc1TDMwMi42MCwyMDkuNTBMMzA2LjkwLDIwOC4yNUwzMTEuMjAsMjA3LjAwTDMxNS41MCwyMDUuNzVMMzE5LjgwLDIwNC41MEwzMjQuMTAsMjAzLjI1TDMyOC40MCwyMDIuMDBMMzMyLjcwLDIwMC43NUwzMzcuMDAsMTk5LjUwTDM0MS4zMCwxOTguMjVMMzQ1LjYwLDE5Ny4wMEwzNDkuOTAsMTk1Ljc1TDM1NC4yMCwxOTQuNTBMMzU4LjUwLDE5My4yNUwzNjIuODAsMTkyLjAwTDM2Ny4xMCwxOTAuNzVMMzcxLjQwLDE4OS41MEwzNzUuNzAsMTg4LjI1TDM4MC4wMCwxODcuMDBMMzg0LjMwLDE4NS43NUwzODguNjAsMTg0LjUwTDM5Mi45MCwxODMuMjVMMzk3LjIwLDE4Mi4wMEw0MDEuNTAsMTgwLjc1TDQwNS44MCwxNzkuNTBMNDEwLjEwLDE3OC4yNUw0MTQuNDAsMTc3LjAwTDQxOC43MCwxNzUuNzVMNDIzLjAwLDE3NC41MEw0MjcuMzAsMTczLjI1TDQzMS42MCwxNzIuMDBMNDM1LjkwLDE3MC43NUw0NDAuMjAsMTY5LjUwTDQ0NC41MCwxNjguMjVMNDQ4LjgwLDE2Ny4wMEw0NTMuMTAsMTY1Ljc1TDQ1Ny40MCwxNjQuNTBMNDYxLjcwLDE2My4yNUw0NjYuMDAsMTYyLjAwTDQ2NiwxODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSIyMjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtMTAiPjx0ZXh0IHg9IjMwIiB5PSIyOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij4xMDwvdGV4dD48bGluZSB4MT0iODgiIHkxPSIyODIiIHgyPSIyNTQiIHkyPSIyODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDI4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDI4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iMjk3IiB4Mj0iMjYyIiB5Mj0iMjk3IiBzdHJva2U9IiM2NDc0OGIiLz48bGluZSB4MT0iODgiIHkxPSIyNTIiIHgyPSIyNTQiIHkyPSIyNTIiIHN0cm9rZT0iIzI1NjNlYiIvPjxsaW5lIHgxPSI4OCIgeTE9IjI1MiIgeDI9Ijg4IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTg1LDI2OUw4OCwyNzRMOTEsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjEwMy4wOTA5MDkwOTA5MDkxIiB5MT0iMjUyIiB4Mj0iMTAzLjA5MDkwOTA5MDkwOTEiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTAwLjA5MDkwOTA5MDkwOTEsMjY5TDEwMy4wOTA5MDkwOTA5MDkxLDI3NEwxMDYuMDkwOTA5MDkwOTA5MSwyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTE4LjE4MTgxODE4MTgxODE5IiB5MT0iMjUyIiB4Mj0iMTE4LjE4MTgxODE4MTgxODE5IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTExNS4xODE4MTgxODE4MTgxOSwyNjlMMTE4LjE4MTgxODE4MTgxODE5LDI3NEwxMjEuMTgxODE4MTgxODE4MTksMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjEzMy4yNzI3MjcyNzI3MjcyOCIgeTE9IjI1MiIgeDI9IjEzMy4yNzI3MjcyNzI3MjcyOCIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xMzAuMjcyNzI3MjcyNzI3MjgsMjY5TDEzMy4yNzI3MjcyNzI3MjcyOCwyNzRMMTM2LjI3MjcyNzI3MjcyNzI4LDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxNDguMzYzNjM2MzYzNjM2MzciIHkxPSIyNTIiIHgyPSIxNDguMzYzNjM2MzYzNjM2MzciIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTQ1LjM2MzYzNjM2MzYzNjM3LDI2OUwxNDguMzYzNjM2MzYzNjM2MzcsMjc0TDE1MS4zNjM2MzYzNjM2MzYzNywyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTYzLjQ1NDU0NTQ1NDU0NTQ0IiB5MT0iMjUyIiB4Mj0iMTYzLjQ1NDU0NTQ1NDU0NTQ0IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE2MC40NTQ1NDU0NTQ1NDU0NCwyNjlMMTYzLjQ1NDU0NTQ1NDU0NTQ0LDI3NEwxNjYuNDU0NTQ1NDU0NTQ1NDQsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjE3OC41NDU0NTQ1NDU0NTQ1NiIgeTE9IjI1MiIgeDI9IjE3OC41NDU0NTQ1NDU0NTQ1NiIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xNzUuNTQ1NDU0NTQ1NDU0NTYsMjY5TDE3OC41NDU0NTQ1NDU0NTQ1NiwyNzRMMTgxLjU0NTQ1NDU0NTQ1NDU2LDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxOTMuNjM2MzYzNjM2MzYzNjMiIHkxPSIyNTIiIHgyPSIxOTMuNjM2MzYzNjM2MzYzNjMiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTkwLjYzNjM2MzYzNjM2MzYzLDI2OUwxOTMuNjM2MzYzNjM2MzYzNjMsMjc0TDE5Ni42MzYzNjM2MzYzNjM2MywyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMjA4LjcyNzI3MjcyNzI3Mjc1IiB5MT0iMjUyIiB4Mj0iMjA4LjcyNzI3MjcyNzI3Mjc1IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTIwNS43MjcyNzI3MjcyNzI3NSwyNjlMMjA4LjcyNzI3MjcyNzI3Mjc1LDI3NEwyMTEuNzI3MjcyNzI3MjcyNzUsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjIyMy44MTgxODE4MTgxODE4IiB5MT0iMjUyIiB4Mj0iMjIzLjgxODE4MTgxODE4MTgiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjIwLjgxODE4MTgxODE4MTgsMjY5TDIyMy44MTgxODE4MTgxODE4LDI3NEwyMjYuODE4MTgxODE4MTgxOCwyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMjM4LjkwOTA5MDkwOTA5MDkiIHkxPSIyNTIiIHgyPSIyMzguOTA5MDkwOTA5MDkwOSIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yMzUuOTA5MDkwOTA5MDkwOSwyNjlMMjM4LjkwOTA5MDkwOTA5MDksMjc0TDI0MS45MDkwOTA5MDkwOTA5LDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIyNTQiIHkxPSIyNTIiIHgyPSIyNTQiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjUxLDI2OUwyNTQsMjc0TDI1NywyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxNzEiIHk9IjI0OSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+cTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjMyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+U2ltcGx5IHN1cHBvcnRlZDsgVURMPC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSIyODciIHgyPSI0NjYiIHkyPSIyODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCwyODdMMjk0LjAwLDI4Ny4wMEwyOTguMzAsMjg5LjQ0TDMwMi42MCwyOTEuNzVMMzA2LjkwLDI5My45NEwzMTEuMjAsMjk2LjAwTDMxNS41MCwyOTcuOTRMMzE5LjgwLDI5OS43NUwzMjQuMTAsMzAxLjQ0TDMyOC40MCwzMDMuMDBMMzMyLjcwLDMwNC40NEwzMzcuMDAsMzA1Ljc1TDM0MS4zMCwzMDYuOTRMMzQ1LjYwLDMwOC4wMEwzNDkuOTAsMzA4Ljk0TDM1NC4yMCwzMDkuNzVMMzU4LjUwLDMxMC40NEwzNjIuODAsMzExLjAwTDM2Ny4xMCwzMTEuNDRMMzcxLjQwLDMxMS43NUwzNzUuNzAsMzExLjk0TDM4MC4wMCwzMTIuMDBMMzg0LjMwLDMxMS45NEwzODguNjAsMzExLjc1TDM5Mi45MCwzMTEuNDRMMzk3LjIwLDMxMS4wMEw0MDEuNTAsMzEwLjQ0TDQwNS44MCwzMDkuNzVMNDEwLjEwLDMwOC45NEw0MTQuNDAsMzA4LjAwTDQxOC43MCwzMDYuOTRMNDIzLjAwLDMwNS43NUw0MjcuMzAsMzA0LjQ0TDQzMS42MCwzMDMuMDBMNDM1LjkwLDMwMS40NEw0NDAuMjAsMjk5Ljc1TDQ0NC41MCwyOTcuOTRMNDQ4LjgwLDI5Ni4wMEw0NTMuMTAsMjkzLjk0TDQ1Ny40MCwyOTEuNzVMNDYxLjcwLDI4OS40NEw0NjYuMDAsMjg3LjAwTDQ2NiwyODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSIzMjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtMTEiPjx0ZXh0IHg9IjMwIiB5PSIzOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij4xMTwvdGV4dD48bGluZSB4MT0iODgiIHkxPSIzODIiIHgyPSIyNTQiIHkyPSIzODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDM3MFYzOTQiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PGxpbmUgeDE9IjgzIiB5MT0iMzc0IiB4Mj0iODgiIHkyPSIzNzAiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iODMiIHkxPSIzNzgiIHgyPSI4OCIgeTI9IjM3NCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSI4MyIgeTE9IjM4MiIgeDI9Ijg4IiB5Mj0iMzc4IiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjgzIiB5MT0iMzg2IiB4Mj0iODgiIHkyPSIzODIiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iODMiIHkxPSIzOTAiIHgyPSI4OCIgeTI9IjM4NiIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTI1NCwzNzBWMzk0IiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxsaW5lIHgxPSIyNDkiIHkxPSIzNzQiIHgyPSIyNTQiIHkyPSIzNzAiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iMjQ5IiB5MT0iMzc4IiB4Mj0iMjU0IiB5Mj0iMzc0IiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjI0OSIgeTE9IjM4MiIgeDI9IjI1NCIgeTI9IjM3OCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSIyNDkiIHkxPSIzODYiIHgyPSIyNTQiIHkyPSIzODIiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iMjQ5IiB5MT0iMzkwIiB4Mj0iMjU0IiB5Mj0iMzg2IiBzdHJva2U9IiM2NDc0OGIiLz48bGluZSB4MT0iODgiIHkxPSIzNTIiIHgyPSIyNTQiIHkyPSIzNTIiIHN0cm9rZT0iIzI1NjNlYiIvPjxsaW5lIHgxPSI4OCIgeTE9IjM1MiIgeDI9Ijg4IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTg1LDM2OUw4OCwzNzRMOTEsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjEwMy4wOTA5MDkwOTA5MDkxIiB5MT0iMzUyIiB4Mj0iMTAzLjA5MDkwOTA5MDkwOTEiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTAwLjA5MDkwOTA5MDkwOTEsMzY5TDEwMy4wOTA5MDkwOTA5MDkxLDM3NEwxMDYuMDkwOTA5MDkwOTA5MSwzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTE4LjE4MTgxODE4MTgxODE5IiB5MT0iMzUyIiB4Mj0iMTE4LjE4MTgxODE4MTgxODE5IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTExNS4xODE4MTgxODE4MTgxOSwzNjlMMTE4LjE4MTgxODE4MTgxODE5LDM3NEwxMjEuMTgxODE4MTgxODE4MTksMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjEzMy4yNzI3MjcyNzI3MjcyOCIgeTE9IjM1MiIgeDI9IjEzMy4yNzI3MjcyNzI3MjcyOCIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xMzAuMjcyNzI3MjcyNzI3MjgsMzY5TDEzMy4yNzI3MjcyNzI3MjcyOCwzNzRMMTM2LjI3MjcyNzI3MjcyNzI4LDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxNDguMzYzNjM2MzYzNjM2MzciIHkxPSIzNTIiIHgyPSIxNDguMzYzNjM2MzYzNjM2MzciIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTQ1LjM2MzYzNjM2MzYzNjM3LDM2OUwxNDguMzYzNjM2MzYzNjM2MzcsMzc0TDE1MS4zNjM2MzYzNjM2MzYzNywzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTYzLjQ1NDU0NTQ1NDU0NTQ0IiB5MT0iMzUyIiB4Mj0iMTYzLjQ1NDU0NTQ1NDU0NTQ0IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE2MC40NTQ1NDU0NTQ1NDU0NCwzNjlMMTYzLjQ1NDU0NTQ1NDU0NTQ0LDM3NEwxNjYuNDU0NTQ1NDU0NTQ1NDQsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjE3OC41NDU0NTQ1NDU0NTQ1NiIgeTE9IjM1MiIgeDI9IjE3OC41NDU0NTQ1NDU0NTQ1NiIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xNzUuNTQ1NDU0NTQ1NDU0NTYsMzY5TDE3OC41NDU0NTQ1NDU0NTQ1NiwzNzRMMTgxLjU0NTQ1NDU0NTQ1NDU2LDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxOTMuNjM2MzYzNjM2MzYzNjMiIHkxPSIzNTIiIHgyPSIxOTMuNjM2MzYzNjM2MzYzNjMiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTkwLjYzNjM2MzYzNjM2MzYzLDM2OUwxOTMuNjM2MzYzNjM2MzYzNjMsMzc0TDE5Ni42MzYzNjM2MzYzNjM2MywzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMjA4LjcyNzI3MjcyNzI3Mjc1IiB5MT0iMzUyIiB4Mj0iMjA4LjcyNzI3MjcyNzI3Mjc1IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTIwNS43MjcyNzI3MjcyNzI3NSwzNjlMMjA4LjcyNzI3MjcyNzI3Mjc1LDM3NEwyMTEuNzI3MjcyNzI3MjcyNzUsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjIyMy44MTgxODE4MTgxODE4IiB5MT0iMzUyIiB4Mj0iMjIzLjgxODE4MTgxODE4MTgiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjIwLjgxODE4MTgxODE4MTgsMzY5TDIyMy44MTgxODE4MTgxODE4LDM3NEwyMjYuODE4MTgxODE4MTgxOCwzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMjM4LjkwOTA5MDkwOTA5MDkiIHkxPSIzNTIiIHgyPSIyMzguOTA5MDkwOTA5MDkwOSIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yMzUuOTA5MDkwOTA5MDkwOSwzNjlMMjM4LjkwOTA5MDkwOTA5MDksMzc0TDI0MS45MDkwOTA5MDkwOTA5LDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIyNTQiIHkxPSIzNTIiIHgyPSIyNTQiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjUxLDM2OUwyNTQsMzc0TDI1NywzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxNzEiIHk9IjM0OSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+cTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjQyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+Rml4ZWQgaW4gYmVuZGluZzsgVURMPC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSIzODciIHgyPSI0NjYiIHkyPSIzODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCwzODdMMjk0LjAwLDM2Mi4wMEwyOTguMzAsMzY1LjY2TDMwMi42MCwzNjkuMTNMMzA2LjkwLDM3Mi40MUwzMTEuMjAsMzc1LjUwTDMxNS41MCwzNzguNDFMMzE5LjgwLDM4MS4xM0wzMjQuMTAsMzgzLjY2TDMyOC40MCwzODYuMDBMMzMyLjcwLDM4OC4xNkwzMzcuMDAsMzkwLjEzTDM0MS4zMCwzOTEuOTFMMzQ1LjYwLDM5My41MEwzNDkuOTAsMzk0LjkxTDM1NC4yMCwzOTYuMTNMMzU4LjUwLDM5Ny4xNkwzNjIuODAsMzk4LjAwTDM2Ny4xMCwzOTguNjZMMzcxLjQwLDM5OS4xM0wzNzUuNzAsMzk5LjQxTDM4MC4wMCwzOTkuNTBMMzg0LjMwLDM5OS40MUwzODguNjAsMzk5LjEzTDM5Mi45MCwzOTguNjZMMzk3LjIwLDM5OC4wMEw0MDEuNTAsMzk3LjE2TDQwNS44MCwzOTYuMTNMNDEwLjEwLDM5NC45MUw0MTQuNDAsMzkzLjUwTDQxOC43MCwzOTEuOTFMNDIzLjAwLDM5MC4xM0w0MjcuMzAsMzg4LjE2TDQzMS42MCwzODYuMDBMNDM1LjkwLDM4My42Nkw0NDAuMjAsMzgxLjEzTDQ0NC41MCwzNzguNDFMNDQ4LjgwLDM3NS41MEw0NTMuMTAsMzcyLjQxTDQ1Ny40MCwzNjkuMTNMNDYxLjcwLDM2NS42Nkw0NjYuMDAsMzYyLjAwTDQ2NiwzODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSI0MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtMTIiPjx0ZXh0IHg9IjMwIiB5PSI0OTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij4xMjwvdGV4dD48bGluZSB4MT0iODgiIHkxPSI0ODIiIHgyPSIyNTQiIHkyPSI0ODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDQ4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDQ4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iNDk3IiB4Mj0iMjYyIiB5Mj0iNDk3IiBzdHJva2U9IiM2NDc0OGIiLz48bGluZSB4MT0iMTcxIiB5MT0iNDQ4IiB4Mj0iMTcxIiB5Mj0iNDc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE2OCw0NjlMMTcxLDQ3NEwxNzQsNDY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTc5IiB5PSI0NTgiID5GPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iNTI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5TaW1wbHkgc3VwcG9ydGVkOyBtaWQtcG9pbnQgbG9hZDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iNDg3IiB4Mj0iNDY2IiB5Mj0iNDg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsNDg3TDI5NC4wMCw0ODcuMDBMMjk4LjMwLDQ4OC4yNUwzMDIuNjAsNDg5LjUwTDMwNi45MCw0OTAuNzVMMzExLjIwLDQ5Mi4wMEwzMTUuNTAsNDkzLjI1TDMxOS44MCw0OTQuNTBMMzI0LjEwLDQ5NS43NUwzMjguNDAsNDk3LjAwTDMzMi43MCw0OTguMjVMMzM3LjAwLDQ5OS41MEwzNDEuMzAsNTAwLjc1TDM0NS42MCw1MDIuMDBMMzQ5LjkwLDUwMy4yNUwzNTQuMjAsNTA0LjUwTDM1OC41MCw1MDUuNzVMMzYyLjgwLDUwNy4wMEwzNjcuMTAsNTA4LjI1TDM3MS40MCw1MDkuNTBMMzc1LjcwLDUxMC43NUwzODAuMDAsNTEyLjAwTDM4NC4zMCw1MTAuNzVMMzg4LjYwLDUwOS41MEwzOTIuOTAsNTA4LjI1TDM5Ny4yMCw1MDcuMDBMNDAxLjUwLDUwNS43NUw0MDUuODAsNTA0LjUwTDQxMC4xMCw1MDMuMjVMNDE0LjQwLDUwMi4wMEw0MTguNzAsNTAwLjc1TDQyMy4wMCw0OTkuNTBMNDI3LjMwLDQ5OC4yNUw0MzEuNjAsNDk3LjAwTDQzNS45MCw0OTUuNzVMNDQwLjIwLDQ5NC41MEw0NDQuNTAsNDkzLjI1TDQ0OC44MCw0OTIuMDBMNDUzLjEwLDQ5MC43NUw0NTcuNDAsNDg5LjUwTDQ2MS43MCw0ODguMjVMNDY2LjAwLDQ4Ny4wMEw0NjYsNDg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iNTI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTEzIj48dGV4dCB4PSIzMCIgeT0iNTk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+MTM8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iNTgyIiB4Mj0iMjU0IiB5Mj0iNTgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCw1NzBWNTk0IiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxsaW5lIHgxPSI4MyIgeTE9IjU3NCIgeDI9Ijg4IiB5Mj0iNTcwIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjgzIiB5MT0iNTc4IiB4Mj0iODgiIHkyPSI1NzQiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iODMiIHkxPSI1ODIiIHgyPSI4OCIgeTI9IjU3OCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSI4MyIgeTE9IjU4NiIgeDI9Ijg4IiB5Mj0iNTgyIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjgzIiB5MT0iNTkwIiB4Mj0iODgiIHkyPSI1ODYiIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik0yNTQsNTcwVjU5NCIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iMjQ5IiB5MT0iNTc0IiB4Mj0iMjU0IiB5Mj0iNTcwIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjI0OSIgeTE9IjU3OCIgeDI9IjI1NCIgeTI9IjU3NCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSIyNDkiIHkxPSI1ODIiIHgyPSIyNTQiIHkyPSI1NzgiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iMjQ5IiB5MT0iNTg2IiB4Mj0iMjU0IiB5Mj0iNTgyIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjI0OSIgeTE9IjU5MCIgeDI9IjI1NCIgeTI9IjU4NiIgc3Ryb2tlPSIjNjQ3NDhiIi8+PGxpbmUgeDE9IjE3MSIgeTE9IjU0OCIgeDI9IjE3MSIgeTI9IjU3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xNjgsNTY5TDE3MSw1NzRMMTc0LDU2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjE3OSIgeT0iNTU4IiA+RjwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjYyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+Rml4ZWQgaW4gYmVuZGluZzsgbWlkLXBvaW50IGxvYWQ8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9IjU4NyIgeDI9IjQ2NiIgeTI9IjU4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDU4N0wyOTQuMDAsNTYyLjAwTDI5OC4zMCw1NjQuNTBMMzAyLjYwLDU2Ny4wMEwzMDYuOTAsNTY5LjUwTDMxMS4yMCw1NzIuMDBMMzE1LjUwLDU3NC41MEwzMTkuODAsNTc3LjAwTDMyNC4xMCw1NzkuNTBMMzI4LjQwLDU4Mi4wMEwzMzIuNzAsNTg0LjUwTDMzNy4wMCw1ODcuMDBMMzQxLjMwLDU4OS41MEwzNDUuNjAsNTkyLjAwTDM0OS45MCw1OTQuNTBMMzU0LjIwLDU5Ny4wMEwzNTguNTAsNTk5LjUwTDM2Mi44MCw2MDIuMDBMMzY3LjEwLDYwNC41MEwzNzEuNDAsNjA3LjAwTDM3NS43MCw2MDkuNTBMMzgwLjAwLDYxMi4wMEwzODQuMzAsNjA5LjUwTDM4OC42MCw2MDcuMDBMMzkyLjkwLDYwNC41MEwzOTcuMjAsNjAyLjAwTDQwMS41MCw1OTkuNTBMNDA1LjgwLDU5Ny4wMEw0MTAuMTAsNTk0LjUwTDQxNC40MCw1OTIuMDBMNDE4LjcwLDU4OS41MEw0MjMuMDAsNTg3LjAwTDQyNy4zMCw1ODQuNTBMNDMxLjYwLDU4Mi4wMEw0MzUuOTAsNTc5LjUwTDQ0MC4yMCw1NzcuMDBMNDQ0LjUwLDU3NC41MEw0NDguODAsNTcyLjAwTDQ1My4xMCw1NjkuNTBMNDU3LjQwLDU2Ny4wMEw0NjEuNzAsNTY0LjUwTDQ2Ni4wMCw1NjIuMDBMNDY2LDU4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjYyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPgogICAgPC9nPgogIDwvc3ZnPg=="
+      },
+      "groupId": "s_stl_group_8g"
+    },
+    {
+      "id": "s_stl_8h",
+      "type": "math",
+      "x": 576,
+      "y": 11854,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{1.8}\\coloneq 2.57",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_8g"
+    },
+    {
+      "id": "s_stl_8i",
+      "type": "math",
+      "x": 656,
+      "y": 11854,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{2.8}\\coloneq 0",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_8g"
+    },
+    {
+      "id": "s_stl_8j",
+      "type": "math",
+      "x": 576,
+      "y": 11954,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{1.9}\\coloneq 2.55",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_8g"
+    },
+    {
+      "id": "s_stl_8k",
+      "type": "math",
+      "x": 656,
+      "y": 11954,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{2.9}\\coloneq 0",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_8g"
+    },
+    {
+      "id": "s_stl_8l",
+      "type": "math",
+      "x": 576,
+      "y": 12054,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{1.10}\\coloneq 1.127",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_8g"
+    },
+    {
+      "id": "s_stl_8m",
+      "type": "math",
+      "x": 656,
+      "y": 12054,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{2.10}\\coloneq 0.454",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_8g"
+    },
+    {
+      "id": "s_stl_8n",
+      "type": "math",
+      "x": 576,
+      "y": 12154,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{1.11}\\coloneq 2.578",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_8g"
+    },
+    {
+      "id": "s_stl_8o",
+      "type": "math",
+      "x": 656,
+      "y": 12154,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{2.11}\\coloneq 1.554",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_8g"
+    },
+    {
+      "id": "s_stl_8p",
+      "type": "math",
+      "x": 576,
+      "y": 12254,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{1.12}\\coloneq 1.348",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_8g"
+    },
+    {
+      "id": "s_stl_8q",
+      "type": "math",
+      "x": 656,
+      "y": 12254,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{2.12}\\coloneq 0.630",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_8g"
+    },
+    {
+      "id": "s_stl_8r",
+      "type": "math",
+      "x": 576,
+      "y": 12354,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{1.13}\\coloneq 1.683",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_8g"
+    },
+    {
+      "id": "s_stl_8s",
+      "type": "math",
+      "x": 656,
+      "y": 12354,
+      "props": {
+        "w": 40,
+        "h": 23,
+        "baseline": 16,
+        "latex": "C_{2.13}\\coloneq 1.645",
+        "displayMode": "value",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 14,
+        "color": "#0f172a",
+        "resultFormat": "decimal",
+        "trailingZeros": true,
+        "constant": true
+      },
+      "groupId": "s_stl_group_8g"
+    },
+    {
+      "id": "s_stl_8t",
       "type": "text",
       "x": 76,
-      "y": 9769,
+      "y": 12417,
       "props": {
         "w": 204,
         "h": 18,
-        "html": "Case numbers",
+        "html": "Lookup row indices",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -4980,32 +5561,32 @@
       }
     },
     {
-      "id": "s_stl_83",
+      "id": "s_stl_8u",
       "type": "math",
       "x": 296,
-      "y": 9764,
+      "y": 12416,
       "props": {
-        "w": 107,
-        "h": 26,
-        "baseline": 18,
+        "w": 81,
+        "h": 20,
+        "baseline": 14,
         "latex": "n_{t}\\coloneq\\mathrm{seq}\\left(1,13\\right)",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "autoSize": true,
-        "fontSize": 16,
+        "fontSize": 12,
         "color": "#0f172a"
       }
     },
     {
-      "id": "s_stl_84",
+      "id": "s_stl_8v",
       "type": "text",
       "x": 76,
-      "y": 9796,
+      "y": 12442,
       "props": {
         "w": 630,
         "h": 18,
-        "html": "C1",
+        "html": "C1 column from the table cells",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -5013,32 +5594,32 @@
       }
     },
     {
-      "id": "s_stl_85",
+      "id": "s_stl_8w",
       "type": "math",
-      "x": 76,
-      "y": 9820,
+      "x": 96,
+      "y": 12466,
       "props": {
-        "w": 590,
-        "h": 26,
-        "baseline": 18,
-        "latex": "C_{1.t}\\coloneq\\mathrm{stack}\\left(1.00,1.14,1.31,1.52,1.77,2.05,2.33,2.57,2.55,1.127,2.578,1.348,1.683\\right)",
+        "w": 430,
+        "h": 20,
+        "baseline": 14,
+        "latex": "C_{1.t}\\coloneq\\mathrm{stack}\\left(C_{1.1},C_{1.2},C_{1.3},C_{1.4},C_{1.5},C_{1.6},C_{1.7},C_{1.8},C_{1.9},C_{1.10},C_{1.11},C_{1.12},C_{1.13}\\right)",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "autoSize": true,
-        "fontSize": 16,
+        "fontSize": 12,
         "color": "#0f172a"
       }
     },
     {
-      "id": "s_stl_86",
+      "id": "s_stl_8x",
       "type": "text",
       "x": 76,
-      "y": 9857,
+      "y": 12492,
       "props": {
-        "w": 204,
+        "w": 630,
         "h": 18,
-        "html": "C2",
+        "html": "C2 column from the table cells",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -5046,20 +5627,20 @@
       }
     },
     {
-      "id": "s_stl_87",
+      "id": "s_stl_8y",
       "type": "math",
-      "x": 296,
-      "y": 9852,
+      "x": 96,
+      "y": 12516,
       "props": {
-        "w": 405,
-        "h": 26,
-        "baseline": 18,
-        "latex": "C_{2.t}\\coloneq\\mathrm{stack}\\left(0,0,0,0,0,0,0,0,0,0.454,1.554,0.630,1.645\\right)",
+        "w": 430,
+        "h": 20,
+        "baseline": 14,
+        "latex": "C_{2.t}\\coloneq\\mathrm{stack}\\left(C_{2.1},C_{2.2},C_{2.3},C_{2.4},C_{2.5},C_{2.6},C_{2.7},C_{2.8},C_{2.9},C_{2.10},C_{2.11},C_{2.12},C_{2.13}\\right)",
         "displayMode": "formula",
         "displayUnit": "",
         "precision": -1,
         "autoSize": true,
-        "fontSize": 16,
+        "fontSize": 12,
         "color": "#0f172a"
       }
     }
