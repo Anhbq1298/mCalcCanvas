@@ -48,13 +48,20 @@ const HELP_SECTIONS: { id: string; title: string; body: ReactNode; text: string 
   },
   {
     id: 'math',
-    title: 'Math regions',
-    text: 'operators palette subscript greek units display format decimals scientific engineering trailing zeros if function vector range',
+    title: 'Math & matrices',
+    text: 'operators palette subscript greek units display format decimals scientific engineering trailing zeros if function vector range math functions abs sqrt nthRoot exp ln log sin cos tan asin acos atan sinh cosh tanh floor ceil min max matrix matrices matrix multiply determinant inverse transpose index rows columns solve lsolve dot cross norm hadamard divideElements powerElements',
     body: (
       <>
-        <p>Use the palettes (Math tab → Operators and Symbols) or the keys below. A dot after a name makes a literal subscript (<code>M.Ed</code> → M<sub>Ed</sub>). Units are typed after the number (<code>35 MPa</code>); results can be shown in another unit (Result unit box).</p>
-        <p>Results: display (formula, result, full calculation), number format (general, decimal, scientific, engineering), decimal places and trailing zeros. These change only how a number is written: the value used in later regions keeps full precision.</p>
-        <p>Functions <code>f(x):…</code>, ranges <code>i:0;n-1</code>, if blocks and checks (<code>UR≤1</code> shows PASS / FAIL) are supported.</p>
+        <h4 className="help-h4">Enter and use math</h4>
+        <p>Click a page and type an equation. Use <Kbd k=":" /> to define a value and <Kbd k="=" /> to show a result: <code>L:8.5 m</code>, then <code>A=L^2</code>. Equations calculate from top to bottom, so define a value before using it.</p>
+        <p>Use parentheses to group operations, <code>^</code> for powers and the Math tab’s Operators, Symbols, Constants and Units palettes for special notation. Common functions include <code>abs</code>, <code>sqrt</code>, <code>nthRoot</code>, <code>exp</code>, <code>ln</code>, <code>log</code>, <code>sin</code>, <code>cos</code>, <code>tan</code>, <code>asin</code>, <code>acos</code>, <code>atan</code>, <code>sinh</code>, <code>cosh</code>, <code>tanh</code>, <code>floor</code>, <code>ceil</code>, <code>min</code> and <code>max</code>. For example, <code>sin(30 deg)=</code> gives 0.5. Trigonometric inputs can use angle units.</p>
+        <p>Define functions with <code>f(x):…</code>, ranges with <code>i:0;n-1</code>, and use if blocks for conditional calculations. Checks such as <code>UR≤1</code> show PASS or FAIL. Units follow numbers (for example, <code>35 MPa</code>); use the Result unit box to change how a result is displayed.</p>
+        <p>Result display settings (formula, result or full calculation; general, decimal, scientific or engineering format; decimal places and trailing zeros) only change how numbers are shown. Calculations keep full precision.</p>
+        <h4 className="help-h4">Matrices and vectors</h4>
+        <p>Open Matrices/Tables → Matrix and choose the number of rows and columns, then fill every cell. Use <code>A=</code> to display a matrix. Matrix operators include <code>A·B</code> (multiply), <code>A^T</code> (transpose), <code>A^(-1)</code> (inverse) and <code>det(A)</code> (determinant); matrix multiplication needs matching inner dimensions.</p>
+        <p>For a system of linear equations <code>A·x=b</code>, use <code>x=lsolve(A,b)</code>. Useful functions include <code>rows(A)</code>, <code>cols(A)</code>, <code>at(A,0,1)</code> (row 0, column 1), <code>row(A,0)</code>, <code>col(A,1)</code>, <code>trace(A)</code> and <code>rank(A)</code>. Matrix and vector indices start at zero.</p>
+        <p>For vectors, <code>dot(v,w)</code> is the dot product, <code>cross(v,w)</code> is the 3D cross product and <code>norm(v)</code> is the length. For entry-by-entry matrix operations, use <code>hadamard(A,B)</code>, <code>divideElements(A,B)</code> or <code>powerElements(A,B)</code>; the arrays must have matching shapes.</p>
+        <p>The searchable Matrices/Tables → Functions menu inserts function templates. It also includes constructors such as <code>zeros</code>, <code>ones</code> and <code>identity</code>, rearrangement and factorization functions, and advanced array functions. Use <code>lsolve</code> to solve a system; matrix division is not supported. For determinant, inverse and solve, entries within each matrix or vector must use consistent dimensions.</p>
       </>
     ),
   },

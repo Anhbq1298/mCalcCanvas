@@ -75,6 +75,21 @@ test.describe('Parameters panel', () => {
     await expect(dlg).toContainText('kip');
     await expect(dlg.getByTestId('guide-card')).toHaveCount(6);
   });
+
+  test('Help Center guides users through math and matrix functions', async ({ page }) => {
+    await page.getByTestId('format-tab-help').click();
+    await page.getByTestId('help-open').click();
+    const help = page.getByTestId('help-center');
+    await help.getByRole('button', { name: 'Math & matrices' }).click();
+    await expect(help.locator('.help-article')).toContainText('sin(30 deg)');
+    await expect(help.locator('.help-article')).toContainText('lsolve(A,b)');
+    await expect(help.locator('.help-article')).toContainText('indices start at zero');
+    await help.getByLabel('Search help and shortcuts').fill('lsolve');
+    const topic = help.getByRole('button', { name: 'Math & matrices' }).last();
+    await expect(topic).toBeVisible();
+    await topic.click();
+    await expect(help.locator('.help-article')).toContainText('divideElements(A,B)');
+  });
 });
 
 test.describe('.mCCV files', () => {
