@@ -20,7 +20,7 @@
     "baselineSnap": "minor",
     "snapToGrid": false,
     "optimizePrintLayout": true,
-    "pages": 11
+    "pages": 13
   },
   "inputResult": {
     "title": "Members and load cases",
@@ -61,6 +61,11 @@
         "label": "L_cr,z"
       },
       {
+        "id": "lcrt",
+        "regionId": "s_stl_u",
+        "label": "L_cr,T"
+      },
+      {
         "id": "llt",
         "regionId": "s_stl_w",
         "label": "L_LT"
@@ -74,48 +79,53 @@
     "outputs": [
       {
         "id": "cls",
-        "regionId": "s_stl_37",
+        "regionId": "s_stl_38",
         "label": "Class"
       },
       {
         "id": "ursec",
-        "regionId": "s_stl_4l",
+        "regionId": "s_stl_4m",
         "label": "UR section"
       },
       {
         "id": "urby",
-        "regionId": "s_stl_58",
+        "regionId": "s_stl_59",
         "label": "UR buckling y"
       },
       {
         "id": "urbz",
-        "regionId": "s_stl_5n",
+        "regionId": "s_stl_5o",
         "label": "UR buckling z"
       },
       {
         "id": "urlt",
-        "regionId": "s_stl_6x",
+        "regionId": "s_stl_6y",
         "label": "UR LTB"
       },
       {
         "id": "ur61",
-        "regionId": "s_stl_7m",
+        "regionId": "s_stl_7o",
         "label": "UR (6.61)"
       },
       {
         "id": "ur62",
-        "regionId": "s_stl_7q",
+        "regionId": "s_stl_7s",
         "label": "UR (6.62)"
       },
       {
         "id": "ur",
-        "regionId": "s_stl_7v",
+        "regionId": "s_stl_97",
         "label": "UR"
       },
       {
+        "id": "scope",
+        "regionId": "s_stl_93",
+        "label": "Scope valid (1=yes)"
+      },
+      {
         "id": "ok",
-        "regionId": "s_stl_7x",
-        "label": "Member"
+        "regionId": "s_stl_9b",
+        "label": "Member (scope + UR)"
       }
     ],
     "rows": [
@@ -130,6 +140,7 @@
           "vz": 0,
           "lcry": 4.335,
           "lcrz": 4.335,
+          "lcrt": 4.335,
           "llt": 4.335,
           "nlt": 6
         }
@@ -145,6 +156,7 @@
           "vz": 60,
           "lcry": 4.335,
           "lcrz": 4.335,
+          "lcrt": 4.335,
           "llt": 4.335,
           "nlt": 5
         }
@@ -160,6 +172,7 @@
           "vz": 75,
           "lcry": 6,
           "lcrz": 6,
+          "lcrt": 6,
           "llt": 6,
           "nlt": 10
         }
@@ -1272,9 +1285,24 @@
     },
     {
       "id": "s_stl_1w",
+      "type": "text",
+      "x": 76,
+      "y": 1560,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Library properties may be geometry-derived; confirm It and Iw against project section tables.",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_1x",
       "type": "math",
       "x": 96,
-      "y": 1560,
+      "y": 1585,
       "props": {
         "w": 101,
         "h": 26,
@@ -1289,10 +1317,10 @@
       }
     },
     {
-      "id": "s_stl_1x",
+      "id": "s_stl_1y",
       "type": "math",
       "x": 396,
-      "y": 1560,
+      "y": 1585,
       "props": {
         "w": 99,
         "h": 26,
@@ -1307,10 +1335,10 @@
       }
     },
     {
-      "id": "s_stl_1y",
+      "id": "s_stl_1z",
       "type": "math",
       "x": 96,
-      "y": 1592,
+      "y": 1617,
       "props": {
         "w": 111,
         "h": 26,
@@ -1325,10 +1353,10 @@
       }
     },
     {
-      "id": "s_stl_1z",
+      "id": "s_stl_20",
       "type": "math",
       "x": 396,
-      "y": 1592,
+      "y": 1617,
       "props": {
         "w": 110,
         "h": 26,
@@ -1343,10 +1371,10 @@
       }
     },
     {
-      "id": "s_stl_20",
+      "id": "s_stl_21",
       "type": "math",
       "x": 96,
-      "y": 1624,
+      "y": 1649,
       "props": {
         "w": 92,
         "h": 26,
@@ -1361,10 +1389,10 @@
       }
     },
     {
-      "id": "s_stl_21",
+      "id": "s_stl_22",
       "type": "math",
       "x": 396,
-      "y": 1624,
+      "y": 1649,
       "props": {
         "w": 116,
         "h": 26,
@@ -1379,10 +1407,10 @@
       }
     },
     {
-      "id": "s_stl_22",
+      "id": "s_stl_23",
       "type": "math",
       "x": 96,
-      "y": 1656,
+      "y": 1681,
       "props": {
         "w": 123,
         "h": 26,
@@ -1397,10 +1425,10 @@
       }
     },
     {
-      "id": "s_stl_23",
+      "id": "s_stl_24",
       "type": "math",
       "x": 396,
-      "y": 1656,
+      "y": 1681,
       "props": {
         "w": 115,
         "h": 26,
@@ -1415,10 +1443,10 @@
       }
     },
     {
-      "id": "s_stl_24",
+      "id": "s_stl_25",
       "type": "math",
       "x": 96,
-      "y": 1688,
+      "y": 1713,
       "props": {
         "w": 136,
         "h": 26,
@@ -1433,10 +1461,10 @@
       }
     },
     {
-      "id": "s_stl_25",
+      "id": "s_stl_26",
       "type": "math",
       "x": 396,
-      "y": 1688,
+      "y": 1713,
       "props": {
         "w": 126,
         "h": 26,
@@ -1451,10 +1479,10 @@
       }
     },
     {
-      "id": "s_stl_26",
+      "id": "s_stl_27",
       "type": "math",
       "x": 96,
-      "y": 1720,
+      "y": 1745,
       "props": {
         "w": 137,
         "h": 26,
@@ -1469,10 +1497,10 @@
       }
     },
     {
-      "id": "s_stl_27",
+      "id": "s_stl_28",
       "type": "math",
       "x": 396,
-      "y": 1720,
+      "y": 1745,
       "props": {
         "w": 128,
         "h": 26,
@@ -1487,10 +1515,10 @@
       }
     },
     {
-      "id": "s_stl_28",
+      "id": "s_stl_29",
       "type": "math",
       "x": 96,
-      "y": 1752,
+      "y": 1777,
       "props": {
         "w": 105,
         "h": 26,
@@ -1505,10 +1533,10 @@
       }
     },
     {
-      "id": "s_stl_29",
+      "id": "s_stl_2a",
       "type": "math",
       "x": 396,
-      "y": 1752,
+      "y": 1777,
       "props": {
         "w": 142,
         "h": 26,
@@ -1523,10 +1551,10 @@
       }
     },
     {
-      "id": "s_stl_2a",
+      "id": "s_stl_2b",
       "type": "math",
       "x": 96,
-      "y": 1784,
+      "y": 1809,
       "props": {
         "w": 120,
         "h": 26,
@@ -1541,10 +1569,10 @@
       }
     },
     {
-      "id": "s_stl_2b",
+      "id": "s_stl_2c",
       "type": "math",
       "x": 396,
-      "y": 1784,
+      "y": 1809,
       "props": {
         "w": 124,
         "h": 26,
@@ -1559,10 +1587,10 @@
       }
     },
     {
-      "id": "s_stl_2c",
+      "id": "s_stl_2d",
       "type": "graph",
       "x": 267,
-      "y": 1816,
+      "y": 1841,
       "props": {
         "w": 260,
         "h": 260,
@@ -1592,10 +1620,10 @@
       }
     },
     {
-      "id": "s_stl_2d",
+      "id": "s_stl_2e",
       "type": "text",
       "x": 76,
-      "y": 2088,
+      "y": 2113,
       "props": {
         "w": 630,
         "h": 24,
@@ -1608,10 +1636,10 @@
       }
     },
     {
-      "id": "s_stl_2e",
+      "id": "s_stl_2f",
       "type": "text",
       "x": 76,
-      "y": 2129,
+      "y": 2154,
       "props": {
         "w": 204,
         "h": 18,
@@ -1623,10 +1651,10 @@
       }
     },
     {
-      "id": "s_stl_2f",
+      "id": "s_stl_2g",
       "type": "math",
       "x": 296,
-      "y": 2118,
+      "y": 2143,
       "props": {
         "w": 188,
         "h": 43,
@@ -1641,7 +1669,7 @@
       }
     },
     {
-      "id": "s_stl_2g",
+      "id": "s_stl_2h",
       "type": "text",
       "x": 76,
       "y": 2402,
@@ -1657,7 +1685,7 @@
       }
     },
     {
-      "id": "s_stl_2h",
+      "id": "s_stl_2i",
       "type": "text",
       "x": 76,
       "y": 2438,
@@ -1672,7 +1700,7 @@
       }
     },
     {
-      "id": "s_stl_2i",
+      "id": "s_stl_2j",
       "type": "math",
       "x": 296,
       "y": 2429,
@@ -1690,7 +1718,7 @@
       }
     },
     {
-      "id": "s_stl_2j",
+      "id": "s_stl_2k",
       "type": "text",
       "x": 76,
       "y": 2497,
@@ -1705,7 +1733,7 @@
       }
     },
     {
-      "id": "s_stl_2k",
+      "id": "s_stl_2l",
       "type": "math",
       "x": 376,
       "y": 2470,
@@ -1723,7 +1751,7 @@
       }
     },
     {
-      "id": "s_stl_2l",
+      "id": "s_stl_2m",
       "type": "text",
       "x": 76,
       "y": 2606,
@@ -1738,7 +1766,7 @@
       }
     },
     {
-      "id": "s_stl_2m",
+      "id": "s_stl_2n",
       "type": "math",
       "x": 296,
       "y": 2521,
@@ -1756,7 +1784,7 @@
       }
     },
     {
-      "id": "s_stl_2n",
+      "id": "s_stl_2o",
       "type": "text",
       "x": 76,
       "y": 2693,
@@ -1772,7 +1800,7 @@
       }
     },
     {
-      "id": "s_stl_2o",
+      "id": "s_stl_2p",
       "type": "text",
       "x": 76,
       "y": 2720,
@@ -1787,7 +1815,7 @@
       }
     },
     {
-      "id": "s_stl_2p",
+      "id": "s_stl_2q",
       "type": "text",
       "x": 76,
       "y": 2750,
@@ -1802,7 +1830,7 @@
       }
     },
     {
-      "id": "s_stl_2q",
+      "id": "s_stl_2r",
       "type": "math",
       "x": 296,
       "y": 2745,
@@ -1820,7 +1848,7 @@
       }
     },
     {
-      "id": "s_stl_2r",
+      "id": "s_stl_2s",
       "type": "text",
       "x": 76,
       "y": 2777,
@@ -1835,7 +1863,7 @@
       }
     },
     {
-      "id": "s_stl_2s",
+      "id": "s_stl_2t",
       "type": "math",
       "x": 76,
       "y": 2801,
@@ -1853,7 +1881,7 @@
       }
     },
     {
-      "id": "s_stl_2t",
+      "id": "s_stl_2u",
       "type": "text",
       "x": 76,
       "y": 2910,
@@ -1868,7 +1896,7 @@
       }
     },
     {
-      "id": "s_stl_2u",
+      "id": "s_stl_2v",
       "type": "math",
       "x": 76,
       "y": 2934,
@@ -1886,7 +1914,7 @@
       }
     },
     {
-      "id": "s_stl_2v",
+      "id": "s_stl_2w",
       "type": "text",
       "x": 76,
       "y": 3127,
@@ -1901,7 +1929,7 @@
       }
     },
     {
-      "id": "s_stl_2w",
+      "id": "s_stl_2x",
       "type": "math",
       "x": 296,
       "y": 3062,
@@ -1919,7 +1947,7 @@
       }
     },
     {
-      "id": "s_stl_2x",
+      "id": "s_stl_2y",
       "type": "text",
       "x": 76,
       "y": 3254,
@@ -1934,7 +1962,7 @@
       }
     },
     {
-      "id": "s_stl_2y",
+      "id": "s_stl_2z",
       "type": "math",
       "x": 296,
       "y": 3189,
@@ -1952,7 +1980,7 @@
       }
     },
     {
-      "id": "s_stl_2z",
+      "id": "s_stl_30",
       "type": "text",
       "x": 76,
       "y": 3618,
@@ -1967,7 +1995,7 @@
       }
     },
     {
-      "id": "s_stl_30",
+      "id": "s_stl_31",
       "type": "math",
       "x": 296,
       "y": 3573,
@@ -1985,7 +2013,7 @@
       }
     },
     {
-      "id": "s_stl_31",
+      "id": "s_stl_32",
       "type": "text",
       "x": 76,
       "y": 3707,
@@ -2000,7 +2028,7 @@
       }
     },
     {
-      "id": "s_stl_32",
+      "id": "s_stl_33",
       "type": "math",
       "x": 296,
       "y": 3682,
@@ -2018,7 +2046,7 @@
       }
     },
     {
-      "id": "s_stl_33",
+      "id": "s_stl_34",
       "type": "text",
       "x": 76,
       "y": 3816,
@@ -2033,7 +2061,7 @@
       }
     },
     {
-      "id": "s_stl_34",
+      "id": "s_stl_35",
       "type": "math",
       "x": 296,
       "y": 3731,
@@ -2051,7 +2079,7 @@
       }
     },
     {
-      "id": "s_stl_35",
+      "id": "s_stl_36",
       "type": "text",
       "x": 76,
       "y": 3903,
@@ -2067,7 +2095,7 @@
       }
     },
     {
-      "id": "s_stl_36",
+      "id": "s_stl_37",
       "type": "text",
       "x": 76,
       "y": 3935,
@@ -2082,7 +2110,7 @@
       }
     },
     {
-      "id": "s_stl_37",
+      "id": "s_stl_38",
       "type": "math",
       "x": 296,
       "y": 3930,
@@ -2100,7 +2128,7 @@
       }
     },
     {
-      "id": "s_stl_38",
+      "id": "s_stl_39",
       "type": "text",
       "x": 76,
       "y": 3966,
@@ -2115,7 +2143,7 @@
       }
     },
     {
-      "id": "s_stl_39",
+      "id": "s_stl_3a",
       "type": "math",
       "x": 356,
       "y": 3961,
@@ -2133,7 +2161,7 @@
       }
     },
     {
-      "id": "s_stl_3a",
+      "id": "s_stl_3b",
       "type": "text",
       "x": 76,
       "y": 3998,
@@ -2149,7 +2177,7 @@
       }
     },
     {
-      "id": "s_stl_3b",
+      "id": "s_stl_3c",
       "type": "text",
       "x": 76,
       "y": 4034,
@@ -2165,7 +2193,7 @@
       }
     },
     {
-      "id": "s_stl_3c",
+      "id": "s_stl_3d",
       "type": "text",
       "x": 76,
       "y": 4072,
@@ -2180,7 +2208,7 @@
       }
     },
     {
-      "id": "s_stl_3d",
+      "id": "s_stl_3e",
       "type": "math",
       "x": 296,
       "y": 4061,
@@ -2198,7 +2226,7 @@
       }
     },
     {
-      "id": "s_stl_3e",
+      "id": "s_stl_3f",
       "type": "text",
       "x": 76,
       "y": 4119,
@@ -2213,7 +2241,7 @@
       }
     },
     {
-      "id": "s_stl_3f",
+      "id": "s_stl_3g",
       "type": "math",
       "x": 296,
       "y": 4108,
@@ -2231,7 +2259,7 @@
       }
     },
     {
-      "id": "s_stl_3g",
+      "id": "s_stl_3h",
       "type": "text",
       "x": 76,
       "y": 4183,
@@ -2246,7 +2274,7 @@
       }
     },
     {
-      "id": "s_stl_3h",
+      "id": "s_stl_3i",
       "type": "math",
       "x": 296,
       "y": 4155,
@@ -2264,7 +2292,7 @@
       }
     },
     {
-      "id": "s_stl_3i",
+      "id": "s_stl_3j",
       "type": "text",
       "x": 76,
       "y": 4212,
@@ -2279,7 +2307,7 @@
       }
     },
     {
-      "id": "s_stl_3j",
+      "id": "s_stl_3k",
       "type": "math",
       "x": 296,
       "y": 4207,
@@ -2297,7 +2325,7 @@
       }
     },
     {
-      "id": "s_stl_3k",
+      "id": "s_stl_3l",
       "type": "text",
       "x": 76,
       "y": 4249,
@@ -2312,7 +2340,7 @@
       }
     },
     {
-      "id": "s_stl_3l",
+      "id": "s_stl_3m",
       "type": "math",
       "x": 296,
       "y": 4238,
@@ -2330,7 +2358,7 @@
       }
     },
     {
-      "id": "s_stl_3m",
+      "id": "s_stl_3n",
       "type": "text",
       "x": 76,
       "y": 4291,
@@ -2345,7 +2373,7 @@
       }
     },
     {
-      "id": "s_stl_3n",
+      "id": "s_stl_3o",
       "type": "math",
       "x": 296,
       "y": 4286,
@@ -2363,7 +2391,7 @@
       }
     },
     {
-      "id": "s_stl_3o",
+      "id": "s_stl_3p",
       "type": "text",
       "x": 76,
       "y": 4328,
@@ -2378,7 +2406,7 @@
       }
     },
     {
-      "id": "s_stl_3p",
+      "id": "s_stl_3q",
       "type": "math",
       "x": 356,
       "y": 4317,
@@ -2396,7 +2424,7 @@
       }
     },
     {
-      "id": "s_stl_3q",
+      "id": "s_stl_3r",
       "type": "text",
       "x": 76,
       "y": 4408,
@@ -2411,7 +2439,7 @@
       }
     },
     {
-      "id": "s_stl_3r",
+      "id": "s_stl_3s",
       "type": "math",
       "x": 416,
       "y": 4363,
@@ -2429,7 +2457,7 @@
       }
     },
     {
-      "id": "s_stl_3s",
+      "id": "s_stl_3t",
       "type": "text",
       "x": 76,
       "y": 4507,
@@ -2444,7 +2472,7 @@
       }
     },
     {
-      "id": "s_stl_3t",
+      "id": "s_stl_3u",
       "type": "math",
       "x": 296,
       "y": 4462,
@@ -2462,7 +2490,7 @@
       }
     },
     {
-      "id": "s_stl_3u",
+      "id": "s_stl_3v",
       "type": "text",
       "x": 76,
       "y": 4749,
@@ -2477,7 +2505,7 @@
       }
     },
     {
-      "id": "s_stl_3v",
+      "id": "s_stl_3w",
       "type": "math",
       "x": 296,
       "y": 4744,
@@ -2495,7 +2523,7 @@
       }
     },
     {
-      "id": "s_stl_3w",
+      "id": "s_stl_3x",
       "type": "text",
       "x": 76,
       "y": 4776,
@@ -2510,7 +2538,7 @@
       }
     },
     {
-      "id": "s_stl_3x",
+      "id": "s_stl_3y",
       "type": "text",
       "x": 76,
       "y": 4807,
@@ -2526,7 +2554,7 @@
       }
     },
     {
-      "id": "s_stl_3y",
+      "id": "s_stl_3z",
       "type": "text",
       "x": 76,
       "y": 4845,
@@ -2541,7 +2569,7 @@
       }
     },
     {
-      "id": "s_stl_3z",
+      "id": "s_stl_40",
       "type": "math",
       "x": 296,
       "y": 4834,
@@ -2559,7 +2587,7 @@
       }
     },
     {
-      "id": "s_stl_40",
+      "id": "s_stl_41",
       "type": "text",
       "x": 76,
       "y": 4880,
@@ -2574,7 +2602,7 @@
       }
     },
     {
-      "id": "s_stl_41",
+      "id": "s_stl_42",
       "type": "math",
       "x": 76,
       "y": 4904,
@@ -2592,7 +2620,7 @@
       }
     },
     {
-      "id": "s_stl_42",
+      "id": "s_stl_43",
       "type": "text",
       "x": 76,
       "y": 5038,
@@ -2607,7 +2635,7 @@
       }
     },
     {
-      "id": "s_stl_43",
+      "id": "s_stl_44",
       "type": "math",
       "x": 296,
       "y": 4993,
@@ -2625,7 +2653,7 @@
       }
     },
     {
-      "id": "s_stl_44",
+      "id": "s_stl_45",
       "type": "text",
       "x": 76,
       "y": 5082,
@@ -2640,7 +2668,7 @@
       }
     },
     {
-      "id": "s_stl_45",
+      "id": "s_stl_46",
       "type": "math",
       "x": 96,
       "y": 5106,
@@ -2658,7 +2686,7 @@
       }
     },
     {
-      "id": "s_stl_46",
+      "id": "s_stl_47",
       "type": "text",
       "x": 76,
       "y": 5165,
@@ -2673,7 +2701,7 @@
       }
     },
     {
-      "id": "s_stl_47",
+      "id": "s_stl_48",
       "type": "math",
       "x": 296,
       "y": 5153,
@@ -2691,7 +2719,7 @@
       }
     },
     {
-      "id": "s_stl_48",
+      "id": "s_stl_49",
       "type": "text",
       "x": 76,
       "y": 5229,
@@ -2706,7 +2734,7 @@
       }
     },
     {
-      "id": "s_stl_49",
+      "id": "s_stl_4a",
       "type": "math",
       "x": 296,
       "y": 5200,
@@ -2724,7 +2752,7 @@
       }
     },
     {
-      "id": "s_stl_4a",
+      "id": "s_stl_4b",
       "type": "text",
       "x": 76,
       "y": 5258,
@@ -2739,7 +2767,7 @@
       }
     },
     {
-      "id": "s_stl_4b",
+      "id": "s_stl_4c",
       "type": "math",
       "x": 296,
       "y": 5253,
@@ -2757,7 +2785,7 @@
       }
     },
     {
-      "id": "s_stl_4c",
+      "id": "s_stl_4d",
       "type": "text",
       "x": 76,
       "y": 5295,
@@ -2772,7 +2800,7 @@
       }
     },
     {
-      "id": "s_stl_4d",
+      "id": "s_stl_4e",
       "type": "math",
       "x": 296,
       "y": 5284,
@@ -2790,7 +2818,7 @@
       }
     },
     {
-      "id": "s_stl_4e",
+      "id": "s_stl_4f",
       "type": "text",
       "x": 76,
       "y": 5337,
@@ -2805,7 +2833,7 @@
       }
     },
     {
-      "id": "s_stl_4f",
+      "id": "s_stl_4g",
       "type": "math",
       "x": 296,
       "y": 5332,
@@ -2823,7 +2851,7 @@
       }
     },
     {
-      "id": "s_stl_4g",
+      "id": "s_stl_4h",
       "type": "text",
       "x": 76,
       "y": 5392,
@@ -2838,7 +2866,7 @@
       }
     },
     {
-      "id": "s_stl_4h",
+      "id": "s_stl_4i",
       "type": "math",
       "x": 296,
       "y": 5363,
@@ -2856,7 +2884,7 @@
       }
     },
     {
-      "id": "s_stl_4i",
+      "id": "s_stl_4j",
       "type": "text",
       "x": 76,
       "y": 5421,
@@ -2871,7 +2899,7 @@
       }
     },
     {
-      "id": "s_stl_4j",
+      "id": "s_stl_4k",
       "type": "math",
       "x": 296,
       "y": 5416,
@@ -2889,7 +2917,7 @@
       }
     },
     {
-      "id": "s_stl_4k",
+      "id": "s_stl_4l",
       "type": "text",
       "x": 76,
       "y": 5476,
@@ -2904,7 +2932,7 @@
       }
     },
     {
-      "id": "s_stl_4l",
+      "id": "s_stl_4m",
       "type": "math",
       "x": 336,
       "y": 5447,
@@ -2922,7 +2950,7 @@
       }
     },
     {
-      "id": "s_stl_4m",
+      "id": "s_stl_4n",
       "type": "text",
       "x": 76,
       "y": 5505,
@@ -2937,7 +2965,7 @@
       }
     },
     {
-      "id": "s_stl_4n",
+      "id": "s_stl_4o",
       "type": "math",
       "x": 296,
       "y": 5500,
@@ -2955,7 +2983,7 @@
       }
     },
     {
-      "id": "s_stl_4o",
+      "id": "s_stl_4p",
       "type": "text",
       "x": 76,
       "y": 5537,
@@ -2971,7 +2999,7 @@
       }
     },
     {
-      "id": "s_stl_4p",
+      "id": "s_stl_4q",
       "type": "text",
       "x": 76,
       "y": 5573,
@@ -2987,7 +3015,7 @@
       }
     },
     {
-      "id": "s_stl_4q",
+      "id": "s_stl_4r",
       "type": "text",
       "x": 76,
       "y": 5600,
@@ -3002,7 +3030,7 @@
       }
     },
     {
-      "id": "s_stl_4r",
+      "id": "s_stl_4s",
       "type": "math",
       "x": 76,
       "y": 5915,
@@ -3020,7 +3048,7 @@
       }
     },
     {
-      "id": "s_stl_4s",
+      "id": "s_stl_4t",
       "type": "text",
       "x": 76,
       "y": 6120,
@@ -3035,7 +3063,7 @@
       }
     },
     {
-      "id": "s_stl_4t",
+      "id": "s_stl_4u",
       "type": "math",
       "x": 76,
       "y": 6144,
@@ -3053,7 +3081,7 @@
       }
     },
     {
-      "id": "s_stl_4u",
+      "id": "s_stl_4v",
       "type": "text",
       "x": 76,
       "y": 6354,
@@ -3068,7 +3096,7 @@
       }
     },
     {
-      "id": "s_stl_4v",
+      "id": "s_stl_4w",
       "type": "math",
       "x": 376,
       "y": 6349,
@@ -3086,7 +3114,7 @@
       }
     },
     {
-      "id": "s_stl_4w",
+      "id": "s_stl_4x",
       "type": "text",
       "x": 76,
       "y": 6387,
@@ -3102,7 +3130,7 @@
       }
     },
     {
-      "id": "s_stl_4x",
+      "id": "s_stl_4y",
       "type": "text",
       "x": 76,
       "y": 6427,
@@ -3117,7 +3145,7 @@
       }
     },
     {
-      "id": "s_stl_4y",
+      "id": "s_stl_4z",
       "type": "math",
       "x": 296,
       "y": 6414,
@@ -3135,7 +3163,7 @@
       }
     },
     {
-      "id": "s_stl_4z",
+      "id": "s_stl_50",
       "type": "text",
       "x": 76,
       "y": 6482,
@@ -3150,7 +3178,7 @@
       }
     },
     {
-      "id": "s_stl_50",
+      "id": "s_stl_51",
       "type": "math",
       "x": 296,
       "y": 6465,
@@ -3168,7 +3196,7 @@
       }
     },
     {
-      "id": "s_stl_51",
+      "id": "s_stl_52",
       "type": "text",
       "x": 76,
       "y": 6528,
@@ -3183,7 +3211,7 @@
       }
     },
     {
-      "id": "s_stl_52",
+      "id": "s_stl_53",
       "type": "math",
       "x": 296,
       "y": 6523,
@@ -3201,7 +3229,7 @@
       }
     },
     {
-      "id": "s_stl_53",
+      "id": "s_stl_54",
       "type": "text",
       "x": 76,
       "y": 6577,
@@ -3216,7 +3244,7 @@
       }
     },
     {
-      "id": "s_stl_54",
+      "id": "s_stl_55",
       "type": "math",
       "x": 296,
       "y": 6555,
@@ -3234,7 +3262,7 @@
       }
     },
     {
-      "id": "s_stl_55",
+      "id": "s_stl_56",
       "type": "text",
       "x": 76,
       "y": 6636,
@@ -3249,7 +3277,7 @@
       }
     },
     {
-      "id": "s_stl_56",
+      "id": "s_stl_57",
       "type": "math",
       "x": 296,
       "y": 6625,
@@ -3267,7 +3295,7 @@
       }
     },
     {
-      "id": "s_stl_57",
+      "id": "s_stl_58",
       "type": "text",
       "x": 76,
       "y": 6699,
@@ -3282,7 +3310,7 @@
       }
     },
     {
-      "id": "s_stl_58",
+      "id": "s_stl_59",
       "type": "math",
       "x": 296,
       "y": 6671,
@@ -3300,7 +3328,7 @@
       }
     },
     {
-      "id": "s_stl_59",
+      "id": "s_stl_5a",
       "type": "text",
       "x": 76,
       "y": 6728,
@@ -3315,7 +3343,7 @@
       }
     },
     {
-      "id": "s_stl_5a",
+      "id": "s_stl_5b",
       "type": "math",
       "x": 296,
       "y": 6723,
@@ -3333,7 +3361,7 @@
       }
     },
     {
-      "id": "s_stl_5b",
+      "id": "s_stl_5c",
       "type": "text",
       "x": 76,
       "y": 6760,
@@ -3349,7 +3377,7 @@
       }
     },
     {
-      "id": "s_stl_5c",
+      "id": "s_stl_5d",
       "type": "text",
       "x": 76,
       "y": 6798,
@@ -3364,7 +3392,7 @@
       }
     },
     {
-      "id": "s_stl_5d",
+      "id": "s_stl_5e",
       "type": "math",
       "x": 296,
       "y": 6787,
@@ -3382,7 +3410,7 @@
       }
     },
     {
-      "id": "s_stl_5e",
+      "id": "s_stl_5f",
       "type": "text",
       "x": 76,
       "y": 6848,
@@ -3397,7 +3425,7 @@
       }
     },
     {
-      "id": "s_stl_5f",
+      "id": "s_stl_5g",
       "type": "math",
       "x": 296,
       "y": 6834,
@@ -3415,7 +3443,7 @@
       }
     },
     {
-      "id": "s_stl_5g",
+      "id": "s_stl_5h",
       "type": "text",
       "x": 76,
       "y": 6888,
@@ -3430,7 +3458,7 @@
       }
     },
     {
-      "id": "s_stl_5h",
+      "id": "s_stl_5i",
       "type": "math",
       "x": 296,
       "y": 6883,
@@ -3448,7 +3476,7 @@
       }
     },
     {
-      "id": "s_stl_5i",
+      "id": "s_stl_5j",
       "type": "text",
       "x": 76,
       "y": 7103,
@@ -3463,7 +3491,7 @@
       }
     },
     {
-      "id": "s_stl_5j",
+      "id": "s_stl_5k",
       "type": "math",
       "x": 296,
       "y": 7086,
@@ -3481,7 +3509,7 @@
       }
     },
     {
-      "id": "s_stl_5k",
+      "id": "s_stl_5l",
       "type": "text",
       "x": 76,
       "y": 7155,
@@ -3496,7 +3524,7 @@
       }
     },
     {
-      "id": "s_stl_5l",
+      "id": "s_stl_5m",
       "type": "math",
       "x": 296,
       "y": 7144,
@@ -3514,7 +3542,7 @@
       }
     },
     {
-      "id": "s_stl_5m",
+      "id": "s_stl_5n",
       "type": "text",
       "x": 76,
       "y": 7219,
@@ -3529,7 +3557,7 @@
       }
     },
     {
-      "id": "s_stl_5n",
+      "id": "s_stl_5o",
       "type": "math",
       "x": 296,
       "y": 7190,
@@ -3547,7 +3575,7 @@
       }
     },
     {
-      "id": "s_stl_5o",
+      "id": "s_stl_5p",
       "type": "text",
       "x": 76,
       "y": 7248,
@@ -3562,7 +3590,7 @@
       }
     },
     {
-      "id": "s_stl_5p",
+      "id": "s_stl_5q",
       "type": "math",
       "x": 296,
       "y": 7243,
@@ -3580,7 +3608,7 @@
       }
     },
     {
-      "id": "s_stl_5q",
+      "id": "s_stl_5r",
       "type": "text",
       "x": 76,
       "y": 7280,
@@ -3596,14 +3624,14 @@
       }
     },
     {
-      "id": "s_stl_5r",
+      "id": "s_stl_5s",
       "type": "text",
       "x": 76,
       "y": 7322,
       "props": {
         "w": 204,
         "h": 18,
-        "html": "Polar radius of gyration squared",
+        "html": "Polar radius of gyration",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -3611,7 +3639,7 @@
       }
     },
     {
-      "id": "s_stl_5s",
+      "id": "s_stl_5t",
       "type": "math",
       "x": 296,
       "y": 7307,
@@ -3629,7 +3657,7 @@
       }
     },
     {
-      "id": "s_stl_5t",
+      "id": "s_stl_5u",
       "type": "text",
       "x": 76,
       "y": 7368,
@@ -3644,7 +3672,7 @@
       }
     },
     {
-      "id": "s_stl_5u",
+      "id": "s_stl_5v",
       "type": "math",
       "x": 296,
       "y": 7356,
@@ -3662,7 +3690,7 @@
       }
     },
     {
-      "id": "s_stl_5v",
+      "id": "s_stl_5w",
       "type": "text",
       "x": 76,
       "y": 7419,
@@ -3677,7 +3705,7 @@
       }
     },
     {
-      "id": "s_stl_5w",
+      "id": "s_stl_5x",
       "type": "math",
       "x": 296,
       "y": 7405,
@@ -3695,7 +3723,7 @@
       }
     },
     {
-      "id": "s_stl_5x",
+      "id": "s_stl_5y",
       "type": "text",
       "x": 76,
       "y": 7459,
@@ -3710,7 +3738,7 @@
       }
     },
     {
-      "id": "s_stl_5y",
+      "id": "s_stl_5z",
       "type": "math",
       "x": 296,
       "y": 7454,
@@ -3728,7 +3756,7 @@
       }
     },
     {
-      "id": "s_stl_5z",
+      "id": "s_stl_60",
       "type": "text",
       "x": 76,
       "y": 7503,
@@ -3743,7 +3771,7 @@
       }
     },
     {
-      "id": "s_stl_60",
+      "id": "s_stl_61",
       "type": "math",
       "x": 296,
       "y": 7486,
@@ -3761,7 +3789,7 @@
       }
     },
     {
-      "id": "s_stl_61",
+      "id": "s_stl_62",
       "type": "text",
       "x": 76,
       "y": 7555,
@@ -3776,7 +3804,7 @@
       }
     },
     {
-      "id": "s_stl_62",
+      "id": "s_stl_63",
       "type": "math",
       "x": 296,
       "y": 7544,
@@ -3794,7 +3822,7 @@
       }
     },
     {
-      "id": "s_stl_63",
+      "id": "s_stl_64",
       "type": "text",
       "x": 76,
       "y": 7619,
@@ -3809,7 +3837,7 @@
       }
     },
     {
-      "id": "s_stl_64",
+      "id": "s_stl_65",
       "type": "math",
       "x": 296,
       "y": 7590,
@@ -3827,7 +3855,7 @@
       }
     },
     {
-      "id": "s_stl_65",
+      "id": "s_stl_66",
       "type": "text",
       "x": 76,
       "y": 7648,
@@ -3842,7 +3870,7 @@
       }
     },
     {
-      "id": "s_stl_66",
+      "id": "s_stl_67",
       "type": "math",
       "x": 296,
       "y": 7643,
@@ -3860,7 +3888,7 @@
       }
     },
     {
-      "id": "s_stl_67",
+      "id": "s_stl_68",
       "type": "text",
       "x": 76,
       "y": 7680,
@@ -3876,7 +3904,7 @@
       }
     },
     {
-      "id": "s_stl_68",
+      "id": "s_stl_69",
       "type": "text",
       "x": 76,
       "y": 7710,
@@ -3891,7 +3919,7 @@
       }
     },
     {
-      "id": "s_stl_69",
+      "id": "s_stl_6a",
       "type": "text",
       "x": 76,
       "y": 7735,
@@ -3910,7 +3938,7 @@
       }
     },
     {
-      "id": "s_stl_6a",
+      "id": "s_stl_6b",
       "type": "text",
       "x": 76,
       "y": 7765,
@@ -3925,7 +3953,7 @@
       }
     },
     {
-      "id": "s_stl_6b",
+      "id": "s_stl_6c",
       "type": "math",
       "x": 76,
       "y": 7789,
@@ -3943,7 +3971,7 @@
       }
     },
     {
-      "id": "s_stl_6c",
+      "id": "s_stl_6d",
       "type": "text",
       "x": 76,
       "y": 7922,
@@ -3958,7 +3986,7 @@
       }
     },
     {
-      "id": "s_stl_6d",
+      "id": "s_stl_6e",
       "type": "math",
       "x": 316,
       "y": 7917,
@@ -3976,7 +4004,7 @@
       }
     },
     {
-      "id": "s_stl_6e",
+      "id": "s_stl_6f",
       "type": "text",
       "x": 76,
       "y": 7994,
@@ -3991,7 +4019,7 @@
       }
     },
     {
-      "id": "s_stl_6f",
+      "id": "s_stl_6g",
       "type": "math",
       "x": 296,
       "y": 7949,
@@ -4009,7 +4037,7 @@
       }
     },
     {
-      "id": "s_stl_6g",
+      "id": "s_stl_6h",
       "type": "text",
       "x": 76,
       "y": 8302,
@@ -4024,7 +4052,7 @@
       }
     },
     {
-      "id": "s_stl_6h",
+      "id": "s_stl_6i",
       "type": "math",
       "x": 296,
       "y": 8257,
@@ -4042,7 +4070,7 @@
       }
     },
     {
-      "id": "s_stl_6i",
+      "id": "s_stl_6j",
       "type": "text",
       "x": 76,
       "y": 8357,
@@ -4057,7 +4085,7 @@
       }
     },
     {
-      "id": "s_stl_6j",
+      "id": "s_stl_6k",
       "type": "math",
       "x": 376,
       "y": 8346,
@@ -4075,7 +4103,7 @@
       }
     },
     {
-      "id": "s_stl_6k",
+      "id": "s_stl_6l",
       "type": "text",
       "x": 76,
       "y": 8395,
@@ -4090,7 +4118,7 @@
       }
     },
     {
-      "id": "s_stl_6l",
+      "id": "s_stl_6m",
       "type": "math",
       "x": 96,
       "y": 8419,
@@ -4108,7 +4136,7 @@
       }
     },
     {
-      "id": "s_stl_6m",
+      "id": "s_stl_6n",
       "type": "text",
       "x": 76,
       "y": 8493,
@@ -4123,7 +4151,7 @@
       }
     },
     {
-      "id": "s_stl_6n",
+      "id": "s_stl_6o",
       "type": "math",
       "x": 296,
       "y": 8479,
@@ -4141,7 +4169,7 @@
       }
     },
     {
-      "id": "s_stl_6o",
+      "id": "s_stl_6p",
       "type": "text",
       "x": 76,
       "y": 8528,
@@ -4156,7 +4184,7 @@
       }
     },
     {
-      "id": "s_stl_6p",
+      "id": "s_stl_6q",
       "type": "math",
       "x": 76,
       "y": 8552,
@@ -4174,7 +4202,7 @@
       }
     },
     {
-      "id": "s_stl_6q",
+      "id": "s_stl_6r",
       "type": "text",
       "x": 76,
       "y": 8724,
@@ -4189,7 +4217,7 @@
       }
     },
     {
-      "id": "s_stl_6r",
+      "id": "s_stl_6s",
       "type": "math",
       "x": 296,
       "y": 8719,
@@ -4207,7 +4235,7 @@
       }
     },
     {
-      "id": "s_stl_6s",
+      "id": "s_stl_6t",
       "type": "text",
       "x": 76,
       "y": 8768,
@@ -4222,7 +4250,7 @@
       }
     },
     {
-      "id": "s_stl_6t",
+      "id": "s_stl_6u",
       "type": "math",
       "x": 296,
       "y": 8751,
@@ -4240,7 +4268,7 @@
       }
     },
     {
-      "id": "s_stl_6u",
+      "id": "s_stl_6v",
       "type": "text",
       "x": 76,
       "y": 8820,
@@ -4255,7 +4283,7 @@
       }
     },
     {
-      "id": "s_stl_6v",
+      "id": "s_stl_6w",
       "type": "math",
       "x": 316,
       "y": 8809,
@@ -4273,7 +4301,7 @@
       }
     },
     {
-      "id": "s_stl_6w",
+      "id": "s_stl_6x",
       "type": "text",
       "x": 76,
       "y": 8866,
@@ -4288,7 +4316,7 @@
       }
     },
     {
-      "id": "s_stl_6x",
+      "id": "s_stl_6y",
       "type": "math",
       "x": 296,
       "y": 8855,
@@ -4306,7 +4334,7 @@
       }
     },
     {
-      "id": "s_stl_6y",
+      "id": "s_stl_6z",
       "type": "text",
       "x": 76,
       "y": 8905,
@@ -4321,7 +4349,7 @@
       }
     },
     {
-      "id": "s_stl_6z",
+      "id": "s_stl_70",
       "type": "math",
       "x": 296,
       "y": 8900,
@@ -4339,7 +4367,7 @@
       }
     },
     {
-      "id": "s_stl_70",
+      "id": "s_stl_71",
       "type": "text",
       "x": 76,
       "y": 8937,
@@ -4355,7 +4383,7 @@
       }
     },
     {
-      "id": "s_stl_71",
+      "id": "s_stl_72",
       "type": "text",
       "x": 76,
       "y": 8967,
@@ -4370,7 +4398,7 @@
       }
     },
     {
-      "id": "s_stl_72",
+      "id": "s_stl_73",
       "type": "text",
       "x": 76,
       "y": 8992,
@@ -4385,10 +4413,25 @@
       }
     },
     {
-      "id": "s_stl_73",
+      "id": "s_stl_74",
       "type": "text",
       "x": 76,
-      "y": 9022,
+      "y": 9017,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Class / slenderness limits below apply to combined interaction; see scope flags in the summary.",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_75",
+      "type": "text",
+      "x": 76,
+      "y": 9047,
       "props": {
         "w": 324,
         "h": 18,
@@ -4400,10 +4443,10 @@
       }
     },
     {
-      "id": "s_stl_74",
+      "id": "s_stl_76",
       "type": "math",
       "x": 416,
-      "y": 9017,
+      "y": 9042,
       "props": {
         "w": 178,
         "h": 25,
@@ -4418,10 +4461,10 @@
       }
     },
     {
-      "id": "s_stl_75",
+      "id": "s_stl_77",
       "type": "text",
       "x": 76,
-      "y": 9053,
+      "y": 9078,
       "props": {
         "w": 244,
         "h": 18,
@@ -4433,10 +4476,10 @@
       }
     },
     {
-      "id": "s_stl_76",
+      "id": "s_stl_78",
       "type": "math",
       "x": 336,
-      "y": 9048,
+      "y": 9073,
       "props": {
         "w": 206,
         "h": 26,
@@ -4451,10 +4494,10 @@
       }
     },
     {
-      "id": "s_stl_77",
+      "id": "s_stl_79",
       "type": "text",
       "x": 76,
-      "y": 9108,
+      "y": 9133,
       "props": {
         "w": 204,
         "h": 18,
@@ -4466,10 +4509,10 @@
       }
     },
     {
-      "id": "s_stl_78",
+      "id": "s_stl_7a",
       "type": "math",
       "x": 296,
-      "y": 9080,
+      "y": 9105,
       "props": {
         "w": 159,
         "h": 39,
@@ -4484,10 +4527,10 @@
       }
     },
     {
-      "id": "s_stl_79",
+      "id": "s_stl_7b",
       "type": "text",
       "x": 76,
-      "y": 9161,
+      "y": 9186,
       "props": {
         "w": 204,
         "h": 18,
@@ -4499,10 +4542,10 @@
       }
     },
     {
-      "id": "s_stl_7a",
+      "id": "s_stl_7c",
       "type": "math",
       "x": 296,
-      "y": 9132,
+      "y": 9157,
       "props": {
         "w": 158,
         "h": 37,
@@ -4517,43 +4560,10 @@
       }
     },
     {
-      "id": "s_stl_7b",
-      "type": "text",
-      "x": 76,
-      "y": 9190,
-      "props": {
-        "w": 204,
-        "h": 18,
-        "html": "Table B.1",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_stl_7c",
-      "type": "math",
-      "x": 296,
-      "y": 9185,
-      "props": {
-        "w": 314,
-        "h": 26,
-        "baseline": 18,
-        "latex": "k_{yy}\\coloneq C_{my}\\left(1+\\min\\left(\\lambda_{y}-0.2,0.8\\right)n_{y}\\right)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
       "id": "s_stl_7d",
       "type": "text",
       "x": 76,
-      "y": 9222,
+      "y": 9215,
       "props": {
         "w": 204,
         "h": 18,
@@ -4568,12 +4578,12 @@
       "id": "s_stl_7e",
       "type": "math",
       "x": 296,
-      "y": 9217,
+      "y": 9210,
       "props": {
-        "w": 321,
+        "w": 314,
         "h": 26,
         "baseline": 18,
-        "latex": "k_{zz}\\coloneq C_{mz}\\left(1+\\min\\left(2\\lambda_{z}-0.6,1.4\\right)n_{z}\\right)",
+        "latex": "k_{yy}\\coloneq C_{my}\\left(1+\\min\\left(\\lambda_{y}-0.2,0.8\\right)n_{y}\\right)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": 3,
@@ -4603,6 +4613,39 @@
       "x": 296,
       "y": 9428,
       "props": {
+        "w": 321,
+        "h": 26,
+        "baseline": 18,
+        "latex": "k_{zz}\\coloneq C_{mz}\\left(1+\\min\\left(2\\lambda_{z}-0.6,1.4\\right)n_{z}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_7h",
+      "type": "text",
+      "x": 76,
+      "y": 9465,
+      "props": {
+        "w": 204,
+        "h": 18,
+        "html": "Table B.1",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_7i",
+      "type": "math",
+      "x": 296,
+      "y": 9460,
+      "props": {
         "w": 152,
         "h": 26,
         "baseline": 18,
@@ -4616,10 +4659,10 @@
       }
     },
     {
-      "id": "s_stl_7h",
+      "id": "s_stl_7j",
       "type": "text",
       "x": 76,
-      "y": 9473,
+      "y": 9505,
       "props": {
         "w": 204,
         "h": 18,
@@ -4631,10 +4674,10 @@
       }
     },
     {
-      "id": "s_stl_7i",
+      "id": "s_stl_7k",
       "type": "math",
       "x": 296,
-      "y": 9460,
+      "y": 9492,
       "props": {
         "w": 414,
         "h": 43,
@@ -4649,10 +4692,10 @@
       }
     },
     {
-      "id": "s_stl_7j",
+      "id": "s_stl_7l",
       "type": "text",
       "x": 76,
-      "y": 9520,
+      "y": 9552,
       "props": {
         "w": 244,
         "h": 18,
@@ -4664,10 +4707,10 @@
       }
     },
     {
-      "id": "s_stl_7k",
+      "id": "s_stl_7m",
       "type": "math",
       "x": 336,
-      "y": 9509,
+      "y": 9541,
       "props": {
         "w": 232,
         "h": 40,
@@ -4682,10 +4725,10 @@
       }
     },
     {
-      "id": "s_stl_7l",
+      "id": "s_stl_7n",
       "type": "text",
       "x": 76,
-      "y": 9566,
+      "y": 9598,
       "props": {
         "w": 204,
         "h": 18,
@@ -4697,10 +4740,10 @@
       }
     },
     {
-      "id": "s_stl_7m",
+      "id": "s_stl_7o",
       "type": "math",
       "x": 296,
-      "y": 9555,
+      "y": 9587,
       "props": {
         "w": 334,
         "h": 39,
@@ -4715,10 +4758,10 @@
       }
     },
     {
-      "id": "s_stl_7n",
+      "id": "s_stl_7p",
       "type": "text",
       "x": 76,
-      "y": 9605,
+      "y": 9637,
       "props": {
         "w": 204,
         "h": 18,
@@ -4730,10 +4773,10 @@
       }
     },
     {
-      "id": "s_stl_7o",
+      "id": "s_stl_7q",
       "type": "math",
       "x": 296,
-      "y": 9600,
+      "y": 9632,
       "props": {
         "w": 222,
         "h": 25,
@@ -4748,10 +4791,10 @@
       }
     },
     {
-      "id": "s_stl_7p",
+      "id": "s_stl_7r",
       "type": "text",
       "x": 76,
-      "y": 9642,
+      "y": 9674,
       "props": {
         "w": 204,
         "h": 18,
@@ -4763,10 +4806,10 @@
       }
     },
     {
-      "id": "s_stl_7q",
+      "id": "s_stl_7s",
       "type": "math",
       "x": 296,
-      "y": 9631,
+      "y": 9663,
       "props": {
         "w": 334,
         "h": 39,
@@ -4781,10 +4824,10 @@
       }
     },
     {
-      "id": "s_stl_7r",
+      "id": "s_stl_7t",
       "type": "text",
       "x": 76,
-      "y": 9681,
+      "y": 9713,
       "props": {
         "w": 204,
         "h": 18,
@@ -4796,10 +4839,10 @@
       }
     },
     {
-      "id": "s_stl_7s",
+      "id": "s_stl_7u",
       "type": "math",
       "x": 296,
-      "y": 9676,
+      "y": 9708,
       "props": {
         "w": 222,
         "h": 25,
@@ -4814,10 +4857,10 @@
       }
     },
     {
-      "id": "s_stl_7t",
+      "id": "s_stl_7v",
       "type": "text",
       "x": 76,
-      "y": 9713,
+      "y": 9745,
       "props": {
         "w": 630,
         "h": 24,
@@ -4830,14 +4873,44 @@
       }
     },
     {
-      "id": "s_stl_7u",
+      "id": "s_stl_7w",
       "type": "text",
       "x": 76,
-      "y": 9743,
+      "y": 9775,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Scope flags: 1 = supported, 0 = invalid input or separate verification required.",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_7x",
+      "type": "text",
+      "x": 76,
+      "y": 9800,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "A failed scope flag prevents Member PASS, including in Input &amp; Results reports.",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_7y",
+      "type": "text",
+      "x": 76,
+      "y": 9825,
       "props": {
         "w": 630,
         "h": 18,
-        "html": "Governing utilisation",
+        "html": "Axial compression and nonnegative shear magnitudes",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -4845,10 +4918,739 @@
       }
     },
     {
-      "id": "s_stl_7v",
+      "id": "s_stl_7z",
       "type": "math",
       "x": 76,
-      "y": 9767,
+      "y": 9849,
+      "props": {
+        "w": 352,
+        "h": 83,
+        "baseline": 18,
+        "latex": "\\delta_{forces}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\min\\left(N_{Ed},V_{y.Ed},V_{z.Ed}\\right)\\ge0\\,\\mathrm{kN}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_80",
+      "type": "text",
+      "x": 76,
+      "y": 9983,
+      "props": {
+        "w": 204,
+        "h": 18,
+        "html": "Nonnegative moment magnitudes",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_81",
+      "type": "math",
+      "x": 296,
+      "y": 9938,
+      "props": {
+        "w": 362,
+        "h": 83,
+        "baseline": 18,
+        "latex": "\\delta_{moments}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\min\\left(M_{y.Ed},M_{z.Ed}\\right)\\ge0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_82",
+      "type": "text",
+      "x": 76,
+      "y": 10032,
+      "props": {
+        "w": 204,
+        "h": 18,
+        "html": "Valid action signs",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_83",
+      "type": "math",
+      "x": 296,
+      "y": 10027,
+      "props": {
+        "w": 193,
+        "h": 26,
+        "baseline": 18,
+        "latex": "\\delta_{actions}\\coloneq\\delta_{forces}\\delta_{moments}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_84",
+      "type": "text",
+      "x": 76,
+      "y": 10104,
+      "props": {
+        "w": 264,
+        "h": 18,
+        "html": "Positive material stiffness and strength",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_85",
+      "type": "math",
+      "x": 356,
+      "y": 10059,
+      "props": {
+        "w": 301,
+        "h": 83,
+        "baseline": 18,
+        "latex": "\\delta_{elastic}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\min\\left(f_y,E,G\\right)>0\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_86",
+      "type": "text",
+      "x": 76,
+      "y": 10193,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Positive partial factors and shear-area factor",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_87",
+      "type": "math",
+      "x": 396,
+      "y": 10148,
+      "props": {
+        "w": 283,
+        "h": 83,
+        "baseline": 18,
+        "latex": "\\delta_{factors}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\min\\left(\\gamma_{M0},\\gamma_{M1},\\eta\\right)>0\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_88",
+      "type": "text",
+      "x": 76,
+      "y": 10237,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Valid material inputs (also fy ≤ 460 MPa above)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_89",
+      "type": "math",
+      "x": 76,
+      "y": 10261,
+      "props": {
+        "w": 355,
+        "h": 26,
+        "baseline": 18,
+        "latex": "\\delta_{material}\\coloneq\\delta_{elastic}\\delta_{factors}\\mathrm{if}\\left(f_y\\le460\\,\\mathrm{MPa},1,0\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_8a",
+      "type": "text",
+      "x": 76,
+      "y": 10338,
+      "props": {
+        "w": 224,
+        "h": 18,
+        "html": "Positive buckling lengths (SN003b)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_8b",
+      "type": "math",
+      "x": 316,
+      "y": 10293,
+      "props": {
+        "w": 374,
+        "h": 83,
+        "baseline": 18,
+        "latex": "\\delta_{lengths}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\min\\left(L_{cr.y},L_{cr.z},L_{cr.T},L_{LT}\\right)>0\\,\\mathrm{m}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_8c",
+      "type": "text",
+      "x": 76,
+      "y": 10644,
+      "props": {
+        "w": 204,
+        "h": 18,
+        "html": "Positive end factors (SN003b)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_8d",
+      "type": "math",
+      "x": 296,
+      "y": 10599,
+      "props": {
+        "w": 225,
+        "h": 83,
+        "baseline": 18,
+        "latex": "\\delta_{ends}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\min\\left(k,k_w\\right)>0\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_8e",
+      "type": "text",
+      "x": 76,
+      "y": 10688,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Valid I/H dimensions, excluding fillets or welds",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_8f",
+      "type": "math",
+      "x": 76,
+      "y": 10712,
+      "props": {
+        "w": 559,
+        "h": 83,
+        "baseline": 18,
+        "latex": "\\delta_{geometry}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\min\\left(h-2t_f-2r,b-t_w-2r,t_w,t_f\\right)>0\\,\\mathrm{mm}\\land r\\ge0\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_8g",
+      "type": "text",
+      "x": 76,
+      "y": 10846,
+      "props": {
+        "w": 204,
+        "h": 18,
+        "html": "Positive selected C1 (SN003b)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_8h",
+      "type": "math",
+      "x": 296,
+      "y": 10801,
+      "props": {
+        "w": 159,
+        "h": 83,
+        "baseline": 18,
+        "latex": "\\delta_{C1}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ C_1>0\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_8i",
+      "type": "text",
+      "x": 76,
+      "y": 10890,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Cm factors in Table B.3 range",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_8j",
+      "type": "math",
+      "x": 76,
+      "y": 10914,
+      "props": {
+        "w": 614,
+        "h": 83,
+        "baseline": 18,
+        "latex": "\\delta_{Cm}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ C_{my}\\ge0.4\\land C_{my}\\le1\\land C_{mz}\\ge0.4\\land C_{mz}\\le1\\land C_{mLT}\\ge0.4\\land C_{mLT}\\le1\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_8k",
+      "type": "text",
+      "x": 76,
+      "y": 11003,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Section: Class ≤ 3; compression web not Class 4 (Table 5.2)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_8l",
+      "type": "math",
+      "x": 76,
+      "y": 11027,
+      "props": {
+        "w": 394,
+        "h": 83,
+        "baseline": 18,
+        "latex": "\\delta_{section}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le3\\land\\left(N_{Ed}\\equiv0\\,\\mathrm{kN}\\lor\\beta_w\\le42\\right)\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_8m",
+      "type": "text",
+      "x": 76,
+      "y": 11116,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Table 6.2 rolled geometry range, or welded section",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_8n",
+      "type": "math",
+      "x": 76,
+      "y": 11140,
+      "props": {
+        "w": 395,
+        "h": 83,
+        "baseline": 18,
+        "latex": "\\delta_{curves}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Section}=0\\lor t_f\\le100\\,\\mathrm{mm}\\lor\\frac{h}{b}\\le1.2\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_8o",
+      "type": "text",
+      "x": 76,
+      "y": 11229,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Web shear buckling excluded (§6.2.6); one shear direction only",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_8p",
+      "type": "math",
+      "x": 76,
+      "y": 11253,
+      "props": {
+        "w": 450,
+        "h": 85,
+        "baseline": 18,
+        "latex": "\\delta_{shear}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\frac{h-2t_f}{t_w}\\le\\frac{72\\varepsilon}{\\eta}\\land\\left(V_{y.Ed}\\equiv0\\,\\mathrm{kN}\\lor V_{z.Ed}\\equiv0\\,\\mathrm{kN}\\right)\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_8q",
+      "type": "text",
+      "x": 76,
+      "y": 11344,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "High shear with bending requires separate stability verification",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_8r",
+      "type": "math",
+      "x": 76,
+      "y": 11368,
+      "props": {
+        "w": 471,
+        "h": 83,
+        "baseline": 18,
+        "latex": "\\delta_{highV}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\rho\\equiv0\\lor\\left(M_{y.Ed}\\equiv0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\land M_{z.Ed}\\equiv0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\right)\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_8s",
+      "type": "text",
+      "x": 76,
+      "y": 11502,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Annex B plastic branch: Class 1/2 and λz ≥ 0.4",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_8t",
+      "type": "math",
+      "x": 396,
+      "y": 11457,
+      "props": {
+        "w": 271,
+        "h": 83,
+        "baseline": 18,
+        "latex": "\\delta_{plastic}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le2\\land\\lambda_z\\ge0.4\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_8u",
+      "type": "text",
+      "x": 76,
+      "y": 11546,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Torsional mode must not govern combined stability",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_8v",
+      "type": "math",
+      "x": 76,
+      "y": 11770,
+      "props": {
+        "w": 333,
+        "h": 83,
+        "baseline": 18,
+        "latex": "\\delta_{mode}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ N_{b.T.Rd}\\ge\\min\\left(N_{b.y.Rd},N_{b.z.Rd}\\right)\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_8w",
+      "type": "text",
+      "x": 76,
+      "y": 11859,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Interaction applicability; pure compression / major bending exempt",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_8x",
+      "type": "math",
+      "x": 76,
+      "y": 11883,
+      "props": {
+        "w": 427,
+        "h": 122,
+        "baseline": 18,
+        "latex": "\\delta_{interaction}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ M_{y.Ed}=0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\land M_{z.Ed}=0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ N_{Ed}=0\\,\\mathrm{kN}\\land M_{z.Ed}=0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\delta_{plastic}\\delta_{mode}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_8y",
+      "type": "text",
+      "x": 76,
+      "y": 12016,
+      "props": {
+        "w": 204,
+        "h": 18,
+        "html": "Input validity",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_8z",
+      "type": "math",
+      "x": 296,
+      "y": 12011,
+      "props": {
+        "w": 289,
+        "h": 26,
+        "baseline": 18,
+        "latex": "\\delta_{input}\\coloneq\\delta_{actions}\\delta_{material}\\delta_{lengths}\\delta_{ends}\\delta_{Cm}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_90",
+      "type": "text",
+      "x": 76,
+      "y": 12048,
+      "props": {
+        "w": 204,
+        "h": 18,
+        "html": "Section and LTB input validity",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_91",
+      "type": "math",
+      "x": 296,
+      "y": 12043,
+      "props": {
+        "w": 185,
+        "h": 26,
+        "baseline": 18,
+        "latex": "\\delta_{data}\\coloneq\\delta_{geometry}\\delta_{C1}\\delta_{LT}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_92",
+      "type": "text",
+      "x": 76,
+      "y": 12075,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "All scope flags and LTB case valid (1 = yes)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_93",
+      "type": "math",
+      "x": 76,
+      "y": 12099,
+      "props": {
+        "w": 380,
+        "h": 26,
+        "baseline": 18,
+        "latex": "\\delta_{scope}\\coloneq\\delta_{input}\\delta_{section}\\delta_{curves}\\delta_{shear}\\delta_{highV}\\delta_{interaction}\\delta_{data}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_94",
+      "type": "text",
+      "x": 76,
+      "y": 12136,
+      "props": {
+        "w": 204,
+        "h": 18,
+        "html": "Scope (0 = NOT VERIFIED)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "groupId": "s_stl_group_94"
+    },
+    {
+      "id": "s_stl_95",
+      "type": "math",
+      "x": 296,
+      "y": 12131,
+      "props": {
+        "w": 176,
+        "h": 26,
+        "baseline": 18,
+        "latex": "\\delta_{scope}\\ge1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "groupId": "s_stl_group_94"
+    },
+    {
+      "id": "s_stl_96",
+      "type": "text",
+      "x": 76,
+      "y": 12176,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Governing utilisation (valid only when scope = 1)",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "groupId": "s_stl_group_94"
+    },
+    {
+      "id": "s_stl_97",
+      "type": "math",
+      "x": 96,
+      "y": 12191,
       "props": {
         "w": 587,
         "h": 25,
@@ -4860,28 +5662,30 @@
         "autoSize": true,
         "fontSize": 16,
         "color": "#0f172a"
-      }
+      },
+      "groupId": "s_stl_group_94"
     },
     {
-      "id": "s_stl_7w",
+      "id": "s_stl_98",
       "type": "text",
       "x": 76,
-      "y": 9803,
+      "y": 12236,
       "props": {
-        "w": 204,
+        "w": 244,
         "h": 18,
-        "html": "Member check",
+        "html": "Resistance check (scope must also pass)",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
-      }
+      },
+      "groupId": "s_stl_group_94"
     },
     {
-      "id": "s_stl_7x",
+      "id": "s_stl_99",
       "type": "math",
-      "x": 296,
-      "y": 9798,
+      "x": 336,
+      "y": 12231,
       "props": {
         "w": 201,
         "h": 25,
@@ -4893,13 +5697,49 @@
         "autoSize": true,
         "fontSize": 16,
         "color": "#0f172a"
-      }
+      },
+      "groupId": "s_stl_group_94"
     },
     {
-      "id": "s_stl_7y",
+      "id": "s_stl_9a",
       "type": "text",
       "x": 76,
-      "y": 9841,
+      "y": 12316,
+      "props": {
+        "w": 284,
+        "h": 18,
+        "html": "Member: both scope and resistance must pass",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "groupId": "s_stl_group_94"
+    },
+    {
+      "id": "s_stl_9b",
+      "type": "math",
+      "x": 376,
+      "y": 12271,
+      "props": {
+        "w": 264,
+        "h": 83,
+        "baseline": 18,
+        "latex": "\\delta_{scope}\\mathrm{if}\\left(\\mathrm{UR}\\le1,1,0\\right)\\ge1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "groupId": "s_stl_group_94"
+    },
+    {
+      "id": "s_stl_9c",
+      "type": "text",
+      "x": 76,
+      "y": 12372,
       "props": {
         "w": 630,
         "h": 29,
@@ -4915,10 +5755,10 @@
       }
     },
     {
-      "id": "s_stl_7z",
+      "id": "s_stl_9d",
       "type": "text",
       "x": 76,
-      "y": 9882,
+      "y": 12413,
       "props": {
         "w": 630,
         "h": 24,
@@ -4935,10 +5775,10 @@
       }
     },
     {
-      "id": "s_stl_80",
+      "id": "s_stl_9e",
       "type": "text",
       "x": 76,
-      "y": 9912,
+      "y": 12443,
       "props": {
         "w": 630,
         "h": 19,
@@ -4950,10 +5790,10 @@
       }
     },
     {
-      "id": "s_stl_81",
+      "id": "s_stl_9f",
       "type": "text",
       "x": 76,
-      "y": 9937,
+      "y": 12468,
       "props": {
         "w": 630,
         "h": 19,
@@ -4965,10 +5805,10 @@
       }
     },
     {
-      "id": "s_stl_82",
+      "id": "s_stl_9g",
       "type": "text",
       "x": 76,
-      "y": 9962,
+      "y": 12493,
       "props": {
         "w": 630,
         "h": 19,
@@ -4980,22 +5820,22 @@
       }
     },
     {
-      "id": "s_stl_83",
+      "id": "s_stl_9h",
       "type": "image",
       "x": 76,
-      "y": 10599,
+      "y": 12941,
       "props": {
         "w": 640,
         "h": 740,
         "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iNzQwIiB2aWV3Qm94PSIwIDAgNjQwIDc0MCI+CiAgICA8dGl0bGU+TFRCIGNhc2VzIDEgdG8gNzsgU0NJIE5DQ0kgU04wMDNiIFRhYmxlcyAzLjEgYW5kIDMuMjwvdGl0bGU+CiAgICA8cmVjdCB4PSIwLjUiIHk9IjAuNSIgd2lkdGg9IjYzOSIgaGVpZ2h0PSI3MzkiIGZpbGw9IndoaXRlIiBzdHJva2U9IiM5NGEzYjgiLz4KICAgIDxyZWN0IHg9IjEiIHk9IjEiIHdpZHRoPSI2MzgiIGhlaWdodD0iMzkiIGZpbGw9IiNlZmY2ZmYiLz4KICAgIDxnIHN0cm9rZT0iI2NiZDVlMSIgc3Ryb2tlLXdpZHRoPSIxIj48bGluZSB4MT0iMCIgeTE9IjQwIiB4Mj0iNjQwIiB5Mj0iNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSIxNDAiIHgyPSI2NDAiIHkyPSIxNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSIyNDAiIHgyPSI2NDAiIHkyPSIyNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSIzNDAiIHgyPSI2NDAiIHkyPSIzNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSI0NDAiIHgyPSI2NDAiIHkyPSI0NDAiIC8+PGxpbmUgeDE9IjAiIHkxPSI1NDAiIHgyPSI2NDAiIHkyPSI1NDAiIC8+PGxpbmUgeDE9IjAiIHkxPSI2NDAiIHgyPSI2NDAiIHkyPSI2NDAiIC8+PGxpbmUgeDE9IjYwIiB5MT0iMCIgeDI9IjYwIiB5Mj0iNzQwIiAvPjxsaW5lIHgxPSIyODAiIHkxPSIwIiB4Mj0iMjgwIiB5Mj0iNzQwIiAvPjxsaW5lIHgxPSI0ODAiIHkxPSIwIiB4Mj0iNDgwIiB5Mj0iNzQwIiAvPjxsaW5lIHgxPSI1NjAiIHkxPSIwIiB4Mj0iNTYwIiB5Mj0iNzQwIiAvPjwvZz4KICAgIDxnIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMWUzYTVmIj4KICAgICAgPGcgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPjx0ZXh0IHg9IjMwIiB5PSIyNSIgPkNhc2U8L3RleHQ+PHRleHQgeD0iMTcwIiB5PSIyNSIgPkxvYWRpbmcgYW5kIHN1cHBvcnRzPC90ZXh0Pjx0ZXh0IHg9IjM4MCIgeT0iMjUiID5CZW5kaW5nIG1vbWVudCBkaWFncmFtPC90ZXh0Pjx0ZXh0IHg9IjUyMCIgeT0iMjUiID5DMTwvdGV4dD48dGV4dCB4PSI2MDAiIHk9IjI1IiA+QzI8L3RleHQ+PC9nPgogICAgICA8ZyBpZD0ibHRiLWNhc2UtMSI+PHRleHQgeD0iMzAiIHk9Ijk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+MTwvdGV4dD48bGluZSB4MT0iODgiIHkxPSI4MiIgeDI9IjI1NCIgeTI9IjgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCw4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxsaW5lIHgxPSIyNDYiIHkxPSI5NyIgeDI9IjI2MiIgeTI9Ijk3IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNODgsNTVBMTEsMTEgMCAxIDEgNzcsNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNNzQsNzFMNzcsNjZMODAsNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxMDMiIHk9IjYyIiA+TTwvdGV4dD48cGF0aCBkPSJNMjU0LDU1QTExLDExIDAgMSAwIDI2NSw2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yNjIsNzFMMjY1LDY2TDI2OCw3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjIyMCIgeT0iNjIiIHRleHQtYW5jaG9yPSJlbmQiPjEuMDBNPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iMTI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSArMS4wMDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iODciIHgyPSI0NjYiIHkyPSI4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDg3TDI5NC4wMCwxMTIuMDBMMjk4LjMwLDExMi4wMEwzMDIuNjAsMTEyLjAwTDMwNi45MCwxMTIuMDBMMzExLjIwLDExMi4wMEwzMTUuNTAsMTEyLjAwTDMxOS44MCwxMTIuMDBMMzI0LjEwLDExMi4wMEwzMjguNDAsMTEyLjAwTDMzMi43MCwxMTIuMDBMMzM3LjAwLDExMi4wMEwzNDEuMzAsMTEyLjAwTDM0NS42MCwxMTIuMDBMMzQ5LjkwLDExMi4wMEwzNTQuMjAsMTEyLjAwTDM1OC41MCwxMTIuMDBMMzYyLjgwLDExMi4wMEwzNjcuMTAsMTEyLjAwTDM3MS40MCwxMTIuMDBMMzc1LjcwLDExMi4wMEwzODAuMDAsMTEyLjAwTDM4NC4zMCwxMTIuMDBMMzg4LjYwLDExMi4wMEwzOTIuOTAsMTEyLjAwTDM5Ny4yMCwxMTIuMDBMNDAxLjUwLDExMi4wMEw0MDUuODAsMTEyLjAwTDQxMC4xMCwxMTIuMDBMNDE0LjQwLDExMi4wMEw0MTguNzAsMTEyLjAwTDQyMy4wMCwxMTIuMDBMNDI3LjMwLDExMi4wMEw0MzEuNjAsMTEyLjAwTDQzNS45MCwxMTIuMDBMNDQwLjIwLDExMi4wMEw0NDQuNTAsMTEyLjAwTDQ0OC44MCwxMTIuMDBMNDUzLjEwLDExMi4wMEw0NTcuNDAsMTEyLjAwTDQ2MS43MCwxMTIuMDBMNDY2LjAwLDExMi4wMEw0NjYsODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSIxMjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtMiI+PHRleHQgeD0iMzAiIHk9IjE5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjI8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iMTgyIiB4Mj0iMjU0IiB5Mj0iMTgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCwxODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCwxODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PGxpbmUgeDE9IjI0NiIgeTE9IjE5NyIgeDI9IjI2MiIgeTI9IjE5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTg4LDE1NUExMSwxMSAwIDEgMSA3NywxNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNNzQsMTcxTDc3LDE2Nkw4MCwxNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxMDMiIHk9IjE2MiIgPk08L3RleHQ+PHBhdGggZD0iTTI1NCwxNTVBMTEsMTEgMCAxIDAgMjY1LDE2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yNjIsMTcxTDI2NSwxNjZMMjY4LDE3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjIyMCIgeT0iMTYyIiB0ZXh0LWFuY2hvcj0iZW5kIj4wLjc1TTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjIyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+RW5kIG1vbWVudHM7IM+IID0gKzAuNzU8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9IjE4NyIgeDI9IjQ2NiIgeTI9IjE4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDE4N0wyOTQuMDAsMjEyLjAwTDI5OC4zMCwyMTEuODRMMzAyLjYwLDIxMS42OUwzMDYuOTAsMjExLjUzTDMxMS4yMCwyMTEuMzhMMzE1LjUwLDIxMS4yMkwzMTkuODAsMjExLjA2TDMyNC4xMCwyMTAuOTFMMzI4LjQwLDIxMC43NUwzMzIuNzAsMjEwLjU5TDMzNy4wMCwyMTAuNDRMMzQxLjMwLDIxMC4yOEwzNDUuNjAsMjEwLjEzTDM0OS45MCwyMDkuOTdMMzU0LjIwLDIwOS44MUwzNTguNTAsMjA5LjY2TDM2Mi44MCwyMDkuNTBMMzY3LjEwLDIwOS4zNEwzNzEuNDAsMjA5LjE5TDM3NS43MCwyMDkuMDNMMzgwLjAwLDIwOC44OEwzODQuMzAsMjA4LjcyTDM4OC42MCwyMDguNTZMMzkyLjkwLDIwOC40MUwzOTcuMjAsMjA4LjI1TDQwMS41MCwyMDguMDlMNDA1LjgwLDIwNy45NEw0MTAuMTAsMjA3Ljc4TDQxNC40MCwyMDcuNjNMNDE4LjcwLDIwNy40N0w0MjMuMDAsMjA3LjMxTDQyNy4zMCwyMDcuMTZMNDMxLjYwLDIwNy4wMEw0MzUuOTAsMjA2Ljg0TDQ0MC4yMCwyMDYuNjlMNDQ0LjUwLDIwNi41M0w0NDguODAsMjA2LjM4TDQ1My4xMCwyMDYuMjJMNDU3LjQwLDIwNi4wNkw0NjEuNzAsMjA1LjkxTDQ2Ni4wMCwyMDUuNzVMNDY2LDE4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjIyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPjxnIGlkPSJsdGItY2FzZS0zIj48dGV4dCB4PSIzMCIgeT0iMjk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+MzwvdGV4dD48bGluZSB4MT0iODgiIHkxPSIyODIiIHgyPSIyNTQiIHkyPSIyODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDI4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDI4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iMjk3IiB4Mj0iMjYyIiB5Mj0iMjk3IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNODgsMjU1QTExLDExIDAgMSAxIDc3LDI2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik03NCwyNzFMNzcsMjY2TDgwLDI3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjEwMyIgeT0iMjYyIiA+TTwvdGV4dD48cGF0aCBkPSJNMjU0LDI1NUExMSwxMSAwIDEgMCAyNjUsMjY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI2MiwyNzFMMjY1LDI2NkwyNjgsMjcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMjIwIiB5PSIyNjIiIHRleHQtYW5jaG9yPSJlbmQiPjAuNTBNPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iMzI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSArMC41MDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iMjg3IiB4Mj0iNDY2IiB5Mj0iMjg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsMjg3TDI5NC4wMCwzMTIuMDBMMjk4LjMwLDMxMS42OUwzMDIuNjAsMzExLjM4TDMwNi45MCwzMTEuMDZMMzExLjIwLDMxMC43NUwzMTUuNTAsMzEwLjQ0TDMxOS44MCwzMTAuMTNMMzI0LjEwLDMwOS44MUwzMjguNDAsMzA5LjUwTDMzMi43MCwzMDkuMTlMMzM3LjAwLDMwOC44OEwzNDEuMzAsMzA4LjU2TDM0NS42MCwzMDguMjVMMzQ5LjkwLDMwNy45NEwzNTQuMjAsMzA3LjYzTDM1OC41MCwzMDcuMzFMMzYyLjgwLDMwNy4wMEwzNjcuMTAsMzA2LjY5TDM3MS40MCwzMDYuMzhMMzc1LjcwLDMwNi4wNkwzODAuMDAsMzA1Ljc1TDM4NC4zMCwzMDUuNDRMMzg4LjYwLDMwNS4xM0wzOTIuOTAsMzA0LjgxTDM5Ny4yMCwzMDQuNTBMNDAxLjUwLDMwNC4xOUw0MDUuODAsMzAzLjg4TDQxMC4xMCwzMDMuNTZMNDE0LjQwLDMwMy4yNUw0MTguNzAsMzAyLjk0TDQyMy4wMCwzMDIuNjNMNDI3LjMwLDMwMi4zMUw0MzEuNjAsMzAyLjAwTDQzNS45MCwzMDEuNjlMNDQwLjIwLDMwMS4zOEw0NDQuNTAsMzAxLjA2TDQ0OC44MCwzMDAuNzVMNDUzLjEwLDMwMC40NEw0NTcuNDAsMzAwLjEzTDQ2MS43MCwyOTkuODFMNDY2LjAwLDI5OS41MEw0NjYsMjg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iMzI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTQiPjx0ZXh0IHg9IjMwIiB5PSIzOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij40PC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjM4MiIgeDI9IjI1NCIgeTI9IjM4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsMzg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxwYXRoIGQ9Ik0yNTQsMzg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxsaW5lIHgxPSIyNDYiIHkxPSIzOTciIHgyPSIyNjIiIHkyPSIzOTciIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik04OCwzNTVBMTEsMTEgMCAxIDEgNzcsMzY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDM3MUw3NywzNjZMODAsMzcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSIzNjIiID5NPC90ZXh0PjxwYXRoIGQ9Ik0yNTQsMzU1QTExLDExIDAgMSAwIDI2NSwzNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjYyLDM3MUwyNjUsMzY2TDI2OCwzNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIyMjAiIHk9IjM2MiIgdGV4dC1hbmNob3I9ImVuZCI+MC4yNU08L3RleHQ+PHRleHQgeD0iMTcxIiB5PSI0MjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkVuZCBtb21lbnRzOyDPiCA9ICswLjI1PC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSIzODciIHgyPSI0NjYiIHkyPSIzODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCwzODdMMjk0LjAwLDQxMi4wMEwyOTguMzAsNDExLjUzTDMwMi42MCw0MTEuMDZMMzA2LjkwLDQxMC41OUwzMTEuMjAsNDEwLjEzTDMxNS41MCw0MDkuNjZMMzE5LjgwLDQwOS4xOUwzMjQuMTAsNDA4LjcyTDMyOC40MCw0MDguMjVMMzMyLjcwLDQwNy43OEwzMzcuMDAsNDA3LjMxTDM0MS4zMCw0MDYuODRMMzQ1LjYwLDQwNi4zOEwzNDkuOTAsNDA1LjkxTDM1NC4yMCw0MDUuNDRMMzU4LjUwLDQwNC45N0wzNjIuODAsNDA0LjUwTDM2Ny4xMCw0MDQuMDNMMzcxLjQwLDQwMy41NkwzNzUuNzAsNDAzLjA5TDM4MC4wMCw0MDIuNjNMMzg0LjMwLDQwMi4xNkwzODguNjAsNDAxLjY5TDM5Mi45MCw0MDEuMjJMMzk3LjIwLDQwMC43NUw0MDEuNTAsNDAwLjI4TDQwNS44MCwzOTkuODFMNDEwLjEwLDM5OS4zNEw0MTQuNDAsMzk4Ljg4TDQxOC43MCwzOTguNDFMNDIzLjAwLDM5Ny45NEw0MjcuMzAsMzk3LjQ3TDQzMS42MCwzOTcuMDBMNDM1LjkwLDM5Ni41M0w0NDAuMjAsMzk2LjA2TDQ0NC41MCwzOTUuNTlMNDQ4LjgwLDM5NS4xM0w0NTMuMTAsMzk0LjY2TDQ1Ny40MCwzOTQuMTlMNDYxLjcwLDM5My43Mkw0NjYuMDAsMzkzLjI1TDQ2NiwzODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSI0MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtNSI+PHRleHQgeD0iMzAiIHk9IjQ5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjU8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iNDgyIiB4Mj0iMjU0IiB5Mj0iNDgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCw0ODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCw0ODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PGxpbmUgeDE9IjI0NiIgeTE9IjQ5NyIgeDI9IjI2MiIgeTI9IjQ5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTg4LDQ1NUExMSwxMSAwIDEgMSA3Nyw0NjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNNzQsNDcxTDc3LDQ2Nkw4MCw0NzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxMDMiIHk9IjQ2MiIgPk08L3RleHQ+PHRleHQgeD0iMTcxIiB5PSI1MjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkVuZCBtb21lbnRzOyDPiCA9IDAuMDA8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9IjQ4NyIgeDI9IjQ2NiIgeTI9IjQ4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDQ4N0wyOTQuMDAsNTEyLjAwTDI5OC4zMCw1MTEuMzhMMzAyLjYwLDUxMC43NUwzMDYuOTAsNTEwLjEzTDMxMS4yMCw1MDkuNTBMMzE1LjUwLDUwOC44OEwzMTkuODAsNTA4LjI1TDMyNC4xMCw1MDcuNjNMMzI4LjQwLDUwNy4wMEwzMzIuNzAsNTA2LjM4TDMzNy4wMCw1MDUuNzVMMzQxLjMwLDUwNS4xM0wzNDUuNjAsNTA0LjUwTDM0OS45MCw1MDMuODhMMzU0LjIwLDUwMy4yNUwzNTguNTAsNTAyLjYzTDM2Mi44MCw1MDIuMDBMMzY3LjEwLDUwMS4zOEwzNzEuNDAsNTAwLjc1TDM3NS43MCw1MDAuMTNMMzgwLjAwLDQ5OS41MEwzODQuMzAsNDk4Ljg4TDM4OC42MCw0OTguMjVMMzkyLjkwLDQ5Ny42M0wzOTcuMjAsNDk3LjAwTDQwMS41MCw0OTYuMzhMNDA1LjgwLDQ5NS43NUw0MTAuMTAsNDk1LjEzTDQxNC40MCw0OTQuNTBMNDE4LjcwLDQ5My44OEw0MjMuMDAsNDkzLjI1TDQyNy4zMCw0OTIuNjNMNDMxLjYwLDQ5Mi4wMEw0MzUuOTAsNDkxLjM4TDQ0MC4yMCw0OTAuNzVMNDQ0LjUwLDQ5MC4xM0w0NDguODAsNDg5LjUwTDQ1My4xMCw0ODguODhMNDU3LjQwLDQ4OC4yNUw0NjEuNzAsNDg3LjYzTDQ2Ni4wMCw0ODcuMDBMNDY2LDQ4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjUyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPjxnIGlkPSJsdGItY2FzZS02Ij48dGV4dCB4PSIzMCIgeT0iNTk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+NjwvdGV4dD48bGluZSB4MT0iODgiIHkxPSI1ODIiIHgyPSIyNTQiIHkyPSI1ODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDU4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDU4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iNTk3IiB4Mj0iMjYyIiB5Mj0iNTk3IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNODgsNTU1QTExLDExIDAgMSAxIDc3LDU2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik03NCw1NzFMNzcsNTY2TDgwLDU3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjEwMyIgeT0iNTYyIiA+TTwvdGV4dD48cGF0aCBkPSJNMjU0LDU1NUExMSwxMSAwIDEgMSAyNDMsNTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI0MCw1NzFMMjQzLDU2NkwyNDYsNTcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMjIwIiB5PSI1NjIiIHRleHQtYW5jaG9yPSJlbmQiPuKIkjAuMjVNPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iNjI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSAtMC4yNTwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iNTg3IiB4Mj0iNDY2IiB5Mj0iNTg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsNTg3TDI5NC4wMCw2MTIuMDBMMjk4LjMwLDYxMS4yMkwzMDIuNjAsNjEwLjQ0TDMwNi45MCw2MDkuNjZMMzExLjIwLDYwOC44OEwzMTUuNTAsNjA4LjA5TDMxOS44MCw2MDcuMzFMMzI0LjEwLDYwNi41M0wzMjguNDAsNjA1Ljc1TDMzMi43MCw2MDQuOTdMMzM3LjAwLDYwNC4xOUwzNDEuMzAsNjAzLjQxTDM0NS42MCw2MDIuNjNMMzQ5LjkwLDYwMS44NEwzNTQuMjAsNjAxLjA2TDM1OC41MCw2MDAuMjhMMzYyLjgwLDU5OS41MEwzNjcuMTAsNTk4LjcyTDM3MS40MCw1OTcuOTRMMzc1LjcwLDU5Ny4xNkwzODAuMDAsNTk2LjM4TDM4NC4zMCw1OTUuNTlMMzg4LjYwLDU5NC44MUwzOTIuOTAsNTk0LjAzTDM5Ny4yMCw1OTMuMjVMNDAxLjUwLDU5Mi40N0w0MDUuODAsNTkxLjY5TDQxMC4xMCw1OTAuOTFMNDE0LjQwLDU5MC4xM0w0MTguNzAsNTg5LjM0TDQyMy4wMCw1ODguNTZMNDI3LjMwLDU4Ny43OEw0MzEuNjAsNTg3LjAwTDQzNS45MCw1ODYuMjJMNDQwLjIwLDU4NS40NEw0NDQuNTAsNTg0LjY2TDQ0OC44MCw1ODMuODhMNDUzLjEwLDU4My4wOUw0NTcuNDAsNTgyLjMxTDQ2MS43MCw1ODEuNTNMNDY2LjAwLDU4MC43NUw0NjYsNTg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iNjI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTciPjx0ZXh0IHg9IjMwIiB5PSI2OTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij43PC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjY4MiIgeDI9IjI1NCIgeTI9IjY4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsNjg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxwYXRoIGQ9Ik0yNTQsNjg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxsaW5lIHgxPSIyNDYiIHkxPSI2OTciIHgyPSIyNjIiIHkyPSI2OTciIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik04OCw2NTVBMTEsMTEgMCAxIDEgNzcsNjY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDY3MUw3Nyw2NjZMODAsNjcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSI2NjIiID5NPC90ZXh0PjxwYXRoIGQ9Ik0yNTQsNjU1QTExLDExIDAgMSAxIDI0Myw2NjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjQwLDY3MUwyNDMsNjY2TDI0Niw2NzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIyMjAiIHk9IjY2MiIgdGV4dC1hbmNob3I9ImVuZCI+4oiSMC41ME08L3RleHQ+PHRleHQgeD0iMTcxIiB5PSI3MjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkVuZCBtb21lbnRzOyDPiCA9IC0wLjUwPC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSI2ODciIHgyPSI0NjYiIHkyPSI2ODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCw2ODdMMjk0LjAwLDcxMi4wMEwyOTguMzAsNzExLjA2TDMwMi42MCw3MTAuMTNMMzA2LjkwLDcwOS4xOUwzMTEuMjAsNzA4LjI1TDMxNS41MCw3MDcuMzFMMzE5LjgwLDcwNi4zOEwzMjQuMTAsNzA1LjQ0TDMyOC40MCw3MDQuNTBMMzMyLjcwLDcwMy41NkwzMzcuMDAsNzAyLjYzTDM0MS4zMCw3MDEuNjlMMzQ1LjYwLDcwMC43NUwzNDkuOTAsNjk5LjgxTDM1NC4yMCw2OTguODhMMzU4LjUwLDY5Ny45NEwzNjIuODAsNjk3LjAwTDM2Ny4xMCw2OTYuMDZMMzcxLjQwLDY5NS4xM0wzNzUuNzAsNjk0LjE5TDM4MC4wMCw2OTMuMjVMMzg0LjMwLDY5Mi4zMUwzODguNjAsNjkxLjM4TDM5Mi45MCw2OTAuNDRMMzk3LjIwLDY4OS41MEw0MDEuNTAsNjg4LjU2TDQwNS44MCw2ODcuNjNMNDEwLjEwLDY4Ni42OUw0MTQuNDAsNjg1Ljc1TDQxOC43MCw2ODQuODFMNDIzLjAwLDY4My44OEw0MjcuMzAsNjgyLjk0TDQzMS42MCw2ODIuMDBMNDM1LjkwLDY4MS4wNkw0NDAuMjAsNjgwLjEzTDQ0NC41MCw2NzkuMTlMNDQ4LjgwLDY3OC4yNUw0NTMuMTAsNjc3LjMxTDQ1Ny40MCw2NzYuMzhMNDYxLjcwLDY3NS40NEw0NjYuMDAsNjc0LjUwTDQ2Niw2ODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSI3MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz4KICAgIDwvZz4KICA8L3N2Zz4="
       },
-      "groupId": "s_stl_group_83"
+      "groupId": "s_stl_group_9h"
     },
     {
-      "id": "s_stl_84",
+      "id": "s_stl_9i",
       "type": "math",
       "x": 576,
-      "y": 10683,
+      "y": 13025,
       "props": {
         "w": 40,
         "h": 23,
@@ -5011,13 +5851,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_83"
+      "groupId": "s_stl_group_9h"
     },
     {
-      "id": "s_stl_85",
+      "id": "s_stl_9j",
       "type": "math",
       "x": 656,
-      "y": 10683,
+      "y": 13025,
       "props": {
         "w": 40,
         "h": 23,
@@ -5033,13 +5873,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_83"
+      "groupId": "s_stl_group_9h"
     },
     {
-      "id": "s_stl_86",
+      "id": "s_stl_9k",
       "type": "math",
       "x": 576,
-      "y": 10783,
+      "y": 13125,
       "props": {
         "w": 40,
         "h": 23,
@@ -5055,13 +5895,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_83"
+      "groupId": "s_stl_group_9h"
     },
     {
-      "id": "s_stl_87",
+      "id": "s_stl_9l",
       "type": "math",
       "x": 656,
-      "y": 10783,
+      "y": 13125,
       "props": {
         "w": 40,
         "h": 23,
@@ -5077,13 +5917,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_83"
+      "groupId": "s_stl_group_9h"
     },
     {
-      "id": "s_stl_88",
+      "id": "s_stl_9m",
       "type": "math",
       "x": 576,
-      "y": 10883,
+      "y": 13225,
       "props": {
         "w": 40,
         "h": 23,
@@ -5099,13 +5939,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_83"
+      "groupId": "s_stl_group_9h"
     },
     {
-      "id": "s_stl_89",
+      "id": "s_stl_9n",
       "type": "math",
       "x": 656,
-      "y": 10883,
+      "y": 13225,
       "props": {
         "w": 40,
         "h": 23,
@@ -5121,13 +5961,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_83"
+      "groupId": "s_stl_group_9h"
     },
     {
-      "id": "s_stl_8a",
+      "id": "s_stl_9o",
       "type": "math",
       "x": 576,
-      "y": 10983,
+      "y": 13325,
       "props": {
         "w": 40,
         "h": 23,
@@ -5143,13 +5983,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_83"
+      "groupId": "s_stl_group_9h"
     },
     {
-      "id": "s_stl_8b",
+      "id": "s_stl_9p",
       "type": "math",
       "x": 656,
-      "y": 10983,
+      "y": 13325,
       "props": {
         "w": 40,
         "h": 23,
@@ -5165,13 +6005,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_83"
+      "groupId": "s_stl_group_9h"
     },
     {
-      "id": "s_stl_8c",
+      "id": "s_stl_9q",
       "type": "math",
       "x": 576,
-      "y": 11083,
+      "y": 13425,
       "props": {
         "w": 40,
         "h": 23,
@@ -5187,13 +6027,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_83"
+      "groupId": "s_stl_group_9h"
     },
     {
-      "id": "s_stl_8d",
+      "id": "s_stl_9r",
       "type": "math",
       "x": 656,
-      "y": 11083,
+      "y": 13425,
       "props": {
         "w": 40,
         "h": 23,
@@ -5209,13 +6049,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_83"
+      "groupId": "s_stl_group_9h"
     },
     {
-      "id": "s_stl_8e",
+      "id": "s_stl_9s",
       "type": "math",
       "x": 576,
-      "y": 11183,
+      "y": 13525,
       "props": {
         "w": 40,
         "h": 23,
@@ -5231,13 +6071,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_83"
+      "groupId": "s_stl_group_9h"
     },
     {
-      "id": "s_stl_8f",
+      "id": "s_stl_9t",
       "type": "math",
       "x": 656,
-      "y": 11183,
+      "y": 13525,
       "props": {
         "w": 40,
         "h": 23,
@@ -5253,13 +6093,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_83"
+      "groupId": "s_stl_group_9h"
     },
     {
-      "id": "s_stl_8g",
+      "id": "s_stl_9u",
       "type": "math",
       "x": 576,
-      "y": 11283,
+      "y": 13625,
       "props": {
         "w": 40,
         "h": 23,
@@ -5275,13 +6115,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_83"
+      "groupId": "s_stl_group_9h"
     },
     {
-      "id": "s_stl_8h",
+      "id": "s_stl_9v",
       "type": "math",
       "x": 656,
-      "y": 11283,
+      "y": 13625,
       "props": {
         "w": 40,
         "h": 23,
@@ -5297,25 +6137,25 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_83"
+      "groupId": "s_stl_group_9h"
     },
     {
-      "id": "s_stl_8i",
+      "id": "s_stl_9w",
       "type": "image",
       "x": 76,
-      "y": 11770,
+      "y": 14112,
       "props": {
         "w": 640,
         "h": 640,
         "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgNjQwIDY0MCI+CiAgICA8dGl0bGU+TFRCIGNhc2VzIDggdG8gMTM7IFNDSSBOQ0NJIFNOMDAzYiBUYWJsZXMgMy4xIGFuZCAzLjI8L3RpdGxlPgogICAgPHJlY3QgeD0iMC41IiB5PSIwLjUiIHdpZHRoPSI2MzkiIGhlaWdodD0iNjM5IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjOTRhM2I4Ii8+CiAgICA8cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iNjM4IiBoZWlnaHQ9IjM5IiBmaWxsPSIjZWZmNmZmIi8+CiAgICA8ZyBzdHJva2U9IiNjYmQ1ZTEiIHN0cm9rZS13aWR0aD0iMSI+PGxpbmUgeDE9IjAiIHkxPSI0MCIgeDI9IjY0MCIgeTI9IjQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iMTQwIiB4Mj0iNjQwIiB5Mj0iMTQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iMjQwIiB4Mj0iNjQwIiB5Mj0iMjQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iMzQwIiB4Mj0iNjQwIiB5Mj0iMzQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iNDQwIiB4Mj0iNjQwIiB5Mj0iNDQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iNTQwIiB4Mj0iNjQwIiB5Mj0iNTQwIiAvPjxsaW5lIHgxPSI2MCIgeTE9IjAiIHgyPSI2MCIgeTI9IjY0MCIgLz48bGluZSB4MT0iMjgwIiB5MT0iMCIgeDI9IjI4MCIgeTI9IjY0MCIgLz48bGluZSB4MT0iNDgwIiB5MT0iMCIgeDI9IjQ4MCIgeTI9IjY0MCIgLz48bGluZSB4MT0iNTYwIiB5MT0iMCIgeDI9IjU2MCIgeTI9IjY0MCIgLz48L2c+CiAgICA8ZyBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzFlM2E1ZiI+CiAgICAgIDxnIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj48dGV4dCB4PSIzMCIgeT0iMjUiID5DYXNlPC90ZXh0Pjx0ZXh0IHg9IjE3MCIgeT0iMjUiID5Mb2FkaW5nIGFuZCBzdXBwb3J0czwvdGV4dD48dGV4dCB4PSIzODAiIHk9IjI1IiA+QmVuZGluZyBtb21lbnQgZGlhZ3JhbTwvdGV4dD48dGV4dCB4PSI1MjAiIHk9IjI1IiA+QzE8L3RleHQ+PHRleHQgeD0iNjAwIiB5PSIyNSIgPkMyPC90ZXh0PjwvZz4KICAgICAgPGcgaWQ9Imx0Yi1jYXNlLTgiPjx0ZXh0IHg9IjMwIiB5PSI5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjg8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iODIiIHgyPSIyNTQiIHkyPSI4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCw4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iOTciIHgyPSIyNjIiIHkyPSI5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTg4LDU1QTExLDExIDAgMSAxIDc3LDY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDcxTDc3LDY2TDgwLDcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSI2MiIgPk08L3RleHQ+PHBhdGggZD0iTTI1NCw1NUExMSwxMSAwIDEgMSAyNDMsNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjQwLDcxTDI0Myw2NkwyNDYsNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIyMjAiIHk9IjYyIiB0ZXh0LWFuY2hvcj0iZW5kIj7iiJIwLjc1TTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjEyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+RW5kIG1vbWVudHM7IM+IID0gLTAuNzU8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9Ijg3IiB4Mj0iNDY2IiB5Mj0iODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCw4N0wyOTQuMDAsMTEyLjAwTDI5OC4zMCwxMTAuOTFMMzAyLjYwLDEwOS44MUwzMDYuOTAsMTA4LjcyTDMxMS4yMCwxMDcuNjNMMzE1LjUwLDEwNi41M0wzMTkuODAsMTA1LjQ0TDMyNC4xMCwxMDQuMzRMMzI4LjQwLDEwMy4yNUwzMzIuNzAsMTAyLjE2TDMzNy4wMCwxMDEuMDZMMzQxLjMwLDk5Ljk3TDM0NS42MCw5OC44OEwzNDkuOTAsOTcuNzhMMzU0LjIwLDk2LjY5TDM1OC41MCw5NS41OUwzNjIuODAsOTQuNTBMMzY3LjEwLDkzLjQxTDM3MS40MCw5Mi4zMUwzNzUuNzAsOTEuMjJMMzgwLjAwLDkwLjEzTDM4NC4zMCw4OS4wM0wzODguNjAsODcuOTRMMzkyLjkwLDg2Ljg0TDM5Ny4yMCw4NS43NUw0MDEuNTAsODQuNjZMNDA1LjgwLDgzLjU2TDQxMC4xMCw4Mi40N0w0MTQuNDAsODEuMzhMNDE4LjcwLDgwLjI4TDQyMy4wMCw3OS4xOUw0MjcuMzAsNzguMDlMNDMxLjYwLDc3LjAwTDQzNS45MCw3NS45MUw0NDAuMjAsNzQuODFMNDQ0LjUwLDczLjcyTDQ0OC44MCw3Mi42M0w0NTMuMTAsNzEuNTNMNDU3LjQwLDcwLjQ0TDQ2MS43MCw2OS4zNEw0NjYuMDAsNjguMjVMNDY2LDg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iMTI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTkiPjx0ZXh0IHg9IjMwIiB5PSIxOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij45PC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjE4MiIgeDI9IjI1NCIgeTI9IjE4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsMTg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxwYXRoIGQ9Ik0yNTQsMTg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxsaW5lIHgxPSIyNDYiIHkxPSIxOTciIHgyPSIyNjIiIHkyPSIxOTciIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik04OCwxNTVBMTEsMTEgMCAxIDEgNzcsMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDE3MUw3NywxNjZMODAsMTcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSIxNjIiID5NPC90ZXh0PjxwYXRoIGQ9Ik0yNTQsMTU1QTExLDExIDAgMSAxIDI0MywxNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjQwLDE3MUwyNDMsMTY2TDI0NiwxNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIyMjAiIHk9IjE2MiIgdGV4dC1hbmNob3I9ImVuZCI+4oiSMS4wME08L3RleHQ+PHRleHQgeD0iMTcxIiB5PSIyMjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkVuZCBtb21lbnRzOyDPiCA9IC0xLjAwPC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSIxODciIHgyPSI0NjYiIHkyPSIxODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCwxODdMMjk0LjAwLDIxMi4wMEwyOTguMzAsMjEwLjc1TDMwMi42MCwyMDkuNTBMMzA2LjkwLDIwOC4yNUwzMTEuMjAsMjA3LjAwTDMxNS41MCwyMDUuNzVMMzE5LjgwLDIwNC41MEwzMjQuMTAsMjAzLjI1TDMyOC40MCwyMDIuMDBMMzMyLjcwLDIwMC43NUwzMzcuMDAsMTk5LjUwTDM0MS4zMCwxOTguMjVMMzQ1LjYwLDE5Ny4wMEwzNDkuOTAsMTk1Ljc1TDM1NC4yMCwxOTQuNTBMMzU4LjUwLDE5My4yNUwzNjIuODAsMTkyLjAwTDM2Ny4xMCwxOTAuNzVMMzcxLjQwLDE4OS41MEwzNzUuNzAsMTg4LjI1TDM4MC4wMCwxODcuMDBMMzg0LjMwLDE4NS43NUwzODguNjAsMTg0LjUwTDM5Mi45MCwxODMuMjVMMzk3LjIwLDE4Mi4wMEw0MDEuNTAsMTgwLjc1TDQwNS44MCwxNzkuNTBMNDEwLjEwLDE3OC4yNUw0MTQuNDAsMTc3LjAwTDQxOC43MCwxNzUuNzVMNDIzLjAwLDE3NC41MEw0MjcuMzAsMTczLjI1TDQzMS42MCwxNzIuMDBMNDM1LjkwLDE3MC43NUw0NDAuMjAsMTY5LjUwTDQ0NC41MCwxNjguMjVMNDQ4LjgwLDE2Ny4wMEw0NTMuMTAsMTY1Ljc1TDQ1Ny40MCwxNjQuNTBMNDYxLjcwLDE2My4yNUw0NjYuMDAsMTYyLjAwTDQ2NiwxODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSIyMjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtMTAiPjx0ZXh0IHg9IjMwIiB5PSIyOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij4xMDwvdGV4dD48bGluZSB4MT0iODgiIHkxPSIyODIiIHgyPSIyNTQiIHkyPSIyODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDI4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDI4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iMjk3IiB4Mj0iMjYyIiB5Mj0iMjk3IiBzdHJva2U9IiM2NDc0OGIiLz48bGluZSB4MT0iODgiIHkxPSIyNTIiIHgyPSIyNTQiIHkyPSIyNTIiIHN0cm9rZT0iIzI1NjNlYiIvPjxsaW5lIHgxPSI4OCIgeTE9IjI1MiIgeDI9Ijg4IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTg1LDI2OUw4OCwyNzRMOTEsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjEwMy4wOTA5MDkwOTA5MDkxIiB5MT0iMjUyIiB4Mj0iMTAzLjA5MDkwOTA5MDkwOTEiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTAwLjA5MDkwOTA5MDkwOTEsMjY5TDEwMy4wOTA5MDkwOTA5MDkxLDI3NEwxMDYuMDkwOTA5MDkwOTA5MSwyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTE4LjE4MTgxODE4MTgxODE5IiB5MT0iMjUyIiB4Mj0iMTE4LjE4MTgxODE4MTgxODE5IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTExNS4xODE4MTgxODE4MTgxOSwyNjlMMTE4LjE4MTgxODE4MTgxODE5LDI3NEwxMjEuMTgxODE4MTgxODE4MTksMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjEzMy4yNzI3MjcyNzI3MjcyOCIgeTE9IjI1MiIgeDI9IjEzMy4yNzI3MjcyNzI3MjcyOCIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xMzAuMjcyNzI3MjcyNzI3MjgsMjY5TDEzMy4yNzI3MjcyNzI3MjcyOCwyNzRMMTM2LjI3MjcyNzI3MjcyNzI4LDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxNDguMzYzNjM2MzYzNjM2MzciIHkxPSIyNTIiIHgyPSIxNDguMzYzNjM2MzYzNjM2MzciIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTQ1LjM2MzYzNjM2MzYzNjM3LDI2OUwxNDguMzYzNjM2MzYzNjM2MzcsMjc0TDE1MS4zNjM2MzYzNjM2MzYzNywyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTYzLjQ1NDU0NTQ1NDU0NTQ0IiB5MT0iMjUyIiB4Mj0iMTYzLjQ1NDU0NTQ1NDU0NTQ0IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE2MC40NTQ1NDU0NTQ1NDU0NCwyNjlMMTYzLjQ1NDU0NTQ1NDU0NTQ0LDI3NEwxNjYuNDU0NTQ1NDU0NTQ1NDQsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjE3OC41NDU0NTQ1NDU0NTQ1NiIgeTE9IjI1MiIgeDI9IjE3OC41NDU0NTQ1NDU0NTQ1NiIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xNzUuNTQ1NDU0NTQ1NDU0NTYsMjY5TDE3OC41NDU0NTQ1NDU0NTQ1NiwyNzRMMTgxLjU0NTQ1NDU0NTQ1NDU2LDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxOTMuNjM2MzYzNjM2MzYzNjMiIHkxPSIyNTIiIHgyPSIxOTMuNjM2MzYzNjM2MzYzNjMiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTkwLjYzNjM2MzYzNjM2MzYzLDI2OUwxOTMuNjM2MzYzNjM2MzYzNjMsMjc0TDE5Ni42MzYzNjM2MzYzNjM2MywyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMjA4LjcyNzI3MjcyNzI3Mjc1IiB5MT0iMjUyIiB4Mj0iMjA4LjcyNzI3MjcyNzI3Mjc1IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTIwNS43MjcyNzI3MjcyNzI3NSwyNjlMMjA4LjcyNzI3MjcyNzI3Mjc1LDI3NEwyMTEuNzI3MjcyNzI3MjcyNzUsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjIyMy44MTgxODE4MTgxODE4IiB5MT0iMjUyIiB4Mj0iMjIzLjgxODE4MTgxODE4MTgiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjIwLjgxODE4MTgxODE4MTgsMjY5TDIyMy44MTgxODE4MTgxODE4LDI3NEwyMjYuODE4MTgxODE4MTgxOCwyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMjM4LjkwOTA5MDkwOTA5MDkiIHkxPSIyNTIiIHgyPSIyMzguOTA5MDkwOTA5MDkwOSIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yMzUuOTA5MDkwOTA5MDkwOSwyNjlMMjM4LjkwOTA5MDkwOTA5MDksMjc0TDI0MS45MDkwOTA5MDkwOTA5LDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIyNTQiIHkxPSIyNTIiIHgyPSIyNTQiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjUxLDI2OUwyNTQsMjc0TDI1NywyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxNzEiIHk9IjI0OSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+cTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjMyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+U2ltcGx5IHN1cHBvcnRlZDsgVURMPC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSIyODciIHgyPSI0NjYiIHkyPSIyODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCwyODdMMjk0LjAwLDI4Ny4wMEwyOTguMzAsMjg5LjQ0TDMwMi42MCwyOTEuNzVMMzA2LjkwLDI5My45NEwzMTEuMjAsMjk2LjAwTDMxNS41MCwyOTcuOTRMMzE5LjgwLDI5OS43NUwzMjQuMTAsMzAxLjQ0TDMyOC40MCwzMDMuMDBMMzMyLjcwLDMwNC40NEwzMzcuMDAsMzA1Ljc1TDM0MS4zMCwzMDYuOTRMMzQ1LjYwLDMwOC4wMEwzNDkuOTAsMzA4Ljk0TDM1NC4yMCwzMDkuNzVMMzU4LjUwLDMxMC40NEwzNjIuODAsMzExLjAwTDM2Ny4xMCwzMTEuNDRMMzcxLjQwLDMxMS43NUwzNzUuNzAsMzExLjk0TDM4MC4wMCwzMTIuMDBMMzg0LjMwLDMxMS45NEwzODguNjAsMzExLjc1TDM5Mi45MCwzMTEuNDRMMzk3LjIwLDMxMS4wMEw0MDEuNTAsMzEwLjQ0TDQwNS44MCwzMDkuNzVMNDEwLjEwLDMwOC45NEw0MTQuNDAsMzA4LjAwTDQxOC43MCwzMDYuOTRMNDIzLjAwLDMwNS43NUw0MjcuMzAsMzA0LjQ0TDQzMS42MCwzMDMuMDBMNDM1LjkwLDMwMS40NEw0NDAuMjAsMjk5Ljc1TDQ0NC41MCwyOTcuOTRMNDQ4LjgwLDI5Ni4wMEw0NTMuMTAsMjkzLjk0TDQ1Ny40MCwyOTEuNzVMNDYxLjcwLDI4OS40NEw0NjYuMDAsMjg3LjAwTDQ2NiwyODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSIzMjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtMTEiPjx0ZXh0IHg9IjMwIiB5PSIzOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij4xMTwvdGV4dD48bGluZSB4MT0iODgiIHkxPSIzODIiIHgyPSIyNTQiIHkyPSIzODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDM3MFYzOTQiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PGxpbmUgeDE9IjgzIiB5MT0iMzc0IiB4Mj0iODgiIHkyPSIzNzAiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iODMiIHkxPSIzNzgiIHgyPSI4OCIgeTI9IjM3NCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSI4MyIgeTE9IjM4MiIgeDI9Ijg4IiB5Mj0iMzc4IiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjgzIiB5MT0iMzg2IiB4Mj0iODgiIHkyPSIzODIiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iODMiIHkxPSIzOTAiIHgyPSI4OCIgeTI9IjM4NiIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTI1NCwzNzBWMzk0IiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxsaW5lIHgxPSIyNDkiIHkxPSIzNzQiIHgyPSIyNTQiIHkyPSIzNzAiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iMjQ5IiB5MT0iMzc4IiB4Mj0iMjU0IiB5Mj0iMzc0IiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjI0OSIgeTE9IjM4MiIgeDI9IjI1NCIgeTI9IjM3OCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSIyNDkiIHkxPSIzODYiIHgyPSIyNTQiIHkyPSIzODIiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iMjQ5IiB5MT0iMzkwIiB4Mj0iMjU0IiB5Mj0iMzg2IiBzdHJva2U9IiM2NDc0OGIiLz48bGluZSB4MT0iODgiIHkxPSIzNTIiIHgyPSIyNTQiIHkyPSIzNTIiIHN0cm9rZT0iIzI1NjNlYiIvPjxsaW5lIHgxPSI4OCIgeTE9IjM1MiIgeDI9Ijg4IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTg1LDM2OUw4OCwzNzRMOTEsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjEwMy4wOTA5MDkwOTA5MDkxIiB5MT0iMzUyIiB4Mj0iMTAzLjA5MDkwOTA5MDkwOTEiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTAwLjA5MDkwOTA5MDkwOTEsMzY5TDEwMy4wOTA5MDkwOTA5MDkxLDM3NEwxMDYuMDkwOTA5MDkwOTA5MSwzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTE4LjE4MTgxODE4MTgxODE5IiB5MT0iMzUyIiB4Mj0iMTE4LjE4MTgxODE4MTgxODE5IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTExNS4xODE4MTgxODE4MTgxOSwzNjlMMTE4LjE4MTgxODE4MTgxODE5LDM3NEwxMjEuMTgxODE4MTgxODE4MTksMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjEzMy4yNzI3MjcyNzI3MjcyOCIgeTE9IjM1MiIgeDI9IjEzMy4yNzI3MjcyNzI3MjcyOCIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xMzAuMjcyNzI3MjcyNzI3MjgsMzY5TDEzMy4yNzI3MjcyNzI3MjcyOCwzNzRMMTM2LjI3MjcyNzI3MjcyNzI4LDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxNDguMzYzNjM2MzYzNjM2MzciIHkxPSIzNTIiIHgyPSIxNDguMzYzNjM2MzYzNjM2MzciIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTQ1LjM2MzYzNjM2MzYzNjM3LDM2OUwxNDguMzYzNjM2MzYzNjM2MzcsMzc0TDE1MS4zNjM2MzYzNjM2MzYzNywzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTYzLjQ1NDU0NTQ1NDU0NTQ0IiB5MT0iMzUyIiB4Mj0iMTYzLjQ1NDU0NTQ1NDU0NTQ0IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE2MC40NTQ1NDU0NTQ1NDU0NCwzNjlMMTYzLjQ1NDU0NTQ1NDU0NTQ0LDM3NEwxNjYuNDU0NTQ1NDU0NTQ1NDQsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjE3OC41NDU0NTQ1NDU0NTQ1NiIgeTE9IjM1MiIgeDI9IjE3OC41NDU0NTQ1NDU0NTQ1NiIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xNzUuNTQ1NDU0NTQ1NDU0NTYsMzY5TDE3OC41NDU0NTQ1NDU0NTQ1NiwzNzRMMTgxLjU0NTQ1NDU0NTQ1NDU2LDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxOTMuNjM2MzYzNjM2MzYzNjMiIHkxPSIzNTIiIHgyPSIxOTMuNjM2MzYzNjM2MzYzNjMiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTkwLjYzNjM2MzYzNjM2MzYzLDM2OUwxOTMuNjM2MzYzNjM2MzYzNjMsMzc0TDE5Ni42MzYzNjM2MzYzNjM2MywzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMjA4LjcyNzI3MjcyNzI3Mjc1IiB5MT0iMzUyIiB4Mj0iMjA4LjcyNzI3MjcyNzI3Mjc1IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTIwNS43MjcyNzI3MjcyNzI3NSwzNjlMMjA4LjcyNzI3MjcyNzI3Mjc1LDM3NEwyMTEuNzI3MjcyNzI3MjcyNzUsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjIyMy44MTgxODE4MTgxODE4IiB5MT0iMzUyIiB4Mj0iMjIzLjgxODE4MTgxODE4MTgiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjIwLjgxODE4MTgxODE4MTgsMzY5TDIyMy44MTgxODE4MTgxODE4LDM3NEwyMjYuODE4MTgxODE4MTgxOCwzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMjM4LjkwOTA5MDkwOTA5MDkiIHkxPSIzNTIiIHgyPSIyMzguOTA5MDkwOTA5MDkwOSIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yMzUuOTA5MDkwOTA5MDkwOSwzNjlMMjM4LjkwOTA5MDkwOTA5MDksMzc0TDI0MS45MDkwOTA5MDkwOTA5LDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIyNTQiIHkxPSIzNTIiIHgyPSIyNTQiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjUxLDM2OUwyNTQsMzc0TDI1NywzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxNzEiIHk9IjM0OSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+cTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjQyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+Rml4ZWQgaW4gYmVuZGluZzsgVURMPC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSIzODciIHgyPSI0NjYiIHkyPSIzODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCwzODdMMjk0LjAwLDM2Mi4wMEwyOTguMzAsMzY1LjY2TDMwMi42MCwzNjkuMTNMMzA2LjkwLDM3Mi40MUwzMTEuMjAsMzc1LjUwTDMxNS41MCwzNzguNDFMMzE5LjgwLDM4MS4xM0wzMjQuMTAsMzgzLjY2TDMyOC40MCwzODYuMDBMMzMyLjcwLDM4OC4xNkwzMzcuMDAsMzkwLjEzTDM0MS4zMCwzOTEuOTFMMzQ1LjYwLDM5My41MEwzNDkuOTAsMzk0LjkxTDM1NC4yMCwzOTYuMTNMMzU4LjUwLDM5Ny4xNkwzNjIuODAsMzk4LjAwTDM2Ny4xMCwzOTguNjZMMzcxLjQwLDM5OS4xM0wzNzUuNzAsMzk5LjQxTDM4MC4wMCwzOTkuNTBMMzg0LjMwLDM5OS40MUwzODguNjAsMzk5LjEzTDM5Mi45MCwzOTguNjZMMzk3LjIwLDM5OC4wMEw0MDEuNTAsMzk3LjE2TDQwNS44MCwzOTYuMTNMNDEwLjEwLDM5NC45MUw0MTQuNDAsMzkzLjUwTDQxOC43MCwzOTEuOTFMNDIzLjAwLDM5MC4xM0w0MjcuMzAsMzg4LjE2TDQzMS42MCwzODYuMDBMNDM1LjkwLDM4My42Nkw0NDAuMjAsMzgxLjEzTDQ0NC41MCwzNzguNDFMNDQ4LjgwLDM3NS41MEw0NTMuMTAsMzcyLjQxTDQ1Ny40MCwzNjkuMTNMNDYxLjcwLDM2NS42Nkw0NjYuMDAsMzYyLjAwTDQ2NiwzODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSI0MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtMTIiPjx0ZXh0IHg9IjMwIiB5PSI0OTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij4xMjwvdGV4dD48bGluZSB4MT0iODgiIHkxPSI0ODIiIHgyPSIyNTQiIHkyPSI0ODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDQ4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDQ4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iNDk3IiB4Mj0iMjYyIiB5Mj0iNDk3IiBzdHJva2U9IiM2NDc0OGIiLz48bGluZSB4MT0iMTcxIiB5MT0iNDQ4IiB4Mj0iMTcxIiB5Mj0iNDc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE2OCw0NjlMMTcxLDQ3NEwxNzQsNDY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTc5IiB5PSI0NTgiID5GPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iNTI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5TaW1wbHkgc3VwcG9ydGVkOyBtaWQtcG9pbnQgbG9hZDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iNDg3IiB4Mj0iNDY2IiB5Mj0iNDg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsNDg3TDI5NC4wMCw0ODcuMDBMMjk4LjMwLDQ4OC4yNUwzMDIuNjAsNDg5LjUwTDMwNi45MCw0OTAuNzVMMzExLjIwLDQ5Mi4wMEwzMTUuNTAsNDkzLjI1TDMxOS44MCw0OTQuNTBMMzI0LjEwLDQ5NS43NUwzMjguNDAsNDk3LjAwTDMzMi43MCw0OTguMjVMMzM3LjAwLDQ5OS41MEwzNDEuMzAsNTAwLjc1TDM0NS42MCw1MDIuMDBMMzQ5LjkwLDUwMy4yNUwzNTQuMjAsNTA0LjUwTDM1OC41MCw1MDUuNzVMMzYyLjgwLDUwNy4wMEwzNjcuMTAsNTA4LjI1TDM3MS40MCw1MDkuNTBMMzc1LjcwLDUxMC43NUwzODAuMDAsNTEyLjAwTDM4NC4zMCw1MTAuNzVMMzg4LjYwLDUwOS41MEwzOTIuOTAsNTA4LjI1TDM5Ny4yMCw1MDcuMDBMNDAxLjUwLDUwNS43NUw0MDUuODAsNTA0LjUwTDQxMC4xMCw1MDMuMjVMNDE0LjQwLDUwMi4wMEw0MTguNzAsNTAwLjc1TDQyMy4wMCw0OTkuNTBMNDI3LjMwLDQ5OC4yNUw0MzEuNjAsNDk3LjAwTDQzNS45MCw0OTUuNzVMNDQwLjIwLDQ5NC41MEw0NDQuNTAsNDkzLjI1TDQ0OC44MCw0OTIuMDBMNDUzLjEwLDQ5MC43NUw0NTcuNDAsNDg5LjUwTDQ2MS43MCw0ODguMjVMNDY2LjAwLDQ4Ny4wMEw0NjYsNDg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iNTI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTEzIj48dGV4dCB4PSIzMCIgeT0iNTk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+MTM8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iNTgyIiB4Mj0iMjU0IiB5Mj0iNTgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCw1NzBWNTk0IiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxsaW5lIHgxPSI4MyIgeTE9IjU3NCIgeDI9Ijg4IiB5Mj0iNTcwIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjgzIiB5MT0iNTc4IiB4Mj0iODgiIHkyPSI1NzQiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iODMiIHkxPSI1ODIiIHgyPSI4OCIgeTI9IjU3OCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSI4MyIgeTE9IjU4NiIgeDI9Ijg4IiB5Mj0iNTgyIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjgzIiB5MT0iNTkwIiB4Mj0iODgiIHkyPSI1ODYiIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik0yNTQsNTcwVjU5NCIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iMjQ5IiB5MT0iNTc0IiB4Mj0iMjU0IiB5Mj0iNTcwIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjI0OSIgeTE9IjU3OCIgeDI9IjI1NCIgeTI9IjU3NCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSIyNDkiIHkxPSI1ODIiIHgyPSIyNTQiIHkyPSI1NzgiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iMjQ5IiB5MT0iNTg2IiB4Mj0iMjU0IiB5Mj0iNTgyIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjI0OSIgeTE9IjU5MCIgeDI9IjI1NCIgeTI9IjU4NiIgc3Ryb2tlPSIjNjQ3NDhiIi8+PGxpbmUgeDE9IjE3MSIgeTE9IjU0OCIgeDI9IjE3MSIgeTI9IjU3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xNjgsNTY5TDE3MSw1NzRMMTc0LDU2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjE3OSIgeT0iNTU4IiA+RjwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjYyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+Rml4ZWQgaW4gYmVuZGluZzsgbWlkLXBvaW50IGxvYWQ8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9IjU4NyIgeDI9IjQ2NiIgeTI9IjU4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDU4N0wyOTQuMDAsNTYyLjAwTDI5OC4zMCw1NjQuNTBMMzAyLjYwLDU2Ny4wMEwzMDYuOTAsNTY5LjUwTDMxMS4yMCw1NzIuMDBMMzE1LjUwLDU3NC41MEwzMTkuODAsNTc3LjAwTDMyNC4xMCw1NzkuNTBMMzI4LjQwLDU4Mi4wMEwzMzIuNzAsNTg0LjUwTDMzNy4wMCw1ODcuMDBMMzQxLjMwLDU4OS41MEwzNDUuNjAsNTkyLjAwTDM0OS45MCw1OTQuNTBMMzU0LjIwLDU5Ny4wMEwzNTguNTAsNTk5LjUwTDM2Mi44MCw2MDIuMDBMMzY3LjEwLDYwNC41MEwzNzEuNDAsNjA3LjAwTDM3NS43MCw2MDkuNTBMMzgwLjAwLDYxMi4wMEwzODQuMzAsNjA5LjUwTDM4OC42MCw2MDcuMDBMMzkyLjkwLDYwNC41MEwzOTcuMjAsNjAyLjAwTDQwMS41MCw1OTkuNTBMNDA1LjgwLDU5Ny4wMEw0MTAuMTAsNTk0LjUwTDQxNC40MCw1OTIuMDBMNDE4LjcwLDU4OS41MEw0MjMuMDAsNTg3LjAwTDQyNy4zMCw1ODQuNTBMNDMxLjYwLDU4Mi4wMEw0MzUuOTAsNTc5LjUwTDQ0MC4yMCw1NzcuMDBMNDQ0LjUwLDU3NC41MEw0NDguODAsNTcyLjAwTDQ1My4xMCw1NjkuNTBMNDU3LjQwLDU2Ny4wMEw0NjEuNzAsNTY0LjUwTDQ2Ni4wMCw1NjIuMDBMNDY2LDU4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjYyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPgogICAgPC9nPgogIDwvc3ZnPg=="
       },
-      "groupId": "s_stl_group_8i"
+      "groupId": "s_stl_group_9w"
     },
     {
-      "id": "s_stl_8j",
+      "id": "s_stl_9x",
       "type": "math",
       "x": 576,
-      "y": 11854,
+      "y": 14196,
       "props": {
         "w": 40,
         "h": 23,
@@ -5331,13 +6171,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_8i"
+      "groupId": "s_stl_group_9w"
     },
     {
-      "id": "s_stl_8k",
+      "id": "s_stl_9y",
       "type": "math",
       "x": 656,
-      "y": 11854,
+      "y": 14196,
       "props": {
         "w": 40,
         "h": 23,
@@ -5353,13 +6193,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_8i"
+      "groupId": "s_stl_group_9w"
     },
     {
-      "id": "s_stl_8l",
+      "id": "s_stl_9z",
       "type": "math",
       "x": 576,
-      "y": 11954,
+      "y": 14296,
       "props": {
         "w": 40,
         "h": 23,
@@ -5375,13 +6215,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_8i"
+      "groupId": "s_stl_group_9w"
     },
     {
-      "id": "s_stl_8m",
+      "id": "s_stl_a0",
       "type": "math",
       "x": 656,
-      "y": 11954,
+      "y": 14296,
       "props": {
         "w": 40,
         "h": 23,
@@ -5397,13 +6237,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_8i"
+      "groupId": "s_stl_group_9w"
     },
     {
-      "id": "s_stl_8n",
+      "id": "s_stl_a1",
       "type": "math",
       "x": 576,
-      "y": 12054,
+      "y": 14396,
       "props": {
         "w": 40,
         "h": 23,
@@ -5419,13 +6259,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_8i"
+      "groupId": "s_stl_group_9w"
     },
     {
-      "id": "s_stl_8o",
+      "id": "s_stl_a2",
       "type": "math",
       "x": 656,
-      "y": 12054,
+      "y": 14396,
       "props": {
         "w": 40,
         "h": 23,
@@ -5441,13 +6281,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_8i"
+      "groupId": "s_stl_group_9w"
     },
     {
-      "id": "s_stl_8p",
+      "id": "s_stl_a3",
       "type": "math",
       "x": 576,
-      "y": 12154,
+      "y": 14496,
       "props": {
         "w": 40,
         "h": 23,
@@ -5463,13 +6303,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_8i"
+      "groupId": "s_stl_group_9w"
     },
     {
-      "id": "s_stl_8q",
+      "id": "s_stl_a4",
       "type": "math",
       "x": 656,
-      "y": 12154,
+      "y": 14496,
       "props": {
         "w": 40,
         "h": 23,
@@ -5485,13 +6325,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_8i"
+      "groupId": "s_stl_group_9w"
     },
     {
-      "id": "s_stl_8r",
+      "id": "s_stl_a5",
       "type": "math",
       "x": 576,
-      "y": 12254,
+      "y": 14596,
       "props": {
         "w": 40,
         "h": 23,
@@ -5507,13 +6347,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_8i"
+      "groupId": "s_stl_group_9w"
     },
     {
-      "id": "s_stl_8s",
+      "id": "s_stl_a6",
       "type": "math",
       "x": 656,
-      "y": 12254,
+      "y": 14596,
       "props": {
         "w": 40,
         "h": 23,
@@ -5529,13 +6369,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_8i"
+      "groupId": "s_stl_group_9w"
     },
     {
-      "id": "s_stl_8t",
+      "id": "s_stl_a7",
       "type": "math",
       "x": 576,
-      "y": 12354,
+      "y": 14696,
       "props": {
         "w": 40,
         "h": 23,
@@ -5551,13 +6391,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_8i"
+      "groupId": "s_stl_group_9w"
     },
     {
-      "id": "s_stl_8u",
+      "id": "s_stl_a8",
       "type": "math",
       "x": 656,
-      "y": 12354,
+      "y": 14696,
       "props": {
         "w": 40,
         "h": 23,
@@ -5573,13 +6413,13 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_8i"
+      "groupId": "s_stl_group_9w"
     },
     {
-      "id": "s_stl_8v",
+      "id": "s_stl_a9",
       "type": "text",
       "x": 76,
-      "y": 12417,
+      "y": 14759,
       "props": {
         "w": 204,
         "h": 18,
@@ -5591,10 +6431,10 @@
       }
     },
     {
-      "id": "s_stl_8w",
+      "id": "s_stl_aa",
       "type": "math",
       "x": 296,
-      "y": 12416,
+      "y": 14758,
       "props": {
         "w": 81,
         "h": 20,
@@ -5609,10 +6449,10 @@
       }
     },
     {
-      "id": "s_stl_8x",
+      "id": "s_stl_ab",
       "type": "text",
       "x": 76,
-      "y": 12442,
+      "y": 14784,
       "props": {
         "w": 630,
         "h": 18,
@@ -5624,10 +6464,10 @@
       }
     },
     {
-      "id": "s_stl_8y",
+      "id": "s_stl_ac",
       "type": "math",
       "x": 96,
-      "y": 12466,
+      "y": 14808,
       "props": {
         "w": 430,
         "h": 20,
@@ -5642,10 +6482,10 @@
       }
     },
     {
-      "id": "s_stl_8z",
+      "id": "s_stl_ad",
       "type": "text",
       "x": 76,
-      "y": 12492,
+      "y": 14834,
       "props": {
         "w": 630,
         "h": 18,
@@ -5657,10 +6497,10 @@
       }
     },
     {
-      "id": "s_stl_90",
+      "id": "s_stl_ae",
       "type": "math",
       "x": 96,
-      "y": 12516,
+      "y": 14858,
       "props": {
         "w": 430,
         "h": 20,

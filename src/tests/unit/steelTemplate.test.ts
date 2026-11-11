@@ -57,7 +57,8 @@ function evaluate(inputs: Record<string, string> = {}, custom?: SectionDimension
     return r.value!.number!;
   };
   const check = (start: string) => e.getResult(find(start)!.id)?.check?.pass;
-  return { e, si, check, regions, inputResult, errors: ids.filter((i) => e.getResult(i)?.status === 'error').map((i) => `${i}: ${e.getResult(i)?.error?.message}`) };
+  const member = () => e.getResult(inputResult.outputs.find(c => c.id === 'ok')!.regionId)?.check?.pass;
+  return { e, si, check, member, regions, inputResult, errors: ids.filter((i) => e.getResult(i)?.status === 'error').map((i) => `${i}: ${e.getResult(i)?.error?.message}`) };
 }
 const UR = (name: string) => String.raw`\mathrm{UR}_{${name}}`;
 
@@ -178,6 +179,8 @@ describe('steel beam-column template (EN 1993-1-1)', () => {
       expect(t.si('k_{zy}')).toBeCloseTo(0.957128477993407, 10);
       expect(t.si(UR('6.61'))).toBeCloseTo(0.359413388769415, 10);
       expect(t.si(UR('6.62'))).toBeCloseTo(0.4617630209645871, 10);
+      expect(t.si('\\delta_{scope}')).toBe(1);
+      expect(t.member()).toBe(true);
     });
 
     step('JRC 2014 (Simões) Example 3 with published Cm factors, HEB 320 S355 beam-column: printed values', () => {
@@ -316,6 +319,62 @@ describe('steel beam-column template (EN 1993-1-1)', () => {
       expect(evaluate({ 'f_{y}': String.raw`500\,\mathrm{MPa}` }).check('f_{y}\\le460')).toBe(false);
       expect(evaluate({ 'L_{cr.z}': String.raw`1\,\mathrm{m}` }).check('\\lambda_{z}\\ge0.4')).toBe(false);
       expect(evaluate({ '\\mathrm{Section}': '1' }).errors.join()).toMatch(/Unknown steel section/);
+    });
+
+    step('final member and batch decisions cannot pass invalid inputs or unsupported scope', () => {
+      const cases: Record<string, string>[] = [
+        { 'L_{cr.z}': String.raw`1\,\mathrm{m}` },
+        { 'n_{LT}': '2.5' }, { 'k': '0.5' },
+        { 'f_{y}': String.raw`500\,\mathrm{MPa}` },
+        { 'N_{Ed}': String.raw`-100\,\mathrm{kN}` },
+        { 'N_{Ed}': String.raw`0\,\mathrm{kN}`, 'M_{y.Ed}': `-1000${KNM}` },
+        { 'M_{z.Ed}': `-1${KNM}` },
+        { 'V_{y.Ed}': String.raw`-1\,\mathrm{kN}` },
+        { 'V_{z.Ed}': String.raw`-1\,\mathrm{kN}` },
+        { 'L_{cr.y}': String.raw`-4\,\mathrm{m}` },
+        { 'L_{cr.T}': String.raw`-4\,\mathrm{m}` },
+        { 'L_{LT}': String.raw`-4\,\mathrm{m}` },
+        { 'C_{my}': '0.3' }, { 'C_{mz}': '1.1' }, { 'C_{mLT}': '0.2' },
+        { 'V_{z.Ed}': String.raw`700\,\mathrm{kN}` },
+        { 'V_{z.Ed}': String.raw`10\,\mathrm{kN}`, 'V_{y.Ed}': String.raw`10\,\mathrm{kN}` },
+        { 'L_{cr.T}': String.raw`100\,\mathrm{m}` },
+      ];
+      for (const inputs of cases) {
+        const t = evaluate(inputs);
+        expect(t.si('\\delta_{scope}'), JSON.stringify(inputs)).toBe(0);
+        expect(t.member(), JSON.stringify(inputs)).toBe(false);
+      }
+      const custom = evaluate({}, { h: 600, b: 200, tf: 20, tw: 10 });
+      expect(custom.si('\\mathrm{Class}')).toBe(4);
+      expect(custom.si('\\delta_{scope}')).toBe(0);
+      expect(custom.member()).toBe(false);
+      const compressionWeb = evaluate({ 'N_{Ed}': String.raw`100\,\mathrm{kN}`, 'M_{y.Ed}': `100${KNM}` }, { h: 600, b: 200, tf: 20, tw: 12 });
+      expect(compressionWeb.si('\\mathrm{Class}')).toBe(1); // combined stress classification is insufficient for the compression web
+      expect(compressionWeb.si('\\delta_{shear}')).toBe(1);
+      expect(compressionWeb.si('\\delta_{section}')).toBe(0);
+      expect(compressionWeb.member()).toBe(false);
+      const beam = evaluate({ 'N_{Ed}': String.raw`0\,\mathrm{kN}` }, { h: 600, b: 200, tf: 10, tw: 15 });
+      expect(beam.si('\\mathrm{Class}')).toBe(3);
+      expect(beam.si('\\delta_{scope}')).toBe(1);
+      expect(beam.member()).toBe(true);
+      const overload = evaluate({ 'M_{y.Ed}': `1000${KNM}` });
+      expect(overload.si('\\delta_{scope}')).toBe(1);
+      expect(overload.si('\\mathrm{UR}')).toBeGreaterThan(1);
+      expect(overload.member()).toBe(false);
+      const invalidArithmetic: Record<string, string>[] = [
+        { 'L_{cr.z}': String.raw`0\,\mathrm{m}` },
+        { 'E': String.raw`0\,\mathrm{GPa}` },
+        { '\\gamma_{M0}': '-1' },
+        { 'n_{LT}': '0', 'C_{1.u}': '-1' },
+      ];
+      for (const inputs of invalidArithmetic) expect(evaluate(inputs).member(), JSON.stringify(inputs)).not.toBe(true);
+      const t = evaluate();
+      const inputId = t.inputResult.inputs.find(c => c.id === 'nlt')!.regionId;
+      const rows = [{ id: 'valid', overrides: [] }, { id: 'invalid', overrides: [{ regionId: inputId, value: 2.5, unit: '' }] }];
+      const r = runBatchJob({ regions: t.regions.map(r => ({ id: r.id, input: r })), inputIds: t.inputResult.inputs.map(c => c.regionId), rows, outputs: t.inputResult.outputs.filter(c => ['ok', 'scope'].includes(c.id)).map(c => ({ columnId: c.id, regionId: c.regionId })) }, {});
+      expect(r.valid.outputs.ok?.check?.pass).toBe(true);
+      expect(r.invalid.outputs.scope?.value?.number).toBe(0);
+      expect(r.invalid.outputs.ok?.check?.pass).toBe(false);
     });
 
     step('section lookup rejects a dimensioned ID', () => {

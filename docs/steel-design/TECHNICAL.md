@@ -16,6 +16,18 @@ EN 1993-1-1:2005 + A1:2014. Uniform, doubly symmetric rolled or custom welded I/
 
 ## Method
 
+The final Member result now requires **both** `delta_scope = 1` and `UR <= 1`.
+Summary flags reject negative action magnitudes, nonpositive material/factor/length inputs,
+invalid section geometry, out-of-range Cm values and invalid LTB arrangements. They also
+exclude unsupported combined interaction: Class 3/4, the lambda,z < 0.4 branch,
+high shear with bending, biaxial shear and torsional-mode-governed combined stability.
+The web must not be Class 4 under uniform compression when NEd > 0.
+Pure compression and pure major-axis bending do not require the plastic interaction branch.
+A failed scope flag means **NOT VERIFIED**, even if the separate numerical resistance check passes.
+The batch table includes Scope and uses the same combined Member decision; Lcr,T is a per-row input.
+Library It/Iw values may be geometry-derived approximations, as stated on the worksheet.
+See [the audit and remediation record](AUDIT-2026-11-11.md).
+
 | Step | Reference | Notes |
 |---|---|---|
 | Classification | §5.5, Table 5.2 | Flange: outstand in uniform compression. Web: bending + compression (α, ψ) for My with Mz = 0, otherwise uniform compression. |

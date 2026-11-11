@@ -8,7 +8,7 @@ import { ltbCaseTable } from './ltbTable.mjs';
 import sectionFormulae from '../../src/engineering/steel/sectionFormulae.json' with { type: 'json' };
 
 const layout = createLayout({ idPrefix: 's_stl', sizesFile: 'sizes_steel.json' });
-const { gap, LINK, H, T, P, ROW, S, GRAPH, M, mm, kN, kNm, MPa, fr, finish } = layout;
+const { gap, need, LINK, H, T, P, ROW, S, GRAPH, M, mm, kN, kNm, MPa, fr, KEEP, finish } = layout;
 
 const IF = (...branches) => {
   const rows = branches.map(([c, v], i) => (c === null ? R`\mathrm{else}` : `${i ? R`\mathrm{else}\ ` : ''}\\mathrm{if}\\ ${c}`) + R`\\\quad\left\Vert\displaystyle ${v}\right.`);
@@ -29,6 +29,8 @@ const UR = (desc, name, latex, clause) => {
 };
 const chiOf = (phi, lam) => R`\min\left(1,\frac{1}{${phi}+\sqrt{${phi}^2-${lam}^2}}\right)`;
 const phiOf = (lam, alpha) => R`0.5\left(1+${alpha}\left(${lam}-0.2\right)+${lam}^2\right)`;
+const MEMBER = R`\delta_{scope}\mathrm{if}\left(\mathrm{UR}\le1,1,0\right)\ge1`;
+const flag = (desc, name, condition) => P(desc, R`\delta_{${name}}\coloneq${IF([condition, '1'], [null, '0'])}`);
 
 // ================= 1. Basis =================
 H(1, 'STEEL BEAM-COLUMN CHECK – I/H SECTION (EC3)');
@@ -78,6 +80,7 @@ H(2, '3. SECTION PROPERTIES');
 T('Browse: choose a section by name, or enter custom h, b, tf, tw; properties update automatically.');
 T('Custom: r = 0, no weld metal; It / Iw: SCI P385 B.2.2 / B.3.1 thin-wall approximations.');
 T('Custom shear areas: EN 1993-1-1 §6.2.6(3), conservative η = 1.0. Check project section tables.');
+T('Library properties may be geometry-derived; confirm It and Iw against project section tables.');
 const PROPS = [['h', 'mm'], ['b', 'mm'], ['t_w', 'mm'], ['t_f', 'mm'], ['r', 'mm'], ['A', 'mm^2'], ['I_y', 'mm^4'], ['I_z', 'mm^4'],
   ['W_{el.y}', 'mm^3'], ['W_{el.z}', 'mm^3'], ['W_{pl.y}', 'mm^3'], ['W_{pl.z}', 'mm^3'], ['I_t', 'mm^4'], ['I_w', 'mm^6'], ['A_{v.y}', 'mm^2'], ['A_{v.z}', 'mm^2']];
 const DISP = { 'mm': ['mm', 1], 'mm^2': ['cm^2', 1], 'mm^3': ['cm^3', 0], 'mm^4': ['cm^4', 0], 'mm^6': ['cm^6', 0] };
@@ -161,7 +164,7 @@ P('Reduction factor', R`\chi_{z}\coloneq${chiOf(R`\Phi_{z}`, R`\lambda_{z}`)}`, 
 P('Buckling resistance', R`N_{b.z.Rd}\coloneq\frac{\chi_{z}Af_{y}}{\gamma_{M1}}`, M(kN, fr));
 UR('Flexural buckling about z', 'b.z', R`\frac{N_{Ed}}{N_{b.z.Rd}}`, '§6.3.1.1 (6.46)');
 H(3, '6.4 Torsional buckling (§6.3.1.4)');
-P('Polar radius of gyration squared', R`i_{0}\coloneq\sqrt{\frac{I_{y}+I_{z}}{A}}`, M(mm, fr));
+P('Polar radius of gyration', R`i_{0}\coloneq\sqrt{\frac{I_{y}+I_{z}}{A}}`, M(mm, fr));
 P('Elastic critical force', R`N_{cr.T}\coloneq\frac{1}{i_{0}^2}\left(GI_{t}+\frac{\pi^2EI_{w}}{L_{cr.T}^2}\right)`, M(kN, fr));
 P('Relative slenderness (6.52)', R`\lambda_{T}\coloneq\sqrt{\frac{Af_{y}}{N_{cr.T}}}`, M(p3, fr));
 P('Curve for z-z, §6.3.1.4(3)', R`\Phi_{T}\coloneq${phiOf(R`\lambda_{T}`, R`\alpha_{z}`)}`, M(p3, fr));
@@ -190,6 +193,7 @@ UR('Lateral-torsional buckling', 'LT', R`\frac{M_{y.Ed}}{M_{b.Rd}}`, '§6.3.2.1 
 H(2, '8. BENDING AND AXIAL COMPRESSION (§6.3.3, Annex B)');
 T('Interaction factors: Table B.1 and B.2, I-sections, Class 1 and 2, member susceptible to torsional');
 T('deformations. Cm factors are inputs (Table B.3). High shear (ρ > 0) needs a separate check.');
+T('Class / slenderness limits below apply to combined interaction; see scope flags in the summary.');
 P('Plastic interaction factors apply to Class 1 and 2', R`\mathrm{Class}\le2`);
 P('Branch of kzy used here needs λz ≥ 0.4', R`\lambda_{z}\ge0.4`, M(p3));
 P('Axial ratios', R`n_{y}\coloneq\frac{N_{Ed}}{N_{b.y.Rd}}`, M(p3, fr));
@@ -204,11 +208,40 @@ UR('Interaction (6.62)', '6.62', R`n_{z}+k_{zy}\frac{M_{y.Ed}}{M_{b.Rd}}+k_{zz}\
 
 // ================= 9. Summary =================
 H(2, '9. SUMMARY');
+T('Scope flags: 1 = supported, 0 = invalid input or separate verification required.');
+T('A failed scope flag prevents Member PASS, including in Input & Results reports.');
+flag('Axial compression and nonnegative shear magnitudes', 'forces', R`\min\left(N_{Ed},V_{y.Ed},V_{z.Ed}\right)\ge0\,\mathrm{kN}`);
+flag('Nonnegative moment magnitudes', 'moments', R`\min\left(M_{y.Ed},M_{z.Ed}\right)\ge${kNm0}`);
+P('Valid action signs', R`\delta_{actions}\coloneq\delta_{forces}\delta_{moments}`);
+flag('Positive material stiffness and strength', 'elastic', R`\min\left(f_y,E,G\right)>0\,\mathrm{MPa}`);
+flag('Positive partial factors and shear-area factor', 'factors', R`\min\left(\gamma_{M0},\gamma_{M1},\eta\right)>0`);
+P('Valid material inputs (also fy ≤ 460 MPa above)', R`\delta_{material}\coloneq\delta_{elastic}\delta_{factors}\mathrm{if}\left(f_y\le460\,\mathrm{MPa},1,0\right)`);
+flag('Positive buckling lengths (SN003b)', 'lengths', R`\min\left(L_{cr.y},L_{cr.z},L_{cr.T},L_{LT}\right)>0\,\mathrm{m}`);
+flag('Positive end factors (SN003b)', 'ends', R`\min\left(k,k_w\right)>0`);
+flag('Valid I/H dimensions, excluding fillets or welds', 'geometry', R`\min\left(h-2t_f-2r,b-t_w-2r,t_w,t_f\right)>0\,\mathrm{mm}\land r\ge0\,\mathrm{mm}`);
+flag('Positive selected C1 (SN003b)', 'C1', R`C_1>0`);
+flag('Cm factors in Table B.3 range', 'Cm', R`C_{my}\ge0.4\land C_{my}\le1\land C_{mz}\ge0.4\land C_{mz}\le1\land C_{mLT}\ge0.4\land C_{mLT}\le1`);
+flag('Section: Class ≤ 3; compression web not Class 4 (Table 5.2)', 'section', R`\mathrm{Class}\le3\land\left(N_{Ed}\equiv0\,\mathrm{kN}\lor\beta_w\le42\right)`);
+flag('Table 6.2 rolled geometry range, or welded section', 'curves', R`\mathrm{Section}=0\lor t_f\le100\,\mathrm{mm}\lor\frac{h}{b}\le1.2`);
+flag('Web shear buckling excluded (§6.2.6); one shear direction only', 'shear', R`\frac{h-2t_f}{t_w}\le\frac{72\varepsilon}{\eta}\land\left(V_{y.Ed}\equiv0\,\mathrm{kN}\lor V_{z.Ed}\equiv0\,\mathrm{kN}\right)`);
+flag('High shear with bending requires separate stability verification', 'highV', R`\rho\equiv0\lor\left(M_{y.Ed}\equiv${kNm0}\land M_{z.Ed}\equiv${kNm0}\right)`);
+flag('Annex B plastic branch: Class 1/2 and λz ≥ 0.4', 'plastic', R`\mathrm{Class}\le2\land\lambda_z\ge0.4`);
+flag('Torsional mode must not govern combined stability', 'mode', R`N_{b.T.Rd}\ge\min\left(N_{b.y.Rd},N_{b.z.Rd}\right)`);
+P('Interaction applicability; pure compression / major bending exempt', R`\delta_{interaction}\coloneq${IF([R`M_{y.Ed}=${kNm0}\land M_{z.Ed}=${kNm0}`, '1'], [R`N_{Ed}=0\,\mathrm{kN}\land M_{z.Ed}=${kNm0}`, '1'], [null, R`\delta_{plastic}\delta_{mode}`])}`);
+P('Input validity', R`\delta_{input}\coloneq\delta_{actions}\delta_{material}\delta_{lengths}\delta_{ends}\delta_{Cm}`);
+P('Section and LTB input validity', R`\delta_{data}\coloneq\delta_{geometry}\delta_{C1}\delta_{LT}`);
+const SCOPE = R`\delta_{scope}\coloneq\delta_{input}\delta_{section}\delta_{curves}\delta_{shear}\delta_{highV}\delta_{interaction}\delta_{data}`;
+P('All scope flags and LTB case valid (1 = yes)', SCOPE);
 const GOV = R`\mathrm{UR}\coloneq\max\left(\mathrm{UR}_{V.z},\mathrm{UR}_{V.y},\mathrm{UR}_{sec},\mathrm{UR}_{b.y},\mathrm{UR}_{b.z},\mathrm{UR}_{b.T},\mathrm{UR}_{LT},\mathrm{UR}_{6.61},\mathrm{UR}_{6.62}\right)`;
-P('Governing utilisation', GOV, M(p3));
-P('Member check', R`\mathrm{UR}\le1`, M(p3));
+need(8);
+KEEP(() => {
+  P('Scope (0 = NOT VERIFIED)', R`\delta_{scope}\ge1`);
+  P('Governing utilisation (valid only when scope = 1)', GOV, M(p3));
+  P('Resistance check (scope must also pass)', R`\mathrm{UR}\le1`, M(p3));
+  P('Member: both scope and resistance must pass', MEMBER);
+});
 
-const lc = (id, name, sec, n, my, mz, vz, lcr, llt, nlt) => ({ id, name, values: { sec, n, my, mz, vz, lcry: lcr, lcrz: lcr, llt, nlt } });
+const lc = (id, name, sec, n, my, mz, vz, lcr, llt, nlt) => ({ id, name, values: { sec, n, my, mz, vz, lcry: lcr, lcrz: lcr, lcrt: lcr, llt, nlt } });
 finish({
   id: 'tpl-steel-beam-column', title: 'Steel Beam-Column Check (EN 1993-1-1)', reference: 'CALC-ST-01', file: 'Steel_Beam_Column_EC3.mCCV',
   batch: {
@@ -221,6 +254,7 @@ finish({
       ['vz', 'V_z,Ed', R`V_{z.Ed}\coloneq0\,\mathrm{kN}`],
       ['lcry', 'L_cr,y', R`L_{cr.y}\coloneq4.335\,\mathrm{m}`],
       ['lcrz', 'L_cr,z', R`L_{cr.z}\coloneq4.335\,\mathrm{m}`],
+      ['lcrt', 'L_cr,T', R`L_{cr.T}\coloneq4.335\,\mathrm{m}`],
       ['llt', 'L_LT', R`L_{LT}\coloneq4.335\,\mathrm{m}`],
       ['nlt', 'LTB case', R`n_{LT}\coloneq6`],
     ],
@@ -233,7 +267,8 @@ finish({
       ['ur61', 'UR (6.61)', U['6.61']],
       ['ur62', 'UR (6.62)', U['6.62']],
       ['ur', 'UR', GOV],
-      ['ok', 'Member', R`\mathrm{UR}\le1`],
+      ['scope', 'Scope valid (1=yes)', SCOPE],
+      ['ok', 'Member (scope + UR)', MEMBER],
     ],
     rows: [
       lc('m1', 'C1 HEB 320 (Simões ex. 3)', 1211, 1704, 24.8, 0, 0, 4.335, 4.335, 6),
