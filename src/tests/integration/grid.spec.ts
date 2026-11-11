@@ -145,8 +145,12 @@ test.describe('moving regions', () => {
   test('drag follows the pointer, shows where it lands, then drops on the grid', async ({ page }) => {
     const p = await pageToScreen(page, 76 + 40, 60 + 40);
     await page.mouse.click(p.x, p.y);
-    await page.keyboard.type('b:2', { delay: 15 });
+    // The first key mounts MathLive; wait for focus before completing and leaving it.
+    await page.keyboard.type('b', { delay: 15 });
+    await expect(page.locator('math-field')).toBeFocused();
+    await page.keyboard.type(':2', { delay: 15 });
     await page.keyboard.press('Enter');
+    await expect(page.locator('math-field')).toHaveCount(0);
     // Let the new region get its result and settle on its baseline before grabbing it.
     await page.evaluate(() => (window as unknown as { __calccanvas: { idle(): Promise<void> } }).__calccanvas.idle());
     await expect(page.locator('.math-region').first()).toHaveAttribute('data-status', 'valid');
