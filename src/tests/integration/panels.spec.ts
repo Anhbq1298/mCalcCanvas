@@ -76,19 +76,23 @@ test.describe('Parameters panel', () => {
     await expect(dlg.getByTestId('guide-card')).toHaveCount(6);
   });
 
-  test('Help Center guides users through math and matrix functions', async ({ page }) => {
+  test('Help Center explains math, matrix operations and plots', async ({ page }) => {
     await page.getByTestId('format-tab-help').click();
     await page.getByTestId('help-open').click();
     const help = page.getByTestId('help-center');
-    await help.getByRole('button', { name: 'Math & matrices' }).click();
+    await help.getByRole('button', { name: 'Math functions' }).click();
     await expect(help.locator('.help-article')).toContainText('sin(30 deg)');
+    await help.getByRole('button', { name: 'Matrices & vectors' }).click();
     await expect(help.locator('.help-article')).toContainText('lsolve(A,b)');
-    await expect(help.locator('.help-article')).toContainText('indices start at zero');
-    await help.getByLabel('Search help and shortcuts').fill('lsolve');
-    const topic = help.getByRole('button', { name: 'Math & matrices' }).last();
+    await expect(help.locator('.help-article')).toContainText('Indices start at zero');
+    await help.getByRole('button', { name: 'Plots' }).click();
+    await expect(help.locator('.help-article')).toContainText('X-Y Plot');
+    await expect(help.locator('.help-article')).toContainText('Show when');
+    await help.getByLabel('Search help and shortcuts').fill('plots');
+    const topic = help.getByRole('button', { name: 'Plots' }).last();
     await expect(topic).toBeVisible();
     await topic.click();
-    await expect(help.locator('.help-article')).toContainText('divideElements(A,B)');
+    await expect(help.locator('.help-article')).toContainText('Segments');
   });
 });
 

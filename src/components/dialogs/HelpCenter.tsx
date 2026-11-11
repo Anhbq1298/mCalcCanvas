@@ -48,8 +48,8 @@ const HELP_SECTIONS: { id: string; title: string; body: ReactNode; text: string 
   },
   {
     id: 'math',
-    title: 'Math & matrices',
-    text: 'operators palette subscript greek units display format decimals scientific engineering trailing zeros if function vector range math functions abs sqrt nthRoot exp ln log sin cos tan asin acos atan sinh cosh tanh floor ceil min max matrix matrices matrix multiply determinant inverse transpose index rows columns solve lsolve dot cross norm hadamard divideElements powerElements',
+    title: 'Math functions',
+    text: 'operators palette subscript greek units display format decimals scientific engineering trailing zeros if function vector range math functions abs sqrt nthRoot exp ln log sin cos tan asin acos atan sinh cosh tanh floor ceil min max',
     body: (
       <>
         <h4 className="help-h4">Enter and use math</h4>
@@ -57,11 +57,38 @@ const HELP_SECTIONS: { id: string; title: string; body: ReactNode; text: string 
         <p>Use parentheses to group operations, <code>^</code> for powers and the Math tab’s Operators, Symbols, Constants and Units palettes for special notation. Common functions include <code>abs</code>, <code>sqrt</code>, <code>nthRoot</code>, <code>exp</code>, <code>ln</code>, <code>log</code>, <code>sin</code>, <code>cos</code>, <code>tan</code>, <code>asin</code>, <code>acos</code>, <code>atan</code>, <code>sinh</code>, <code>cosh</code>, <code>tanh</code>, <code>floor</code>, <code>ceil</code>, <code>min</code> and <code>max</code>. For example, <code>sin(30 deg)=</code> gives 0.5. Trigonometric inputs can use angle units.</p>
         <p>Define functions with <code>f(x):…</code>, ranges with <code>i:0;n-1</code>, and use if blocks for conditional calculations. Checks such as <code>UR≤1</code> show PASS or FAIL. Units follow numbers (for example, <code>35 MPa</code>); use the Result unit box to change how a result is displayed.</p>
         <p>Result display settings (formula, result or full calculation; general, decimal, scientific or engineering format; decimal places and trailing zeros) only change how numbers are shown. Calculations keep full precision.</p>
-        <h4 className="help-h4">Matrices and vectors</h4>
-        <p>Open Matrices/Tables → Matrix and choose the number of rows and columns, then fill every cell. Use <code>A=</code> to display a matrix. Matrix operators include <code>A·B</code> (multiply), <code>A^T</code> (transpose), <code>A^(-1)</code> (inverse) and <code>det(A)</code> (determinant); matrix multiplication needs matching inner dimensions.</p>
-        <p>For a system of linear equations <code>A·x=b</code>, use <code>x=lsolve(A,b)</code>. Useful functions include <code>rows(A)</code>, <code>cols(A)</code>, <code>at(A,0,1)</code> (row 0, column 1), <code>row(A,0)</code>, <code>col(A,1)</code>, <code>trace(A)</code> and <code>rank(A)</code>. Matrix and vector indices start at zero.</p>
-        <p>For vectors, <code>dot(v,w)</code> is the dot product, <code>cross(v,w)</code> is the 3D cross product and <code>norm(v)</code> is the length. For entry-by-entry matrix operations, use <code>hadamard(A,B)</code>, <code>divideElements(A,B)</code> or <code>powerElements(A,B)</code>; the arrays must have matching shapes.</p>
-        <p>The searchable Matrices/Tables → Functions menu inserts function templates. It also includes constructors such as <code>zeros</code>, <code>ones</code> and <code>identity</code>, rearrangement and factorization functions, and advanced array functions. Use <code>lsolve</code> to solve a system; matrix division is not supported. For determinant, inverse and solve, entries within each matrix or vector must use consistent dimensions.</p>
+      </>
+    ),
+  },
+  {
+    id: 'matrices',
+    title: 'Matrices & vectors',
+    text: 'matrix matrices vectors Matrices Tables insert matrix dimensions cells calculate multiply determinant inverse transpose index rows columns solve lsolve dot cross norm hadamard divideElements powerElements functions',
+    body: (
+      <>
+        <h4 className="help-h4">Create a matrix</h4>
+        <p>Open Matrices/Tables → Matrix, choose the row and column count, and fill the highlighted cells. To define it, put a name and <Kbd k=":" /> before the matrix, for example <code>A:</code>, then enter values in each cell. Use <code>A=</code> in a later equation to show the matrix. Define vectors and matrices before the equations that use them.</p>
+        <h4 className="help-h4">Use matrix and vector operations</h4>
+        <p>Use Matrices/Tables → Operators or type functions directly: <code>A·B</code> multiplies matrices, <code>A^T</code> transposes, <code>A^(-1)</code> or <code>inv(A)</code> inverts, and <code>det(A)</code> finds the determinant. Multiplication requires the number of columns in A to equal the number of rows in B; inverse and determinant need a square matrix.</p>
+        <p>For a system <code>A·x=b</code>, calculate <code>x=lsolve(A,b)</code>. Read dimensions with <code>rows(A)</code> and <code>cols(A)</code>. Select an entry with <code>at(A,0,1)</code> (row 0, column 1), or extract a whole row or column with <code>row(A,0)</code> and <code>col(A,1)</code>. Indices start at zero.</p>
+        <p>For vectors, <code>dot(v,w)</code> is the dot product, <code>cross(v,w)</code> is the 3D cross product, and <code>norm(v)</code> is the length. For element-by-element matrix math use <code>hadamard(A,B)</code>, <code>divideElements(A,B)</code> or <code>powerElements(A,B)</code>; both arrays must have the same shape. Matrix division is not supported.</p>
+        <p>The searchable Matrices/Tables → Functions menu inserts function templates, including <code>zeros</code>, <code>ones</code>, <code>identity</code>, rearrangement, factorization and advanced array functions. Each matrix cell carries units; operations such as determinant, inverse and solve require consistent dimensions in their inputs.</p>
+      </>
+    ),
+  },
+  {
+    id: 'plots',
+    title: 'Plots',
+    text: 'plot plots graph graphing x-y series vector range axes units title label line marker circles segments legend show data inputs auto scale equal grid origin',
+    body: (
+      <>
+        <h4 className="help-h4">Create an X-Y plot</h4>
+        <p>First define the data above where the plot will go. For example, enter <code>n:4</code>, <code>i:0;n-1</code> and <code>y:i^2</code> in separate math regions. This creates four x and y values: 0–3 and their squares.</p>
+        <p>Open Plots → X-Y Plot to insert a graph. Select the graph, click Plots → Add series, then enter <code>i</code> for X values and <code>y</code> for Y values in the Properties panel. The graph recalculates when worksheet values change. Use Add series again to plot another pair of expressions.</p>
+        <h4 className="help-h4">Format and troubleshoot</h4>
+        <p>In Properties, set the graph title and X/Y labels, then give each series a legend label and colour. Choose Line to connect points, Markers to show separate points, Circles to draw points with radius <code>r</code>, or Segments to break the line where group value <code>g</code> changes.</p>
+        <p>Use the Plots tab to set axis display units, show grid lines, put axes through the origin or use equal X/Y scales (useful for plans and sections). Units default to automatic; specified axis units must be compatible with the plotted data. The graph fits its range to the data automatically.</p>
+        <p>X and Y expressions can each return one value or a vector; vectors must have matching lengths. If a series is blank, has mismatched lengths or contains an invalid expression or unit, the graph shows an error. Correct the expression or units in the series properties. Optional “Show when” controls whether a series is displayed for the current worksheet values.</p>
       </>
     ),
   },
