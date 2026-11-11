@@ -74,47 +74,47 @@
     "outputs": [
       {
         "id": "cls",
-        "regionId": "s_stl_33",
+        "regionId": "s_stl_35",
         "label": "Class"
       },
       {
         "id": "ursec",
-        "regionId": "s_stl_4h",
+        "regionId": "s_stl_4j",
         "label": "UR section"
       },
       {
         "id": "urby",
-        "regionId": "s_stl_54",
+        "regionId": "s_stl_56",
         "label": "UR buckling y"
       },
       {
         "id": "urbz",
-        "regionId": "s_stl_5j",
+        "regionId": "s_stl_5l",
         "label": "UR buckling z"
       },
       {
         "id": "urlt",
-        "regionId": "s_stl_6t",
+        "regionId": "s_stl_6v",
         "label": "UR LTB"
       },
       {
         "id": "ur61",
-        "regionId": "s_stl_7i",
+        "regionId": "s_stl_7k",
         "label": "UR (6.61)"
       },
       {
         "id": "ur62",
-        "regionId": "s_stl_7m",
+        "regionId": "s_stl_7o",
         "label": "UR (6.62)"
       },
       {
         "id": "ur",
-        "regionId": "s_stl_7r",
+        "regionId": "s_stl_7t",
         "label": "UR"
       },
       {
         "id": "ok",
-        "regionId": "s_stl_7t",
+        "regionId": "s_stl_7v",
         "label": "Member"
       }
     ],
@@ -175,7 +175,7 @@
       "props": {
         "w": 630,
         "h": 29,
-        "html": "STEEL BEAM-COLUMN CHECK – ROLLED I/H SECTION (EC3)",
+        "html": "STEEL BEAM-COLUMN CHECK – I/H SECTION (EC3)",
         "fontFamily": "Inter",
         "fontSize": 20,
         "color": "#1e3a5f",
@@ -207,7 +207,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "EN 1993-1-1:2005 + A1:2014. Doubly symmetric rolled I/H section, Class 1 to 3, uniform member.",
+        "html": "EN 1993-1-1:2005 + A1:2014. Doubly symmetric rolled or welded I/H, Class 1 to 3, uniform member.",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -526,9 +526,9 @@
       "x": 76,
       "y": 556,
       "props": {
-        "w": 344,
+        "w": 364,
         "h": 18,
-        "html": "Section ID from the built-in library (Browse to choose)",
+        "html": "Section ID: library, or 0 for custom welded I/H (Browse)",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -538,10 +538,10 @@
     {
       "id": "s_stl_n",
       "type": "math",
-      "x": 436,
+      "x": 456,
       "y": 550,
       "props": {
-        "w": 237,
+        "w": 236,
         "h": 28,
         "baseline": 19,
         "latex": "\\mathrm{Section}\\coloneq1211",
@@ -1203,7 +1203,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "Looked up from the built-in library by Section ID. Check against the project section tables.",
+        "html": "Library: Section ID. Custom: h, b, tf, tw from Browse; equations are stored in the worksheet.",
         "fontFamily": "Inter",
         "fontSize": 13,
         "color": "#475569",
@@ -1212,9 +1212,39 @@
     },
     {
       "id": "s_stl_1s",
+      "type": "text",
+      "x": 76,
+      "y": 1479,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Custom: r = 0, no weld metal; It / Iw: SCI P385 B.2.2 / B.3.1 thin-wall approximations.",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_1t",
+      "type": "text",
+      "x": 76,
+      "y": 1504,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Custom shear areas: EN 1993-1-1 §6.2.6(3), conservative η = 1.0. Check project section tables.",
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_1u",
       "type": "math",
       "x": 96,
-      "y": 1479,
+      "y": 1529,
       "props": {
         "w": 196,
         "h": 26,
@@ -1229,10 +1259,10 @@
       }
     },
     {
-      "id": "s_stl_1t",
+      "id": "s_stl_1v",
       "type": "math",
       "x": 396,
-      "y": 1479,
+      "y": 1529,
       "props": {
         "w": 194,
         "h": 26,
@@ -1247,10 +1277,10 @@
       }
     },
     {
-      "id": "s_stl_1u",
+      "id": "s_stl_1w",
       "type": "math",
       "x": 96,
-      "y": 1511,
+      "y": 1561,
       "props": {
         "w": 202,
         "h": 26,
@@ -1265,10 +1295,10 @@
       }
     },
     {
-      "id": "s_stl_1v",
+      "id": "s_stl_1x",
       "type": "math",
       "x": 396,
-      "y": 1511,
+      "y": 1561,
       "props": {
         "w": 200,
         "h": 26,
@@ -1283,10 +1313,10 @@
       }
     },
     {
-      "id": "s_stl_1w",
+      "id": "s_stl_1y",
       "type": "math",
       "x": 96,
-      "y": 1543,
+      "y": 1593,
       "props": {
         "w": 195,
         "h": 26,
@@ -1301,10 +1331,10 @@
       }
     },
     {
-      "id": "s_stl_1x",
+      "id": "s_stl_1z",
       "type": "math",
       "x": 396,
-      "y": 1543,
+      "y": 1593,
       "props": {
         "w": 199,
         "h": 26,
@@ -1319,10 +1349,10 @@
       }
     },
     {
-      "id": "s_stl_1y",
+      "id": "s_stl_20",
       "type": "math",
       "x": 96,
-      "y": 1575,
+      "y": 1625,
       "props": {
         "w": 202,
         "h": 26,
@@ -1337,10 +1367,10 @@
       }
     },
     {
-      "id": "s_stl_1z",
+      "id": "s_stl_21",
       "type": "math",
       "x": 396,
-      "y": 1575,
+      "y": 1625,
       "props": {
         "w": 202,
         "h": 26,
@@ -1355,10 +1385,10 @@
       }
     },
     {
-      "id": "s_stl_20",
+      "id": "s_stl_22",
       "type": "math",
       "x": 96,
-      "y": 1607,
+      "y": 1657,
       "props": {
         "w": 223,
         "h": 26,
@@ -1373,10 +1403,10 @@
       }
     },
     {
-      "id": "s_stl_21",
+      "id": "s_stl_23",
       "type": "math",
       "x": 396,
-      "y": 1607,
+      "y": 1657,
       "props": {
         "w": 223,
         "h": 26,
@@ -1391,10 +1421,10 @@
       }
     },
     {
-      "id": "s_stl_22",
+      "id": "s_stl_24",
       "type": "math",
       "x": 96,
-      "y": 1639,
+      "y": 1689,
       "props": {
         "w": 232,
         "h": 26,
@@ -1409,10 +1439,10 @@
       }
     },
     {
-      "id": "s_stl_23",
+      "id": "s_stl_25",
       "type": "math",
       "x": 396,
-      "y": 1639,
+      "y": 1689,
       "props": {
         "w": 231,
         "h": 26,
@@ -1427,10 +1457,10 @@
       }
     },
     {
-      "id": "s_stl_24",
+      "id": "s_stl_26",
       "type": "math",
       "x": 96,
-      "y": 1671,
+      "y": 1721,
       "props": {
         "w": 208,
         "h": 26,
@@ -1445,10 +1475,10 @@
       }
     },
     {
-      "id": "s_stl_25",
+      "id": "s_stl_27",
       "type": "math",
       "x": 396,
-      "y": 1671,
+      "y": 1721,
       "props": {
         "w": 213,
         "h": 26,
@@ -1463,10 +1493,10 @@
       }
     },
     {
-      "id": "s_stl_26",
+      "id": "s_stl_28",
       "type": "math",
       "x": 96,
-      "y": 1703,
+      "y": 1753,
       "props": {
         "w": 223,
         "h": 26,
@@ -1481,10 +1511,10 @@
       }
     },
     {
-      "id": "s_stl_27",
+      "id": "s_stl_29",
       "type": "math",
       "x": 396,
-      "y": 1703,
+      "y": 1753,
       "props": {
         "w": 223,
         "h": 26,
@@ -1499,10 +1529,10 @@
       }
     },
     {
-      "id": "s_stl_28",
+      "id": "s_stl_2a",
       "type": "graph",
       "x": 267,
-      "y": 1735,
+      "y": 1785,
       "props": {
         "w": 260,
         "h": 260,
@@ -1532,10 +1562,10 @@
       }
     },
     {
-      "id": "s_stl_29",
+      "id": "s_stl_2b",
       "type": "text",
       "x": 76,
-      "y": 2007,
+      "y": 2057,
       "props": {
         "w": 630,
         "h": 24,
@@ -1548,10 +1578,10 @@
       }
     },
     {
-      "id": "s_stl_2a",
+      "id": "s_stl_2c",
       "type": "text",
       "x": 76,
-      "y": 2048,
+      "y": 2098,
       "props": {
         "w": 204,
         "h": 18,
@@ -1563,10 +1593,10 @@
       }
     },
     {
-      "id": "s_stl_2b",
+      "id": "s_stl_2d",
       "type": "math",
       "x": 296,
-      "y": 2037,
+      "y": 2087,
       "props": {
         "w": 116,
         "h": 43,
@@ -1581,10 +1611,10 @@
       }
     },
     {
-      "id": "s_stl_2c",
+      "id": "s_stl_2e",
       "type": "text",
       "x": 76,
-      "y": 2092,
+      "y": 2142,
       "props": {
         "w": 630,
         "h": 21,
@@ -1597,10 +1627,10 @@
       }
     },
     {
-      "id": "s_stl_2d",
+      "id": "s_stl_2f",
       "type": "text",
       "x": 76,
-      "y": 2128,
+      "y": 2178,
       "props": {
         "w": 204,
         "h": 18,
@@ -1612,10 +1642,10 @@
       }
     },
     {
-      "id": "s_stl_2e",
+      "id": "s_stl_2g",
       "type": "math",
       "x": 296,
-      "y": 2119,
+      "y": 2169,
       "props": {
         "w": 122,
         "h": 35,
@@ -1630,10 +1660,10 @@
       }
     },
     {
-      "id": "s_stl_2f",
+      "id": "s_stl_2h",
       "type": "text",
       "x": 76,
-      "y": 2187,
+      "y": 2429,
       "props": {
         "w": 284,
         "h": 18,
@@ -1645,10 +1675,10 @@
       }
     },
     {
-      "id": "s_stl_2g",
+      "id": "s_stl_2i",
       "type": "math",
       "x": 376,
-      "y": 2160,
+      "y": 2402,
       "props": {
         "w": 69,
         "h": 37,
@@ -1663,10 +1693,10 @@
       }
     },
     {
-      "id": "s_stl_2h",
+      "id": "s_stl_2j",
       "type": "text",
       "x": 76,
-      "y": 2487,
+      "y": 2538,
       "props": {
         "w": 204,
         "h": 18,
@@ -1678,10 +1708,10 @@
       }
     },
     {
-      "id": "s_stl_2i",
+      "id": "s_stl_2k",
       "type": "math",
       "x": 296,
-      "y": 2402,
+      "y": 2453,
       "props": {
         "w": 187,
         "h": 160,
@@ -1696,10 +1726,10 @@
       }
     },
     {
-      "id": "s_stl_2j",
+      "id": "s_stl_2l",
       "type": "text",
       "x": 76,
-      "y": 2574,
+      "y": 2625,
       "props": {
         "w": 630,
         "h": 21,
@@ -1712,10 +1742,10 @@
       }
     },
     {
-      "id": "s_stl_2k",
+      "id": "s_stl_2m",
       "type": "text",
       "x": 76,
-      "y": 2601,
+      "y": 2652,
       "props": {
         "w": 630,
         "h": 19,
@@ -1727,10 +1757,10 @@
       }
     },
     {
-      "id": "s_stl_2l",
+      "id": "s_stl_2n",
       "type": "text",
       "x": 76,
-      "y": 2631,
+      "y": 2682,
       "props": {
         "w": 204,
         "h": 18,
@@ -1742,10 +1772,10 @@
       }
     },
     {
-      "id": "s_stl_2m",
+      "id": "s_stl_2o",
       "type": "math",
       "x": 296,
-      "y": 2626,
+      "y": 2677,
       "props": {
         "w": 126,
         "h": 26,
@@ -1760,10 +1790,10 @@
       }
     },
     {
-      "id": "s_stl_2n",
+      "id": "s_stl_2p",
       "type": "text",
       "x": 76,
-      "y": 2658,
+      "y": 2709,
       "props": {
         "w": 630,
         "h": 18,
@@ -1775,10 +1805,10 @@
       }
     },
     {
-      "id": "s_stl_2o",
+      "id": "s_stl_2q",
       "type": "math",
       "x": 76,
-      "y": 2682,
+      "y": 2733,
       "props": {
         "w": 354,
         "h": 103,
@@ -1793,10 +1823,10 @@
       }
     },
     {
-      "id": "s_stl_2p",
+      "id": "s_stl_2r",
       "type": "text",
       "x": 76,
-      "y": 2791,
+      "y": 2842,
       "props": {
         "w": 630,
         "h": 18,
@@ -1808,10 +1838,10 @@
       }
     },
     {
-      "id": "s_stl_2q",
+      "id": "s_stl_2s",
       "type": "math",
       "x": 76,
-      "y": 2815,
+      "y": 2866,
       "props": {
         "w": 355,
         "h": 122,
@@ -1826,10 +1856,10 @@
       }
     },
     {
-      "id": "s_stl_2r",
+      "id": "s_stl_2t",
       "type": "text",
       "x": 76,
-      "y": 3008,
+      "y": 3059,
       "props": {
         "w": 204,
         "h": 18,
@@ -1841,10 +1871,10 @@
       }
     },
     {
-      "id": "s_stl_2s",
+      "id": "s_stl_2u",
       "type": "math",
       "x": 296,
-      "y": 2943,
+      "y": 2994,
       "props": {
         "w": 196,
         "h": 121,
@@ -1859,10 +1889,10 @@
       }
     },
     {
-      "id": "s_stl_2t",
+      "id": "s_stl_2v",
       "type": "text",
       "x": 76,
-      "y": 3135,
+      "y": 3186,
       "props": {
         "w": 204,
         "h": 18,
@@ -1874,10 +1904,10 @@
       }
     },
     {
-      "id": "s_stl_2u",
+      "id": "s_stl_2w",
       "type": "math",
       "x": 296,
-      "y": 3070,
+      "y": 3121,
       "props": {
         "w": 196,
         "h": 121,
@@ -1892,10 +1922,10 @@
       }
     },
     {
-      "id": "s_stl_2v",
+      "id": "s_stl_2x",
       "type": "text",
       "x": 76,
-      "y": 3242,
+      "y": 3293,
       "props": {
         "w": 204,
         "h": 18,
@@ -1907,10 +1937,10 @@
       }
     },
     {
-      "id": "s_stl_2w",
+      "id": "s_stl_2y",
       "type": "math",
       "x": 296,
-      "y": 3197,
+      "y": 3248,
       "props": {
         "w": 219,
         "h": 103,
@@ -1925,10 +1955,10 @@
       }
     },
     {
-      "id": "s_stl_2x",
+      "id": "s_stl_2z",
       "type": "text",
       "x": 76,
-      "y": 3331,
+      "y": 3382,
       "props": {
         "w": 204,
         "h": 18,
@@ -1940,10 +1970,10 @@
       }
     },
     {
-      "id": "s_stl_2y",
+      "id": "s_stl_30",
       "type": "math",
       "x": 296,
-      "y": 3306,
+      "y": 3357,
       "props": {
         "w": 72,
         "h": 33,
@@ -1958,7 +1988,7 @@
       }
     },
     {
-      "id": "s_stl_2z",
+      "id": "s_stl_31",
       "type": "text",
       "x": 76,
       "y": 3658,
@@ -1973,7 +2003,7 @@
       }
     },
     {
-      "id": "s_stl_30",
+      "id": "s_stl_32",
       "type": "math",
       "x": 296,
       "y": 3573,
@@ -1991,7 +2021,7 @@
       }
     },
     {
-      "id": "s_stl_31",
+      "id": "s_stl_33",
       "type": "text",
       "x": 76,
       "y": 3745,
@@ -2007,7 +2037,7 @@
       }
     },
     {
-      "id": "s_stl_32",
+      "id": "s_stl_34",
       "type": "text",
       "x": 76,
       "y": 3777,
@@ -2022,7 +2052,7 @@
       }
     },
     {
-      "id": "s_stl_33",
+      "id": "s_stl_35",
       "type": "math",
       "x": 296,
       "y": 3772,
@@ -2040,7 +2070,7 @@
       }
     },
     {
-      "id": "s_stl_34",
+      "id": "s_stl_36",
       "type": "text",
       "x": 76,
       "y": 3808,
@@ -2055,7 +2085,7 @@
       }
     },
     {
-      "id": "s_stl_35",
+      "id": "s_stl_37",
       "type": "math",
       "x": 356,
       "y": 3803,
@@ -2073,7 +2103,7 @@
       }
     },
     {
-      "id": "s_stl_36",
+      "id": "s_stl_38",
       "type": "text",
       "x": 76,
       "y": 3840,
@@ -2089,7 +2119,7 @@
       }
     },
     {
-      "id": "s_stl_37",
+      "id": "s_stl_39",
       "type": "text",
       "x": 76,
       "y": 3876,
@@ -2105,7 +2135,7 @@
       }
     },
     {
-      "id": "s_stl_38",
+      "id": "s_stl_3a",
       "type": "text",
       "x": 76,
       "y": 3914,
@@ -2120,7 +2150,7 @@
       }
     },
     {
-      "id": "s_stl_39",
+      "id": "s_stl_3b",
       "type": "math",
       "x": 296,
       "y": 3903,
@@ -2138,7 +2168,7 @@
       }
     },
     {
-      "id": "s_stl_3a",
+      "id": "s_stl_3c",
       "type": "text",
       "x": 76,
       "y": 3961,
@@ -2153,7 +2183,7 @@
       }
     },
     {
-      "id": "s_stl_3b",
+      "id": "s_stl_3d",
       "type": "math",
       "x": 296,
       "y": 3950,
@@ -2171,7 +2201,7 @@
       }
     },
     {
-      "id": "s_stl_3c",
+      "id": "s_stl_3e",
       "type": "text",
       "x": 76,
       "y": 4025,
@@ -2186,7 +2216,7 @@
       }
     },
     {
-      "id": "s_stl_3d",
+      "id": "s_stl_3f",
       "type": "math",
       "x": 296,
       "y": 3997,
@@ -2204,7 +2234,7 @@
       }
     },
     {
-      "id": "s_stl_3e",
+      "id": "s_stl_3g",
       "type": "text",
       "x": 76,
       "y": 4054,
@@ -2219,7 +2249,7 @@
       }
     },
     {
-      "id": "s_stl_3f",
+      "id": "s_stl_3h",
       "type": "math",
       "x": 296,
       "y": 4049,
@@ -2237,7 +2267,7 @@
       }
     },
     {
-      "id": "s_stl_3g",
+      "id": "s_stl_3i",
       "type": "text",
       "x": 76,
       "y": 4091,
@@ -2252,7 +2282,7 @@
       }
     },
     {
-      "id": "s_stl_3h",
+      "id": "s_stl_3j",
       "type": "math",
       "x": 296,
       "y": 4080,
@@ -2270,7 +2300,7 @@
       }
     },
     {
-      "id": "s_stl_3i",
+      "id": "s_stl_3k",
       "type": "text",
       "x": 76,
       "y": 4133,
@@ -2285,7 +2315,7 @@
       }
     },
     {
-      "id": "s_stl_3j",
+      "id": "s_stl_3l",
       "type": "math",
       "x": 296,
       "y": 4128,
@@ -2303,7 +2333,7 @@
       }
     },
     {
-      "id": "s_stl_3k",
+      "id": "s_stl_3m",
       "type": "text",
       "x": 76,
       "y": 4170,
@@ -2318,7 +2348,7 @@
       }
     },
     {
-      "id": "s_stl_3l",
+      "id": "s_stl_3n",
       "type": "math",
       "x": 356,
       "y": 4159,
@@ -2336,7 +2366,7 @@
       }
     },
     {
-      "id": "s_stl_3m",
+      "id": "s_stl_3o",
       "type": "text",
       "x": 76,
       "y": 4250,
@@ -2351,7 +2381,7 @@
       }
     },
     {
-      "id": "s_stl_3n",
+      "id": "s_stl_3p",
       "type": "math",
       "x": 416,
       "y": 4205,
@@ -2369,7 +2399,7 @@
       }
     },
     {
-      "id": "s_stl_3o",
+      "id": "s_stl_3q",
       "type": "text",
       "x": 76,
       "y": 4349,
@@ -2384,7 +2414,7 @@
       }
     },
     {
-      "id": "s_stl_3p",
+      "id": "s_stl_3r",
       "type": "math",
       "x": 296,
       "y": 4304,
@@ -2402,7 +2432,7 @@
       }
     },
     {
-      "id": "s_stl_3q",
+      "id": "s_stl_3s",
       "type": "text",
       "x": 76,
       "y": 4408,
@@ -2417,7 +2447,7 @@
       }
     },
     {
-      "id": "s_stl_3r",
+      "id": "s_stl_3t",
       "type": "math",
       "x": 296,
       "y": 4403,
@@ -2435,7 +2465,7 @@
       }
     },
     {
-      "id": "s_stl_3s",
+      "id": "s_stl_3u",
       "type": "text",
       "x": 76,
       "y": 4435,
@@ -2450,7 +2480,7 @@
       }
     },
     {
-      "id": "s_stl_3t",
+      "id": "s_stl_3v",
       "type": "text",
       "x": 76,
       "y": 4466,
@@ -2466,7 +2496,7 @@
       }
     },
     {
-      "id": "s_stl_3u",
+      "id": "s_stl_3w",
       "type": "text",
       "x": 76,
       "y": 4504,
@@ -2481,7 +2511,7 @@
       }
     },
     {
-      "id": "s_stl_3v",
+      "id": "s_stl_3x",
       "type": "math",
       "x": 296,
       "y": 4493,
@@ -2499,7 +2529,7 @@
       }
     },
     {
-      "id": "s_stl_3w",
+      "id": "s_stl_3y",
       "type": "text",
       "x": 76,
       "y": 4789,
@@ -2514,7 +2544,7 @@
       }
     },
     {
-      "id": "s_stl_3x",
+      "id": "s_stl_3z",
       "type": "math",
       "x": 516,
       "y": 4744,
@@ -2532,7 +2562,7 @@
       }
     },
     {
-      "id": "s_stl_3y",
+      "id": "s_stl_40",
       "type": "text",
       "x": 76,
       "y": 4878,
@@ -2547,7 +2577,7 @@
       }
     },
     {
-      "id": "s_stl_3z",
+      "id": "s_stl_41",
       "type": "math",
       "x": 296,
       "y": 4833,
@@ -2565,7 +2595,7 @@
       }
     },
     {
-      "id": "s_stl_40",
+      "id": "s_stl_42",
       "type": "text",
       "x": 76,
       "y": 4934,
@@ -2580,7 +2610,7 @@
       }
     },
     {
-      "id": "s_stl_41",
+      "id": "s_stl_43",
       "type": "math",
       "x": 476,
       "y": 4922,
@@ -2598,7 +2628,7 @@
       }
     },
     {
-      "id": "s_stl_42",
+      "id": "s_stl_44",
       "type": "text",
       "x": 76,
       "y": 4981,
@@ -2613,7 +2643,7 @@
       }
     },
     {
-      "id": "s_stl_43",
+      "id": "s_stl_45",
       "type": "math",
       "x": 296,
       "y": 4969,
@@ -2631,7 +2661,7 @@
       }
     },
     {
-      "id": "s_stl_44",
+      "id": "s_stl_46",
       "type": "text",
       "x": 76,
       "y": 5045,
@@ -2646,7 +2676,7 @@
       }
     },
     {
-      "id": "s_stl_45",
+      "id": "s_stl_47",
       "type": "math",
       "x": 296,
       "y": 5016,
@@ -2664,7 +2694,7 @@
       }
     },
     {
-      "id": "s_stl_46",
+      "id": "s_stl_48",
       "type": "text",
       "x": 76,
       "y": 5074,
@@ -2679,7 +2709,7 @@
       }
     },
     {
-      "id": "s_stl_47",
+      "id": "s_stl_49",
       "type": "math",
       "x": 296,
       "y": 5069,
@@ -2697,7 +2727,7 @@
       }
     },
     {
-      "id": "s_stl_48",
+      "id": "s_stl_4a",
       "type": "text",
       "x": 76,
       "y": 5111,
@@ -2712,7 +2742,7 @@
       }
     },
     {
-      "id": "s_stl_49",
+      "id": "s_stl_4b",
       "type": "math",
       "x": 296,
       "y": 5100,
@@ -2730,7 +2760,7 @@
       }
     },
     {
-      "id": "s_stl_4a",
+      "id": "s_stl_4c",
       "type": "text",
       "x": 76,
       "y": 5153,
@@ -2745,7 +2775,7 @@
       }
     },
     {
-      "id": "s_stl_4b",
+      "id": "s_stl_4d",
       "type": "math",
       "x": 296,
       "y": 5148,
@@ -2763,7 +2793,7 @@
       }
     },
     {
-      "id": "s_stl_4c",
+      "id": "s_stl_4e",
       "type": "text",
       "x": 76,
       "y": 5208,
@@ -2778,7 +2808,7 @@
       }
     },
     {
-      "id": "s_stl_4d",
+      "id": "s_stl_4f",
       "type": "math",
       "x": 296,
       "y": 5179,
@@ -2796,7 +2826,7 @@
       }
     },
     {
-      "id": "s_stl_4e",
+      "id": "s_stl_4g",
       "type": "text",
       "x": 76,
       "y": 5237,
@@ -2811,7 +2841,7 @@
       }
     },
     {
-      "id": "s_stl_4f",
+      "id": "s_stl_4h",
       "type": "math",
       "x": 296,
       "y": 5232,
@@ -2829,7 +2859,7 @@
       }
     },
     {
-      "id": "s_stl_4g",
+      "id": "s_stl_4i",
       "type": "text",
       "x": 76,
       "y": 5292,
@@ -2844,7 +2874,7 @@
       }
     },
     {
-      "id": "s_stl_4h",
+      "id": "s_stl_4j",
       "type": "math",
       "x": 336,
       "y": 5263,
@@ -2862,7 +2892,7 @@
       }
     },
     {
-      "id": "s_stl_4i",
+      "id": "s_stl_4k",
       "type": "text",
       "x": 76,
       "y": 5321,
@@ -2877,7 +2907,7 @@
       }
     },
     {
-      "id": "s_stl_4j",
+      "id": "s_stl_4l",
       "type": "math",
       "x": 296,
       "y": 5316,
@@ -2895,7 +2925,7 @@
       }
     },
     {
-      "id": "s_stl_4k",
+      "id": "s_stl_4m",
       "type": "text",
       "x": 76,
       "y": 5353,
@@ -2911,14 +2941,14 @@
       }
     },
     {
-      "id": "s_stl_4l",
+      "id": "s_stl_4n",
       "type": "text",
       "x": 76,
       "y": 5389,
       "props": {
         "w": 630,
         "h": 21,
-        "html": "6.1 Buckling curves (Table 6.2, rolled I/H, S235 to S420)",
+        "html": "6.1 Buckling curves (Table 6.2, rolled / welded I/H, S235 to S420)",
         "fontFamily": "Inter",
         "fontSize": 14,
         "color": "#334155",
@@ -2927,47 +2957,14 @@
       }
     },
     {
-      "id": "s_stl_4m",
-      "type": "text",
-      "x": 76,
-      "y": 5481,
-      "props": {
-        "w": 284,
-        "h": 18,
-        "html": "Imperfection factor about y: curve a, b or d",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_stl_4n",
-      "type": "math",
-      "x": 376,
-      "y": 5416,
-      "props": {
-        "w": 238,
-        "h": 122,
-        "baseline": 18,
-        "latex": "\\alpha_{y}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\frac{h}{b}>1.2\\land t_{f}\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 0.21\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ t_{f}\\le100\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 0.34\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0.76\\right.\\end{array}",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": -1,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
       "id": "s_stl_4o",
       "type": "text",
       "x": 76,
-      "y": 5609,
+      "y": 5416,
       "props": {
-        "w": 284,
+        "w": 630,
         "h": 18,
-        "html": "Imperfection factor about z: curve b, c or d",
+        "html": "Imperfection factor about y: Table 6.2, welded when Section = 0",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -2977,13 +2974,13 @@
     {
       "id": "s_stl_4p",
       "type": "math",
-      "x": 376,
-      "y": 5544,
+      "x": 76,
+      "y": 5440,
       "props": {
-        "w": 238,
-        "h": 122,
+        "w": 266,
+        "h": 199,
         "baseline": 18,
-        "latex": "\\alpha_{z}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\frac{h}{b}>1.2\\land t_{f}\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 0.34\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ t_{f}\\le100\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 0.49\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0.76\\right.\\end{array}",
+        "latex": "\\alpha_{y}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Section}=0\\land t_f\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 0.34\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\mathrm{Section}=0\\\\\\quad\\left\\Vert\\displaystyle 0.49\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\frac{h}{b}>1.2\\land t_f\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 0.21\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ t_f\\le100\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 0.34\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0.76\\right.\\end{array}",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": -1,
@@ -2996,7 +2993,40 @@
       "id": "s_stl_4q",
       "type": "text",
       "x": 76,
-      "y": 5677,
+      "y": 5645,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Imperfection factor about z: Table 6.2, welded when Section = 0",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_4r",
+      "type": "math",
+      "x": 76,
+      "y": 5915,
+      "props": {
+        "w": 266,
+        "h": 199,
+        "baseline": 18,
+        "latex": "\\alpha_{z}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Section}=0\\land t_f\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 0.49\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\mathrm{Section}=0\\\\\\quad\\left\\Vert\\displaystyle 0.76\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\frac{h}{b}>1.2\\land t_f\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 0.34\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ t_f\\le100\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle 0.49\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0.76\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_4s",
+      "type": "text",
+      "x": 76,
+      "y": 6125,
       "props": {
         "w": 284,
         "h": 18,
@@ -3008,10 +3038,10 @@
       }
     },
     {
-      "id": "s_stl_4r",
+      "id": "s_stl_4t",
       "type": "math",
       "x": 376,
-      "y": 5672,
+      "y": 6120,
       "props": {
         "w": 115,
         "h": 26,
@@ -3026,10 +3056,10 @@
       }
     },
     {
-      "id": "s_stl_4s",
+      "id": "s_stl_4u",
       "type": "text",
       "x": 76,
-      "y": 5915,
+      "y": 6158,
       "props": {
         "w": 630,
         "h": 21,
@@ -3042,10 +3072,10 @@
       }
     },
     {
-      "id": "s_stl_4t",
+      "id": "s_stl_4v",
       "type": "text",
       "x": 76,
-      "y": 5955,
+      "y": 6198,
       "props": {
         "w": 204,
         "h": 18,
@@ -3057,10 +3087,10 @@
       }
     },
     {
-      "id": "s_stl_4u",
+      "id": "s_stl_4w",
       "type": "math",
       "x": 296,
-      "y": 5942,
+      "y": 6185,
       "props": {
         "w": 109,
         "h": 45,
@@ -3075,10 +3105,10 @@
       }
     },
     {
-      "id": "s_stl_4v",
+      "id": "s_stl_4x",
       "type": "text",
       "x": 76,
-      "y": 6010,
+      "y": 6253,
       "props": {
         "w": 204,
         "h": 18,
@@ -3090,10 +3120,10 @@
       }
     },
     {
-      "id": "s_stl_4w",
+      "id": "s_stl_4y",
       "type": "math",
       "x": 296,
-      "y": 5993,
+      "y": 6236,
       "props": {
         "w": 90,
         "h": 52,
@@ -3108,10 +3138,10 @@
       }
     },
     {
-      "id": "s_stl_4x",
+      "id": "s_stl_4z",
       "type": "text",
       "x": 76,
-      "y": 6056,
+      "y": 6299,
       "props": {
         "w": 204,
         "h": 18,
@@ -3123,10 +3153,10 @@
       }
     },
     {
-      "id": "s_stl_4y",
+      "id": "s_stl_50",
       "type": "math",
       "x": 296,
-      "y": 6051,
+      "y": 6294,
       "props": {
         "w": 228,
         "h": 26,
@@ -3141,10 +3171,10 @@
       }
     },
     {
-      "id": "s_stl_4z",
+      "id": "s_stl_51",
       "type": "text",
       "x": 76,
-      "y": 6105,
+      "y": 6348,
       "props": {
         "w": 204,
         "h": 18,
@@ -3156,10 +3186,10 @@
       }
     },
     {
-      "id": "s_stl_50",
+      "id": "s_stl_52",
       "type": "math",
       "x": 296,
-      "y": 6083,
+      "y": 6326,
       "props": {
         "w": 205,
         "h": 64,
@@ -3174,10 +3204,10 @@
       }
     },
     {
-      "id": "s_stl_51",
+      "id": "s_stl_53",
       "type": "text",
       "x": 76,
-      "y": 6164,
+      "y": 6407,
       "props": {
         "w": 204,
         "h": 18,
@@ -3189,10 +3219,10 @@
       }
     },
     {
-      "id": "s_stl_52",
+      "id": "s_stl_54",
       "type": "math",
       "x": 296,
-      "y": 6153,
+      "y": 6396,
       "props": {
         "w": 122,
         "h": 40,
@@ -3207,10 +3237,10 @@
       }
     },
     {
-      "id": "s_stl_53",
+      "id": "s_stl_55",
       "type": "text",
       "x": 76,
-      "y": 6227,
+      "y": 6470,
       "props": {
         "w": 204,
         "h": 18,
@@ -3222,10 +3252,10 @@
       }
     },
     {
-      "id": "s_stl_54",
+      "id": "s_stl_56",
       "type": "math",
       "x": 296,
-      "y": 6199,
+      "y": 6442,
       "props": {
         "w": 116,
         "h": 39,
@@ -3240,10 +3270,10 @@
       }
     },
     {
-      "id": "s_stl_55",
+      "id": "s_stl_57",
       "type": "text",
       "x": 76,
-      "y": 6256,
+      "y": 6499,
       "props": {
         "w": 204,
         "h": 18,
@@ -3255,10 +3285,10 @@
       }
     },
     {
-      "id": "s_stl_56",
+      "id": "s_stl_58",
       "type": "math",
       "x": 296,
-      "y": 6251,
+      "y": 6494,
       "props": {
         "w": 76,
         "h": 25,
@@ -3273,10 +3303,10 @@
       }
     },
     {
-      "id": "s_stl_57",
+      "id": "s_stl_59",
       "type": "text",
       "x": 76,
-      "y": 6288,
+      "y": 6531,
       "props": {
         "w": 630,
         "h": 21,
@@ -3289,10 +3319,10 @@
       }
     },
     {
-      "id": "s_stl_58",
+      "id": "s_stl_5a",
       "type": "text",
       "x": 76,
-      "y": 6326,
+      "y": 6569,
       "props": {
         "w": 204,
         "h": 18,
@@ -3304,10 +3334,10 @@
       }
     },
     {
-      "id": "s_stl_59",
+      "id": "s_stl_5b",
       "type": "math",
       "x": 296,
-      "y": 6315,
+      "y": 6558,
       "props": {
         "w": 109,
         "h": 41,
@@ -3322,10 +3352,10 @@
       }
     },
     {
-      "id": "s_stl_5a",
+      "id": "s_stl_5c",
       "type": "text",
       "x": 76,
-      "y": 6376,
+      "y": 6619,
       "props": {
         "w": 204,
         "h": 18,
@@ -3337,10 +3367,10 @@
       }
     },
     {
-      "id": "s_stl_5b",
+      "id": "s_stl_5d",
       "type": "math",
       "x": 296,
-      "y": 6362,
+      "y": 6605,
       "props": {
         "w": 90,
         "h": 43,
@@ -3355,10 +3385,10 @@
       }
     },
     {
-      "id": "s_stl_5c",
+      "id": "s_stl_5e",
       "type": "text",
       "x": 76,
-      "y": 6416,
+      "y": 6659,
       "props": {
         "w": 204,
         "h": 18,
@@ -3370,10 +3400,10 @@
       }
     },
     {
-      "id": "s_stl_5d",
+      "id": "s_stl_5f",
       "type": "math",
       "x": 296,
-      "y": 6411,
+      "y": 6654,
       "props": {
         "w": 227,
         "h": 26,
@@ -3388,10 +3418,10 @@
       }
     },
     {
-      "id": "s_stl_5e",
+      "id": "s_stl_5g",
       "type": "text",
       "x": 76,
-      "y": 6460,
+      "y": 6703,
       "props": {
         "w": 204,
         "h": 18,
@@ -3403,10 +3433,10 @@
       }
     },
     {
-      "id": "s_stl_5f",
+      "id": "s_stl_5h",
       "type": "math",
       "x": 296,
-      "y": 6443,
+      "y": 6686,
       "props": {
         "w": 199,
         "h": 52,
@@ -3421,10 +3451,10 @@
       }
     },
     {
-      "id": "s_stl_5g",
+      "id": "s_stl_5i",
       "type": "text",
       "x": 76,
-      "y": 6512,
+      "y": 6755,
       "props": {
         "w": 204,
         "h": 18,
@@ -3436,10 +3466,10 @@
       }
     },
     {
-      "id": "s_stl_5h",
+      "id": "s_stl_5j",
       "type": "math",
       "x": 296,
-      "y": 6501,
+      "y": 6744,
       "props": {
         "w": 122,
         "h": 40,
@@ -3454,10 +3484,10 @@
       }
     },
     {
-      "id": "s_stl_5i",
+      "id": "s_stl_5k",
       "type": "text",
       "x": 76,
-      "y": 6576,
+      "y": 6819,
       "props": {
         "w": 204,
         "h": 18,
@@ -3469,10 +3499,10 @@
       }
     },
     {
-      "id": "s_stl_5j",
+      "id": "s_stl_5l",
       "type": "math",
       "x": 296,
-      "y": 6547,
+      "y": 6790,
       "props": {
         "w": 115,
         "h": 37,
@@ -3487,10 +3517,10 @@
       }
     },
     {
-      "id": "s_stl_5k",
+      "id": "s_stl_5m",
       "type": "text",
       "x": 76,
-      "y": 6605,
+      "y": 6848,
       "props": {
         "w": 204,
         "h": 18,
@@ -3502,10 +3532,10 @@
       }
     },
     {
-      "id": "s_stl_5l",
+      "id": "s_stl_5n",
       "type": "math",
       "x": 296,
-      "y": 6600,
+      "y": 6843,
       "props": {
         "w": 76,
         "h": 25,
@@ -3520,10 +3550,10 @@
       }
     },
     {
-      "id": "s_stl_5m",
+      "id": "s_stl_5o",
       "type": "text",
       "x": 76,
-      "y": 6637,
+      "y": 7086,
       "props": {
         "w": 630,
         "h": 21,
@@ -3536,10 +3566,10 @@
       }
     },
     {
-      "id": "s_stl_5n",
+      "id": "s_stl_5p",
       "type": "text",
       "x": 76,
-      "y": 6679,
+      "y": 7128,
       "props": {
         "w": 204,
         "h": 18,
@@ -3551,10 +3581,10 @@
       }
     },
     {
-      "id": "s_stl_5o",
+      "id": "s_stl_5q",
       "type": "math",
       "x": 296,
-      "y": 6664,
+      "y": 7113,
       "props": {
         "w": 101,
         "h": 43,
@@ -3569,10 +3599,10 @@
       }
     },
     {
-      "id": "s_stl_5p",
+      "id": "s_stl_5r",
       "type": "text",
       "x": 76,
-      "y": 6725,
+      "y": 7174,
       "props": {
         "w": 204,
         "h": 18,
@@ -3584,10 +3614,10 @@
       }
     },
     {
-      "id": "s_stl_5q",
+      "id": "s_stl_5s",
       "type": "math",
       "x": 296,
-      "y": 6713,
+      "y": 7162,
       "props": {
         "w": 188,
         "h": 43,
@@ -3602,10 +3632,10 @@
       }
     },
     {
-      "id": "s_stl_5r",
+      "id": "s_stl_5t",
       "type": "text",
       "x": 76,
-      "y": 6776,
+      "y": 7225,
       "props": {
         "w": 204,
         "h": 18,
@@ -3617,10 +3647,10 @@
       }
     },
     {
-      "id": "s_stl_5s",
+      "id": "s_stl_5u",
       "type": "math",
       "x": 296,
-      "y": 6762,
+      "y": 7211,
       "props": {
         "w": 94,
         "h": 43,
@@ -3635,10 +3665,10 @@
       }
     },
     {
-      "id": "s_stl_5t",
+      "id": "s_stl_5v",
       "type": "text",
       "x": 76,
-      "y": 6816,
+      "y": 7265,
       "props": {
         "w": 204,
         "h": 18,
@@ -3650,10 +3680,10 @@
       }
     },
     {
-      "id": "s_stl_5u",
+      "id": "s_stl_5w",
       "type": "math",
       "x": 296,
-      "y": 6811,
+      "y": 7260,
       "props": {
         "w": 234,
         "h": 26,
@@ -3668,10 +3698,10 @@
       }
     },
     {
-      "id": "s_stl_5v",
+      "id": "s_stl_5x",
       "type": "text",
       "x": 76,
-      "y": 6860,
+      "y": 7309,
       "props": {
         "w": 204,
         "h": 18,
@@ -3683,10 +3713,10 @@
       }
     },
     {
-      "id": "s_stl_5w",
+      "id": "s_stl_5y",
       "type": "math",
       "x": 296,
-      "y": 6843,
+      "y": 7292,
       "props": {
         "w": 208,
         "h": 52,
@@ -3701,10 +3731,10 @@
       }
     },
     {
-      "id": "s_stl_5x",
+      "id": "s_stl_5z",
       "type": "text",
       "x": 76,
-      "y": 7097,
+      "y": 7361,
       "props": {
         "w": 204,
         "h": 18,
@@ -3716,10 +3746,10 @@
       }
     },
     {
-      "id": "s_stl_5y",
+      "id": "s_stl_60",
       "type": "math",
       "x": 296,
-      "y": 7086,
+      "y": 7350,
       "props": {
         "w": 127,
         "h": 40,
@@ -3734,10 +3764,10 @@
       }
     },
     {
-      "id": "s_stl_5z",
+      "id": "s_stl_61",
       "type": "text",
       "x": 76,
-      "y": 7161,
+      "y": 7425,
       "props": {
         "w": 204,
         "h": 18,
@@ -3749,10 +3779,10 @@
       }
     },
     {
-      "id": "s_stl_60",
+      "id": "s_stl_62",
       "type": "math",
       "x": 296,
-      "y": 7132,
+      "y": 7396,
       "props": {
         "w": 120,
         "h": 37,
@@ -3767,10 +3797,10 @@
       }
     },
     {
-      "id": "s_stl_61",
+      "id": "s_stl_63",
       "type": "text",
       "x": 76,
-      "y": 7190,
+      "y": 7454,
       "props": {
         "w": 204,
         "h": 18,
@@ -3782,10 +3812,10 @@
       }
     },
     {
-      "id": "s_stl_62",
+      "id": "s_stl_64",
       "type": "math",
       "x": 296,
-      "y": 7185,
+      "y": 7449,
       "props": {
         "w": 78,
         "h": 25,
@@ -3800,10 +3830,10 @@
       }
     },
     {
-      "id": "s_stl_63",
+      "id": "s_stl_65",
       "type": "text",
       "x": 76,
-      "y": 7222,
+      "y": 7486,
       "props": {
         "w": 630,
         "h": 24,
@@ -3816,10 +3846,10 @@
       }
     },
     {
-      "id": "s_stl_64",
+      "id": "s_stl_66",
       "type": "text",
       "x": 76,
-      "y": 7252,
+      "y": 7516,
       "props": {
         "w": 630,
         "h": 19,
@@ -3831,10 +3861,10 @@
       }
     },
     {
-      "id": "s_stl_65",
+      "id": "s_stl_67",
       "type": "text",
       "x": 76,
-      "y": 7277,
+      "y": 7541,
       "props": {
         "w": 630,
         "h": 24,
@@ -3850,10 +3880,10 @@
       }
     },
     {
-      "id": "s_stl_66",
+      "id": "s_stl_68",
       "type": "text",
       "x": 76,
-      "y": 7307,
+      "y": 7571,
       "props": {
         "w": 630,
         "h": 18,
@@ -3865,10 +3895,10 @@
       }
     },
     {
-      "id": "s_stl_67",
+      "id": "s_stl_69",
       "type": "math",
       "x": 76,
-      "y": 7331,
+      "y": 7595,
       "props": {
         "w": 511,
         "h": 122,
@@ -3883,10 +3913,10 @@
       }
     },
     {
-      "id": "s_stl_68",
+      "id": "s_stl_6a",
       "type": "text",
       "x": 76,
-      "y": 7464,
+      "y": 7728,
       "props": {
         "w": 224,
         "h": 18,
@@ -3898,10 +3928,10 @@
       }
     },
     {
-      "id": "s_stl_69",
+      "id": "s_stl_6b",
       "type": "math",
       "x": 316,
-      "y": 7459,
+      "y": 7723,
       "props": {
         "w": 62,
         "h": 26,
@@ -3916,10 +3946,10 @@
       }
     },
     {
-      "id": "s_stl_6a",
+      "id": "s_stl_6c",
       "type": "text",
       "x": 76,
-      "y": 7536,
+      "y": 7800,
       "props": {
         "w": 204,
         "h": 18,
@@ -3931,10 +3961,10 @@
       }
     },
     {
-      "id": "s_stl_6b",
+      "id": "s_stl_6d",
       "type": "math",
       "x": 296,
-      "y": 7491,
+      "y": 7755,
       "props": {
         "w": 232,
         "h": 83,
@@ -3949,10 +3979,10 @@
       }
     },
     {
-      "id": "s_stl_6c",
+      "id": "s_stl_6e",
       "type": "text",
       "x": 76,
-      "y": 7625,
+      "y": 7889,
       "props": {
         "w": 204,
         "h": 18,
@@ -3964,10 +3994,10 @@
       }
     },
     {
-      "id": "s_stl_6d",
+      "id": "s_stl_6f",
       "type": "math",
       "x": 296,
-      "y": 7580,
+      "y": 7844,
       "props": {
         "w": 232,
         "h": 83,
@@ -3982,10 +4012,10 @@
       }
     },
     {
-      "id": "s_stl_6e",
+      "id": "s_stl_6g",
       "type": "text",
       "x": 76,
-      "y": 7680,
+      "y": 7944,
       "props": {
         "w": 284,
         "h": 18,
@@ -3997,10 +4027,10 @@
       }
     },
     {
-      "id": "s_stl_6f",
+      "id": "s_stl_6h",
       "type": "math",
       "x": 376,
-      "y": 7669,
+      "y": 7933,
       "props": {
         "w": 130,
         "h": 43,
@@ -4015,10 +4045,10 @@
       }
     },
     {
-      "id": "s_stl_6g",
+      "id": "s_stl_6i",
       "type": "text",
       "x": 76,
-      "y": 7718,
+      "y": 7982,
       "props": {
         "w": 630,
         "h": 18,
@@ -4030,10 +4060,10 @@
       }
     },
     {
-      "id": "s_stl_6h",
+      "id": "s_stl_6j",
       "type": "math",
       "x": 96,
-      "y": 7742,
+      "y": 8006,
       "props": {
         "w": 396,
         "h": 54,
@@ -4048,10 +4078,10 @@
       }
     },
     {
-      "id": "s_stl_6i",
+      "id": "s_stl_6k",
       "type": "text",
       "x": 76,
-      "y": 7816,
+      "y": 8271,
       "props": {
         "w": 204,
         "h": 18,
@@ -4063,10 +4093,10 @@
       }
     },
     {
-      "id": "s_stl_6j",
+      "id": "s_stl_6l",
       "type": "math",
       "x": 296,
-      "y": 7802,
+      "y": 8257,
       "props": {
         "w": 106,
         "h": 43,
@@ -4081,14 +4111,14 @@
       }
     },
     {
-      "id": "s_stl_6k",
+      "id": "s_stl_6m",
       "type": "text",
       "x": 76,
-      "y": 7896,
+      "y": 8391,
       "props": {
         "w": 384,
         "h": 18,
-        "html": "Imperfection factor, Table 6.4: curve a for h/b ≤ 2, else b",
+        "html": "Imperfection factor, Table 6.4: rolled a/b; custom welded c/d",
         "fontFamily": "Inter",
         "fontSize": 12,
         "color": "#475569",
@@ -4096,15 +4126,15 @@
       }
     },
     {
-      "id": "s_stl_6l",
+      "id": "s_stl_6n",
       "type": "math",
       "x": 476,
-      "y": 7851,
+      "y": 8306,
       "props": {
-        "w": 129,
-        "h": 83,
+        "w": 223,
+        "h": 161,
         "baseline": 18,
-        "latex": "\\alpha_{LT}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\frac{h}{b}\\le2\\\\\\quad\\left\\Vert\\displaystyle 0.21\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0.34\\right.\\end{array}",
+        "latex": "\\alpha_{LT}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Section}=0\\land\\frac{h}{b}\\le2\\\\\\quad\\left\\Vert\\displaystyle 0.49\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\mathrm{Section}=0\\\\\\quad\\left\\Vert\\displaystyle 0.76\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\frac{h}{b}\\le2\\\\\\quad\\left\\Vert\\displaystyle 0.21\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0.34\\right.\\end{array}",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": -1,
@@ -4114,10 +4144,10 @@
       }
     },
     {
-      "id": "s_stl_6m",
+      "id": "s_stl_6o",
       "type": "text",
       "x": 76,
-      "y": 7945,
+      "y": 8478,
       "props": {
         "w": 204,
         "h": 18,
@@ -4129,10 +4159,10 @@
       }
     },
     {
-      "id": "s_stl_6n",
+      "id": "s_stl_6p",
       "type": "math",
       "x": 296,
-      "y": 7940,
+      "y": 8473,
       "props": {
         "w": 267,
         "h": 26,
@@ -4147,10 +4177,10 @@
       }
     },
     {
-      "id": "s_stl_6o",
+      "id": "s_stl_6q",
       "type": "text",
       "x": 76,
-      "y": 7989,
+      "y": 8522,
       "props": {
         "w": 204,
         "h": 18,
@@ -4162,10 +4192,10 @@
       }
     },
     {
-      "id": "s_stl_6p",
+      "id": "s_stl_6r",
       "type": "math",
       "x": 296,
-      "y": 7972,
+      "y": 8505,
       "props": {
         "w": 238,
         "h": 52,
@@ -4180,10 +4210,10 @@
       }
     },
     {
-      "id": "s_stl_6q",
+      "id": "s_stl_6s",
       "type": "text",
       "x": 76,
-      "y": 8041,
+      "y": 8574,
       "props": {
         "w": 224,
         "h": 18,
@@ -4195,10 +4225,10 @@
       }
     },
     {
-      "id": "s_stl_6r",
+      "id": "s_stl_6t",
       "type": "math",
       "x": 316,
-      "y": 8030,
+      "y": 8563,
       "props": {
         "w": 138,
         "h": 40,
@@ -4213,10 +4243,10 @@
       }
     },
     {
-      "id": "s_stl_6s",
+      "id": "s_stl_6u",
       "type": "text",
       "x": 76,
-      "y": 8268,
+      "y": 8620,
       "props": {
         "w": 204,
         "h": 18,
@@ -4228,10 +4258,10 @@
       }
     },
     {
-      "id": "s_stl_6t",
+      "id": "s_stl_6v",
       "type": "math",
       "x": 296,
-      "y": 8257,
+      "y": 8609,
       "props": {
         "w": 113,
         "h": 39,
@@ -4246,10 +4276,10 @@
       }
     },
     {
-      "id": "s_stl_6u",
+      "id": "s_stl_6w",
       "type": "text",
       "x": 76,
-      "y": 8307,
+      "y": 8659,
       "props": {
         "w": 204,
         "h": 18,
@@ -4261,10 +4291,10 @@
       }
     },
     {
-      "id": "s_stl_6v",
+      "id": "s_stl_6x",
       "type": "math",
       "x": 296,
-      "y": 8302,
+      "y": 8654,
       "props": {
         "w": 78,
         "h": 25,
@@ -4279,10 +4309,10 @@
       }
     },
     {
-      "id": "s_stl_6w",
+      "id": "s_stl_6y",
       "type": "text",
       "x": 76,
-      "y": 8339,
+      "y": 8691,
       "props": {
         "w": 630,
         "h": 24,
@@ -4295,10 +4325,10 @@
       }
     },
     {
-      "id": "s_stl_6x",
+      "id": "s_stl_6z",
       "type": "text",
       "x": 76,
-      "y": 8369,
+      "y": 8721,
       "props": {
         "w": 630,
         "h": 19,
@@ -4310,10 +4340,10 @@
       }
     },
     {
-      "id": "s_stl_6y",
+      "id": "s_stl_70",
       "type": "text",
       "x": 76,
-      "y": 8394,
+      "y": 8746,
       "props": {
         "w": 630,
         "h": 19,
@@ -4325,10 +4355,10 @@
       }
     },
     {
-      "id": "s_stl_6z",
+      "id": "s_stl_71",
       "type": "text",
       "x": 76,
-      "y": 8424,
+      "y": 8776,
       "props": {
         "w": 324,
         "h": 18,
@@ -4340,10 +4370,10 @@
       }
     },
     {
-      "id": "s_stl_70",
+      "id": "s_stl_72",
       "type": "math",
       "x": 416,
-      "y": 8419,
+      "y": 8771,
       "props": {
         "w": 74,
         "h": 25,
@@ -4358,10 +4388,10 @@
       }
     },
     {
-      "id": "s_stl_71",
+      "id": "s_stl_73",
       "type": "text",
       "x": 76,
-      "y": 8455,
+      "y": 8807,
       "props": {
         "w": 244,
         "h": 18,
@@ -4373,10 +4403,10 @@
       }
     },
     {
-      "id": "s_stl_72",
+      "id": "s_stl_74",
       "type": "math",
       "x": 336,
-      "y": 8450,
+      "y": 8802,
       "props": {
         "w": 66,
         "h": 26,
@@ -4391,10 +4421,10 @@
       }
     },
     {
-      "id": "s_stl_73",
+      "id": "s_stl_75",
       "type": "text",
       "x": 76,
-      "y": 8510,
+      "y": 8862,
       "props": {
         "w": 204,
         "h": 18,
@@ -4406,10 +4436,10 @@
       }
     },
     {
-      "id": "s_stl_74",
+      "id": "s_stl_76",
       "type": "math",
       "x": 296,
-      "y": 8482,
+      "y": 8834,
       "props": {
         "w": 94,
         "h": 39,
@@ -4424,10 +4454,10 @@
       }
     },
     {
-      "id": "s_stl_75",
+      "id": "s_stl_77",
       "type": "text",
       "x": 76,
-      "y": 8563,
+      "y": 8915,
       "props": {
         "w": 204,
         "h": 18,
@@ -4439,10 +4469,10 @@
       }
     },
     {
-      "id": "s_stl_76",
+      "id": "s_stl_78",
       "type": "math",
       "x": 296,
-      "y": 8534,
+      "y": 8886,
       "props": {
         "w": 93,
         "h": 37,
@@ -4457,43 +4487,10 @@
       }
     },
     {
-      "id": "s_stl_77",
-      "type": "text",
-      "x": 76,
-      "y": 8592,
-      "props": {
-        "w": 204,
-        "h": 18,
-        "html": "Table B.1",
-        "fontFamily": "Inter",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_stl_78",
-      "type": "math",
-      "x": 296,
-      "y": 8587,
-      "props": {
-        "w": 257,
-        "h": 26,
-        "baseline": 18,
-        "latex": "k_{yy}\\coloneq C_{my}\\left(1+\\min\\left(\\lambda_{y}-0.2,0.8\\right)n_{y}\\right)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      }
-    },
-    {
       "id": "s_stl_79",
       "type": "text",
       "x": 76,
-      "y": 8624,
+      "y": 8944,
       "props": {
         "w": 204,
         "h": 18,
@@ -4508,12 +4505,12 @@
       "id": "s_stl_7a",
       "type": "math",
       "x": 296,
-      "y": 8619,
+      "y": 8939,
       "props": {
-        "w": 264,
+        "w": 257,
         "h": 26,
         "baseline": 18,
-        "latex": "k_{zz}\\coloneq C_{mz}\\left(1+\\min\\left(2\\lambda_{z}-0.6,1.4\\right)n_{z}\\right)",
+        "latex": "k_{yy}\\coloneq C_{my}\\left(1+\\min\\left(\\lambda_{y}-0.2,0.8\\right)n_{y}\\right)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": 3,
@@ -4526,7 +4523,7 @@
       "id": "s_stl_7b",
       "type": "text",
       "x": 76,
-      "y": 8656,
+      "y": 8976,
       "props": {
         "w": 204,
         "h": 18,
@@ -4541,7 +4538,40 @@
       "id": "s_stl_7c",
       "type": "math",
       "x": 296,
-      "y": 8651,
+      "y": 8971,
+      "props": {
+        "w": 264,
+        "h": 26,
+        "baseline": 18,
+        "latex": "k_{zz}\\coloneq C_{mz}\\left(1+\\min\\left(2\\lambda_{z}-0.6,1.4\\right)n_{z}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_stl_7d",
+      "type": "text",
+      "x": 76,
+      "y": 9008,
+      "props": {
+        "w": 204,
+        "h": 18,
+        "html": "Table B.1",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_7e",
+      "type": "math",
+      "x": 296,
+      "y": 9003,
       "props": {
         "w": 87,
         "h": 26,
@@ -4556,10 +4586,10 @@
       }
     },
     {
-      "id": "s_stl_7d",
+      "id": "s_stl_7f",
       "type": "text",
       "x": 76,
-      "y": 8696,
+      "y": 9048,
       "props": {
         "w": 204,
         "h": 18,
@@ -4571,10 +4601,10 @@
       }
     },
     {
-      "id": "s_stl_7e",
+      "id": "s_stl_7g",
       "type": "math",
       "x": 296,
-      "y": 8683,
+      "y": 9035,
       "props": {
         "w": 336,
         "h": 43,
@@ -4589,10 +4619,10 @@
       }
     },
     {
-      "id": "s_stl_7f",
+      "id": "s_stl_7h",
       "type": "text",
       "x": 76,
-      "y": 8743,
+      "y": 9095,
       "props": {
         "w": 244,
         "h": 18,
@@ -4604,10 +4634,10 @@
       }
     },
     {
-      "id": "s_stl_7g",
+      "id": "s_stl_7i",
       "type": "math",
       "x": 336,
-      "y": 8732,
+      "y": 9084,
       "props": {
         "w": 118,
         "h": 40,
@@ -4622,10 +4652,10 @@
       }
     },
     {
-      "id": "s_stl_7h",
+      "id": "s_stl_7j",
       "type": "text",
       "x": 76,
-      "y": 8789,
+      "y": 9141,
       "props": {
         "w": 204,
         "h": 18,
@@ -4637,10 +4667,10 @@
       }
     },
     {
-      "id": "s_stl_7i",
+      "id": "s_stl_7k",
       "type": "math",
       "x": 296,
-      "y": 8778,
+      "y": 9130,
       "props": {
         "w": 269,
         "h": 39,
@@ -4655,10 +4685,10 @@
       }
     },
     {
-      "id": "s_stl_7j",
+      "id": "s_stl_7l",
       "type": "text",
       "x": 76,
-      "y": 8828,
+      "y": 9180,
       "props": {
         "w": 204,
         "h": 18,
@@ -4670,10 +4700,10 @@
       }
     },
     {
-      "id": "s_stl_7k",
+      "id": "s_stl_7m",
       "type": "math",
       "x": 296,
-      "y": 8823,
+      "y": 9175,
       "props": {
         "w": 82,
         "h": 25,
@@ -4688,10 +4718,10 @@
       }
     },
     {
-      "id": "s_stl_7l",
+      "id": "s_stl_7n",
       "type": "text",
       "x": 76,
-      "y": 8865,
+      "y": 9217,
       "props": {
         "w": 204,
         "h": 18,
@@ -4703,10 +4733,10 @@
       }
     },
     {
-      "id": "s_stl_7m",
+      "id": "s_stl_7o",
       "type": "math",
       "x": 296,
-      "y": 8854,
+      "y": 9206,
       "props": {
         "w": 269,
         "h": 39,
@@ -4721,10 +4751,10 @@
       }
     },
     {
-      "id": "s_stl_7n",
+      "id": "s_stl_7p",
       "type": "text",
       "x": 76,
-      "y": 8904,
+      "y": 9433,
       "props": {
         "w": 204,
         "h": 18,
@@ -4736,10 +4766,10 @@
       }
     },
     {
-      "id": "s_stl_7o",
+      "id": "s_stl_7q",
       "type": "math",
       "x": 296,
-      "y": 8899,
+      "y": 9428,
       "props": {
         "w": 82,
         "h": 25,
@@ -4754,10 +4784,10 @@
       }
     },
     {
-      "id": "s_stl_7p",
+      "id": "s_stl_7r",
       "type": "text",
       "x": 76,
-      "y": 8936,
+      "y": 9465,
       "props": {
         "w": 630,
         "h": 24,
@@ -4770,10 +4800,10 @@
       }
     },
     {
-      "id": "s_stl_7q",
+      "id": "s_stl_7s",
       "type": "text",
       "x": 76,
-      "y": 8966,
+      "y": 9495,
       "props": {
         "w": 630,
         "h": 18,
@@ -4785,10 +4815,10 @@
       }
     },
     {
-      "id": "s_stl_7r",
+      "id": "s_stl_7t",
       "type": "math",
       "x": 76,
-      "y": 8990,
+      "y": 9519,
       "props": {
         "w": 522,
         "h": 25,
@@ -4803,10 +4833,10 @@
       }
     },
     {
-      "id": "s_stl_7s",
+      "id": "s_stl_7u",
       "type": "text",
       "x": 76,
-      "y": 9026,
+      "y": 9555,
       "props": {
         "w": 204,
         "h": 18,
@@ -4818,10 +4848,10 @@
       }
     },
     {
-      "id": "s_stl_7t",
+      "id": "s_stl_7v",
       "type": "math",
       "x": 296,
-      "y": 9021,
+      "y": 9550,
       "props": {
         "w": 61,
         "h": 25,
@@ -4836,10 +4866,10 @@
       }
     },
     {
-      "id": "s_stl_7u",
+      "id": "s_stl_7w",
       "type": "text",
       "x": 76,
-      "y": 9064,
+      "y": 9593,
       "props": {
         "w": 630,
         "h": 29,
@@ -4855,10 +4885,10 @@
       }
     },
     {
-      "id": "s_stl_7v",
+      "id": "s_stl_7x",
       "type": "text",
       "x": 76,
-      "y": 9105,
+      "y": 9634,
       "props": {
         "w": 630,
         "h": 24,
@@ -4875,10 +4905,10 @@
       }
     },
     {
-      "id": "s_stl_7w",
+      "id": "s_stl_7y",
       "type": "text",
       "x": 76,
-      "y": 9135,
+      "y": 9664,
       "props": {
         "w": 630,
         "h": 19,
@@ -4890,10 +4920,10 @@
       }
     },
     {
-      "id": "s_stl_7x",
+      "id": "s_stl_7z",
       "type": "text",
       "x": 76,
-      "y": 9160,
+      "y": 9689,
       "props": {
         "w": 630,
         "h": 19,
@@ -4905,10 +4935,10 @@
       }
     },
     {
-      "id": "s_stl_7y",
+      "id": "s_stl_80",
       "type": "text",
       "x": 76,
-      "y": 9185,
+      "y": 9714,
       "props": {
         "w": 630,
         "h": 19,
@@ -4920,10 +4950,10 @@
       }
     },
     {
-      "id": "s_stl_7z",
+      "id": "s_stl_81",
       "type": "text",
       "x": 76,
-      "y": 9210,
+      "y": 9739,
       "props": {
         "w": 630,
         "h": 19,
@@ -4935,10 +4965,10 @@
       }
     },
     {
-      "id": "s_stl_80",
+      "id": "s_stl_82",
       "type": "text",
       "x": 76,
-      "y": 9433,
+      "y": 9769,
       "props": {
         "w": 204,
         "h": 18,
@@ -4950,10 +4980,10 @@
       }
     },
     {
-      "id": "s_stl_81",
+      "id": "s_stl_83",
       "type": "math",
       "x": 296,
-      "y": 9428,
+      "y": 9764,
       "props": {
         "w": 107,
         "h": 26,
@@ -4968,10 +4998,10 @@
       }
     },
     {
-      "id": "s_stl_82",
+      "id": "s_stl_84",
       "type": "text",
       "x": 76,
-      "y": 9460,
+      "y": 9796,
       "props": {
         "w": 630,
         "h": 18,
@@ -4983,10 +5013,10 @@
       }
     },
     {
-      "id": "s_stl_83",
+      "id": "s_stl_85",
       "type": "math",
       "x": 76,
-      "y": 9484,
+      "y": 9820,
       "props": {
         "w": 590,
         "h": 26,
@@ -5001,10 +5031,10 @@
       }
     },
     {
-      "id": "s_stl_84",
+      "id": "s_stl_86",
       "type": "text",
       "x": 76,
-      "y": 9521,
+      "y": 9857,
       "props": {
         "w": 204,
         "h": 18,
@@ -5016,10 +5046,10 @@
       }
     },
     {
-      "id": "s_stl_85",
+      "id": "s_stl_87",
       "type": "math",
       "x": 296,
-      "y": 9516,
+      "y": 9852,
       "props": {
         "w": 405,
         "h": 26,

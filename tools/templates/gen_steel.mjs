@@ -1,8 +1,9 @@
-// Steel beam-column (EN 1993-1-1:2005 + A1:2014): rolled I/H section from the built-in library, classification,
+// Steel beam-column (EN 1993-1-1:2005 + A1:2014): library or custom welded I/H section, classification,
 // cross-section resistance, flexural / torsional / lateral-torsional buckling, Annex B interaction.
 // Every result is a worksheet equation. Writes templates/Steel_Beam_Column_EC3.mCCV.
 // Default data: JRC "Design of steel buildings with worked examples" (2014), R. Simões, Example 3 (HEB 320, S355).
 import { createLayout, R } from './layout.mjs';
+import sectionFormulae from '../../src/engineering/steel/sectionFormulae.json' with { type: 'json' };
 
 const { gap, LINK, H, T, P, ROW, S, GRAPH, M, mm, kN, kNm, MPa, fr, fo, finish } =
   createLayout({ idPrefix: 's_stl', sizesFile: 'sizes_steel.json' });
@@ -12,6 +13,10 @@ const IF = (...branches) => {
   return R`\begin{array}{||l}` + rows.join(R`\\`) + R`\end{array}`;
 };
 const SEC = R`\mathrm{Section}`;
+const curve = symbol => {
+  const { branches, otherwise } = sectionFormulae.curves[symbol];
+  return IF(...branches.map(({ condition, value }) => [condition, value]), [null, otherwise]);
+};
 const kNm0 = R`0\,\mathrm{kN}\cdot\mathrm{m}`;
 const p3 = { precision: 3 };
 const U = {};
@@ -24,9 +29,9 @@ const chiOf = (phi, lam) => R`\min\left(1,\frac{1}{${phi}+\sqrt{${phi}^2-${lam}^
 const phiOf = (lam, alpha) => R`0.5\left(1+${alpha}\left(${lam}-0.2\right)+${lam}^2\right)`;
 
 // ================= 1. Basis =================
-H(1, 'STEEL BEAM-COLUMN CHECK – ROLLED I/H SECTION (EC3)');
+H(1, 'STEEL BEAM-COLUMN CHECK – I/H SECTION (EC3)');
 H(2, '1. DESIGN BASIS');
-T('EN 1993-1-1:2005 + A1:2014. Doubly symmetric rolled I/H section, Class 1 to 3, uniform member.');
+T('EN 1993-1-1:2005 + A1:2014. Doubly symmetric rolled or welded I/H, Class 1 to 3, uniform member.');
 T('Cross-section resistance §6.2; flexural and torsional buckling §6.3.1; lateral-torsional buckling');
 T('§6.3.2.2 (general case) with Mcr from SCI NCCI SN003b; interaction §6.3.3 with Annex B (Method 2).');
 T('N positive in compression. Enter moments and shears as magnitudes. z is the web direction.');
@@ -42,7 +47,7 @@ P('Partial factor, cross-section resistance (National Annex)', R`\gamma_{M0}\col
 P('Partial factor, member buckling (National Annex)', R`\gamma_{M1}\coloneq1.0`);
 P('Shear area factor η, EN 1993-1-5 §5.1 (National Annex)', R`\eta\coloneq1.2`);
 H(3, '2.2 Section');
-P('Section ID from the built-in library (Browse to choose)', R`${SEC}\coloneq1211`);
+P('Section ID: library, or 0 for custom welded I/H (Browse)', R`${SEC}\coloneq1211`);
 H(3, '2.3 Member');
 P('Buckling length about y-y (major axis)', R`L_{cr.y}\coloneq4.335\,\mathrm{m}`);
 P('Buckling length about z-z (minor axis)', R`L_{cr.z}\coloneq4.335\,\mathrm{m}`);
@@ -66,7 +71,9 @@ P('Shear force along y (flanges)', R`V_{y.Ed}\coloneq0\,\mathrm{kN}`, M(kN));
 
 // ================= 3. Section properties =================
 H(2, '3. SECTION PROPERTIES');
-T('Looked up from the built-in library by Section ID. Check against the project section tables.');
+T('Library: Section ID. Custom: h, b, tf, tw from Browse; equations are stored in the worksheet.');
+T('Custom: r = 0, no weld metal; It / Iw: SCI P385 B.2.2 / B.3.1 thin-wall approximations.');
+T('Custom shear areas: EN 1993-1-1 §6.2.6(3), conservative η = 1.0. Check project section tables.');
 const PROPS = [['h', 'mm'], ['b', 'mm'], ['t_w', 'mm'], ['t_f', 'mm'], ['r', 'mm'], ['A', 'mm^2'], ['I_y', 'mm^4'], ['I_z', 'mm^4'],
   ['W_{el.y}', 'mm^3'], ['W_{el.z}', 'mm^3'], ['W_{pl.y}', 'mm^3'], ['W_{pl.z}', 'mm^3'], ['I_t', 'mm^4'], ['I_w', 'mm^6'], ['A_{v.y}', 'mm^2'], ['A_{v.z}', 'mm^2']];
 const DISP = { 'mm': ['mm', 1], 'mm^2': ['cm^2', 1], 'mm^3': ['cm^3', 0], 'mm^4': ['cm^4', 0], 'mm^6': ['cm^6', 0] };
@@ -131,9 +138,9 @@ UR('Combined N + My + Mz, linear summation', 'sec', R`\frac{N_{Ed}}{N_{c.Rd}\lef
 
 // ================= 6. Flexural and torsional buckling =================
 H(2, '6. BUCKLING IN COMPRESSION (§6.3.1)');
-H(3, '6.1 Buckling curves (Table 6.2, rolled I/H, S235 to S420)');
-P('Imperfection factor about y: curve a, b or d', R`\alpha_{y}\coloneq${IF([R`\frac{h}{b}>1.2\land t_{f}\le40\,\mathrm{mm}`, '0.21'], [R`t_{f}\le100\,\mathrm{mm}`, '0.34'], [null, '0.76'])}`);
-P('Imperfection factor about z: curve b, c or d', R`\alpha_{z}\coloneq${IF([R`\frac{h}{b}>1.2\land t_{f}\le40\,\mathrm{mm}`, '0.34'], [R`t_{f}\le100\,\mathrm{mm}`, '0.49'], [null, '0.76'])}`);
+H(3, '6.1 Buckling curves (Table 6.2, rolled / welded I/H, S235 to S420)');
+P('Imperfection factor about y: Table 6.2, welded when Section = 0', R`\alpha_{y}\coloneq${curve(R`\alpha_{y}`)}`);
+P('Imperfection factor about z: Table 6.2, welded when Section = 0', R`\alpha_{z}\coloneq${curve(R`\alpha_{z}`)}`);
 P('Steel grade within the range of these curves', R`f_{y}\le460\,\mathrm{MPa}`, M(MPa));
 H(3, '6.2 Flexural buckling about y-y');
 P('Elastic critical force', R`N_{cr.y}\coloneq\frac{\pi^2EI_{y}}{L_{cr.y}^2}`, M(kN, fr));
@@ -177,7 +184,7 @@ P('Load height factor', R`C_{2}\coloneq${IF([R`n_{LT}=0`, 'C_{2.u}'], [null, R`\
 P('Euler force of the compression flange length', R`N_{cr.LT}\coloneq\frac{\pi^2EI_{z}}{\left(kL_{LT}\right)^2}`, M(kN, fr));
 P('Elastic critical moment, SN003b (1)', R`M_{cr}\coloneq C_{1}N_{cr.LT}\left(\sqrt{\left(\frac{k}{k_{w}}\right)^2\frac{I_{w}}{I_{z}}+\frac{GI_{t}}{N_{cr.LT}}+\left(C_{2}z_{g}\right)^2}-C_{2}z_{g}\right)`, { wide: true, ...M(kNm, fr) });
 P('Relative slenderness (6.56)', R`\lambda_{LT}\coloneq\sqrt{\frac{W_{y}f_{y}}{M_{cr}}}`, M(p3, fr));
-P('Imperfection factor, Table 6.4: curve a for h/b ≤ 2, else b', R`\alpha_{LT}\coloneq${IF([R`\frac{h}{b}\le2`, '0.21'], [null, '0.34'])}`);
+P('Imperfection factor, Table 6.4: rolled a/b; custom welded c/d', R`\alpha_{LT}\coloneq${curve(R`\alpha_{LT}`)}`);
 P('', R`\Phi_{LT}\coloneq${phiOf(R`\lambda_{LT}`, R`\alpha_{LT}`)}`, M(p3, fr));
 P('Reduction factor (6.56)', R`\chi_{LT}\coloneq${chiOf(R`\Phi_{LT}`, R`\lambda_{LT}`)}`, M(p3, fr));
 P('Buckling resistance moment (6.55)', R`M_{b.Rd}\coloneq\frac{\chi_{LT}W_{y}f_{y}}{\gamma_{M1}}`, M(kNm, fr));

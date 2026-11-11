@@ -6,14 +6,24 @@ import { calcKey } from '../../canvas/engineBridge';
 import { graphRegionId } from '../../canvas/graphData';
 import { templateById } from '../../documents/templates';
 import { sectionById, sections, validateSection } from '../../engineering/steel/sections';
+import { customSectionValues, sectionDimensionError, customPropertyDefinition, sectionSymbols, type SectionDimensions } from '../../engineering/steel/customSection';
+import { propertyKeys, sectionUnits } from '../../engineering/steel/sections';
+import { applySteelSection, planSteelSection, savedCustomDimensions } from '../../canvas/steelSections';
+import { loadShapes, undo, redo, useCanvasStore } from '../../canvas/model/canvasStore';
 import { designSteel, rolledCurves, type SectionGeometry, type SteelInput } from '../reference/ec3';
 import { ltbCoefficientCases } from '../reference/ltbCases';
 
 const KNM = String.raw`\,\mathrm{kN}\cdot\mathrm{m}`;
 /** Inputs are replaced by the start of their LaTeX (as the Parameters panel does). */
-function evaluate(inputs: Record<string, string> = {}) {
+function evaluate(inputs: Record<string, string> = {}, custom?: SectionDimensions) {
   const tpl = templateById('steel-beam-column')!;
   const { shapes, inputResult } = tpl.instantiate!();
+  if (custom) {
+    const rec = Object.fromEntries(shapes.map(s => [s.id, s]));
+    const section = shapes.find(s => s.type === 'math' && s.props.latex.startsWith('\\mathrm{Section}\\coloneq'))!;
+    const patches = planSteelSection(rec, section.id, custom);
+    for (const s of shapes) if (s.type === 'math' && patches[s.id]?.props) Object.assign(s.props, patches[s.id].props);
+  }
   for (const s of shapes) {
     if (s.type !== 'math') continue;
     for (const [name, rhs] of Object.entries(inputs)) if (s.props.latex.startsWith(`${name}\\coloneq`)) s.props = { ...s.props, latex: `${name}\\coloneq ${rhs}` };
@@ -71,6 +81,89 @@ describe('steel beam-column template (EN 1993-1-1)', () => {
       expect(new Set(sections.map((s) => s.id)).size).toBe(sections.length);
       expect(sectionById(1012).values.A / 7270).toBeCloseTo(1, 2);
       expect(sectionById(1012).values.Iy / 162700000).toBeCloseTo(1, 2);
+    });
+
+    step('custom I/H properties agree with independent three-rectangle integration and stay worksheet equations', () => {
+      const d = { h: 600, b: 200, tf: 20, tw: 10 };
+      const v = customSectionValues(d);
+      // Python Fraction integration of three non-overlapping rectangles, mm / N units.
+      const reference = { A: 13600, Iy: 819413333.3333334, Iz: 26713333.333333332, Wel_y: 2731377.777777778, Wel_z: 267133.3333333333,
+        Wpl_y: 3104000, Wpl_z: 414000, It: 1253333.3333333333, Iw: 2242666666666.6665, Avy: 8000, Avz: 5600, mass: 106.76 };
+      for (const [key, value] of Object.entries(reference)) expect(v[key as keyof typeof v], key).toBeCloseTo(value, 5);
+      const e = new CalculationEngine();
+      e.setRegion('section', { latex: '\\mathrm{Section}\\coloneq0', order: 0 });
+      propertyKeys.forEach((key, i) => e.setRegion(key, { latex: customPropertyDefinition(key, d), order: i + 1, displayUnit: sectionUnits[key] }));
+      for (const key of propertyKeys) {
+        const result = e.getResult(key)!;
+        expect(result.status, `${key}: ${result.error?.message}`).toBe('valid');
+        if (v[key] === 0) expect(result.value?.number).toBe(0);
+        else expect(result.value!.number! / v[key], sectionSymbols[key]).toBeCloseTo(1, 10);
+      }
+      for (const bad of [{ ...d, h: 40 }, { ...d, b: 10 }, { ...d, tf: 0 }, { ...d, tw: -1 }, { ...d, b: Infinity }, { ...d, h: NaN }]) {
+        expect(sectionDimensionError(bad)).not.toBeNull();
+        expect(() => customSectionValues(bad)).toThrow();
+      }
+    });
+
+    step('custom selection is persistent worksheet input and one atomic, reversible change', () => {
+      const shapes = templateById('steel-beam-column')!.shapes();
+      loadShapes(shapes);
+      const section = shapes.find(s => s.type === 'math' && s.props.latex.startsWith('\\mathrm{Section}\\coloneq'))!;
+      const before = useCanvasStore.getState().shapes;
+      const d = { h: 600, b: 200, tf: 20, tw: 10 };
+      applySteelSection(section.id, d);
+      expect(savedCustomDimensions(useCanvasStore.getState().shapes, section.id)).toEqual(d);
+      undo();
+      expect(useCanvasStore.getState().shapes).toEqual(before);
+      redo();
+      expect(savedCustomDimensions(useCanvasStore.getState().shapes, section.id)).toEqual(d);
+      const custom = useCanvasStore.getState().shapes;
+      expect(() => applySteelSection(section.id, { ...d, tf: 300 })).toThrow();
+      expect(useCanvasStore.getState().shapes).toBe(custom);
+      applySteelSection(section.id, 1015);
+      expect(savedCustomDimensions(useCanvasStore.getState().shapes, section.id)).toBeNull();
+      expect(useCanvasStore.getState().shapes[section.id]).toMatchObject({ props: { latex: '\\mathrm{Section}\\coloneq1015' } });
+      const missing = { ...useCanvasStore.getState().shapes };
+      const curve = Object.values(missing).find(s => s.type === 'math' && s.props.latex.startsWith('\\alpha_{LT}\\coloneq'))!;
+      delete missing[curve.id];
+      expect(() => planSteelSection(missing, section.id, d)).toThrow(/requires the section-property and buckling equations/);
+      expect(useCanvasStore.getState().shapes[section.id]).toMatchObject({ props: { latex: '\\mathrm{Section}\\coloneq1015' } });
+    });
+
+    step('custom welded buckling curves follow Tables 6.2 and 6.4 at tf = 40 mm and h/b = 2', () => {
+      for (const [d, expected] of [
+        [{ h: 600, b: 300, tf: 40, tw: 15 }, [0.34, 0.49, 0.49]],
+        [{ h: 600, b: 300, tf: 41, tw: 15 }, [0.49, 0.76, 0.49]],
+        [{ h: 600, b: 200, tf: 20, tw: 10 }, [0.34, 0.49, 0.76]],
+      ] as const) {
+        const t = evaluate({}, d);
+        expect(t.errors).toEqual([]);
+        expect([t.si('\\alpha_{y}'), t.si('\\alpha_{z}'), t.si('\\alpha_{LT}')]).toEqual(expected);
+        expect(t.si('A', 'mm^2')).toBeCloseTo(customSectionValues(d).A, 8);
+      }
+    });
+
+    step('batch section overrides switch custom geometry and curves back to library data without leakage', () => {
+      const d = { h: 600, b: 200, tf: 20, tw: 10 };
+      const t = evaluate({}, d);
+      const sectionId = t.inputResult.inputs.find(c => c.id === 'sec')!.regionId;
+      const outputs = ['h', 'A', '\\alpha_{y}', '\\alpha_{LT}'].map(name => ({ columnId: name, regionId: t.regions.find(r => r.latex.startsWith(`${name}\\coloneq`))!.id }));
+      const rows = [
+        { id: 'custom', overrides: [{ regionId: sectionId, value: 0, unit: '' }] },
+        { id: 'library', overrides: [{ regionId: sectionId, value: 1015, unit: '' }] },
+      ];
+      const job = { regions: t.regions.map(r => ({ id: r.id, input: r })), inputIds: [sectionId], rows, outputs };
+      const forward = runBatchJob(job, {}), reverse = runBatchJob({ ...job, rows: [...rows].reverse() }, {});
+      expect(forward).toEqual(reverse);
+      expect(forward.custom.outputs['\\alpha_{y}']?.value?.number).toBe(0.34);
+      expect(forward.custom.outputs['\\alpha_{LT}']?.value?.number).toBe(0.76);
+      expect(forward.library.outputs['\\alpha_{y}']?.value?.number).toBe(0.21);
+      expect(forward.library.outputs['\\alpha_{LT}']?.value?.number).toBe(0.34);
+      for (const [row, h, area] of [['custom', d.h, customSectionValues(d).A], ['library', 500, sectionById(1015).values.A]] as const) {
+        // Display units of the generated property table are mm / cm².
+        expect(forward[row].outputs.h?.value?.number).toBe(h);
+        expect(forward[row].outputs.A?.value?.number).toBeCloseTo(area / 100, 8);
+      }
     });
 
     step('default sheet = JRC 2014 (Simões) Example 3, HEB 320 S355 beam-column: printed values', () => {

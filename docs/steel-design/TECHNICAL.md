@@ -4,7 +4,7 @@
 
 ## Scope
 
-EN 1993-1-1:2005 + A1:2014. Uniform, doubly symmetric rolled I/H member, Class 1 to 3, compression with bending about both axes and shear. Not covered: Class 4, tension, torsion, shear buckling, holes, fire, connections. A limit that is exceeded fails a visible check (it never passes silently):
+EN 1993-1-1:2005 + A1:2014. Uniform, doubly symmetric rolled or custom welded I/H member, Class 1 to 3, compression with bending about both axes and shear. Not covered: Class 4, tension, torsion, shear buckling, holes, fire, connections. A limit that is exceeded fails a visible check (it never passes silently):
 
 | Limit | Check on the sheet |
 |---|---|
@@ -19,7 +19,7 @@ EN 1993-1-1:2005 + A1:2014. Uniform, doubly symmetric rolled I/H member, Class 1
 | Step | Reference | Notes |
 |---|---|---|
 | Classification | §5.5, Table 5.2 | Flange: outstand in uniform compression. Web: bending + compression (α, ψ) for My with Mz = 0, otherwise uniform compression. |
-| Shear | §6.2.6 | Vpl from the library shear areas. ρ = (2V/Vpl − 1)² above 0.5 Vpl (§6.2.8), larger of both directions, applied to the whole section (conservative). |
+| Shear | §6.2.6 | Vpl from library or custom geometric shear areas. ρ = (2V/Vpl − 1)² above 0.5 Vpl (§6.2.8), larger of both directions, applied to the whole section (conservative). |
 | Compression, bending | §6.2.4, §6.2.5 | Wpl for Class 1–2, Wel for Class 3. |
 | N + My + Mz | §6.2.1(7) | Linear summation. |
 | Buckling curves | Table 6.2, Table 6.4 | From h/b and tf on the sheet, so they follow the section (also in Table In&Out). S235–S420 curves; conservative for S460. |
@@ -32,6 +32,16 @@ EN 1993-1-1:2005 + A1:2014. Uniform, doubly symmetric rolled I/H member, Class 1
 `sectionProp(Section, i)` looks a property up in the built-in library (`src/engineering/steel/`, 379 records: IPE, HEA, HEB, HEM, W). The **Browse** button on the `Section` input opens the library and sets the ID. IDs are stable (1000+ IPE, 1100+ HEA, 1200+ HEB, 1300+ HEM, 2000+ W): never renumber.
 
 Data: IPE/HE from Steel_Section_Database (MIT), geometry-derived properties; W from steelpy (Apache-2.0), AISC values, r = 0. Licences and source files are in `src/engineering/steel/data/`; `tools/templates/import-steel-sections.mjs` rebuilds `catalogue.json`. Check properties against the project section tables.
+
+### Custom welded I/H
+
+Browse → **Custom I/H** accepts overall depth `h`, flange width `b`, flange thickness `tf` and web thickness `tw`, in mm. Both flanges are identical. Inputs must be positive and finite, with `h > 2tf` and `b > tw`. Sharp corners (`r = 0`); weld metal is excluded. The dialog previews all 19 library properties, including mass at 7850 kg/m³ and both radii of gyration.
+
+Section ID **0** identifies a custom welded section. `src/canvas/steelSections.ts` applies the four literal dimensions, section-property equations and buckling-curve definitions as one undo transaction. Inputs and expressions are stored as ordinary LaTeX regions, so save/reload, file export and worker calculation use the same document format. No calculated property is persisted. The custom equations retain a lazy library branch: a Table In&Out case overriding Section with a library ID still uses that section's properties and rolled curves.
+
+For `hw = h − 2tf`, area, second moments and plastic moduli follow rectangle integration. `It ≈ (2b·tf³ + hw·tw³)/3` and `Iw ≈ tf·b³·(h − tf)²/24` use the thin-wall model, without fillet or weld corrections: [SCI P385, Appendix B.2.2 and B.3.1](https://www.steelconstruction.info/images/6/6f/Sci_p385.pdf). These approximations are stated in the dialog and worksheet. The shear areas are `Av,y = 2b·tf` and `Av,z = hw·tw`, with conservative η = 1.0 under EN 1993-1-1:2005 §6.2.6(3); the separate worksheet η input still controls the shear-buckling scope check.
+
+Welded flexural curves follow Table 6.2: b/c for tf ≤ 40 mm, c/d above 40 mm ([SCIA theoretical background](https://help.scia.net/19.1/cs/pvt/steelcodechecktb/en/flexural_buckling.htm)). Welded general-case LTB curves follow Table 6.4: c for h/b ≤ 2, d otherwise ([SCI AD 560](https://www.newsteelconstruction.com/wp/ad-560lateral-torsional-buckling-of-unrestrained-plate-girders/)). Rolled library curves remain unchanged. The shared formula data are in `src/engineering/steel/sectionFormulae.json`; preview arithmetic is checked against independently integrated reference values and the worksheet engine.
 
 ## Verification (`src/tests/unit/steelTemplate.test.ts`)
 

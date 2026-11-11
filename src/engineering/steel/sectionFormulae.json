@@ -1,0 +1,47 @@
+{
+  "properties": {
+    "r": "0\\,\\mathrm{mm}",
+    "A": "2bt_f+(h-2t_f)t_w",
+    "Iy": "\\frac{bh^3-(b-t_w)(h-2t_f)^3}{12}",
+    "Iz": "\\frac{2t_fb^3+(h-2t_f)t_w^3}{12}",
+    "Wel_y": "\\frac{2I_y}{h}",
+    "Wel_z": "\\frac{2I_z}{b}",
+    "Wpl_y": "bt_f(h-t_f)+\\frac{t_w(h-2t_f)^2}{4}",
+    "Wpl_z": "\\frac{t_fb^2}{2}+\\frac{(h-2t_f)t_w^2}{4}",
+    "It": "\\frac{2bt_f^3+(h-2t_f)t_w^3}{3}",
+    "Iw": "\\frac{t_fb^3(h-t_f)^2}{24}",
+    "Avy": "2bt_f",
+    "Avz": "(h-2t_f)t_w",
+    "mass": "A\\cdot7850\\,\\frac{\\mathrm{kg}}{\\mathrm{m}^3}",
+    "iy": "\\sqrt{\\frac{I_y}{A}}",
+    "iz": "\\sqrt{\\frac{I_z}{A}}"
+  },
+  "curves": {
+    "\\alpha_{y}": {
+      "branches": [
+        { "condition": "\\mathrm{Section}=0\\land t_f\\le40\\,\\mathrm{mm}", "value": "0.34" },
+        { "condition": "\\mathrm{Section}=0", "value": "0.49" },
+        { "condition": "\\frac{h}{b}>1.2\\land t_f\\le40\\,\\mathrm{mm}", "value": "0.21" },
+        { "condition": "t_f\\le100\\,\\mathrm{mm}", "value": "0.34" }
+      ],
+      "otherwise": "0.76"
+    },
+    "\\alpha_{z}": {
+      "branches": [
+        { "condition": "\\mathrm{Section}=0\\land t_f\\le40\\,\\mathrm{mm}", "value": "0.49" },
+        { "condition": "\\mathrm{Section}=0", "value": "0.76" },
+        { "condition": "\\frac{h}{b}>1.2\\land t_f\\le40\\,\\mathrm{mm}", "value": "0.34" },
+        { "condition": "t_f\\le100\\,\\mathrm{mm}", "value": "0.49" }
+      ],
+      "otherwise": "0.76"
+    },
+    "\\alpha_{LT}": {
+      "branches": [
+        { "condition": "\\mathrm{Section}=0\\land\\frac{h}{b}\\le2", "value": "0.49" },
+        { "condition": "\\mathrm{Section}=0", "value": "0.76" },
+        { "condition": "\\frac{h}{b}\\le2", "value": "0.21" }
+      ],
+      "otherwise": "0.34"
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { mkdir } from 'node:fs/promises';
 import { openFresh, resultOf } from './helpers.ts';
 
 test.describe('Steel beam-column template', () => {
@@ -24,5 +25,58 @@ test.describe('Steel beam-column template', () => {
     await resultOf(page, '\\alpha_{LT}\\coloneq').toBe('0.34');
     await resultOf(page, '\\alpha_{y}\\coloneq').toBe('0.21');
     await expect(page.locator('[data-testid=math-region][data-status=error]')).toHaveCount(0);
+
+    await test.step('custom I/H previews properties, validates geometry and applies welded curves in one undo step', async () => {
+      await page.getByTestId('browse-steel').click();
+      await dlg.getByRole('tab', { name: 'Custom I/H', exact: true }).click();
+      for (const [key, value] of Object.entries({ h: '600', b: '200', tf: '20', tw: '200' })) await dlg.getByLabel(`${key} [mm]`, { exact: true }).fill(value);
+      await expect(dlg.getByRole('alert')).toHaveText('b must be greater than tw.');
+      await expect(dlg.getByTestId('select-steel')).toBeDisabled();
+      await dlg.getByLabel('tw [mm]', { exact: true }).fill('10');
+      await expect(dlg.getByTestId('section-property-A')).toContainText('13600.0');
+      await expect(dlg.getByTestId('section-property-mass')).toContainText('106.760');
+      if (process.env.UI_SNAPSHOTS) {
+        await mkdir('test-results/ui-snapshots', { recursive: true });
+        await dlg.screenshot({ path: 'test-results/ui-snapshots/steel-custom-section.png' });
+      }
+      await dlg.getByTestId('select-steel').click();
+      await resultOf(page, '\\mathrm{Section}\\coloneq').toBe('0');
+      await resultOf(page, 'h\\coloneq').toBe('600 mm');
+      await resultOf(page, '\\alpha_{LT}\\coloneq').toBe('0.76');
+      await resultOf(page, '\\alpha_{y}\\coloneq').toBe('0.34');
+      await expect(page.locator('[data-testid=math-region][data-status=error]')).toHaveCount(0);
+      await page.getByTestId('quick-undo').click();
+      await resultOf(page, '\\mathrm{Section}\\coloneq').toBe('1015');
+      await resultOf(page, 'h\\coloneq').toBe('500 mm');
+      await page.getByTestId('quick-redo').click();
+      await resultOf(page, 'h\\coloneq').toBe('600 mm');
+      if (process.env.UI_SNAPSHOTS) {
+        await page.evaluate(() => (window as unknown as { __calccanvas: { idle(): Promise<void> } }).__calccanvas.idle());
+        await page.getByTestId('export-pdf').click();
+        await expect(page.locator('#print-root .print-page').first()).toBeAttached();
+        await expect(page.locator('#print-root [data-testid=math-region][data-status=error]')).toHaveCount(0);
+        await expect(page.locator('#print-root')).toContainText('Custom welded I/H');
+        await page.emulateMedia({ media: 'print' });
+        await page.pdf({ path: 'test-results/ui-snapshots/steel-custom-section.pdf', preferCSSPageSize: true, printBackground: true });
+        await page.emulateMedia({ media: 'screen' });
+      }
+    });
+
+    await test.step('custom dimensions survive reload and can be replaced by a library section', async () => {
+      await expect(page.getByTestId('save-state')).toHaveText('Saved');
+      await page.reload();
+      await resultOf(page, '\\mathrm{Section}\\coloneq').toBe('0');
+      await resultOf(page, 'h\\coloneq').toBe('600 mm');
+      await page.getByTestId('browse-steel').click();
+      await expect(dlg.getByRole('tab', { name: 'Custom I/H', exact: true })).toHaveAttribute('aria-selected', 'true');
+      for (const [key, value] of Object.entries({ h: '600', b: '200', tf: '20', tw: '10' })) await expect(dlg.getByLabel(`${key} [mm]`, { exact: true })).toHaveValue(value);
+      await dlg.getByRole('tab', { name: 'Library', exact: true }).click();
+      await dlg.getByLabel('Section family').selectOption('HEB');
+      await dlg.getByLabel('Search sections').fill('HEB 320');
+      await dlg.getByRole('button', { name: /^HEB 320/ }).click();
+      await dlg.getByTestId('select-steel').click();
+      await resultOf(page, '\\mathrm{Section}\\coloneq').toBe('1211');
+      await resultOf(page, '\\mathrm{UR}\\coloneq').toBe('0.4571');
+    });
   });
 });

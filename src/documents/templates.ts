@@ -208,7 +208,7 @@ export const TEMPLATES: WorksheetTemplate[] = [
   {
     id: 'steel-beam-column',
     name: 'Steel beam-column check (EN 1993-1-1)',
-    description: 'Rolled I/H section from the built-in library: classification, section resistance, flexural, torsional and lateral-torsional buckling, Annex B interaction, UR checks. Default data: JRC worked example (HEB 320).',
+    description: 'Library or custom welded I/H section (h, b, tf, tw): classification, section resistance, flexural, torsional and lateral-torsional buckling, Annex B interaction, UR checks. Default data: JRC worked example (HEB 320).',
     ...steelColumn,
   },
 ];
