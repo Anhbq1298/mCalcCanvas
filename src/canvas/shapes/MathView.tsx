@@ -144,7 +144,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         {editing ? (
           <>
             <MathEditor latex={latex} onChange={onChange} onExit={onExit} onConvertToText={onConvertToText} ariaLabel="Math region editor" />
-            {result?.value?.unitText && display.latex.includes(result.value.latex) && (
+            {result?.value?.unitText && (
               <InlineResultUnit shape={shape} numberText={numberPart(result.value.text, result.value.unitText)} automaticUnit={result.value.unitText} />
             )}
           </>

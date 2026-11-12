@@ -18,6 +18,10 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
 
   test('result units can be edited beside the open equation', async ({ page }) => {
     await addRegion(page, 300, 220, ['L:8m']);
+    const l = (await region(page, 'L'))!;
+    await page.locator(`[data-testid=math-region][data-shape-id="${l.id}"]`).dblclick();
+    await expect(page.getByTestId('inline-result-unit')).toHaveValue('m');
+    await page.keyboard.press('Escape');
     await addRegion(page, 300, 300, ['w:2kN/m']);
     await addRegion(page, 300, 380, ['M:w*L=']);
     const m = (await region(page, 'M'))!;
