@@ -8,12 +8,25 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
   });
 
   test('":" defines, "\\" is square root, "." starts a subscript, Ctrl+G makes Greek', async ({ page }) => {
-    await addRegion(page, 300, 220, ['M.Ed', '{ArrowRight}', ':4']);
+    await addRegion(page, 300, 220, ['M.Ed:4']);
     await expect.poll(async () => (await regions(page))[0]?.latex).toMatch(/^M_\{Ed\}\\coloneq\s*4$/);
     await addRegion(page, 300, 300, ['r:', '\\', '16', '{ArrowRight}', '=']);
     await resultOf(page, 'r').toBe('4');
     await addRegion(page, 300, 380, ['a', '{Control+g}', ':2=']);
     await resultOf(page, '\\alpha').toBe('2');
+  });
+
+  test('result units can be edited beside the open equation', async ({ page }) => {
+    await addRegion(page, 300, 220, ['L:8m']);
+    await addRegion(page, 300, 300, ['w:2kN/m']);
+    await addRegion(page, 300, 380, ['M:w*L=']);
+    const m = (await region(page, 'M'))!;
+    await page.locator(`[data-testid=math-region][data-shape-id="${m.id}"]`).dblclick();
+    const unit = page.getByTestId('inline-result-unit');
+    await expect(unit).toHaveValue('kN');
+    await unit.fill('kN·m/m');
+    await unit.press('Enter');
+    await expect.poll(async () => (await region(page, 'M'))?.result).toBe('16 kN·m/m');
   });
 
   test('Enter moves the + cursor below so the next region stacks', async ({ page }) => {

@@ -25,6 +25,15 @@ const LATIN_FROM_GREEK: Record<string, string> = Object.fromEntries(Object.entri
 
 type Insert = (latex: string) => void;
 
+// MathLive does not expose the parent branch of the caret. Remember when the
+// user deliberately entered a literal subscript with "." so the next operator
+// can leave that branch, like Mathcad, without changing fraction navigation.
+const literalSubscripts = new WeakSet<MathfieldElement>();
+
+export function forgetMathcadContext(mf: MathfieldElement): void {
+  literalSubscripts.delete(mf);
+}
+
 function charBefore(mf: MathfieldElement): string {
   if (mf.position <= 0) return '';
   return mf.getValue(mf.position - 1, mf.position, 'latex').trim();
@@ -41,6 +50,15 @@ export function handleMathcadKey(e: KeyboardEvent, mf: MathfieldElement, changed
   };
   const mod = e.ctrlKey || e.metaKey;
   const before = () => mf.getValue(0, mf.position, 'latex');
+
+  if (literalSubscripts.has(mf)) {
+    if ([':', '=', '+', '-', '*', '/', '<', '>'].includes(e.key)) {
+      mf.executeCommand('moveAfterParent');
+      literalSubscripts.delete(mf);
+    } else if (e.key.startsWith('Arrow') || e.key === 'Escape' || e.key === 'Enter' || e.key === 'Tab') {
+      literalSubscripts.delete(mf);
+    }
+  }
 
   if (mod && !e.altKey) {
     if (e.shiftKey && e.key.toLowerCase() === 'p') return insert('\\pi'), true;
@@ -113,6 +131,7 @@ export function handleMathcadKey(e: KeyboardEvent, mf: MathfieldElement, changed
       if (/^[A-Za-z]$/.test(prev) || /^\\[a-zA-Z]+$/.test(prev) && prev in LATIN_FROM_GREEK) {
         if (/\d\s*$/.test(before())) return false;
         mf.executeCommand('moveToSubscript');
+        literalSubscripts.add(mf);
         changed();
         return true;
       }

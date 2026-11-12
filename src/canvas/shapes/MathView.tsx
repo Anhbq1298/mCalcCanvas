@@ -2,7 +2,7 @@ import { SteelArrayLabel, SteelControls, SteelSectionLabel } from '../../compone
 import { sectionArrayInfo } from '../../engineering/steel/sectionArray';
 import { SECTION_DEF } from '../../engineering/steel/sections';
 import { AlertCircle, AlertTriangle, CheckCircle2, CircleDashed, XCircle } from 'lucide-react';
-import { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ReportShapes } from '../../store/reportResults';
 import { buildDisplay, flowColumnVectors } from '../../math/MathFormatter';
 import { MathEditor } from '../../math/MathEditor';
@@ -16,6 +16,7 @@ import { useSeparateAfterEditing } from './useSeparate';
 import { useSeen } from './useSeen';
 import { annexInfo, annexNumber, pageNumberOf } from '../annex';
 import { useAppStore } from '../../store/appStore';
+import { unitPatch } from '../inputUnits';
 
 const PAD_X = 4;
 const PAD_Y = 2;
@@ -141,7 +142,12 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     >
       <div className="flex items-center gap-1.5">
         {editing ? (
-          <MathEditor latex={latex} onChange={onChange} onExit={onExit} onConvertToText={onConvertToText} ariaLabel="Math region editor" />
+          <>
+            <MathEditor latex={latex} onChange={onChange} onExit={onExit} onConvertToText={onConvertToText} ariaLabel="Math region editor" />
+            {result?.value?.unitText && display.latex.includes(result.value.latex) && (
+              <InlineResultUnit shape={shape} numberText={numberPart(result.value.text, result.value.unitText)} automaticUnit={result.value.unitText} />
+            )}
+          </>
         ) : empty ? (
           <span className="math-placeholder">Empty region</span>
         ) : (
@@ -171,6 +177,46 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         {editing && result?.draftError && <StatusIcon kind="draft" message="Incomplete – dependent regions use the last valid expression." />}
       </div>
     </div>
+  );
+}
+
+function numberPart(text: string, unit: string): string {
+  return text.endsWith(unit) ? text.slice(0, -unit.length).trimEnd() : text;
+}
+
+/** Result-unit editor shown beside the equation while it is being edited. */
+function InlineResultUnit({ shape, numberText, automaticUnit }: { shape: MathShape; numberText: string; automaticUnit: string }) {
+  const initial = shape.props.displayUnit || automaticUnit;
+  const [draft, setDraft] = useState(initial);
+  const [error, setError] = useState<string | null>(null);
+  const commit = () => {
+    const next = draft.trim();
+    if (next === initial) return;
+    void unitPatch(shape, next).then(
+      (patch) => {
+        if (patch) updateShape(shape.id, patch);
+        setError(null);
+      },
+      (reason: Error) => setError(reason.message),
+    );
+  };
+  return (
+    <span className="inline-flex items-center gap-1 font-sans text-[13px]" onPointerDown={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
+      <span aria-hidden>= {numberText}</span>
+      <input
+        aria-label="Result unit in equation"
+        data-testid="inline-result-unit"
+        className={'h-7 w-24 rounded border bg-card px-1.5 text-foreground focus:outline-none ' + (error ? 'border-destructive' : 'border-border focus:border-accent')}
+        title={error ?? 'Edit the displayed result unit. Clear it for automatic units.'}
+        value={draft}
+        onChange={(e) => { setDraft(e.target.value); setError(null); }}
+        onBlur={commit}
+        onKeyDown={(e) => {
+          e.stopPropagation();
+          if (e.key === 'Enter') e.currentTarget.blur();
+        }}
+      />
+    </span>
   );
 }
 

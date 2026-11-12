@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import { flushPendingKeys, setActiveMathEditor, setKeyReplayer } from './activeEditor';
-import { handleMathcadKey } from './mathcadKeys';
+import { forgetMathcadContext, handleMathcadKey } from './mathcadKeys';
 import { configureMathfield, MathfieldElement } from './mathliveSetup';
 import { convertibleMathWord } from './mathToText';
 
@@ -60,6 +60,7 @@ export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel
       e.stopPropagation();
     };
     const stop = (e: Event) => e.stopPropagation();
+    const forgetContext = () => forgetMathcadContext(mf);
 
     // Mathcad keystrokes (":" → ≔, "\\" → √, Ctrl+G Greek, "=" evaluates the
     // whole region…). Capture phase, i.e. before MathLive handles the key.
@@ -81,6 +82,7 @@ export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel
     };
 
     mf.addEventListener('keydown', onKeyDownCapture, { capture: true });
+    mf.addEventListener('pointerdown', forgetContext);
     mf.addEventListener('input', onInput);
     mf.addEventListener('keydown', onKeyDown);
     for (const type of ['keyup', 'keypress', 'copy', 'cut', 'paste', 'wheel']) mf.addEventListener(type, stop);
@@ -104,6 +106,7 @@ export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel
     return () => {
       cancelAnimationFrame(raf);
       mf.removeEventListener('keydown', onKeyDownCapture, { capture: true });
+      mf.removeEventListener('pointerdown', forgetContext);
       mf.removeEventListener('input', onInput);
       mf.removeEventListener('keydown', onKeyDown);
       for (const type of ['keyup', 'keypress', 'copy', 'cut', 'paste', 'wheel']) mf.removeEventListener(type, stop);
