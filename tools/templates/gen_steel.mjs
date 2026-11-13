@@ -194,7 +194,43 @@ H(2, '8. MEMBER CHECK: COMPRESSION AND BENDING (§6.3.3)');
 T('EN 1993-1-1:2005 §6.3.3(4), equations (6.61) and (6.62); Annex B, Method 2.');
 T('Interaction factors: Table B.1 and B.2, I-sections, Class 1 and 2, member susceptible to torsional');
 T('deformations. Cm factors are inputs (Table B.3). High shear (ρ > 0) needs a separate check.');
-T('Class / slenderness limits below apply to combined interaction; see scope flags in the summary.');
+T('Class / slenderness limits below apply to combined interaction; validation is in the annex.');
+const interactionTables = () => {
+  T('EN 1993-1-1:2005, Annex B, Tables B.1 and B.2; selected Class 1/2 I/H branches.');
+  T('Redrawn reference extract, not the complete tables. Main-body equations remain editable.');
+  T('Notation: ny = NEd / Nb,y,Rd; nz = NEd / Nb,z,Rd; worksheet lambda denotes slenderness.');
+  const table = (title, rows) => {
+    need(2.5 + rows.length * 2.5);
+    KEEP(() => {
+    H(3, title);
+    for (const [symbol, formula] of rows) {
+      need(2.5);
+      KEEP(() => {
+        const y = layout.ln(layout.st.page, layout.st.row);
+        for (const [x, w] of [[76, 100], [176, 540]]) {
+          layout.out.push({ id: layout.id(), type: 'rect', x, y,
+            props: { w, h: 100, stroke: '#94a3b8', strokeWidth: 1 } });
+        }
+        ROW([[96, symbol, { displayMode: 'formula', fontSize: 14 }],
+          [196, formula, { displayMode: 'formula', fontSize: 13 }]], 2.5);
+      });
+    }
+    });
+  };
+  table('Table B.1 - selected plastic I/H factors', [
+    [R`k_{yy}`, R`C_{my}\left[1+\min\left(\lambda_y-0.2,0.8\right)n_y\right]`],
+    [R`k_{yz}`, R`0.6k_{zz}`],
+    [R`k_{zz}`, R`C_{mz}\left[1+\min\left(2\lambda_z-0.6,1.4\right)n_z\right]`],
+  ]);
+  T('Table B.1 concerns members not susceptible to torsional deformation.');
+  T('For this worksheet, Table B.2 retains the three factors above and replaces kzy below.');
+  table('Table B.2 - torsionally susceptible members, Class 1/2', [
+    [R`k_{zy}`, R`\max\left(1-\frac{0.1\lambda_z n_z}{C_{mLT}-0.25},1-\frac{0.1n_z}{C_{mLT}-0.25}\right)`],
+  ]);
+  T('The displayed kzy branch requires lambda,z >= 0.4; the lower-slenderness branch is excluded.');
+  T('Cm inputs: Table B.3, using the moment diagram between the relevant braced points.');
+  T('Default Cmy = Cmz = CmLT = 1.0; no moment-gradient benefit is taken.');
+};
 P('Plastic interaction factors apply to Class 1 and 2', R`\mathrm{Class}\le2`);
 P('Branch of kzy used here needs λz ≥ 0.4', R`\lambda_{z}\ge0.4`, M(p3));
 P('Axial ratios', R`n_{y}\coloneq\frac{N_{Ed}}{N_{b.y.Rd}}`, M(p3, fr));
@@ -206,11 +242,14 @@ P('Table B.2', R`k_{zy}\coloneq\max\left(1-\frac{0.1\lambda_{z}n_{z}}{C_{mLT}-0.
 P('Minor-axis bending resistance with γM1', R`M_{z.Rd1}\coloneq\frac{W_{z}f_{y}}{\gamma_{M1}}`, M(kNm, fr));
 UR('Interaction (6.61)', '6.61', R`n_{y}+k_{yy}\frac{M_{y.Ed}}{M_{b.Rd}}+k_{yz}\frac{M_{z.Ed}}{M_{z.Rd1}}`, '§6.3.3 (6.61)');
 UR('Interaction (6.62)', '6.62', R`n_{z}+k_{zy}\frac{M_{y.Ed}}{M_{b.Rd}}+k_{zz}\frac{M_{z.Ed}}{M_{z.Rd1}}`, '§6.3.3 (6.62)');
+LINK('interaction-tables', 'EC3 Annex B - interaction factor reference tables', interactionTables);
 
 // ================= 9. Summary =================
 H(2, '9. SUMMARY');
-T('Scope flags: 1 = supported, 0 = invalid input or separate verification required.');
-T('A failed scope flag prevents Member PASS, including in Input & Results reports.');
+T('Valid only within the stated scope; unsupported cases cannot receive Member PASS.');
+const SCOPE = R`\delta_{scope}\coloneq\delta_{input}\delta_{section}\delta_{curves}\delta_{shear}\delta_{highV}\delta_{interaction}\delta_{data}`;
+LINK('scope', 'Method applicability - detailed validation', () => {
+T('Flags: 1 = supported; 0 = invalid input or separate verification required.');
 flag('Axial compression and nonnegative shear magnitudes', 'forces', R`\min\left(N_{Ed},V_{y.Ed},V_{z.Ed}\right)\ge0\,\mathrm{kN}`);
 flag('Nonnegative moment magnitudes', 'moments', R`\min\left(M_{y.Ed},M_{z.Ed}\right)\ge${kNm0}`);
 P('Valid action signs', R`\delta_{actions}\coloneq\delta_{forces}\delta_{moments}`);
@@ -231,12 +270,12 @@ flag('Torsional mode must not govern combined stability', 'mode', R`N_{b.T.Rd}\g
 P('Interaction applicability; pure compression / major bending exempt', R`\delta_{interaction}\coloneq${IF([R`M_{y.Ed}=${kNm0}\land M_{z.Ed}=${kNm0}`, '1'], [R`N_{Ed}=0\,\mathrm{kN}\land M_{z.Ed}=${kNm0}`, '1'], [null, R`\delta_{plastic}\delta_{mode}`])}`);
 P('Input validity', R`\delta_{input}\coloneq\delta_{actions}\delta_{material}\delta_{lengths}\delta_{ends}\delta_{Cm}`);
 P('Section and LTB input validity', R`\delta_{data}\coloneq\delta_{geometry}\delta_{C1}\delta_{LT}`);
-const SCOPE = R`\delta_{scope}\coloneq\delta_{input}\delta_{section}\delta_{curves}\delta_{shear}\delta_{highV}\delta_{interaction}\delta_{data}`;
 P('All scope flags and LTB case valid (1 = yes)', SCOPE);
+P('Scope (0 = NOT VERIFIED)', R`\delta_{scope}\ge1`);
+});
 const GOV = R`\mathrm{UR}\coloneq\max\left(\mathrm{UR}_{V.z},\mathrm{UR}_{V.y},\mathrm{UR}_{sec},\mathrm{UR}_{b.y},\mathrm{UR}_{b.z},\mathrm{UR}_{b.T},\mathrm{UR}_{LT},\mathrm{UR}_{6.61},\mathrm{UR}_{6.62}\right)`;
 need(8);
 KEEP(() => {
-  P('Scope (0 = NOT VERIFIED)', R`\delta_{scope}\ge1`);
   P('Governing utilisation (valid only when scope = 1)', GOV, M(p3));
   P('Resistance check (scope must also pass)', R`\mathrm{UR}\le1`, M(p3));
   P('Member: both scope and resistance must pass', MEMBER);

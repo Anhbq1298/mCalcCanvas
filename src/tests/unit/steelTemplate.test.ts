@@ -90,6 +90,14 @@ describe('steel beam-column template (EN 1993-1-1)', () => {
       const inputs = shapes.filter(s => s.type === 'math' && ['N_{Ed}', 'M_{y.Ed}', 'M_{z.Ed}'].some(name => s.props.latex.startsWith(`${name}\\coloneq`)));
       expect(inputs).toHaveLength(3);
       expect(inputs.every(s => s.x === 396)).toBe(true);
+      const summary = texts.find(s => s.props.html === '9. SUMMARY')!;
+      const annex = texts.find(s => s.props.annex?.kind === 'start')!;
+      const scope = shapes.find(s => s.type === 'math' && s.props.latex.startsWith('\\delta_{scope}\\coloneq'))!;
+      expect(scope.y).toBeGreaterThan(annex.y);
+      expect(texts.some(s => s.y > summary.y && s.y < annex.y && s.props.html.includes('Valid only within'))).toBe(true);
+      for (const table of ['Table B.1 - selected plastic I/H factors', 'Table B.2 - torsionally susceptible members, Class 1/2']) {
+        expect(texts.some(s => s.y > annex.y && s.props.html === table)).toBe(true);
+      }
     });
     step('Insert Steel Section creates a usable library/custom block and undoes as one action', () => {
       loadShapes([]);

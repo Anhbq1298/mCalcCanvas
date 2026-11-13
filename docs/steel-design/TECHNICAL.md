@@ -21,6 +21,10 @@ Presentation separates cross-section resistance (§6.2) from member compression
 (§6.3.3(4), equations (6.61)/(6.62), Annex B Method 2). Worksheet text and LTB
 diagram captions use Roboto. Parameter equations share a fixed x = 396 column;
 long equations use a separate x = 96 line below their labels.
+The summary shows a short scope note; detailed applicability flags remain active
+at their annex link and still gate Member PASS and batch decisions. Annex B
+reference tables redraw only the implemented Class 1/2 I/H branches of Tables
+B.1/B.2, with Table B.3 cited for Cm. The main-body factor calculations remain.
 
 The final Member result now requires **both** `delta_scope = 1` and `UR <= 1`.
 Summary flags reject negative action magnitudes, nonpositive material/factor/length inputs,
