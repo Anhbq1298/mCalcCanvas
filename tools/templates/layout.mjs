@@ -8,7 +8,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const TPL = path.resolve(HERE, '../../templates');
 export const R = String.raw;
 
-export function createLayout({ idPrefix, sizesFile }) {
+export function createLayout({ idPrefix, sizesFile, textFont = 'Inter', mathColumn = null }) {
 const A4H = 1123, GAP = 48, LAST = 24;
 const ln = (page, n) => page * (A4H + GAP) + 80 + Math.round((40 * n - 40) / 20) * 20;
 const PG = A4H + GAP;
@@ -40,7 +40,7 @@ const newPage = () => { page++; row = 1; };
 /** Annex link here; the block (fn) is written in the annex and calculated at this line. */
 const LINK = (aid, title, fn) => {
   need(1);
-  out.push({ id: id(), type: 'text', x: 76, y: alignTop(ln(page, row), 15), props: { w: 630, h: 24, html: '', fontFamily: 'Inter', fontSize: 14, color: '#2563eb', align: 'left', annex: { kind: 'link', target: aid } } });
+  out.push({ id: id(), type: 'text', x: 76, y: alignTop(ln(page, row), 15), props: { w: 630, h: 24, html: '', fontFamily: textFont, fontSize: 14, color: '#2563eb', align: 'left', annex: { kind: 'link', target: aid } } });
   row += 1;
   ANNEX.push({ aid, title, fn });
 };
@@ -48,7 +48,7 @@ const textAt = (pg, r, t, o = {}) => {
   const st = STYLES[o.heading] ?? { fontSize: 14, color: '#475569' };
   out.push({
     id: id(), type: 'text', x: o.x ?? 76, y: place(ln(pg, r) + (o.dy ?? 0), Math.round((o.size ?? st.fontSize) * 1.09), 0, false, o.floor !== false),
-    props: { w: o.w ?? 630, h: Math.ceil((o.size ?? st.fontSize) * 1.45), html: o.italic ? `<i>${esc(t)}</i>` : esc(t), fontFamily: 'Inter',
+    props: { w: o.w ?? 630, h: Math.ceil((o.size ?? st.fontSize) * 1.45), html: o.italic ? `<i>${esc(t)}</i>` : esc(t), fontFamily: textFont,
       fontSize: o.size ?? st.fontSize, color: o.color ?? st.color, align: 'left', ...(o.heading ? { heading: o.heading } : {}), ...(o.annex ? { annex: o.annex } : {}) },
   });
 };
@@ -81,7 +81,7 @@ const P = (desc, latex, o = {}) => {
   const hpx = size ? size[1] : null;
   const h = o.h ?? (hpx ? Math.max(1, Math.ceil((hpx + 4) / 40)) : hOf(latex, o));
   const labelW = METRICS[esc(desc)]?.[3] ?? desc.length * 6.2;
-  const mathX = Math.max(XM, 76 + Math.ceil((labelW + 16) / 20) * 20);
+  const mathX = mathColumn ?? Math.max(XM, 76 + Math.ceil((labelW + 16) / 20) * 20);
   const wide = o.wide ?? (size ? size[0] : estW(latex, o)) > 714 - mathX;
   if (wide) {
     const top0 = ln(page, row);
@@ -179,7 +179,7 @@ const finish = ({ id: docId, title, reference, file, batch }) => {
   const doc = {
     format: 'calccanvas', id: docId, version: 3, title,
     metadata: { project: 'Project name', calculationReference: reference, preparedBy: 'Mark', checkedBy: '', revision: 'A' },
-    settings: { unitSystem: 'SI', precision: 2, canvasMode: 'page', pageOrientation: 'portrait', showHeaderFooter: true, textFont: 'Inter', baselineSnap: 'minor', snapToGrid: false, optimizePrintLayout: true, pages },
+    settings: { unitSystem: 'SI', precision: 2, canvasMode: 'page', pageOrientation: 'portrait', showHeaderFooter: true, textFont, baselineSnap: 'minor', snapToGrid: false, optimizePrintLayout: true, pages },
     inputResult: batchConfig(batch), shapes: layout.shapes, createdAt: date, updatedAt: date,
   };
   fs.writeFileSync(path.join(process.env.TEMPLATE_OUT ?? TPL, file), JSON.stringify(doc, null, 2));

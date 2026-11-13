@@ -16,7 +16,7 @@
     "canvasMode": "page",
     "pageOrientation": "portrait",
     "showHeaderFooter": true,
-    "textFont": "Inter",
+    "textFont": "Roboto",
     "baselineSnap": "minor",
     "snapToGrid": false,
     "optimizePrintLayout": true,
@@ -104,27 +104,27 @@
       },
       {
         "id": "ur61",
-        "regionId": "s_stl_7o",
+        "regionId": "s_stl_7p",
         "label": "UR (6.61)"
       },
       {
         "id": "ur62",
-        "regionId": "s_stl_7s",
+        "regionId": "s_stl_7t",
         "label": "UR (6.62)"
       },
       {
         "id": "ur",
-        "regionId": "s_stl_97",
+        "regionId": "s_stl_98",
         "label": "UR"
       },
       {
         "id": "scope",
-        "regionId": "s_stl_93",
+        "regionId": "s_stl_94",
         "label": "Scope valid (1=yes)"
       },
       {
         "id": "ok",
-        "regionId": "s_stl_9b",
+        "regionId": "s_stl_9c",
         "label": "Member (scope + UR)"
       }
     ],
@@ -189,7 +189,7 @@
         "w": 630,
         "h": 29,
         "html": "STEEL BEAM-COLUMN CHECK – I/H SECTION (EC3)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 20,
         "color": "#1e3a5f",
         "align": "left",
@@ -205,7 +205,7 @@
         "w": 630,
         "h": 24,
         "html": "1. DESIGN BASIS",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 16,
         "color": "#0f172a",
         "align": "left",
@@ -221,7 +221,7 @@
         "w": 630,
         "h": 19,
         "html": "EN 1993-1-1:2005 + A1:2014. Doubly symmetric rolled or welded I/H, Class 1 to 3, uniform member.",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -236,7 +236,7 @@
         "w": 630,
         "h": 19,
         "html": "Cross-section resistance §6.2; flexural and torsional buckling §6.3.1; lateral-torsional buckling",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -251,7 +251,7 @@
         "w": 630,
         "h": 19,
         "html": "§6.3.2.2 (general case) with Mcr from SCI NCCI SN003b; interaction §6.3.3 with Annex B (Method 2).",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -266,7 +266,7 @@
         "w": 630,
         "h": 19,
         "html": "N positive in compression. Enter moments and shears as magnitudes. z is the web direction.",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -281,7 +281,7 @@
         "w": 630,
         "h": 19,
         "html": "Not covered: Class 4, tension, torsion, shear buckling, holes, fire, connections.",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -296,7 +296,7 @@
         "w": 630,
         "h": 24,
         "html": "2. INPUTS",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 16,
         "color": "#0f172a",
         "align": "left",
@@ -312,7 +312,7 @@
         "w": 630,
         "h": 21,
         "html": "2.1 Material and partial factors",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
         "align": "left",
@@ -325,10 +325,10 @@
       "x": 76,
       "y": 330,
       "props": {
-        "w": 324,
+        "w": 304,
         "h": 18,
         "html": "Yield strength (reduce for thick flanges, EN 10025)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -337,7 +337,7 @@
     {
       "id": "s_stl_a",
       "type": "math",
-      "x": 416,
+      "x": 396,
       "y": 325,
       "props": {
         "w": 110,
@@ -358,10 +358,10 @@
       "x": 76,
       "y": 362,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Elastic modulus",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -370,7 +370,7 @@
     {
       "id": "s_stl_c",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 357,
       "props": {
         "w": 104,
@@ -391,10 +391,10 @@
       "x": 76,
       "y": 394,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Shear modulus",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -403,7 +403,7 @@
     {
       "id": "s_stl_e",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 389,
       "props": {
         "w": 96,
@@ -424,10 +424,10 @@
       "x": 76,
       "y": 426,
       "props": {
-        "w": 364,
+        "w": 304,
         "h": 18,
         "html": "Partial factor, cross-section resistance (National Annex)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -436,7 +436,7 @@
     {
       "id": "s_stl_g",
       "type": "math",
-      "x": 456,
+      "x": 396,
       "y": 421,
       "props": {
         "w": 72,
@@ -460,7 +460,7 @@
         "w": 304,
         "h": 18,
         "html": "Partial factor, member buckling (National Annex)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -490,10 +490,10 @@
       "x": 76,
       "y": 490,
       "props": {
-        "w": 344,
+        "w": 304,
         "h": 18,
         "html": "Shear area factor η, EN 1993-1-5 §5.1 (National Annex)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -502,7 +502,7 @@
     {
       "id": "s_stl_k",
       "type": "math",
-      "x": 436,
+      "x": 396,
       "y": 485,
       "props": {
         "w": 53,
@@ -526,7 +526,7 @@
         "w": 630,
         "h": 21,
         "html": "2.2 Section",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
         "align": "left",
@@ -539,10 +539,10 @@
       "x": 76,
       "y": 557,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Steel section (Browse)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -551,7 +551,7 @@
     {
       "id": "s_stl_n",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 550,
       "props": {
         "w": 198,
@@ -575,7 +575,7 @@
         "w": 630,
         "h": 21,
         "html": "2.3 Member",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
         "align": "left",
@@ -588,10 +588,10 @@
       "x": 76,
       "y": 622,
       "props": {
-        "w": 244,
+        "w": 304,
         "h": 18,
         "html": "Buckling length about y-y (major axis)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -600,7 +600,7 @@
     {
       "id": "s_stl_q",
       "type": "math",
-      "x": 336,
+      "x": 396,
       "y": 617,
       "props": {
         "w": 117,
@@ -621,10 +621,10 @@
       "x": 76,
       "y": 654,
       "props": {
-        "w": 244,
+        "w": 304,
         "h": 18,
         "html": "Buckling length about z-z (minor axis)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -633,7 +633,7 @@
     {
       "id": "s_stl_s",
       "type": "math",
-      "x": 336,
+      "x": 396,
       "y": 649,
       "props": {
         "w": 116,
@@ -654,10 +654,10 @@
       "x": 76,
       "y": 686,
       "props": {
-        "w": 244,
+        "w": 304,
         "h": 18,
         "html": "Buckling length for torsional buckling",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -666,7 +666,7 @@
     {
       "id": "s_stl_u",
       "type": "math",
-      "x": 336,
+      "x": 396,
       "y": 681,
       "props": {
         "w": 119,
@@ -687,10 +687,10 @@
       "x": 76,
       "y": 718,
       "props": {
-        "w": 244,
+        "w": 304,
         "h": 18,
         "html": "Length between lateral restraints (LTB)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -699,7 +699,7 @@
     {
       "id": "s_stl_w",
       "type": "math",
-      "x": 336,
+      "x": 396,
       "y": 713,
       "props": {
         "w": 113,
@@ -720,10 +720,10 @@
       "x": 76,
       "y": 750,
       "props": {
-        "w": 364,
+        "w": 304,
         "h": 18,
         "html": "LTB moment case 1 to 13 (Annex A.1); 0 = use C1, C2 below",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -732,7 +732,7 @@
     {
       "id": "s_stl_y",
       "type": "math",
-      "x": 456,
+      "x": 396,
       "y": 745,
       "props": {
         "w": 58,
@@ -753,10 +753,10 @@
       "x": 76,
       "y": 782,
       "props": {
-        "w": 224,
+        "w": 304,
         "h": 18,
         "html": "User C1 (only when the case is 0)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -765,7 +765,7 @@
     {
       "id": "s_stl_10",
       "type": "math",
-      "x": 316,
+      "x": 396,
       "y": 777,
       "props": {
         "w": 73,
@@ -786,10 +786,10 @@
       "x": 76,
       "y": 814,
       "props": {
-        "w": 224,
+        "w": 304,
         "h": 18,
         "html": "User C2 (only when the case is 0)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -798,7 +798,7 @@
     {
       "id": "s_stl_12",
       "type": "math",
-      "x": 316,
+      "x": 396,
       "y": 809,
       "props": {
         "w": 61,
@@ -819,10 +819,10 @@
       "x": 76,
       "y": 846,
       "props": {
-        "w": 384,
+        "w": 304,
         "h": 18,
         "html": "Load height above the shear centre (destabilising positive)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -831,7 +831,7 @@
     {
       "id": "s_stl_14",
       "type": "math",
-      "x": 476,
+      "x": 396,
       "y": 841,
       "props": {
         "w": 85,
@@ -852,10 +852,10 @@
       "x": 76,
       "y": 878,
       "props": {
-        "w": 264,
+        "w": 304,
         "h": 18,
         "html": "End rotation on plan factor k (1 = free)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -864,7 +864,7 @@
     {
       "id": "s_stl_16",
       "type": "math",
-      "x": 356,
+      "x": 396,
       "y": 873,
       "props": {
         "w": 53,
@@ -885,10 +885,10 @@
       "x": 76,
       "y": 910,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "End warping factor kw (1 = free)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -897,7 +897,7 @@
     {
       "id": "s_stl_18",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 905,
       "props": {
         "w": 63,
@@ -921,7 +921,7 @@
         "w": 304,
         "h": 18,
         "html": "Equivalent uniform moment factor Cmy (Table B.3)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -954,7 +954,7 @@
         "w": 304,
         "h": 18,
         "html": "Equivalent uniform moment factor Cmz (Table B.3)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -987,7 +987,7 @@
         "w": 304,
         "h": 18,
         "html": "Equivalent uniform moment factor CmLT (Table B.3)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -1020,7 +1020,7 @@
         "w": 630,
         "h": 19,
         "html": "Conservative defaults: Cmy = Cmz = CmLT = 1.0; no moment-gradient benefit is taken.",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -1035,7 +1035,7 @@
         "w": 630,
         "h": 19,
         "html": "For refined values, use EN 1993-1-1:2005 Table B.3 for each relevant braced segment.",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -1050,7 +1050,7 @@
         "w": 630,
         "h": 21,
         "html": "2.4 Design actions (ULS)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
         "align": "left",
@@ -1063,10 +1063,10 @@
       "x": 76,
       "y": 1294,
       "props": {
-        "w": 224,
+        "w": 304,
         "h": 18,
         "html": "Axial force, compression positive",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -1075,7 +1075,7 @@
     {
       "id": "s_stl_1j",
       "type": "math",
-      "x": 316,
+      "x": 396,
       "y": 1289,
       "props": {
         "w": 118,
@@ -1096,10 +1096,10 @@
       "x": 76,
       "y": 1326,
       "props": {
-        "w": 324,
+        "w": 304,
         "h": 18,
         "html": "Bending moment about y-y (maximum along the member)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -1108,7 +1108,7 @@
     {
       "id": "s_stl_1l",
       "type": "math",
-      "x": 416,
+      "x": 396,
       "y": 1321,
       "props": {
         "w": 152,
@@ -1129,10 +1129,10 @@
       "x": 76,
       "y": 1358,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Bending moment about z-z",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -1141,7 +1141,7 @@
     {
       "id": "s_stl_1n",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 1353,
       "props": {
         "w": 131,
@@ -1162,10 +1162,10 @@
       "x": 76,
       "y": 1390,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Shear force along z (web)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -1174,7 +1174,7 @@
     {
       "id": "s_stl_1p",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 1385,
       "props": {
         "w": 102,
@@ -1195,10 +1195,10 @@
       "x": 76,
       "y": 1422,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Shear force along y (flanges)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -1207,7 +1207,7 @@
     {
       "id": "s_stl_1r",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 1417,
       "props": {
         "w": 102,
@@ -1231,7 +1231,7 @@
         "w": 630,
         "h": 24,
         "html": "3. SECTION PROPERTIES",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 16,
         "color": "#0f172a",
         "align": "left",
@@ -1247,7 +1247,7 @@
         "w": 630,
         "h": 19,
         "html": "Browse: choose a section by name, or enter custom h, b, tf, tw; properties update automatically.",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -1262,7 +1262,7 @@
         "w": 630,
         "h": 19,
         "html": "Custom: r = 0, no weld metal; It / Iw: SCI P385 B.2.2 / B.3.1 thin-wall approximations.",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -1277,7 +1277,7 @@
         "w": 630,
         "h": 19,
         "html": "Custom shear areas: EN 1993-1-1 §6.2.6(3), conservative η = 1.0. Check project section tables.",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -1292,7 +1292,7 @@
         "w": 630,
         "h": 19,
         "html": "Library properties may be geometry-derived; confirm It and Iw against project section tables.",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -1628,7 +1628,7 @@
         "w": 630,
         "h": 24,
         "html": "4. CLASSIFICATION (§5.5, Table 5.2)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 16,
         "color": "#0f172a",
         "align": "left",
@@ -1641,10 +1641,10 @@
       "x": 76,
       "y": 2154,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Material parameter ε",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -1653,7 +1653,7 @@
     {
       "id": "s_stl_2g",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 2143,
       "props": {
         "w": 188,
@@ -1677,7 +1677,7 @@
         "w": 630,
         "h": 21,
         "html": "4.1 Flange (outstand in compression)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
         "align": "left",
@@ -1690,10 +1690,10 @@
       "x": 76,
       "y": 2438,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Flange outstand",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -1702,7 +1702,7 @@
     {
       "id": "s_stl_2j",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 2429,
       "props": {
         "w": 205,
@@ -1723,10 +1723,10 @@
       "x": 76,
       "y": 2497,
       "props": {
-        "w": 284,
+        "w": 304,
         "h": 18,
         "html": "Flange slenderness c/(t·ε): limits 9, 10, 14",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -1735,7 +1735,7 @@
     {
       "id": "s_stl_2l",
       "type": "math",
-      "x": 376,
+      "x": 396,
       "y": 2470,
       "props": {
         "w": 118,
@@ -1756,10 +1756,10 @@
       "x": 76,
       "y": 2606,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Flange class",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -1768,7 +1768,7 @@
     {
       "id": "s_stl_2n",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 2521,
       "props": {
         "w": 216,
@@ -1792,7 +1792,7 @@
         "w": 630,
         "h": 21,
         "html": "4.2 Web (internal part)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
         "align": "left",
@@ -1808,7 +1808,7 @@
         "w": 630,
         "h": 19,
         "html": "Bending with compression is used for My with Mz = 0; otherwise the web is taken in uniform compression.",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -1820,10 +1820,10 @@
       "x": 76,
       "y": 2750,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Web depth between fillets",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -1832,7 +1832,7 @@
     {
       "id": "s_stl_2r",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 2745,
       "props": {
         "w": 209,
@@ -1856,7 +1856,7 @@
         "w": 630,
         "h": 18,
         "html": "Compressed part of the web at full plasticity",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -1889,7 +1889,7 @@
         "w": 630,
         "h": 18,
         "html": "Elastic stress ratio (compression positive)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -1919,10 +1919,10 @@
       "x": 76,
       "y": 3127,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Class 1 limit of c/(t·ε)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -1931,7 +1931,7 @@
     {
       "id": "s_stl_2x",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 3062,
       "props": {
         "w": 234,
@@ -1952,10 +1952,10 @@
       "x": 76,
       "y": 3254,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Class 2 limit",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -1964,7 +1964,7 @@
     {
       "id": "s_stl_2z",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 3189,
       "props": {
         "w": 234,
@@ -1985,10 +1985,10 @@
       "x": 76,
       "y": 3618,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Class 3 limit",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -1997,7 +1997,7 @@
     {
       "id": "s_stl_31",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 3573,
       "props": {
         "w": 276,
@@ -2018,10 +2018,10 @@
       "x": 76,
       "y": 3707,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Web slenderness c/(t·ε)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2030,7 +2030,7 @@
     {
       "id": "s_stl_33",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 3682,
       "props": {
         "w": 129,
@@ -2051,10 +2051,10 @@
       "x": 76,
       "y": 3816,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Web class",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2063,7 +2063,7 @@
     {
       "id": "s_stl_35",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 3731,
       "props": {
         "w": 228,
@@ -2087,7 +2087,7 @@
         "w": 630,
         "h": 21,
         "html": "4.3 Section class",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
         "align": "left",
@@ -2100,10 +2100,10 @@
       "x": 76,
       "y": 3935,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Class of the cross-section",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2112,7 +2112,7 @@
     {
       "id": "s_stl_38",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 3930,
       "props": {
         "w": 231,
@@ -2133,10 +2133,10 @@
       "x": 76,
       "y": 3966,
       "props": {
-        "w": 264,
+        "w": 304,
         "h": 18,
         "html": "Class 4 (effective section) is not covered",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2145,7 +2145,7 @@
     {
       "id": "s_stl_3a",
       "type": "math",
-      "x": 356,
+      "x": 396,
       "y": 3961,
       "props": {
         "w": 178,
@@ -2169,7 +2169,7 @@
         "w": 630,
         "h": 24,
         "html": "5. CROSS-SECTION RESISTANCE (§6.2)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 16,
         "color": "#0f172a",
         "align": "left",
@@ -2185,7 +2185,7 @@
         "w": 630,
         "h": 21,
         "html": "5.1 Shear (§6.2.6)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
         "align": "left",
@@ -2198,10 +2198,10 @@
       "x": 76,
       "y": 4072,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Plastic shear resistance along z",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2210,7 +2210,7 @@
     {
       "id": "s_stl_3e",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 4061,
       "props": {
         "w": 216,
@@ -2231,10 +2231,10 @@
       "x": 76,
       "y": 4119,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Plastic shear resistance along y",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2243,7 +2243,7 @@
     {
       "id": "s_stl_3g",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 4108,
       "props": {
         "w": 217,
@@ -2264,10 +2264,10 @@
       "x": 76,
       "y": 4183,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Shear along z",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2276,7 +2276,7 @@
     {
       "id": "s_stl_3i",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 4155,
       "props": {
         "w": 151,
@@ -2297,10 +2297,10 @@
       "x": 76,
       "y": 4212,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "§6.2.6 (6.17)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2309,7 +2309,7 @@
     {
       "id": "s_stl_3k",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 4207,
       "props": {
         "w": 182,
@@ -2330,10 +2330,10 @@
       "x": 76,
       "y": 4249,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Shear along y",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2342,7 +2342,7 @@
     {
       "id": "s_stl_3m",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 4238,
       "props": {
         "w": 151,
@@ -2363,10 +2363,10 @@
       "x": 76,
       "y": 4291,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "§6.2.6 (6.17)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2375,7 +2375,7 @@
     {
       "id": "s_stl_3o",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 4286,
       "props": {
         "w": 184,
@@ -2396,10 +2396,10 @@
       "x": 76,
       "y": 4328,
       "props": {
-        "w": 264,
+        "w": 304,
         "h": 18,
         "html": "No shear buckling check needed, §6.2.6(6)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2408,7 +2408,7 @@
     {
       "id": "s_stl_3q",
       "type": "math",
-      "x": 356,
+      "x": 396,
       "y": 4317,
       "props": {
         "w": 285,
@@ -2429,10 +2429,10 @@
       "x": 76,
       "y": 4408,
       "props": {
-        "w": 324,
+        "w": 304,
         "h": 18,
         "html": "Reduction for shear above 0.5 Vpl (§6.2.8), along z",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2441,7 +2441,7 @@
     {
       "id": "s_stl_3s",
       "type": "math",
-      "x": 416,
+      "x": 396,
       "y": 4363,
       "props": {
         "w": 273,
@@ -2462,10 +2462,10 @@
       "x": 76,
       "y": 4507,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Along y",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2474,7 +2474,7 @@
     {
       "id": "s_stl_3u",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 4462,
       "props": {
         "w": 273,
@@ -2495,10 +2495,10 @@
       "x": 76,
       "y": 4749,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Larger of both directions",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2507,7 +2507,7 @@
     {
       "id": "s_stl_3w",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 4744,
       "props": {
         "w": 143,
@@ -2531,7 +2531,7 @@
         "w": 630,
         "h": 19,
         "html": "The reduction (1 − ρ) is applied to the whole section (conservative).",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -2546,7 +2546,7 @@
         "w": 630,
         "h": 21,
         "html": "5.2 Compression and bending (§6.2.4, §6.2.5)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
         "align": "left",
@@ -2559,10 +2559,10 @@
       "x": 76,
       "y": 4845,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Compression resistance (6.10)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2571,7 +2571,7 @@
     {
       "id": "s_stl_40",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 4834,
       "props": {
         "w": 181,
@@ -2590,12 +2590,12 @@
       "id": "s_stl_41",
       "type": "text",
       "x": 76,
-      "y": 4880,
+      "y": 4905,
       "props": {
-        "w": 630,
+        "w": 304,
         "h": 18,
         "html": "Section modulus about y: plastic for Class 1, 2; elastic for Class 3",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2604,8 +2604,8 @@
     {
       "id": "s_stl_42",
       "type": "math",
-      "x": 76,
-      "y": 4904,
+      "x": 396,
+      "y": 4880,
       "props": {
         "w": 240,
         "h": 83,
@@ -2623,12 +2623,12 @@
       "id": "s_stl_43",
       "type": "text",
       "x": 76,
-      "y": 5038,
+      "y": 5014,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Section modulus about z",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2637,8 +2637,8 @@
     {
       "id": "s_stl_44",
       "type": "math",
-      "x": 296,
-      "y": 4993,
+      "x": 396,
+      "y": 4969,
       "props": {
         "w": 232,
         "h": 83,
@@ -2656,12 +2656,12 @@
       "id": "s_stl_45",
       "type": "text",
       "x": 76,
-      "y": 5082,
+      "y": 5070,
       "props": {
-        "w": 630,
+        "w": 304,
         "h": 18,
         "html": "Bending resistance about y (6.13), (6.14), reduced for shear",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2670,8 +2670,8 @@
     {
       "id": "s_stl_46",
       "type": "math",
-      "x": 96,
-      "y": 5106,
+      "x": 396,
+      "y": 5058,
       "props": {
         "w": 274,
         "h": 41,
@@ -2689,12 +2689,12 @@
       "id": "s_stl_47",
       "type": "text",
       "x": 76,
-      "y": 5165,
+      "y": 5117,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Bending resistance about z",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2703,8 +2703,8 @@
     {
       "id": "s_stl_48",
       "type": "math",
-      "x": 296,
-      "y": 5153,
+      "x": 396,
+      "y": 5105,
       "props": {
         "w": 286,
         "h": 41,
@@ -2722,12 +2722,12 @@
       "id": "s_stl_49",
       "type": "text",
       "x": 76,
-      "y": 5229,
+      "y": 5181,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Compression",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2736,8 +2736,8 @@
     {
       "id": "s_stl_4a",
       "type": "math",
-      "x": 296,
-      "y": 5200,
+      "x": 396,
+      "y": 5152,
       "props": {
         "w": 168,
         "h": 37,
@@ -2755,12 +2755,12 @@
       "id": "s_stl_4b",
       "type": "text",
       "x": 76,
-      "y": 5258,
+      "y": 5210,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "§6.2.4 (6.9)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2769,8 +2769,8 @@
     {
       "id": "s_stl_4c",
       "type": "math",
-      "x": 296,
-      "y": 5253,
+      "x": 396,
+      "y": 5205,
       "props": {
         "w": 212,
         "h": 25,
@@ -2788,12 +2788,12 @@
       "id": "s_stl_4d",
       "type": "text",
       "x": 76,
-      "y": 5295,
+      "y": 5247,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Bending about y",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2802,8 +2802,8 @@
     {
       "id": "s_stl_4e",
       "type": "math",
-      "x": 296,
-      "y": 5284,
+      "x": 396,
+      "y": 5236,
       "props": {
         "w": 191,
         "h": 42,
@@ -2821,12 +2821,12 @@
       "id": "s_stl_4f",
       "type": "text",
       "x": 76,
-      "y": 5337,
+      "y": 5289,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "§6.2.5 (6.12)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2835,8 +2835,8 @@
     {
       "id": "s_stl_4g",
       "type": "math",
-      "x": 296,
-      "y": 5332,
+      "x": 396,
+      "y": 5284,
       "props": {
         "w": 222,
         "h": 25,
@@ -2854,12 +2854,12 @@
       "id": "s_stl_4h",
       "type": "text",
       "x": 76,
-      "y": 5392,
+      "y": 5344,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Bending about z",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2868,8 +2868,8 @@
     {
       "id": "s_stl_4i",
       "type": "math",
-      "x": 296,
-      "y": 5363,
+      "x": 396,
+      "y": 5315,
       "props": {
         "w": 154,
         "h": 37,
@@ -2887,12 +2887,12 @@
       "id": "s_stl_4j",
       "type": "text",
       "x": 76,
-      "y": 5421,
+      "y": 5373,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "§6.2.5 (6.12)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2901,8 +2901,8 @@
     {
       "id": "s_stl_4k",
       "type": "math",
-      "x": 296,
-      "y": 5416,
+      "x": 396,
+      "y": 5368,
       "props": {
         "w": 184,
         "h": 25,
@@ -2920,12 +2920,12 @@
       "id": "s_stl_4l",
       "type": "text",
       "x": 76,
-      "y": 5476,
+      "y": 5399,
       "props": {
-        "w": 244,
+        "w": 630,
         "h": 18,
         "html": "Combined N + My + Mz, linear summation",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2934,8 +2934,8 @@
     {
       "id": "s_stl_4m",
       "type": "math",
-      "x": 336,
-      "y": 5447,
+      "x": 96,
+      "y": 5423,
       "props": {
         "w": 339,
         "h": 39,
@@ -2953,12 +2953,12 @@
       "id": "s_stl_4n",
       "type": "text",
       "x": 76,
-      "y": 5505,
+      "y": 5473,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "§6.2.1(7) (6.2)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -2967,8 +2967,8 @@
     {
       "id": "s_stl_4o",
       "type": "math",
-      "x": 296,
-      "y": 5500,
+      "x": 396,
+      "y": 5468,
       "props": {
         "w": 201,
         "h": 25,
@@ -2986,12 +2986,12 @@
       "id": "s_stl_4p",
       "type": "text",
       "x": 76,
-      "y": 5537,
+      "y": 5915,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "6. BUCKLING IN COMPRESSION (§6.3.1)",
-        "fontFamily": "Inter",
+        "html": "6. MEMBER CHECK: COMPRESSION (§6.3.1)",
+        "fontFamily": "Roboto",
         "fontSize": 16,
         "color": "#0f172a",
         "align": "left",
@@ -3002,12 +3002,12 @@
       "id": "s_stl_4q",
       "type": "text",
       "x": 76,
-      "y": 5573,
+      "y": 5951,
       "props": {
         "w": 630,
         "h": 21,
         "html": "6.1 Buckling curves (Table 6.2, rolled / welded I/H, S235 to S420)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
         "align": "left",
@@ -3018,12 +3018,12 @@
       "id": "s_stl_4r",
       "type": "text",
       "x": 76,
-      "y": 5600,
+      "y": 6063,
       "props": {
-        "w": 630,
+        "w": 304,
         "h": 18,
         "html": "Imperfection factor about y: Table 6.2, welded when Section = 0",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3032,8 +3032,8 @@
     {
       "id": "s_stl_4s",
       "type": "math",
-      "x": 76,
-      "y": 5915,
+      "x": 396,
+      "y": 5978,
       "props": {
         "w": 316,
         "h": 199,
@@ -3051,12 +3051,12 @@
       "id": "s_stl_4t",
       "type": "text",
       "x": 76,
-      "y": 6120,
+      "y": 6268,
       "props": {
-        "w": 630,
+        "w": 304,
         "h": 18,
         "html": "Imperfection factor about z: Table 6.2, welded when Section = 0",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3065,8 +3065,8 @@
     {
       "id": "s_stl_4u",
       "type": "math",
-      "x": 76,
-      "y": 6144,
+      "x": 396,
+      "y": 6183,
       "props": {
         "w": 316,
         "h": 199,
@@ -3084,12 +3084,12 @@
       "id": "s_stl_4v",
       "type": "text",
       "x": 76,
-      "y": 6354,
+      "y": 6393,
       "props": {
-        "w": 284,
+        "w": 304,
         "h": 18,
         "html": "Steel grade within the range of these curves",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3098,8 +3098,8 @@
     {
       "id": "s_stl_4w",
       "type": "math",
-      "x": 376,
-      "y": 6349,
+      "x": 396,
+      "y": 6388,
       "props": {
         "w": 280,
         "h": 26,
@@ -3117,12 +3117,12 @@
       "id": "s_stl_4x",
       "type": "text",
       "x": 76,
-      "y": 6387,
+      "y": 6426,
       "props": {
         "w": 630,
         "h": 21,
-        "html": "6.2 Flexural buckling about y-y",
-        "fontFamily": "Inter",
+        "html": "6.2 Flexural buckling about y-y (§6.3.1.1)",
+        "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
         "align": "left",
@@ -3133,12 +3133,12 @@
       "id": "s_stl_4y",
       "type": "text",
       "x": 76,
-      "y": 6427,
+      "y": 6466,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Elastic critical force",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3147,8 +3147,8 @@
     {
       "id": "s_stl_4z",
       "type": "math",
-      "x": 296,
-      "y": 6414,
+      "x": 396,
+      "y": 6453,
       "props": {
         "w": 202,
         "h": 45,
@@ -3166,12 +3166,12 @@
       "id": "s_stl_50",
       "type": "text",
       "x": 76,
-      "y": 6482,
+      "y": 6521,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Relative slenderness (6.50)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3180,8 +3180,8 @@
     {
       "id": "s_stl_51",
       "type": "math",
-      "x": 296,
-      "y": 6465,
+      "x": 396,
+      "y": 6504,
       "props": {
         "w": 162,
         "h": 52,
@@ -3199,12 +3199,12 @@
       "id": "s_stl_52",
       "type": "text",
       "x": 76,
-      "y": 6528,
+      "y": 6567,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3213,8 +3213,8 @@
     {
       "id": "s_stl_53",
       "type": "math",
-      "x": 296,
-      "y": 6523,
+      "x": 396,
+      "y": 6562,
       "props": {
         "w": 280,
         "h": 26,
@@ -3232,12 +3232,12 @@
       "id": "s_stl_54",
       "type": "text",
       "x": 76,
-      "y": 6577,
+      "y": 6616,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Reduction factor (6.49)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3246,8 +3246,8 @@
     {
       "id": "s_stl_55",
       "type": "math",
-      "x": 296,
-      "y": 6555,
+      "x": 396,
+      "y": 6594,
       "props": {
         "w": 289,
         "h": 64,
@@ -3265,12 +3265,12 @@
       "id": "s_stl_56",
       "type": "text",
       "x": 76,
-      "y": 6636,
+      "y": 6675,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Buckling resistance (6.47)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3279,8 +3279,8 @@
     {
       "id": "s_stl_57",
       "type": "math",
-      "x": 296,
-      "y": 6625,
+      "x": 396,
+      "y": 6664,
       "props": {
         "w": 207,
         "h": 40,
@@ -3298,12 +3298,12 @@
       "id": "s_stl_58",
       "type": "text",
       "x": 76,
-      "y": 6699,
+      "y": 6738,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Flexural buckling about y",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3312,8 +3312,8 @@
     {
       "id": "s_stl_59",
       "type": "math",
-      "x": 296,
-      "y": 6671,
+      "x": 396,
+      "y": 6710,
       "props": {
         "w": 181,
         "h": 39,
@@ -3331,12 +3331,12 @@
       "id": "s_stl_5a",
       "type": "text",
       "x": 76,
-      "y": 6728,
+      "y": 6767,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "§6.3.1.1 (6.46)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3345,8 +3345,8 @@
     {
       "id": "s_stl_5b",
       "type": "math",
-      "x": 296,
-      "y": 6723,
+      "x": 396,
+      "y": 6762,
       "props": {
         "w": 218,
         "h": 25,
@@ -3364,12 +3364,12 @@
       "id": "s_stl_5c",
       "type": "text",
       "x": 76,
-      "y": 6760,
+      "y": 6799,
       "props": {
         "w": 630,
         "h": 21,
-        "html": "6.3 Flexural buckling about z-z",
-        "fontFamily": "Inter",
+        "html": "6.3 Flexural buckling about z-z (§6.3.1.1)",
+        "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
         "align": "left",
@@ -3380,12 +3380,12 @@
       "id": "s_stl_5d",
       "type": "text",
       "x": 76,
-      "y": 6798,
+      "y": 6837,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Elastic critical force",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3394,8 +3394,8 @@
     {
       "id": "s_stl_5e",
       "type": "math",
-      "x": 296,
-      "y": 6787,
+      "x": 396,
+      "y": 6826,
       "props": {
         "w": 202,
         "h": 41,
@@ -3413,12 +3413,12 @@
       "id": "s_stl_5f",
       "type": "text",
       "x": 76,
-      "y": 6848,
+      "y": 6887,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Relative slenderness",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3427,8 +3427,8 @@
     {
       "id": "s_stl_5g",
       "type": "math",
-      "x": 296,
-      "y": 6834,
+      "x": 396,
+      "y": 6873,
       "props": {
         "w": 162,
         "h": 43,
@@ -3446,12 +3446,12 @@
       "id": "s_stl_5h",
       "type": "text",
       "x": 76,
-      "y": 6888,
+      "y": 7091,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3460,8 +3460,8 @@
     {
       "id": "s_stl_5i",
       "type": "math",
-      "x": 296,
-      "y": 6883,
+      "x": 396,
+      "y": 7086,
       "props": {
         "w": 296,
         "h": 26,
@@ -3479,12 +3479,12 @@
       "id": "s_stl_5j",
       "type": "text",
       "x": 76,
-      "y": 7103,
+      "y": 7135,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Reduction factor",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3493,8 +3493,8 @@
     {
       "id": "s_stl_5k",
       "type": "math",
-      "x": 296,
-      "y": 7086,
+      "x": 396,
+      "y": 7118,
       "props": {
         "w": 285,
         "h": 52,
@@ -3512,12 +3512,12 @@
       "id": "s_stl_5l",
       "type": "text",
       "x": 76,
-      "y": 7155,
+      "y": 7187,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Buckling resistance",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3526,8 +3526,8 @@
     {
       "id": "s_stl_5m",
       "type": "math",
-      "x": 296,
-      "y": 7144,
+      "x": 396,
+      "y": 7176,
       "props": {
         "w": 207,
         "h": 40,
@@ -3545,12 +3545,12 @@
       "id": "s_stl_5n",
       "type": "text",
       "x": 76,
-      "y": 7219,
+      "y": 7251,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Flexural buckling about z",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3559,8 +3559,8 @@
     {
       "id": "s_stl_5o",
       "type": "math",
-      "x": 296,
-      "y": 7190,
+      "x": 396,
+      "y": 7222,
       "props": {
         "w": 180,
         "h": 37,
@@ -3578,12 +3578,12 @@
       "id": "s_stl_5p",
       "type": "text",
       "x": 76,
-      "y": 7248,
+      "y": 7280,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "§6.3.1.1 (6.46)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3592,8 +3592,8 @@
     {
       "id": "s_stl_5q",
       "type": "math",
-      "x": 296,
-      "y": 7243,
+      "x": 396,
+      "y": 7275,
       "props": {
         "w": 217,
         "h": 25,
@@ -3611,12 +3611,12 @@
       "id": "s_stl_5r",
       "type": "text",
       "x": 76,
-      "y": 7280,
+      "y": 7312,
       "props": {
         "w": 630,
         "h": 21,
         "html": "6.4 Torsional buckling (§6.3.1.4)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
         "align": "left",
@@ -3627,12 +3627,12 @@
       "id": "s_stl_5s",
       "type": "text",
       "x": 76,
-      "y": 7322,
+      "y": 7354,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Polar radius of gyration",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3641,8 +3641,8 @@
     {
       "id": "s_stl_5t",
       "type": "math",
-      "x": 296,
-      "y": 7307,
+      "x": 396,
+      "y": 7339,
       "props": {
         "w": 191,
         "h": 43,
@@ -3660,12 +3660,12 @@
       "id": "s_stl_5u",
       "type": "text",
       "x": 76,
-      "y": 7368,
+      "y": 7400,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Elastic critical force",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3674,8 +3674,8 @@
     {
       "id": "s_stl_5v",
       "type": "math",
-      "x": 296,
-      "y": 7356,
+      "x": 396,
+      "y": 7388,
       "props": {
         "w": 293,
         "h": 43,
@@ -3693,12 +3693,12 @@
       "id": "s_stl_5w",
       "type": "text",
       "x": 76,
-      "y": 7419,
+      "y": 7451,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Relative slenderness (6.52)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3707,8 +3707,8 @@
     {
       "id": "s_stl_5x",
       "type": "math",
-      "x": 296,
-      "y": 7405,
+      "x": 396,
+      "y": 7437,
       "props": {
         "w": 167,
         "h": 43,
@@ -3726,12 +3726,12 @@
       "id": "s_stl_5y",
       "type": "text",
       "x": 76,
-      "y": 7459,
+      "y": 7491,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Curve for z-z, §6.3.1.4(3)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3740,8 +3740,8 @@
     {
       "id": "s_stl_5z",
       "type": "math",
-      "x": 296,
-      "y": 7454,
+      "x": 396,
+      "y": 7486,
       "props": {
         "w": 303,
         "h": 26,
@@ -3759,12 +3759,12 @@
       "id": "s_stl_60",
       "type": "text",
       "x": 76,
-      "y": 7503,
+      "y": 7535,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Reduction factor",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3773,8 +3773,8 @@
     {
       "id": "s_stl_61",
       "type": "math",
-      "x": 296,
-      "y": 7486,
+      "x": 396,
+      "y": 7518,
       "props": {
         "w": 295,
         "h": 52,
@@ -3792,12 +3792,12 @@
       "id": "s_stl_62",
       "type": "text",
       "x": 76,
-      "y": 7555,
+      "y": 7587,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Buckling resistance",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3806,8 +3806,8 @@
     {
       "id": "s_stl_63",
       "type": "math",
-      "x": 296,
-      "y": 7544,
+      "x": 396,
+      "y": 7576,
       "props": {
         "w": 211,
         "h": 40,
@@ -3825,12 +3825,12 @@
       "id": "s_stl_64",
       "type": "text",
       "x": 76,
-      "y": 7619,
+      "y": 7651,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Torsional buckling",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3839,8 +3839,8 @@
     {
       "id": "s_stl_65",
       "type": "math",
-      "x": 296,
-      "y": 7590,
+      "x": 396,
+      "y": 7622,
       "props": {
         "w": 185,
         "h": 37,
@@ -3858,12 +3858,12 @@
       "id": "s_stl_66",
       "type": "text",
       "x": 76,
-      "y": 7648,
+      "y": 7680,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "§6.3.1.1 (6.46)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3872,8 +3872,8 @@
     {
       "id": "s_stl_67",
       "type": "math",
-      "x": 296,
-      "y": 7643,
+      "x": 396,
+      "y": 7675,
       "props": {
         "w": 220,
         "h": 25,
@@ -3891,12 +3891,12 @@
       "id": "s_stl_68",
       "type": "text",
       "x": 76,
-      "y": 7680,
+      "y": 7712,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "7. LATERAL-TORSIONAL BUCKLING (§6.3.2.2)",
-        "fontFamily": "Inter",
+        "html": "7. MEMBER CHECK: LATERAL-TORSIONAL BUCKLING (§6.3.2.2)",
+        "fontFamily": "Roboto",
         "fontSize": 16,
         "color": "#0f172a",
         "align": "left",
@@ -3907,12 +3907,12 @@
       "id": "s_stl_69",
       "type": "text",
       "x": 76,
-      "y": 7710,
+      "y": 7742,
       "props": {
         "w": 630,
         "h": 19,
         "html": "Mcr: SCI NCCI SN003b eq. (1), fork supports. Tabulated C1, C2 are for k = kw = 1 only.",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -3922,12 +3922,12 @@
       "id": "s_stl_6a",
       "type": "text",
       "x": 76,
-      "y": 7735,
+      "y": 7767,
       "props": {
         "w": 630,
         "h": 24,
         "html": "",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#2563eb",
         "align": "left",
@@ -3941,12 +3941,12 @@
       "id": "s_stl_6b",
       "type": "text",
       "x": 76,
-      "y": 7765,
+      "y": 7797,
       "props": {
         "w": 630,
         "h": 18,
         "html": "Case valid (1 = yes): 0, or a whole number 1 to 13 with k = kw = 1",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3956,7 +3956,7 @@
       "id": "s_stl_6c",
       "type": "math",
       "x": 76,
-      "y": 7789,
+      "y": 7821,
       "props": {
         "w": 540,
         "h": 122,
@@ -3974,12 +3974,12 @@
       "id": "s_stl_6d",
       "type": "text",
       "x": 76,
-      "y": 7922,
+      "y": 7954,
       "props": {
-        "w": 224,
+        "w": 304,
         "h": 18,
         "html": "Tabulated C1, C2 are for k = kw = 1",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -3988,8 +3988,8 @@
     {
       "id": "s_stl_6e",
       "type": "math",
-      "x": 316,
-      "y": 7917,
+      "x": 396,
+      "y": 7949,
       "props": {
         "w": 165,
         "h": 26,
@@ -4007,12 +4007,12 @@
       "id": "s_stl_6f",
       "type": "text",
       "x": 76,
-      "y": 7994,
+      "y": 8026,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Moment distribution factor",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -4021,8 +4021,8 @@
     {
       "id": "s_stl_6g",
       "type": "math",
-      "x": 296,
-      "y": 7949,
+      "x": 396,
+      "y": 7981,
       "props": {
         "w": 281,
         "h": 83,
@@ -4042,10 +4042,10 @@
       "x": 76,
       "y": 8302,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Load height factor",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -4054,7 +4054,7 @@
     {
       "id": "s_stl_6i",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 8257,
       "props": {
         "w": 261,
@@ -4075,10 +4075,10 @@
       "x": 76,
       "y": 8357,
       "props": {
-        "w": 284,
+        "w": 304,
         "h": 18,
         "html": "Euler force of the compression flange length",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -4087,7 +4087,7 @@
     {
       "id": "s_stl_6k",
       "type": "math",
-      "x": 376,
+      "x": 396,
       "y": 8346,
       "props": {
         "w": 223,
@@ -4111,7 +4111,7 @@
         "w": 630,
         "h": 18,
         "html": "Elastic critical moment, SN003b (1)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -4141,10 +4141,10 @@
       "x": 76,
       "y": 8493,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Relative slenderness (6.56)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -4153,7 +4153,7 @@
     {
       "id": "s_stl_6o",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 8479,
       "props": {
         "w": 178,
@@ -4172,12 +4172,12 @@
       "id": "s_stl_6p",
       "type": "text",
       "x": 76,
-      "y": 8528,
+      "y": 8593,
       "props": {
-        "w": 630,
+        "w": 304,
         "h": 18,
         "html": "Imperfection factor, Table 6.4: rolled a/b; custom welded c/d",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -4186,8 +4186,8 @@
     {
       "id": "s_stl_6q",
       "type": "math",
-      "x": 76,
-      "y": 8552,
+      "x": 396,
+      "y": 8528,
       "props": {
         "w": 273,
         "h": 161,
@@ -4205,12 +4205,12 @@
       "id": "s_stl_6r",
       "type": "text",
       "x": 76,
-      "y": 8724,
+      "y": 8695,
       "props": {
-        "w": 204,
+        "w": 630,
         "h": 18,
         "html": "",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -4219,7 +4219,7 @@
     {
       "id": "s_stl_6s",
       "type": "math",
-      "x": 296,
+      "x": 76,
       "y": 8719,
       "props": {
         "w": 336,
@@ -4238,12 +4238,12 @@
       "id": "s_stl_6t",
       "type": "text",
       "x": 76,
-      "y": 8768,
+      "y": 8751,
       "props": {
-        "w": 204,
+        "w": 630,
         "h": 18,
         "html": "Reduction factor (6.56)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -4252,8 +4252,8 @@
     {
       "id": "s_stl_6u",
       "type": "math",
-      "x": 296,
-      "y": 8751,
+      "x": 96,
+      "y": 8775,
       "props": {
         "w": 325,
         "h": 52,
@@ -4271,12 +4271,12 @@
       "id": "s_stl_6v",
       "type": "text",
       "x": 76,
-      "y": 8820,
+      "y": 8844,
       "props": {
-        "w": 224,
+        "w": 304,
         "h": 18,
         "html": "Buckling resistance moment (6.55)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -4285,8 +4285,8 @@
     {
       "id": "s_stl_6w",
       "type": "math",
-      "x": 316,
-      "y": 8809,
+      "x": 396,
+      "y": 8833,
       "props": {
         "w": 252,
         "h": 40,
@@ -4304,12 +4304,12 @@
       "id": "s_stl_6x",
       "type": "text",
       "x": 76,
-      "y": 8866,
+      "y": 8890,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Lateral-torsional buckling",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -4318,8 +4318,8 @@
     {
       "id": "s_stl_6y",
       "type": "math",
-      "x": 296,
-      "y": 8855,
+      "x": 396,
+      "y": 8879,
       "props": {
         "w": 186,
         "h": 39,
@@ -4337,12 +4337,12 @@
       "id": "s_stl_6z",
       "type": "text",
       "x": 76,
-      "y": 8905,
+      "y": 8929,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "§6.3.2.1 (6.54)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
@@ -4351,8 +4351,8 @@
     {
       "id": "s_stl_70",
       "type": "math",
-      "x": 296,
-      "y": 8900,
+      "x": 396,
+      "y": 8924,
       "props": {
         "w": 225,
         "h": 25,
@@ -4370,12 +4370,12 @@
       "id": "s_stl_71",
       "type": "text",
       "x": 76,
-      "y": 8937,
+      "y": 8961,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "8. BENDING AND AXIAL COMPRESSION (§6.3.3, Annex B)",
-        "fontFamily": "Inter",
+        "html": "8. MEMBER CHECK: COMPRESSION AND BENDING (§6.3.3)",
+        "fontFamily": "Roboto",
         "fontSize": 16,
         "color": "#0f172a",
         "align": "left",
@@ -4386,12 +4386,12 @@
       "id": "s_stl_72",
       "type": "text",
       "x": 76,
-      "y": 8967,
+      "y": 8991,
       "props": {
         "w": 630,
         "h": 19,
-        "html": "Interaction factors: Table B.1 and B.2, I-sections, Class 1 and 2, member susceptible to torsional",
-        "fontFamily": "Inter",
+        "html": "EN 1993-1-1:2005 §6.3.3(4), equations (6.61) and (6.62); Annex B, Method 2.",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -4401,12 +4401,12 @@
       "id": "s_stl_73",
       "type": "text",
       "x": 76,
-      "y": 8992,
+      "y": 9016,
       "props": {
         "w": 630,
         "h": 19,
-        "html": "deformations. Cm factors are inputs (Table B.3). High shear (ρ &gt; 0) needs a separate check.",
-        "fontFamily": "Inter",
+        "html": "Interaction factors: Table B.1 and B.2, I-sections, Class 1 and 2, member susceptible to torsional",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -4416,12 +4416,12 @@
       "id": "s_stl_74",
       "type": "text",
       "x": 76,
-      "y": 9017,
+      "y": 9041,
       "props": {
         "w": 630,
         "h": 19,
-        "html": "Class / slenderness limits below apply to combined interaction; see scope flags in the summary.",
-        "fontFamily": "Inter",
+        "html": "deformations. Cm factors are inputs (Table B.3). High shear (ρ &gt; 0) needs a separate check.",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -4431,22 +4431,37 @@
       "id": "s_stl_75",
       "type": "text",
       "x": 76,
-      "y": 9047,
+      "y": 9066,
       "props": {
-        "w": 324,
-        "h": 18,
-        "html": "Plastic interaction factors apply to Class 1 and 2",
-        "fontFamily": "Inter",
-        "fontSize": 12,
+        "w": 630,
+        "h": 19,
+        "html": "Class / slenderness limits below apply to combined interaction; see scope flags in the summary.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
         "color": "#475569",
         "align": "left"
       }
     },
     {
       "id": "s_stl_76",
+      "type": "text",
+      "x": 76,
+      "y": 9096,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Plastic interaction factors apply to Class 1 and 2",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_77",
       "type": "math",
-      "x": 416,
-      "y": 9042,
+      "x": 396,
+      "y": 9091,
       "props": {
         "w": 178,
         "h": 25,
@@ -4461,25 +4476,25 @@
       }
     },
     {
-      "id": "s_stl_77",
+      "id": "s_stl_78",
       "type": "text",
       "x": 76,
-      "y": 9078,
+      "y": 9127,
       "props": {
-        "w": 244,
+        "w": 304,
         "h": 18,
         "html": "Branch of kzy used here needs λz ≥ 0.4",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_78",
+      "id": "s_stl_79",
       "type": "math",
-      "x": 336,
-      "y": 9073,
+      "x": 396,
+      "y": 9122,
       "props": {
         "w": 206,
         "h": 26,
@@ -4494,25 +4509,25 @@
       }
     },
     {
-      "id": "s_stl_79",
+      "id": "s_stl_7a",
       "type": "text",
       "x": 76,
-      "y": 9133,
+      "y": 9182,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Axial ratios",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_7a",
+      "id": "s_stl_7b",
       "type": "math",
-      "x": 296,
-      "y": 9105,
+      "x": 396,
+      "y": 9154,
       "props": {
         "w": 159,
         "h": 39,
@@ -4527,25 +4542,25 @@
       }
     },
     {
-      "id": "s_stl_7b",
+      "id": "s_stl_7c",
       "type": "text",
       "x": 76,
-      "y": 9186,
+      "y": 9235,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_7c",
+      "id": "s_stl_7d",
       "type": "math",
-      "x": 296,
-      "y": 9157,
+      "x": 396,
+      "y": 9206,
       "props": {
         "w": 158,
         "h": 37,
@@ -4560,25 +4575,25 @@
       }
     },
     {
-      "id": "s_stl_7d",
+      "id": "s_stl_7e",
       "type": "text",
       "x": 76,
-      "y": 9215,
+      "y": 9433,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Table B.1",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_7e",
+      "id": "s_stl_7f",
       "type": "math",
-      "x": 296,
-      "y": 9210,
+      "x": 396,
+      "y": 9428,
       "props": {
         "w": 314,
         "h": 26,
@@ -4593,25 +4608,25 @@
       }
     },
     {
-      "id": "s_stl_7f",
+      "id": "s_stl_7g",
       "type": "text",
       "x": 76,
-      "y": 9433,
+      "y": 9460,
       "props": {
-        "w": 204,
+        "w": 630,
         "h": 18,
         "html": "Table B.1",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_7g",
+      "id": "s_stl_7h",
       "type": "math",
-      "x": 296,
-      "y": 9428,
+      "x": 76,
+      "y": 9484,
       "props": {
         "w": 321,
         "h": 26,
@@ -4626,25 +4641,25 @@
       }
     },
     {
-      "id": "s_stl_7h",
+      "id": "s_stl_7i",
       "type": "text",
       "x": 76,
-      "y": 9465,
+      "y": 9521,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Table B.1",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_7i",
+      "id": "s_stl_7j",
       "type": "math",
-      "x": 296,
-      "y": 9460,
+      "x": 396,
+      "y": 9516,
       "props": {
         "w": 152,
         "h": 26,
@@ -4659,25 +4674,25 @@
       }
     },
     {
-      "id": "s_stl_7j",
+      "id": "s_stl_7k",
       "type": "text",
       "x": 76,
-      "y": 9505,
+      "y": 9548,
       "props": {
-        "w": 204,
+        "w": 630,
         "h": 18,
         "html": "Table B.2",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_7k",
+      "id": "s_stl_7l",
       "type": "math",
-      "x": 296,
-      "y": 9492,
+      "x": 96,
+      "y": 9572,
       "props": {
         "w": 414,
         "h": 43,
@@ -4692,25 +4707,25 @@
       }
     },
     {
-      "id": "s_stl_7l",
+      "id": "s_stl_7m",
       "type": "text",
       "x": 76,
-      "y": 9552,
+      "y": 9632,
       "props": {
-        "w": 244,
+        "w": 304,
         "h": 18,
         "html": "Minor-axis bending resistance with γM1",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_7m",
+      "id": "s_stl_7n",
       "type": "math",
-      "x": 336,
-      "y": 9541,
+      "x": 396,
+      "y": 9621,
       "props": {
         "w": 232,
         "h": 40,
@@ -4725,25 +4740,25 @@
       }
     },
     {
-      "id": "s_stl_7n",
+      "id": "s_stl_7o",
       "type": "text",
       "x": 76,
-      "y": 9598,
+      "y": 9667,
       "props": {
-        "w": 204,
+        "w": 630,
         "h": 18,
         "html": "Interaction (6.61)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_7o",
+      "id": "s_stl_7p",
       "type": "math",
-      "x": 296,
-      "y": 9587,
+      "x": 96,
+      "y": 9691,
       "props": {
         "w": 334,
         "h": 39,
@@ -4758,25 +4773,25 @@
       }
     },
     {
-      "id": "s_stl_7p",
+      "id": "s_stl_7q",
       "type": "text",
       "x": 76,
-      "y": 9637,
+      "y": 9741,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "§6.3.3 (6.61)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_7q",
+      "id": "s_stl_7r",
       "type": "math",
-      "x": 296,
-      "y": 9632,
+      "x": 396,
+      "y": 9736,
       "props": {
         "w": 222,
         "h": 25,
@@ -4791,25 +4806,25 @@
       }
     },
     {
-      "id": "s_stl_7r",
+      "id": "s_stl_7s",
       "type": "text",
       "x": 76,
-      "y": 9674,
+      "y": 9767,
       "props": {
-        "w": 204,
+        "w": 630,
         "h": 18,
         "html": "Interaction (6.62)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_7s",
+      "id": "s_stl_7t",
       "type": "math",
-      "x": 296,
-      "y": 9663,
+      "x": 96,
+      "y": 9791,
       "props": {
         "w": 334,
         "h": 39,
@@ -4824,25 +4839,25 @@
       }
     },
     {
-      "id": "s_stl_7t",
+      "id": "s_stl_7u",
       "type": "text",
       "x": 76,
-      "y": 9713,
+      "y": 9841,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "§6.3.3 (6.62)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_7u",
+      "id": "s_stl_7v",
       "type": "math",
-      "x": 296,
-      "y": 9708,
+      "x": 396,
+      "y": 9836,
       "props": {
         "w": 222,
         "h": 25,
@@ -4857,15 +4872,15 @@
       }
     },
     {
-      "id": "s_stl_7v",
+      "id": "s_stl_7w",
       "type": "text",
       "x": 76,
-      "y": 9745,
+      "y": 9873,
       "props": {
         "w": 630,
         "h": 24,
         "html": "9. SUMMARY",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 16,
         "color": "#0f172a",
         "align": "left",
@@ -4873,30 +4888,15 @@
       }
     },
     {
-      "id": "s_stl_7w",
+      "id": "s_stl_7x",
       "type": "text",
       "x": 76,
-      "y": 9775,
+      "y": 9903,
       "props": {
         "w": 630,
         "h": 19,
         "html": "Scope flags: 1 = supported, 0 = invalid input or separate verification required.",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_stl_7x",
-      "type": "text",
-      "x": 76,
-      "y": 9800,
-      "props": {
-        "w": 630,
-        "h": 19,
-        "html": "A failed scope flag prevents Member PASS, including in Input &amp; Results reports.",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -4906,22 +4906,37 @@
       "id": "s_stl_7y",
       "type": "text",
       "x": 76,
-      "y": 9825,
+      "y": 9928,
       "props": {
         "w": 630,
-        "h": 18,
-        "html": "Axial compression and nonnegative shear magnitudes",
-        "fontFamily": "Inter",
-        "fontSize": 12,
+        "h": 19,
+        "html": "A failed scope flag prevents Member PASS, including in Input &amp; Results reports.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
         "color": "#475569",
         "align": "left"
       }
     },
     {
       "id": "s_stl_7z",
+      "type": "text",
+      "x": 76,
+      "y": 9953,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Axial compression and nonnegative shear magnitudes",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_80",
       "type": "math",
       "x": 76,
-      "y": 9849,
+      "y": 9977,
       "props": {
         "w": 352,
         "h": 83,
@@ -4936,25 +4951,25 @@
       }
     },
     {
-      "id": "s_stl_80",
+      "id": "s_stl_81",
       "type": "text",
       "x": 76,
-      "y": 9983,
+      "y": 10066,
       "props": {
-        "w": 204,
+        "w": 630,
         "h": 18,
         "html": "Nonnegative moment magnitudes",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_81",
+      "id": "s_stl_82",
       "type": "math",
-      "x": 296,
-      "y": 9938,
+      "x": 76,
+      "y": 10090,
       "props": {
         "w": 362,
         "h": 83,
@@ -4969,25 +4984,25 @@
       }
     },
     {
-      "id": "s_stl_82",
+      "id": "s_stl_83",
       "type": "text",
       "x": 76,
-      "y": 10032,
+      "y": 10184,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Valid action signs",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_83",
+      "id": "s_stl_84",
       "type": "math",
-      "x": 296,
-      "y": 10027,
+      "x": 396,
+      "y": 10179,
       "props": {
         "w": 193,
         "h": 26,
@@ -5002,25 +5017,25 @@
       }
     },
     {
-      "id": "s_stl_84",
+      "id": "s_stl_85",
       "type": "text",
       "x": 76,
-      "y": 10104,
+      "y": 10256,
       "props": {
-        "w": 264,
+        "w": 304,
         "h": 18,
         "html": "Positive material stiffness and strength",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_85",
+      "id": "s_stl_86",
       "type": "math",
-      "x": 356,
-      "y": 10059,
+      "x": 396,
+      "y": 10211,
       "props": {
         "w": 301,
         "h": 83,
@@ -5035,25 +5050,25 @@
       }
     },
     {
-      "id": "s_stl_86",
+      "id": "s_stl_87",
       "type": "text",
       "x": 76,
-      "y": 10193,
+      "y": 10345,
       "props": {
         "w": 304,
         "h": 18,
         "html": "Positive partial factors and shear-area factor",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_87",
+      "id": "s_stl_88",
       "type": "math",
       "x": 396,
-      "y": 10148,
+      "y": 10300,
       "props": {
         "w": 283,
         "h": 83,
@@ -5068,25 +5083,25 @@
       }
     },
     {
-      "id": "s_stl_88",
+      "id": "s_stl_89",
       "type": "text",
       "x": 76,
-      "y": 10237,
+      "y": 10389,
       "props": {
         "w": 630,
         "h": 18,
         "html": "Valid material inputs (also fy ≤ 460 MPa above)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_89",
+      "id": "s_stl_8a",
       "type": "math",
       "x": 76,
-      "y": 10261,
+      "y": 10599,
       "props": {
         "w": 355,
         "h": 26,
@@ -5101,25 +5116,25 @@
       }
     },
     {
-      "id": "s_stl_8a",
+      "id": "s_stl_8b",
       "type": "text",
       "x": 76,
-      "y": 10338,
+      "y": 10631,
       "props": {
-        "w": 224,
+        "w": 630,
         "h": 18,
         "html": "Positive buckling lengths (SN003b)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_8b",
+      "id": "s_stl_8c",
       "type": "math",
-      "x": 316,
-      "y": 10293,
+      "x": 76,
+      "y": 10655,
       "props": {
         "w": 374,
         "h": 83,
@@ -5134,25 +5149,25 @@
       }
     },
     {
-      "id": "s_stl_8c",
+      "id": "s_stl_8d",
       "type": "text",
       "x": 76,
-      "y": 10644,
+      "y": 10789,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Positive end factors (SN003b)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_8d",
+      "id": "s_stl_8e",
       "type": "math",
-      "x": 296,
-      "y": 10599,
+      "x": 396,
+      "y": 10744,
       "props": {
         "w": 225,
         "h": 83,
@@ -5167,25 +5182,25 @@
       }
     },
     {
-      "id": "s_stl_8e",
+      "id": "s_stl_8f",
       "type": "text",
       "x": 76,
-      "y": 10688,
+      "y": 10833,
       "props": {
         "w": 630,
         "h": 18,
         "html": "Valid I/H dimensions, excluding fillets or welds",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_8f",
+      "id": "s_stl_8g",
       "type": "math",
       "x": 76,
-      "y": 10712,
+      "y": 10857,
       "props": {
         "w": 559,
         "h": 83,
@@ -5200,25 +5215,25 @@
       }
     },
     {
-      "id": "s_stl_8g",
+      "id": "s_stl_8h",
       "type": "text",
       "x": 76,
-      "y": 10846,
+      "y": 10991,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Positive selected C1 (SN003b)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_8h",
+      "id": "s_stl_8i",
       "type": "math",
-      "x": 296,
-      "y": 10801,
+      "x": 396,
+      "y": 10946,
       "props": {
         "w": 159,
         "h": 83,
@@ -5233,25 +5248,25 @@
       }
     },
     {
-      "id": "s_stl_8i",
+      "id": "s_stl_8j",
       "type": "text",
       "x": 76,
-      "y": 10890,
+      "y": 11035,
       "props": {
         "w": 630,
         "h": 18,
         "html": "Cm factors in Table B.3 range",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_8j",
+      "id": "s_stl_8k",
       "type": "math",
       "x": 76,
-      "y": 10914,
+      "y": 11059,
       "props": {
         "w": 614,
         "h": 83,
@@ -5266,25 +5281,25 @@
       }
     },
     {
-      "id": "s_stl_8k",
+      "id": "s_stl_8l",
       "type": "text",
       "x": 76,
-      "y": 11003,
+      "y": 11148,
       "props": {
         "w": 630,
         "h": 18,
         "html": "Section: Class ≤ 3; compression web not Class 4 (Table 5.2)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_8l",
+      "id": "s_stl_8m",
       "type": "math",
       "x": 76,
-      "y": 11027,
+      "y": 11172,
       "props": {
         "w": 394,
         "h": 83,
@@ -5299,25 +5314,25 @@
       }
     },
     {
-      "id": "s_stl_8m",
+      "id": "s_stl_8n",
       "type": "text",
       "x": 76,
-      "y": 11116,
+      "y": 11261,
       "props": {
         "w": 630,
         "h": 18,
         "html": "Table 6.2 rolled geometry range, or welded section",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_8n",
+      "id": "s_stl_8o",
       "type": "math",
       "x": 76,
-      "y": 11140,
+      "y": 11285,
       "props": {
         "w": 395,
         "h": 83,
@@ -5332,25 +5347,25 @@
       }
     },
     {
-      "id": "s_stl_8o",
+      "id": "s_stl_8p",
       "type": "text",
       "x": 76,
-      "y": 11229,
+      "y": 11374,
       "props": {
         "w": 630,
         "h": 18,
         "html": "Web shear buckling excluded (§6.2.6); one shear direction only",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_8p",
+      "id": "s_stl_8q",
       "type": "math",
       "x": 76,
-      "y": 11253,
+      "y": 11398,
       "props": {
         "w": 450,
         "h": 85,
@@ -5365,25 +5380,25 @@
       }
     },
     {
-      "id": "s_stl_8q",
+      "id": "s_stl_8r",
       "type": "text",
       "x": 76,
-      "y": 11344,
+      "y": 11489,
       "props": {
         "w": 630,
         "h": 18,
         "html": "High shear with bending requires separate stability verification",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_8r",
+      "id": "s_stl_8s",
       "type": "math",
       "x": 76,
-      "y": 11368,
+      "y": 11513,
       "props": {
         "w": 471,
         "h": 83,
@@ -5398,25 +5413,25 @@
       }
     },
     {
-      "id": "s_stl_8s",
+      "id": "s_stl_8t",
       "type": "text",
       "x": 76,
-      "y": 11502,
+      "y": 11815,
       "props": {
         "w": 304,
         "h": 18,
         "html": "Annex B plastic branch: Class 1/2 and λz ≥ 0.4",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_8t",
+      "id": "s_stl_8u",
       "type": "math",
       "x": 396,
-      "y": 11457,
+      "y": 11770,
       "props": {
         "w": 271,
         "h": 83,
@@ -5431,25 +5446,25 @@
       }
     },
     {
-      "id": "s_stl_8u",
+      "id": "s_stl_8v",
       "type": "text",
       "x": 76,
-      "y": 11546,
+      "y": 11859,
       "props": {
         "w": 630,
         "h": 18,
         "html": "Torsional mode must not govern combined stability",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_8v",
+      "id": "s_stl_8w",
       "type": "math",
       "x": 76,
-      "y": 11770,
+      "y": 11883,
       "props": {
         "w": 333,
         "h": 83,
@@ -5464,25 +5479,25 @@
       }
     },
     {
-      "id": "s_stl_8w",
+      "id": "s_stl_8x",
       "type": "text",
       "x": 76,
-      "y": 11859,
+      "y": 11972,
       "props": {
         "w": 630,
         "h": 18,
         "html": "Interaction applicability; pure compression / major bending exempt",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_8x",
+      "id": "s_stl_8y",
       "type": "math",
       "x": 76,
-      "y": 11883,
+      "y": 11996,
       "props": {
         "w": 427,
         "h": 122,
@@ -5497,25 +5512,25 @@
       }
     },
     {
-      "id": "s_stl_8y",
+      "id": "s_stl_8z",
       "type": "text",
       "x": 76,
-      "y": 12016,
+      "y": 12129,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Input validity",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_8z",
+      "id": "s_stl_90",
       "type": "math",
-      "x": 296,
-      "y": 12011,
+      "x": 396,
+      "y": 12124,
       "props": {
         "w": 289,
         "h": 26,
@@ -5530,25 +5545,25 @@
       }
     },
     {
-      "id": "s_stl_90",
+      "id": "s_stl_91",
       "type": "text",
       "x": 76,
-      "y": 12048,
+      "y": 12161,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Section and LTB input validity",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_91",
+      "id": "s_stl_92",
       "type": "math",
-      "x": 296,
-      "y": 12043,
+      "x": 396,
+      "y": 12156,
       "props": {
         "w": 185,
         "h": 26,
@@ -5563,25 +5578,25 @@
       }
     },
     {
-      "id": "s_stl_92",
+      "id": "s_stl_93",
       "type": "text",
       "x": 76,
-      "y": 12075,
+      "y": 12188,
       "props": {
         "w": 630,
         "h": 18,
         "html": "All scope flags and LTB case valid (1 = yes)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_93",
+      "id": "s_stl_94",
       "type": "math",
       "x": 76,
-      "y": 12099,
+      "y": 12212,
       "props": {
         "w": 380,
         "h": 26,
@@ -5596,26 +5611,26 @@
       }
     },
     {
-      "id": "s_stl_94",
+      "id": "s_stl_95",
       "type": "text",
       "x": 76,
-      "y": 12136,
+      "y": 12249,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Scope (0 = NOT VERIFIED)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       },
-      "groupId": "s_stl_group_94"
+      "groupId": "s_stl_group_95"
     },
     {
-      "id": "s_stl_95",
+      "id": "s_stl_96",
       "type": "math",
-      "x": 296,
-      "y": 12131,
+      "x": 396,
+      "y": 12244,
       "props": {
         "w": 176,
         "h": 26,
@@ -5628,29 +5643,29 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "groupId": "s_stl_group_94"
+      "groupId": "s_stl_group_95"
     },
     {
-      "id": "s_stl_96",
+      "id": "s_stl_97",
       "type": "text",
       "x": 76,
-      "y": 12176,
+      "y": 12289,
       "props": {
         "w": 630,
         "h": 18,
         "html": "Governing utilisation (valid only when scope = 1)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       },
-      "groupId": "s_stl_group_94"
+      "groupId": "s_stl_group_95"
     },
     {
-      "id": "s_stl_97",
+      "id": "s_stl_98",
       "type": "math",
       "x": 96,
-      "y": 12191,
+      "y": 12304,
       "props": {
         "w": 587,
         "h": 25,
@@ -5663,29 +5678,29 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "groupId": "s_stl_group_94"
+      "groupId": "s_stl_group_95"
     },
     {
-      "id": "s_stl_98",
+      "id": "s_stl_99",
       "type": "text",
       "x": 76,
-      "y": 12236,
+      "y": 12349,
       "props": {
-        "w": 244,
+        "w": 304,
         "h": 18,
         "html": "Resistance check (scope must also pass)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       },
-      "groupId": "s_stl_group_94"
+      "groupId": "s_stl_group_95"
     },
     {
-      "id": "s_stl_99",
+      "id": "s_stl_9a",
       "type": "math",
-      "x": 336,
-      "y": 12231,
+      "x": 396,
+      "y": 12344,
       "props": {
         "w": 201,
         "h": 25,
@@ -5698,29 +5713,29 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "groupId": "s_stl_group_94"
+      "groupId": "s_stl_group_95"
     },
     {
-      "id": "s_stl_9a",
+      "id": "s_stl_9b",
       "type": "text",
       "x": 76,
-      "y": 12316,
+      "y": 12429,
       "props": {
-        "w": 284,
+        "w": 304,
         "h": 18,
         "html": "Member: both scope and resistance must pass",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       },
-      "groupId": "s_stl_group_94"
+      "groupId": "s_stl_group_95"
     },
     {
-      "id": "s_stl_9b",
+      "id": "s_stl_9c",
       "type": "math",
-      "x": 376,
-      "y": 12271,
+      "x": 396,
+      "y": 12384,
       "props": {
         "w": 264,
         "h": 83,
@@ -5733,18 +5748,18 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "groupId": "s_stl_group_94"
+      "groupId": "s_stl_group_95"
     },
     {
-      "id": "s_stl_9c",
+      "id": "s_stl_9d",
       "type": "text",
       "x": 76,
-      "y": 12372,
+      "y": 12485,
       "props": {
         "w": 630,
         "h": 29,
         "html": "ANNEX",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 20,
         "color": "#1e3a5f",
         "align": "left",
@@ -5755,15 +5770,15 @@
       }
     },
     {
-      "id": "s_stl_9d",
+      "id": "s_stl_9e",
       "type": "text",
       "x": 76,
-      "y": 12413,
+      "y": 12526,
       "props": {
         "w": 630,
         "h": 24,
         "html": "LTB moment cases – C1 and C2 (SN003b Tables 3.1 and 3.2)",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 16,
         "color": "#0f172a",
         "align": "left",
@@ -5775,30 +5790,15 @@
       }
     },
     {
-      "id": "s_stl_9e",
+      "id": "s_stl_9f",
       "type": "text",
       "x": 76,
-      "y": 12443,
+      "y": 12556,
       "props": {
         "w": 630,
         "h": 19,
         "html": "SN003b Tables 3.1 / 3.2; k = kw = 1 and κ = 0 (conservative C1). No interpolation of cases.",
-        "fontFamily": "Inter",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_stl_9f",
-      "type": "text",
-      "x": 76,
-      "y": 12468,
-      "props": {
-        "w": 630,
-        "h": 19,
-        "html": "Support symbols show bending restraints; lateral movement and twist are restrained at both ends.",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -5808,12 +5808,12 @@
       "id": "s_stl_9g",
       "type": "text",
       "x": 76,
-      "y": 12493,
+      "y": 12581,
       "props": {
         "w": 630,
         "h": 19,
-        "html": "Double-click a C1/C2 cell to edit. Lookup uses these cells; use case 0 for other arrangements.",
-        "fontFamily": "Inter",
+        "html": "Support symbols show bending restraints; lateral movement and twist are restrained at both ends.",
+        "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
         "align": "left"
@@ -5821,18 +5821,33 @@
     },
     {
       "id": "s_stl_9h",
+      "type": "text",
+      "x": 76,
+      "y": 12606,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Double-click a C1/C2 cell to edit. Lookup uses these cells; use case 0 for other arrangements.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_stl_9i",
       "type": "image",
       "x": 76,
       "y": 12941,
       "props": {
         "w": 640,
         "h": 740,
-        "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iNzQwIiB2aWV3Qm94PSIwIDAgNjQwIDc0MCI+CiAgICA8dGl0bGU+TFRCIGNhc2VzIDEgdG8gNzsgU0NJIE5DQ0kgU04wMDNiIFRhYmxlcyAzLjEgYW5kIDMuMjwvdGl0bGU+CiAgICA8cmVjdCB4PSIwLjUiIHk9IjAuNSIgd2lkdGg9IjYzOSIgaGVpZ2h0PSI3MzkiIGZpbGw9IndoaXRlIiBzdHJva2U9IiM5NGEzYjgiLz4KICAgIDxyZWN0IHg9IjEiIHk9IjEiIHdpZHRoPSI2MzgiIGhlaWdodD0iMzkiIGZpbGw9IiNlZmY2ZmYiLz4KICAgIDxnIHN0cm9rZT0iI2NiZDVlMSIgc3Ryb2tlLXdpZHRoPSIxIj48bGluZSB4MT0iMCIgeTE9IjQwIiB4Mj0iNjQwIiB5Mj0iNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSIxNDAiIHgyPSI2NDAiIHkyPSIxNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSIyNDAiIHgyPSI2NDAiIHkyPSIyNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSIzNDAiIHgyPSI2NDAiIHkyPSIzNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSI0NDAiIHgyPSI2NDAiIHkyPSI0NDAiIC8+PGxpbmUgeDE9IjAiIHkxPSI1NDAiIHgyPSI2NDAiIHkyPSI1NDAiIC8+PGxpbmUgeDE9IjAiIHkxPSI2NDAiIHgyPSI2NDAiIHkyPSI2NDAiIC8+PGxpbmUgeDE9IjYwIiB5MT0iMCIgeDI9IjYwIiB5Mj0iNzQwIiAvPjxsaW5lIHgxPSIyODAiIHkxPSIwIiB4Mj0iMjgwIiB5Mj0iNzQwIiAvPjxsaW5lIHgxPSI0ODAiIHkxPSIwIiB4Mj0iNDgwIiB5Mj0iNzQwIiAvPjxsaW5lIHgxPSI1NjAiIHkxPSIwIiB4Mj0iNTYwIiB5Mj0iNzQwIiAvPjwvZz4KICAgIDxnIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMWUzYTVmIj4KICAgICAgPGcgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPjx0ZXh0IHg9IjMwIiB5PSIyNSIgPkNhc2U8L3RleHQ+PHRleHQgeD0iMTcwIiB5PSIyNSIgPkxvYWRpbmcgYW5kIHN1cHBvcnRzPC90ZXh0Pjx0ZXh0IHg9IjM4MCIgeT0iMjUiID5CZW5kaW5nIG1vbWVudCBkaWFncmFtPC90ZXh0Pjx0ZXh0IHg9IjUyMCIgeT0iMjUiID5DMTwvdGV4dD48dGV4dCB4PSI2MDAiIHk9IjI1IiA+QzI8L3RleHQ+PC9nPgogICAgICA8ZyBpZD0ibHRiLWNhc2UtMSI+PHRleHQgeD0iMzAiIHk9Ijk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+MTwvdGV4dD48bGluZSB4MT0iODgiIHkxPSI4MiIgeDI9IjI1NCIgeTI9IjgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCw4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxsaW5lIHgxPSIyNDYiIHkxPSI5NyIgeDI9IjI2MiIgeTI9Ijk3IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNODgsNTVBMTEsMTEgMCAxIDEgNzcsNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNNzQsNzFMNzcsNjZMODAsNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxMDMiIHk9IjYyIiA+TTwvdGV4dD48cGF0aCBkPSJNMjU0LDU1QTExLDExIDAgMSAwIDI2NSw2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yNjIsNzFMMjY1LDY2TDI2OCw3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjIyMCIgeT0iNjIiIHRleHQtYW5jaG9yPSJlbmQiPjEuMDBNPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iMTI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSArMS4wMDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iODciIHgyPSI0NjYiIHkyPSI4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDg3TDI5NC4wMCwxMTIuMDBMMjk4LjMwLDExMi4wMEwzMDIuNjAsMTEyLjAwTDMwNi45MCwxMTIuMDBMMzExLjIwLDExMi4wMEwzMTUuNTAsMTEyLjAwTDMxOS44MCwxMTIuMDBMMzI0LjEwLDExMi4wMEwzMjguNDAsMTEyLjAwTDMzMi43MCwxMTIuMDBMMzM3LjAwLDExMi4wMEwzNDEuMzAsMTEyLjAwTDM0NS42MCwxMTIuMDBMMzQ5LjkwLDExMi4wMEwzNTQuMjAsMTEyLjAwTDM1OC41MCwxMTIuMDBMMzYyLjgwLDExMi4wMEwzNjcuMTAsMTEyLjAwTDM3MS40MCwxMTIuMDBMMzc1LjcwLDExMi4wMEwzODAuMDAsMTEyLjAwTDM4NC4zMCwxMTIuMDBMMzg4LjYwLDExMi4wMEwzOTIuOTAsMTEyLjAwTDM5Ny4yMCwxMTIuMDBMNDAxLjUwLDExMi4wMEw0MDUuODAsMTEyLjAwTDQxMC4xMCwxMTIuMDBMNDE0LjQwLDExMi4wMEw0MTguNzAsMTEyLjAwTDQyMy4wMCwxMTIuMDBMNDI3LjMwLDExMi4wMEw0MzEuNjAsMTEyLjAwTDQzNS45MCwxMTIuMDBMNDQwLjIwLDExMi4wMEw0NDQuNTAsMTEyLjAwTDQ0OC44MCwxMTIuMDBMNDUzLjEwLDExMi4wMEw0NTcuNDAsMTEyLjAwTDQ2MS43MCwxMTIuMDBMNDY2LjAwLDExMi4wMEw0NjYsODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSIxMjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtMiI+PHRleHQgeD0iMzAiIHk9IjE5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjI8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iMTgyIiB4Mj0iMjU0IiB5Mj0iMTgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCwxODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCwxODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PGxpbmUgeDE9IjI0NiIgeTE9IjE5NyIgeDI9IjI2MiIgeTI9IjE5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTg4LDE1NUExMSwxMSAwIDEgMSA3NywxNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNNzQsMTcxTDc3LDE2Nkw4MCwxNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxMDMiIHk9IjE2MiIgPk08L3RleHQ+PHBhdGggZD0iTTI1NCwxNTVBMTEsMTEgMCAxIDAgMjY1LDE2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yNjIsMTcxTDI2NSwxNjZMMjY4LDE3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjIyMCIgeT0iMTYyIiB0ZXh0LWFuY2hvcj0iZW5kIj4wLjc1TTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjIyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+RW5kIG1vbWVudHM7IM+IID0gKzAuNzU8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9IjE4NyIgeDI9IjQ2NiIgeTI9IjE4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDE4N0wyOTQuMDAsMjEyLjAwTDI5OC4zMCwyMTEuODRMMzAyLjYwLDIxMS42OUwzMDYuOTAsMjExLjUzTDMxMS4yMCwyMTEuMzhMMzE1LjUwLDIxMS4yMkwzMTkuODAsMjExLjA2TDMyNC4xMCwyMTAuOTFMMzI4LjQwLDIxMC43NUwzMzIuNzAsMjEwLjU5TDMzNy4wMCwyMTAuNDRMMzQxLjMwLDIxMC4yOEwzNDUuNjAsMjEwLjEzTDM0OS45MCwyMDkuOTdMMzU0LjIwLDIwOS44MUwzNTguNTAsMjA5LjY2TDM2Mi44MCwyMDkuNTBMMzY3LjEwLDIwOS4zNEwzNzEuNDAsMjA5LjE5TDM3NS43MCwyMDkuMDNMMzgwLjAwLDIwOC44OEwzODQuMzAsMjA4LjcyTDM4OC42MCwyMDguNTZMMzkyLjkwLDIwOC40MUwzOTcuMjAsMjA4LjI1TDQwMS41MCwyMDguMDlMNDA1LjgwLDIwNy45NEw0MTAuMTAsMjA3Ljc4TDQxNC40MCwyMDcuNjNMNDE4LjcwLDIwNy40N0w0MjMuMDAsMjA3LjMxTDQyNy4zMCwyMDcuMTZMNDMxLjYwLDIwNy4wMEw0MzUuOTAsMjA2Ljg0TDQ0MC4yMCwyMDYuNjlMNDQ0LjUwLDIwNi41M0w0NDguODAsMjA2LjM4TDQ1My4xMCwyMDYuMjJMNDU3LjQwLDIwNi4wNkw0NjEuNzAsMjA1LjkxTDQ2Ni4wMCwyMDUuNzVMNDY2LDE4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjIyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPjxnIGlkPSJsdGItY2FzZS0zIj48dGV4dCB4PSIzMCIgeT0iMjk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+MzwvdGV4dD48bGluZSB4MT0iODgiIHkxPSIyODIiIHgyPSIyNTQiIHkyPSIyODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDI4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDI4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iMjk3IiB4Mj0iMjYyIiB5Mj0iMjk3IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNODgsMjU1QTExLDExIDAgMSAxIDc3LDI2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik03NCwyNzFMNzcsMjY2TDgwLDI3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjEwMyIgeT0iMjYyIiA+TTwvdGV4dD48cGF0aCBkPSJNMjU0LDI1NUExMSwxMSAwIDEgMCAyNjUsMjY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI2MiwyNzFMMjY1LDI2NkwyNjgsMjcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMjIwIiB5PSIyNjIiIHRleHQtYW5jaG9yPSJlbmQiPjAuNTBNPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iMzI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSArMC41MDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iMjg3IiB4Mj0iNDY2IiB5Mj0iMjg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsMjg3TDI5NC4wMCwzMTIuMDBMMjk4LjMwLDMxMS42OUwzMDIuNjAsMzExLjM4TDMwNi45MCwzMTEuMDZMMzExLjIwLDMxMC43NUwzMTUuNTAsMzEwLjQ0TDMxOS44MCwzMTAuMTNMMzI0LjEwLDMwOS44MUwzMjguNDAsMzA5LjUwTDMzMi43MCwzMDkuMTlMMzM3LjAwLDMwOC44OEwzNDEuMzAsMzA4LjU2TDM0NS42MCwzMDguMjVMMzQ5LjkwLDMwNy45NEwzNTQuMjAsMzA3LjYzTDM1OC41MCwzMDcuMzFMMzYyLjgwLDMwNy4wMEwzNjcuMTAsMzA2LjY5TDM3MS40MCwzMDYuMzhMMzc1LjcwLDMwNi4wNkwzODAuMDAsMzA1Ljc1TDM4NC4zMCwzMDUuNDRMMzg4LjYwLDMwNS4xM0wzOTIuOTAsMzA0LjgxTDM5Ny4yMCwzMDQuNTBMNDAxLjUwLDMwNC4xOUw0MDUuODAsMzAzLjg4TDQxMC4xMCwzMDMuNTZMNDE0LjQwLDMwMy4yNUw0MTguNzAsMzAyLjk0TDQyMy4wMCwzMDIuNjNMNDI3LjMwLDMwMi4zMUw0MzEuNjAsMzAyLjAwTDQzNS45MCwzMDEuNjlMNDQwLjIwLDMwMS4zOEw0NDQuNTAsMzAxLjA2TDQ0OC44MCwzMDAuNzVMNDUzLjEwLDMwMC40NEw0NTcuNDAsMzAwLjEzTDQ2MS43MCwyOTkuODFMNDY2LjAwLDI5OS41MEw0NjYsMjg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iMzI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTQiPjx0ZXh0IHg9IjMwIiB5PSIzOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij40PC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjM4MiIgeDI9IjI1NCIgeTI9IjM4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsMzg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxwYXRoIGQ9Ik0yNTQsMzg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxsaW5lIHgxPSIyNDYiIHkxPSIzOTciIHgyPSIyNjIiIHkyPSIzOTciIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik04OCwzNTVBMTEsMTEgMCAxIDEgNzcsMzY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDM3MUw3NywzNjZMODAsMzcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSIzNjIiID5NPC90ZXh0PjxwYXRoIGQ9Ik0yNTQsMzU1QTExLDExIDAgMSAwIDI2NSwzNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjYyLDM3MUwyNjUsMzY2TDI2OCwzNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIyMjAiIHk9IjM2MiIgdGV4dC1hbmNob3I9ImVuZCI+MC4yNU08L3RleHQ+PHRleHQgeD0iMTcxIiB5PSI0MjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkVuZCBtb21lbnRzOyDPiCA9ICswLjI1PC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSIzODciIHgyPSI0NjYiIHkyPSIzODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCwzODdMMjk0LjAwLDQxMi4wMEwyOTguMzAsNDExLjUzTDMwMi42MCw0MTEuMDZMMzA2LjkwLDQxMC41OUwzMTEuMjAsNDEwLjEzTDMxNS41MCw0MDkuNjZMMzE5LjgwLDQwOS4xOUwzMjQuMTAsNDA4LjcyTDMyOC40MCw0MDguMjVMMzMyLjcwLDQwNy43OEwzMzcuMDAsNDA3LjMxTDM0MS4zMCw0MDYuODRMMzQ1LjYwLDQwNi4zOEwzNDkuOTAsNDA1LjkxTDM1NC4yMCw0MDUuNDRMMzU4LjUwLDQwNC45N0wzNjIuODAsNDA0LjUwTDM2Ny4xMCw0MDQuMDNMMzcxLjQwLDQwMy41NkwzNzUuNzAsNDAzLjA5TDM4MC4wMCw0MDIuNjNMMzg0LjMwLDQwMi4xNkwzODguNjAsNDAxLjY5TDM5Mi45MCw0MDEuMjJMMzk3LjIwLDQwMC43NUw0MDEuNTAsNDAwLjI4TDQwNS44MCwzOTkuODFMNDEwLjEwLDM5OS4zNEw0MTQuNDAsMzk4Ljg4TDQxOC43MCwzOTguNDFMNDIzLjAwLDM5Ny45NEw0MjcuMzAsMzk3LjQ3TDQzMS42MCwzOTcuMDBMNDM1LjkwLDM5Ni41M0w0NDAuMjAsMzk2LjA2TDQ0NC41MCwzOTUuNTlMNDQ4LjgwLDM5NS4xM0w0NTMuMTAsMzk0LjY2TDQ1Ny40MCwzOTQuMTlMNDYxLjcwLDM5My43Mkw0NjYuMDAsMzkzLjI1TDQ2NiwzODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSI0MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtNSI+PHRleHQgeD0iMzAiIHk9IjQ5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjU8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iNDgyIiB4Mj0iMjU0IiB5Mj0iNDgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCw0ODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCw0ODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PGxpbmUgeDE9IjI0NiIgeTE9IjQ5NyIgeDI9IjI2MiIgeTI9IjQ5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTg4LDQ1NUExMSwxMSAwIDEgMSA3Nyw0NjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNNzQsNDcxTDc3LDQ2Nkw4MCw0NzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxMDMiIHk9IjQ2MiIgPk08L3RleHQ+PHRleHQgeD0iMTcxIiB5PSI1MjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkVuZCBtb21lbnRzOyDPiCA9IDAuMDA8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9IjQ4NyIgeDI9IjQ2NiIgeTI9IjQ4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDQ4N0wyOTQuMDAsNTEyLjAwTDI5OC4zMCw1MTEuMzhMMzAyLjYwLDUxMC43NUwzMDYuOTAsNTEwLjEzTDMxMS4yMCw1MDkuNTBMMzE1LjUwLDUwOC44OEwzMTkuODAsNTA4LjI1TDMyNC4xMCw1MDcuNjNMMzI4LjQwLDUwNy4wMEwzMzIuNzAsNTA2LjM4TDMzNy4wMCw1MDUuNzVMMzQxLjMwLDUwNS4xM0wzNDUuNjAsNTA0LjUwTDM0OS45MCw1MDMuODhMMzU0LjIwLDUwMy4yNUwzNTguNTAsNTAyLjYzTDM2Mi44MCw1MDIuMDBMMzY3LjEwLDUwMS4zOEwzNzEuNDAsNTAwLjc1TDM3NS43MCw1MDAuMTNMMzgwLjAwLDQ5OS41MEwzODQuMzAsNDk4Ljg4TDM4OC42MCw0OTguMjVMMzkyLjkwLDQ5Ny42M0wzOTcuMjAsNDk3LjAwTDQwMS41MCw0OTYuMzhMNDA1LjgwLDQ5NS43NUw0MTAuMTAsNDk1LjEzTDQxNC40MCw0OTQuNTBMNDE4LjcwLDQ5My44OEw0MjMuMDAsNDkzLjI1TDQyNy4zMCw0OTIuNjNMNDMxLjYwLDQ5Mi4wMEw0MzUuOTAsNDkxLjM4TDQ0MC4yMCw0OTAuNzVMNDQ0LjUwLDQ5MC4xM0w0NDguODAsNDg5LjUwTDQ1My4xMCw0ODguODhMNDU3LjQwLDQ4OC4yNUw0NjEuNzAsNDg3LjYzTDQ2Ni4wMCw0ODcuMDBMNDY2LDQ4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjUyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPjxnIGlkPSJsdGItY2FzZS02Ij48dGV4dCB4PSIzMCIgeT0iNTk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+NjwvdGV4dD48bGluZSB4MT0iODgiIHkxPSI1ODIiIHgyPSIyNTQiIHkyPSI1ODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDU4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDU4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iNTk3IiB4Mj0iMjYyIiB5Mj0iNTk3IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNODgsNTU1QTExLDExIDAgMSAxIDc3LDU2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik03NCw1NzFMNzcsNTY2TDgwLDU3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjEwMyIgeT0iNTYyIiA+TTwvdGV4dD48cGF0aCBkPSJNMjU0LDU1NUExMSwxMSAwIDEgMSAyNDMsNTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI0MCw1NzFMMjQzLDU2NkwyNDYsNTcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMjIwIiB5PSI1NjIiIHRleHQtYW5jaG9yPSJlbmQiPuKIkjAuMjVNPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iNjI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSAtMC4yNTwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iNTg3IiB4Mj0iNDY2IiB5Mj0iNTg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsNTg3TDI5NC4wMCw2MTIuMDBMMjk4LjMwLDYxMS4yMkwzMDIuNjAsNjEwLjQ0TDMwNi45MCw2MDkuNjZMMzExLjIwLDYwOC44OEwzMTUuNTAsNjA4LjA5TDMxOS44MCw2MDcuMzFMMzI0LjEwLDYwNi41M0wzMjguNDAsNjA1Ljc1TDMzMi43MCw2MDQuOTdMMzM3LjAwLDYwNC4xOUwzNDEuMzAsNjAzLjQxTDM0NS42MCw2MDIuNjNMMzQ5LjkwLDYwMS44NEwzNTQuMjAsNjAxLjA2TDM1OC41MCw2MDAuMjhMMzYyLjgwLDU5OS41MEwzNjcuMTAsNTk4LjcyTDM3MS40MCw1OTcuOTRMMzc1LjcwLDU5Ny4xNkwzODAuMDAsNTk2LjM4TDM4NC4zMCw1OTUuNTlMMzg4LjYwLDU5NC44MUwzOTIuOTAsNTk0LjAzTDM5Ny4yMCw1OTMuMjVMNDAxLjUwLDU5Mi40N0w0MDUuODAsNTkxLjY5TDQxMC4xMCw1OTAuOTFMNDE0LjQwLDU5MC4xM0w0MTguNzAsNTg5LjM0TDQyMy4wMCw1ODguNTZMNDI3LjMwLDU4Ny43OEw0MzEuNjAsNTg3LjAwTDQzNS45MCw1ODYuMjJMNDQwLjIwLDU4NS40NEw0NDQuNTAsNTg0LjY2TDQ0OC44MCw1ODMuODhMNDUzLjEwLDU4My4wOUw0NTcuNDAsNTgyLjMxTDQ2MS43MCw1ODEuNTNMNDY2LjAwLDU4MC43NUw0NjYsNTg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iNjI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTciPjx0ZXh0IHg9IjMwIiB5PSI2OTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij43PC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjY4MiIgeDI9IjI1NCIgeTI9IjY4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsNjg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxwYXRoIGQ9Ik0yNTQsNjg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxsaW5lIHgxPSIyNDYiIHkxPSI2OTciIHgyPSIyNjIiIHkyPSI2OTciIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik04OCw2NTVBMTEsMTEgMCAxIDEgNzcsNjY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDY3MUw3Nyw2NjZMODAsNjcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSI2NjIiID5NPC90ZXh0PjxwYXRoIGQ9Ik0yNTQsNjU1QTExLDExIDAgMSAxIDI0Myw2NjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjQwLDY3MUwyNDMsNjY2TDI0Niw2NzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIyMjAiIHk9IjY2MiIgdGV4dC1hbmNob3I9ImVuZCI+4oiSMC41ME08L3RleHQ+PHRleHQgeD0iMTcxIiB5PSI3MjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkVuZCBtb21lbnRzOyDPiCA9IC0wLjUwPC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSI2ODciIHgyPSI0NjYiIHkyPSI2ODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCw2ODdMMjk0LjAwLDcxMi4wMEwyOTguMzAsNzExLjA2TDMwMi42MCw3MTAuMTNMMzA2LjkwLDcwOS4xOUwzMTEuMjAsNzA4LjI1TDMxNS41MCw3MDcuMzFMMzE5LjgwLDcwNi4zOEwzMjQuMTAsNzA1LjQ0TDMyOC40MCw3MDQuNTBMMzMyLjcwLDcwMy41NkwzMzcuMDAsNzAyLjYzTDM0MS4zMCw3MDEuNjlMMzQ1LjYwLDcwMC43NUwzNDkuOTAsNjk5LjgxTDM1NC4yMCw2OTguODhMMzU4LjUwLDY5Ny45NEwzNjIuODAsNjk3LjAwTDM2Ny4xMCw2OTYuMDZMMzcxLjQwLDY5NS4xM0wzNzUuNzAsNjk0LjE5TDM4MC4wMCw2OTMuMjVMMzg0LjMwLDY5Mi4zMUwzODguNjAsNjkxLjM4TDM5Mi45MCw2OTAuNDRMMzk3LjIwLDY4OS41MEw0MDEuNTAsNjg4LjU2TDQwNS44MCw2ODcuNjNMNDEwLjEwLDY4Ni42OUw0MTQuNDAsNjg1Ljc1TDQxOC43MCw2ODQuODFMNDIzLjAwLDY4My44OEw0MjcuMzAsNjgyLjk0TDQzMS42MCw2ODIuMDBMNDM1LjkwLDY4MS4wNkw0NDAuMjAsNjgwLjEzTDQ0NC41MCw2NzkuMTlMNDQ4LjgwLDY3OC4yNUw0NTMuMTAsNjc3LjMxTDQ1Ny40MCw2NzYuMzhMNDYxLjcwLDY3NS40NEw0NjYuMDAsNjc0LjUwTDQ2Niw2ODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSI3MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz4KICAgIDwvZz4KICA8L3N2Zz4="
+        "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iNzQwIiB2aWV3Qm94PSIwIDAgNjQwIDc0MCI+CiAgICA8dGl0bGU+TFRCIGNhc2VzIDEgdG8gNzsgU0NJIE5DQ0kgU04wMDNiIFRhYmxlcyAzLjEgYW5kIDMuMjwvdGl0bGU+CiAgICA8cmVjdCB4PSIwLjUiIHk9IjAuNSIgd2lkdGg9IjYzOSIgaGVpZ2h0PSI3MzkiIGZpbGw9IndoaXRlIiBzdHJva2U9IiM5NGEzYjgiLz4KICAgIDxyZWN0IHg9IjEiIHk9IjEiIHdpZHRoPSI2MzgiIGhlaWdodD0iMzkiIGZpbGw9IiNlZmY2ZmYiLz4KICAgIDxnIHN0cm9rZT0iI2NiZDVlMSIgc3Ryb2tlLXdpZHRoPSIxIj48bGluZSB4MT0iMCIgeTE9IjQwIiB4Mj0iNjQwIiB5Mj0iNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSIxNDAiIHgyPSI2NDAiIHkyPSIxNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSIyNDAiIHgyPSI2NDAiIHkyPSIyNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSIzNDAiIHgyPSI2NDAiIHkyPSIzNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSI0NDAiIHgyPSI2NDAiIHkyPSI0NDAiIC8+PGxpbmUgeDE9IjAiIHkxPSI1NDAiIHgyPSI2NDAiIHkyPSI1NDAiIC8+PGxpbmUgeDE9IjAiIHkxPSI2NDAiIHgyPSI2NDAiIHkyPSI2NDAiIC8+PGxpbmUgeDE9IjYwIiB5MT0iMCIgeDI9IjYwIiB5Mj0iNzQwIiAvPjxsaW5lIHgxPSIyODAiIHkxPSIwIiB4Mj0iMjgwIiB5Mj0iNzQwIiAvPjxsaW5lIHgxPSI0ODAiIHkxPSIwIiB4Mj0iNDgwIiB5Mj0iNzQwIiAvPjxsaW5lIHgxPSI1NjAiIHkxPSIwIiB4Mj0iNTYwIiB5Mj0iNzQwIiAvPjwvZz4KICAgIDxnIGZvbnQtZmFtaWx5PSJSb2JvdG8sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzFlM2E1ZiI+CiAgICAgIDxnIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj48dGV4dCB4PSIzMCIgeT0iMjUiID5DYXNlPC90ZXh0Pjx0ZXh0IHg9IjE3MCIgeT0iMjUiID5Mb2FkaW5nIGFuZCBzdXBwb3J0czwvdGV4dD48dGV4dCB4PSIzODAiIHk9IjI1IiA+QmVuZGluZyBtb21lbnQgZGlhZ3JhbTwvdGV4dD48dGV4dCB4PSI1MjAiIHk9IjI1IiA+QzE8L3RleHQ+PHRleHQgeD0iNjAwIiB5PSIyNSIgPkMyPC90ZXh0PjwvZz4KICAgICAgPGcgaWQ9Imx0Yi1jYXNlLTEiPjx0ZXh0IHg9IjMwIiB5PSI5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjE8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iODIiIHgyPSIyNTQiIHkyPSI4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCw4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iOTciIHgyPSIyNjIiIHkyPSI5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTg4LDU1QTExLDExIDAgMSAxIDc3LDY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDcxTDc3LDY2TDgwLDcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSI2MiIgPk08L3RleHQ+PHBhdGggZD0iTTI1NCw1NUExMSwxMSAwIDEgMCAyNjUsNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjYyLDcxTDI2NSw2NkwyNjgsNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIyMjAiIHk9IjYyIiB0ZXh0LWFuY2hvcj0iZW5kIj4xLjAwTTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjEyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+RW5kIG1vbWVudHM7IM+IID0gKzEuMDA8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9Ijg3IiB4Mj0iNDY2IiB5Mj0iODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCw4N0wyOTQuMDAsMTEyLjAwTDI5OC4zMCwxMTIuMDBMMzAyLjYwLDExMi4wMEwzMDYuOTAsMTEyLjAwTDMxMS4yMCwxMTIuMDBMMzE1LjUwLDExMi4wMEwzMTkuODAsMTEyLjAwTDMyNC4xMCwxMTIuMDBMMzI4LjQwLDExMi4wMEwzMzIuNzAsMTEyLjAwTDMzNy4wMCwxMTIuMDBMMzQxLjMwLDExMi4wMEwzNDUuNjAsMTEyLjAwTDM0OS45MCwxMTIuMDBMMzU0LjIwLDExMi4wMEwzNTguNTAsMTEyLjAwTDM2Mi44MCwxMTIuMDBMMzY3LjEwLDExMi4wMEwzNzEuNDAsMTEyLjAwTDM3NS43MCwxMTIuMDBMMzgwLjAwLDExMi4wMEwzODQuMzAsMTEyLjAwTDM4OC42MCwxMTIuMDBMMzkyLjkwLDExMi4wMEwzOTcuMjAsMTEyLjAwTDQwMS41MCwxMTIuMDBMNDA1LjgwLDExMi4wMEw0MTAuMTAsMTEyLjAwTDQxNC40MCwxMTIuMDBMNDE4LjcwLDExMi4wMEw0MjMuMDAsMTEyLjAwTDQyNy4zMCwxMTIuMDBMNDMxLjYwLDExMi4wMEw0MzUuOTAsMTEyLjAwTDQ0MC4yMCwxMTIuMDBMNDQ0LjUwLDExMi4wMEw0NDguODAsMTEyLjAwTDQ1My4xMCwxMTIuMDBMNDU3LjQwLDExMi4wMEw0NjEuNzAsMTEyLjAwTDQ2Ni4wMCwxMTIuMDBMNDY2LDg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iMTI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTIiPjx0ZXh0IHg9IjMwIiB5PSIxOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij4yPC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjE4MiIgeDI9IjI1NCIgeTI9IjE4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsMTg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxwYXRoIGQ9Ik0yNTQsMTg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxsaW5lIHgxPSIyNDYiIHkxPSIxOTciIHgyPSIyNjIiIHkyPSIxOTciIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik04OCwxNTVBMTEsMTEgMCAxIDEgNzcsMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDE3MUw3NywxNjZMODAsMTcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSIxNjIiID5NPC90ZXh0PjxwYXRoIGQ9Ik0yNTQsMTU1QTExLDExIDAgMSAwIDI2NSwxNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjYyLDE3MUwyNjUsMTY2TDI2OCwxNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIyMjAiIHk9IjE2MiIgdGV4dC1hbmNob3I9ImVuZCI+MC43NU08L3RleHQ+PHRleHQgeD0iMTcxIiB5PSIyMjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkVuZCBtb21lbnRzOyDPiCA9ICswLjc1PC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSIxODciIHgyPSI0NjYiIHkyPSIxODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCwxODdMMjk0LjAwLDIxMi4wMEwyOTguMzAsMjExLjg0TDMwMi42MCwyMTEuNjlMMzA2LjkwLDIxMS41M0wzMTEuMjAsMjExLjM4TDMxNS41MCwyMTEuMjJMMzE5LjgwLDIxMS4wNkwzMjQuMTAsMjEwLjkxTDMyOC40MCwyMTAuNzVMMzMyLjcwLDIxMC41OUwzMzcuMDAsMjEwLjQ0TDM0MS4zMCwyMTAuMjhMMzQ1LjYwLDIxMC4xM0wzNDkuOTAsMjA5Ljk3TDM1NC4yMCwyMDkuODFMMzU4LjUwLDIwOS42NkwzNjIuODAsMjA5LjUwTDM2Ny4xMCwyMDkuMzRMMzcxLjQwLDIwOS4xOUwzNzUuNzAsMjA5LjAzTDM4MC4wMCwyMDguODhMMzg0LjMwLDIwOC43MkwzODguNjAsMjA4LjU2TDM5Mi45MCwyMDguNDFMMzk3LjIwLDIwOC4yNUw0MDEuNTAsMjA4LjA5TDQwNS44MCwyMDcuOTRMNDEwLjEwLDIwNy43OEw0MTQuNDAsMjA3LjYzTDQxOC43MCwyMDcuNDdMNDIzLjAwLDIwNy4zMUw0MjcuMzAsMjA3LjE2TDQzMS42MCwyMDcuMDBMNDM1LjkwLDIwNi44NEw0NDAuMjAsMjA2LjY5TDQ0NC41MCwyMDYuNTNMNDQ4LjgwLDIwNi4zOEw0NTMuMTAsMjA2LjIyTDQ1Ny40MCwyMDYuMDZMNDYxLjcwLDIwNS45MUw0NjYuMDAsMjA1Ljc1TDQ2NiwxODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSIyMjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtMyI+PHRleHQgeD0iMzAiIHk9IjI5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjM8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iMjgyIiB4Mj0iMjU0IiB5Mj0iMjgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCwyODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCwyODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PGxpbmUgeDE9IjI0NiIgeTE9IjI5NyIgeDI9IjI2MiIgeTI9IjI5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTg4LDI1NUExMSwxMSAwIDEgMSA3NywyNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNNzQsMjcxTDc3LDI2Nkw4MCwyNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxMDMiIHk9IjI2MiIgPk08L3RleHQ+PHBhdGggZD0iTTI1NCwyNTVBMTEsMTEgMCAxIDAgMjY1LDI2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yNjIsMjcxTDI2NSwyNjZMMjY4LDI3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjIyMCIgeT0iMjYyIiB0ZXh0LWFuY2hvcj0iZW5kIj4wLjUwTTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjMyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+RW5kIG1vbWVudHM7IM+IID0gKzAuNTA8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9IjI4NyIgeDI9IjQ2NiIgeTI9IjI4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDI4N0wyOTQuMDAsMzEyLjAwTDI5OC4zMCwzMTEuNjlMMzAyLjYwLDMxMS4zOEwzMDYuOTAsMzExLjA2TDMxMS4yMCwzMTAuNzVMMzE1LjUwLDMxMC40NEwzMTkuODAsMzEwLjEzTDMyNC4xMCwzMDkuODFMMzI4LjQwLDMwOS41MEwzMzIuNzAsMzA5LjE5TDMzNy4wMCwzMDguODhMMzQxLjMwLDMwOC41NkwzNDUuNjAsMzA4LjI1TDM0OS45MCwzMDcuOTRMMzU0LjIwLDMwNy42M0wzNTguNTAsMzA3LjMxTDM2Mi44MCwzMDcuMDBMMzY3LjEwLDMwNi42OUwzNzEuNDAsMzA2LjM4TDM3NS43MCwzMDYuMDZMMzgwLjAwLDMwNS43NUwzODQuMzAsMzA1LjQ0TDM4OC42MCwzMDUuMTNMMzkyLjkwLDMwNC44MUwzOTcuMjAsMzA0LjUwTDQwMS41MCwzMDQuMTlMNDA1LjgwLDMwMy44OEw0MTAuMTAsMzAzLjU2TDQxNC40MCwzMDMuMjVMNDE4LjcwLDMwMi45NEw0MjMuMDAsMzAyLjYzTDQyNy4zMCwzMDIuMzFMNDMxLjYwLDMwMi4wMEw0MzUuOTAsMzAxLjY5TDQ0MC4yMCwzMDEuMzhMNDQ0LjUwLDMwMS4wNkw0NDguODAsMzAwLjc1TDQ1My4xMCwzMDAuNDRMNDU3LjQwLDMwMC4xM0w0NjEuNzAsMjk5LjgxTDQ2Ni4wMCwyOTkuNTBMNDY2LDI4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjMyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPjxnIGlkPSJsdGItY2FzZS00Ij48dGV4dCB4PSIzMCIgeT0iMzk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+NDwvdGV4dD48bGluZSB4MT0iODgiIHkxPSIzODIiIHgyPSIyNTQiIHkyPSIzODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDM4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDM4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iMzk3IiB4Mj0iMjYyIiB5Mj0iMzk3IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNODgsMzU1QTExLDExIDAgMSAxIDc3LDM2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik03NCwzNzFMNzcsMzY2TDgwLDM3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjEwMyIgeT0iMzYyIiA+TTwvdGV4dD48cGF0aCBkPSJNMjU0LDM1NUExMSwxMSAwIDEgMCAyNjUsMzY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI2MiwzNzFMMjY1LDM2NkwyNjgsMzcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMjIwIiB5PSIzNjIiIHRleHQtYW5jaG9yPSJlbmQiPjAuMjVNPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iNDI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSArMC4yNTwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iMzg3IiB4Mj0iNDY2IiB5Mj0iMzg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsMzg3TDI5NC4wMCw0MTIuMDBMMjk4LjMwLDQxMS41M0wzMDIuNjAsNDExLjA2TDMwNi45MCw0MTAuNTlMMzExLjIwLDQxMC4xM0wzMTUuNTAsNDA5LjY2TDMxOS44MCw0MDkuMTlMMzI0LjEwLDQwOC43MkwzMjguNDAsNDA4LjI1TDMzMi43MCw0MDcuNzhMMzM3LjAwLDQwNy4zMUwzNDEuMzAsNDA2Ljg0TDM0NS42MCw0MDYuMzhMMzQ5LjkwLDQwNS45MUwzNTQuMjAsNDA1LjQ0TDM1OC41MCw0MDQuOTdMMzYyLjgwLDQwNC41MEwzNjcuMTAsNDA0LjAzTDM3MS40MCw0MDMuNTZMMzc1LjcwLDQwMy4wOUwzODAuMDAsNDAyLjYzTDM4NC4zMCw0MDIuMTZMMzg4LjYwLDQwMS42OUwzOTIuOTAsNDAxLjIyTDM5Ny4yMCw0MDAuNzVMNDAxLjUwLDQwMC4yOEw0MDUuODAsMzk5LjgxTDQxMC4xMCwzOTkuMzRMNDE0LjQwLDM5OC44OEw0MTguNzAsMzk4LjQxTDQyMy4wMCwzOTcuOTRMNDI3LjMwLDM5Ny40N0w0MzEuNjAsMzk3LjAwTDQzNS45MCwzOTYuNTNMNDQwLjIwLDM5Ni4wNkw0NDQuNTAsMzk1LjU5TDQ0OC44MCwzOTUuMTNMNDUzLjEwLDM5NC42Nkw0NTcuNDAsMzk0LjE5TDQ2MS43MCwzOTMuNzJMNDY2LjAwLDM5My4yNUw0NjYsMzg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iNDI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTUiPjx0ZXh0IHg9IjMwIiB5PSI0OTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij41PC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjQ4MiIgeDI9IjI1NCIgeTI9IjQ4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsNDg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxwYXRoIGQ9Ik0yNTQsNDg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxsaW5lIHgxPSIyNDYiIHkxPSI0OTciIHgyPSIyNjIiIHkyPSI0OTciIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik04OCw0NTVBMTEsMTEgMCAxIDEgNzcsNDY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDQ3MUw3Nyw0NjZMODAsNDcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSI0NjIiID5NPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iNTI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSAwLjAwPC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSI0ODciIHgyPSI0NjYiIHkyPSI0ODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCw0ODdMMjk0LjAwLDUxMi4wMEwyOTguMzAsNTExLjM4TDMwMi42MCw1MTAuNzVMMzA2LjkwLDUxMC4xM0wzMTEuMjAsNTA5LjUwTDMxNS41MCw1MDguODhMMzE5LjgwLDUwOC4yNUwzMjQuMTAsNTA3LjYzTDMyOC40MCw1MDcuMDBMMzMyLjcwLDUwNi4zOEwzMzcuMDAsNTA1Ljc1TDM0MS4zMCw1MDUuMTNMMzQ1LjYwLDUwNC41MEwzNDkuOTAsNTAzLjg4TDM1NC4yMCw1MDMuMjVMMzU4LjUwLDUwMi42M0wzNjIuODAsNTAyLjAwTDM2Ny4xMCw1MDEuMzhMMzcxLjQwLDUwMC43NUwzNzUuNzAsNTAwLjEzTDM4MC4wMCw0OTkuNTBMMzg0LjMwLDQ5OC44OEwzODguNjAsNDk4LjI1TDM5Mi45MCw0OTcuNjNMMzk3LjIwLDQ5Ny4wMEw0MDEuNTAsNDk2LjM4TDQwNS44MCw0OTUuNzVMNDEwLjEwLDQ5NS4xM0w0MTQuNDAsNDk0LjUwTDQxOC43MCw0OTMuODhMNDIzLjAwLDQ5My4yNUw0MjcuMzAsNDkyLjYzTDQzMS42MCw0OTIuMDBMNDM1LjkwLDQ5MS4zOEw0NDAuMjAsNDkwLjc1TDQ0NC41MCw0OTAuMTNMNDQ4LjgwLDQ4OS41MEw0NTMuMTAsNDg4Ljg4TDQ1Ny40MCw0ODguMjVMNDYxLjcwLDQ4Ny42M0w0NjYuMDAsNDg3LjAwTDQ2Niw0ODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSI1MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtNiI+PHRleHQgeD0iMzAiIHk9IjU5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjY8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iNTgyIiB4Mj0iMjU0IiB5Mj0iNTgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCw1ODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCw1ODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PGxpbmUgeDE9IjI0NiIgeTE9IjU5NyIgeDI9IjI2MiIgeTI9IjU5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTg4LDU1NUExMSwxMSAwIDEgMSA3Nyw1NjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNNzQsNTcxTDc3LDU2Nkw4MCw1NzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxMDMiIHk9IjU2MiIgPk08L3RleHQ+PHBhdGggZD0iTTI1NCw1NTVBMTEsMTEgMCAxIDEgMjQzLDU2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yNDAsNTcxTDI0Myw1NjZMMjQ2LDU3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjIyMCIgeT0iNTYyIiB0ZXh0LWFuY2hvcj0iZW5kIj7iiJIwLjI1TTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjYyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+RW5kIG1vbWVudHM7IM+IID0gLTAuMjU8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9IjU4NyIgeDI9IjQ2NiIgeTI9IjU4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDU4N0wyOTQuMDAsNjEyLjAwTDI5OC4zMCw2MTEuMjJMMzAyLjYwLDYxMC40NEwzMDYuOTAsNjA5LjY2TDMxMS4yMCw2MDguODhMMzE1LjUwLDYwOC4wOUwzMTkuODAsNjA3LjMxTDMyNC4xMCw2MDYuNTNMMzI4LjQwLDYwNS43NUwzMzIuNzAsNjA0Ljk3TDMzNy4wMCw2MDQuMTlMMzQxLjMwLDYwMy40MUwzNDUuNjAsNjAyLjYzTDM0OS45MCw2MDEuODRMMzU0LjIwLDYwMS4wNkwzNTguNTAsNjAwLjI4TDM2Mi44MCw1OTkuNTBMMzY3LjEwLDU5OC43MkwzNzEuNDAsNTk3Ljk0TDM3NS43MCw1OTcuMTZMMzgwLjAwLDU5Ni4zOEwzODQuMzAsNTk1LjU5TDM4OC42MCw1OTQuODFMMzkyLjkwLDU5NC4wM0wzOTcuMjAsNTkzLjI1TDQwMS41MCw1OTIuNDdMNDA1LjgwLDU5MS42OUw0MTAuMTAsNTkwLjkxTDQxNC40MCw1OTAuMTNMNDE4LjcwLDU4OS4zNEw0MjMuMDAsNTg4LjU2TDQyNy4zMCw1ODcuNzhMNDMxLjYwLDU4Ny4wMEw0MzUuOTAsNTg2LjIyTDQ0MC4yMCw1ODUuNDRMNDQ0LjUwLDU4NC42Nkw0NDguODAsNTgzLjg4TDQ1My4xMCw1ODMuMDlMNDU3LjQwLDU4Mi4zMUw0NjEuNzAsNTgxLjUzTDQ2Ni4wMCw1ODAuNzVMNDY2LDU4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjYyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPjxnIGlkPSJsdGItY2FzZS03Ij48dGV4dCB4PSIzMCIgeT0iNjk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+NzwvdGV4dD48bGluZSB4MT0iODgiIHkxPSI2ODIiIHgyPSIyNTQiIHkyPSI2ODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDY4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDY4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iNjk3IiB4Mj0iMjYyIiB5Mj0iNjk3IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNODgsNjU1QTExLDExIDAgMSAxIDc3LDY2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik03NCw2NzFMNzcsNjY2TDgwLDY3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjEwMyIgeT0iNjYyIiA+TTwvdGV4dD48cGF0aCBkPSJNMjU0LDY1NUExMSwxMSAwIDEgMSAyNDMsNjY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI0MCw2NzFMMjQzLDY2NkwyNDYsNjcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMjIwIiB5PSI2NjIiIHRleHQtYW5jaG9yPSJlbmQiPuKIkjAuNTBNPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iNzI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSAtMC41MDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iNjg3IiB4Mj0iNDY2IiB5Mj0iNjg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsNjg3TDI5NC4wMCw3MTIuMDBMMjk4LjMwLDcxMS4wNkwzMDIuNjAsNzEwLjEzTDMwNi45MCw3MDkuMTlMMzExLjIwLDcwOC4yNUwzMTUuNTAsNzA3LjMxTDMxOS44MCw3MDYuMzhMMzI0LjEwLDcwNS40NEwzMjguNDAsNzA0LjUwTDMzMi43MCw3MDMuNTZMMzM3LjAwLDcwMi42M0wzNDEuMzAsNzAxLjY5TDM0NS42MCw3MDAuNzVMMzQ5LjkwLDY5OS44MUwzNTQuMjAsNjk4Ljg4TDM1OC41MCw2OTcuOTRMMzYyLjgwLDY5Ny4wMEwzNjcuMTAsNjk2LjA2TDM3MS40MCw2OTUuMTNMMzc1LjcwLDY5NC4xOUwzODAuMDAsNjkzLjI1TDM4NC4zMCw2OTIuMzFMMzg4LjYwLDY5MS4zOEwzOTIuOTAsNjkwLjQ0TDM5Ny4yMCw2ODkuNTBMNDAxLjUwLDY4OC41Nkw0MDUuODAsNjg3LjYzTDQxMC4xMCw2ODYuNjlMNDE0LjQwLDY4NS43NUw0MTguNzAsNjg0LjgxTDQyMy4wMCw2ODMuODhMNDI3LjMwLDY4Mi45NEw0MzEuNjAsNjgyLjAwTDQzNS45MCw2ODEuMDZMNDQwLjIwLDY4MC4xM0w0NDQuNTAsNjc5LjE5TDQ0OC44MCw2NzguMjVMNDUzLjEwLDY3Ny4zMUw0NTcuNDAsNjc2LjM4TDQ2MS43MCw2NzUuNDRMNDY2LjAwLDY3NC41MEw0NjYsNjg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iNzI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+CiAgICA8L2c+CiAgPC9zdmc+"
       },
-      "groupId": "s_stl_group_9h"
+      "groupId": "s_stl_group_9i"
     },
     {
-      "id": "s_stl_9i",
+      "id": "s_stl_9j",
       "type": "math",
       "x": 576,
       "y": 13025,
@@ -5851,10 +5866,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9h"
+      "groupId": "s_stl_group_9i"
     },
     {
-      "id": "s_stl_9j",
+      "id": "s_stl_9k",
       "type": "math",
       "x": 656,
       "y": 13025,
@@ -5873,10 +5888,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9h"
+      "groupId": "s_stl_group_9i"
     },
     {
-      "id": "s_stl_9k",
+      "id": "s_stl_9l",
       "type": "math",
       "x": 576,
       "y": 13125,
@@ -5895,10 +5910,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9h"
+      "groupId": "s_stl_group_9i"
     },
     {
-      "id": "s_stl_9l",
+      "id": "s_stl_9m",
       "type": "math",
       "x": 656,
       "y": 13125,
@@ -5917,10 +5932,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9h"
+      "groupId": "s_stl_group_9i"
     },
     {
-      "id": "s_stl_9m",
+      "id": "s_stl_9n",
       "type": "math",
       "x": 576,
       "y": 13225,
@@ -5939,10 +5954,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9h"
+      "groupId": "s_stl_group_9i"
     },
     {
-      "id": "s_stl_9n",
+      "id": "s_stl_9o",
       "type": "math",
       "x": 656,
       "y": 13225,
@@ -5961,10 +5976,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9h"
+      "groupId": "s_stl_group_9i"
     },
     {
-      "id": "s_stl_9o",
+      "id": "s_stl_9p",
       "type": "math",
       "x": 576,
       "y": 13325,
@@ -5983,10 +5998,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9h"
+      "groupId": "s_stl_group_9i"
     },
     {
-      "id": "s_stl_9p",
+      "id": "s_stl_9q",
       "type": "math",
       "x": 656,
       "y": 13325,
@@ -6005,10 +6020,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9h"
+      "groupId": "s_stl_group_9i"
     },
     {
-      "id": "s_stl_9q",
+      "id": "s_stl_9r",
       "type": "math",
       "x": 576,
       "y": 13425,
@@ -6027,10 +6042,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9h"
+      "groupId": "s_stl_group_9i"
     },
     {
-      "id": "s_stl_9r",
+      "id": "s_stl_9s",
       "type": "math",
       "x": 656,
       "y": 13425,
@@ -6049,10 +6064,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9h"
+      "groupId": "s_stl_group_9i"
     },
     {
-      "id": "s_stl_9s",
+      "id": "s_stl_9t",
       "type": "math",
       "x": 576,
       "y": 13525,
@@ -6071,10 +6086,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9h"
+      "groupId": "s_stl_group_9i"
     },
     {
-      "id": "s_stl_9t",
+      "id": "s_stl_9u",
       "type": "math",
       "x": 656,
       "y": 13525,
@@ -6093,10 +6108,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9h"
+      "groupId": "s_stl_group_9i"
     },
     {
-      "id": "s_stl_9u",
+      "id": "s_stl_9v",
       "type": "math",
       "x": 576,
       "y": 13625,
@@ -6115,10 +6130,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9h"
+      "groupId": "s_stl_group_9i"
     },
     {
-      "id": "s_stl_9v",
+      "id": "s_stl_9w",
       "type": "math",
       "x": 656,
       "y": 13625,
@@ -6137,22 +6152,22 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9h"
+      "groupId": "s_stl_group_9i"
     },
     {
-      "id": "s_stl_9w",
+      "id": "s_stl_9x",
       "type": "image",
       "x": 76,
       "y": 14112,
       "props": {
         "w": 640,
         "h": 640,
-        "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgNjQwIDY0MCI+CiAgICA8dGl0bGU+TFRCIGNhc2VzIDggdG8gMTM7IFNDSSBOQ0NJIFNOMDAzYiBUYWJsZXMgMy4xIGFuZCAzLjI8L3RpdGxlPgogICAgPHJlY3QgeD0iMC41IiB5PSIwLjUiIHdpZHRoPSI2MzkiIGhlaWdodD0iNjM5IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjOTRhM2I4Ii8+CiAgICA8cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iNjM4IiBoZWlnaHQ9IjM5IiBmaWxsPSIjZWZmNmZmIi8+CiAgICA8ZyBzdHJva2U9IiNjYmQ1ZTEiIHN0cm9rZS13aWR0aD0iMSI+PGxpbmUgeDE9IjAiIHkxPSI0MCIgeDI9IjY0MCIgeTI9IjQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iMTQwIiB4Mj0iNjQwIiB5Mj0iMTQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iMjQwIiB4Mj0iNjQwIiB5Mj0iMjQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iMzQwIiB4Mj0iNjQwIiB5Mj0iMzQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iNDQwIiB4Mj0iNjQwIiB5Mj0iNDQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iNTQwIiB4Mj0iNjQwIiB5Mj0iNTQwIiAvPjxsaW5lIHgxPSI2MCIgeTE9IjAiIHgyPSI2MCIgeTI9IjY0MCIgLz48bGluZSB4MT0iMjgwIiB5MT0iMCIgeDI9IjI4MCIgeTI9IjY0MCIgLz48bGluZSB4MT0iNDgwIiB5MT0iMCIgeDI9IjQ4MCIgeTI9IjY0MCIgLz48bGluZSB4MT0iNTYwIiB5MT0iMCIgeDI9IjU2MCIgeTI9IjY0MCIgLz48L2c+CiAgICA8ZyBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzFlM2E1ZiI+CiAgICAgIDxnIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj48dGV4dCB4PSIzMCIgeT0iMjUiID5DYXNlPC90ZXh0Pjx0ZXh0IHg9IjE3MCIgeT0iMjUiID5Mb2FkaW5nIGFuZCBzdXBwb3J0czwvdGV4dD48dGV4dCB4PSIzODAiIHk9IjI1IiA+QmVuZGluZyBtb21lbnQgZGlhZ3JhbTwvdGV4dD48dGV4dCB4PSI1MjAiIHk9IjI1IiA+QzE8L3RleHQ+PHRleHQgeD0iNjAwIiB5PSIyNSIgPkMyPC90ZXh0PjwvZz4KICAgICAgPGcgaWQ9Imx0Yi1jYXNlLTgiPjx0ZXh0IHg9IjMwIiB5PSI5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjg8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iODIiIHgyPSIyNTQiIHkyPSI4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCw4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iOTciIHgyPSIyNjIiIHkyPSI5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTg4LDU1QTExLDExIDAgMSAxIDc3LDY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDcxTDc3LDY2TDgwLDcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSI2MiIgPk08L3RleHQ+PHBhdGggZD0iTTI1NCw1NUExMSwxMSAwIDEgMSAyNDMsNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjQwLDcxTDI0Myw2NkwyNDYsNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIyMjAiIHk9IjYyIiB0ZXh0LWFuY2hvcj0iZW5kIj7iiJIwLjc1TTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjEyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+RW5kIG1vbWVudHM7IM+IID0gLTAuNzU8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9Ijg3IiB4Mj0iNDY2IiB5Mj0iODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCw4N0wyOTQuMDAsMTEyLjAwTDI5OC4zMCwxMTAuOTFMMzAyLjYwLDEwOS44MUwzMDYuOTAsMTA4LjcyTDMxMS4yMCwxMDcuNjNMMzE1LjUwLDEwNi41M0wzMTkuODAsMTA1LjQ0TDMyNC4xMCwxMDQuMzRMMzI4LjQwLDEwMy4yNUwzMzIuNzAsMTAyLjE2TDMzNy4wMCwxMDEuMDZMMzQxLjMwLDk5Ljk3TDM0NS42MCw5OC44OEwzNDkuOTAsOTcuNzhMMzU0LjIwLDk2LjY5TDM1OC41MCw5NS41OUwzNjIuODAsOTQuNTBMMzY3LjEwLDkzLjQxTDM3MS40MCw5Mi4zMUwzNzUuNzAsOTEuMjJMMzgwLjAwLDkwLjEzTDM4NC4zMCw4OS4wM0wzODguNjAsODcuOTRMMzkyLjkwLDg2Ljg0TDM5Ny4yMCw4NS43NUw0MDEuNTAsODQuNjZMNDA1LjgwLDgzLjU2TDQxMC4xMCw4Mi40N0w0MTQuNDAsODEuMzhMNDE4LjcwLDgwLjI4TDQyMy4wMCw3OS4xOUw0MjcuMzAsNzguMDlMNDMxLjYwLDc3LjAwTDQzNS45MCw3NS45MUw0NDAuMjAsNzQuODFMNDQ0LjUwLDczLjcyTDQ0OC44MCw3Mi42M0w0NTMuMTAsNzEuNTNMNDU3LjQwLDcwLjQ0TDQ2MS43MCw2OS4zNEw0NjYuMDAsNjguMjVMNDY2LDg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iMTI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTkiPjx0ZXh0IHg9IjMwIiB5PSIxOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij45PC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjE4MiIgeDI9IjI1NCIgeTI9IjE4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsMTg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxwYXRoIGQ9Ik0yNTQsMTg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxsaW5lIHgxPSIyNDYiIHkxPSIxOTciIHgyPSIyNjIiIHkyPSIxOTciIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik04OCwxNTVBMTEsMTEgMCAxIDEgNzcsMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDE3MUw3NywxNjZMODAsMTcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSIxNjIiID5NPC90ZXh0PjxwYXRoIGQ9Ik0yNTQsMTU1QTExLDExIDAgMSAxIDI0MywxNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjQwLDE3MUwyNDMsMTY2TDI0NiwxNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIyMjAiIHk9IjE2MiIgdGV4dC1hbmNob3I9ImVuZCI+4oiSMS4wME08L3RleHQ+PHRleHQgeD0iMTcxIiB5PSIyMjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkVuZCBtb21lbnRzOyDPiCA9IC0xLjAwPC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSIxODciIHgyPSI0NjYiIHkyPSIxODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCwxODdMMjk0LjAwLDIxMi4wMEwyOTguMzAsMjEwLjc1TDMwMi42MCwyMDkuNTBMMzA2LjkwLDIwOC4yNUwzMTEuMjAsMjA3LjAwTDMxNS41MCwyMDUuNzVMMzE5LjgwLDIwNC41MEwzMjQuMTAsMjAzLjI1TDMyOC40MCwyMDIuMDBMMzMyLjcwLDIwMC43NUwzMzcuMDAsMTk5LjUwTDM0MS4zMCwxOTguMjVMMzQ1LjYwLDE5Ny4wMEwzNDkuOTAsMTk1Ljc1TDM1NC4yMCwxOTQuNTBMMzU4LjUwLDE5My4yNUwzNjIuODAsMTkyLjAwTDM2Ny4xMCwxOTAuNzVMMzcxLjQwLDE4OS41MEwzNzUuNzAsMTg4LjI1TDM4MC4wMCwxODcuMDBMMzg0LjMwLDE4NS43NUwzODguNjAsMTg0LjUwTDM5Mi45MCwxODMuMjVMMzk3LjIwLDE4Mi4wMEw0MDEuNTAsMTgwLjc1TDQwNS44MCwxNzkuNTBMNDEwLjEwLDE3OC4yNUw0MTQuNDAsMTc3LjAwTDQxOC43MCwxNzUuNzVMNDIzLjAwLDE3NC41MEw0MjcuMzAsMTczLjI1TDQzMS42MCwxNzIuMDBMNDM1LjkwLDE3MC43NUw0NDAuMjAsMTY5LjUwTDQ0NC41MCwxNjguMjVMNDQ4LjgwLDE2Ny4wMEw0NTMuMTAsMTY1Ljc1TDQ1Ny40MCwxNjQuNTBMNDYxLjcwLDE2My4yNUw0NjYuMDAsMTYyLjAwTDQ2NiwxODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSIyMjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtMTAiPjx0ZXh0IHg9IjMwIiB5PSIyOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij4xMDwvdGV4dD48bGluZSB4MT0iODgiIHkxPSIyODIiIHgyPSIyNTQiIHkyPSIyODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDI4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDI4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iMjk3IiB4Mj0iMjYyIiB5Mj0iMjk3IiBzdHJva2U9IiM2NDc0OGIiLz48bGluZSB4MT0iODgiIHkxPSIyNTIiIHgyPSIyNTQiIHkyPSIyNTIiIHN0cm9rZT0iIzI1NjNlYiIvPjxsaW5lIHgxPSI4OCIgeTE9IjI1MiIgeDI9Ijg4IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTg1LDI2OUw4OCwyNzRMOTEsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjEwMy4wOTA5MDkwOTA5MDkxIiB5MT0iMjUyIiB4Mj0iMTAzLjA5MDkwOTA5MDkwOTEiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTAwLjA5MDkwOTA5MDkwOTEsMjY5TDEwMy4wOTA5MDkwOTA5MDkxLDI3NEwxMDYuMDkwOTA5MDkwOTA5MSwyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTE4LjE4MTgxODE4MTgxODE5IiB5MT0iMjUyIiB4Mj0iMTE4LjE4MTgxODE4MTgxODE5IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTExNS4xODE4MTgxODE4MTgxOSwyNjlMMTE4LjE4MTgxODE4MTgxODE5LDI3NEwxMjEuMTgxODE4MTgxODE4MTksMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjEzMy4yNzI3MjcyNzI3MjcyOCIgeTE9IjI1MiIgeDI9IjEzMy4yNzI3MjcyNzI3MjcyOCIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xMzAuMjcyNzI3MjcyNzI3MjgsMjY5TDEzMy4yNzI3MjcyNzI3MjcyOCwyNzRMMTM2LjI3MjcyNzI3MjcyNzI4LDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxNDguMzYzNjM2MzYzNjM2MzciIHkxPSIyNTIiIHgyPSIxNDguMzYzNjM2MzYzNjM2MzciIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTQ1LjM2MzYzNjM2MzYzNjM3LDI2OUwxNDguMzYzNjM2MzYzNjM2MzcsMjc0TDE1MS4zNjM2MzYzNjM2MzYzNywyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTYzLjQ1NDU0NTQ1NDU0NTQ0IiB5MT0iMjUyIiB4Mj0iMTYzLjQ1NDU0NTQ1NDU0NTQ0IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE2MC40NTQ1NDU0NTQ1NDU0NCwyNjlMMTYzLjQ1NDU0NTQ1NDU0NTQ0LDI3NEwxNjYuNDU0NTQ1NDU0NTQ1NDQsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjE3OC41NDU0NTQ1NDU0NTQ1NiIgeTE9IjI1MiIgeDI9IjE3OC41NDU0NTQ1NDU0NTQ1NiIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xNzUuNTQ1NDU0NTQ1NDU0NTYsMjY5TDE3OC41NDU0NTQ1NDU0NTQ1NiwyNzRMMTgxLjU0NTQ1NDU0NTQ1NDU2LDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxOTMuNjM2MzYzNjM2MzYzNjMiIHkxPSIyNTIiIHgyPSIxOTMuNjM2MzYzNjM2MzYzNjMiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTkwLjYzNjM2MzYzNjM2MzYzLDI2OUwxOTMuNjM2MzYzNjM2MzYzNjMsMjc0TDE5Ni42MzYzNjM2MzYzNjM2MywyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMjA4LjcyNzI3MjcyNzI3Mjc1IiB5MT0iMjUyIiB4Mj0iMjA4LjcyNzI3MjcyNzI3Mjc1IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTIwNS43MjcyNzI3MjcyNzI3NSwyNjlMMjA4LjcyNzI3MjcyNzI3Mjc1LDI3NEwyMTEuNzI3MjcyNzI3MjcyNzUsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjIyMy44MTgxODE4MTgxODE4IiB5MT0iMjUyIiB4Mj0iMjIzLjgxODE4MTgxODE4MTgiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjIwLjgxODE4MTgxODE4MTgsMjY5TDIyMy44MTgxODE4MTgxODE4LDI3NEwyMjYuODE4MTgxODE4MTgxOCwyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMjM4LjkwOTA5MDkwOTA5MDkiIHkxPSIyNTIiIHgyPSIyMzguOTA5MDkwOTA5MDkwOSIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yMzUuOTA5MDkwOTA5MDkwOSwyNjlMMjM4LjkwOTA5MDkwOTA5MDksMjc0TDI0MS45MDkwOTA5MDkwOTA5LDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIyNTQiIHkxPSIyNTIiIHgyPSIyNTQiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjUxLDI2OUwyNTQsMjc0TDI1NywyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxNzEiIHk9IjI0OSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+cTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjMyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+U2ltcGx5IHN1cHBvcnRlZDsgVURMPC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSIyODciIHgyPSI0NjYiIHkyPSIyODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCwyODdMMjk0LjAwLDI4Ny4wMEwyOTguMzAsMjg5LjQ0TDMwMi42MCwyOTEuNzVMMzA2LjkwLDI5My45NEwzMTEuMjAsMjk2LjAwTDMxNS41MCwyOTcuOTRMMzE5LjgwLDI5OS43NUwzMjQuMTAsMzAxLjQ0TDMyOC40MCwzMDMuMDBMMzMyLjcwLDMwNC40NEwzMzcuMDAsMzA1Ljc1TDM0MS4zMCwzMDYuOTRMMzQ1LjYwLDMwOC4wMEwzNDkuOTAsMzA4Ljk0TDM1NC4yMCwzMDkuNzVMMzU4LjUwLDMxMC40NEwzNjIuODAsMzExLjAwTDM2Ny4xMCwzMTEuNDRMMzcxLjQwLDMxMS43NUwzNzUuNzAsMzExLjk0TDM4MC4wMCwzMTIuMDBMMzg0LjMwLDMxMS45NEwzODguNjAsMzExLjc1TDM5Mi45MCwzMTEuNDRMMzk3LjIwLDMxMS4wMEw0MDEuNTAsMzEwLjQ0TDQwNS44MCwzMDkuNzVMNDEwLjEwLDMwOC45NEw0MTQuNDAsMzA4LjAwTDQxOC43MCwzMDYuOTRMNDIzLjAwLDMwNS43NUw0MjcuMzAsMzA0LjQ0TDQzMS42MCwzMDMuMDBMNDM1LjkwLDMwMS40NEw0NDAuMjAsMjk5Ljc1TDQ0NC41MCwyOTcuOTRMNDQ4LjgwLDI5Ni4wMEw0NTMuMTAsMjkzLjk0TDQ1Ny40MCwyOTEuNzVMNDYxLjcwLDI4OS40NEw0NjYuMDAsMjg3LjAwTDQ2NiwyODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSIzMjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtMTEiPjx0ZXh0IHg9IjMwIiB5PSIzOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij4xMTwvdGV4dD48bGluZSB4MT0iODgiIHkxPSIzODIiIHgyPSIyNTQiIHkyPSIzODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDM3MFYzOTQiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PGxpbmUgeDE9IjgzIiB5MT0iMzc0IiB4Mj0iODgiIHkyPSIzNzAiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iODMiIHkxPSIzNzgiIHgyPSI4OCIgeTI9IjM3NCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSI4MyIgeTE9IjM4MiIgeDI9Ijg4IiB5Mj0iMzc4IiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjgzIiB5MT0iMzg2IiB4Mj0iODgiIHkyPSIzODIiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iODMiIHkxPSIzOTAiIHgyPSI4OCIgeTI9IjM4NiIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTI1NCwzNzBWMzk0IiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxsaW5lIHgxPSIyNDkiIHkxPSIzNzQiIHgyPSIyNTQiIHkyPSIzNzAiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iMjQ5IiB5MT0iMzc4IiB4Mj0iMjU0IiB5Mj0iMzc0IiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjI0OSIgeTE9IjM4MiIgeDI9IjI1NCIgeTI9IjM3OCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSIyNDkiIHkxPSIzODYiIHgyPSIyNTQiIHkyPSIzODIiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iMjQ5IiB5MT0iMzkwIiB4Mj0iMjU0IiB5Mj0iMzg2IiBzdHJva2U9IiM2NDc0OGIiLz48bGluZSB4MT0iODgiIHkxPSIzNTIiIHgyPSIyNTQiIHkyPSIzNTIiIHN0cm9rZT0iIzI1NjNlYiIvPjxsaW5lIHgxPSI4OCIgeTE9IjM1MiIgeDI9Ijg4IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTg1LDM2OUw4OCwzNzRMOTEsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjEwMy4wOTA5MDkwOTA5MDkxIiB5MT0iMzUyIiB4Mj0iMTAzLjA5MDkwOTA5MDkwOTEiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTAwLjA5MDkwOTA5MDkwOTEsMzY5TDEwMy4wOTA5MDkwOTA5MDkxLDM3NEwxMDYuMDkwOTA5MDkwOTA5MSwzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTE4LjE4MTgxODE4MTgxODE5IiB5MT0iMzUyIiB4Mj0iMTE4LjE4MTgxODE4MTgxODE5IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTExNS4xODE4MTgxODE4MTgxOSwzNjlMMTE4LjE4MTgxODE4MTgxODE5LDM3NEwxMjEuMTgxODE4MTgxODE4MTksMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjEzMy4yNzI3MjcyNzI3MjcyOCIgeTE9IjM1MiIgeDI9IjEzMy4yNzI3MjcyNzI3MjcyOCIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xMzAuMjcyNzI3MjcyNzI3MjgsMzY5TDEzMy4yNzI3MjcyNzI3MjcyOCwzNzRMMTM2LjI3MjcyNzI3MjcyNzI4LDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxNDguMzYzNjM2MzYzNjM2MzciIHkxPSIzNTIiIHgyPSIxNDguMzYzNjM2MzYzNjM2MzciIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTQ1LjM2MzYzNjM2MzYzNjM3LDM2OUwxNDguMzYzNjM2MzYzNjM2MzcsMzc0TDE1MS4zNjM2MzYzNjM2MzYzNywzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTYzLjQ1NDU0NTQ1NDU0NTQ0IiB5MT0iMzUyIiB4Mj0iMTYzLjQ1NDU0NTQ1NDU0NTQ0IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE2MC40NTQ1NDU0NTQ1NDU0NCwzNjlMMTYzLjQ1NDU0NTQ1NDU0NTQ0LDM3NEwxNjYuNDU0NTQ1NDU0NTQ1NDQsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjE3OC41NDU0NTQ1NDU0NTQ1NiIgeTE9IjM1MiIgeDI9IjE3OC41NDU0NTQ1NDU0NTQ1NiIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xNzUuNTQ1NDU0NTQ1NDU0NTYsMzY5TDE3OC41NDU0NTQ1NDU0NTQ1NiwzNzRMMTgxLjU0NTQ1NDU0NTQ1NDU2LDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxOTMuNjM2MzYzNjM2MzYzNjMiIHkxPSIzNTIiIHgyPSIxOTMuNjM2MzYzNjM2MzYzNjMiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTkwLjYzNjM2MzYzNjM2MzYzLDM2OUwxOTMuNjM2MzYzNjM2MzYzNjMsMzc0TDE5Ni42MzYzNjM2MzYzNjM2MywzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMjA4LjcyNzI3MjcyNzI3Mjc1IiB5MT0iMzUyIiB4Mj0iMjA4LjcyNzI3MjcyNzI3Mjc1IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTIwNS43MjcyNzI3MjcyNzI3NSwzNjlMMjA4LjcyNzI3MjcyNzI3Mjc1LDM3NEwyMTEuNzI3MjcyNzI3MjcyNzUsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjIyMy44MTgxODE4MTgxODE4IiB5MT0iMzUyIiB4Mj0iMjIzLjgxODE4MTgxODE4MTgiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjIwLjgxODE4MTgxODE4MTgsMzY5TDIyMy44MTgxODE4MTgxODE4LDM3NEwyMjYuODE4MTgxODE4MTgxOCwzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMjM4LjkwOTA5MDkwOTA5MDkiIHkxPSIzNTIiIHgyPSIyMzguOTA5MDkwOTA5MDkwOSIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yMzUuOTA5MDkwOTA5MDkwOSwzNjlMMjM4LjkwOTA5MDkwOTA5MDksMzc0TDI0MS45MDkwOTA5MDkwOTA5LDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIyNTQiIHkxPSIzNTIiIHgyPSIyNTQiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjUxLDM2OUwyNTQsMzc0TDI1NywzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxNzEiIHk9IjM0OSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+cTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjQyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+Rml4ZWQgaW4gYmVuZGluZzsgVURMPC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSIzODciIHgyPSI0NjYiIHkyPSIzODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCwzODdMMjk0LjAwLDM2Mi4wMEwyOTguMzAsMzY1LjY2TDMwMi42MCwzNjkuMTNMMzA2LjkwLDM3Mi40MUwzMTEuMjAsMzc1LjUwTDMxNS41MCwzNzguNDFMMzE5LjgwLDM4MS4xM0wzMjQuMTAsMzgzLjY2TDMyOC40MCwzODYuMDBMMzMyLjcwLDM4OC4xNkwzMzcuMDAsMzkwLjEzTDM0MS4zMCwzOTEuOTFMMzQ1LjYwLDM5My41MEwzNDkuOTAsMzk0LjkxTDM1NC4yMCwzOTYuMTNMMzU4LjUwLDM5Ny4xNkwzNjIuODAsMzk4LjAwTDM2Ny4xMCwzOTguNjZMMzcxLjQwLDM5OS4xM0wzNzUuNzAsMzk5LjQxTDM4MC4wMCwzOTkuNTBMMzg0LjMwLDM5OS40MUwzODguNjAsMzk5LjEzTDM5Mi45MCwzOTguNjZMMzk3LjIwLDM5OC4wMEw0MDEuNTAsMzk3LjE2TDQwNS44MCwzOTYuMTNMNDEwLjEwLDM5NC45MUw0MTQuNDAsMzkzLjUwTDQxOC43MCwzOTEuOTFMNDIzLjAwLDM5MC4xM0w0MjcuMzAsMzg4LjE2TDQzMS42MCwzODYuMDBMNDM1LjkwLDM4My42Nkw0NDAuMjAsMzgxLjEzTDQ0NC41MCwzNzguNDFMNDQ4LjgwLDM3NS41MEw0NTMuMTAsMzcyLjQxTDQ1Ny40MCwzNjkuMTNMNDYxLjcwLDM2NS42Nkw0NjYuMDAsMzYyLjAwTDQ2NiwzODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSI0MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtMTIiPjx0ZXh0IHg9IjMwIiB5PSI0OTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij4xMjwvdGV4dD48bGluZSB4MT0iODgiIHkxPSI0ODIiIHgyPSIyNTQiIHkyPSI0ODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDQ4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDQ4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iNDk3IiB4Mj0iMjYyIiB5Mj0iNDk3IiBzdHJva2U9IiM2NDc0OGIiLz48bGluZSB4MT0iMTcxIiB5MT0iNDQ4IiB4Mj0iMTcxIiB5Mj0iNDc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE2OCw0NjlMMTcxLDQ3NEwxNzQsNDY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTc5IiB5PSI0NTgiID5GPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iNTI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5TaW1wbHkgc3VwcG9ydGVkOyBtaWQtcG9pbnQgbG9hZDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iNDg3IiB4Mj0iNDY2IiB5Mj0iNDg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsNDg3TDI5NC4wMCw0ODcuMDBMMjk4LjMwLDQ4OC4yNUwzMDIuNjAsNDg5LjUwTDMwNi45MCw0OTAuNzVMMzExLjIwLDQ5Mi4wMEwzMTUuNTAsNDkzLjI1TDMxOS44MCw0OTQuNTBMMzI0LjEwLDQ5NS43NUwzMjguNDAsNDk3LjAwTDMzMi43MCw0OTguMjVMMzM3LjAwLDQ5OS41MEwzNDEuMzAsNTAwLjc1TDM0NS42MCw1MDIuMDBMMzQ5LjkwLDUwMy4yNUwzNTQuMjAsNTA0LjUwTDM1OC41MCw1MDUuNzVMMzYyLjgwLDUwNy4wMEwzNjcuMTAsNTA4LjI1TDM3MS40MCw1MDkuNTBMMzc1LjcwLDUxMC43NUwzODAuMDAsNTEyLjAwTDM4NC4zMCw1MTAuNzVMMzg4LjYwLDUwOS41MEwzOTIuOTAsNTA4LjI1TDM5Ny4yMCw1MDcuMDBMNDAxLjUwLDUwNS43NUw0MDUuODAsNTA0LjUwTDQxMC4xMCw1MDMuMjVMNDE0LjQwLDUwMi4wMEw0MTguNzAsNTAwLjc1TDQyMy4wMCw0OTkuNTBMNDI3LjMwLDQ5OC4yNUw0MzEuNjAsNDk3LjAwTDQzNS45MCw0OTUuNzVMNDQwLjIwLDQ5NC41MEw0NDQuNTAsNDkzLjI1TDQ0OC44MCw0OTIuMDBMNDUzLjEwLDQ5MC43NUw0NTcuNDAsNDg5LjUwTDQ2MS43MCw0ODguMjVMNDY2LjAwLDQ4Ny4wMEw0NjYsNDg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iNTI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTEzIj48dGV4dCB4PSIzMCIgeT0iNTk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+MTM8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iNTgyIiB4Mj0iMjU0IiB5Mj0iNTgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCw1NzBWNTk0IiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxsaW5lIHgxPSI4MyIgeTE9IjU3NCIgeDI9Ijg4IiB5Mj0iNTcwIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjgzIiB5MT0iNTc4IiB4Mj0iODgiIHkyPSI1NzQiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iODMiIHkxPSI1ODIiIHgyPSI4OCIgeTI9IjU3OCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSI4MyIgeTE9IjU4NiIgeDI9Ijg4IiB5Mj0iNTgyIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjgzIiB5MT0iNTkwIiB4Mj0iODgiIHkyPSI1ODYiIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik0yNTQsNTcwVjU5NCIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iMjQ5IiB5MT0iNTc0IiB4Mj0iMjU0IiB5Mj0iNTcwIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjI0OSIgeTE9IjU3OCIgeDI9IjI1NCIgeTI9IjU3NCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSIyNDkiIHkxPSI1ODIiIHgyPSIyNTQiIHkyPSI1NzgiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iMjQ5IiB5MT0iNTg2IiB4Mj0iMjU0IiB5Mj0iNTgyIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjI0OSIgeTE9IjU5MCIgeDI9IjI1NCIgeTI9IjU4NiIgc3Ryb2tlPSIjNjQ3NDhiIi8+PGxpbmUgeDE9IjE3MSIgeTE9IjU0OCIgeDI9IjE3MSIgeTI9IjU3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xNjgsNTY5TDE3MSw1NzRMMTc0LDU2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjE3OSIgeT0iNTU4IiA+RjwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjYyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+Rml4ZWQgaW4gYmVuZGluZzsgbWlkLXBvaW50IGxvYWQ8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9IjU4NyIgeDI9IjQ2NiIgeTI9IjU4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDU4N0wyOTQuMDAsNTYyLjAwTDI5OC4zMCw1NjQuNTBMMzAyLjYwLDU2Ny4wMEwzMDYuOTAsNTY5LjUwTDMxMS4yMCw1NzIuMDBMMzE1LjUwLDU3NC41MEwzMTkuODAsNTc3LjAwTDMyNC4xMCw1NzkuNTBMMzI4LjQwLDU4Mi4wMEwzMzIuNzAsNTg0LjUwTDMzNy4wMCw1ODcuMDBMMzQxLjMwLDU4OS41MEwzNDUuNjAsNTkyLjAwTDM0OS45MCw1OTQuNTBMMzU0LjIwLDU5Ny4wMEwzNTguNTAsNTk5LjUwTDM2Mi44MCw2MDIuMDBMMzY3LjEwLDYwNC41MEwzNzEuNDAsNjA3LjAwTDM3NS43MCw2MDkuNTBMMzgwLjAwLDYxMi4wMEwzODQuMzAsNjA5LjUwTDM4OC42MCw2MDcuMDBMMzkyLjkwLDYwNC41MEwzOTcuMjAsNjAyLjAwTDQwMS41MCw1OTkuNTBMNDA1LjgwLDU5Ny4wMEw0MTAuMTAsNTk0LjUwTDQxNC40MCw1OTIuMDBMNDE4LjcwLDU4OS41MEw0MjMuMDAsNTg3LjAwTDQyNy4zMCw1ODQuNTBMNDMxLjYwLDU4Mi4wMEw0MzUuOTAsNTc5LjUwTDQ0MC4yMCw1NzcuMDBMNDQ0LjUwLDU3NC41MEw0NDguODAsNTcyLjAwTDQ1My4xMCw1NjkuNTBMNDU3LjQwLDU2Ny4wMEw0NjEuNzAsNTY0LjUwTDQ2Ni4wMCw1NjIuMDBMNDY2LDU4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjYyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPgogICAgPC9nPgogIDwvc3ZnPg=="
+        "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgNjQwIDY0MCI+CiAgICA8dGl0bGU+TFRCIGNhc2VzIDggdG8gMTM7IFNDSSBOQ0NJIFNOMDAzYiBUYWJsZXMgMy4xIGFuZCAzLjI8L3RpdGxlPgogICAgPHJlY3QgeD0iMC41IiB5PSIwLjUiIHdpZHRoPSI2MzkiIGhlaWdodD0iNjM5IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjOTRhM2I4Ii8+CiAgICA8cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iNjM4IiBoZWlnaHQ9IjM5IiBmaWxsPSIjZWZmNmZmIi8+CiAgICA8ZyBzdHJva2U9IiNjYmQ1ZTEiIHN0cm9rZS13aWR0aD0iMSI+PGxpbmUgeDE9IjAiIHkxPSI0MCIgeDI9IjY0MCIgeTI9IjQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iMTQwIiB4Mj0iNjQwIiB5Mj0iMTQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iMjQwIiB4Mj0iNjQwIiB5Mj0iMjQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iMzQwIiB4Mj0iNjQwIiB5Mj0iMzQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iNDQwIiB4Mj0iNjQwIiB5Mj0iNDQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iNTQwIiB4Mj0iNjQwIiB5Mj0iNTQwIiAvPjxsaW5lIHgxPSI2MCIgeTE9IjAiIHgyPSI2MCIgeTI9IjY0MCIgLz48bGluZSB4MT0iMjgwIiB5MT0iMCIgeDI9IjI4MCIgeTI9IjY0MCIgLz48bGluZSB4MT0iNDgwIiB5MT0iMCIgeDI9IjQ4MCIgeTI9IjY0MCIgLz48bGluZSB4MT0iNTYwIiB5MT0iMCIgeDI9IjU2MCIgeTI9IjY0MCIgLz48L2c+CiAgICA8ZyBmb250LWZhbWlseT0iUm9ib3RvLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMxZTNhNWYiPgogICAgICA8ZyBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+PHRleHQgeD0iMzAiIHk9IjI1IiA+Q2FzZTwvdGV4dD48dGV4dCB4PSIxNzAiIHk9IjI1IiA+TG9hZGluZyBhbmQgc3VwcG9ydHM8L3RleHQ+PHRleHQgeD0iMzgwIiB5PSIyNSIgPkJlbmRpbmcgbW9tZW50IGRpYWdyYW08L3RleHQ+PHRleHQgeD0iNTIwIiB5PSIyNSIgPkMxPC90ZXh0Pjx0ZXh0IHg9IjYwMCIgeT0iMjUiID5DMjwvdGV4dD48L2c+CiAgICAgIDxnIGlkPSJsdGItY2FzZS04Ij48dGV4dCB4PSIzMCIgeT0iOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij44PC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjgyIiB4Mj0iMjU0IiB5Mj0iODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxwYXRoIGQ9Ik0yNTQsODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PGxpbmUgeDE9IjI0NiIgeTE9Ijk3IiB4Mj0iMjYyIiB5Mj0iOTciIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik04OCw1NUExMSwxMSAwIDEgMSA3Nyw2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik03NCw3MUw3Nyw2Nkw4MCw3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjEwMyIgeT0iNjIiID5NPC90ZXh0PjxwYXRoIGQ9Ik0yNTQsNTVBMTEsMTEgMCAxIDEgMjQzLDY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI0MCw3MUwyNDMsNjZMMjQ2LDcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMjIwIiB5PSI2MiIgdGV4dC1hbmNob3I9ImVuZCI+4oiSMC43NU08L3RleHQ+PHRleHQgeD0iMTcxIiB5PSIxMjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkVuZCBtb21lbnRzOyDPiCA9IC0wLjc1PC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSI4NyIgeDI9IjQ2NiIgeTI9Ijg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsODdMMjk0LjAwLDExMi4wMEwyOTguMzAsMTEwLjkxTDMwMi42MCwxMDkuODFMMzA2LjkwLDEwOC43MkwzMTEuMjAsMTA3LjYzTDMxNS41MCwxMDYuNTNMMzE5LjgwLDEwNS40NEwzMjQuMTAsMTA0LjM0TDMyOC40MCwxMDMuMjVMMzMyLjcwLDEwMi4xNkwzMzcuMDAsMTAxLjA2TDM0MS4zMCw5OS45N0wzNDUuNjAsOTguODhMMzQ5LjkwLDk3Ljc4TDM1NC4yMCw5Ni42OUwzNTguNTAsOTUuNTlMMzYyLjgwLDk0LjUwTDM2Ny4xMCw5My40MUwzNzEuNDAsOTIuMzFMMzc1LjcwLDkxLjIyTDM4MC4wMCw5MC4xM0wzODQuMzAsODkuMDNMMzg4LjYwLDg3Ljk0TDM5Mi45MCw4Ni44NEwzOTcuMjAsODUuNzVMNDAxLjUwLDg0LjY2TDQwNS44MCw4My41Nkw0MTAuMTAsODIuNDdMNDE0LjQwLDgxLjM4TDQxOC43MCw4MC4yOEw0MjMuMDAsNzkuMTlMNDI3LjMwLDc4LjA5TDQzMS42MCw3Ny4wMEw0MzUuOTAsNzUuOTFMNDQwLjIwLDc0LjgxTDQ0NC41MCw3My43Mkw0NDguODAsNzIuNjNMNDUzLjEwLDcxLjUzTDQ1Ny40MCw3MC40NEw0NjEuNzAsNjkuMzRMNDY2LjAwLDY4LjI1TDQ2Niw4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjEyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPjxnIGlkPSJsdGItY2FzZS05Ij48dGV4dCB4PSIzMCIgeT0iMTk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+OTwvdGV4dD48bGluZSB4MT0iODgiIHkxPSIxODIiIHgyPSIyNTQiIHkyPSIxODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDE4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDE4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iMTk3IiB4Mj0iMjYyIiB5Mj0iMTk3IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNODgsMTU1QTExLDExIDAgMSAxIDc3LDE2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik03NCwxNzFMNzcsMTY2TDgwLDE3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjEwMyIgeT0iMTYyIiA+TTwvdGV4dD48cGF0aCBkPSJNMjU0LDE1NUExMSwxMSAwIDEgMSAyNDMsMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI0MCwxNzFMMjQzLDE2NkwyNDYsMTcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMjIwIiB5PSIxNjIiIHRleHQtYW5jaG9yPSJlbmQiPuKIkjEuMDBNPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iMjI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSAtMS4wMDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iMTg3IiB4Mj0iNDY2IiB5Mj0iMTg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsMTg3TDI5NC4wMCwyMTIuMDBMMjk4LjMwLDIxMC43NUwzMDIuNjAsMjA5LjUwTDMwNi45MCwyMDguMjVMMzExLjIwLDIwNy4wMEwzMTUuNTAsMjA1Ljc1TDMxOS44MCwyMDQuNTBMMzI0LjEwLDIwMy4yNUwzMjguNDAsMjAyLjAwTDMzMi43MCwyMDAuNzVMMzM3LjAwLDE5OS41MEwzNDEuMzAsMTk4LjI1TDM0NS42MCwxOTcuMDBMMzQ5LjkwLDE5NS43NUwzNTQuMjAsMTk0LjUwTDM1OC41MCwxOTMuMjVMMzYyLjgwLDE5Mi4wMEwzNjcuMTAsMTkwLjc1TDM3MS40MCwxODkuNTBMMzc1LjcwLDE4OC4yNUwzODAuMDAsMTg3LjAwTDM4NC4zMCwxODUuNzVMMzg4LjYwLDE4NC41MEwzOTIuOTAsMTgzLjI1TDM5Ny4yMCwxODIuMDBMNDAxLjUwLDE4MC43NUw0MDUuODAsMTc5LjUwTDQxMC4xMCwxNzguMjVMNDE0LjQwLDE3Ny4wMEw0MTguNzAsMTc1Ljc1TDQyMy4wMCwxNzQuNTBMNDI3LjMwLDE3My4yNUw0MzEuNjAsMTcyLjAwTDQzNS45MCwxNzAuNzVMNDQwLjIwLDE2OS41MEw0NDQuNTAsMTY4LjI1TDQ0OC44MCwxNjcuMDBMNDUzLjEwLDE2NS43NUw0NTcuNDAsMTY0LjUwTDQ2MS43MCwxNjMuMjVMNDY2LjAwLDE2Mi4wMEw0NjYsMTg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iMjI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTEwIj48dGV4dCB4PSIzMCIgeT0iMjk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+MTA8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iMjgyIiB4Mj0iMjU0IiB5Mj0iMjgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCwyODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCwyODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PGxpbmUgeDE9IjI0NiIgeTE9IjI5NyIgeDI9IjI2MiIgeTI9IjI5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PGxpbmUgeDE9Ijg4IiB5MT0iMjUyIiB4Mj0iMjU0IiB5Mj0iMjUyIiBzdHJva2U9IiMyNTYzZWIiLz48bGluZSB4MT0iODgiIHkxPSIyNTIiIHgyPSI4OCIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik04NSwyNjlMODgsMjc0TDkxLDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxMDMuMDkwOTA5MDkwOTA5MSIgeTE9IjI1MiIgeDI9IjEwMy4wOTA5MDkwOTA5MDkxIiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTEwMC4wOTA5MDkwOTA5MDkxLDI2OUwxMDMuMDkwOTA5MDkwOTA5MSwyNzRMMTA2LjA5MDkwOTA5MDkwOTEsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjExOC4xODE4MTgxODE4MTgxOSIgeTE9IjI1MiIgeDI9IjExOC4xODE4MTgxODE4MTgxOSIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xMTUuMTgxODE4MTgxODE4MTksMjY5TDExOC4xODE4MTgxODE4MTgxOSwyNzRMMTIxLjE4MTgxODE4MTgxODE5LDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxMzMuMjcyNzI3MjcyNzI3MjgiIHkxPSIyNTIiIHgyPSIxMzMuMjcyNzI3MjcyNzI3MjgiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTMwLjI3MjcyNzI3MjcyNzI4LDI2OUwxMzMuMjcyNzI3MjcyNzI3MjgsMjc0TDEzNi4yNzI3MjcyNzI3MjcyOCwyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTQ4LjM2MzYzNjM2MzYzNjM3IiB5MT0iMjUyIiB4Mj0iMTQ4LjM2MzYzNjM2MzYzNjM3IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE0NS4zNjM2MzYzNjM2MzYzNywyNjlMMTQ4LjM2MzYzNjM2MzYzNjM3LDI3NEwxNTEuMzYzNjM2MzYzNjM2MzcsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjE2My40NTQ1NDU0NTQ1NDU0NCIgeTE9IjI1MiIgeDI9IjE2My40NTQ1NDU0NTQ1NDU0NCIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xNjAuNDU0NTQ1NDU0NTQ1NDQsMjY5TDE2My40NTQ1NDU0NTQ1NDU0NCwyNzRMMTY2LjQ1NDU0NTQ1NDU0NTQ0LDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxNzguNTQ1NDU0NTQ1NDU0NTYiIHkxPSIyNTIiIHgyPSIxNzguNTQ1NDU0NTQ1NDU0NTYiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTc1LjU0NTQ1NDU0NTQ1NDU2LDI2OUwxNzguNTQ1NDU0NTQ1NDU0NTYsMjc0TDE4MS41NDU0NTQ1NDU0NTQ1NiwyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTkzLjYzNjM2MzYzNjM2MzYzIiB5MT0iMjUyIiB4Mj0iMTkzLjYzNjM2MzYzNjM2MzYzIiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE5MC42MzYzNjM2MzYzNjM2MywyNjlMMTkzLjYzNjM2MzYzNjM2MzYzLDI3NEwxOTYuNjM2MzYzNjM2MzYzNjMsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjIwOC43MjcyNzI3MjcyNzI3NSIgeTE9IjI1MiIgeDI9IjIwOC43MjcyNzI3MjcyNzI3NSIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yMDUuNzI3MjcyNzI3MjcyNzUsMjY5TDIwOC43MjcyNzI3MjcyNzI3NSwyNzRMMjExLjcyNzI3MjcyNzI3Mjc1LDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIyMjMuODE4MTgxODE4MTgxOCIgeTE9IjI1MiIgeDI9IjIyMy44MTgxODE4MTgxODE4IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTIyMC44MTgxODE4MTgxODE4LDI2OUwyMjMuODE4MTgxODE4MTgxOCwyNzRMMjI2LjgxODE4MTgxODE4MTgsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjIzOC45MDkwOTA5MDkwOTA5IiB5MT0iMjUyIiB4Mj0iMjM4LjkwOTA5MDkwOTA5MDkiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjM1LjkwOTA5MDkwOTA5MDksMjY5TDIzOC45MDkwOTA5MDkwOTA5LDI3NEwyNDEuOTA5MDkwOTA5MDkwOSwyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMjU0IiB5MT0iMjUyIiB4Mj0iMjU0IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI1MSwyNjlMMjU0LDI3NEwyNTcsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTcxIiB5PSIyNDkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnE8L3RleHQ+PHRleHQgeD0iMTcxIiB5PSIzMjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPlNpbXBseSBzdXBwb3J0ZWQ7IFVETDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iMjg3IiB4Mj0iNDY2IiB5Mj0iMjg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsMjg3TDI5NC4wMCwyODcuMDBMMjk4LjMwLDI4OS40NEwzMDIuNjAsMjkxLjc1TDMwNi45MCwyOTMuOTRMMzExLjIwLDI5Ni4wMEwzMTUuNTAsMjk3Ljk0TDMxOS44MCwyOTkuNzVMMzI0LjEwLDMwMS40NEwzMjguNDAsMzAzLjAwTDMzMi43MCwzMDQuNDRMMzM3LjAwLDMwNS43NUwzNDEuMzAsMzA2Ljk0TDM0NS42MCwzMDguMDBMMzQ5LjkwLDMwOC45NEwzNTQuMjAsMzA5Ljc1TDM1OC41MCwzMTAuNDRMMzYyLjgwLDMxMS4wMEwzNjcuMTAsMzExLjQ0TDM3MS40MCwzMTEuNzVMMzc1LjcwLDMxMS45NEwzODAuMDAsMzEyLjAwTDM4NC4zMCwzMTEuOTRMMzg4LjYwLDMxMS43NUwzOTIuOTAsMzExLjQ0TDM5Ny4yMCwzMTEuMDBMNDAxLjUwLDMxMC40NEw0MDUuODAsMzA5Ljc1TDQxMC4xMCwzMDguOTRMNDE0LjQwLDMwOC4wMEw0MTguNzAsMzA2Ljk0TDQyMy4wMCwzMDUuNzVMNDI3LjMwLDMwNC40NEw0MzEuNjAsMzAzLjAwTDQzNS45MCwzMDEuNDRMNDQwLjIwLDI5OS43NUw0NDQuNTAsMjk3Ljk0TDQ0OC44MCwyOTYuMDBMNDUzLjEwLDI5My45NEw0NTcuNDAsMjkxLjc1TDQ2MS43MCwyODkuNDRMNDY2LjAwLDI4Ny4wMEw0NjYsMjg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iMzI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTExIj48dGV4dCB4PSIzMCIgeT0iMzk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+MTE8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iMzgyIiB4Mj0iMjU0IiB5Mj0iMzgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCwzNzBWMzk0IiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxsaW5lIHgxPSI4MyIgeTE9IjM3NCIgeDI9Ijg4IiB5Mj0iMzcwIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjgzIiB5MT0iMzc4IiB4Mj0iODgiIHkyPSIzNzQiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iODMiIHkxPSIzODIiIHgyPSI4OCIgeTI9IjM3OCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSI4MyIgeTE9IjM4NiIgeDI9Ijg4IiB5Mj0iMzgyIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjgzIiB5MT0iMzkwIiB4Mj0iODgiIHkyPSIzODYiIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik0yNTQsMzcwVjM5NCIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iMjQ5IiB5MT0iMzc0IiB4Mj0iMjU0IiB5Mj0iMzcwIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjI0OSIgeTE9IjM3OCIgeDI9IjI1NCIgeTI9IjM3NCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSIyNDkiIHkxPSIzODIiIHgyPSIyNTQiIHkyPSIzNzgiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iMjQ5IiB5MT0iMzg2IiB4Mj0iMjU0IiB5Mj0iMzgyIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjI0OSIgeTE9IjM5MCIgeDI9IjI1NCIgeTI9IjM4NiIgc3Ryb2tlPSIjNjQ3NDhiIi8+PGxpbmUgeDE9Ijg4IiB5MT0iMzUyIiB4Mj0iMjU0IiB5Mj0iMzUyIiBzdHJva2U9IiMyNTYzZWIiLz48bGluZSB4MT0iODgiIHkxPSIzNTIiIHgyPSI4OCIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik04NSwzNjlMODgsMzc0TDkxLDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxMDMuMDkwOTA5MDkwOTA5MSIgeTE9IjM1MiIgeDI9IjEwMy4wOTA5MDkwOTA5MDkxIiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTEwMC4wOTA5MDkwOTA5MDkxLDM2OUwxMDMuMDkwOTA5MDkwOTA5MSwzNzRMMTA2LjA5MDkwOTA5MDkwOTEsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjExOC4xODE4MTgxODE4MTgxOSIgeTE9IjM1MiIgeDI9IjExOC4xODE4MTgxODE4MTgxOSIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xMTUuMTgxODE4MTgxODE4MTksMzY5TDExOC4xODE4MTgxODE4MTgxOSwzNzRMMTIxLjE4MTgxODE4MTgxODE5LDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxMzMuMjcyNzI3MjcyNzI3MjgiIHkxPSIzNTIiIHgyPSIxMzMuMjcyNzI3MjcyNzI3MjgiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTMwLjI3MjcyNzI3MjcyNzI4LDM2OUwxMzMuMjcyNzI3MjcyNzI3MjgsMzc0TDEzNi4yNzI3MjcyNzI3MjcyOCwzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTQ4LjM2MzYzNjM2MzYzNjM3IiB5MT0iMzUyIiB4Mj0iMTQ4LjM2MzYzNjM2MzYzNjM3IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE0NS4zNjM2MzYzNjM2MzYzNywzNjlMMTQ4LjM2MzYzNjM2MzYzNjM3LDM3NEwxNTEuMzYzNjM2MzYzNjM2MzcsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjE2My40NTQ1NDU0NTQ1NDU0NCIgeTE9IjM1MiIgeDI9IjE2My40NTQ1NDU0NTQ1NDU0NCIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xNjAuNDU0NTQ1NDU0NTQ1NDQsMzY5TDE2My40NTQ1NDU0NTQ1NDU0NCwzNzRMMTY2LjQ1NDU0NTQ1NDU0NTQ0LDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxNzguNTQ1NDU0NTQ1NDU0NTYiIHkxPSIzNTIiIHgyPSIxNzguNTQ1NDU0NTQ1NDU0NTYiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTc1LjU0NTQ1NDU0NTQ1NDU2LDM2OUwxNzguNTQ1NDU0NTQ1NDU0NTYsMzc0TDE4MS41NDU0NTQ1NDU0NTQ1NiwzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTkzLjYzNjM2MzYzNjM2MzYzIiB5MT0iMzUyIiB4Mj0iMTkzLjYzNjM2MzYzNjM2MzYzIiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE5MC42MzYzNjM2MzYzNjM2MywzNjlMMTkzLjYzNjM2MzYzNjM2MzYzLDM3NEwxOTYuNjM2MzYzNjM2MzYzNjMsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjIwOC43MjcyNzI3MjcyNzI3NSIgeTE9IjM1MiIgeDI9IjIwOC43MjcyNzI3MjcyNzI3NSIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yMDUuNzI3MjcyNzI3MjcyNzUsMzY5TDIwOC43MjcyNzI3MjcyNzI3NSwzNzRMMjExLjcyNzI3MjcyNzI3Mjc1LDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIyMjMuODE4MTgxODE4MTgxOCIgeTE9IjM1MiIgeDI9IjIyMy44MTgxODE4MTgxODE4IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTIyMC44MTgxODE4MTgxODE4LDM2OUwyMjMuODE4MTgxODE4MTgxOCwzNzRMMjI2LjgxODE4MTgxODE4MTgsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjIzOC45MDkwOTA5MDkwOTA5IiB5MT0iMzUyIiB4Mj0iMjM4LjkwOTA5MDkwOTA5MDkiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjM1LjkwOTA5MDkwOTA5MDksMzY5TDIzOC45MDkwOTA5MDkwOTA5LDM3NEwyNDEuOTA5MDkwOTA5MDkwOSwzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMjU0IiB5MT0iMzUyIiB4Mj0iMjU0IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI1MSwzNjlMMjU0LDM3NEwyNTcsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTcxIiB5PSIzNDkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnE8L3RleHQ+PHRleHQgeD0iMTcxIiB5PSI0MjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkZpeGVkIGluIGJlbmRpbmc7IFVETDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iMzg3IiB4Mj0iNDY2IiB5Mj0iMzg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsMzg3TDI5NC4wMCwzNjIuMDBMMjk4LjMwLDM2NS42NkwzMDIuNjAsMzY5LjEzTDMwNi45MCwzNzIuNDFMMzExLjIwLDM3NS41MEwzMTUuNTAsMzc4LjQxTDMxOS44MCwzODEuMTNMMzI0LjEwLDM4My42NkwzMjguNDAsMzg2LjAwTDMzMi43MCwzODguMTZMMzM3LjAwLDM5MC4xM0wzNDEuMzAsMzkxLjkxTDM0NS42MCwzOTMuNTBMMzQ5LjkwLDM5NC45MUwzNTQuMjAsMzk2LjEzTDM1OC41MCwzOTcuMTZMMzYyLjgwLDM5OC4wMEwzNjcuMTAsMzk4LjY2TDM3MS40MCwzOTkuMTNMMzc1LjcwLDM5OS40MUwzODAuMDAsMzk5LjUwTDM4NC4zMCwzOTkuNDFMMzg4LjYwLDM5OS4xM0wzOTIuOTAsMzk4LjY2TDM5Ny4yMCwzOTguMDBMNDAxLjUwLDM5Ny4xNkw0MDUuODAsMzk2LjEzTDQxMC4xMCwzOTQuOTFMNDE0LjQwLDM5My41MEw0MTguNzAsMzkxLjkxTDQyMy4wMCwzOTAuMTNMNDI3LjMwLDM4OC4xNkw0MzEuNjAsMzg2LjAwTDQzNS45MCwzODMuNjZMNDQwLjIwLDM4MS4xM0w0NDQuNTAsMzc4LjQxTDQ0OC44MCwzNzUuNTBMNDUzLjEwLDM3Mi40MUw0NTcuNDAsMzY5LjEzTDQ2MS43MCwzNjUuNjZMNDY2LjAwLDM2Mi4wMEw0NjYsMzg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iNDI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTEyIj48dGV4dCB4PSIzMCIgeT0iNDk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+MTI8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iNDgyIiB4Mj0iMjU0IiB5Mj0iNDgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCw0ODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCw0ODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PGxpbmUgeDE9IjI0NiIgeTE9IjQ5NyIgeDI9IjI2MiIgeTI9IjQ5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PGxpbmUgeDE9IjE3MSIgeTE9IjQ0OCIgeDI9IjE3MSIgeTI9IjQ3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xNjgsNDY5TDE3MSw0NzRMMTc0LDQ2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjE3OSIgeT0iNDU4IiA+RjwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjUyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+U2ltcGx5IHN1cHBvcnRlZDsgbWlkLXBvaW50IGxvYWQ8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9IjQ4NyIgeDI9IjQ2NiIgeTI9IjQ4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDQ4N0wyOTQuMDAsNDg3LjAwTDI5OC4zMCw0ODguMjVMMzAyLjYwLDQ4OS41MEwzMDYuOTAsNDkwLjc1TDMxMS4yMCw0OTIuMDBMMzE1LjUwLDQ5My4yNUwzMTkuODAsNDk0LjUwTDMyNC4xMCw0OTUuNzVMMzI4LjQwLDQ5Ny4wMEwzMzIuNzAsNDk4LjI1TDMzNy4wMCw0OTkuNTBMMzQxLjMwLDUwMC43NUwzNDUuNjAsNTAyLjAwTDM0OS45MCw1MDMuMjVMMzU0LjIwLDUwNC41MEwzNTguNTAsNTA1Ljc1TDM2Mi44MCw1MDcuMDBMMzY3LjEwLDUwOC4yNUwzNzEuNDAsNTA5LjUwTDM3NS43MCw1MTAuNzVMMzgwLjAwLDUxMi4wMEwzODQuMzAsNTEwLjc1TDM4OC42MCw1MDkuNTBMMzkyLjkwLDUwOC4yNUwzOTcuMjAsNTA3LjAwTDQwMS41MCw1MDUuNzVMNDA1LjgwLDUwNC41MEw0MTAuMTAsNTAzLjI1TDQxNC40MCw1MDIuMDBMNDE4LjcwLDUwMC43NUw0MjMuMDAsNDk5LjUwTDQyNy4zMCw0OTguMjVMNDMxLjYwLDQ5Ny4wMEw0MzUuOTAsNDk1Ljc1TDQ0MC4yMCw0OTQuNTBMNDQ0LjUwLDQ5My4yNUw0NDguODAsNDkyLjAwTDQ1My4xMCw0OTAuNzVMNDU3LjQwLDQ4OS41MEw0NjEuNzAsNDg4LjI1TDQ2Ni4wMCw0ODcuMDBMNDY2LDQ4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjUyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPjxnIGlkPSJsdGItY2FzZS0xMyI+PHRleHQgeD0iMzAiIHk9IjU5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjEzPC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjU4MiIgeDI9IjI1NCIgeTI9IjU4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsNTcwVjU5NCIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iODMiIHkxPSI1NzQiIHgyPSI4OCIgeTI9IjU3MCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSI4MyIgeTE9IjU3OCIgeDI9Ijg4IiB5Mj0iNTc0IiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjgzIiB5MT0iNTgyIiB4Mj0iODgiIHkyPSI1NzgiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iODMiIHkxPSI1ODYiIHgyPSI4OCIgeTI9IjU4MiIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSI4MyIgeTE9IjU5MCIgeDI9Ijg4IiB5Mj0iNTg2IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNMjU0LDU3MFY1OTQiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PGxpbmUgeDE9IjI0OSIgeTE9IjU3NCIgeDI9IjI1NCIgeTI9IjU3MCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSIyNDkiIHkxPSI1NzgiIHgyPSIyNTQiIHkyPSI1NzQiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iMjQ5IiB5MT0iNTgyIiB4Mj0iMjU0IiB5Mj0iNTc4IiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjI0OSIgeTE9IjU4NiIgeDI9IjI1NCIgeTI9IjU4MiIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSIyNDkiIHkxPSI1OTAiIHgyPSIyNTQiIHkyPSI1ODYiIHN0cm9rZT0iIzY0NzQ4YiIvPjxsaW5lIHgxPSIxNzEiIHkxPSI1NDgiIHgyPSIxNzEiIHkyPSI1NzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTY4LDU2OUwxNzEsNTc0TDE3NCw1NjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxNzkiIHk9IjU1OCIgPkY8L3RleHQ+PHRleHQgeD0iMTcxIiB5PSI2MjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkZpeGVkIGluIGJlbmRpbmc7IG1pZC1wb2ludCBsb2FkPC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSI1ODciIHgyPSI0NjYiIHkyPSI1ODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCw1ODdMMjk0LjAwLDU2Mi4wMEwyOTguMzAsNTY0LjUwTDMwMi42MCw1NjcuMDBMMzA2LjkwLDU2OS41MEwzMTEuMjAsNTcyLjAwTDMxNS41MCw1NzQuNTBMMzE5LjgwLDU3Ny4wMEwzMjQuMTAsNTc5LjUwTDMyOC40MCw1ODIuMDBMMzMyLjcwLDU4NC41MEwzMzcuMDAsNTg3LjAwTDM0MS4zMCw1ODkuNTBMMzQ1LjYwLDU5Mi4wMEwzNDkuOTAsNTk0LjUwTDM1NC4yMCw1OTcuMDBMMzU4LjUwLDU5OS41MEwzNjIuODAsNjAyLjAwTDM2Ny4xMCw2MDQuNTBMMzcxLjQwLDYwNy4wMEwzNzUuNzAsNjA5LjUwTDM4MC4wMCw2MTIuMDBMMzg0LjMwLDYwOS41MEwzODguNjAsNjA3LjAwTDM5Mi45MCw2MDQuNTBMMzk3LjIwLDYwMi4wMEw0MDEuNTAsNTk5LjUwTDQwNS44MCw1OTcuMDBMNDEwLjEwLDU5NC41MEw0MTQuNDAsNTkyLjAwTDQxOC43MCw1ODkuNTBMNDIzLjAwLDU4Ny4wMEw0MjcuMzAsNTg0LjUwTDQzMS42MCw1ODIuMDBMNDM1LjkwLDU3OS41MEw0NDAuMjAsNTc3LjAwTDQ0NC41MCw1NzQuNTBMNDQ4LjgwLDU3Mi4wMEw0NTMuMTAsNTY5LjUwTDQ1Ny40MCw1NjcuMDBMNDYxLjcwLDU2NC41MEw0NjYuMDAsNTYyLjAwTDQ2Niw1ODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSI2MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz4KICAgIDwvZz4KICA8L3N2Zz4="
       },
-      "groupId": "s_stl_group_9w"
+      "groupId": "s_stl_group_9x"
     },
     {
-      "id": "s_stl_9x",
+      "id": "s_stl_9y",
       "type": "math",
       "x": 576,
       "y": 14196,
@@ -6171,10 +6186,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9w"
+      "groupId": "s_stl_group_9x"
     },
     {
-      "id": "s_stl_9y",
+      "id": "s_stl_9z",
       "type": "math",
       "x": 656,
       "y": 14196,
@@ -6193,10 +6208,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9w"
+      "groupId": "s_stl_group_9x"
     },
     {
-      "id": "s_stl_9z",
+      "id": "s_stl_a0",
       "type": "math",
       "x": 576,
       "y": 14296,
@@ -6215,10 +6230,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9w"
+      "groupId": "s_stl_group_9x"
     },
     {
-      "id": "s_stl_a0",
+      "id": "s_stl_a1",
       "type": "math",
       "x": 656,
       "y": 14296,
@@ -6237,10 +6252,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9w"
+      "groupId": "s_stl_group_9x"
     },
     {
-      "id": "s_stl_a1",
+      "id": "s_stl_a2",
       "type": "math",
       "x": 576,
       "y": 14396,
@@ -6259,10 +6274,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9w"
+      "groupId": "s_stl_group_9x"
     },
     {
-      "id": "s_stl_a2",
+      "id": "s_stl_a3",
       "type": "math",
       "x": 656,
       "y": 14396,
@@ -6281,10 +6296,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9w"
+      "groupId": "s_stl_group_9x"
     },
     {
-      "id": "s_stl_a3",
+      "id": "s_stl_a4",
       "type": "math",
       "x": 576,
       "y": 14496,
@@ -6303,10 +6318,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9w"
+      "groupId": "s_stl_group_9x"
     },
     {
-      "id": "s_stl_a4",
+      "id": "s_stl_a5",
       "type": "math",
       "x": 656,
       "y": 14496,
@@ -6325,10 +6340,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9w"
+      "groupId": "s_stl_group_9x"
     },
     {
-      "id": "s_stl_a5",
+      "id": "s_stl_a6",
       "type": "math",
       "x": 576,
       "y": 14596,
@@ -6347,10 +6362,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9w"
+      "groupId": "s_stl_group_9x"
     },
     {
-      "id": "s_stl_a6",
+      "id": "s_stl_a7",
       "type": "math",
       "x": 656,
       "y": 14596,
@@ -6369,10 +6384,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9w"
+      "groupId": "s_stl_group_9x"
     },
     {
-      "id": "s_stl_a7",
+      "id": "s_stl_a8",
       "type": "math",
       "x": 576,
       "y": 14696,
@@ -6391,10 +6406,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9w"
+      "groupId": "s_stl_group_9x"
     },
     {
-      "id": "s_stl_a8",
+      "id": "s_stl_a9",
       "type": "math",
       "x": 656,
       "y": 14696,
@@ -6413,27 +6428,27 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_stl_group_9w"
+      "groupId": "s_stl_group_9x"
     },
     {
-      "id": "s_stl_a9",
+      "id": "s_stl_aa",
       "type": "text",
       "x": 76,
       "y": 14759,
       "props": {
-        "w": 204,
+        "w": 304,
         "h": 18,
         "html": "Lookup row indices",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_aa",
+      "id": "s_stl_ab",
       "type": "math",
-      "x": 296,
+      "x": 396,
       "y": 14758,
       "props": {
         "w": 81,
@@ -6449,7 +6464,7 @@
       }
     },
     {
-      "id": "s_stl_ab",
+      "id": "s_stl_ac",
       "type": "text",
       "x": 76,
       "y": 14784,
@@ -6457,14 +6472,14 @@
         "w": 630,
         "h": 18,
         "html": "C1 column from the table cells",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_ac",
+      "id": "s_stl_ad",
       "type": "math",
       "x": 96,
       "y": 14808,
@@ -6482,7 +6497,7 @@
       }
     },
     {
-      "id": "s_stl_ad",
+      "id": "s_stl_ae",
       "type": "text",
       "x": 76,
       "y": 14834,
@@ -6490,14 +6505,14 @@
         "w": 630,
         "h": 18,
         "html": "C2 column from the table cells",
-        "fontFamily": "Inter",
+        "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       }
     },
     {
-      "id": "s_stl_ae",
+      "id": "s_stl_af",
       "type": "math",
       "x": 96,
       "y": 14858,

@@ -16,6 +16,12 @@ EN 1993-1-1:2005 + A1:2014. Uniform, doubly symmetric rolled or custom welded I/
 
 ## Method
 
+Presentation separates cross-section resistance (§6.2) from member compression
+(§6.3.1), lateral-torsional buckling (§6.3.2.2) and compression/bending interaction
+(§6.3.3(4), equations (6.61)/(6.62), Annex B Method 2). Worksheet text and LTB
+diagram captions use Roboto. Parameter equations share a fixed x = 396 column;
+long equations use a separate x = 96 line below their labels.
+
 The final Member result now requires **both** `delta_scope = 1` and `UR <= 1`.
 Summary flags reject negative action magnitudes, nonpositive material/factor/length inputs,
 invalid section geometry, out-of-range Cm values and invalid LTB arrangements. They also

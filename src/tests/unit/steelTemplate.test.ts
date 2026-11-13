@@ -79,6 +79,18 @@ function reference(sectionId: number, a: { N: number; My: number; Mz: number; Vz
 
 describe('steel beam-column template (EN 1993-1-1)', () => {
   it('reproduces published worked examples and the reference kernel', () => {
+    step('steel worksheet uses consistent text and clause-labelled member checks', () => {
+      const { shapes } = templateById('steel-beam-column')!.instantiate!();
+      const texts = shapes.filter(s => s.type === 'text');
+      expect(texts.length).toBeGreaterThan(0);
+      expect(texts.every(s => s.props.fontFamily === 'Roboto')).toBe(true);
+      for (const clause of ['6. MEMBER CHECK: COMPRESSION', '7. MEMBER CHECK: LATERAL-TORSIONAL', '8. MEMBER CHECK: COMPRESSION AND BENDING']) {
+        expect(texts.some(s => s.props.html.includes(clause))).toBe(true);
+      }
+      const inputs = shapes.filter(s => s.type === 'math' && ['N_{Ed}', 'M_{y.Ed}', 'M_{z.Ed}'].some(name => s.props.latex.startsWith(`${name}\\coloneq`)));
+      expect(inputs).toHaveLength(3);
+      expect(inputs.every(s => s.x === 396)).toBe(true);
+    });
     step('Insert Steel Section creates a usable library/custom block and undoes as one action', () => {
       loadShapes([]);
       const id = insertSteelSection();

@@ -71,7 +71,7 @@ function panelSvg(rows) {
     <rect x="0.5" y="0.5" width="639" height="${height - 1}" fill="white" stroke="#94a3b8"/>
     <rect x="1" y="1" width="638" height="39" fill="#eff6ff"/>
     <g stroke="#cbd5e1" stroke-width="1">${horizontal}${[60, 280, 480, 560].map(x => line(x, 0, x, height)).join('')}</g>
-    <g font-family="Arial,sans-serif" font-size="12" fill="#1e3a5f">
+    <g font-family="Roboto,sans-serif" font-size="12" fill="#1e3a5f">
       <g font-weight="bold" text-anchor="middle">${text(30, 25, 'Case')}${text(170, 25, 'Loading and supports')}${text(380, 25, 'Bending moment diagram')}${text(520, 25, 'C1')}${text(600, 25, 'C2')}</g>
       ${rows.map((c, i) => { const y = HEADER + i * HEIGHT; return `<g id="ltb-case-${c.id}">${text(30, y + 57, String(c.id), 'text-anchor="middle" font-weight="bold" font-size="14"')}${loading(c, y)}${momentDiagram(c, y)}</g>`; }).join('')}
     </g>

@@ -7,7 +7,7 @@ import { createLayout, R } from './layout.mjs';
 import { ltbCaseTable } from './ltbTable.mjs';
 import sectionFormulae from '../../src/engineering/steel/sectionFormulae.json' with { type: 'json' };
 
-const layout = createLayout({ idPrefix: 's_stl', sizesFile: 'sizes_steel.json' });
+const layout = createLayout({ idPrefix: 's_stl', sizesFile: 'sizes_steel.json', textFont: 'Roboto', mathColumn: 396 });
 const { gap, need, LINK, H, T, P, ROW, S, GRAPH, M, mm, kN, kNm, MPa, fr, KEEP, finish } = layout;
 
 const IF = (...branches) => {
@@ -144,19 +144,19 @@ UR('Bending about z', 'M.z', R`\frac{M_{z.Ed}}{M_{c.z.Rd}}`, '§6.2.5 (6.12)');
 UR('Combined N + My + Mz, linear summation', 'sec', R`\frac{N_{Ed}}{N_{c.Rd}\left(1-\rho\right)}+\mathrm{UR}_{M.y}+\mathrm{UR}_{M.z}`, '§6.2.1(7) (6.2)');
 
 // ================= 6. Flexural and torsional buckling =================
-H(2, '6. BUCKLING IN COMPRESSION (§6.3.1)');
+H(2, '6. MEMBER CHECK: COMPRESSION (§6.3.1)');
 H(3, '6.1 Buckling curves (Table 6.2, rolled / welded I/H, S235 to S420)');
 P('Imperfection factor about y: Table 6.2, welded when Section = 0', R`\alpha_{y}\coloneq${curve(R`\alpha_{y}`)}`);
 P('Imperfection factor about z: Table 6.2, welded when Section = 0', R`\alpha_{z}\coloneq${curve(R`\alpha_{z}`)}`);
 P('Steel grade within the range of these curves', R`f_{y}\le460\,\mathrm{MPa}`, M(MPa));
-H(3, '6.2 Flexural buckling about y-y');
+H(3, '6.2 Flexural buckling about y-y (§6.3.1.1)');
 P('Elastic critical force', R`N_{cr.y}\coloneq\frac{\pi^2EI_{y}}{L_{cr.y}^2}`, M(kN, fr));
 P('Relative slenderness (6.50)', R`\lambda_{y}\coloneq\sqrt{\frac{Af_{y}}{N_{cr.y}}}`, M(p3, fr));
 P('', R`\Phi_{y}\coloneq${phiOf(R`\lambda_{y}`, R`\alpha_{y}`)}`, M(p3, fr));
 P('Reduction factor (6.49)', R`\chi_{y}\coloneq${chiOf(R`\Phi_{y}`, R`\lambda_{y}`)}`, M(p3, fr));
 P('Buckling resistance (6.47)', R`N_{b.y.Rd}\coloneq\frac{\chi_{y}Af_{y}}{\gamma_{M1}}`, M(kN, fr));
 UR('Flexural buckling about y', 'b.y', R`\frac{N_{Ed}}{N_{b.y.Rd}}`, '§6.3.1.1 (6.46)');
-H(3, '6.3 Flexural buckling about z-z');
+H(3, '6.3 Flexural buckling about z-z (§6.3.1.1)');
 P('Elastic critical force', R`N_{cr.z}\coloneq\frac{\pi^2EI_{z}}{L_{cr.z}^2}`, M(kN, fr));
 P('Relative slenderness', R`\lambda_{z}\coloneq\sqrt{\frac{Af_{y}}{N_{cr.z}}}`, M(p3, fr));
 P('', R`\Phi_{z}\coloneq${phiOf(R`\lambda_{z}`, R`\alpha_{z}`)}`, M(p3, fr));
@@ -173,7 +173,7 @@ P('Buckling resistance', R`N_{b.T.Rd}\coloneq\frac{\chi_{T}Af_{y}}{\gamma_{M1}}`
 UR('Torsional buckling', 'b.T', R`\frac{N_{Ed}}{N_{b.T.Rd}}`, '§6.3.1.1 (6.46)');
 
 // ================= 7. LTB =================
-H(2, '7. LATERAL-TORSIONAL BUCKLING (§6.3.2.2)');
+H(2, '7. MEMBER CHECK: LATERAL-TORSIONAL BUCKLING (§6.3.2.2)');
 T('Mcr: SCI NCCI SN003b eq. (1), fork supports. Tabulated C1, C2 are for k = kw = 1 only.');
 LINK('ltb', 'LTB moment cases – C1 and C2 (SN003b Tables 3.1 and 3.2)', () => ltbCaseTable(layout));
 P('Case valid (1 = yes): 0, or a whole number 1 to 13 with k = kw = 1', R`\delta_{LT}\coloneq${IF([R`n_{LT}=0`, '1'], [R`n_{LT}=\mathrm{floor}\left(n_{LT}\right)\land n_{LT}\ge1\land n_{LT}\le13\land k=1\land k_{w}=1`, '1'], [null, '0'])}`);
@@ -190,7 +190,8 @@ P('Buckling resistance moment (6.55)', R`M_{b.Rd}\coloneq\frac{\chi_{LT}W_{y}f_{
 UR('Lateral-torsional buckling', 'LT', R`\frac{M_{y.Ed}}{M_{b.Rd}}`, '§6.3.2.1 (6.54)');
 
 // ================= 8. Interaction =================
-H(2, '8. BENDING AND AXIAL COMPRESSION (§6.3.3, Annex B)');
+H(2, '8. MEMBER CHECK: COMPRESSION AND BENDING (§6.3.3)');
+T('EN 1993-1-1:2005 §6.3.3(4), equations (6.61) and (6.62); Annex B, Method 2.');
 T('Interaction factors: Table B.1 and B.2, I-sections, Class 1 and 2, member susceptible to torsional');
 T('deformations. Cm factors are inputs (Table B.3). High shear (ρ > 0) needs a separate check.');
 T('Class / slenderness limits below apply to combined interaction; see scope flags in the summary.');
