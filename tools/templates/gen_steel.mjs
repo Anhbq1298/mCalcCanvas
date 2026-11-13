@@ -29,8 +29,7 @@ const UR = (desc, name, latex, clause) => {
 };
 const chiOf = (phi, lam) => R`\min\left(1,\frac{1}{${phi}+\sqrt{${phi}^2-${lam}^2}}\right)`;
 const phiOf = (lam, alpha) => R`0.5\left(1+${alpha}\left(${lam}-0.2\right)+${lam}^2\right)`;
-const MEMBER = R`\delta_{scope}\mathrm{if}\left(\mathrm{UR}\le1,1,0\right)\ge1`;
-const flag = (desc, name, condition) => P(desc, R`\delta_{${name}}\coloneq${IF([condition, '1'], [null, '0'])}`);
+const MEMBER = R`\mathrm{UR}\le1`;
 
 // ================= 1. Basis =================
 H(1, 'STEEL BEAM-COLUMN CHECK – I/H SECTION (EC3)');
@@ -194,7 +193,7 @@ H(2, '8. MEMBER CHECK: COMPRESSION AND BENDING (§6.3.3)');
 T('EN 1993-1-1:2005 §6.3.3(4), equations (6.61) and (6.62); Annex B, Method 2.');
 T('Interaction factors: Table B.1 and B.2, I-sections, Class 1 and 2, member susceptible to torsional');
 T('deformations. Cm factors are inputs (Table B.3). High shear (ρ > 0) needs a separate check.');
-T('Class / slenderness limits below apply to combined interaction; validation is in the annex.');
+T('Class / slenderness limits below apply to combined interaction; check the stated method limits.');
 const interactionTables = () => {
   T('EN 1993-1-1:2005, Annex B, Tables B.1 and B.2; selected Class 1/2 I/H branches.');
   T('Redrawn reference extract, not the complete tables. Main-body equations remain editable.');
@@ -246,39 +245,12 @@ LINK('interaction-tables', 'EC3 Annex B - interaction factor reference tables', 
 
 // ================= 9. Summary =================
 H(2, '9. SUMMARY');
-T('Valid only within the stated scope; unsupported cases cannot receive Member PASS.');
-const SCOPE = R`\delta_{scope}\coloneq\delta_{input}\delta_{section}\delta_{curves}\delta_{shear}\delta_{highV}\delta_{interaction}\delta_{data}`;
-LINK('scope', 'Method applicability - detailed validation', () => {
-T('Flags: 1 = supported; 0 = invalid input or separate verification required.');
-flag('Axial compression and nonnegative shear magnitudes', 'forces', R`\min\left(N_{Ed},V_{y.Ed},V_{z.Ed}\right)\ge0\,\mathrm{kN}`);
-flag('Nonnegative moment magnitudes', 'moments', R`\min\left(M_{y.Ed},M_{z.Ed}\right)\ge${kNm0}`);
-P('Valid action signs', R`\delta_{actions}\coloneq\delta_{forces}\delta_{moments}`);
-flag('Positive material stiffness and strength', 'elastic', R`\min\left(f_y,E,G\right)>0\,\mathrm{MPa}`);
-flag('Positive partial factors and shear-area factor', 'factors', R`\min\left(\gamma_{M0},\gamma_{M1},\eta\right)>0`);
-P('Valid material inputs (also fy ≤ 460 MPa above)', R`\delta_{material}\coloneq\delta_{elastic}\delta_{factors}\mathrm{if}\left(f_y\le460\,\mathrm{MPa},1,0\right)`);
-flag('Positive buckling lengths (SN003b)', 'lengths', R`\min\left(L_{cr.y},L_{cr.z},L_{cr.T},L_{LT}\right)>0\,\mathrm{m}`);
-flag('Positive end factors (SN003b)', 'ends', R`\min\left(k,k_w\right)>0`);
-flag('Valid I/H dimensions, excluding fillets or welds', 'geometry', R`\min\left(h-2t_f-2r,b-t_w-2r,t_w,t_f\right)>0\,\mathrm{mm}\land r\ge0\,\mathrm{mm}`);
-flag('Positive selected C1 (SN003b)', 'C1', R`C_1>0`);
-flag('Cm factors in Table B.3 range', 'Cm', R`C_{my}\ge0.4\land C_{my}\le1\land C_{mz}\ge0.4\land C_{mz}\le1\land C_{mLT}\ge0.4\land C_{mLT}\le1`);
-flag('Section: Class ≤ 3; compression web not Class 4 (Table 5.2)', 'section', R`\mathrm{Class}\le3\land\left(N_{Ed}\equiv0\,\mathrm{kN}\lor\beta_w\le42\right)`);
-flag('Table 6.2 rolled geometry range, or welded section', 'curves', R`\mathrm{Section}=0\lor t_f\le100\,\mathrm{mm}\lor\frac{h}{b}\le1.2`);
-flag('Web shear buckling excluded (§6.2.6); one shear direction only', 'shear', R`\frac{h-2t_f}{t_w}\le\frac{72\varepsilon}{\eta}\land\left(V_{y.Ed}\equiv0\,\mathrm{kN}\lor V_{z.Ed}\equiv0\,\mathrm{kN}\right)`);
-flag('High shear with bending requires separate stability verification', 'highV', R`\rho\equiv0\lor\left(M_{y.Ed}\equiv${kNm0}\land M_{z.Ed}\equiv${kNm0}\right)`);
-flag('Annex B plastic branch: Class 1/2 and λz ≥ 0.4', 'plastic', R`\mathrm{Class}\le2\land\lambda_z\ge0.4`);
-flag('Torsional mode must not govern combined stability', 'mode', R`N_{b.T.Rd}\ge\min\left(N_{b.y.Rd},N_{b.z.Rd}\right)`);
-P('Interaction applicability; pure compression / major bending exempt', R`\delta_{interaction}\coloneq${IF([R`M_{y.Ed}=${kNm0}\land M_{z.Ed}=${kNm0}`, '1'], [R`N_{Ed}=0\,\mathrm{kN}\land M_{z.Ed}=${kNm0}`, '1'], [null, R`\delta_{plastic}\delta_{mode}`])}`);
-P('Input validity', R`\delta_{input}\coloneq\delta_{actions}\delta_{material}\delta_{lengths}\delta_{ends}\delta_{Cm}`);
-P('Section and LTB input validity', R`\delta_{data}\coloneq\delta_{geometry}\delta_{C1}\delta_{LT}`);
-P('All scope flags and LTB case valid (1 = yes)', SCOPE);
-P('Scope (0 = NOT VERIFIED)', R`\delta_{scope}\ge1`);
-});
+T('Results apply only within the stated assumptions and scope; applicability is not checked.');
 const GOV = R`\mathrm{UR}\coloneq\max\left(\mathrm{UR}_{V.z},\mathrm{UR}_{V.y},\mathrm{UR}_{sec},\mathrm{UR}_{b.y},\mathrm{UR}_{b.z},\mathrm{UR}_{b.T},\mathrm{UR}_{LT},\mathrm{UR}_{6.61},\mathrm{UR}_{6.62}\right)`;
 need(8);
 KEEP(() => {
-  P('Governing utilisation (valid only when scope = 1)', GOV, M(p3));
-  P('Resistance check (scope must also pass)', R`\mathrm{UR}\le1`, M(p3));
-  P('Member: both scope and resistance must pass', MEMBER);
+  P('Governing utilisation', GOV, M(p3));
+  P('Member resistance check', MEMBER);
 });
 
 const lc = (id, name, sec, n, my, mz, vz, lcr, llt, nlt) => ({ id, name, values: { sec, n, my, mz, vz, lcry: lcr, lcrz: lcr, lcrt: lcr, llt, nlt } });
@@ -307,8 +279,7 @@ finish({
       ['ur61', 'UR (6.61)', U['6.61']],
       ['ur62', 'UR (6.62)', U['6.62']],
       ['ur', 'UR', GOV],
-      ['scope', 'Scope valid (1=yes)', SCOPE],
-      ['ok', 'Member (scope + UR)', MEMBER],
+      ['ok', 'Member resistance', MEMBER],
     ],
     rows: [
       lc('m1', 'C1 HEB 320 (Simões ex. 3)', 1211, 1704, 24.8, 0, 0, 4.335, 4.335, 6),

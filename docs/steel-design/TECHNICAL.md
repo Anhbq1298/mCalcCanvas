@@ -21,20 +21,15 @@ Presentation separates cross-section resistance (§6.2) from member compression
 (§6.3.3(4), equations (6.61)/(6.62), Annex B Method 2). Worksheet text and LTB
 diagram captions use Roboto. Parameter equations share a fixed x = 396 column;
 long equations use a separate x = 96 line below their labels.
-The summary shows a short scope note; detailed applicability flags remain active
-at their annex link and still gate Member PASS and batch decisions. Annex B
+The summary shows a short scope note. Annex B
 reference tables redraw only the implemented Class 1/2 I/H branches of Tables
 B.1/B.2, with Table B.3 cited for Cm. The main-body factor calculations remain.
 
-The final Member result now requires **both** `delta_scope = 1` and `UR <= 1`.
-Summary flags reject negative action magnitudes, nonpositive material/factor/length inputs,
-invalid section geometry, out-of-range Cm values and invalid LTB arrangements. They also
-exclude unsupported combined interaction: Class 3/4, the lambda,z < 0.4 branch,
-high shear with bending, biaxial shear and torsional-mode-governed combined stability.
-The web must not be Class 4 under uniform compression when NEd > 0.
-Pure compression and pure major-axis bending do not require the plastic interaction branch.
-A failed scope flag means **NOT VERIFIED**, even if the separate numerical resistance check passes.
-The batch table includes Scope and uses the same combined Member decision; Lcr,T is a per-row input.
+At the owner's request, annex A.3 and its applicability logic have been removed.
+Member resistance and the batch Member column now report `UR <= 1` only; the
+Scope output has been removed. The user must verify the stated method limits
+independently. Existing local checks in classification, LTB and interaction remain
+visible but do not gate the final resistance result. Lcr,T remains a per-row input.
 Library It/Iw values may be geometry-derived approximations, as stated on the worksheet.
 See [the audit and remediation record](AUDIT-2026-11-11.md).
 

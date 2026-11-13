@@ -50,8 +50,7 @@ test.describe('Steel beam-column template', () => {
     await expect(page.locator('[data-testid=math-region][data-status=error]')).toHaveCount(0);
     // JRC member geometry and actions, with conservative Cm = 1 (independent Python reference).
     await resultOf(page, '\\mathrm{UR}\\coloneq').toBe('0.4618');
-    await resultOf(page, '\\delta_{scope}\\coloneq').toBe('1');
-    const memberRegion = await region(page, '\\delta_{scope}\\mathrm{if}');
+    const memberRegion = await region(page, '\\mathrm{UR}\\le1');
     const memberBadge = page.locator(`[data-shape-id="${memberRegion!.id}"]`).getByTestId('check-badge');
     await expect(memberBadge).toHaveText('PASS');
     for (const name of ['C_{my}', 'C_{mz}', 'C_{mLT}']) await resultOf(page, `${name}\\coloneq`).toBe('1');
@@ -94,8 +93,7 @@ test.describe('Steel beam-column template', () => {
       await expect(designation).toHaveText('Section := Custom welded I/H');
       await resultOf(page, '\\alpha_{LT}\\coloneq').toBe('0.76');
       await resultOf(page, '\\alpha_{y}\\coloneq').toBe('0.34');
-      await resultOf(page, '\\delta_{scope}\\coloneq').toBe('0');
-      await expect(memberBadge).toHaveText('FAIL');
+      await expect(page.getByText('Method applicability - detailed validation', { exact: true })).toHaveCount(0);
       await expect(page.locator('[data-testid=math-region][data-status=error]')).toHaveCount(0);
       await page.getByTestId('quick-undo').click();
       await resultOf(page, '\\mathrm{Section}\\coloneq').toBe('1015');
