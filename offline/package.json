@@ -9,7 +9,7 @@
     "prepare:app": "node prepare.mjs",
     "start": "electron .",
     "test": "node smoke.mjs",
-    "build": "npm run prepare:app && electron-builder --win portable --x64 --publish never"
+    "build": "npm run prepare:app && electron-builder --win portable --x64 --publish never && node clean-releases.mjs"
   },
   "devDependencies": {
     "@fontsource-variable/inter": "5.3.0",

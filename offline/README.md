@@ -15,6 +15,9 @@ npm run build
 ```
 
 The portable Windows x64 executable is generated under `offline/release/`.
+After a successful build, older versioned portable executables in that directory
+are deleted automatically. The current executable and worksheet data are retained;
+failed builds do not trigger cleanup.
 It is unsigned; this initial packaging has no updater, installer or file association.
 Build dependencies require internet access once. Build output is git-ignored.
 `npm test` uses a fresh temporary desktop profile. To smoke-test a packaged build,
