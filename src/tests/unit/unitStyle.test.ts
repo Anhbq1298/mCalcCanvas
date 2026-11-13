@@ -1,11 +1,21 @@
 import { describe, expect, it } from 'vitest';
 import { step } from '../step';
 import { styleUnits, UNIT_COLOR } from '../../math/unitStyle';
+import { fractionUnitLatex, resultUnitText } from '../../math/resultUnit';
 
 const C = `\\textcolor{${UNIT_COLOR}}`;
 
 describe('unit styling (display only)', () => {
   it('unit styling (display only)', () => {
+    step('result-unit fractions use a restricted unit tree and retain powers', () => {
+      expect(fractionUnitLatex(String.raw`\mathrm{kN}/\mathrm{m}^2`)).toBe(String.raw`\frac{\mathrm{kN}}{\mathrm{m}^{2}}`);
+      expect(resultUnitText(String.raw`\frac{\unit{kN}\cdot\mathrm{m}}{\mathrm{m}^2}`)).toBe('kN m/m^2');
+      expect(resultUnitText(String.raw`\mathrm{m}^{-2}`)).toBe('1/m^2');
+      expect(resultUnitText('')).toBe('');
+      for (const invalid of [String.raw`\mathrm{kN}+\mathrm{m}`, 'x', String.raw`\sin(m)`, String.raw`m^{0.5}`]) {
+        expect(() => resultUnitText(invalid)).toThrow();
+      }
+    });
     step('separates value and unit with a dot and colours the unit', () => {
       expect(styleUnits('L\\coloneq8.5\\,\\mathrm{m}')).toBe(`L\\coloneq8.5\\cdot ${C}{\\mathrm{m}}`);
       expect(styleUnits('g_{k}\\coloneq25\\,\\frac{\\mathrm{kN}}{\\mathrm{m}}')).toBe(`g_{k}\\coloneq25\\cdot \\frac{${C}{\\mathrm{kN}}}{${C}{\\mathrm{m}}}`);

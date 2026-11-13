@@ -16,33 +16,47 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
     await resultOf(page, '\\alpha').toBe('2');
   });
 
-  test('result units can be edited beside the open equation', async ({ page }) => {
-    await addRegion(page, 300, 220, ['L:8m']);
-    const l = (await region(page, 'L'))!;
-    const geometry = () => page.evaluate((id) => {
-      const shape = (window as unknown as { __calccanvas: { store: { getState(): { shapes: Record<string, { x: number; y: number; props: { w: number; h: number } }> } } } }).__calccanvas.store.getState().shapes[id];
-      return { x: shape.x, y: shape.y, w: shape.props.w, h: shape.props.h };
-    }, l.id);
-    const before = await geometry();
-    await page.locator(`[data-testid=math-region][data-shape-id="${l.id}"]`).dblclick();
-    await expect(page.getByTestId('inline-result-unit')).toHaveValue('m');
-    const editor = page.getByTestId('inline-result-unit');
-    await expect(editor).toHaveCSS('font-size', await page.locator(`[data-testid=math-region][data-shape-id="${l.id}"]`).evaluate(el => getComputedStyle(el).fontSize));
-    await editor.fill('mm');
-    await expect.poll(geometry).toEqual(before);
-    await editor.fill('m');
-    await editor.press('Enter');
+  test('formula result units are selectable fractions and convert without changing inputs', async ({ page }, testInfo) => {
+    await addRegion(page, 500, 260, ['w:15kN/m']);
+    const input = (await region(page, 'w'))!;
+    await page.locator(`[data-testid=math-region][data-shape-id="${input.id}"]`).dblclick();
+    await expect(page.getByTestId('inline-result-unit')).toHaveCount(0);
     await page.getByTestId('math-input').press('Escape');
-    await expect.poll(geometry).toEqual(before);
-    await addRegion(page, 300, 300, ['w:2kN/m']);
-    await addRegion(page, 300, 380, ['M:w*L=']);
-    const m = (await region(page, 'M'))!;
-    await page.locator(`[data-testid=math-region][data-shape-id="${m.id}"]`).dblclick();
+    await expect(page.locator('math-field')).toHaveCount(0);
+    await addRegion(page, 500, 400, ['p:w=']);
+    const formula = (await region(page, 'p'))!;
+    const block = page.locator(`[data-testid=math-region][data-shape-id="${formula.id}"]`);
+    const geometry = () => page.evaluate(id => {
+      const s = (window as unknown as { __calccanvas: { store: { getState(): { shapes: Record<string, { x: number; y: number; props: { w: number; h: number } }> } } } }).__calccanvas.store.getState().shapes[id];
+      return { x: s.x, y: s.y, w: s.props.w, h: s.props.h };
+    }, formula.id);
+    const before = await geometry();
+    await block.dblclick();
     const unit = page.getByTestId('inline-result-unit');
-    await expect(unit).toHaveValue('kN');
-    await unit.fill('kN·m/m');
+    await expect(unit).toHaveJSProperty('value', '\\frac{\\mathrm{kN}}{\\mathrm{m}}');
+    await unit.click();
+    await expect.poll(() => unit.evaluate(el => (el as HTMLElement & { selectionIsCollapsed: boolean }).selectionIsCollapsed)).toBe(false);
+    await unit.press('Control+a');
+    await unit.pressSequentially('N/m');
     await unit.press('Enter');
-    await expect.poll(async () => (await region(page, 'M'))?.result).toBe('16 kN·m/m');
+    await resultOf(page, 'p').toBe('15000 N/m');
+    await expect.poll(geometry).toEqual(before);
+    await expect.poll(async () => (await region(page, 'w'))?.latex).toBe(input.latex);
+    await expect.poll(async () => (await region(page, 'p'))?.latex).toBe(formula.latex);
+    await unit.press('Control+a');
+    await unit.pressSequentially('s');
+    await unit.press('Enter');
+    await expect(page.getByRole('alert')).toBeVisible();
+    await resultOf(page, 'p').toBe('15000 N/m');
+    await unit.press('Escape');
+    await page.getByTestId('math-input').press('Escape');
+    await expect(page.locator('math-field')).toHaveCount(0);
+    await page.screenshot({ path: testInfo.outputPath('result-unit.png') });
+    await page.getByTestId('export-pdf').click();
+    await expect(page.locator('#print-root .print-page')).toHaveCount(1);
+    await expect(page.locator('#print-root [data-testid=math-region]')).toHaveCount(2);
+    await page.emulateMedia({ media: 'print' });
+    await page.pdf({ path: testInfo.outputPath('result-unit.pdf'), preferCSSPageSize: true, printBackground: true });
   });
 
   test('Enter moves the + cursor below so the next region stacks', async ({ page }) => {

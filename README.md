@@ -47,6 +47,7 @@ The left side panel has the **Outline** (headings, click to jump) and **Paramete
 - **Type**: start typing to create a math region at the cross, or press `"` to start a text region.
 - **Lines**: `Enter` inserts a line and pushes everything below down (content flows onto the next page). `Delete` removes the blank line the cross is on, and `Backspace` removes the blank line above it. Deleting regions also closes the lines they leave empty.
 - **Units** are shown in a colour, with a dot before them (`25 · kN/m`). The colour is a document label style.
+- **Formula result units**: while editing a formula, select its result unit and type a replacement (`/` creates a stacked fraction). Enter applies the conversion to the displayed result only; source inputs and formulas are unchanged. Literal input regions do not show this control. Incompatible dimensions are rejected.
 
 **Equations**:
 - **Keys**: `:` definition ≔ · `=` evaluate · `/` fraction · `^` power · `.` after a name gives a literal subscript (`M.Ed` → M_Ed) · `\` √ · `Ctrl+\` ⁿ√ · `|` absolute value · `'` parentheses · `Ctrl+G` Greek (a → α) · `Ctrl+Shift+P` π · `Ctrl+9 / 0 / 3` ≤ ≥ ≠.

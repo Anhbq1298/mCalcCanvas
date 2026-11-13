@@ -444,17 +444,6 @@ body {
   font-size: inherit;
   color: inherit;
 }
-.inline-result-unit-input {
-  min-width: 2ch;
-  padding: 0 0.15em;
-  font-family: KaTeX_Main, 'Cambria Math', serif;
-  font-size: inherit;
-  line-height: inherit;
-  color: inherit;
-}
-.math-region:not([data-equation-font='Math']) .inline-result-unit-input {
-  font-family: var(--equation-font-family);
-}
 .baseline-probe {
   display: inline-block;
   width: 0;
@@ -495,6 +484,16 @@ body {
 .math-region math-field::part(virtual-keyboard-toggle),
 .math-region math-field::part(menu-toggle) {
   display: none;
+}
+.math-region math-field.inline-result-unit-input {
+  min-width: 1em;
+  padding: 0 2px;
+  border-color: transparent;
+  background: transparent;
+  color: inherit;
+}
+.math-region math-field.inline-result-unit-input:focus-within {
+  border-color: var(--color-accent);
 }
 .math-region math-field:focus-within {
   box-shadow: 0 0 0 3px rgb(37 99 235 / 0.15);

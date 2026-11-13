@@ -203,6 +203,7 @@ export class CalculationEngine {
   /**
    * An input (a definition from literals only, e.g. f_ck := 35 MPa) rewritten in
    * another unit with the same value: "35 MPa" in ksi → "5.07632… ksi".
+   * Validates scalar formula units too, returning null without rewriting them.
    * Returns the new LaTeX, null when the region is not a scalar input with a unit,
    * or throws when the unit is unknown or of another dimension.
    */
@@ -210,15 +211,16 @@ export class CalculationEngine {
     const region = this.regions.get(id);
     const result = this.results.get(id);
     const value = this.values.get(id);
-    if (!region || !result || region.statement?.kind !== 'definition' || region.statement.params) return null;
-    if (result.status !== 'valid' || result.references.length > 0 || value === undefined || isVector(value) || !isUnit(value)) return null;
+    if (!region || !result || result.status !== 'valid' || value === undefined || isVector(value) || !isUnit(value)) return null;
+    // Validate formula result units too, before the UI commits a display-unit patch.
+    const unit = parseDisplayUnit(unitText);
+    const f = formatQuantity(value, { decimals: 12, system: this.settings.unitSystem, targetUnit: unit });
+    if (region.statement?.kind !== 'definition' || region.statement.params || result.references.length > 0) return null;
     const latex = region.input.latex;
     const at = latex.search(/\\(coloneq|coloneqq|Coloneqq|Coloneq|colonequals|definedas)|:=/);
     if (at < 0) return null;
     const head = latex.slice(0, at);
     const op = latex.slice(at).match(/^(\\[A-Za-z]+|:=)/)![0];
-    const unit = parseDisplayUnit(unitText);
-    const f = formatQuantity(value, { decimals: 12, system: this.settings.unitSystem, targetUnit: unit });
     // Shortest decimal that gives back the value (≤ 12 significant digits): no rounding of the input.
     let num = '';
     for (let p = 1; p <= 12; p++) {

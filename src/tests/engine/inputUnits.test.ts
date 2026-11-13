@@ -31,6 +31,8 @@ describe('changing the unit of an input keeps its value', () => {
       expect(e.inputInUnit('g', 'ksi')).toBeNull();
       expect(e.inputInUnit('n', 'mm')).toBeNull();
       expect(() => e.inputInUnit('f', 'kN')).toThrow(/Cannot display/);
+      expect(() => e.inputInUnit('g', 's')).toThrow(/Cannot display/);
+      expect(e.getResult('g')!.status).toBe('valid');
     });
   });
 });

@@ -2,7 +2,7 @@ import { SteelArrayLabel, SteelControls, SteelSectionLabel } from '../../compone
 import { sectionArrayInfo } from '../../engineering/steel/sectionArray';
 import { SECTION_DEF } from '../../engineering/steel/sections';
 import { AlertCircle, AlertTriangle, CheckCircle2, CircleDashed, XCircle } from 'lucide-react';
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { ReportShapes } from '../../store/reportResults';
 import { buildDisplay, flowColumnVectors } from '../../math/MathFormatter';
 import { MathEditor } from '../../math/MathEditor';
@@ -17,6 +17,9 @@ import { useSeen } from './useSeen';
 import { annexInfo, annexNumber, pageNumberOf } from '../annex';
 import { useAppStore } from '../../store/appStore';
 import { unitPatch } from '../inputUnits';
+import { configureMathfield, MathfieldElement } from '../../math/mathliveSetup';
+import { handleMathcadKey } from '../../math/mathcadKeys';
+import { fractionUnitLatex, resultUnitText } from '../../math/resultUnit';
 
 const PAD_X = 4;
 const PAD_Y = 2;
@@ -29,9 +32,13 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   const measurementFrame = useRef(0);
   const { latex, displayMode, fontSize, color, textFont, equationFont, fontStyle, w, h } = shape.props;
   const display = useMemo(() => {
-    const parts = buildDisplay(latex, result, displayMode);
+    const unit = result?.value?.unitLatex;
+    const fractionalResult = unit && shape.props.displayUnit.includes('/') && !(result.kind === 'definition' && result.references.length === 0)
+      ? { ...result, value: { ...result.value!, latex: result.value!.latex.replace(unit, fractionUnitLatex(unit)) } }
+      : result;
+    const parts = buildDisplay(latex, fractionalResult, displayMode);
     return shape.props.vectorExpanded && shape.props.vectorLayout === 'column' ? { ...parts, latex: flowColumnVectors(parts.latex) } : parts;
-  }, [latex, result, displayMode, shape.props.vectorExpanded, shape.props.vectorLayout]);
+  }, [latex, result, displayMode, shape.props.displayUnit, shape.props.vectorExpanded, shape.props.vectorLayout]);
   const hasResult = !!result;
   const steelArray = useMemo(() => sectionArrayInfo(latex), [latex]);
   // Off-screen regions with a measured size are typeset when they come near the view.
@@ -145,8 +152,8 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         {editing ? (
           <>
             <MathEditor latex={latex} onChange={onChange} onExit={onExit} onConvertToText={onConvertToText} ariaLabel="Math region editor" />
-            {result?.value?.unitText && (
-              <InlineResultUnit shape={shape} numberText={numberPart(result.value.text, result.value.unitText)} automaticUnit={result.value.unitText} />
+            {result?.value?.unitText && !(result.kind === 'definition' && result.references.length === 0) && (
+              <InlineResultUnit shape={shape} numberText={numberPart(result.value.text, result.value.unitText)} unitLatex={result.value.unitLatex} />
             )}
           </>
         ) : empty ? (
@@ -186,38 +193,53 @@ function numberPart(text: string, unit: string): string {
 }
 
 /** Result-unit editor shown beside the equation while it is being edited. */
-function InlineResultUnit({ shape, numberText, automaticUnit }: { shape: MathShape; numberText: string; automaticUnit: string }) {
-  const initial = shape.props.displayUnit || automaticUnit;
-  const [draft, setDraft] = useState(initial);
+function InlineResultUnit({ shape, numberText, unitLatex }: { shape: MathShape; numberText: string; unitLatex: string }) {
+  const hostRef = useRef<HTMLSpanElement>(null);
+  const currentShape = useRef(shape);
+  useLayoutEffect(() => { currentShape.current = shape; });
   const [error, setError] = useState<string | null>(null);
-  const commit = () => {
-    const next = draft.trim();
-    if (next === initial) return;
-    void unitPatch(shape, next).then(
-      (patch) => {
-        if (patch) updateShape(shape.id, patch);
-        setError(null);
-      },
-      (reason: Error) => setError(reason.message),
-    );
-  };
+  useEffect(() => {
+    const mf = new MathfieldElement();
+    hostRef.current?.appendChild(mf);
+    configureMathfield(mf);
+    mf.setAttribute('aria-label', 'Result unit in equation');
+    mf.setAttribute('data-testid', 'inline-result-unit');
+    mf.className = 'inline-result-unit-input';
+    mf.value = fractionUnitLatex(unitLatex);
+    let committed = mf.value;
+    const commit = () => {
+      if (mf.value === committed) return;
+      try {
+        const next = resultUnitText(mf.value);
+        void unitPatch(currentShape.current, next).then(patch => {
+          if (patch) updateShape(shape.id, patch);
+          committed = mf.value;
+          setError(null);
+        }, (reason: Error) => setError(reason.message));
+      } catch (reason) { setError((reason as Error).message); }
+    };
+    const focus = () => mf.select();
+    const key = (event: KeyboardEvent) => {
+      event.stopPropagation();
+      if (event.key === 'Enter') { event.preventDefault(); commit(); }
+      else if (event.key === 'Escape') { event.preventDefault(); mf.value = committed; mf.blur(); setError(null); }
+      else if (handleMathcadKey(event, mf, () => setError(null))) event.preventDefault();
+    };
+    mf.addEventListener('focus', focus);
+    mf.addEventListener('keydown', key, { capture: true });
+    mf.addEventListener('blur', commit);
+    return () => {
+      mf.removeEventListener('focus', focus);
+      mf.removeEventListener('keydown', key, { capture: true });
+      mf.removeEventListener('blur', commit);
+      mf.remove();
+    };
+  }, [shape.id, unitLatex]);
   return (
     <span className="inline-result-unit" onPointerDown={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
       <span aria-hidden><MathRenderer latex={`= ${numberText}`} /></span>
-      <input
-        aria-label="Result unit in equation"
-        data-testid="inline-result-unit"
-        className={'inline-result-unit-input rounded-sm border bg-card focus:outline-none ' + (error ? 'border-destructive' : 'border-border focus:border-accent')}
-        style={{ width: `${Math.max(2, draft.length + 1)}ch` }}
-        title={error ?? 'Edit the displayed result unit. Clear it for automatic units.'}
-        value={draft}
-        onChange={(e) => { setDraft(e.target.value); setError(null); }}
-        onBlur={commit}
-        onKeyDown={(e) => {
-          e.stopPropagation();
-          if (e.key === 'Enter') e.currentTarget.blur();
-        }}
-      />
+      <span ref={hostRef} title={error ?? 'Select the result unit and type a replacement. Use / for a fraction.'} />
+      {error && <span role="alert" className="text-destructive text-xs">{error}</span>}
     </span>
   );
 }
