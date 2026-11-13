@@ -498,6 +498,26 @@ body {
 .math-region math-field:focus-within {
   box-shadow: 0 0 0 3px rgb(37 99 235 / 0.15);
 }
+.math-edit-block {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2em;
+  padding: 2px 4px;
+  border: 1px solid var(--color-accent);
+  border-radius: 2px;
+  background: var(--color-card);
+}
+.math-edit-block:focus-within {
+  box-shadow: 0 0 0 3px rgb(37 99 235 / 0.15);
+}
+.math-edit-block math-field,
+.math-edit-block math-field.inline-result-unit-input,
+.math-edit-block math-field:focus-within {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
 .math-region .math-placeholder {
   font-family: var(--font-sans);
   font-size: 13px;

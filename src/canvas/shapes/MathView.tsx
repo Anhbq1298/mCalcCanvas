@@ -27,6 +27,7 @@ const PAD_Y = 2;
 /** A math region: MathLive editor while editing, rendered equation + result otherwise. */
 export function MathView({ shape, editing, isStatic }: { shape: MathShape; editing: boolean; isStatic: boolean }) {
   const result = useRegionResult(shape.id);
+  const resultUnitEditable = !!result?.value?.unitText && !(result.kind === 'definition' && result.references.length === 0);
   const contentRef = useRef<HTMLDivElement>(null);
   const probeRef = useRef<HTMLSpanElement>(null);
   const measurementFrame = useRef(0);
@@ -87,7 +88,11 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
 
   useSeparateAfterEditing(shape.id, editing, isStatic);
 
-  const onChange = useCallback((next: string) => updateShape(shape.id, { props: { latex: next } }, { history: false }), [shape.id]);
+  const onChange = useCallback((next: string) => {
+    // The preview owns the visible equals sign; retain the source evaluation marker.
+    const source = resultUnitEditable && latex.trimEnd().endsWith('=') && !next.trimEnd().endsWith('=') ? `${next}=` : next;
+    updateShape(shape.id, { props: { latex: source } }, { history: false });
+  }, [shape.id, resultUnitEditable, latex]);
   const onConvertToText = useCallback((text: string, caretOffset: number) => convertMathRegionToText(shape.id, text, caretOffset), [shape.id]);
   const onExit = useCallback(
     (reason: 'enter' | 'escape') => {
@@ -150,12 +155,12 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     >
       <div className="flex items-center gap-1.5">
         {editing ? (
-          <>
-            <MathEditor latex={latex} onChange={onChange} onExit={onExit} onConvertToText={onConvertToText} ariaLabel="Math region editor" />
-            {result?.value?.unitText && !(result.kind === 'definition' && result.references.length === 0) && (
+          <div className="math-edit-block" data-testid="math-edit-block">
+            <MathEditor hideTrailingEquals={resultUnitEditable} latex={resultUnitEditable ? latex.replace(/=\s*$/, '') : latex} onChange={onChange} onExit={onExit} onConvertToText={onConvertToText} ariaLabel="Math region editor" />
+            {resultUnitEditable && result?.value && (
               <InlineResultUnit shape={shape} numberText={numberPart(result.value.text, result.value.unitText)} unitLatex={result.value.unitLatex} />
             )}
-          </>
+          </div>
         ) : empty ? (
           <span className="math-placeholder">Empty region</span>
         ) : (

@@ -12,6 +12,8 @@ interface MathEditorProps {
   onConvertToText(text: string, caretOffset: number): void;
   /** Report the rendered size so the region can grow while typing. */
   ariaLabel?: string;
+  /** The result preview renders the trailing evaluation equals sign. */
+  hideTrailingEquals?: boolean;
 }
 
 /**
@@ -21,8 +23,9 @@ interface MathEditorProps {
  * Keyboard and pointer events are stopped at the mathfield boundary so
  * canvas shortcuts (tool letters, Delete, Ctrl+D…) never steal input.
  */
-export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel }: MathEditorProps) {
+export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel, hideTrailingEquals }: MathEditorProps) {
   const hostRef = useRef<HTMLDivElement>(null);
+  const fieldRef = useRef<MathfieldElement | null>(null);
   const callbacks = useRef({ onChange, onExit, onConvertToText });
   useLayoutEffect(() => {
     callbacks.current = { onChange, onExit, onConvertToText };
@@ -36,6 +39,7 @@ export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel
     mf.setAttribute('aria-label', ariaLabel ?? 'Math input');
     mf.setAttribute('data-testid', 'math-input');
     host.appendChild(mf);
+    fieldRef.current = mf;
     configureMathfield(mf);
     mf.value = initialLatex.current;
     const changed = () => callbacks.current.onChange(mf.value);
@@ -113,8 +117,17 @@ export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel
       setActiveMathEditor(null);
       setKeyReplayer(null);
       mf.remove();
+      fieldRef.current = null;
     };
   }, [ariaLabel]);
+
+  useEffect(() => {
+    const mf = fieldRef.current;
+    if (hideTrailingEquals && mf?.isConnected && /=\s*$/.test(mf.value)) {
+      mf.value = mf.value.replace(/=\s*$/, '');
+      mf.executeCommand('moveToMathfieldEnd');
+    }
+  }, [hideTrailingEquals, latex]);
 
   return <div ref={hostRef} className="inline-block" />;
 }

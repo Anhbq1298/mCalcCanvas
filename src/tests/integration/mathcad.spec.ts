@@ -34,8 +34,13 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
     await block.dblclick();
     const unit = page.getByTestId('inline-result-unit');
     await expect(unit).toHaveJSProperty('value', '\\frac{\\mathrm{kN}}{\\mathrm{m}}');
+    await expect(page.getByTestId('math-edit-block').locator('math-field')).toHaveCount(2);
+    await expect(page.getByTestId('math-input')).toHaveCSS('border-top-width', '0px');
+    await expect(page.getByTestId('math-input')).toHaveJSProperty('value', 'p\\coloneq w');
+    await expect(unit).toHaveCSS('border-top-width', '0px');
     await unit.click();
     await expect.poll(() => unit.evaluate(el => (el as HTMLElement & { selectionIsCollapsed: boolean }).selectionIsCollapsed)).toBe(false);
+    await page.screenshot({ path: testInfo.outputPath('result-unit-edit.png') });
     await unit.press('Control+a');
     await unit.pressSequentially('N/m');
     await unit.press('Enter');
