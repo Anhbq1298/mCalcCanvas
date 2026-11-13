@@ -24,6 +24,7 @@ On a first visit the **RC beam** template opens. Worksheets autosave to the brow
 | `npm run dev` | Development server |
 | `npm run build` | Type-check and production build (`dist/`) |
 | `npm run build:single` | One offline HTML file (`dist-single/index.html`) |
+| `npm run build --prefix offline` | Windows desktop portable executable (see [offline](offline/README.md)) |
 | `npm test` | Engine and unit tests (Vitest) |
 | `npm run test:e2e` | Browser tests (Playwright) |
 | `npm run typecheck` / `npm run lint` | |
