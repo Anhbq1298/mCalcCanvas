@@ -8,6 +8,7 @@ import { spawn, execFileSync } from 'node:child_process';
 import { createServer } from 'node:net';
 import { setTimeout } from 'node:timers/promises';
 import { _electron as electron, chromium, expect } from '@playwright/test';
+import { addRegion, newBlankWorksheet, region, resultOf } from '../src/tests/integration/helpers.ts';
 
 const require = createRequire(import.meta.url);
 const env = { ...process.env };
@@ -58,7 +59,19 @@ try {
   await page.evaluate(async () => { await window.__calccanvas.loaded; await window.__calccanvas.idle(); });
   assert.ok(await page.getByTestId('math-region').count() > 0);
   assert.equal(await page.getByTestId('math-region').first().getAttribute('data-shape-id'), firstId);
-  console.log('Desktop smoke passed: local protocol, worker calculation, sandbox, reload/persistence.');
+  await newBlankWorksheet(page);
+  await addRegion(page, 500, 260, ['L:469mm']);
+  const input = await region(page, 'L');
+  await addRegion(page, 500, 400, ['z:L=']);
+  const z = await region(page, 'z');
+  await page.locator(`[data-testid=math-region][data-shape-id="${z.id}"]`).dblclick();
+  const unit = page.getByTestId('inline-result-unit');
+  await unit.click();
+  await page.keyboard.type('cm');
+  await page.mouse.click(900, 600);
+  await resultOf(page, 'z').toBe('46.9 cm');
+  assert.equal((await region(page, 'L')).latex, input.latex);
+  console.log('Desktop smoke passed: local protocol, worker calculation, sandbox, persistence, click-to-replace result units.');
 } finally {
   // The isolated smoke profile has no user work; do not wait on unload prompts.
   if (desktop) {

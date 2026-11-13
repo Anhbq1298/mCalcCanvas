@@ -211,30 +211,38 @@ function InlineResultUnit({ shape, numberText, unitLatex }: { shape: MathShape; 
     mf.setAttribute('data-testid', 'inline-result-unit');
     mf.className = 'inline-result-unit-input';
     mf.value = fractionUnitLatex(unitLatex);
-    let committed = mf.value;
+    const state: { committed: string; pending: string | null } = { committed: mf.value, pending: null };
     const commit = () => {
-      if (mf.value === committed) return;
+      const draft = mf.value;
+      if (draft === state.committed || draft === state.pending) return;
       try {
-        const next = resultUnitText(mf.value);
+        const next = resultUnitText(draft);
+        state.pending = draft;
         void unitPatch(currentShape.current, next).then(patch => {
           if (patch) updateShape(shape.id, patch);
-          committed = mf.value;
+          state.committed = draft;
+          state.pending = null;
           setError(null);
-        }, (reason: Error) => setError(reason.message));
+        }, (reason: Error) => { state.pending = null; setError(reason.message); });
       } catch (reason) { setError((reason as Error).message); }
     };
     const focus = () => mf.select();
     const key = (event: KeyboardEvent) => {
       event.stopPropagation();
       if (event.key === 'Enter') { event.preventDefault(); commit(); }
-      else if (event.key === 'Escape') { event.preventDefault(); mf.value = committed; mf.blur(); setError(null); }
+      else if (event.key === 'Escape') { event.preventDefault(); mf.value = state.committed; mf.blur(); setError(null); }
       else if (handleMathcadKey(event, mf, () => setError(null))) event.preventDefault();
     };
     mf.addEventListener('focus', focus);
+    // MathLive's pointer handler can collapse the focus-time selection on pointerup.
+    mf.addEventListener('click', focus);
     mf.addEventListener('keydown', key, { capture: true });
     mf.addEventListener('blur', commit);
     return () => {
+      // Clicking the canvas unmounts the editor before the browser fires blur.
+      commit();
       mf.removeEventListener('focus', focus);
+      mf.removeEventListener('click', focus);
       mf.removeEventListener('keydown', key, { capture: true });
       mf.removeEventListener('blur', commit);
       mf.remove();
