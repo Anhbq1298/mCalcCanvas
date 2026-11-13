@@ -19,9 +19,21 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
   test('result units can be edited beside the open equation', async ({ page }) => {
     await addRegion(page, 300, 220, ['L:8m']);
     const l = (await region(page, 'L'))!;
+    const geometry = () => page.evaluate((id) => {
+      const shape = (window as unknown as { __calccanvas: { store: { getState(): { shapes: Record<string, { x: number; y: number; props: { w: number; h: number } }> } } } }).__calccanvas.store.getState().shapes[id];
+      return { x: shape.x, y: shape.y, w: shape.props.w, h: shape.props.h };
+    }, l.id);
+    const before = await geometry();
     await page.locator(`[data-testid=math-region][data-shape-id="${l.id}"]`).dblclick();
     await expect(page.getByTestId('inline-result-unit')).toHaveValue('m');
-    await page.keyboard.press('Escape');
+    const editor = page.getByTestId('inline-result-unit');
+    await expect(editor).toHaveCSS('font-size', await page.locator(`[data-testid=math-region][data-shape-id="${l.id}"]`).evaluate(el => getComputedStyle(el).fontSize));
+    await editor.fill('mm');
+    await expect.poll(geometry).toEqual(before);
+    await editor.fill('m');
+    await editor.press('Enter');
+    await page.getByTestId('math-input').press('Escape');
+    await expect.poll(geometry).toEqual(before);
     await addRegion(page, 300, 300, ['w:2kN/m']);
     await addRegion(page, 300, 380, ['M:w*L=']);
     const m = (await region(page, 'M'))!;

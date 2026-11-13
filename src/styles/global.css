@@ -437,6 +437,24 @@ body {
 .math-baseline {
   display: inline-block;
 }
+.inline-result-unit {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25em;
+  font-size: inherit;
+  color: inherit;
+}
+.inline-result-unit-input {
+  min-width: 2ch;
+  padding: 0 0.15em;
+  font-family: KaTeX_Main, 'Cambria Math', serif;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+.math-region:not([data-equation-font='Math']) .inline-result-unit-input {
+  font-family: var(--equation-font-family);
+}
 .baseline-probe {
   display: inline-block;
   width: 0;

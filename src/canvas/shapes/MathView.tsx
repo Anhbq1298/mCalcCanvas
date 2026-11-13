@@ -39,7 +39,8 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
 
   // Auto-size: the box follows the rendered equation unless resized manually.
   useEffect(() => {
-    if (isStatic) return;
+    // Editing chrome is transient; measure only the finished worksheet equation.
+    if (isStatic || editing) return;
     const el = contentRef.current;
     if (!el) return;
     // A loaded region with a measured size waits for its first result: measuring the bare
@@ -201,12 +202,13 @@ function InlineResultUnit({ shape, numberText, automaticUnit }: { shape: MathSha
     );
   };
   return (
-    <span className="inline-flex items-center gap-1 font-sans text-[13px]" onPointerDown={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
-      <span aria-hidden>= {numberText}</span>
+    <span className="inline-result-unit" onPointerDown={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
+      <span aria-hidden><MathRenderer latex={`= ${numberText}`} /></span>
       <input
         aria-label="Result unit in equation"
         data-testid="inline-result-unit"
-        className={'h-7 w-24 rounded border bg-card px-1.5 text-foreground focus:outline-none ' + (error ? 'border-destructive' : 'border-border focus:border-accent')}
+        className={'inline-result-unit-input rounded-sm border bg-card focus:outline-none ' + (error ? 'border-destructive' : 'border-border focus:border-accent')}
+        style={{ width: `${Math.max(2, draft.length + 1)}ch` }}
         title={error ?? 'Edit the displayed result unit. Clear it for automatic units.'}
         value={draft}
         onChange={(e) => { setDraft(e.target.value); setError(null); }}
