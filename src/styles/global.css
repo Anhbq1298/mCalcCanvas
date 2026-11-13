@@ -518,6 +518,24 @@ body {
   background: transparent;
   box-shadow: none;
 }
+.math-region [data-result-unit] { cursor: text; }
+.math-region[data-unit-editing] [data-result-unit] { visibility: hidden; }
+.result-unit-overlay { position: absolute; z-index: 1; line-height: 1; color: var(--result-unit-color); }
+.math-region .result-unit-overlay math-field.inline-result-unit-input {
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.result-unit-overlay math-field::part(container),
+.result-unit-overlay math-field::part(content),
+.math-edit-block math-field::part(container),
+.math-edit-block math-field::part(content) {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
 .math-region .math-placeholder {
   font-family: var(--font-sans);
   font-size: 13px;

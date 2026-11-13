@@ -64,7 +64,11 @@ try {
   const input = await region(page, 'L');
   await addRegion(page, 500, 400, ['z:L=']);
   const z = await region(page, 'z');
-  await page.locator(`[data-testid=math-region][data-shape-id="${z.id}"]`).dblclick();
+  const resultBlock = page.locator(`[data-testid=math-region][data-shape-id="${z.id}"]`);
+  const bounds = await resultBlock.boundingBox();
+  await resultBlock.locator('[data-result-unit]').click();
+  await expect(page.getByTestId('math-input')).toHaveCount(0);
+  assert.deepEqual(await resultBlock.boundingBox(), bounds);
   const unit = page.getByTestId('inline-result-unit');
   await unit.click();
   await page.keyboard.type('cm');

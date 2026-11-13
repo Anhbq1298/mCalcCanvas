@@ -20,6 +20,7 @@ import { unitPatch } from '../inputUnits';
 import { configureMathfield, MathfieldElement } from '../../math/mathliveSetup';
 import { handleMathcadKey } from '../../math/mathcadKeys';
 import { fractionUnitLatex, resultUnitText } from '../../math/resultUnit';
+import { UNIT_COLOR } from '../../math/unitStyle';
 
 const PAD_X = 4;
 const PAD_Y = 2;
@@ -28,6 +29,9 @@ const PAD_Y = 2;
 export function MathView({ shape, editing, isStatic }: { shape: MathShape; editing: boolean; isStatic: boolean }) {
   const result = useRegionResult(shape.id);
   const resultUnitEditable = !!result?.value?.unitText && !(result.kind === 'definition' && result.references.length === 0);
+  const [unitEditor, setUnitEditor] = useState<{ left: number; top: number } | null>(null);
+  const closeUnitEditor = useCallback(() => setUnitEditor(null), []);
+  const visibleUnit = result?.value?.unitLatex ? shape.props.displayUnit.includes('/') ? fractionUnitLatex(result.value.unitLatex) : result.value.unitLatex : undefined;
   const contentRef = useRef<HTMLDivElement>(null);
   const probeRef = useRef<HTMLSpanElement>(null);
   const measurementFrame = useRef(0);
@@ -133,6 +137,22 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
       data-input={isInput || undefined}
       data-font-style={fontStyle ?? 'normal'}
       data-equation-font={equationFont ?? 'Math'}
+      data-unit-editing={!!unitEditor || undefined}
+      onPointerDown={(event) => {
+        const target = (event.target as Element).closest('[data-result-unit]');
+        if (isStatic || editing || !resultUnitEditable || !target) return;
+        event.preventDefault();
+        event.stopPropagation();
+        const root = event.currentTarget;
+        const r = root.getBoundingClientRect();
+        const u = target.getBoundingClientRect();
+        const scale = root.offsetWidth ? r.width / root.offsetWidth : 1;
+        select([shape.id]);
+        setUnitEditor({ left: (u.left - r.left) / scale, top: (u.top - r.top) / scale });
+      }}
+      onDoubleClick={(event) => {
+        if ((event.target as Element).closest('[data-result-unit]')) event.stopPropagation();
+      }}
       title={
         result?.redefines
           ? `Redefines ${result.redefines.name}: regions below this one use this value; regions above keep the earlier one.`
@@ -142,9 +162,11 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         {
           '--math-size': `${fontSize}px`,
           '--math-color': isInput ? INPUT_COLOR : color,
+          '--result-unit-color': labels?.unitColor ?? UNIT_COLOR,
           '--text-font-family': fontStack(textFont ?? 'Inter'),
           '--equation-font-family': fontStack(equationFont && equationFont !== 'Math' ? equationFont : 'Inter'),
           width: 'max-content',
+          position: 'relative',
           padding: `${PAD_Y}px ${PAD_X}px`,
           // Green outline: this region redefines a variable defined earlier.
           ...(shape.props.highlight && !editing ? { background: shape.props.highlight, borderRadius: 3 } : {}),
@@ -166,7 +188,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         ) : (
           <div className="flex items-center gap-2">
             <span className="math-baseline">
-              {seen ? steelArray ? <SteelArrayLabel latex={latex} /> : latex.startsWith(SECTION_DEF) ? <SteelSectionLabel sectionId={result?.value?.number} /> : <MathRenderer latex={display.latex} /> : <span style={{ display: 'inline-block', width: Math.max(0, w - 2 * PAD_X), height: Math.max(0, h - 2 * PAD_Y) }} />}
+              {seen ? steelArray ? <SteelArrayLabel latex={latex} /> : latex.startsWith(SECTION_DEF) ? <SteelSectionLabel sectionId={result?.value?.number} /> : <MathRenderer latex={display.latex} resultUnit={!isStatic && resultUnitEditable && displayMode !== 'formula' && (result?.kind !== 'expression' || displayMode !== 'auto') ? visibleUnit : undefined} /> : <span style={{ display: 'inline-block', width: Math.max(0, w - 2 * PAD_X), height: Math.max(0, h - 2 * PAD_Y) }} />}
               <span ref={probeRef} className="baseline-probe" aria-hidden />
             </span>
             {display.check && (
@@ -183,6 +205,11 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
             )}
           </div>
         )}
+        {!editing && !isStatic && unitEditor && visibleUnit && (
+          <span className="result-unit-overlay" style={unitEditor}>
+            <InlineResultUnit shape={shape} unitLatex={visibleUnit} direct onDone={closeUnitEditor} />
+          </span>
+        )}
         {!isStatic && <SteelControls id={shape.id} latex={latex}/>}
         {/* Status as compact symbols; the explanation appears on hover. */}
         {error && !empty && !(editing && result?.draftError) && <StatusIcon kind="error" message={errorMessage ?? error.message} />}
@@ -198,7 +225,7 @@ function numberPart(text: string, unit: string): string {
 }
 
 /** Result-unit editor shown beside the equation while it is being edited. */
-function InlineResultUnit({ shape, numberText, unitLatex }: { shape: MathShape; numberText: string; unitLatex: string }) {
+function InlineResultUnit({ shape, numberText, unitLatex, direct = false, onDone }: { shape: MathShape; numberText?: string; unitLatex: string; direct?: boolean; onDone?: () => void }) {
   const hostRef = useRef<HTMLSpanElement>(null);
   const currentShape = useRef(shape);
   useLayoutEffect(() => { currentShape.current = shape; });
@@ -210,7 +237,7 @@ function InlineResultUnit({ shape, numberText, unitLatex }: { shape: MathShape; 
     mf.setAttribute('aria-label', 'Result unit in equation');
     mf.setAttribute('data-testid', 'inline-result-unit');
     mf.className = 'inline-result-unit-input';
-    mf.value = fractionUnitLatex(unitLatex);
+    mf.value = direct ? unitLatex : fractionUnitLatex(unitLatex);
     const state: { committed: string; pending: string | null } = { committed: mf.value, pending: null };
     const commit = () => {
       const draft = mf.value;
@@ -223,34 +250,40 @@ function InlineResultUnit({ shape, numberText, unitLatex }: { shape: MathShape; 
           state.committed = draft;
           state.pending = null;
           setError(null);
+          onDone?.();
         }, (reason: Error) => { state.pending = null; setError(reason.message); });
       } catch (reason) { setError((reason as Error).message); }
     };
     const focus = () => mf.select();
+    const blur = () => {
+      if (mf.value === state.committed) onDone?.();
+      else commit();
+    };
     const key = (event: KeyboardEvent) => {
       event.stopPropagation();
       if (event.key === 'Enter') { event.preventDefault(); commit(); }
-      else if (event.key === 'Escape') { event.preventDefault(); mf.value = state.committed; mf.blur(); setError(null); }
+      else if (event.key === 'Escape') { event.preventDefault(); mf.value = state.committed; mf.blur(); setError(null); onDone?.(); }
       else if (handleMathcadKey(event, mf, () => setError(null))) event.preventDefault();
     };
     mf.addEventListener('focus', focus);
     // MathLive's pointer handler can collapse the focus-time selection on pointerup.
     mf.addEventListener('click', focus);
     mf.addEventListener('keydown', key, { capture: true });
-    mf.addEventListener('blur', commit);
+    mf.addEventListener('blur', blur);
+    if (direct) { mf.focus(); mf.select(); }
     return () => {
       // Clicking the canvas unmounts the editor before the browser fires blur.
       commit();
       mf.removeEventListener('focus', focus);
       mf.removeEventListener('click', focus);
       mf.removeEventListener('keydown', key, { capture: true });
-      mf.removeEventListener('blur', commit);
+      mf.removeEventListener('blur', blur);
       mf.remove();
     };
-  }, [shape.id, unitLatex]);
+  }, [shape.id, unitLatex, direct, onDone]);
   return (
     <span className="inline-result-unit" onPointerDown={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
-      <span aria-hidden><MathRenderer latex={`= ${numberText}`} /></span>
+      {numberText !== undefined && <span aria-hidden><MathRenderer latex={`= ${numberText}`} /></span>}
       <span ref={hostRef} title={error ?? 'Select the result unit and type a replacement. Use / for a fraction.'} />
       {error && <span role="alert" className="text-destructive text-xs">{error}</span>}
     </span>
