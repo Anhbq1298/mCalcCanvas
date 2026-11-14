@@ -14,6 +14,7 @@ interface MathEditorProps {
   ariaLabel?: string;
   /** The result preview renders the trailing evaluation equals sign. */
   hideTrailingEquals?: boolean;
+  initialPoint?: { x: number; y: number };
 }
 
 /**
@@ -23,7 +24,7 @@ interface MathEditorProps {
  * Keyboard and pointer events are stopped at the mathfield boundary so
  * canvas shortcuts (tool letters, Delete, Ctrl+D…) never steal input.
  */
-export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel, hideTrailingEquals }: MathEditorProps) {
+export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel, hideTrailingEquals, initialPoint }: MathEditorProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const fieldRef = useRef<MathfieldElement | null>(null);
   const callbacks = useRef({ onChange, onExit, onConvertToText });
@@ -31,6 +32,7 @@ export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel
     callbacks.current = { onChange, onExit, onConvertToText };
   });
   const initialLatex = useRef(latex);
+  const clickedPoint = useRef(initialPoint);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -94,7 +96,9 @@ export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel
     // Focus right away so no keystroke is lost, and again after the
     // pointer event that created the region has finished.
     const startCaret = () => {
-      if (mf.value.includes('\\placeholder')) {
+      if (clickedPoint.current) {
+        mf.position = mf.getOffsetFromPoint(clickedPoint.current.x, clickedPoint.current.y);
+      } else if (mf.value.includes('\\placeholder')) {
         mf.executeCommand('moveToMathfieldStart');
         mf.executeCommand('moveToNextPlaceholder');
       } else mf.executeCommand('moveToMathfieldEnd');

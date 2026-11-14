@@ -99,6 +99,37 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
     await page.pdf({ path: testInfo.outputPath('result-unit.pdf'), preferCSSPageSize: true, printBackground: true });
   });
 
+  test('compound formulas edit at the clicked term without growing over the next check', async ({ page }, testInfo) => {
+    await openFresh(page, 'rc-beam');
+    await page.evaluate(async () => {
+      const api = (window as unknown as { __calccanvas: { idle(): Promise<void>; store: { getState(): { shapes: Record<string, { x: number; y: number; props: { latex?: string } }> }; setState(patch: { camera: { x: number; y: number; z: number } }): void } } }).__calccanvas;
+      await api.idle();
+      const shape = Object.values(api.store.getState().shapes).find(s => s.props.latex?.startsWith('A_{s.min}\\coloneq'))!;
+      api.store.setState({ camera: { x: shape.x - 200, y: shape.y - 260, z: 1 } });
+    });
+    const formula = (await region(page, 'A_{s.min}\\coloneq'))!;
+    const block = page.locator(`[data-testid=math-region][data-shape-id="${formula.id}"]`);
+    await expect(block).toBeInViewport();
+    await expect(block.locator('.math-baseline .ML__latex')).toHaveCount(1);
+    const before = (await block.boundingBox())!;
+    await block.dblclick({ position: { x: before.width * 0.3, y: before.height / 2 } });
+    const editor = page.getByTestId('math-input');
+    await expect(editor).toHaveJSProperty('readOnly', false);
+    expect(await block.boundingBox()).toEqual(before);
+    await expect.poll(() => editor.evaluate(el => {
+      const mf = el as HTMLElement & { position: number; lastOffset: number };
+      return mf.position < mf.lastOffset;
+    })).toBe(true);
+    await page.screenshot({ path: testInfo.outputPath('compound-formula-edit.png') });
+    await editor.press('Control+a');
+    await page.keyboard.type('a:2mm^2');
+    await page.keyboard.press('Enter');
+    await expect(page.getByTestId('math-input')).toHaveCount(0);
+    await expect(block).toHaveAttribute('data-latex', 'a\\coloneq2\\unit{mm}^2');
+    await expect(block).toHaveAttribute('data-status', 'valid');
+    await expect(block).toHaveAttribute('data-result', '2 mm²');
+  });
+
   test('Enter moves the + cursor below so the next region stacks', async ({ page }) => {
     await addRegion(page, 300, 220, ['x:1']);
     await expect(page.getByTestId('crosshair')).toBeVisible();

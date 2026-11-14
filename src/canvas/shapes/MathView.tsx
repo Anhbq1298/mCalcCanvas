@@ -32,7 +32,9 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   const [unitEditor, setUnitEditor] = useState<{ left: number; top: number } | null>(null);
   const closeUnitEditor = useCallback(() => setUnitEditor(null), []);
   const visibleUnit = result?.value?.unitLatex ? shape.props.displayUnit.includes('/') ? fractionUnitLatex(result.value.unitLatex) : result.value.unitLatex : undefined;
+  const renderedResultUnit = !isStatic && resultUnitEditable && shape.props.displayMode !== 'formula' && (result?.kind !== 'expression' || shape.props.displayMode !== 'auto') ? visibleUnit : undefined;
   const contentRef = useRef<HTMLDivElement>(null);
+  const [editPoint, setEditPoint] = useState<{ x: number; y: number } | undefined>(undefined);
   const probeRef = useRef<HTMLSpanElement>(null);
   const measurementFrame = useRef(0);
   const { latex, displayMode, fontSize, color, textFont, equationFont, fontStyle, w, h } = shape.props;
@@ -101,6 +103,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   const onExit = useCallback(
     (reason: 'enter' | 'escape') => {
       stopEditing();
+      setEditPoint(undefined);
       if (reason === 'enter') {
         // Mathcad: Enter leaves the region and puts the red cross below it.
         const s = useCanvasStore.getState().shapes[shape.id];
@@ -140,6 +143,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
       data-unit-editing={!!unitEditor || undefined}
       onPointerDown={(event) => {
         const target = (event.target as Element).closest('[data-result-unit]');
+        if (!target && !isStatic && !editing) setEditPoint({ x: event.clientX, y: event.clientY });
         if (isStatic || editing || !resultUnitEditable || !target) return;
         event.preventDefault();
         event.stopPropagation();
@@ -152,6 +156,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
       }}
       onDoubleClick={(event) => {
         if ((event.target as Element).closest('[data-result-unit]')) event.stopPropagation();
+        else setEditPoint({ x: event.clientX, y: event.clientY });
       }}
       title={
         result?.redefines
@@ -177,18 +182,21 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
     >
       <div className="flex items-center gap-1.5">
         {editing ? (
-          <div className="math-edit-block" data-testid="math-edit-block">
-            <MathEditor hideTrailingEquals={resultUnitEditable} latex={resultUnitEditable ? latex.replace(/=\s*$/, '') : latex} onChange={onChange} onExit={onExit} onConvertToText={onConvertToText} ariaLabel="Math region editor" />
-            {resultUnitEditable && result?.value && (
-              <InlineResultUnit shape={shape} numberText={numberPart(result.value.text, result.value.unitText)} unitLatex={result.value.unitLatex} />
-            )}
+          <div className="math-edit-surface">
+            <span className="math-edit-measure" aria-hidden><MathRenderer latex={display.latex} resultUnit={renderedResultUnit} /></span>
+            <div className="math-edit-block" data-testid="math-edit-block">
+              <MathEditor initialPoint={editPoint} hideTrailingEquals={resultUnitEditable} latex={resultUnitEditable ? latex.replace(/=\s*$/, '') : latex} onChange={onChange} onExit={onExit} onConvertToText={onConvertToText} ariaLabel="Math region editor" />
+              {resultUnitEditable && result?.value && (
+                <InlineResultUnit shape={shape} numberText={numberPart(result.value.text, result.value.unitText)} unitLatex={result.value.unitLatex} />
+              )}
+            </div>
           </div>
         ) : empty ? (
           <span className="math-placeholder">Empty region</span>
         ) : (
           <div className="flex items-center gap-2">
             <span className="math-baseline">
-              {seen ? steelArray ? <SteelArrayLabel latex={latex} /> : latex.startsWith(SECTION_DEF) ? <SteelSectionLabel sectionId={result?.value?.number} /> : <MathRenderer latex={display.latex} resultUnit={!isStatic && resultUnitEditable && displayMode !== 'formula' && (result?.kind !== 'expression' || displayMode !== 'auto') ? visibleUnit : undefined} /> : <span style={{ display: 'inline-block', width: Math.max(0, w - 2 * PAD_X), height: Math.max(0, h - 2 * PAD_Y) }} />}
+              {seen ? steelArray ? <SteelArrayLabel latex={latex} /> : latex.startsWith(SECTION_DEF) ? <SteelSectionLabel sectionId={result?.value?.number} /> : <MathRenderer latex={display.latex} resultUnit={renderedResultUnit} /> : <span style={{ display: 'inline-block', width: Math.max(0, w - 2 * PAD_X), height: Math.max(0, h - 2 * PAD_Y) }} />}
               <span ref={probeRef} className="baseline-probe" aria-hidden />
             </span>
             {display.check && (

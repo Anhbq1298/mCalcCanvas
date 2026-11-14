@@ -499,16 +499,20 @@ body {
   box-shadow: 0 0 0 3px rgb(37 99 235 / 0.15);
 }
 .math-edit-block {
+  position: absolute;
+  left: 0;
+  top: 0;
   display: inline-flex;
   align-items: center;
   gap: 0.2em;
-  padding: 2px 4px;
-  border: 1px solid var(--color-accent);
-  border-radius: 2px;
-  background: var(--color-card);
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
+.math-edit-surface { position: relative; display: inline-block; }
+.math-edit-measure { visibility: hidden; pointer-events: none; }
 .math-edit-block:focus-within {
-  box-shadow: 0 0 0 3px rgb(37 99 235 / 0.15);
+  box-shadow: none;
 }
 .math-edit-block math-field,
 .math-edit-block math-field.inline-result-unit-input,
