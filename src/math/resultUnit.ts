@@ -4,7 +4,9 @@ import type { Expr } from '../engine/ExpressionTypes';
 /** Render slash units as stacked fractions, including their existing powers. */
 export function fractionUnitLatex(latex: string): string {
   if (!latex.includes('/')) return latex;
-  const statement = parseLatex(latex);
+  let statement: ReturnType<typeof parseLatex>;
+  try { statement = parseLatex(latex); }
+  catch { return latex; } // A partially formatted fallback unit must not crash the worksheet.
   if (statement.kind !== 'expression') return latex;
   const render = (node: Expr): string => {
     switch (node.type) {

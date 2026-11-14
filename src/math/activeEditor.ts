@@ -3,6 +3,7 @@
  * (operators, Greek symbols, constants, units) can insert into it.
  */
 import type { MathfieldElement } from 'mathlive';
+import { leaveLiteralSubscript } from './mathcadKeys';
 
 let active: { mf: MathfieldElement; changed: () => void } | null = null;
 
@@ -21,6 +22,7 @@ export function releaseActiveMathEditor(mf: MathfieldElement): void {
 export function insertIntoActiveMath(latex: string): boolean {
   if (!active || !active.mf.isConnected) return false;
   active.mf.focus();
+  if (/^(?:[+*/=<>^:-]|#@\^|\\(?:cdot|times|div|frac|sqrt|leq?|geq?|neq?|equiv|coloneq|land|lor)\b)/.test(latex)) leaveLiteralSubscript(active.mf);
   active.mf.insert(latex, { selectionMode: 'placeholder', focus: true });
   active.changed();
   return true;

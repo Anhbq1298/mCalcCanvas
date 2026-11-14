@@ -16,6 +16,102 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
     await resultOf(page, '\\alpha').toBe('2');
   });
 
+  test('operators leave literal subscripts reached by typing, arrows or a mouse click', async ({ page }, testInfo) => {
+    await addRegion(page, 500, 280, ['M.Ed:100']);
+    await addRegion(page, 500, 360, ['N.Ed:20']);
+    await addRegion(page, 500, 440, ['r:2']);
+    await addRegion(page, 500, 580, ['M.Ed/N.Ed=']);
+    const formula = page.getByTestId('math-region').last();
+    await formula.dblclick();
+    const editor = page.getByTestId('math-input');
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await test.step('operators leave both dot and underscore subscripts', async () => {
+      for (const [operator, expected] of [
+        ['+', 'M_{Ed}+2'], ['-', 'M_{Ed}-2'], ['*', 'M_{Ed}\\cdot2'],
+        ['/', '\\frac{M_{Ed}}{2}'], ['^', 'M_{Ed}^2'], [':', 'M_{Ed}\\coloneq2'],
+        ['=', 'M_{Ed}=2'], ['<', 'M_{Ed}<2'], ['>', 'M_{Ed}>2'],
+      ]) {
+        await editor.press('Control+a');
+        await page.keyboard.type(`M.Ed${operator}2`);
+        await expect(editor).toHaveJSProperty('value', expected);
+      }
+      await editor.press('Control+a');
+      await page.keyboard.type('M_Ed*2');
+      await expect(editor).toHaveJSProperty('value', 'M_{Ed}\\cdot2');
+      await editor.press('Control+a');
+      await page.keyboard.type('M.Ed');
+      await editor.press('ArrowRight');
+      await editor.press('ArrowLeft');
+      await page.keyboard.type('*2');
+      await expect(editor).toHaveJSProperty('value', 'M_{Ed}\\cdot2');
+      await editor.press('Control+a');
+      await page.keyboard.type('M.Ed');
+      await editor.press('Control+9');
+      await page.keyboard.type('2');
+      await expect(editor).toHaveJSProperty('value', 'M_{Ed}\\le2');
+    });
+    const seed = async (latex: string, atom?: string, last = false) => editor.evaluate((el, args) => {
+      const mf = el as HTMLElement & { value: string; position: number; lastOffset: number; getElementInfo(n: number): { latex?: string }; executeCommand(s: string): void };
+      mf.value = args.latex;
+      const offsets = Array.from({ length: mf.lastOffset + 1 }, (_, i) => i).filter(i => mf.getElementInfo(i)?.latex === args.atom);
+      mf.position = args.atom ? offsets[args.last ? offsets.length - 1 : 0] : mf.lastOffset;
+    }, { latex, atom, last });
+    await test.step('superscripts, ordinary fraction arithmetic and summation limits keep their scope', async () => {
+      await seed('\\phi_{w}', 'w');
+      await page.keyboard.type('*r');
+      await expect(editor).toHaveJSProperty('value', '\\phi_{w}\\cdot r');
+      await seed('\\mathrm{M}_{Ed}', 'd');
+      await page.keyboard.type('*r');
+      await expect(editor).toHaveJSProperty('value', '\\mathrm{M}_{Ed}\\cdot r');
+      await seed('M_{Ed}^2', '2');
+      await page.keyboard.type('-1');
+      await expect(editor).toHaveJSProperty('value', 'M_{Ed}^{2-1}');
+      await seed('\\frac{a}{b}', 'a');
+      await page.keyboard.type('+1');
+      await expect(editor).toHaveJSProperty('value', '\\frac{a+1}{b}');
+      await seed('\\frac{a}{b}', 'b');
+      await page.keyboard.type('+1');
+      await expect(editor).toHaveJSProperty('value', '\\frac{a}{b+1}');
+      await seed('\\frac{a}{b}_{i}', 'a');
+      await page.keyboard.type('+1');
+      await expect(editor).toHaveJSProperty('value', '\\frac{a+1}{b}_{i}');
+      await seed('\\sum_{i=1}^{n}a_i', 'i');
+      await page.keyboard.type('+1');
+      await expect.poll(() => editor.evaluate(el => (el as HTMLElement & { value: string }).value)).toContain('_{i+1=1}');
+    });
+    await test.step('ribbon operators leave a literal subscript too', async () => {
+      await seed('M_{Ed}', 'd');
+      await page.getByTestId('palette-operators').click();
+      await page.getByTestId('palette-·').click();
+      await page.keyboard.type('r');
+      await expect(editor).toHaveJSProperty('value', 'M_{Ed}\\cdot r');
+      await page.getByTestId('palette-operators').click();
+    });
+    await test.step('clicking a subscript in either fraction branch exits only that subscript', async () => {
+      for (const last of [false, true]) {
+        await seed('\\frac{M_{Ed}}{N_{Ed}}');
+        const point = await editor.evaluate(async (el, useLast) => {
+          const mf = el as HTMLElement & { lastOffset: number; getElementInfo(n: number): { latex?: string; bounds?: DOMRect } };
+          await new Promise(requestAnimationFrame);
+          const atoms = Array.from({ length: mf.lastOffset + 1 }, (_, i) => mf.getElementInfo(i)).filter(info => info?.latex === 'd');
+          const bounds = atoms[useLast ? atoms.length - 1 : 0].bounds!;
+          return { x: bounds.x + bounds.width * 0.8, y: bounds.y + bounds.height / 2 };
+        }, last);
+        await page.mouse.click(point.x, point.y);
+        await page.keyboard.type('*r');
+        await expect(editor).toHaveJSProperty('value', last ? '\\frac{M_{Ed}}{N_{Ed}\\cdot r}' : '\\frac{M_{Ed}\\cdot r}{N_{Ed}}');
+      }
+      await seed('\\frac{M_{Ed}}{N_{Ed}}', 'd');
+      await page.keyboard.type('*r=');
+      await editor.press('Enter');
+      await resultOf(page, '\\frac{M_{Ed}\\cdot r}').toBe('10');
+    });
+    await page.screenshot({ path: testInfo.outputPath('subscript-operator.png') });
+    await page.getByTestId('export-pdf').click();
+    await page.emulateMedia({ media: 'print' });
+    await page.pdf({ path: testInfo.outputPath('subscript-operator.pdf'), preferCSSPageSize: true, printBackground: true });
+  });
+
   test('formula result units are selectable fractions and convert without changing inputs', async ({ page }, testInfo) => {
     await addRegion(page, 500, 260, ['w:15kN/m']);
     const input = (await region(page, 'w'))!;

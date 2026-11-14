@@ -25,13 +25,50 @@ const LATIN_FROM_GREEK: Record<string, string> = Object.fromEntries(Object.entri
 
 type Insert = (latex: string) => void;
 
-// MathLive does not expose the parent branch of the caret. Remember when the
-// user deliberately entered a literal subscript with "." so the next operator
-// can leave that branch, like Mathcad, without changing fraction navigation.
-const literalSubscripts = new WeakSet<MathfieldElement>();
+function isLimitOperator(latex: string): boolean {
+  return /^\\(?:sum|prod|coprod|[a-z]*int|lim[a-z]*|big[a-z]+|min|max|sup|inf)(?![A-Za-z])/.test(latex.replace(/^\\operatorname\{([^{}]+)\}$/, '\\$1'));
+}
 
-export function forgetMathcadContext(mf: MathfieldElement): void {
-  literalSubscripts.delete(mf);
+function hasLiteralSubscript(latex: string): boolean {
+  // Limits of sums, integrals and limit operators are mathematical expressions.
+  if (isLimitOperator(latex)) return false;
+  let braces = 0;
+  for (const char of latex) {
+    if (char === '{') braces++;
+    else if (char === '}') braces--;
+    else if (char === '_' && braces === 0) return true;
+  }
+  return false;
+}
+
+/** Inspect existing branches with public navigation commands; never change the expression. */
+export function leaveLiteralSubscript(mf: MathfieldElement): void {
+  if (!mf.selectionIsCollapsed) return;
+  const original = mf.position;
+  let target = original;
+  let depthLeft = mf.getElementInfo(original)?.depth ?? 0;
+  while (depthLeft-- > 0) {
+    const previous = mf.position;
+    const previousDepth = mf.getElementInfo(previous)?.depth ?? 0;
+    mf.executeCommand('moveAfterParent');
+    const parent = mf.position;
+    if (parent === previous || (mf.getElementInfo(parent)?.depth ?? 0) >= previousDepth) break;
+    if (!hasLiteralSubscript(mf.getElementInfo(parent)?.latex ?? '')) continue;
+    // Re-enter the existing subscript to find its range. A superscript on the
+    // same symbol is a different branch, and operators must stay inside it.
+    mf.executeCommand('moveToSubscript');
+    const end = mf.position;
+    const depth = mf.getElementInfo(end)?.depth ?? 0;
+    let start = end;
+    while (start > 0) {
+      const info = mf.getElementInfo(start);
+      if ((info?.depth ?? -1) < depth || (info?.depth === depth && !info.latex)) break;
+      start--;
+    }
+    if (original >= start && original <= end && !isLimitOperator(mf.getElementInfo(start - 1)?.latex ?? '')) target = parent;
+    mf.position = parent;
+  }
+  mf.position = target;
 }
 
 function charBefore(mf: MathfieldElement): string {
@@ -51,14 +88,7 @@ export function handleMathcadKey(e: KeyboardEvent, mf: MathfieldElement, changed
   const mod = e.ctrlKey || e.metaKey;
   const before = () => mf.getValue(0, mf.position, 'latex');
 
-  if (literalSubscripts.has(mf)) {
-    if ([':', '=', '+', '-', '*', '/', '<', '>'].includes(e.key)) {
-      mf.executeCommand('moveAfterParent');
-      literalSubscripts.delete(mf);
-    } else if (e.key.startsWith('Arrow') || e.key === 'Escape' || e.key === 'Enter' || e.key === 'Tab') {
-      literalSubscripts.delete(mf);
-    }
-  }
+  if (!e.altKey && ((!mod && [':', '=', '+', '-', '*', '/', '^', '<', '>', '\\', '|'].includes(e.key)) || (mod && !e.shiftKey && ['9', '0', '3', '='].includes(e.key)))) leaveLiteralSubscript(mf);
 
   if (mod && !e.altKey) {
     if (e.shiftKey && e.key.toLowerCase() === 'p') return insert('\\pi'), true;
@@ -131,7 +161,6 @@ export function handleMathcadKey(e: KeyboardEvent, mf: MathfieldElement, changed
       if (/^[A-Za-z]$/.test(prev) || /^\\[a-zA-Z]+$/.test(prev) && prev in LATIN_FROM_GREEK) {
         if (/\d\s*$/.test(before())) return false;
         mf.executeCommand('moveToSubscript');
-        literalSubscripts.add(mf);
         changed();
         return true;
       }
