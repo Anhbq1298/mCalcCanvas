@@ -1,27 +1,25 @@
 // Phase 1: editable EC4 worksheet; uses existing engine operators only.
 // No new solver or engine behaviour. See docs/composite-design/TECHNICAL.md.
-import fs from 'node:fs';
 import { createLayout, R } from './layout.mjs';
 import { compositeFigures } from './compositeFigures.mjs';
-import { EX, exampleResults } from './compositeExample.mjs';
 const l = createLayout({ idPrefix: 's_ec4', sizesFile: 'sizes_composite.json', textFont: 'Roboto', mathColumn: 396 });
-const { H, T, M, FU, fr, LINK, finish } = l;
+const { H, T, M, FU, fr, fo, LINK, S, GRAPH2, finish } = l;
 // A description and its region print as one block, so a page break never separates them.
 const P = (...args) => {
   const n = l.out.length;
   l.P(...args);
   for (const s of l.out.slice(n)) s.printGroupId = `s_ec4_pg_${n.toString(36)}`;
 };
-// Figures are drawn for the example inputs; deflection ordinates come from the independent Python reference.
-const ref = JSON.parse(fs.readFileSync(new URL('../../docs/composite-design/reference.json', import.meta.url), 'utf8'));
-const fig = compositeFigures(l, { ...EX, results: { ...exampleResults(), dg: ref.delta_locked_mm, dtot: ref.delta_total_mm } });
+// Static symbolic figures; every value is in the worksheet regions.
+const fig = compositeFigures(l);
 const IF = (...branches) => {
   const rows = branches.map(([c, v], i) => (c === null ? R`\mathrm{else}` : `${i ? R`\mathrm{else}\ ` : ''}\\mathrm{if}\\ ${c}`) + R`\\\quad\left\Vert\displaystyle ${v}\right.`);
   return R`\begin{array}{||l}` + rows.join(R`\\`) + R`\end{array}`;
 };
 const units = u => ({ displayUnit: u, precision: 3 });
 const input = (label, name, value, unit = '') => P(label, R`${name}\coloneq ${value}${unit ? R`\,\mathrm{${unit}}` : ''}`, M(units(unit)));
-const calc = (label, name, rhs, unit = '', full = true) => P(label, R`${name}\coloneq ${rhs}`, M(units(unit), full ? FU : fr));
+// full: true = full substitution, false = formula = result, 'fo' = formula only (long vectors; still calculated)
+const calc = (label, name, rhs, unit = '', full = true) => P(label, R`${name}\coloneq ${rhs}`, M(units(unit), full === 'fo' ? fo : full ? FU : fr));
 const check = (label, lhs, rhs) => P(label, R`${lhs}\le ${rhs}`, M({ precision: 3 }));
 const ur = (label, name, demand, resistance) => {
   calc(label, R`\mathrm{UR}_{${name}}`, R`\frac{${demand}}{${resistance}}`);
@@ -30,7 +28,7 @@ const ur = (label, name, demand, resistance) => {
 H(1, 'COMPOSITE BEAM CALCULATION (EC4)');
 H(2, '1. DESIGN BASIS');
 T('REVIEW DRAFT — engineering and layout approval; Singapore NA verification is outstanding.');
-T('SS EN 1994-1-1:2009; technical equations from EN 1994-1-1:2004. Solid slab; sagging UDL.');
+T('SS EN 1994-1-1:2009; equations from EN 1994-1-1:2004. Solid slab; sagging; load tables.');
 T('Simply supported, unpropped, symmetric rolled I-section; ductile studs; no applied axial force.');
 T('EC3 Class 1/2 plastic design. No openings, fatigue, fire, vibration or transverse slab design.');
 T('All displayed values are calculated by existing worksheet operators; no engine extension.');
@@ -54,8 +52,6 @@ H(3, '2.2 Loads, programme and serviceability');
 input('Wet RC density: includes reinforcement allowance', '\\rho_c', 25, 'kN/m^3');
 input('Construction UDL, explicit project assumption', 'q_{con}', 0.75, 'kPa');
 input('Removable formwork load, explicit assumption', 'g_{form}', 0.5, 'kPa');
-input('Post-curing finishes / SDL', 'g_{SDL}', 1.5, 'kPa');
-input('Final imposed load', 'q_k', 3, 'kPa');
 input('Quasi-permanent factor, occupancy assumption', '\\psi_2', 0.3);
 input('Creep coefficient, project assessment input', '\\varphi', 2);
 input('Free shrinkage magnitude after composite activation', '\\varepsilon_{cs}', 0.0003);
@@ -63,6 +59,13 @@ input('Construction and final total deflection denominator', 'r_{lim}', 250);
 T('Construction load excludes local heaping, impact and pump loads; assess these separately.');
 T('EN 1990 §6.4.3 / Annex A1 and EN 1991-1-6: combinations need project/NA approval.');
 T('Formwork and construction imposed loads are removed before the final service condition.');
+H(3, '2.3 Composite-stage load tables');
+T('One row per load; add a row to add a load. Characteristic values, permanent g / G and');
+T('imposed q / Q per row. Loads act on the composite beam (applied after the slab has cured).');
+P('Distributed loads [x1, x2, g_k, q_k]',R`W_{udl}\coloneq\begin{bmatrix}0\,\mathrm{m}&8\,\mathrm{m}&4.5\,\mathrm{kN/m}&9\,\mathrm{kN/m}\end{bmatrix}`,M({ precision: 3 }));
+P('Point loads [a, G_k, Q_k]',R`P_{pt}\coloneq\begin{bmatrix}3\,\mathrm{m}&30\,\mathrm{kN}&45\,\mathrm{kN}\end{bmatrix}`,M({ precision: 3 }));
+T('Example: finishes 1.5 kPa and imposed 3 kPa over the 3 m load width, plus one point load.');
+T('A table needs at least one row; use zero loads for an unused table. Keep 0 < a < L.');
 H(2, '3. STEEL SECTION PROPERTIES');
 T('UB 406 x 178 x 60; published SCI section data, not a geometry-derived sharp-corner section.');
 T('Phase 1: native explicit inputs. UB table / lookup binding remains a future integration task.');
@@ -70,18 +73,43 @@ const props = [['h_a',406.4,'mm'],['b_a',177.9,'mm'],['t_f',12.8,'mm'],['t_w',7.
 for (const [n,v,u] of props) input('Published section property', n,v,u);
 calc('Steel self weight from section mass', 'g_a', R`m_a\cdot9.81\,\mathrm{m/s^2}`, 'kN/m');
 calc('EC3 §6.2.6(3), conservative eta = 1.0', 'A_v', R`A_a-2b_a t_f+\left(t_w+2r\right)t_f`, 'mm^2', false);
-fig('D02', 'Composite section — geometry', 'section', 7.5);
+fig('F1', 'Composite section — notation', 'section', 7);
 H(2, '4. STRUCTURAL ANALYSIS');
 calc('Wet slab line load', 'g_c', R`\rho_c h_c s_b`, 'kN/m');
-calc('Permanent final line load', 'g_k', R`g_a+g_c+g_{SDL}s_b`, 'kN/m');
-calc('Construction ULS, transient assumed combination', 'w_{1.Ed}', R`\gamma_G\left(g_a+g_c+g_{form}s_b\right)+\gamma_Q q_{con}s_b`, 'kN/m', false);
-calc('Final ULS, one leading variable action', 'w_{Ed}', R`\gamma_G g_k+\gamma_Q q_k s_b`, 'kN/m');
-for (const [n,w] of [['1', 'w_{1.Ed}'],['2','w_{Ed}']]) {
- calc('Reaction / maximum shear, UDL', R`V_{${n}.Ed}`, R`\frac{${w}L}{2}`, 'kN');
- calc('Midspan maximum sagging moment, UDL', R`M_{${n}.Ed}`, R`\frac{${w}L^2}{8}`, 'kN m');
-}
-T('Envelope: M(x) = w x (L-x)/2; V(x) = w (L/2-x), separately for each load stage.');
-fig('D01','UDL, reactions and span', 'beam', 6.5);
+calc('Self weight carried before and after composite action', 'g_0', R`g_a+g_c`, 'kN/m');
+H(3, '4.1 Construction stage: steel only, UDL');
+calc('Construction ULS, transient assumed combination', 'w_{1.Ed}', R`\gamma_G\left(g_0+g_{form}s_b\right)+\gamma_Q q_{con}s_b`, 'kN/m', false);
+calc('Reaction / maximum shear, UDL', R`V_{1.Ed}`, R`\frac{w_{1.Ed}L}{2}`, 'kN');
+calc('Midspan maximum sagging moment, UDL', R`M_{1.Ed}`, R`\frac{w_{1.Ed}L^2}{8}`, 'kN m');
+H(3, '4.2 Composite stage: self weight plus the load tables');
+fig('F2', 'Composite-stage loading (rows of the load tables)', 'loads', 6);
+T('ULS: γG on g0, g and G; γQ on q and Q (one leading variable action; all rows act together).');
+calc('Step for the internal-force diagrams', '\\Delta x', R`\frac{L}{200}`, 'mm');
+LINK('forces', 'Internal forces along the span from the load tables', () => {
+ T('Columns of the tables (first row = row 0). Simply supported beam, x from support A.');
+ for (const [n, t, c] of [['x_{u1}','W_{udl}',0],['x_{u2}','W_{udl}',1],['g_u','W_{udl}',2],['q_u','W_{udl}',3],['a_P','P_{pt}',0],['G_P','P_{pt}',1],['Q_P','P_{pt}',2]])
+  calc(`Column ${c} of the ${t === 'P_{pt}' ? 'point' : 'distributed'} load table`, n, R`\mathrm{col}\left(${t},${c}\right)`, '', false);
+ calc('Loaded lengths', 'l_u', R`x_{u2}-x_{u1}`, 'm', false);
+ calc('Reaction at A per unit distributed load', 'r_u', R`\frac{l_u\left(L-\frac{x_{u1}+x_{u2}}{2}\right)}{L}`, 'm', false);
+ P('Left-part moment per unit row load', R`m_u(x)\coloneq${IF([R`x\le x_{u1}`, R`0\,\mathrm{m^2}`], [R`x\ge x_{u2}`, R`l_u\left(x-\frac{x_{u1}+x_{u2}}{2}\right)`], [null, R`\frac{\left(x-x_{u1}\right)^2}{2}`])}`, M(units('')));
+ P('Row load left of x per unit load', R`v_u(x)\coloneq${IF([R`x\le x_{u1}`, R`0\,\mathrm{m}`], [R`x\ge x_{u2}`, R`l_u`], [null, R`x-x_{u1}`])}`, M(units('')));
+ P('Lever of each point load to the right of x', R`m_P(x)\coloneq${IF([R`x>a_P`, R`x-a_P`], [null, R`0\,\mathrm{m}`])}`, M(units('')));
+ P('Point loads left of x (1) or not (0)', R`h_P(x)\coloneq${IF([R`x>a_P`, '1'], [null, '0'])}`, M(units('')));
+ P('Moment per unit row load', R`k_u(x)\coloneq r_u x-m_u(x)`, M(units('')));
+ P('Moment at x per unit point load', R`k_P(x)\coloneq\frac{L-a_P}{L}x-m_P(x)`, M(units('')));
+ P('Moment from the tables with factors cG on g, G and cQ on q, Q', R`M_s(x,c_G,c_Q)\coloneq\mathrm{dot}\left(c_G g_u+c_Q q_u,k_u(x)\right)+\mathrm{dot}\left(c_G G_P+c_Q Q_P,k_P(x)\right)`, M(units('')));
+ P('Shear from the tables with the same factors', R`V_s(x,c_G,c_Q)\coloneq\mathrm{dot}\left(c_G g_u+c_Q q_u,r_u-v_u(x)\right)+\mathrm{dot}\left(c_G G_P+c_Q Q_P,\frac{L-a_P}{L}-h_P(x)\right)`, M(units('')));
+ calc('Points along the span, 200 intervals', 'x_v', R`\mathrm{seq}\left(0\,\mathrm{m},L,\Delta x\right)`, 'm', 'fo');
+ calc('Design bending moment along the span', 'M_v', R`\gamma_G g_0\frac{x_v\left(L-x_v\right)}{2}+\mathrm{map}\left(M_s,x_v,\gamma_G,\gamma_Q\right)`, 'kN m', 'fo');
+ calc('Design shear force along the span', 'V_v', R`\gamma_G g_0\left(\frac{L}{2}-x_v\right)+\mathrm{map}\left(V_s,x_v,\gamma_G,\gamma_Q\right)`, 'kN', 'fo');
+ calc('Design moments under the point loads', 'M_P', R`\gamma_G g_0\frac{a_P\left(L-a_P\right)}{2}+\mathrm{map}\left(M_s,a_P,\gamma_G,\gamma_Q\right)`, 'kN m', false);
+});
+calc('Maximum design moment (grid of 200 steps and load points)', 'M_{2.Ed}', R`\max\left(\max\left(M_v\right),\max\left(M_P\right)\right)`, 'kN m', false);
+calc('Position of the maximum on the grid', 'x_M', R`\mathrm{at}\left(x_v,\mathrm{at}\left(\mathrm{match}\left(\max\left(M_v\right),M_v\right),0\right)\right)`, 'm', false);
+calc('Support reactions: maximum design shear', 'V_{2.Ed}', R`\max\left(\mathrm{at}\left(V_v,0\right),-\mathrm{at}\left(V_v,\mathrm{last}\left(V_v\right)\right)\right)`, 'kN', false);
+GRAPH2(300,
+ { title: 'Design bending moment M_Ed', xUnit: 'm', yUnit: 'kN m', series: [S('m', '', ['x_v', 'M_v'], 'line', '#1e3a5f', 2), S('mp', 'Point loads', ['a_P', 'M_P'], 'marker', '#dc2626', 2)] },
+ { title: 'Design shear force V_Ed', xUnit: 'm', yUnit: 'kN', series: [S('v', '', ['x_v', 'V_v'], 'line', '#1e3a5f', 2)] });
 H(2, '5. CONSTRUCTION STAGE — STEEL ONLY');
 T('EC3 §5.5 / Table 5.2: bare steel section in major-axis bending, no axial force.');
 calc('Material parameter', '\\varepsilon', R`\sqrt{\frac{235\,\mathrm{MPa}}{f_y}}`);
@@ -109,24 +137,21 @@ calc('LTB reduction factor', '\\chi_{LT}', R`\min\left(1,\frac{1}{\Phi_{LT}+\sqr
 calc('EC3 (6.55)', 'M_{b.Rd}', R`\frac{\chi_{LT}W_{pl}f_y}{\gamma_{M1}}`, 'kN m');
 ur('Construction LTB','LT','M_{1.Ed}','M_{b.Rd}');
 T('A failed LTB check requires a verified temporary restraint scheme or a revised member.');
-calc('Construction characteristic UDL', 'w_{1.k}', R`g_a+g_c+\left(g_{form}+q_{con}\right)s_b`, 'kN/m');
+calc('Construction characteristic UDL', 'w_{1.k}', R`g_0+\left(g_{form}+q_{con}\right)s_b`, 'kN/m');
 calc('Construction elastic deflection', '\\delta_1', R`\frac{5w_{1.k}L^4}{384E_a I_a}`, 'mm');
 calc('Project deflection limit (not a universal EC4 limit)', '\\delta_{lim}', R`\frac{L}{r_{lim}}`, 'mm');
 ur('Construction deflection','d.1','\\delta_1','\\delta_{lim}');
-fig('D04','Steel-only construction; no slab restraint credited','construction', 7.5);
 H(2, '6. EFFECTIVE SLAB WIDTH');
 T('EC4 §5.4.1.2: simply supported midspan Le = L; one stud row, b0 = 0.');
 calc('Equivalent span','L_e','L','m');
 calc('Available width each side','b_1',R`\frac{s_b-b_0}{2}`,'mm');
 calc('Effective width each side','b_e',R`\min\left(\frac{L_e}{8},b_1\right)`,'mm');
 calc('Effective width at midspan','b_{eff}',R`b_0+2b_e`,'mm');
-fig('D03','Effective width at midspan (transverse section), not the 3 m load width','width', 6.5);
 H(2, '7. SHEAR CONNECTOR RESISTANCE');
 input('Headed stud shank diameter','d_{sc}',19,'mm');
 input('Stud height after welding','h_{sc}',100,'mm');
 input('Stud ultimate strength, <= 500 MPa','f_u',450,'MPa');
-input('Studs in each half-span, single row','n_h',24);
-calc('Longitudinal pitch: first/last centres at half pitch','s_{sc}',R`\frac{L}{2n_h}`,'mm');
+input('Studs provided in each shear span (support to max moment)','n_h',24);
 calc('EC4 §6.6.3.1, hsc/d >= 4 here','\\alpha_{sc}',R`\min\left(1,0.2\left(\frac{h_{sc}}{d_{sc}}+1\right)\right)`);
 calc('EC4 (6.18): stud steel failure','P_{s.Rd}',R`\frac{0.8 f_u \pi d_{sc}^2}{4\gamma_V}`,'kN');
 calc('EC4 (6.19): concrete failure','P_{c.Rd}',R`\frac{0.29\alpha_{sc}d_{sc}^2\sqrt{f_{ck}E_{cm}}}{\gamma_V}`,'kN');
@@ -135,14 +160,11 @@ calc('Solid slab stud design resistance','P_{Rd}',R`\min\left(P_{s.Rd},P_{c.Rd}\
 check('Ductile stud geometry, EC4 §6.6.1.2','4d_{sc}','h_{sc}');
 check('Diameter range, lower bound','16\\,\\mathrm{mm}','d_{sc}');
 check('Diameter range, upper bound','d_{sc}','25\\,\\mathrm{mm}');
-check('EC4 §6.6.5.7: minimum longitudinal spacing','5d_{sc}','s_{sc}');
-check('Maximum longitudinal spacing, buildings','s_{sc}',R`\min\left(6h_c,800\,\mathrm{mm}\right)`);
 calc('Slab cover above stud head','c_{sc}',R`h_c-h_{sc}`,'mm');
 check('Nominal top cover >= 20 mm, EC4 §6.6.5.2','20\\,\\mathrm{mm}','c_{sc}');
 calc('Stud shank edge to steel flange edge','e_{sc}',R`\frac{b_a-d_{sc}}{2}`,'mm');
 check('EC4 §6.6.5.6: steel flange edge >= 20 mm','20\\,\\mathrm{mm}','e_{sc}');
-T('Single row: transverse stud pitch is inapplicable. Weld and head dimensions require specification.');
-fig('D09','Shear connectors: plan of 48 studs and section through one stud','studs', 5.5);
+T('Stud arrangement (pitch, rows) is not detailed here; section 9.3 gives the required numbers.');
 H(2, '8. DEGREE OF SHEAR CONNECTION');
 calc('Maximum slab compression, EC4 §6.2.1.2','N_{c.Rd}',R`0.85 f_{cd}b_{eff}h_c`,'kN');
 calc('Steel tensile resistance','N_{a.Rd}',R`A_a f_{yd}`,'kN');
@@ -152,9 +174,8 @@ calc('Degree of connection, EC4 (6.12): not a utilisation','\\eta',R`\min\left(1
 calc('EC4 (6.12), equal flanges, Le <= 25 m','\\eta_{min}',R`\max\left(0.4,1-\frac{355\,\mathrm{MPa}}{f_y}\left(0.75-0.03\frac{L_e}{1\,\mathrm{m}}\right)\right)`);
 check('Minimum connection degree, EC4 §6.6.1.2(1)','\\eta_{min}','\\eta');
 check('Rule (6.12) applicability','L_e','25\\,\\mathrm{m}');
-check('Flange restrained by studs for Class 1, EC4 §6.6.5.5(2)','s_{sc}',R`22t_f\varepsilon`);
 T('Studs are ductile (section 7), the steel flange is Class 1 (section 5) and the web is in');
-T('tension at resistance, so plastic theory, EC4 §6.2.1.2, and uniform stud spacing apply.');
+T('tension at resistance, so plastic theory, EC4 §6.2.1.2, applies.');
 H(2, '9. COMPOSITE BENDING RESISTANCE');
 T('EC4 §6.2.1.3(3): rigid-plastic resistance with the reduced slab force Nc = η Nc,f.');
 T('The neutral axes are results of the inputs and η, not user-selected cases.');
@@ -163,7 +184,7 @@ check('Steel yields before the slab: full-connection PNA in the slab','N_{a.Rd}'
 calc('Full-connection slab compression depth','x_f',R`\frac{N_{c.f}}{0.85 f_{cd}b_{eff}}`,'mm');
 calc('Lever arm, steel centroid to slab block centroid','z_f',R`h_c+\frac{h_a}{2}-\frac{x_f}{2}`,'mm');
 calc('Full-connection plastic resistance','M_{pl.Rd}',R`N_{c.f}z_f`,'kN m');
-T('Its stress block is a reference only (annex figure D06); it is not the state of this beam.');
+T('This full-connection state is only the upper end of the interaction; it is not this beam.');
 H(3, '9.2 Partial connection: concrete depth and steel PNA from equilibrium');
 calc('Slab force at resistance, EC4 §6.2.1.3(3)','N_c',R`\eta N_{c.f}`,'kN');
 calc('Concrete block depth from the slab top','x_c',R`\frac{N_c}{0.85 f_{cd}b_{eff}}`,'mm');
@@ -182,15 +203,13 @@ calc('Steel tension resultant','T_a',R`\left(A_a-A_{ac}\right)f_{yd}`,'kN');
 calc('Tension centroid below the slab top (area weighted)','z_T',R`\frac{A_a\left(h_c+\frac{h_a}{2}\right)-Q_{ac}}{A_a-A_{ac}}`,'mm');
 calc('Force equilibrium residual','R_N',R`N_c+C_a-T_a`,'kN');
 calc('Direct rigid-plastic resistance, moments about the slab top','M_{Rd.pl}',R`T_a z_T-f_{yd}Q_{ac}-\frac{N_c x_c}{2}`,'kN m',false);
-T('Composite resistance only if η >= η_min, ductile studs, Class 1 flange and restraint pitch hold;');
+T('Composite resistance only if η >= η_min, ductile studs and a Class 1 flange hold;');
 T('otherwise the bare steel resistance is used (no composite credit).');
-P('Design resistance, conservative linear interaction EC4 (6.3)',R`M_{Rd}\coloneq${IF([R`\eta_{min}\le\eta\land4d_{sc}\le h_{sc}\land\beta_f\le9\land s_{sc}\le22t_f\varepsilon`, R`M_{a.Rd}+\eta\left(M_{pl.Rd}-M_{a.Rd}\right)`], [null, R`M_{a.Rd}`])}`,M(units('kN m')));
+P('Design resistance, conservative linear interaction EC4 (6.3)',R`M_{Rd}\coloneq${IF([R`\eta_{min}\le\eta\land4d_{sc}\le h_{sc}\land\beta_f\le9`, R`M_{a.Rd}+\eta\left(M_{pl.Rd}-M_{a.Rd}\right)`], [null, R`M_{a.Rd}`])}`,M(units('kN m')));
 check('Linear interaction is not above the direct plastic resistance','M_{Rd}','M_{Rd.pl}');
 ur('Final composite bending','M.2','M_{2.Ed}','M_{Rd}');
-calc('Uniform stud distribution applicability, §6.6.1.3(3)','r_M',R`\frac{M_{pl.Rd}}{M_{a.Rd}}`);
-check('Uniform spacing resistance ratio limit','r_M','2.5');
-fig('D05','Governing stress block: partial connection, steel PNA in top flange','governing',9.5);
-T('Alternative branches, boundaries and the general force model are in the linked annex.');
+fig('F3','Plastic stress block at partial connection (symbolic)','pna',7.5);
+T('Branch boundaries and the general force model are in the linked annex.');
 LINK('pna','General plastic equilibrium and PNA branches', () => {
  H(3,'General force model — y measured down from the steel top');
  T('w_a(y) is the rolled width including root fillets; A_a and W_pl alone do not locate the PNA.');
@@ -207,10 +226,41 @@ LINK('pna','General plastic equilibrium and PNA branches', () => {
  T('Never mix the sharp-corner web formula ya = tf + (Aac - ba tf)/tw with a filleted area Aa.');
  T('Lower flange: inadmissible, because Nc >= 0 and zero axial force give Aac <= Aa/2.');
  calc('Connection degree with the PNA at the fillet toe','\\eta_{fr}',R`1-\frac{2A_{fr}}{A_a}`);
- fig('D06','Reference only: full connection, slab PNA, steel entirely in tension','full',9);
- fig('D07','Alternative branch (illustration, hypothetical η = 0.30): steel PNA in the web','web',9);
- fig('D08','Lower-flange PNA rejected by force equilibrium','rejected',6.5);
 });
+H(3, '9.3 Stud spacing from the maximum-moment position, and M_Rd(x) along the span');
+T('Shear spans: support A to the maximum moment (x_M) and x_M to support B; with a large point');
+T('load x_M moves to the load, so each span gets its own uniform spacing (EC4 §6.6.1.3(3)).');
+calc('Degree needed at the maximum moment, not below η_min','\\eta_{req}',R`\max\left(\eta_{min},\frac{M_{2.Ed}-M_{a.Rd}}{M_{pl.Rd}-M_{a.Rd}}\right)`);
+calc('Studs needed in each shear span','n_{req}',R`\mathrm{ceil}\left(\frac{\eta_{req}N_{c.f}}{P_{Rd}}\right)`);
+check('Provided studs in each shear span','n_{req}','n_h');
+calc('Spacing, support A to x_M (n_h studs, first at s/2)','s_A',R`\frac{x_M}{n_h}`,'mm');
+calc('Spacing, x_M to support B','s_B',R`\frac{L-x_M}{n_h}`,'mm');
+calc('Minimum spacing, EC4 §6.6.5.7(4)','s_{min}',R`5d_{sc}`,'mm');
+calc('Maximum spacing, EC4 §6.6.5.5(2) and (3)','s_{max}',R`\min\left(22t_f\varepsilon,6h_c,800\,\mathrm{mm}\right)`,'mm',false);
+check('Span A spacing not below the minimum','s_{min}','s_A');
+check('Span A spacing not above the maximum','s_A','s_{max}');
+check('Span B spacing not below the minimum','s_{min}','s_B');
+check('Span B spacing not above the maximum','s_B','s_{max}');
+calc('Uniform spacing, EC4 §6.6.1.3(3)','r_M',R`\frac{M_{pl.Rd}}{M_{a.Rd}}`);
+check('Uniform spacing resistance ratio limit','r_M','2.5');
+T('Resistance at every section x from the studs between x and the nearer support (6.3):');
+calc('Studs between support and x','n_x',IF([R`x_v\le x_M`, R`\mathrm{floor}\left(\frac{x_v}{s_A}+0.5\right)`], [null, R`\mathrm{floor}\left(\frac{L-x_v}{s_B}+0.5\right)`]),'','fo');
+calc('Degree of connection at x','\\eta_x',IF([R`n_x P_{Rd}\ge N_{c.f}`, '1'], [null, R`\frac{n_x P_{Rd}}{N_{c.f}}`]),'','fo');
+calc('Bending resistance at x','M_{Rd.x}',R`M_{a.Rd}+\eta_x\left(M_{pl.Rd}-M_{a.Rd}\right)`,'kN m','fo');
+calc('Max utilisation along the span','\\mathrm{UR}_{M.x}',R`\max\left(\frac{M_v}{M_{Rd.x}}\right)`,'',false);
+check('Acceptance at every section','\\mathrm{UR}_{M.x}','1');
+GRAPH2(300,
+ { title: 'Demand and resistance along the span', xUnit: 'm', yUnit: 'kN m', series: [S('med', 'M_Ed(x)', ['x_v', 'M_v'], 'line', '#dc2626', 2), S('mrd', 'M_Rd(x) from studs', ['x_v', 'M_{Rd.x}'], 'line', '#1e3a5f', 2), S('mp', 'Point loads', ['a_P', 'M_P'], 'marker', '#dc2626', 2)] },
+ { title: 'Studs counted from the nearer support', xUnit: 'm', yUnit: '', series: [S('nx', 'Provided n(x)', ['x_v', 'n_x'], 'line', '#1e3a5f', 2), S('nreq', 'Needed at x_M', [R`\mathrm{stack}\left(x_M,x_M\right)`, R`\mathrm{stack}\left(0,n_{req}\right)`], 'line', '#dc2626', 1.5)] });
+T('Left: red M_Ed(x) must stay below blue M_Rd(x). Right: studs counted from the nearer support.');
+H(3, '9.4 Where the plastic neutral axis lies at each critical section');
+T('Case k: 0 = PNA in the slab (steel all in tension), 1 = top flange, 2 = root-fillet zone');
+T('(not solved here, check fails), 3 = web. Decided by A_ac = (A_a - N_c/f_yd)/2 at that section.');
+P('PNA case at the max-moment section',R`k_M\coloneq${IF([R`A_{ac}\le0\,\mathrm{mm^2}`, '0'], [R`A_{ac}\le A_f`, '1'], [R`A_{ac}<A_{fr}`, '2'], [null, '3'])}`,M({ precision: 0 }));
+calc('Studs, nearer support to each P','n_{P}',IF([R`a_P\le x_M`, R`\mathrm{floor}\left(\frac{a_P}{s_A}+0.5\right)`], [null, R`\mathrm{floor}\left(\frac{L-a_P}{s_B}+0.5\right)`]),'',false);
+calc('Slab force available under each point load','N_{c.P}',IF([R`n_P P_{Rd}\ge N_{c.f}`, R`N_{c.f}`], [null, R`n_P P_{Rd}`]),'kN',false);
+calc('Compressed steel area under each point load','A_{ac.P}',R`\frac{A_a-N_{c.P}/f_{yd}}{2}`,'mm^2',false);
+P('PNA case under each point load',R`k_P\coloneq${IF([R`A_{ac.P}\le0\,\mathrm{mm^2}`, '0'], [R`A_{ac.P}\le A_f`, '1'], [R`A_{ac.P}<A_{fr}`, '2'], [null, '3'])}`,M({ precision: 0 }));
 H(2, '10. VERTICAL SHEAR AND INTERACTION');
 ur('Final vertical shear: steel web only','V.2','V_{2.Ed}','V_{pl.Rd}');
 check('EC4 §6.2.2.4: low-shear branch used','V_{2.Ed}','0.5V_{pl.Rd}');
@@ -219,9 +269,9 @@ check('No shear buckling needed, eta = 1.2 recommended','\\lambda_w',R`\frac{72\
 T('If either limit fails, this worksheet branch is inapplicable: perform reduced M-V resistance.');
 H(2, '11. LONGITUDINAL SHEAR AND REINFORCEMENT');
 T('EC4 §6.6.6; EC2 §6.2.4. Symmetric internal beam, two vertical shear planes beside studs.');
-T('Design flow = stud resistance per unit length (uniform ductile studs); half to each outstand.');
-T('Rev D: the draft doubled this flow without a code basis; see TECHNICAL.md.');
-calc('Shear stress on plane a-a, EC2 (6.20)','v_{L.Ed}',R`\frac{P_{Rd}}{2s_{sc}h_c}`,'MPa');
+T('Design flow = stud resistance per unit length at the closest spacing; half per plane.');
+calc('Largest connector flow: closest stud spacing','v_f',R`\frac{P_{Rd}}{\min\left(s_A,s_B\right)}`,'kN/m');
+calc('Shear stress on plane a-a, EC2 (6.20)','v_{L.Ed}',R`\frac{v_f}{2h_c}`,'MPa');
 input('Strut cotangent, EC2: 1 <= cot θ <= 2','c_{theta}',2);
 input('Transverse bar diameter, one layer','d_s',10,'mm');
 input('Bar spacing along beam','s_f',150,'mm');
@@ -232,7 +282,6 @@ calc('EC2 (6.22) concrete strut resistance','v_{L.Rd}',R`\frac{0.6\left(1-\frac{
 ur('Concrete longitudinal strut','L','v_{L.Ed}','v_{L.Rd}');
 T('Bars must develop their design force on both sides of each shear plane; check EC2 anchorage.');
 T('Surface b-b around the stud, splitting and transverse slab bending are not checked (gate).');
-fig('D10','Transverse section: longitudinal shear surfaces and crossing bars','shear', 6.5);
 H(2, '12. SERVICEABILITY — STAGED LOADS');
 T('EC4 §5.4.2.2: nL = n0 (1 + psiL phi); psiL = 1.1 permanent, 0.55 shrinkage.');
 T('Steel carries wet slab and self weight before curing. Formwork/construction loads are removed.');
@@ -243,31 +292,33 @@ for (const [suffix,psi] of [['0','0'],['L','1.1'],['s','0.55']]) {
  calc('Elastic NA depth below slab top',R`y_${suffix}`,R`\frac{A_a\left(h_c+h_a/2\right)+A_{c.${suffix}}h_c/2}{A_a+A_{c.${suffix}}}`,'mm');
  calc('Transformed second moment',R`I_${suffix}`,R`I_a+A_a\left(h_c+\frac{h_a}{2}-y_${suffix}\right)^2+\frac{b_{eff}h_c^3}{12n_${suffix}}+A_{c.${suffix}}\left(y_${suffix}-\frac{h_c}{2}\right)^2`,'mm^4',false);
 }
-calc('Permanent locked-in deflection before curing','\\delta_g',R`\frac{5\left(g_a+g_c\right)L^4}{384E_a I_a}`,'mm');
-calc('Instantaneous post-curing finishes and imposed load','\\delta_{post}',R`\frac{5\left(g_{SDL}+q_k\right)s_b L^4}{384E_a I_0}`,'mm');
-calc('Long-term post-curing sustained load','\\delta_{LT}',R`\frac{5\left(g_{SDL}+\psi_2 q_k\right)s_b L^4}{384E_a I_L}`,'mm');
-calc('Transient part of imposed load','\\delta_{tr}',R`\frac{5\left(1-\psi_2\right)q_k s_b L^4}{384E_a I_0}`,'mm');
+calc('Permanent locked-in deflection before curing','\\delta_g',R`\frac{5g_0 L^4}{384E_a I_a}`,'mm');
+T('Table loads: midspan deflection by virtual work, δ = Σ M(x) m(x) Δx / (E I), on the same grid.');
+calc('Moment from a unit load at midspan','m_v',IF([R`x_v\le\frac{L}{2}`, R`\frac{x_v}{2}`], [null, R`\frac{L-x_v}{2}`]),'m','fo');
+calc('Long-term: sustained g, G and ψ2 q, ψ2 Q on I_L','\\delta_{LT}',R`\frac{\Delta x\,\mathrm{sum}\left(\mathrm{map}\left(M_s,x_v,1,\psi_2\right)m_v\right)}{E_a I_L}`,'mm',false);
+calc('Short-term: transient (1 - ψ2) q, Q on I_0','\\delta_{tr}',R`\frac{\Delta x\,\mathrm{sum}\left(\mathrm{map}\left(M_s,x_v,0,1-\psi_2\right)m_v\right)}{E_a I_0}`,'mm',false);
 calc('Free-shrinkage equivalent concrete force','N_{sh}',R`\frac{E_a}{n_s}b_{eff}h_c\varepsilon_{cs}`,'kN');
 calc('Shrinkage curvature magnitude, elastic eigenstrain equilibrium','\\kappa_{sh}',R`\frac{N_{sh}\left(y_s-h_c/2\right)}{E_a I_s}`,'m^-1');
 calc('Uniform shrinkage curvature deflection','\\delta_{sh}',R`\frac{\kappa_{sh}L^2}{8}`,'mm');
-calc('Post-curing steel-only deflection for the same sustained / transient loads','\\delta_{a.post}',R`\frac{5\left(g_{SDL}+q_k\right)s_b L^4}{384E_a I_a}`,'mm');
+calc('Post-curing table loads on the steel alone (for the slip allowance)','\\delta_{a.post}',R`\frac{\Delta x\,\mathrm{sum}\left(\mathrm{map}\left(M_s,x_v,1,1\right)m_v\right)}{E_a I_a}`,'mm',false);
 calc('Unpropped slip allowance, NCCI guidance, not an SS EN NA rule','\\delta_{slip}',R`0.3\left(1-\eta\right)\left(\delta_{a.post}-\delta_{LT}-\delta_{tr}\right)`,'mm');
 calc('Long-term total plus full live load, no camber','\\delta_{tot}',R`\delta_g+\delta_{LT}+\delta_{tr}+\delta_{slip}+\delta_{sh}`,'mm');
 ur('Total deflection with NCCI slip allowance','d.2','\\delta_{tot}','\\delta_{lim}');
-calc('Long-term slab bottom stress from sustained post-curing load','\\sigma_{c.bot}',R`\frac{\left(g_{SDL}+\psi_2 q_k\right)s_b L^2\left(y_L-h_c\right)}{8n_L I_L}`,'MPa');
+calc('Maximum sustained post-curing moment','M_{qp}',R`\max\left(\mathrm{map}\left(M_s,x_v,1,\psi_2\right)\right)`,'kN m',false);
+calc('Long-term slab bottom stress from that moment','\\sigma_{c.bot}',R`\frac{M_{qp}\left(y_L-h_c\right)}{n_L I_L}`,'MPa');
 T('Positive stress above denotes compression. Tension requires cracked-section / crack-width review.');
 T('Shrinkage input needs RH, notional size, curing and ages from EC2 §3.1.4 / Annex B.');
 T('Final SLS approval requires adopted slip guidance, shrinkage history and stress/cracking review.');
-fig('D11','Staged deflection: the steel-only set remains after curing','deflection', 6.5);
 H(2, '13. DESIGN SUMMARY AND REVIEW GATES');
 for (const n of ['M.1','V.1','LT','d.1','M.2','V.2','sf','L','d.2']) P(`Calculated utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
 T('STATUS: REVIEW DRAFT. Construction LTB fails and is retained: temporary restraint is needed.');
 T('Release gates: Singapore NAs; staged shrinkage/creep; SLS slip; surface b-b, splitting, anchorage.');
-T('PNA: slab, top-flange and web branches are evaluated from the inputs; the fillet transition');
-T('is flagged by a failing check, not solved. Design MRd uses the linear interaction EC4 (6.3).');
+T('Loads from the tables; studs required at critical sections. PNA: slab, flange and web branches');
+T('from the inputs; the fillet transition is flagged, not solved. MRd: linear interaction EC4 (6.3).');
 LINK('sources','References and scope of independent verification', () => {
  T('SCI / European steel partners: Steel Buildings in Europe, Part 10, Technical Software Specification.');
- T('SCI P359 §4.2, P405 §1.1, P364 Ex. 8: methodology cross-checks; text not re-verified in Rev D.');
+ T('SCI P359 (2011) §4.2.3: Nc = η Nc,f; linear interaction conservative. η_min rule §4.4.3.');
+ T('SCI P405 (2015) §4.2.1: studs counted from the support to the maximum moment. P364 not checked.');
  T('SCI section tables / Steel Designers Manual: UB 406 x 178 x 60; rounded published properties.');
  T('SCI NCCI SN003b: Mcr and UDL C1/C2; fork supports and top-flange loading.');
  T('EC4 §§5.4.1.2, 5.4.2.2, 6.2.1.2, 6.2.1.3 (6.3), 6.2.2.4, 6.6.1.2 (6.12), 6.6.5, 6.6.6, 7.3.1.');

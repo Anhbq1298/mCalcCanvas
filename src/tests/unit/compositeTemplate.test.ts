@@ -15,7 +15,7 @@ describe('EC4 phase-one composite worksheet', () => {
     const e = new CalculationEngine({ unitSystem:'SI' });
     const math = doc.shapes.filter(s => s.type === 'math');
     e.batch(() => {
-      for (const s of math) if (s.props.displayMode !== 'formula') e.setRegion(s.id, {
+      for (const s of math) e.setRegion(s.id, {
         latex:s.props.latex, order:calcKey(s,rec), displayUnit:s.props.displayUnit || null, precision:null,
       });
     });
@@ -33,7 +33,7 @@ describe('EC4 phase-one composite worksheet', () => {
     const passes = (start:string) => e.getResult(region(start))?.check?.pass;
     const studs = region('n_h\\coloneq');
     step('all active equations are dimensionally valid', () => {
-      expect(math.filter(s => s.props.displayMode !== 'formula').flatMap(s => {
+      expect(math.flatMap(s => {
         const r=e.getResult(s.id);return r?.status === 'error' ? [`${s.props.latex}: ${r.error?.message}`] : [];
       })).toEqual([]);
     });
@@ -42,7 +42,7 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('\\eta')).toBeCloseTo(0.72162409281,8);
       expect(value('\\eta_{min}')).toBeCloseTo(0.49,10);
       expect(value('M_{1.Ed}','kN m')).toBeCloseTo(171.0674748,6);
-      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(284.4674748,6);
+      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(469.188257625,6);
       expect(value('M_{pl.Rd}','kN m')).toBeCloseTo(850.742634375,6);
       expect(value('M_{Rd}','kN m')).toBeCloseTo(732.504518208868,6);
       expect(value('M_{Rd.pl}','kN m')).toBeCloseTo(787.060803554457,5);
@@ -79,21 +79,57 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(1.87427046672,7);
       expect(value('\\delta_1','mm')).toBeCloseTo(18.329901234568,6);
     });
-    step('staged stiffness, shrinkage and longitudinal shear are independently pinned', () => {
-      expect(value('I_L','mm^4')).toBeCloseTo(633331327.3353621,3);
-      expect(value('\\delta_{slip}','mm')).toBeCloseTo(0.920286617569,7);
+    step('load tables: internal forces, stud spacing from the max-moment position, PNA case, staged deflection', () => {
+      expect(value('V_{2.Ed}','kN')).toBeCloseTo(209.7337374,6);
+      expect(value('x_M','m')).toBeCloseTo(3,9);
+      expect(value('\\eta_{req}')).toBeCloseTo(0.49,10);
+      expect(value('n_{req}')).toBe(17);
+      expect(value('s_A','mm')).toBeCloseTo(125,9);
+      expect(value('s_B','mm')).toBeCloseTo(208.333333333333,9);
+      // just right of the 3 m point load only 23 studs reach support B: UR exceeds the value at x_M
+      expect(value('\\mathrm{UR}_{M.x}')).toBeCloseTo(0.67014302413677,8);
+      expect(value('\\mathrm{UR}_{M.x}')).toBeGreaterThan(value('\\mathrm{UR}_{M.2}'));
+      expect(value('n_{P}')).toBe(24);
+      expect(value('k_M')).toBe(1);
+      expect(value('k_P')).toBe(1);
+      expect(value('v_f','kN/m')).toBeCloseTo(653.250210016847,6);
+      expect(value('\\mathrm{UR}_{sf}')).toBeCloseTo(0.7173792,7);
+      // virtual-work sum on the 200-step grid vs closed-form midspan deflections
+      expect(value('\\delta_{LT}','mm')).toBeCloseTo(6.076147064926,3);
+      expect(value('\\delta_{tr}','mm')).toBeCloseTo(3.763195482790,3);
+      expect(value('\\delta_{slip}','mm')).toBeCloseTo(1.850200836823,3);
       expect(value('\\delta_{sh}','mm')).toBeCloseTo(5.444690799949,7);
-      expect(value('\\delta_{tot}','mm')).toBeCloseTo(25.139012406252,7);
-      expect(value('a_{sf.req}','mm^2/m')).toBeCloseTo(281.714153069765,6);
-      expect(value('\\mathrm{UR}_{sf}')).toBeCloseTo(0.5380344,7);
+      expect(value('\\delta_{tot}','mm')).toBeCloseTo(31.054964343218,2);
+      expect(value('\\sigma_{c.bot}','MPa')).toBeCloseTo(0.211129167388,7);
+      expect(value('I_L','mm^4')).toBeCloseTo(633331327.3353621,3);
     });
-    step('eleven editable figures, one governing stress block in the main body, explicit review status', () => {
+    step('adding a table row adds a load', () => {
+      const pt = region('P_{pt}\\coloneq');
+      const latex = (math.find(s => s.id === pt) as Extract<Shape, { type: 'math' }>).props.latex;
+      e.setRegion(pt, { latex: latex.replace('\\end{bmatrix}', '\\\\6\\,\\mathrm{m}&10\\,\\mathrm{kN}&10\\,\\mathrm{kN}\\end{bmatrix}'), order: calcKey(rec[pt], rec), displayUnit: null, precision: null });
+      // closed form: maximum 490.6303 kNm at x = 3.0614 m; the 40 mm grid is within w·Δx²/8 = 0.007 kNm
+      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(490.630293556811,1);
+      expect(value('V_{2.Ed}','kN')).toBeCloseTo(216.8587374,6);
+      expect(value('M_P','kN m')).toBeCloseTo(490.563257625, 6); // first row: moment under the 3 m load
+      e.setRegion(pt, { latex, order: calcKey(rec[pt], rec), displayUnit: null, precision: null });
+      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(469.188257625,6);
+    });
+    step('a large point load moves the maximum moment and the stud spacing with it', () => {
+      const pt = region('P_{pt}\\coloneq');
+      const latex = (math.find(s => s.id === pt) as Extract<Shape, { type: 'math' }>).props.latex;
+      e.setRegion(pt, { latex: '\\begin{bmatrix}2\\,\\mathrm{m}&100\\,\\mathrm{kN}&150\\,\\mathrm{kN}\\end{bmatrix}'.replace(/^/, 'P_{pt}\\coloneq'), order: calcKey(rec[pt], rec), displayUnit: null, precision: null });
+      expect(value('x_M','m')).toBeCloseTo(2,9);
+      expect(value('s_A','mm')).toBeCloseTo(83.333333333333,9);
+      expect(passes('s_{min}\\le s_A')).toBe(false); // 24 studs over 2 m are closer than 5d
+      e.setRegion(pt, { latex, order: calcKey(rec[pt], rec), displayUnit: null, precision: null });
+      expect(value('x_M','m')).toBeCloseTo(3,9);
+    });
+    step('three static symbolic figures and four graphs; explicit review status', () => {
       const texts=doc.shapes.filter(s => s.type==='text');
-      for(let n=1;n<=11;n++) expect(texts.some(s=>s.props.html.startsWith(`D${String(n).padStart(2,'0')} —`))).toBe(true);
+      expect(texts.filter(s=>/^F\d —/.test(s.props.html)).map(s=>s.props.html.slice(0,2))).toEqual(['F1','F2','F3']);
+      expect(texts.some(s=>s.props.html.includes('<i>h</i><sub>c</sub>'))).toBe(true);
+      expect(doc.shapes.filter(s=>s.type==='graph')).toHaveLength(4);
       expect(doc.shapes.some(s=>s.type==='image')).toBe(false);
-      const annexY = texts.find(s => s.props.annex?.kind === 'start')!.y;
-      const stressFigures = texts.filter(s => /^D0[5-7] —/.test(s.props.html));
-      expect(stressFigures.filter(s => s.y < annexY).map(s => s.props.html.slice(0, 3))).toEqual(['D05']);
       expect(texts.some(s=>s.props.html.includes('Singapore NA verification is outstanding'))).toBe(true);
     });
   });

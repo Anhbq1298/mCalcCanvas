@@ -4,7 +4,7 @@ Geometry/properties are explicit published inputs. The steel PNA is found by num
 integration of the rolled width (circular root fillets), not by the worksheet's branch formulas.
 """
 import json
-from math import pi, sqrt
+from math import ceil, pi, sqrt
 
 
 H, B, TF, TW, RR = 406.4, 177.9, 12.8, 7.9, 10.2
@@ -41,6 +41,33 @@ def plastic(nc, a=7650., fy=355., hc=150., be=2000., n=20000):
             break
     xc = nc / (17 * be)
     return xc, ya, fy * a * (hc + H / 2) - 2 * fy * q - nc * xc / 2
+
+
+def beam(w, loads, L=8000.):
+    """Simply supported beam, full-span UDL w (N/mm) + point loads [(a, P)]: closed form."""
+    ra = w * L / 2 + sum(P * (L - a) / L for a, P in loads)
+    rb = w * L + sum(P for _, P in loads) - ra
+
+    def m(x):
+        return ra * x - w * x * x / 2 - sum(P * max(0., x - a) for a, P in loads)
+    # maximum: at a point load or where the shear changes sign inside a load-free stretch
+    cuts = sorted([0., L] + [a for a, _ in loads])
+    cand = list(cuts)
+    for x0, x1 in zip(cuts, cuts[1:]):
+        v0 = ra - sum(P for a, P in loads if a <= x0)
+        if w > 0 and x0 < v0 / w < x1:
+            cand.append(v0 / w)
+    xm = max(cand, key=m)
+    return ra, rb, m, xm
+
+
+def mid_deflection(w, loads, ei, L=8000.):
+    """Midspan deflection: 5wL^4/384EI plus P a (3L^2 - 4a^2)/48EI per point load (a <= L/2)."""
+    d = 5 * w * L**4 / 384
+    for a, P in loads:
+        b = min(a, L - a)
+        d += P * b * (3 * L * L - 4 * b * b) / 48
+    return d / ei
 
 
 def reference():
@@ -81,24 +108,51 @@ def reference():
         trans[key] = (n,y,ic)
     def delta(w, ic):
         return 5*w*L**4/(384*E*ic)
-    dg = delta(g,I)
-    dl = delta((1.5+.3*3)*3,trans['L'][2])
-    dt = delta(.7*3*3,trans['0'][2])
-    dslip = .3*(1-eta)*(delta((1.5+3)*3,I)-dl-dt)
+    # composite-stage tables: UDL row (g, q) = (4.5, 9) N/mm full span; point load a = 3 m, G 30 kN, Q 45 kN
+    gu, qu, a, gp, qp = 4.5, 9., 3000., 30e3, 45e3
+    w2 = 1.35*(g+gu) + 1.5*qu
+    f2 = 1.35*gp + 1.5*qp
+    ra, rb, mom, xm = beam(w2, [(a, f2)])
+    m2, v2, ma_p = mom(xm), max(ra, rb), mom(a)
+    eta_req = max(.49, (m2 - ma)/(mf - ma))
+    n_req = ceil(eta_req*na/p)
+    nreq_p = ceil(max(0., (ma_p - ma)/(mf - ma))*na/p)
+    # uniform spacing in each shear span (support to max moment), first stud at s/2
+    sa, sb = xm/24, (L - xm)/24
+    vf = p/min(sa, sb)
+    ur_x = 0.
+    for i in range(201):
+        x = L*i/200
+        n = int(x/sa + .5) if x <= xm else int((L - x)/sb + .5)
+        ur_x = max(ur_x, mom(x)/(ma + min(1., n*p/na)*(mf - ma)))
+    n_p = int(a/sa + .5) if a <= xm else int((L - a)/sb + .5)
+    aac_p = (A - min(na, n_p*p)/fy)/2
+    k_p = 0 if aac_p <= 0 else 1 if aac_p <= b*tf else 2 if aac_p < b*tf + 7.9*10.2 + (2 - pi/2)*10.2**2 else 3
+    dg = delta(g, I)
+    dl = mid_deflection(gu + .3*qu, [(a, gp + .3*qp)], E*trans['L'][2])
+    dt = mid_deflection(.7*qu, [(a, .7*qp)], E*trans['0'][2])
+    dslip = .3*(1-eta)*(mid_deflection(gu+qu, [(a, gp+qp)], E*I)-dl-dt)
     ns,ys,is_ = trans['s']
     dsh = (E/ns*be*hc*.0003)*(ys-hc/2)/(E*is_)*L**2/8
-    vl = p/(2*(L/48)*hc)
+    _, _, mqp, xq = beam(gu + .3*qu, [(a, gp + .3*qp)])
+    nl, yl, il = trans['L']
+    sig = mqp(xq)*(yl - hc)/(nl*il)
+    vl = vf/(2*hc)
     as_req = vl*hc/((500/1.15)*2)
     as_prov = pi*10**2/(4*150)
     return dict(P_Rd_kN=p/1000, eta=eta, eta_min=.49,
-                M1_Ed_kNm=w1*L**2/8/1e6, M2_Ed_kNm=w2*L**2/8/1e6,
+                M1_Ed_kNm=w1*L**2/8/1e6, M2_Ed_kNm=m2/1e6, x_M_m=xm/1000,
+                V2_Ed_kN=v2/1000, M_at_point_load_kNm=ma_p/1e6,
+                eta_req=eta_req, n_req=n_req, n_req_point_load=nreq_p,
+                connector_flow_kN_m=vf, s_A_mm=sa, s_B_mm=sb, UR_M_along_span=ur_x,
+                studs_to_point_load=n_p, PNA_case_point_load=k_p, sigma_c_bot_MPa=sig,
                 M_full_kNm=mf/1e6, M_partial_linear_kNm=mr/1e6,
                 M_partial_direct_kNm=direct/1e6, steel_PNA_mm=ya,
                 x_c_mm=xc, x_full_mm=xf, eta_flange_boundary=1-2*b*tf/A,
                 branches=branches,
                 M_cr_kNm=mcr/1e6, M_b_Rd_kNm=chi*ma/1e6,
-                UR_LTB=w1*L**2/(8*chi*ma), UR_M2=w2*L**2/(8*mr),
-                UR_V2=w2*L/(2*vrd), delta_construction_mm=delta(g+3.75,I),
+                UR_LTB=w1*L**2/(8*chi*ma), UR_M2=m2/mr,
+                UR_V2=v2/vrd, delta_construction_mm=delta(g+3.75,I),
                 delta_locked_mm=dg, delta_long_mm=dl, delta_transient_mm=dt,
                 delta_slip_mm=dslip, delta_shrinkage_mm=dsh,
                 delta_total_mm=dg+dl+dt+dslip+dsh,

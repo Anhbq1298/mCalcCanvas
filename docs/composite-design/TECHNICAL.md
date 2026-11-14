@@ -1,16 +1,15 @@
-# EC4 composite beam worksheet — Rev D review draft
+# EC4 composite beam worksheet — Rev E review draft
 
 Editable worksheet for engineering and native-layout review, **not an approved design**.
 No calculation-engine source is changed: every result is a worksheet equation evaluated by the
-existing engine. Rev D (this revision) implements the PNA review requested in
+existing engine. Rev D implemented the PNA review requested in
 `CLAUDE_REVIEW_PROMPT.md` and was measured and exported from the real application.
 
 ## Files and reproduction
 
 - `tools/templates/gen_composite.mjs`: inputs, equations, checks, annex blocks.
-- `tools/templates/compositeFigures.mjs`: eleven native vector figures (line / rect / draw / text).
-- `tools/templates/compositeExample.mjs`: example inputs and the plastic state used only to draw and
-  label the figures (figures are generated for the example inputs; the worksheet regions govern).
+- `tools/templates/compositeFigures.mjs`: three static symbolic figures (section, loading, stress block);
+  drawing-style subscripts, indicative dimensions, no numbers (values live in the regions).
 - `templates/Composite_Beam_EC4.mCCV`: generated; never hand-edit.
 - `tools/templates/sizes_composite.json`: region sizes measured in the built app.
 - `tools/templates/reference_composite.py` → `docs/composite-design/reference.json`: independent reference.
@@ -52,23 +51,35 @@ The PNA positions are **results** of geometry, materials and η, not user-select
   It gives composite credit only if η ≥ η_min, studs are ductile (h_sc ≥ 4d), the flange is Class 1
   and the stud pitch restrains the flange (EC4 6.6.5.5(2)); otherwise M_Rd = M_a,Rd.
 
-Example: η = 0.721624, η_min = 0.49, x_f = 79.875 mm (full connection: slab PNA, steel all in
+Section example: η = 0.721624, η_min = 0.49, x_f = 79.875 mm (full connection: slab PNA, steel all in
 tension), x_c = 57.640 mm, y_a = 5.985 mm (inside the 12.8 mm flange), η_f = 0.404675,
 η_fr = 0.3719. M_pl,Rd = 850.74, M_Rd = 732.50 (linear), M_Rd.pl = 787.06 kNm.
 
-Main body: one stress block (D05, governing branch, dimensions, stress amplitudes, force magnitudes at
-area-weighted centroids). Annex: full-connection reference (D06), web-branch illustration at a
-hypothetical η = 0.30 (D07), lower-flange rejection (D08), the general force model and boundaries.
+Main body: one symbolic stress block (F3); the PNA case is reported numerically in section 9.4.
+Annex: the general force model and branch boundaries.
+
+## Rev E: load tables, stud spacing and PNA case
+
+- Composite-stage loads are two matrix inputs: `W_udl` rows [x1, x2, g_k, q_k] and `P_pt` rows
+  [a, G_k, Q_k]; adding a row adds a load. Self weight g_0 acts in every stage. Point loads are assumed
+  to act after composite action; the construction stage keeps its UDL.
+- M(x), V(x) on a 200-step grid (annex A.1, user functions with factors cG, cQ); M_Ed is the larger of
+  the grid maximum and the moments under the point loads (grid error ≤ wΔx²/8). Graphs M_Ed, V_Ed.
+- Studs: the shear spans run from each support to the maximum-moment section x_M (SCI P405 §4.2.1).
+  n_req = ceil(max(η_min, (M_Ed − M_a,Rd)/(M_pl,Rd − M_a,Rd)) N_c,f / P_Rd) per span; uniform spacing
+  s_A = x_M/n_h and s_B = (L − x_M)/n_h, checked against 5d and min(22 t_f ε, 6h_c, 800 mm).
+  A large point load moves x_M, so the spacings change. M_Rd(x) is then evaluated at every grid point
+  from the studs between x and the nearer support (EC4 (6.3)) and UR = max M_Ed/M_Rd(x) ≤ 1.
+  Graphs: M_Ed(x) against M_Rd(x), and the stud count n(x).
+- PNA case k (0 slab, 1 top flange, 2 fillet zone — not solved, 3 web) at x_M and under each point load.
+- Longitudinal shear flow = P_Rd / min(s_A, s_B), half per plane a-a.
+- SLS midspan deflections for table loads by virtual work on the same grid.
 
 ## Other engineering decisions in Rev D
 
-- **Longitudinal shear (changed, for owner approval).** The draft used v_Ed = 2N_c/(L h_c), a doubled
-  flow with no code basis, and failed. Rev D uses the connector flow for uniformly spaced ductile studs,
-  v_Ed = P_Rd/(2 s h_c) per plane a-a (equal to N_c/(L h_c)), consistent with EC4 6.6.6.1 and
-  EC2 (6.20)/(6.21). Required A_sf = 281.7 mm²/m vs 523.6 provided, UR = 0.538. Loads, bars and
-  restraints are unchanged. Surface b-b around the stud (needs bottom bars), splitting and anchorage
-  remain unchecked gates. If the owner wants an extra local-concentration factor, it must be stated as
-  a project rule.
+- **Longitudinal shear (owner approval).** The draft's doubled flow 2N_c/(L h_c) had no code basis; the
+  design flow is now the stud flow P_Rd / min(s_A, s_B), half per plane a-a (EC4 6.6.6.1, EC2 (6.20)/(6.21)).
+  Surface b-b, splitting and anchorage remain unchecked gates.
 - Construction LTB failure is retained (UR = 1.874, fork ends only, no wet-slab restraint).
 - Wide full-substitution regions (A_v, w_1.Ed, M_cr, I_0/L/s, M_Rd.pl) show formula = result so they fit.
 - Description + region are print-grouped (`printGroupId`) so a page break never separates them.
@@ -77,9 +88,7 @@ hypothetical η = 0.30 (D07), lower-flange rejection (D08), the general force mo
 
 - EN 1994-1-1 clauses used: 2.4.1.2, 5.4.1.2, 5.4.2.2, 6.2.1.2, 6.2.1.3 (6.3), 6.2.2.4, 6.6.1.2 (6.12),
   6.6.1.3(3), 6.6.3.1 (6.18)/(6.19), 6.6.5, 6.6.6; EC3 5.5, 6.2.5–6.2.8, 6.3.2.2; EC2 6.2.4.
-- SCI P359 §4.2.2–4.2.3, P405 §1.1 and P364 Example 8 could **not** be opened in this Rev D session
-  (web access needed approval that was not given). The formulation above follows EN 1994-1-1 directly;
-  the SCI cross-check, and the P364 edition, remain to be done.
+- SCI P359 (2011) and P405 (2015) were opened in Rev E (see VALIDATION.md). P364 Example 8 was not.
 - Singapore NA to SS EN 1994-1-1: values not verified. γ factors, ψ2, combinations and η_min rule are EN
   recommended/EN text; UK NA / NCCI relaxations are not adopted. PN002a slip allowance is NCCI guidance.
 
@@ -89,9 +98,10 @@ hypothetical η = 0.30 (D07), lower-flange rejection (D08), the general force mo
 |---|---|
 | PNA from inputs, flange / web branches, fillet transition flagged | Done (worksheet + tests) |
 | One governing stress block in main body; alternatives in annex | Done |
-| Native figures corrected and drawn to scale where stated | Done; owner visual approval pending |
-| Real-app measurement, no moved regions, PDF exported and inspected | Done (21 pages) |
-| SCI P359/P405/P364 cross-check | Blocked (sources not accessed) |
+| Static symbolic figures (3) + graphs (4) | Done; owner visual approval pending |
+| Load tables, stud spacing from x_M, M_Rd(x) along span, PNA case | Done (Rev E) |
+| Real-app measurement, no moved regions, PDF exported and inspected | Done (22 pages) |
+| SCI P359 / P405 cross-check | Done for the items in VALIDATION.md; P364 not checked |
 | Singapore NA parameters and combinations | Pending |
 | Surface b-b, splitting, anchorage, transverse slab bending | Pending (gates) |
 | SLS shrinkage history, cracking, slip model adoption | Pending |

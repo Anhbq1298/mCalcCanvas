@@ -1,44 +1,42 @@
-# Validation report — Rev D, 14 November 2026
+# Validation report — Rev E, 14 November 2026
 
 ## Passed
 
 | Check | Result |
 |---|---|
-| `npm run typecheck` | pass |
-| `npm run lint` | 0 errors, 0 warnings |
+| `npm run typecheck`, `npm run lint` | pass, 0 warnings |
 | `npm test` | 32 files, 81 tests pass |
-| `npm run build` | pass |
-| `npm run test:e2e` (system Chrome, `CHROME_PATH=/usr/bin/google-chrome`) | 71 passed, 2 skipped (visual capture specs) |
-| `python tools/templates/reference_composite.py` | output identical to `reference.json` |
+| `npm run test:e2e` (system Chrome) | 71 passed, 2 skipped (visual capture specs) |
+| `python tools/templates/reference_composite.py` | identical to `reference.json` |
 | `npm run templates:columns -- --only=composite --pdf` | no "regions moved by the app" warning |
-| Worksheet opened in the built app | 192 math regions, all valid; 1 failed check (construction LTB, intended) |
 
-## Independent numerical reference
+## Independent reference (`reference_composite.py`)
 
-`reference_composite.py` finds the steel PNA by midpoint integration of the rolled width with circular
-root fillets (pieces split at the flange underside and the fillet toe), not by the worksheet branch
-formulas. The unit test pins the worksheet against it:
+Closed-form beam (UDL + point loads, exact maximum), closed-form midspan deflections, numerical
+integration of the filleted steel width for the PNA, and an independent stud count along the span.
 
-| Case | η | y_a (mm) | M_Rd.pl (kNm) | Branch |
-|---|---|---|---|---|
-| n_h = 24 (example) | 0.7216 | 5.9853 | 787.061 | top flange |
-| n_h = 14 | 0.4209 | 12.4501 | 694.310 | top flange (near η_f = 0.4047) |
-| n_h = 8 | 0.2405 | 86.617 | 612.146 | web; η < η_min so M_Rd = M_a,Rd = 426 |
-| n_h = 13 | 0.3909 | — | — | fillet transition: check fails visibly |
+| Quantity | Reference | Worksheet |
+|---|---|---|
+| M_Ed (UDL 4.5 + 9 kN/m, P = 30 G + 45 Q kN at 3 m) | 469.188 kNm at 3.0 m | same |
+| V_Ed | 209.734 kN | same |
+| Studs needed per shear span (η_min governs) | 17 ≤ 24 provided | same |
+| Spacing s_A / s_B | 125 / 208.3 mm (95 ≤ s ≤ 229) | same |
+| Max UR along span from stud count | 0.6701 (just right of the load) | same; > 0.6405 at x_M |
+| PNA case at x_M and under the load | 1 = top flange | same |
+| δ_LT, δ_tr, δ_slip, δ_tot | 6.076, 3.763, 1.850, 31.055 mm | grid virtual work, within 0.0005 mm |
+| Added row 6 m, 10 G + 10 Q kN | M_Ed 490.630 kNm at 3.061 m | 40 mm grid, within 0.007 kNm |
+| Point load 100 G + 150 Q kN at 2 m | x_M = 2 m, s_A = 83.3 mm < 5d | spacing check fails |
 
-Also pinned: x_c 57.640 mm, x_f 79.875 mm, η_f 0.404675, force residual ≈ 0, M_Rd 732.505 kNm,
-LTB UR 1.874 (fail retained), transverse UR 0.538 (Rev D shear-flow change, see TECHNICAL.md).
+## Sources opened this revision
 
-## PDF inspection
+- SCI P359 (2011): §4.2.3 Nc = ηNc,f and linear interaction conservative; §4.4.3 η_min rule.
+  Its flange-PNA formula neglects the compressed flange part (conservative); the worksheet uses
+  exact equilibrium. The text extract did not let the figures be checked visually.
+- SCI P405 (2015) §4.2.1: studs counted from the support to the maximum moment; studs between point
+  loads are not fully effective. §4.2.4: η_min is less severe for point loads (the UDL rule is kept).
+- Not checked: SCI P364 Example 8; Singapore NA values.
 
-`app-export/Composite_Beam_EC4_RevD_app.pdf` is exported by the application (`tools/templates/pdf.mjs`).
-All 21 pages were rendered and inspected at readable scale; label/line clashes found during the
-review (truncated labels, dimension text over extension lines, orphaned descriptions at page breaks,
-an annex formula block shown with error badges) were fixed and the PDF re-exported.
-`app-pages-contact.png` shows every page; `app-D05-governing-stress-block.png` is the app view.
+## Inspection
 
-## Not done / blocked
-
-- SCI P359, P405, P364 pages not opened in this session (web access approval not given).
-- Singapore NA values, surface b-b / splitting / anchorage, SLS acceptance: open engineering gates.
-- Owner's visual approval of the eleven figures.
+`app-export/Composite_Beam_EC4_RevE_app.pdf` (22 pages) was exported by the app and every page was
+inspected; `app-pages-contact.png` shows all pages.
