@@ -1,4 +1,4 @@
-# EC4 composite beam worksheet — Rev E review draft
+# EC4 composite beam worksheet — Rev F review draft
 
 Editable worksheet for engineering and native-layout review, **not an approved design**.
 No calculation-engine source is changed: every result is a worksheet equation evaluated by the
@@ -57,6 +57,18 @@ tension), x_c = 57.640 mm, y_a = 5.985 mm (inside the 12.8 mm flange), η_f = 0.
 
 Main body: one symbolic stress block (F3); the PNA case is reported numerically in section 9.4.
 Annex: the general force model and branch boundaries.
+
+## Rev F: layout by code, propping, SCI cross-check
+
+- Order: 1 Inputs (pages 1–2, every input), 2 Loading (one page: construction and permanent stage,
+  SFD/BMD), 3 EN 1993-1-1 construction checks, 4 EN 1994-1-1 composite checks (incl. SLS),
+  5 EN 1992-1-1 slab longitudinal shear, 6 summary by code, annex. Loading and section 3 start on a new
+  page: app feature `pageBreak` on a text shape, honoured by the template / print layout planner.
+- Propping `c_prop` (0 = unpropped, default; 1 = propped) drives if-blocks: construction span and LTB
+  length L_1 = L_LT = k_LT·L (user input k_LT) when propped; g_0 deflects the long-term composite section
+  instead of the steel alone; the slip factor C_s is 0.5 instead of 0.3. Prop reactions and the prop
+  removal stage are not checked.
+- SCI P364 Example 8 (533×165×75 UKB S275, 12 m, C25/30, deck slab) cross-check: see VALIDATION.md.
 
 ## Rev E: load tables, stud spacing and PNA case
 

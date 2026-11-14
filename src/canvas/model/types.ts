@@ -66,6 +66,8 @@ export interface TextProps {
   textStyle?: TextStyleId;
   /** Annex role (see canvas/annex.ts): the ANNEX title, an annex heading, or a link to one. */
   annex?: AnnexRole;
+  /** Start a new page here when the print / template layout is planned (a section that must stay on its own page). */
+  pageBreak?: boolean;
 }
 
 /**

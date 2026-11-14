@@ -123,6 +123,43 @@ describe('EC4 phase-one composite worksheet', () => {
       e.setRegion(pt, { latex, order: calcKey(rec[pt], rec), displayUnit: null, precision: null });
       expect(value('x_M','m')).toBeCloseTo(3,9);
     });
+    step('propped construction: span and LTB length k_LT L, g0 on the composite section, slip factor 0.5', () => {
+      const prop = region('c_{prop}\\coloneq');
+      e.setDefinitionOverride(prop, { value: 1 });
+      expect(value('L_{LT}','m')).toBeCloseTo(4,9);
+      expect(value('M_{1.Ed}','kN m')).toBeCloseTo(42.7668687,6);
+      expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(0.215961724294,7);
+      expect(value('\\delta_1','mm')).toBeCloseTo(1.145618827160,7);
+      expect(value('\\delta_g','mm')).toBeCloseTo(4.747716691888,7);
+      expect(value('C_s')).toBeCloseTo(0.5,10);
+      expect(value('\\delta_{slip}','mm')).toBeCloseTo(3.083668061372,3);
+      expect(value('\\delta_{tot}','mm')).toBeCloseTo(23.115418100925,2);
+      e.setDefinitionOverride(prop, null);
+      expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(1.87427046672,7);
+    });
+    step('SCI P364 Example 8 (533×165×75 UKB S275, L = 12 m, C25/30): same equations, same results', () => {
+      const set: [string, number, string | null][] = [['L\\coloneq',12,'m'],['s_b\\coloneq',3.5,'m'],['h_c\\coloneq',130,'mm'],['f_y\\coloneq',275,'MPa'],
+        ['f_{ck}\\coloneq',25,'MPa'],['E_{cm}\\coloneq',31,'GPa'],['h_a\\coloneq',529.1,'mm'],['b_a\\coloneq',165.9,'mm'],['t_f\\coloneq',13.6,'mm'],
+        ['t_w\\coloneq',9.7,'mm'],['r\\coloneq',12.7,'mm'],['A_a\\coloneq',9520,'mm^2'],['W_{pl}\\coloneq',1810000,'mm^3']];
+      for (const [start, v, u] of set) e.setDefinitionOverride(region(start), { value: v, unit: u });
+      expect(value('P_{c.Rd}','kN')).toBeCloseTo(73.7303062899,6);  // SCI 73.7
+      expect(value('\\eta_{min}')).toBeCloseTo(0.496545454545,9);    // SCI 0.50
+      expect(value('b_{eff}','mm')).toBeCloseTo(3000,9);              // SCI 3.00 m
+      expect(value('x_f','mm')).toBeCloseTo(61.6,9);                  // SCI 61.5
+      expect(value('M_{pl.Rd}','kN m')).toBeCloseTo(952.2975,6);       // SCI 952.4
+      const eta = region('\\eta\\coloneq');
+      e.setDefinitionOverride(eta, { value: 1252 / 2618 });
+      // η = 0.478 < η_min 0.497 of (6.12): no composite credit here, as in SCI's standard rule
+      expect(value('M_{Rd}','kN m')).toBeCloseTo(497.75,6);
+      // SCI accepts it with the relaxed deck rule η_min = 0.4 (not in this solid-slab sheet): same (6.3)
+      const etaMin = region('\\eta_{min}\\coloneq');
+      e.setDefinitionOverride(etaMin, { value: 0.4 });
+      expect(value('M_{Rd}','kN m')).toBeCloseTo(715.127184873950,6);  // SCI 715.7 (η rounded to 0.48)
+      e.setDefinitionOverride(etaMin, null);
+      e.setDefinitionOverride(eta, null);
+      for (const [start] of set) e.setDefinitionOverride(region(start), null);
+      expect(value('M_{pl.Rd}','kN m')).toBeCloseTo(850.742634375,6);
+    });
     step('three static symbolic figures and three graphs; explicit review status', () => {
       const texts=doc.shapes.filter(s => s.type==='text');
       expect(texts.filter(s=>/^F\d —/.test(s.props.html)).map(s=>s.props.html.slice(0,2))).toEqual(['F1','F2','F3']);

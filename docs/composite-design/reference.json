@@ -51,6 +51,32 @@
   "transverse_required_mm2_m": 375.6188707596872,
   "transverse_provided_mm2_m": 523.598775598299,
   "UR_transverse": 0.7173792,
+  "propped": {
+    "M1_Ed_kNm": 42.7668687,
+    "UR_LTB": 0.21596172429417565,
+    "delta_construction_mm": 1.145618827160494,
+    "delta_locked_mm": 4.747716691888052,
+    "delta_slip_mm": 3.0836680613721974,
+    "delta_total_mm": 23.115418100924764
+  },
+  "sci_p364_example_8": {
+    "P_c_Rd_kN": 73.73030628988326,
+    "eta_min": 0.4965454545454545,
+    "x_c_mm": 61.6,
+    "M_pl_Rd_kNm": 952.2975,
+    "M_Rd_linear_kNm": 715.1271848739495,
+    "x_pl_mm": 5.896213491150199,
+    "M_direct_kNm": 911.8290424058692,
+    "published": {
+      "P_Rd": 73.7,
+      "eta_min": 0.5,
+      "x_c": 61.5,
+      "M_pl_Rd": 952.4,
+      "M_Rd": 715.7,
+      "x_pl": 5.9,
+      "M_direct": 903.9
+    }
+  },
   "I_0_mm4": 813803060.193307,
   "I_L_mm4": 633331327.3353621,
   "I_s_mm4": 699683147.4442575

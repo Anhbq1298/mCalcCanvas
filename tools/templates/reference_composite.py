@@ -141,6 +141,35 @@ def reference():
     vl = vf/(2*hc)
     as_req = vl*hc/((500/1.15)*2)
     as_prov = pi*10**2/(4*150)
+    # propped construction (c_prop = 1, k_LT = 0.5): construction span and LTB length L/2;
+    # g0 then acts on the long-term composite section and the slip factor is 0.5
+    l1 = .5*L
+    ncr1 = pi**2 * E * 12e6 / l1**2
+    mcr1 = 1.127 * ncr1 * (sqrt(466e9 / 12e6 + 81000 * 333000 / ncr1
+                               + (.454 * h / 2)**2) - .454 * h / 2)
+    lam1 = sqrt(ma / mcr1)
+    phi1 = .5 * (1 + .34 * (lam1 - .2) + lam1**2)
+    chi1 = min(1, 1 / (phi1 + sqrt(phi1**2 - lam1**2)))
+    dg_p = 5*g*L**4/(384*E*trans['L'][2])
+    dslip_p = .5*(1-eta)*(mid_deflection(gu+qu, [(a, gp+qp)], E*I)-dl-dt)
+    propped = dict(M1_Ed_kNm=w1*l1**2/8/1e6, UR_LTB=w1*l1**2/(8*chi1*ma),
+                   delta_construction_mm=5*(g+3.75)*l1**4/(384*E*I),
+                   delta_locked_mm=dg_p, delta_slip_mm=dslip_p,
+                   delta_total_mm=dg_p+dl+dt+dslip_p+dsh)
+    # SCI P364 Example 8 (533x165x75 UKB S275, L = 12 m, b_eff = 3.0 m, slab 130 mm, C25/30)
+    na8, fcd8, h8 = 9520*275., 25/1.5, 529.1
+    x8 = na8/(.85*fcd8*3000)
+    mpl8 = na8*(130 + h8/2 - x8/2)
+    ma8 = 1810e3*275
+    nc8 = 2080e3
+    aac8 = (9520 - nc8/275)/2
+    xc8 = nc8/(.85*fcd8*3080)
+    mdir8 = 275*9520*(130 + h8/2) - 2*275*aac8*(130 + aac8/165.9/2) - nc8*xc8/2
+    sci = dict(P_c_Rd_kN=.29*19**2*sqrt(25*31000)/1.25/1000, eta_min=1-(355/275)*(.75-.03*12),
+               x_c_mm=x8, M_pl_Rd_kNm=mpl8/1e6,
+               M_Rd_linear_kNm=(ma8 + 1252/2618*(mpl8 - ma8))/1e6,
+               x_pl_mm=aac8/165.9, M_direct_kNm=mdir8/1e6,
+               published=dict(P_Rd=73.7, eta_min=.50, x_c=61.5, M_pl_Rd=952.4, M_Rd=715.7, x_pl=5.90, M_direct=903.9))
     return dict(P_Rd_kN=p/1000, eta=eta, eta_min=.49,
                 M1_Ed_kNm=w1*L**2/8/1e6, M2_Ed_kNm=m2/1e6, x_M_m=xm/1000,
                 V2_Ed_kN=v2/1000, M_at_point_load_kNm=ma_p/1e6,
@@ -160,6 +189,7 @@ def reference():
                 transverse_required_mm2_m=as_req*1000,
                 transverse_provided_mm2_m=as_prov*1000,
                 UR_transverse=as_req/as_prov,
+                propped=propped, sci_p364_example_8=sci,
                 **{f'I_{k}_mm4':v[2] for k,v in trans.items()})
 
 

@@ -127,6 +127,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           ...([1, 2, 3].includes(p.heading as number) ? { heading: p.heading as 1 | 2 | 3 } : {}),
           ...(p.textStyle === 'title' || p.textStyle === 'subtitle' ? { textStyle: p.textStyle } : {}),
           ...annexRole(p.annex),
+          ...(p.pageBreak === true ? { pageBreak: true } : {}),
         },
       };
     case 'image': {

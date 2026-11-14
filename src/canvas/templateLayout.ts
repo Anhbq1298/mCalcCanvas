@@ -89,6 +89,7 @@ export function optimizeTemplateLayout(input: Shape[], options: TemplateLayoutOp
     const block = packed[i];
     const isHeading = heading(block);
     const annex = block.shapes.some(s => s.type === 'text' && s.props.annex?.kind === 'start');
+    const pageBreak = block.shapes.some(s => s.type === 'text' && s.props.pageBreak === true);
     let keepHeight = block.box.h;
     if (isHeading) {
       for (let j = i + 1; j < packed.length; j++) {
@@ -97,7 +98,11 @@ export function optimizeTemplateLayout(input: Shape[], options: TemplateLayoutOp
       }
     }
     const before = bottom > m.top ? (annex ? 18 : isHeading ? 12 : gap) : 0;
-    if (bottom + before + Math.min(keepHeight, usable.h) > height - m.bottom && bottom > m.top) {
+    if (pageBreak && bottom > m.top) {
+      page++;
+      column = 0;
+      bottom = m.top;
+    } else if (bottom + before + Math.min(keepHeight, usable.h) > height - m.bottom && bottom > m.top) {
       column++;
       if (column === columns) { page++; column = 0; }
       bottom = m.top;

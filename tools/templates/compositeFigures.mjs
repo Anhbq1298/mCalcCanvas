@@ -98,23 +98,22 @@ export function compositeFigures(l) {
         line(cx + b / 2 - 4, st + tf / 2, lx - 4, st + 16, { w: 0.7 }); text(lx, st + 16, 't_f  flange thickness', { size: 11 });
         line(cx + tw / 2, st + ha * 0.5, lx - 4, st + ha * 0.5, { w: 0.7 }); text(lx, st + ha * 0.5, 't_w  web thickness', { size: 11 });
         line(cx + tw / 2 + 2, st + ha - tf - 2, lx - 4, st + ha - 26, { w: 0.7 }); text(lx, st + ha - 26, 'r  root radius', { size: 11 });
-        text(0, st + ha + 52, 'Schematic, not to scale; dimensions indicative. Values: sections 2, 3 and 6.', { size: 11, c: grey, w: W });
+        text(0, st + ha + 52, 'Schematic, not to scale; dimensions indicative. Values: section 1 (inputs).', { size: 11, c: grey, w: W });
       } else if (mode === 'loads') {
-        // Loading of the composite stage: rows of the load tables
-        const xa = 40, xb = 590, yb = 120;
+        // Loading of the composite stage: rows of the load tables (schematic)
+        const xa = 40, xb = 590, yb = 80;
         line(xa, yb, xb, yb, { w: 2 });
         support(xa, yb, false); support(xb, yb, true);
-        line(xa, 90, xb, 90, { w: 0.9 });
-        for (let i = 0; i <= 10; i++) { const x = xa + (i * (xb - xa)) / 10; line(x, 90, x, yb - 3, { arrow: true, w: 0.8, head: 12 }); }
-        text(xa + 4, 78, 'W_udl rows: g_k,i , q_k,i', { size: 11 });
-        for (const x of [300, 520]) line(x, 6, x, yb - 3, { arrow: true, w: 1.8 });
-        text(306, 14, 'P_1 (G_k,1 , Q_k,1)', { size: 11 });
-        text(514, 36, 'P_j (G_k,j , Q_k,j)', { size: 11, a: 'r' });
-        dim(xa, yb, 300, yb, 'a_1', { off: 46, at: yb + 12 });
-        dim(xa, yb, 520, yb, 'a_j', { off: 70, at: yb + 12 });
-        dim(xa, yb, xb, yb, 'L', { off: 94, at: yb + 12, it: true });
-        text(xa + 8, yb + 34, 'R_A'); text(xb - 8, yb + 34, 'R_B', { a: 'r' });
-        text(0, yb + 136, 'Schematic. Each distributed row acts from x_1,i to x_2,i (full span shown); g_0 is added.', { size: 11, c: grey, w: W });
+        line(xa, 56, xb, 56, { w: 0.9 });
+        for (let i = 0; i <= 10; i++) { const x = xa + (i * (xb - xa)) / 10; line(x, 56, x, yb - 3, { arrow: true, w: 0.8, head: 9 }); }
+        text(xa + 4, 46, 'W_udl rows: g_k,i , q_k,i  (x_1,i to x_2,i)', { size: 11 });
+        for (const x of [300, 520]) line(x, 2, x, yb - 3, { arrow: true, w: 1.8 });
+        text(306, 8, 'P_1 (G_k,1 , Q_k,1)', { size: 11 });
+        text(514, 24, 'P_j (G_k,j , Q_k,j)', { size: 11, a: 'r' });
+        dim(xa, yb, 300, yb, 'a_1', { off: 24, at: yb + 8 });
+        dim(xa, yb, 520, yb, 'a_j', { off: 40, at: yb + 8 });
+        dim(xa, yb, xb, yb, 'L', { off: 56, at: yb + 8, it: true });
+        text(xa + 8, yb + 22, 'R_A', { size: 11 }); text(xb - 8, yb + 22, 'R_B', { size: 11, a: 'r' });
       } else if (mode === 'pna') {
         // Symbolic plastic stress block for partial connection; PNA position from section 9.2
         const top = 34, hc = 60, ha = 170, b = 76, tf = 7, tw = 4, cx = 120, X0 = 320, XR = 500;
