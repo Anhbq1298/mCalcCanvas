@@ -13939,7 +13939,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "SCI P359 (2011) §4.2.3: N_c = η N_c,f; linear interaction conservative; η_min §4.4.3.",
+        "html": "Solid slab, HK notes: UB 457×152×52 S355, L 12 m, h_c 125 mm, C30/37 — inputs replaced:",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -13954,7 +13954,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "SCI P405 (2015) §4.2.1: studs counted from the support to the maximum moment.",
+        "html": "  b_eff 2.8 m, N_a 2364 kN, PNA in slab, lever 325.1 mm, M_pl,Rd 768.6 vs 768.5 kNm — match.",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -13969,7 +13969,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "SCI NCCI SN003b: M_cr and C1, C2 for UDL, fork ends, top-flange load.",
+        "html": "SCI P359 (2011) §4.2.3: N_c = η N_c,f; linear interaction conservative; η_min §4.4.3.",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -13984,7 +13984,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "EC4 §§2.4.1.2, 5.4.1.2, 5.4.2.2, 6.2.1, 6.2.2, 6.6.1–6.6.6, 7.3.1; EC3 §§5.5, 6.2, 6.3.2.2; EC2 §6.2.4.",
+        "html": "SCI P405 (2015) §4.2.1: studs counted from the support to the maximum moment.",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -13996,6 +13996,36 @@
       "type": "text",
       "x": 76,
       "y": 21188,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "SCI NCCI SN003b: M_cr and C1, C2 for UDL, fork ends, top-flange load.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_ec4_nm",
+      "type": "text",
+      "x": 76,
+      "y": 21213,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "EC4 §§2.4.1.2, 5.4.1.2, 5.4.2.2, 6.2.1, 6.2.2, 6.6.1–6.6.6, 7.3.1; EC3 §§5.5, 6.2, 6.3.2.2; EC2 §6.2.4.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_ec4_nn",
+      "type": "text",
+      "x": 76,
+      "y": 21238,
       "props": {
         "w": 630,
         "h": 19,

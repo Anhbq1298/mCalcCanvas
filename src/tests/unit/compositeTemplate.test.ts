@@ -206,6 +206,25 @@ describe('EC4 phase-one composite worksheet', () => {
       restore('x_{1.i}', 'x_{2.i}', 'g_{k.i}', 'q_{k.i}', 'a_{j}', 'G_{k.j}', 'Q_{k.j}');
       expect(value('M_{2.Ed}','kN m')).toBeCloseTo(469.188257625,6);
     });
+    step('solid-slab example (HK notes, UB 457×152×52 S355, L = 12 m, h_c = 125 mm): PNA in the slab, full connection', () => {
+      // section from the BS 4-1 table: 449.8 × 152.4 × 7.6 × 10.9, r 10.2, A 66.6 cm², W_pl 1096 cm³
+      const set: [string, number, string | null][] = [['L\\coloneq',12,'m'],['s_b\\coloneq',2.8,'m'],['h_c\\coloneq',125,'mm'],
+        ['h_a\\coloneq',449.8,'mm'],['b_a\\coloneq',152.4,'mm'],['t_f\\coloneq',10.9,'mm'],['t_w\\coloneq',7.6,'mm'],['r\\coloneq',10.2,'mm'],
+        ['A_a\\coloneq',6660,'mm^2'],['W_{pl}\\coloneq',1096000,'mm^3'],['m_a\\coloneq',52.3,'kg/m'],['s_{sc.A}\\coloneq',150,'mm'],['s_{sc.B}\\coloneq',150,'mm']];
+      for (const [start, v, u] of set) e.setDefinitionOverride(region(start), { value: v, unit: u });
+      setColumn('x_{2.i}', [q(12, 'm')]); setColumn('x_{1.i}', [q(0, 'm')]); setColumn('g_{k.i}', [q(1.5, 'kPa')]); setColumn('q_{k.i}', [q(3, 'kPa')]);
+      setColumn('a_{j}', [q(6, 'm')]); setColumn('G_{k.j}', [q(0, 'kN')]); setColumn('Q_{k.j}', [q(0, 'kN')]);
+      expect(value('b_{eff}','mm')).toBeCloseTo(2800,9);                 // notes 2800 (L/4 = 3000 > b)
+      expect(value('x_f','mm')).toBeCloseTo(49.670168067227,8);           // N_a 2364 kN, PNA in the slab
+      expect(value('M_{a.Rd}','kN m')).toBeCloseTo(389.08,9);              // notes 389.0
+      expect(value('M_{pl.Rd}','kN m')).toBeCloseTo(768.550980819328,6);   // notes 768.5 (lever 325.1 mm)
+      expect(value('\\eta')).toBeCloseTo(1,10);                            // 40 studs per half span: full connection
+      expect(value('M_{Rd}','kN m')).toBeCloseTo(768.550980819328,6);
+      expect(value('k_M')).toBe(0);                                        // PNA case 0: in the slab
+      for (const [start] of set) e.setDefinitionOverride(region(start), null);
+      restore('x_{1.i}', 'x_{2.i}', 'g_{k.i}', 'q_{k.i}', 'a_{j}', 'G_{k.j}', 'Q_{k.j}');
+      expect(value('M_{pl.Rd}','kN m')).toBeCloseTo(850.742634375,6);
+    });
     step('three static symbolic figures and three graphs; explicit review status', () => {
       const texts=doc.shapes.filter(s => s.type==='text');
       expect(texts.filter(s=>/^F\d —/.test(s.props.html)).map(s=>s.props.html.slice(0,2))).toEqual(['F1','F2','F3']);

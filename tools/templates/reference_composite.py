@@ -188,6 +188,12 @@ def reference():
                steel_PNA_mm=ya4, M_direct_kNm=mdir4/1e6,
                published=dict(M_Ed=465.6, V_Ed=156.20, M_a_Rd=463.98, V_pl_Rd=874.97, eta_min=.520,
                               b_eff=2250, P_c_Rd=73.73, steel_PNA=400-388, M_Rd=738.))
+    # Solid-slab example (HK lecture notes, CompB-I): UB 457x152x52 S355, L = 12 m, b = 2.8 m, hc = 125 mm,
+    # C30/37 (fcd = 20), full connection, PNA in the slab. Section: BS 4-1 table (A 66.6 cm2, Wpl 1096 cm3).
+    na5 = 6660*355.; xc5 = na5/(.85*20*2800)
+    hk = dict(b_eff_mm=2800., N_a_kN=na5/1000, x_pl_mm=xc5, lever_mm=449.8/2+125-xc5/2,
+              M_pl_Rd_kNm=na5*(449.8/2+125-xc5/2)/1e6, M_a_Rd_kNm=1096e3*355/1e6,
+              published=dict(b_eff=2800, N_a=2364, lever=325.1, M_pl_Rd=768.5, M_a_Rd=389.0))
     return dict(P_Rd_kN=p/1000, eta=eta, eta_min=.49,
                 M1_Ed_kNm=w1*L**2/8/1e6, M2_Ed_kNm=m2/1e6, x_M_m=xm/1000,
                 V2_Ed_kN=v2/1000, M_at_point_load_kNm=ma_p/1e6,
@@ -207,7 +213,7 @@ def reference():
                 transverse_required_mm2_m=as_req*1000,
                 transverse_provided_mm2_m=as_prov*1000,
                 UR_transverse=as_req/as_prov,
-                propped=propped, sci_p364_example_8=sci, sbe_part4_example_a4=sbe,
+                propped=propped, sci_p364_example_8=sci, sbe_part4_example_a4=sbe, hk_solid_slab_ub457=hk,
                 **{f'I_{k}_mm4':v[2] for k,v in trans.items()})
 
 

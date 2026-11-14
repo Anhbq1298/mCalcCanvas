@@ -68,6 +68,26 @@ Not comparable here: SBE's construction LTB uses EC3 §6.3.2.3 with secondary-be
 SBE example A.3 (IPE 270, 7.5 m, propped, deck) was also read: η_min 0.475, A_v 2214 mm², V_pl,Rd 453.8 kN
 and the steel PNA (h_n = 263 mm) follow the same equations; its M_Rd 301.7 kNm uses the deck geometry.
 
+## Solid-slab example: UB 457×152×52 S355 (Hong Kong university lecture notes "CompB-I")
+
+Solid slab 125 mm, C30/37 (f_cd = 20 MPa), L = 12 m, beam spacing 2.8 m, 19 mm studs at 150 mm,
+full shear connection. Section properties checked against the BS 4-1 / BS EN 1993-1-1 UB table
+(449.8 × 152.4 × 7.6 × 10.9, r = 10.2, A = 66.6 cm², W_pl = 1096 cm³). Inputs replaced in the unit test;
+load tables set to one UDL over 12 m and no point load.
+
+| Quantity | Notes | Worksheet | Note |
+|---|---|---|---|
+| b_eff = min(L/4, b) | 2800 mm | 2800 mm | match |
+| N_a = A f_y | 2364 kN | 2364.3 kN | match |
+| PNA | in slab | k_M = 0, x = 49.7 mm | match |
+| Lever arm | 325.1 mm | 325.06 mm | match |
+| M_pl,a,Rd | 389.0 kNm | 389.08 kNm | match |
+| M_pl,Rd | 768.5 kNm | 768.55 kNm | match |
+| η | full (80 studs) | 1.0 | match |
+
+Not compared: the notes use a tabulated P_Rk = 76.3 kN (older code); the sheet uses EN 1994 (6.18)/(6.19).
+This is the only solid-slab source here; it covers the slab-PNA branch that SBE A.4 (steel PNA) does not.
+
 ## Propped construction (c_prop = 1, k_LT = 0.5)
 
 Reference: M_1,Ed 42.77 kNm, UR_LT 0.216, δ_1 1.15 mm, δ_g 4.75 mm (on I_L), δ_slip 3.08 mm,
