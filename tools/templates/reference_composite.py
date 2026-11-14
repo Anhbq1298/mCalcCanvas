@@ -117,8 +117,9 @@ def reference():
     eta_req = max(.49, (m2 - ma)/(mf - ma))
     n_req = ceil(eta_req*na/p)
     nreq_p = ceil(max(0., (ma_p - ma)/(mf - ma))*na/p)
-    # uniform spacing in each shear span (support to max moment), first stud at s/2
-    sa, sb = xm/24, (L - xm)/24
+    # spacing inputs per shear span (support to max moment), first stud at s/2
+    sa, sb = 125., 200.
+    n_a, n_b = int(xm/sa + .5), int((L - xm)/sb + .5)
     vf = p/min(sa, sb)
     ur_x = 0.
     for i in range(201):
@@ -144,7 +145,7 @@ def reference():
                 M1_Ed_kNm=w1*L**2/8/1e6, M2_Ed_kNm=m2/1e6, x_M_m=xm/1000,
                 V2_Ed_kN=v2/1000, M_at_point_load_kNm=ma_p/1e6,
                 eta_req=eta_req, n_req=n_req, n_req_point_load=nreq_p,
-                connector_flow_kN_m=vf, s_A_mm=sa, s_B_mm=sb, UR_M_along_span=ur_x,
+                connector_flow_kN_m=vf, studs_A=n_a, studs_B=n_b, UR_M_along_span=ur_x,
                 studs_to_point_load=n_p, PNA_case_point_load=k_p, sigma_c_bot_MPa=sig,
                 M_full_kNm=mf/1e6, M_partial_linear_kNm=mr/1e6,
                 M_partial_direct_kNm=direct/1e6, steel_PNA_mm=ya,

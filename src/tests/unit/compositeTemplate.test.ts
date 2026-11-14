@@ -84,11 +84,10 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('x_M','m')).toBeCloseTo(3,9);
       expect(value('\\eta_{req}')).toBeCloseTo(0.49,10);
       expect(value('n_{req}')).toBe(17);
-      expect(value('s_A','mm')).toBeCloseTo(125,9);
-      expect(value('s_B','mm')).toBeCloseTo(208.333333333333,9);
-      // just right of the 3 m point load only 23 studs reach support B: UR exceeds the value at x_M
-      expect(value('\\mathrm{UR}_{M.x}')).toBeCloseTo(0.67014302413677,8);
-      expect(value('\\mathrm{UR}_{M.x}')).toBeGreaterThan(value('\\mathrm{UR}_{M.2}'));
+      expect(value('n_A')).toBe(24);
+      expect(value('n_B')).toBe(25);
+      expect(value('n_h')).toBe(24);
+      expect(value('\\mathrm{UR}_{M.x}')).toBeCloseTo(0.66006407439817,8); // just right of the load, 24 studs at 200 mm reach support B
       expect(value('n_{P}')).toBe(24);
       expect(value('k_M')).toBe(1);
       expect(value('k_P')).toBe(1);
@@ -119,16 +118,16 @@ describe('EC4 phase-one composite worksheet', () => {
       const latex = (math.find(s => s.id === pt) as Extract<Shape, { type: 'math' }>).props.latex;
       e.setRegion(pt, { latex: '\\begin{bmatrix}2\\,\\mathrm{m}&100\\,\\mathrm{kN}&150\\,\\mathrm{kN}\\end{bmatrix}'.replace(/^/, 'P_{pt}\\coloneq'), order: calcKey(rec[pt], rec), displayUnit: null, precision: null });
       expect(value('x_M','m')).toBeCloseTo(2,9);
-      expect(value('s_A','mm')).toBeCloseTo(83.333333333333,9);
-      expect(passes('s_{min}\\le s_A')).toBe(false); // 24 studs over 2 m are closer than 5d
+      expect(value('n_A')).toBe(16); // 125 mm spacing over 2 m: too few studs for eta_min
+      expect(passes('\\eta_{min}\\le')).toBe(false);
       e.setRegion(pt, { latex, order: calcKey(rec[pt], rec), displayUnit: null, precision: null });
       expect(value('x_M','m')).toBeCloseTo(3,9);
     });
-    step('three static symbolic figures and four graphs; explicit review status', () => {
+    step('three static symbolic figures and three graphs; explicit review status', () => {
       const texts=doc.shapes.filter(s => s.type==='text');
       expect(texts.filter(s=>/^F\d —/.test(s.props.html)).map(s=>s.props.html.slice(0,2))).toEqual(['F1','F2','F3']);
       expect(texts.some(s=>s.props.html.includes('<i>h</i><sub>c</sub>'))).toBe(true);
-      expect(doc.shapes.filter(s=>s.type==='graph')).toHaveLength(4);
+      expect(doc.shapes.filter(s=>s.type==='graph')).toHaveLength(3);
       expect(doc.shapes.some(s=>s.type==='image')).toBe(false);
       expect(texts.some(s=>s.props.html.includes('Singapore NA verification is outstanding'))).toBe(true);
     });

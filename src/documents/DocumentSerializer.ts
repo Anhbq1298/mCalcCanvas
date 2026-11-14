@@ -155,7 +155,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
       return { ...base, type: 'table', props: { ...defaults, w: bounded(p.w, columnWidths.reduce((sum, width) => sum + width, 0), 48, SIZE_LIMIT), h: bounded(p.h, rows * 32, 24, SIZE_LIMIT), cells, columnWidths, headerRow: p.headerRow !== false } };
     }
     case 'graph': {
-      const styles = ['line', 'marker', 'circle', 'segments'];
+      const styles = ['line', 'marker', 'circle', 'segments', 'area', 'values'];
       const latex = (v: unknown) => str(v).slice(0, 2000);
       const series = (Array.isArray(p.series) ? (p.series as unknown[]) : [])
         .filter((q): q is Record<string, unknown> => !!q && typeof q === 'object')
@@ -183,6 +183,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           xUnit: str(p.xUnit).slice(0, 40),
           yUnit: str(p.yUnit).slice(0, 40),
           equalAxes: p.equalAxes === true,
+          ...(p.invertY === true ? { invertY: true } : {}),
           grid: typeof p.grid === 'boolean' ? p.grid : DEFAULT_GRAPH_STYLE.grid,
           axesAtOrigin: typeof p.axesAtOrigin === 'boolean' ? p.axesAtOrigin : DEFAULT_GRAPH_STYLE.axesAtOrigin,
           font: typeof p.font === 'string' && p.font in TEXT_FONTS ? p.font : DEFAULT_GRAPH_STYLE.font,

@@ -65,12 +65,15 @@ Annex: the general force model and branch boundaries.
   to act after composite action; the construction stage keeps its UDL.
 - M(x), V(x) on a 200-step grid (annex A.1, user functions with factors cG, cQ); M_Ed is the larger of
   the grid maximum and the moments under the point loads (grid error ≤ wΔx²/8). Graphs M_Ed, V_Ed.
-- Studs: the shear spans run from each support to the maximum-moment section x_M (SCI P405 §4.2.1).
-  n_req = ceil(max(η_min, (M_Ed − M_a,Rd)/(M_pl,Rd − M_a,Rd)) N_c,f / P_Rd) per span; uniform spacing
-  s_A = x_M/n_h and s_B = (L − x_M)/n_h, checked against 5d and min(22 t_f ε, 6h_c, 800 mm).
-  A large point load moves x_M, so the spacings change. M_Rd(x) is then evaluated at every grid point
-  from the studs between x and the nearer support (EC4 (6.3)) and UR = max M_Ed/M_Rd(x) ≤ 1.
-  Graphs: M_Ed(x) against M_Rd(x), and the stud count n(x).
+- Studs: the user specifies the spacing of each shear span, s_sc,A (support A to the maximum moment x_M)
+  and s_sc,B (x_M to support B), checked against 5d and min(22 t_f ε, 6h_c, 800 mm). Studs per span
+  n = floor(length/s + 0.5) (first stud at s/2); η uses the weaker span (SCI P405 §4.2.1). A large point
+  load moves x_M, which changes the stud counts. n_req = ceil(max(η_min, (M_Ed − M_a,Rd)/(M_pl,Rd −
+  M_a,Rd)) N_c,f / P_Rd) per span. M_Rd(x) from the studs between x and the nearer support (EC4 (6.3))
+  is compared with M_Ed(x) at every grid point (UR check and one graph).
+- Diagrams: full-width white graphs; shear force V_Ed and bending moment M_Ed (sagging drawn below,
+  tension side) as filled areas with labelled support shears and peak moment. App feature added for
+  this: graph option `invertY` and series styles `area` and `values` (GraphView, serializer, Properties).
 - PNA case k (0 slab, 1 top flange, 2 fillet zone — not solved, 3 web) at x_M and under each point load.
 - Longitudinal shear flow = P_Rd / min(s_A, s_B), half per plane a-a.
 - SLS midspan deflections for table loads by virtual work on the same grid.

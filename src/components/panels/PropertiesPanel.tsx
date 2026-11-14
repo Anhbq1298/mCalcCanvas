@@ -522,6 +522,8 @@ function SeriesEditor({ shapeId, series, index, onChange, onDelete }: { shapeId:
           <option value="marker">Markers</option>
           <option value="circle">Circles (radius r)</option>
           <option value="segments">Segments (group g)</option>
+          <option value="area">Filled area (diagram)</option>
+          <option value="values">Values (labelled points)</option>
         </select>
         <select aria-label="Line width / marker size" className={inputCls + ' h-7 w-20 cursor-pointer'} value={series.width} onChange={(e) => onChange({ width: Number(e.target.value) })}>
           {[0.75, 1, 1.5, 2, 3, 4].map((v) => (
@@ -557,6 +559,10 @@ function GraphProperties({ shape }: { shape: GraphShape }) {
         <label className="flex cursor-pointer items-center gap-2 text-[13px]">
           <input type="checkbox" className="h-4 w-4 cursor-pointer accent-accent" checked={shape.props.equalAxes} onChange={(e) => update({ equalAxes: e.target.checked })} />
           Equal axes (1:1 scale)
+        </label>
+        <label className="flex cursor-pointer items-center gap-2 text-[13px]">
+          <input type="checkbox" data-testid="graph-prop-inverty" className="h-4 w-4 cursor-pointer accent-accent" checked={!!shape.props.invertY} onChange={(e) => update({ invertY: e.target.checked })} />
+          Positive y downwards (moment on the tension side)
         </label>
         <label className="flex cursor-pointer items-center gap-2 text-[13px]">
           <input type="checkbox" className="h-4 w-4 cursor-pointer accent-accent" checked={shape.props.grid} onChange={(e) => update({ grid: e.target.checked })} />

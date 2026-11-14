@@ -134,6 +134,14 @@ export function niceStep(span: number, target = 5): number {
   return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * mag;
 }
 
+/** A plotted value as a label (values style): about four significant figures, no trailing zeros. */
+export function valueLabel(v: number): string {
+  if (!Number.isFinite(v)) return '';
+  const a = Math.abs(v);
+  const s = v.toFixed(a >= 100 ? 1 : a >= 1 ? 2 : 3);
+  return s.includes('.') ? s.replace(/\.?0+$/, '') : s;
+}
+
 export function tickLabel(v: number, step: number): string {
   const decimals = Math.max(0, -Math.floor(Math.log10(step) + 1e-9));
   const s = v.toFixed(Math.min(6, decimals));

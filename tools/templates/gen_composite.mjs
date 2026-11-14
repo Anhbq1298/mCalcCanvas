@@ -3,7 +3,14 @@
 import { createLayout, R } from './layout.mjs';
 import { compositeFigures } from './compositeFigures.mjs';
 const l = createLayout({ idPrefix: 's_ec4', sizesFile: 'sizes_composite.json', textFont: 'Roboto', mathColumn: 396 });
-const { H, T, M, FU, fr, fo, LINK, S, GRAPH2, finish } = l;
+const { H, T, M, FU, fr, fo, LINK, S, finish } = l;
+// Full-width internal-force graph on a white background (diagram style, not the house chart style).
+const DIAGRAM = (h, props) => {
+  const rows = (h + 16) / 40;
+  l.need(rows);
+  l.out.push({ id: l.id(), type: 'graph', x: 80, y: l.ln(l.st.page, l.st.row) - 8, props: { w: 630, h, xLabel: '', yLabel: '', grid: false, axesAtOrigin: true, font: 'Roboto', background: '#ffffff', equalAxes: false, ...props } });
+  l.gap(rows);
+};
 // A description and its region print as one block, so a page break never separates them.
 const P = (...args) => {
   const n = l.out.length;
@@ -107,9 +114,8 @@ LINK('forces', 'Internal forces along the span from the load tables', () => {
 calc('Maximum design moment (grid of 200 steps and load points)', 'M_{2.Ed}', R`\max\left(\max\left(M_v\right),\max\left(M_P\right)\right)`, 'kN m', false);
 calc('Position of the maximum on the grid', 'x_M', R`\mathrm{at}\left(x_v,\mathrm{at}\left(\mathrm{match}\left(\max\left(M_v\right),M_v\right),0\right)\right)`, 'm', false);
 calc('Support reactions: maximum design shear', 'V_{2.Ed}', R`\max\left(\mathrm{at}\left(V_v,0\right),-\mathrm{at}\left(V_v,\mathrm{last}\left(V_v\right)\right)\right)`, 'kN', false);
-GRAPH2(300,
- { title: 'Design bending moment M_Ed', xUnit: 'm', yUnit: 'kN m', series: [S('m', '', ['x_v', 'M_v'], 'line', '#1e3a5f', 2), S('mp', 'Point loads', ['a_P', 'M_P'], 'marker', '#dc2626', 2)] },
- { title: 'Design shear force V_Ed', xUnit: 'm', yUnit: 'kN', series: [S('v', '', ['x_v', 'V_v'], 'line', '#1e3a5f', 2)] });
+DIAGRAM(190, { title: 'Shear force diagram V_Ed', xUnit: 'm', yUnit: 'kN', series: [S('v', '', ['x_v', 'V_v'], 'area', '#1d4ed8', 1.5), S('vv', '', [R`\mathrm{stack}\left(0\,\mathrm{m},L\right)`, R`\mathrm{stack}\left(\mathrm{at}\left(V_v,0\right),\mathrm{at}\left(V_v,\mathrm{last}\left(V_v\right)\right)\right)`], 'values', '#1d4ed8', 1.5)] });
+DIAGRAM(190, { title: 'Bending moment diagram M_Ed (sagging drawn below, tension side)', xUnit: 'm', yUnit: 'kN m', invertY: true, series: [S('m', '', ['x_v', 'M_v'], 'area', '#b91c1c', 1.5), S('mv', '', ['x_M', 'M_{2.Ed}'], 'values', '#b91c1c', 1.5), S('mp', '', ['a_P', 'M_P'], 'values', '#7f1d1d', 1.5)] });
 H(2, '5. CONSTRUCTION STAGE — STEEL ONLY');
 T('EC3 §5.5 / Table 5.2: bare steel section in major-axis bending, no axial force.');
 calc('Material parameter', '\\varepsilon', R`\sqrt{\frac{235\,\mathrm{MPa}}{f_y}}`);
@@ -151,7 +157,8 @@ H(2, '7. SHEAR CONNECTOR RESISTANCE');
 input('Headed stud shank diameter','d_{sc}',19,'mm');
 input('Stud height after welding','h_{sc}',100,'mm');
 input('Stud ultimate strength, <= 500 MPa','f_u',450,'MPa');
-input('Studs provided in each shear span (support to max moment)','n_h',24);
+input('Stud spacing, support A to the max moment','s_{sc.A}',125,'mm');
+input('Stud spacing, max moment to support B','s_{sc.B}',200,'mm');
 calc('EC4 §6.6.3.1, hsc/d >= 4 here','\\alpha_{sc}',R`\min\left(1,0.2\left(\frac{h_{sc}}{d_{sc}}+1\right)\right)`);
 calc('EC4 (6.18): stud steel failure','P_{s.Rd}',R`\frac{0.8 f_u \pi d_{sc}^2}{4\gamma_V}`,'kN');
 calc('EC4 (6.19): concrete failure','P_{c.Rd}',R`\frac{0.29\alpha_{sc}d_{sc}^2\sqrt{f_{ck}E_{cm}}}{\gamma_V}`,'kN');
@@ -164,11 +171,20 @@ calc('Slab cover above stud head','c_{sc}',R`h_c-h_{sc}`,'mm');
 check('Nominal top cover >= 20 mm, EC4 §6.6.5.2','20\\,\\mathrm{mm}','c_{sc}');
 calc('Stud shank edge to steel flange edge','e_{sc}',R`\frac{b_a-d_{sc}}{2}`,'mm');
 check('EC4 §6.6.5.6: steel flange edge >= 20 mm','20\\,\\mathrm{mm}','e_{sc}');
-T('Stud arrangement (pitch, rows) is not detailed here; section 9.3 gives the required numbers.');
+calc('Minimum spacing, EC4 §6.6.5.7(4)','s_{min}',R`5d_{sc}`,'mm');
+calc('Maximum spacing, EC4 §6.6.5.5(2) and (3)','s_{max}',R`\min\left(22t_f\varepsilon,6h_c,800\,\mathrm{mm}\right)`,'mm',false);
+check('Span A spacing not below the minimum','s_{min}','s_{sc.A}');
+check('Span A spacing not above the maximum','s_{sc.A}','s_{max}');
+check('Span B spacing not below the minimum','s_{min}','s_{sc.B}');
+check('Span B spacing not above the maximum','s_{sc.B}','s_{max}');
+T('One stud per row on the flange centreline; the first stud is half a spacing from the support.');
 H(2, '8. DEGREE OF SHEAR CONNECTION');
 calc('Maximum slab compression, EC4 §6.2.1.2','N_{c.Rd}',R`0.85 f_{cd}b_{eff}h_c`,'kN');
 calc('Steel tensile resistance','N_{a.Rd}',R`A_a f_{yd}`,'kN');
 calc('Concrete force for full connection, EC4 §6.2.1.3','N_{c.f}',R`\min\left(N_{c.Rd},N_{a.Rd}\right)`,'kN');
+calc('Studs from support A to the max moment','n_A',R`\mathrm{floor}\left(\frac{x_M}{s_{sc.A}}+0.5\right)`,'',false);
+calc('Studs from the max moment to support B','n_B',R`\mathrm{floor}\left(\frac{L-x_M}{s_{sc.B}}+0.5\right)`,'',false);
+calc('Studs in the weaker shear span','n_h',R`\min\left(n_A,n_B\right)`);
 calc('Stud resistance, zero to maximum moment','N_{conn}',R`n_h P_{Rd}`,'kN');
 calc('Degree of connection, EC4 (6.12): not a utilisation','\\eta',R`\min\left(1,\frac{N_{conn}}{N_{c.f}}\right)`);
 calc('EC4 (6.12), equal flanges, Le <= 25 m','\\eta_{min}',R`\max\left(0.4,1-\frac{355\,\mathrm{MPa}}{f_y}\left(0.75-0.03\frac{L_e}{1\,\mathrm{m}}\right)\right)`);
@@ -227,37 +243,27 @@ LINK('pna','General plastic equilibrium and PNA branches', () => {
  T('Lower flange: inadmissible, because Nc >= 0 and zero axial force give Aac <= Aa/2.');
  calc('Connection degree with the PNA at the fillet toe','\\eta_{fr}',R`1-\frac{2A_{fr}}{A_a}`);
 });
-H(3, '9.3 Stud spacing from the maximum-moment position, and M_Rd(x) along the span');
-T('Shear spans: support A to the maximum moment (x_M) and x_M to support B; with a large point');
-T('load x_M moves to the load, so each span gets its own uniform spacing (EC4 §6.6.1.3(3)).');
+H(3, '9.3 Studs from the maximum-moment position, and M_Rd(x) along the span');
+T('Shear spans: support A to the maximum moment (x_M) and x_M to support B. A large point load');
+T('moves x_M to the load; the spacing of each span is an input (section 7), uniform per span.');
 calc('Degree needed at the maximum moment, not below η_min','\\eta_{req}',R`\max\left(\eta_{min},\frac{M_{2.Ed}-M_{a.Rd}}{M_{pl.Rd}-M_{a.Rd}}\right)`);
 calc('Studs needed in each shear span','n_{req}',R`\mathrm{ceil}\left(\frac{\eta_{req}N_{c.f}}{P_{Rd}}\right)`);
 check('Provided studs in each shear span','n_{req}','n_h');
-calc('Spacing, support A to x_M (n_h studs, first at s/2)','s_A',R`\frac{x_M}{n_h}`,'mm');
-calc('Spacing, x_M to support B','s_B',R`\frac{L-x_M}{n_h}`,'mm');
-calc('Minimum spacing, EC4 §6.6.5.7(4)','s_{min}',R`5d_{sc}`,'mm');
-calc('Maximum spacing, EC4 §6.6.5.5(2) and (3)','s_{max}',R`\min\left(22t_f\varepsilon,6h_c,800\,\mathrm{mm}\right)`,'mm',false);
-check('Span A spacing not below the minimum','s_{min}','s_A');
-check('Span A spacing not above the maximum','s_A','s_{max}');
-check('Span B spacing not below the minimum','s_{min}','s_B');
-check('Span B spacing not above the maximum','s_B','s_{max}');
 calc('Uniform spacing, EC4 §6.6.1.3(3)','r_M',R`\frac{M_{pl.Rd}}{M_{a.Rd}}`);
 check('Uniform spacing resistance ratio limit','r_M','2.5');
 T('Resistance at every section x from the studs between x and the nearer support (6.3):');
-calc('Studs between support and x','n_x',IF([R`x_v\le x_M`, R`\mathrm{floor}\left(\frac{x_v}{s_A}+0.5\right)`], [null, R`\mathrm{floor}\left(\frac{L-x_v}{s_B}+0.5\right)`]),'','fo');
+calc('Studs between support and x','n_x',IF([R`x_v\le x_M`, R`\mathrm{floor}\left(\frac{x_v}{s_{sc.A}}+0.5\right)`], [null, R`\mathrm{floor}\left(\frac{L-x_v}{s_{sc.B}}+0.5\right)`]),'','fo');
 calc('Degree of connection at x','\\eta_x',IF([R`n_x P_{Rd}\ge N_{c.f}`, '1'], [null, R`\frac{n_x P_{Rd}}{N_{c.f}}`]),'','fo');
 calc('Bending resistance at x','M_{Rd.x}',R`M_{a.Rd}+\eta_x\left(M_{pl.Rd}-M_{a.Rd}\right)`,'kN m','fo');
 calc('Max utilisation along the span','\\mathrm{UR}_{M.x}',R`\max\left(\frac{M_v}{M_{Rd.x}}\right)`,'',false);
 check('Acceptance at every section','\\mathrm{UR}_{M.x}','1');
-GRAPH2(300,
- { title: 'Demand and resistance along the span', xUnit: 'm', yUnit: 'kN m', series: [S('med', 'M_Ed(x)', ['x_v', 'M_v'], 'line', '#dc2626', 2), S('mrd', 'M_Rd(x) from studs', ['x_v', 'M_{Rd.x}'], 'line', '#1e3a5f', 2), S('mp', 'Point loads', ['a_P', 'M_P'], 'marker', '#dc2626', 2)] },
- { title: 'Studs counted from the nearer support', xUnit: 'm', yUnit: '', series: [S('nx', 'Provided n(x)', ['x_v', 'n_x'], 'line', '#1e3a5f', 2), S('nreq', 'Needed at x_M', [R`\mathrm{stack}\left(x_M,x_M\right)`, R`\mathrm{stack}\left(0,n_{req}\right)`], 'line', '#dc2626', 1.5)] });
-T('Left: red M_Ed(x) must stay below blue M_Rd(x). Right: studs counted from the nearer support.');
+DIAGRAM(210, { title: 'M_Ed(x) and M_Rd(x) from the studs provided (tension side down)', xUnit: 'm', yUnit: 'kN m', invertY: true, series: [S('med', 'M_Ed(x)', ['x_v', 'M_v'], 'area', '#b91c1c', 1.5), S('mrd', 'M_Rd(x) from studs', ['x_v', 'M_{Rd.x}'], 'line', '#1e3a5f', 2)] });
+T('The red M_Ed(x) area must stay inside the blue M_Rd(x) line at every section.');
 H(3, '9.4 Where the plastic neutral axis lies at each critical section');
 T('Case k: 0 = PNA in the slab (steel all in tension), 1 = top flange, 2 = root-fillet zone');
 T('(not solved here, check fails), 3 = web. Decided by A_ac = (A_a - N_c/f_yd)/2 at that section.');
 P('PNA case at the max-moment section',R`k_M\coloneq${IF([R`A_{ac}\le0\,\mathrm{mm^2}`, '0'], [R`A_{ac}\le A_f`, '1'], [R`A_{ac}<A_{fr}`, '2'], [null, '3'])}`,M({ precision: 0 }));
-calc('Studs, nearer support to each P','n_{P}',IF([R`a_P\le x_M`, R`\mathrm{floor}\left(\frac{a_P}{s_A}+0.5\right)`], [null, R`\mathrm{floor}\left(\frac{L-a_P}{s_B}+0.5\right)`]),'',false);
+calc('Studs, nearer support to each P','n_{P}',IF([R`a_P\le x_M`, R`\mathrm{floor}\left(\frac{a_P}{s_{sc.A}}+0.5\right)`], [null, R`\mathrm{floor}\left(\frac{L-a_P}{s_{sc.B}}+0.5\right)`]),'',false);
 calc('Slab force available under each point load','N_{c.P}',IF([R`n_P P_{Rd}\ge N_{c.f}`, R`N_{c.f}`], [null, R`n_P P_{Rd}`]),'kN',false);
 calc('Compressed steel area under each point load','A_{ac.P}',R`\frac{A_a-N_{c.P}/f_{yd}}{2}`,'mm^2',false);
 P('PNA case under each point load',R`k_P\coloneq${IF([R`A_{ac.P}\le0\,\mathrm{mm^2}`, '0'], [R`A_{ac.P}\le A_f`, '1'], [R`A_{ac.P}<A_{fr}`, '2'], [null, '3'])}`,M({ precision: 0 }));
@@ -270,7 +276,7 @@ T('If either limit fails, this worksheet branch is inapplicable: perform reduced
 H(2, '11. LONGITUDINAL SHEAR AND REINFORCEMENT');
 T('EC4 §6.6.6; EC2 §6.2.4. Symmetric internal beam, two vertical shear planes beside studs.');
 T('Design flow = stud resistance per unit length at the closest spacing; half per plane.');
-calc('Largest connector flow: closest stud spacing','v_f',R`\frac{P_{Rd}}{\min\left(s_A,s_B\right)}`,'kN/m');
+calc('Largest connector flow: closest stud spacing','v_f',R`\frac{P_{Rd}}{\min\left(s_{sc.A},s_{sc.B}\right)}`,'kN/m');
 calc('Shear stress on plane a-a, EC2 (6.20)','v_{L.Ed}',R`\frac{v_f}{2h_c}`,'MPa');
 input('Strut cotangent, EC2: 1 <= cot θ <= 2','c_{theta}',2);
 input('Transverse bar diameter, one layer','d_s',10,'mm');

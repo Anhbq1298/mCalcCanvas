@@ -19,13 +19,13 @@ integration of the filleted steel width for the PNA, and an independent stud cou
 |---|---|---|
 | M_Ed (UDL 4.5 + 9 kN/m, P = 30 G + 45 Q kN at 3 m) | 469.188 kNm at 3.0 m | same |
 | V_Ed | 209.734 kN | same |
-| Studs needed per shear span (η_min governs) | 17 ≤ 24 provided | same |
-| Spacing s_A / s_B | 125 / 208.3 mm (95 ≤ s ≤ 229) | same |
-| Max UR along span from stud count | 0.6701 (just right of the load) | same; > 0.6405 at x_M |
+| Studs needed per shear span (η_min governs) | 17 | same |
+| Spacing inputs 125 / 200 mm → studs per span | 24 / 25, weaker span 24 | same |
+| Max UR along span from stud count | 0.6601 (just right of the load) | same; > 0.6405 at x_M |
 | PNA case at x_M and under the load | 1 = top flange | same |
 | δ_LT, δ_tr, δ_slip, δ_tot | 6.076, 3.763, 1.850, 31.055 mm | grid virtual work, within 0.0005 mm |
 | Added row 6 m, 10 G + 10 Q kN | M_Ed 490.630 kNm at 3.061 m | 40 mm grid, within 0.007 kNm |
-| Point load 100 G + 150 Q kN at 2 m | x_M = 2 m, s_A = 83.3 mm < 5d | spacing check fails |
+| Point load 100 G + 150 Q kN at 2 m | x_M = 2 m, 16 studs at 125 mm | η < η_min check fails |
 
 ## Sources opened this revision
 
