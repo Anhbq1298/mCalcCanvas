@@ -1,9 +1,46 @@
 """Independent reference in N, mm, MPa; no canvas/engine imports.
-Run: python tools/templates/reference_composite.py
-Not a general section solver. Geometry/properties are explicit published inputs.
+Run: python tools/templates/reference_composite.py > docs/composite-design/reference.json
+Geometry/properties are explicit published inputs. The steel PNA is found by numerical
+integration of the rolled width (circular root fillets), not by the worksheet's branch formulas.
 """
 import json
 from math import pi, sqrt
+
+
+H, B, TF, TW, RR = 406.4, 177.9, 12.8, 7.9, 10.2
+
+
+def width(y):
+    """Rolled I-section width at depth y below the top (root fillets as circular arcs)."""
+    yy = min(y, H - y)
+    if yy < TF:
+        return B
+    s = yy - TF
+    if s < RR:
+        return TW + 2 * (RR - sqrt(RR * RR - (RR - s) ** 2))
+    return TW
+
+
+def plastic(nc, a=7650., fy=355., hc=150., be=2000., n=20000):
+    """Rigid-plastic sagging state at slab force nc: (xc, ya, M) in mm, mm, N mm.
+    Midpoint integration on each piece between the width breakpoints (flange, fillet, web)."""
+    aac = (a - nc / fy) / 2
+    acc, q, ya = 0.0, 0.0, None
+    for y_lo, y_hi in ((0, TF), (TF, TF + RR), (TF + RR, H / 2)):
+        dy = (y_hi - y_lo) / n
+        for i in range(n):
+            y0 = y_lo + i * dy
+            w = width(y0 + dy / 2)
+            if acc + w * dy >= aac:
+                ya = y0 + (aac - acc) / w
+                q += (aac - acc) * (hc + (y0 + ya) / 2)
+                break
+            acc += w * dy
+            q += w * dy * (hc + y0 + dy / 2)
+        if ya is not None:
+            break
+    xc = nc / (17 * be)
+    return xc, ya, fy * a * (hc + H / 2) - 2 * fy * q - nc * xc / 2
 
 
 def reference():
@@ -20,11 +57,14 @@ def reference():
     ma = 1.2e6 * fy
     mf = na * (hc + h / 2 - xf / 2)
     mr = ma + eta * (mf - ma)
-    aac = (A - nc / fy) / 2
-    ya = aac / b
-    assert 0 <= aac <= b * tf, 'Flange PNA branch required for this reference'
-    direct = fy * A * (hc + h / 2) - 2 * fy * aac * (hc + ya / 2) - nc * xc / 2
+    _, ya, direct = plastic(nc)
+    assert 0 < ya <= tf, 'Example steel PNA expected in the top flange'
     assert ma < mr < direct < mf
+    branches = {}
+    for studs in (14, 8):
+        _, y_b, m_b = plastic(min(1, studs * p / na) * na)
+        branches[f'n_h_{studs}'] = dict(eta=studs * p / na, steel_PNA_mm=y_b,
+                                         M_direct_kNm=m_b / 1e6)
     ncr = pi**2 * E * 12e6 / L**2
     mcr = 1.127 * ncr * (sqrt(466e9 / 12e6 + 81000 * 333000 / ncr
                              + (.454 * h / 2)**2) - .454 * h / 2)
@@ -47,13 +87,15 @@ def reference():
     dslip = .3*(1-eta)*(delta((1.5+3)*3,I)-dl-dt)
     ns,ys,is_ = trans['s']
     dsh = (E/ns*be*hc*.0003)*(ys-hc/2)/(E*is_)*L**2/8
-    vl = 2*nc/(L*hc)
+    vl = p/(2*(L/48)*hc)
     as_req = vl*hc/((500/1.15)*2)
     as_prov = pi*10**2/(4*150)
     return dict(P_Rd_kN=p/1000, eta=eta, eta_min=.49,
                 M1_Ed_kNm=w1*L**2/8/1e6, M2_Ed_kNm=w2*L**2/8/1e6,
                 M_full_kNm=mf/1e6, M_partial_linear_kNm=mr/1e6,
                 M_partial_direct_kNm=direct/1e6, steel_PNA_mm=ya,
+                x_c_mm=xc, x_full_mm=xf, eta_flange_boundary=1-2*b*tf/A,
+                branches=branches,
                 M_cr_kNm=mcr/1e6, M_b_Rd_kNm=chi*ma/1e6,
                 UR_LTB=w1*L**2/(8*chi*ma), UR_M2=w2*L**2/(8*mr),
                 UR_V2=w2*L/(2*vrd), delta_construction_mm=delta(g+3.75,I),
@@ -62,6 +104,7 @@ def reference():
                 delta_total_mm=dg+dl+dt+dslip+dsh,
                 transverse_required_mm2_m=as_req*1000,
                 transverse_provided_mm2_m=as_prov*1000,
+                UR_transverse=as_req/as_prov,
                 **{f'I_{k}_mm4':v[2] for k,v in trans.items()})
 
 
