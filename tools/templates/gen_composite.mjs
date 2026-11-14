@@ -313,6 +313,9 @@ LINK('sources','References and SCI cross-check', () => {
  T('  P_c,Rd 73.7 kN (6.19 governs), η_min 0.50, x_c 61.5 mm, M_pl,Rd 952.4 kNm, M_Rd 715.7 kNm (6.3).');
  T('  Rigid-plastic, PNA in flange: x_pl = (N_pl,a − N_c)/(2 f_y b) as here; SCI 903.9 vs 912 kNm here');
  T('  (+0.9 %); the printed SCI expression is not legible in the extract (deck slab in SCI).');
+ T('SBE Part 4 (2009) example A.4, IPE 400 S355, L = 9 m, two point loads — inputs replaced, checked:');
+ T('  M_Ed 465.6 kNm, V_Ed 156.2 kN, M_a,Rd 464.0 kNm, V_pl,Rd 875.0 kN, η_min 0.52, b_eff 2.25 m — match;');
+ T('  N_c = 1403 kN: PNA 12.5 mm below steel top (SBE 12); M_Rd 755 vs 738 kNm (deck, +2.3 %).');
  T('SCI P359 (2011) §4.2.3: N_c = η N_c,f; linear interaction conservative; η_min §4.4.3.');
  T('SCI P405 (2015) §4.2.1: studs counted from the support to the maximum moment.');
  T('SCI NCCI SN003b: M_cr and C1, C2 for UDL, fork ends, top-flange load.');

@@ -181,6 +181,31 @@ describe('EC4 phase-one composite worksheet', () => {
       for (const [start] of set) e.setDefinitionOverride(region(start), null);
       expect(value('M_{pl.Rd}','kN m')).toBeCloseTo(850.742634375,6);
     });
+    step('SBE Part 4 example A.4 (IPE 400 S355, L = 9 m, two point loads): load tables and resistances', () => {
+      const set: [string, number, string | null][] = [['L\\coloneq',9,'m'],['s_b\\coloneq',6,'m'],['h_c\\coloneq',140,'mm'],['\\rho_c\\coloneq',0,'kN/m^3'],
+        ['f_{ck}\\coloneq',25,'MPa'],['E_{cm}\\coloneq',31,'GPa'],['h_a\\coloneq',400,'mm'],['b_a\\coloneq',180,'mm'],['t_f\\coloneq',13.5,'mm'],
+        ['t_w\\coloneq',8.6,'mm'],['r\\coloneq',21,'mm'],['A_a\\coloneq',8446,'mm^2'],['W_{pl}\\coloneq',1307000,'mm^3'],['m_a\\coloneq',66.3,'kg/m']];
+      for (const [start, v, u] of set) e.setDefinitionOverride(region(start), { value: v, unit: u });
+      // slab and secondary beams arrive as two point loads; no area loads (slab weight is inside the point loads)
+      setColumn('x_{2.i}', [q(9, 'm')]); setColumn('x_{1.i}', [q(0, 'm')]); setColumn('g_{k.i}', [q(0, 'kPa')]); setColumn('q_{k.i}', [q(0, 'kPa')]);
+      setColumn('a_{j}', [q(3, 'm'), q(6, 'm')]); setColumn('G_{k.j}', [q(62.78, 'kN'), q(62.78, 'kN')]); setColumn('Q_{k.j}', [q(45, 'kN'), q(45, 'kN')]);
+      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(465.649196006250,6); // SBE 465.6
+      expect(value('V_{2.Ed}','kN')).toBeCloseTo(156.204198225,6);     // SBE 156.20
+      expect(value('M_{a.Rd}','kN m')).toBeCloseTo(463.985,9);         // SBE 463.98
+      expect(value('V_{pl.Rd}','kN')).toBeCloseTo(874.99194214009,6);   // SBE 874.97
+      expect(value('\\eta_{min}')).toBeCloseTo(0.52,10);                  // SBE 0.520
+      expect(value('b_{eff}','mm')).toBeCloseTo(2250,9);                // SBE 2.25 m
+      expect(value('P_{c.Rd}','kN')).toBeCloseTo(73.7303062899,6);       // SBE 73.73 (solid value, before k_l)
+      // SBE: 31 deck studs (45.27 kN) to the point load give N_c = 1403 kN; same slab force here
+      const eta = region('\\eta\\coloneq');
+      e.setDefinitionOverride(eta, { value: 1403 / (8446 * 0.355) });
+      expect(value('y_a','mm')).toBeCloseTo(12.483020344288,7);          // SBE h_n = 388 mm, i.e. 12 mm below the top
+      expect(value('M_{Rd.pl}','kN m')).toBeCloseTo(755.251727655505,5); // SBE 738 (deck slab; +2.3 %, see VALIDATION.md)
+      e.setDefinitionOverride(eta, null);
+      for (const [start] of set) e.setDefinitionOverride(region(start), null);
+      restore('x_{1.i}', 'x_{2.i}', 'g_{k.i}', 'q_{k.i}', 'a_{j}', 'G_{k.j}', 'Q_{k.j}');
+      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(469.188257625,6);
+    });
     step('three static symbolic figures and three graphs; explicit review status', () => {
       const texts=doc.shapes.filter(s => s.type==='text');
       expect(texts.filter(s=>/^F\d —/.test(s.props.html)).map(s=>s.props.html.slice(0,2))).toEqual(['F1','F2','F3']);

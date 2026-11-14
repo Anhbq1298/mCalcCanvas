@@ -170,6 +170,24 @@ def reference():
                M_Rd_linear_kNm=(ma8 + 1252/2618*(mpl8 - ma8))/1e6,
                x_pl_mm=aac8/165.9, M_direct_kNm=mdir8/1e6,
                published=dict(P_Rd=73.7, eta_min=.50, x_c=61.5, M_pl_Rd=952.4, M_Rd=715.7, x_pl=5.90, M_direct=903.9))
+    # Steel Buildings in Europe, multi-storey Part 4, worked example A.4 (primary beam, IPE 400 S355,
+    # L = 9 m, two point loads at 3 m and 6 m, b_eff 2.25 m, slab 140 mm, C25/30)
+    ga4 = 66.3*9.81/1000
+    f4 = 1.35*62.78e3 + 1.5*45e3
+    _, _, m4, x4 = beam(1.35*ga4, [(3000., f4), (6000., f4)], L=9000.)
+    v4 = 1.35*ga4*9000/2 + f4
+    a4, na4 = 8446., 8446*355.
+    nc4 = 1403e3
+    aac4 = (a4 - nc4/355)/2
+    ya4 = aac4/180
+    xc4 = nc4/(.85*25/1.5*2250)
+    mdir4 = 355*a4*(140 + 200) - 2*355*aac4*(140 + ya4/2) - nc4*xc4/2
+    sbe = dict(M_Ed_kNm=m4(x4)/1e6, V_Ed_kN=v4/1000, M_a_Rd_kNm=1307e3*355/1e6,
+               V_pl_Rd_kN=(a4 - 2*180*13.5 + (8.6 + 2*21)*13.5)*355/sqrt(3)/1000,
+               eta_min=1-(.75-.03*9), b_eff_mm=2250., P_c_Rd_kN=.29*19**2*sqrt(25*31000)/1.25/1000,
+               steel_PNA_mm=ya4, M_direct_kNm=mdir4/1e6,
+               published=dict(M_Ed=465.6, V_Ed=156.20, M_a_Rd=463.98, V_pl_Rd=874.97, eta_min=.520,
+                              b_eff=2250, P_c_Rd=73.73, steel_PNA=400-388, M_Rd=738.))
     return dict(P_Rd_kN=p/1000, eta=eta, eta_min=.49,
                 M1_Ed_kNm=w1*L**2/8/1e6, M2_Ed_kNm=m2/1e6, x_M_m=xm/1000,
                 V2_Ed_kN=v2/1000, M_at_point_load_kNm=ma_p/1e6,
@@ -189,7 +207,7 @@ def reference():
                 transverse_required_mm2_m=as_req*1000,
                 transverse_provided_mm2_m=as_prov*1000,
                 UR_transverse=as_req/as_prov,
-                propped=propped, sci_p364_example_8=sci,
+                propped=propped, sci_p364_example_8=sci, sbe_part4_example_a4=sbe,
                 **{f'I_{k}_mm4':v[2] for k,v in trans.items()})
 
 
