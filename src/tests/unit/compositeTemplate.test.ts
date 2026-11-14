@@ -102,35 +102,46 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('\\sigma_{c.bot}','MPa')).toBeCloseTo(0.211129167388,7);
       expect(value('I_L','mm^4')).toBeCloseTo(633331327.3353621,3);
     });
+    // Load tables: one column region per variable, one row per load.
+    const original = new Map<string, string>();
+    const setColumn = (name: string, entries: string[] | null) => {
+      const id = region(`${name}\\coloneq`);
+      if (!original.has(id)) original.set(id, (math.find(s => s.id === id) as Extract<Shape, { type: 'math' }>).props.latex);
+      const latex = entries ? `${name}\\coloneq\\begin{bmatrix}${entries.join('\\\\')}\\end{bmatrix}` : original.get(id)!;
+      e.setRegion(id, { latex, order: calcKey(rec[id], rec), displayUnit: null, precision: null });
+    };
+    const restore = (...names: string[]) => names.forEach((n) => setColumn(n, null));
+    const q = (v: number, u: string) => `${v}\\,\\mathrm{${u}}`;
     step('adding a table row adds a load', () => {
-      const pt = region('P_{pt}\\coloneq');
-      const latex = (math.find(s => s.id === pt) as Extract<Shape, { type: 'math' }>).props.latex;
-      e.setRegion(pt, { latex: latex.replace('\\end{bmatrix}', '\\\\6\\,\\mathrm{m}&10\\,\\mathrm{kN}&10\\,\\mathrm{kN}\\end{bmatrix}'), order: calcKey(rec[pt], rec), displayUnit: null, precision: null });
+      setColumn('a_{j}', [q(3, 'm'), q(3, 'm'), q(6, 'm')]);
+      setColumn('G_{k.j}', [q(30, 'kN'), q(0, 'kN'), q(10, 'kN')]);
+      setColumn('Q_{k.j}', [q(0, 'kN'), q(45, 'kN'), q(10, 'kN')]);
       // closed form: maximum 490.6303 kNm at x = 3.0614 m; the 40 mm grid is within w·Δx²/8 = 0.007 kNm
       expect(value('M_{2.Ed}','kN m')).toBeCloseTo(490.630293556811,1);
       expect(value('V_{2.Ed}','kN')).toBeCloseTo(216.8587374,6);
       expect(value('M_P','kN m')).toBeCloseTo(490.563257625, 6); // first row: moment under the 3 m load
-      e.setRegion(pt, { latex, order: calcKey(rec[pt], rec), displayUnit: null, precision: null });
+      restore('a_{j}', 'G_{k.j}', 'Q_{k.j}');
       expect(value('M_{2.Ed}','kN m')).toBeCloseTo(469.188257625,6);
     });
     step('area-load rows are pressures times the load width', () => {
-      const wu = region('W_{udl}\\coloneq');
-      const latex = (math.find(s => s.id === wu) as Extract<Shape, { type: 'math' }>).props.latex;
       expect(value('g_u','kN/m')).toBeCloseTo(4.5,9); // 1.5 kPa × 3 m
-      e.setRegion(wu, { latex: latex.replace('\\end{bmatrix}', '\\\\0\\,\\mathrm{m}&8\\,\\mathrm{m}&1\\,\\mathrm{kPa}&0\\,\\mathrm{kPa}\\end{bmatrix}'), order: calcKey(rec[wu], rec), displayUnit: null, precision: null });
+      setColumn('x_{1.i}', [q(0, 'm'), q(0, 'm'), q(0, 'm')]);
+      setColumn('x_{2.i}', [q(8, 'm'), q(8, 'm'), q(8, 'm')]);
+      setColumn('g_{k.i}', [q(1.5, 'kPa'), q(0, 'kPa'), q(1, 'kPa')]);
+      setColumn('q_{k.i}', [q(0, 'kPa'), q(3, 'kPa'), q(0, 'kPa')]);
       expect(value('M_{2.Ed}','kN m')).toBeCloseTo(499.563257625,6); // closed form, extra 1 kPa × 3 m permanent
       expect(value('V_{2.Ed}','kN')).toBeCloseTo(225.9337374,6);
-      e.setRegion(wu, { latex, order: calcKey(rec[wu], rec), displayUnit: null, precision: null });
+      restore('x_{1.i}', 'x_{2.i}', 'g_{k.i}', 'q_{k.i}');
       expect(value('M_{2.Ed}','kN m')).toBeCloseTo(469.188257625,6);
     });
     step('a large point load moves the maximum moment and the stud spacing with it', () => {
-      const pt = region('P_{pt}\\coloneq');
-      const latex = (math.find(s => s.id === pt) as Extract<Shape, { type: 'math' }>).props.latex;
-      e.setRegion(pt, { latex: '\\begin{bmatrix}2\\,\\mathrm{m}&100\\,\\mathrm{kN}&150\\,\\mathrm{kN}\\end{bmatrix}'.replace(/^/, 'P_{pt}\\coloneq'), order: calcKey(rec[pt], rec), displayUnit: null, precision: null });
+      setColumn('a_{j}', [q(2, 'm')]);
+      setColumn('G_{k.j}', [q(100, 'kN')]);
+      setColumn('Q_{k.j}', [q(150, 'kN')]);
       expect(value('x_M','m')).toBeCloseTo(2,9);
       expect(value('n_A')).toBe(16); // 125 mm spacing over 2 m: too few studs for eta_min
       expect(passes('\\eta_{min}\\le')).toBe(false);
-      e.setRegion(pt, { latex, order: calcKey(rec[pt], rec), displayUnit: null, precision: null });
+      restore('a_{j}', 'G_{k.j}', 'Q_{k.j}');
       expect(value('x_M','m')).toBeCloseTo(3,9);
     });
     step('propped construction: span and LTB length k_LT L, g0 on the composite section, slip factor 0.5', () => {

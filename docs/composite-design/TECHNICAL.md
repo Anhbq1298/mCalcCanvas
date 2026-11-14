@@ -72,10 +72,11 @@ Annex: the general force model and branch boundaries.
 
 ## Rev E: load tables, stud spacing and PNA case
 
-- Composite-stage loads are two matrix inputs: `W_udl` rows [x1, x2, g_k, q_k] as area loads (kPa,
-  multiplied by the load width s_b) and `P_pt` rows
-  [a, G_k, Q_k]; adding a row adds a load. Self weight g_0 acts in every stage. Point loads are assumed
-  to act after composite action; the construction stage keeps its UDL.
+- Composite-stage loads are input as tables: one column region per variable (header = variable name),
+  one row per load. Area loads x_1,i, x_2,i, g_k,i, q_k,i (kPa, multiplied by the load width s_b);
+  point loads a_j, G_k,j, Q_k,j (kN). Add a row in every column of a table. Point loads are assumed to
+  act after composite action; the construction stage keeps its UDL. The example splits finishes and
+  imposed load (and G and Q of the point load) into two rows each.
 - M(x), V(x) on a 200-step grid (annex A.1, user functions with factors cG, cQ); M_Ed is the larger of
   the grid maximum and the moments under the point loads (grid error ≤ wΔx²/8). Graphs M_Ed, V_Ed.
 - Studs: the user specifies the spacing of each shear span, s_sc,A (support A to the maximum moment x_M)
