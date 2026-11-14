@@ -61,8 +61,9 @@ input('Formwork load (removable)', 'g_{form}', 0.5, 'kPa');
 input('LTB: C1, UDL, fork ends (SN003b)', 'C_1', 1.127);
 input('LTB: C2, load on top flange (SN003b)', 'C_2', 0.454);
 input('LTB: imperfection, curve b (EC3 Table 6.4)', '\\alpha_{LT}', 0.34);
-H(3, '1.5 Composite-stage loads (one row per load)');
-P('Distributed loads [x1, x2, g_k, q_k]',R`W_{udl}\coloneq\begin{bmatrix}0\,\mathrm{m}&8\,\mathrm{m}&4.5\,\mathrm{kN/m}&9\,\mathrm{kN/m}\end{bmatrix}`,M({ precision: 3 }));
+H(3, '1.5 Composite-stage load tables (add a row to add a load)');
+T('Area loads act over the load width s_b: UDL = pressure × s_b. Rows may cover part of the span.');
+P('Area loads [x1, x2, g_k, q_k]',R`W_{udl}\coloneq\begin{bmatrix}0\,\mathrm{m}&8\,\mathrm{m}&1.5\,\mathrm{kPa}&3\,\mathrm{kPa}\end{bmatrix}`,M({ precision: 3 }));
 P('Point loads [a, G_k, Q_k]',R`P_{pt}\coloneq\begin{bmatrix}3\,\mathrm{m}&30\,\mathrm{kN}&45\,\mathrm{kN}\end{bmatrix}`,M({ precision: 3 }));
 H(3, '1.6 Shear connection and slab reinforcement');
 input('Stud diameter', 'd_{sc}', 19, 'mm');
@@ -93,8 +94,10 @@ fig('F1', 'Composite-stage loading (rows of the load tables)', 'loads', 4);
 LINK('forces', 'Internal forces along the span from the load tables', () => {
  calc('Diagram step (200 intervals)', '\\Delta x', R`\frac{L}{200}`, 'mm', false);
  T('Columns of the tables (first row = row 0). Simply supported beam, x from support A.');
- for (const [n, t, c] of [['x_{u1}','W_{udl}',0],['x_{u2}','W_{udl}',1],['g_u','W_{udl}',2],['q_u','W_{udl}',3],['a_P','P_{pt}',0],['G_P','P_{pt}',1],['Q_P','P_{pt}',2]])
+ for (const [n, t, c] of [['x_{u1}','W_{udl}',0],['x_{u2}','W_{udl}',1],['a_P','P_{pt}',0],['G_P','P_{pt}',1],['Q_P','P_{pt}',2]])
   calc(`Column ${c} of the ${t === 'P_{pt}' ? 'point' : 'distributed'} load table`, n, R`\mathrm{col}\left(${t},${c}\right)`, '', false);
+ calc('Line loads from the area loads, g_k × s_b', 'g_u', R`s_b\,\mathrm{col}\left(W_{udl},2\right)`, 'kN/m', false);
+ calc('Line loads from the area loads, q_k × s_b', 'q_u', R`s_b\,\mathrm{col}\left(W_{udl},3\right)`, 'kN/m', false);
  calc('Loaded lengths', 'l_u', R`x_{u2}-x_{u1}`, 'm', false);
  calc('Reaction at A per unit distributed load', 'r_u', R`\frac{l_u\left(L-\frac{x_{u1}+x_{u2}}{2}\right)}{L}`, 'm', false);
  P('Left-part moment per unit row load', R`m_u(x)\coloneq${IF([R`x\le x_{u1}`, R`0\,\mathrm{m^2}`], [R`x\ge x_{u2}`, R`l_u\left(x-\frac{x_{u1}+x_{u2}}{2}\right)`], [null, R`\frac{\left(x-x_{u1}\right)^2}{2}`])}`, M(units('')));

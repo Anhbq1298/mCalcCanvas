@@ -113,6 +113,16 @@ describe('EC4 phase-one composite worksheet', () => {
       e.setRegion(pt, { latex, order: calcKey(rec[pt], rec), displayUnit: null, precision: null });
       expect(value('M_{2.Ed}','kN m')).toBeCloseTo(469.188257625,6);
     });
+    step('area-load rows are pressures times the load width', () => {
+      const wu = region('W_{udl}\\coloneq');
+      const latex = (math.find(s => s.id === wu) as Extract<Shape, { type: 'math' }>).props.latex;
+      expect(value('g_u','kN/m')).toBeCloseTo(4.5,9); // 1.5 kPa × 3 m
+      e.setRegion(wu, { latex: latex.replace('\\end{bmatrix}', '\\\\0\\,\\mathrm{m}&8\\,\\mathrm{m}&1\\,\\mathrm{kPa}&0\\,\\mathrm{kPa}\\end{bmatrix}'), order: calcKey(rec[wu], rec), displayUnit: null, precision: null });
+      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(499.563257625,6); // closed form, extra 1 kPa × 3 m permanent
+      expect(value('V_{2.Ed}','kN')).toBeCloseTo(225.9337374,6);
+      e.setRegion(wu, { latex, order: calcKey(rec[wu], rec), displayUnit: null, precision: null });
+      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(469.188257625,6);
+    });
     step('a large point load moves the maximum moment and the stud spacing with it', () => {
       const pt = region('P_{pt}\\coloneq');
       const latex = (math.find(s => s.id === pt) as Extract<Shape, { type: 'math' }>).props.latex;
