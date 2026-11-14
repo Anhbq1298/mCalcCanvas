@@ -4,7 +4,7 @@
 import {
   addShapes,
   deleteShapes,
-  GRID_MAJOR,
+  LINE_HEIGHT,
   GRID_SIZE,
   newShapeId,
   orderedShapes,
@@ -87,7 +87,7 @@ export function moveCrosshair(dx: number, dy: number): void {
       // Past the bottom margin: first line of the next page.
       const after = nextPrintableTop(next.y);
       if (after === null) return;
-      next = crossPoint({ x: next.x, y: after + GRID_MAJOR });
+      next = crossPoint({ x: next.x, y: after + LINE_HEIGHT });
     } else if (dy < 0) {
       return;
     } else {
@@ -342,7 +342,7 @@ function cloneShapes(list: Shape[], times: number): Shape[] {
   const groupMap = new Map<string, string>();
   // Offset copies by two minor squares sideways and one major line down, so they stay on the ruled lines.
   const dx = GRID_SIZE * 2 * times;
-  const dy = GRID_MAJOR * times;
+  const dy = LINE_HEIGHT * times;
   return list.map((s) => {
     const clone: Shape = { ...s, id: newShapeId(), x: s.x + dx, y: s.y + dy } as Shape;
     if (s.printGroupId) clone.printGroupId = `print-${clone.id}`;

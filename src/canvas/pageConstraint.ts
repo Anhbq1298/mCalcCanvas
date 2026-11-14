@@ -3,7 +3,7 @@
  * the margins) area of an A4 page — like typing in a Google Docs page.
  * Free canvas mode has no limits.
  */
-import { GRID_MAJOR, GRID_SIZE, orderedShapes, setPositionNormalizer, updateShapes, useCanvasStore, type ShapePatch } from './model/canvasStore';
+import { LINE_HEIGHT, GRID_SIZE, orderedShapes, setPositionNormalizer, updateShapes, useCanvasStore, type ShapePatch } from './model/canvasStore';
 import { shapeBounds, unionBounds } from './model/geometry';
 import type { Box, Point, Shape } from './model/types';
 import { PAGE_GAP, pageCount, pageSize, printableBox } from '../export/pageGeometry';
@@ -93,18 +93,18 @@ function gridPoint(p: Point): Point {
   return { x: o.x + Math.round((p.x - o.x) / GRID_SIZE) * GRID_SIZE, y: o.y + Math.round((p.y - o.y) / GRID_SIZE) * GRID_SIZE };
 }
 
-/** Vertical snap step for baselines: a major line (40 px) or, if chosen, every grid line (20 px). */
+/** Baselines snap to worksheet lines (40 px) or, if chosen, grid squares (20 px). */
 export function baselineStep(): number {
-  return useAppStore.getState().settings.baselineSnap === 'minor' ? GRID_SIZE : GRID_MAJOR;
+  return useAppStore.getState().settings.baselineSnap === 'minor' ? GRID_SIZE : LINE_HEIGHT;
 }
 
-/** Nearest snap line (major lines, or minor lines when chosen) from the grid origin. */
+/** Nearest worksheet line or grid square, measured from the grid origin. */
 function nearestMajor(y: number, originY: number): number {
   const step = baselineStep();
   return originY + Math.round((y - originY) / step) * step;
 }
 
-/** Insertion cross: x on the minor grid, y on the nearest major line (where the next baseline goes). */
+/** Insertion cross: x on the minor grid, y on the next baseline's snap line. */
 export function crossPoint(p: Point): Point {
   const o = gridOrigin(p);
   return { x: gridPoint(p).x, y: nearestMajor(p.y, o.y) };
@@ -118,10 +118,10 @@ export function nextPrintableTop(y: number): number | null {
   return printableBox(next, orientation()).y;
 }
 
-/** First major line at or below y (for placing the cross under a region). */
+/** First worksheet line at or below y (for placing the cross under a region). */
 export function majorLineAtOrBelow(y: number): number {
   const o = gridOrigin({ x: 0, y });
-  return o.y + Math.ceil((y - o.y) / GRID_MAJOR) * GRID_MAJOR;
+  return o.y + Math.ceil((y - o.y) / LINE_HEIGHT) * LINE_HEIGHT;
 }
 
 /**
@@ -137,7 +137,7 @@ export function baselineOf(s: Shape): number {
 
 /**
  * Math and text regions sit like writing on ruled paper: x on the minor
- * grid, and the first baseline on a major line, inside the margins.
+ * grid, and the first baseline on a worksheet line, inside the margins.
  */
 export function gridAlign(s: Shape): Shape {
   if (s.type !== 'math' && s.type !== 'text') return s;

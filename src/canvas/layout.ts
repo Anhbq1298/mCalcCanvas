@@ -7,7 +7,7 @@
  * Callers apply a plan in one batched update (and one undo step), which
  * keeps layout deterministic and testable on its own.
  */
-import { GRID_MAJOR } from './model/canvasStore';
+import { LINE_HEIGHT } from './model/canvasStore';
 import { shapeBounds } from './model/geometry';
 import type { Box, Shape } from './model/types';
 import { baselineOf, constrained } from './pageConstraint';
@@ -35,7 +35,7 @@ export function planBlockInsertion(existing: Record<string, Shape>, block: Shape
   const dy = box ? Math.max(box.y, Math.min(top, box.y + box.h - height)) - top : 0;
   const shapes = block.map(s => ({ ...s, x: s.x + dx, y: s.y + dy }));
   // Reserve the whole block, so existing equations cannot end up between its definitions.
-  const shift = planLineShift(existing, globalLine(anchorY(shapes[0])), Math.ceil(height / GRID_MAJOR) + 1);
+  const shift = planLineShift(existing, globalLine(anchorY(shapes[0])), Math.ceil(height / LINE_HEIGHT) + 1);
   const shifted = Object.fromEntries(Object.entries(existing).map(([id, s]) => [id, shift.patches[id] ? { ...s, y: shift.patches[id].y } : s]));
   const all = { ...shifted, ...Object.fromEntries(shapes.map(s => [s.id, s])) };
   const separate = planSeparation(all, shapes.map(s => s.id));
@@ -45,13 +45,13 @@ export function planBlockInsertion(existing: Record<string, Shape>, block: Shape
 /** Overlap (px) tolerated between region boxes: their 4 px paddings may touch. */
 const OVERLAP_TOLERANCE = 8;
 
-// -- line model: major lines numbered continuously across pages ---------------
+// -- line model: worksheet lines numbered continuously across pages -----------
 
 export function pageLines() {
   const orientation = useAppStore.getState().settings.pageOrientation;
   const p0 = printableBox(0, orientation);
   const p1 = printableBox(1, orientation);
-  return { stride: p1.y - p0.y, top: p0.y, perPage: Math.floor(p0.h / GRID_MAJOR), orientation };
+  return { stride: p1.y - p0.y, top: p0.y, perPage: Math.floor(p0.h / LINE_HEIGHT), orientation };
 }
 
 /** The y a shape is "written on": its first baseline (math/text) or, for drawings, a baseline under its top. */
@@ -60,21 +60,21 @@ export function anchorY(s: Shape): number {
   return shapeBounds(s).y + 22;
 }
 
-/** Index of the major line nearest to y, counted across pages (page mode) or from the origin (free canvas). */
+/** Index of the worksheet line nearest to y, across pages or from the free-canvas origin. */
 export function globalLine(y: number): number {
-  if (!constrained()) return Math.round(y / GRID_MAJOR);
+  if (!constrained()) return Math.round(y / LINE_HEIGHT);
   const { stride, top, perPage } = pageLines();
   const page = Math.max(0, Math.floor(y / stride));
-  const l = Math.min(perPage, Math.max(1, Math.round((y - page * stride - top) / GRID_MAJOR)));
+  const l = Math.min(perPage, Math.max(1, Math.round((y - page * stride - top) / LINE_HEIGHT)));
   return page * perPage + (l - 1);
 }
 
 /** y of a global line index (inverse of globalLine). */
 export function lineY(g: number): number {
-  if (!constrained()) return g * GRID_MAJOR;
+  if (!constrained()) return g * LINE_HEIGHT;
   const { stride, top, perPage } = pageLines();
   const page = Math.floor(g / perPage);
-  return page * stride + top + GRID_MAJOR * ((g % perPage) + 1);
+  return page * stride + top + LINE_HEIGHT * ((g % perPage) + 1);
 }
 
 /** True if anything is written on line g or reaches into its band. */
@@ -159,7 +159,7 @@ function overlapLines(early: Shape, late: Shape): number {
   const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
   const oy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
   if (ox <= OVERLAP_TOLERANCE || oy <= OVERLAP_TOLERANCE) return 0;
-  return Math.max(0, Math.ceil((a.y + a.h - OVERLAP_TOLERANCE - b.y) / GRID_MAJOR));
+  return Math.max(0, Math.ceil((a.y + a.h - OVERLAP_TOLERANCE - b.y) / LINE_HEIGHT));
 }
 
 const collides = (s: Shape, o: Shape) =>

@@ -112,7 +112,7 @@ export function PageOverlay() {
                 top: m.top,
                 bottom: m.bottom,
                 outline: boundaries ? '1px dashed var(--color-docs-blue)' : isGrid ? '1px solid var(--grid-major)' : undefined,
-                // Engineering pad: 10 px minor / 40 px major (4 × 4) squares inside the print area.
+                // Engineering pad: 20 px minor / 60 px major (3 × 3) squares inside the print area.
                 backgroundImage: isGrid ? gridImage : undefined,
                 backgroundSize: isGrid ? `${GRID_MAJOR}px ${GRID_MAJOR}px, ${GRID_MAJOR}px ${GRID_MAJOR}px, ${GRID_SIZE}px ${GRID_SIZE}px, ${GRID_SIZE}px ${GRID_SIZE}px` : undefined,
               }}

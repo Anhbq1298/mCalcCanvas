@@ -239,7 +239,7 @@ export function CalculationTab() {
           </Field>
           <Field label="Snap">
             <TBSelect
-              label="Equations and text snap their baseline to major lines (every 2 squares) or to every grid line"
+              label="Equations and text snap their baseline to worksheet lines (40 px) or to every grid square (20 px)"
               testId="baseline-snap"
               value={settings.baselineSnap ?? 'major'}
               width={96}

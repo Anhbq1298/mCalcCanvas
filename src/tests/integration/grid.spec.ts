@@ -6,7 +6,7 @@ const shapes = (page: Page): Promise<S[]> =>
   page.evaluate(() =>
     Object.values((window as unknown as { __calccanvas: { store: { getState(): { shapes: Record<string, S> } } } }).__calccanvas.store.getState().shapes),
   );
-/** Ruled paper: x on the 20 px grid, first baseline on a 40 px major line (2 × 2 squares). */
+/** Worksheet baselines use 40 px lines; the visible grid groups 3 × 3 squares of 20 px. */
 const baseline = (s: S) => (s.type === 'math' ? (s.props.baseline ?? 4 + s.props.fontSize) : Math.round(s.props.fontSize * 1.09));
 const onGrid = (s: S) => Math.abs((s.x - 76) % 20) === 0 && (s.y + baseline(s) - 60) % 40 === 0;
 
@@ -40,7 +40,7 @@ test.describe('optional grid snapping', () => {
     expect(snapped.x % 20).toBe(0);
   });
 
-  test('grid, regions and selection stay synchronized through zoom levels', async ({ page }) => {
+  test('the 3 × 3 grid, regions and selection stay synchronized through zoom levels', async ({ page }, testInfo) => {
     await openFresh(page);
     await newBlankWorksheet(page, 'free');
     await page.getByTestId('tool-math').click();
@@ -58,8 +58,21 @@ test.describe('optional grid snapping', () => {
         return Math.max(Math.abs(region.x - outline.x), Math.abs(region.y - outline.y));
       }).toBeLessThan(5);
       const size = await page.getByTestId('canvas').evaluate((el) => getComputedStyle(el).backgroundSize);
-      expect(size).toContain(`${20 * zoom / 100}px`);
+      const minor = 20 * zoom / 100, major = 60 * zoom / 100;
+      expect(size).toBe(`${major}px ${major}px, ${major}px ${major}px, ${minor}px ${minor}px, ${minor}px ${minor}px`);
     }
+    await page.getByRole('group', { name: 'Zoom' }).getByLabel('Zoom').selectOption('100');
+    await page.getByTestId('doc-pages').check();
+    await expect(page.getByTestId('page-grid').first()).toHaveCSS('background-size', '60px 60px, 60px 60px, 20px 20px, 20px 20px');
+    const box = await stableBox(page.getByTestId('math-region'));
+    await page.mouse.move(box.x + 8, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(box.x + 208, box.y + box.height / 2 + 100, { steps: 6 });
+    await page.mouse.up();
+    await page.screenshot({ path: testInfo.outputPath('grid-3x3.png') });
+    await page.getByTestId('export-pdf').click();
+    await page.emulateMedia({ media: 'print' });
+    await page.pdf({ path: testInfo.outputPath('grid-3x3.pdf'), preferCSSPageSize: true, printBackground: true });
   });
 });
 

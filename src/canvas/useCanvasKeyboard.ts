@@ -13,7 +13,7 @@ import {
   insertionPoint,
   nudgeSelection,
 } from './canvasActions';
-import { GRID_MAJOR, GRID_SIZE, select, setTool, useCanvasStore } from './model/canvasStore';
+import { LINE_HEIGHT, GRID_SIZE, select, setTool, useCanvasStore } from './model/canvasStore';
 
 function isTypingTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
@@ -107,9 +107,9 @@ export function useCanvasKeyboard(): void {
         e.preventDefault();
         // Math/text regions move one grid square sideways and one major line up/down (baselines sit on major lines).
         const onGrid = st.selection.some((id) => st.shapes[id]?.type === 'math' || st.shapes[id]?.type === 'text');
-        const stepX = onGrid ? (e.shiftKey ? GRID_MAJOR : GRID_SIZE) : e.shiftKey ? 10 : 1;
+        const stepX = onGrid ? (e.shiftKey ? LINE_HEIGHT : GRID_SIZE) : e.shiftKey ? 10 : 1;
         const line = baselineStep();
-        const stepY = onGrid ? (e.shiftKey ? GRID_MAJOR : line) : e.shiftKey ? 10 : 1;
+        const stepY = onGrid ? (e.shiftKey ? LINE_HEIGHT : line) : e.shiftKey ? 10 : 1;
         nudgeSelection(arrows[e.key][0] * stepX, arrows[e.key][1] * stepY);
         return;
       }

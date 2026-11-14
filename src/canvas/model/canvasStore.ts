@@ -68,9 +68,11 @@ export function setPositionNormalizer(fn: (s: Shape) => Shape): void {
   normalizePosition = fn;
 }
 export const GRID_SIZE = 20;
-/** Major lines every 2 squares (40 px), drawn like the minor ones. Math and text sit with their baseline on a grid line. */
-export const GRID_MAJOR_EVERY = 2;
+/** The visible engineering grid groups three minor squares in each direction. */
+export const GRID_MAJOR_EVERY = 3;
 export const GRID_MAJOR = GRID_SIZE * GRID_MAJOR_EVERY;
+/** Worksheet line spacing is independent of the grid's visual grouping. */
+export const LINE_HEIGHT = GRID_SIZE * 2;
 
 export function newShapeId(): string {
   return `s_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
