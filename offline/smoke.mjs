@@ -63,6 +63,12 @@ try {
   await addRegion(page, 500, 260, ['L:469mm']);
   const input = await region(page, 'L');
   await addRegion(page, 500, 400, ['z:L=']);
+  await resultOf(page, 'z').toBe('0.469 m');
+  await page.evaluate(() => document.fonts.ready);
+  await page.evaluate(async () => {
+    await window.__calccanvas.idle();
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  });
   const z = await region(page, 'z');
   const resultBlock = page.locator(`[data-testid=math-region][data-shape-id="${z.id}"]`);
   const bounds = await resultBlock.boundingBox();
@@ -75,6 +81,23 @@ try {
   await page.mouse.click(900, 600);
   await resultOf(page, 'z').toBe('46.9 cm');
   assert.equal((await region(page, 'L')).latex, input.latex);
+  await newBlankWorksheet(page);
+  await addRegion(page, 500, 220, ['fyk:500MPa']);
+  await addRegion(page, 500, 320, ['fx:10MPa/mm']);
+  await addRegion(page, 500, 420, ['L:fyk/fx=']);
+  const length = await region(page, 'L');
+  const formula = page.locator(`[data-testid=math-region][data-shape-id="${length.id}"]`);
+  await formula.locator('[data-result-unit]').click();
+  await page.keyboard.type('mm');
+  await page.mouse.click(900, 600);
+  await resultOf(page, 'L').toBe('50 mm');
+  await formula.locator('[data-result-unit]').click();
+  await expect(unit).toHaveJSProperty('value', '\\mathrm{mm}');
+  await expect.poll(() => unit.evaluate(el => el.selectionIsCollapsed)).toBe(false);
+  await page.keyboard.type('cm');
+  await page.mouse.click(900, 600);
+  await resultOf(page, 'L').toBe('5 cm');
+  assert.equal((await region(page, 'L')).latex, length.latex);
   console.log('Desktop smoke passed: local protocol, worker calculation, sandbox, persistence, click-to-replace result units.');
 } finally {
   // The isolated smoke profile has no user work; do not wait on unload prompts.
