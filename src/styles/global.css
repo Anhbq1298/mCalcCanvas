@@ -487,6 +487,8 @@ body {
 }
 .math-region math-field.inline-result-unit-input {
   min-width: 1em;
+  width: max-content;
+  flex-shrink: 0;
   padding: 0 2px;
   border-color: transparent;
   background: transparent;
@@ -503,6 +505,7 @@ body {
   left: 0;
   top: 0;
   display: inline-flex;
+  width: max-content;
   align-items: center;
   gap: 0.2em;
   padding: 0;
@@ -524,7 +527,7 @@ body {
 }
 .math-region [data-result-unit] { cursor: text; }
 .math-region[data-unit-editing] [data-result-unit] { visibility: hidden; }
-.result-unit-overlay { position: absolute; z-index: 1; line-height: 1; color: var(--result-unit-color); }
+.result-unit-overlay { position: absolute; width: max-content; z-index: 1; line-height: 1; color: var(--result-unit-color); }
 .math-region .result-unit-overlay math-field.inline-result-unit-input {
   min-width: 0;
   border: 0;

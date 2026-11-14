@@ -22,6 +22,7 @@ import { handleMathcadKey } from '../../math/mathcadKeys';
 import { fractionUnitLatex, resultUnitText } from '../../math/resultUnit';
 import { UNIT_COLOR } from '../../math/unitStyle';
 import { releaseActiveMathEditor, setActiveMathEditor, setKeyReplayer } from '../../math/activeEditor';
+import { setMathEditingBounds } from './mathEditingBounds';
 
 const PAD_X = 4;
 const PAD_Y = 2;
@@ -94,6 +95,31 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   }, [shape.id, shape.props.w, shape.props.h, shape.props.baseline, isStatic, editing, display.latex, textFont, equationFont, fontStyle, hasResult, seen]);
 
   useSeparateAfterEditing(shape.id, editing, isStatic);
+
+  useLayoutEffect(() => {
+    if (isStatic || (!editing && !unitEditor)) return;
+    const root = contentRef.current;
+    if (!root) return;
+    const measure = () => {
+      if (!root.isConnected || !root.getClientRects().length) return;
+      const rect = root.getBoundingClientRect();
+      const scale = root.offsetWidth ? rect.width / root.offsetWidth : 1;
+      let left = rect.left, top = rect.top, right = rect.right, bottom = rect.bottom;
+      for (const surface of root.querySelectorAll('.math-edit-block, .result-unit-overlay')) {
+        const bounds = surface.getBoundingClientRect();
+        left = Math.min(left, bounds.left - PAD_X * scale);
+        top = Math.min(top, bounds.top - PAD_Y * scale);
+        right = Math.max(right, bounds.right + PAD_X * scale);
+        bottom = Math.max(bottom, bounds.bottom + PAD_Y * scale);
+      }
+      setMathEditingBounds(shape.id, { x: shape.x + (left - rect.left) / scale, y: shape.y + (top - rect.top) / scale, w: (right - left) / scale, h: (bottom - top) / scale });
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(root);
+    for (const surface of root.querySelectorAll('.math-edit-block, .result-unit-overlay')) observer.observe(surface);
+    measure();
+    return () => { observer.disconnect(); setMathEditingBounds(shape.id, null); };
+  }, [shape.id, shape.x, shape.y, editing, isStatic, unitEditor]);
 
   const onChange = useCallback((next: string) => {
     // The preview owns the visible equals sign; retain the source evaluation marker.

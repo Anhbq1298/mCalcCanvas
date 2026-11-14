@@ -117,6 +117,27 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
     const source = (await region(page, 'M'))!;
     const block = page.locator(`[data-testid=math-region][data-shape-id="${source.id}"]`);
     const unit = page.getByTestId('inline-result-unit');
+    await test.step('unit and selection boxes grow with a draft and shrink on cancellation', async () => {
+      await block.locator('[data-result-unit]').click();
+      const initial = (await unit.boundingBox())!;
+      await unit.press('Control+a');
+      await page.keyboard.type('kN*m*m*m*m*m*m/m^2');
+      await expect.poll(async () => (await unit.boundingBox())!.width).toBeGreaterThan(initial.width);
+      await expect.poll(async () => (await unit.boundingBox())!.height).toBeGreaterThan(initial.height);
+      await expect.poll(async () => {
+        const field = (await unit.boundingBox())!;
+        const outline = (await page.getByTestId('selection-outline').boundingBox())!;
+        return outline.x <= field.x && outline.y <= field.y && outline.x + outline.width >= field.x + field.width && outline.y + outline.height >= field.y + field.height;
+      }).toBe(true);
+      await resultOf(page, 'M').toBe('200 kN·m');
+      await expect(block).toHaveAttribute('data-latex', source.latex);
+      await page.screenshot({ path: testInfo.outputPath('unit-draft-expanded.png') });
+      await unit.press('Escape');
+      await expect(unit).toHaveCount(0);
+      await block.locator('[data-result-unit]').click();
+      await expect.poll(async () => (await unit.boundingBox())!.width).toBe(initial.width);
+      await unit.press('Escape');
+    });
     await test.step('click places a caret and a product can be extended into a fraction', async () => {
       await block.locator('[data-result-unit]').click({ position: { x: 1, y: 8 } });
       await expect.poll(() => unit.evaluate(el => (el as HTMLElement & { selectionIsCollapsed: boolean }).selectionIsCollapsed)).toBe(true);
@@ -198,6 +219,12 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
       await page.getByTestId('palette-operators').click();
       await page.getByTestId('palette-a/b').click();
       await expect.poll(() => unit.evaluate(el => (el as HTMLElement & { value: string }).value)).toContain('\\frac');
+      await page.keyboard.type('m*m*m*m*m*m');
+      await expect.poll(async () => {
+        const field = (await unit.boundingBox())!;
+        const outline = (await page.getByTestId('selection-outline').boundingBox())!;
+        return outline.x <= field.x && outline.y <= field.y && outline.x + outline.width >= field.x + field.width && outline.y + outline.height >= field.y + field.height;
+      }).toBe(true);
       await expect(page.getByTestId('math-input')).toHaveJSProperty('value', source.latex.replace(/=\s*$/, ''));
       await unit.press('Escape');
       await page.getByTestId('math-input').press('Escape');

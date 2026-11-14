@@ -1,6 +1,7 @@
 import { useCanvasStore } from './model/canvasStore';
 import { shapeBounds } from './model/geometry';
 import type { HandleId } from './CanvasView';
+import { useMathEditingBounds } from './shapes/mathEditingBounds';
 
 const BOX_HANDLES: HandleId[] = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
 const CURSORS: Record<string, string> = {
@@ -15,6 +16,7 @@ export function SelectionOverlay() {
   const editingId = useCanvasStore((s) => s.editingId);
   const z = useCanvasStore((s) => s.camera.z);
   const dragging = useCanvasStore((s) => s.dragging);
+  const editingBounds = useMathEditingBounds(s => s.bounds);
   if (!selection.length || dragging) return null;
 
   const px = 1 / z;
@@ -25,8 +27,8 @@ export function SelectionOverlay() {
     <>
       {selection.map((id) => {
         const s = shapes[id];
-        if (!s || id === editingId) return null;
-        const b = shapeBounds(s);
+        if (!s || (id === editingId && !editingBounds[id])) return null;
+        const b = editingBounds[id] ?? shapeBounds(s);
         if (s.type === 'line') return null;
         return (
           <div
