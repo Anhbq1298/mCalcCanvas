@@ -250,11 +250,12 @@ function InlineResultUnit({ shape, numberText, unitLatex, direct = false, initia
     mf.className = 'inline-result-unit-input';
     // Atomic unit symbols keep the next operator outside an upright text run.
     mf.value = fractionUnitLatex(unitLatex).replace(/\\mathrm\{([A-Za-z]+)\}/g, '\\unit{$1}');
-    const state: { committed: string; pending: string | null } = { committed: mf.value, pending: null };
+    const state: { committed: string; pending: string | null; validated: string | null } = { committed: mf.value, pending: null, validated: null };
     let frame = 0;
     const commit = () => {
       const draft = mf.value;
       if (draft === state.committed || draft === state.pending) return;
+      state.validated = draft;
       try {
         const next = resultUnitText(draft);
         state.pending = draft;
@@ -268,7 +269,12 @@ function InlineResultUnit({ shape, numberText, unitLatex, direct = false, initia
       } catch (reason) { setError((reason as Error).message); }
     };
     const interacted = () => cancelAnimationFrame(frame);
-    const changed = () => { interacted(); setError(null); };
+    const changed = () => {
+      interacted();
+      // MathLive may publish a deferred input event after Enter. It must not
+      // erase the validation message for the same unfinished expression.
+      if (mf.value !== state.validated) setError(null);
+    };
     const focus = () => {
       setActiveMathEditor({ mf, changed });
       setKeyReplayer(key => {

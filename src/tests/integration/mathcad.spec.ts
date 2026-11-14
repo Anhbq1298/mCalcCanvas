@@ -173,6 +173,7 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
       await unit.press('Control+a');
       await page.keyboard.type('kN/');
       await unit.press('Enter');
+      await unit.dispatchEvent('input');
       await expect(page.getByRole('alert')).toBeVisible();
       await unit.press('Escape');
     });
