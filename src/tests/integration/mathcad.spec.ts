@@ -31,6 +31,14 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
       return { x: s.x, y: s.y, w: s.props.w, h: s.props.h };
     }, formula.id);
     const before = await geometry();
+    await test.step('automatic result units expose a stacked fraction and an outlined editor', async () => {
+      await block.locator('[data-result-unit]').click();
+      const editor = page.getByTestId('inline-result-unit');
+      await expect(editor).toHaveJSProperty('value', '\\frac{\\mathrm{kN}}{\\mathrm{m}}');
+      await expect(editor).toHaveCSS('outline-style', 'solid');
+      await expect(editor).toHaveCSS('outline-width', '1px');
+      await editor.press('Escape');
+    });
     await block.dblclick();
     const unit = page.getByTestId('inline-result-unit');
     await expect(unit).toHaveJSProperty('value', '\\frac{\\mathrm{kN}}{\\mathrm{m}}');

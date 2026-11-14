@@ -31,7 +31,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   const resultUnitEditable = !!result?.value?.unitText && !(result.kind === 'definition' && result.references.length === 0);
   const [unitEditor, setUnitEditor] = useState<{ left: number; top: number } | null>(null);
   const closeUnitEditor = useCallback(() => setUnitEditor(null), []);
-  const visibleUnit = result?.value?.unitLatex ? shape.props.displayUnit.includes('/') ? fractionUnitLatex(result.value.unitLatex) : result.value.unitLatex : undefined;
+  const visibleUnit = result?.value?.unitLatex ? fractionUnitLatex(result.value.unitLatex) : undefined;
   const renderedResultUnit = !isStatic && resultUnitEditable && shape.props.displayMode !== 'formula' && (result?.kind !== 'expression' || shape.props.displayMode !== 'auto') ? visibleUnit : undefined;
   const contentRef = useRef<HTMLDivElement>(null);
   const [editPoint, setEditPoint] = useState<{ x: number; y: number } | undefined>(undefined);
@@ -40,12 +40,12 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
   const { latex, displayMode, fontSize, color, textFont, equationFont, fontStyle, w, h } = shape.props;
   const display = useMemo(() => {
     const unit = result?.value?.unitLatex;
-    const fractionalResult = unit && shape.props.displayUnit.includes('/') && !(result.kind === 'definition' && result.references.length === 0)
+    const fractionalResult = unit && !(result.kind === 'definition' && result.references.length === 0)
       ? { ...result, value: { ...result.value!, latex: result.value!.latex.replace(unit, fractionUnitLatex(unit)) } }
       : result;
     const parts = buildDisplay(latex, fractionalResult, displayMode);
     return shape.props.vectorExpanded && shape.props.vectorLayout === 'column' ? { ...parts, latex: flowColumnVectors(parts.latex) } : parts;
-  }, [latex, result, displayMode, shape.props.displayUnit, shape.props.vectorExpanded, shape.props.vectorLayout]);
+  }, [latex, result, displayMode, shape.props.vectorExpanded, shape.props.vectorLayout]);
   const hasResult = !!result;
   const steelArray = useMemo(() => sectionArrayInfo(latex), [latex]);
   // Off-screen regions with a measured size are typeset when they come near the view.
@@ -245,7 +245,7 @@ function InlineResultUnit({ shape, numberText, unitLatex, direct = false, onDone
     mf.setAttribute('aria-label', 'Result unit in equation');
     mf.setAttribute('data-testid', 'inline-result-unit');
     mf.className = 'inline-result-unit-input';
-    mf.value = direct ? unitLatex : fractionUnitLatex(unitLatex);
+    mf.value = fractionUnitLatex(unitLatex);
     const state: { committed: string; pending: string | null } = { committed: mf.value, pending: null };
     const commit = () => {
       const draft = mf.value;

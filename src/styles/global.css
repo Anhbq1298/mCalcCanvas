@@ -540,6 +540,10 @@ body {
   margin: 0;
   border: 0;
 }
+.math-region math-field.inline-result-unit-input:focus-within {
+  outline: 1px solid var(--color-accent);
+  outline-offset: 2px;
+}
 .math-region .math-placeholder {
   font-family: var(--font-sans);
   font-size: 13px;
