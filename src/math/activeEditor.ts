@@ -10,6 +10,13 @@ export function setActiveMathEditor(editor: { mf: MathfieldElement; changed: () 
   active = editor;
 }
 
+/** An unmounting field must not disconnect a different field that just took focus. */
+export function releaseActiveMathEditor(mf: MathfieldElement): void {
+  if (active?.mf !== mf) return;
+  active = null;
+  replayKey = null;
+}
+
 /** Insert LaTeX at the caret of the open editor. Returns false if none is open. */
 export function insertIntoActiveMath(latex: string): boolean {
   if (!active || !active.mf.isConnected) return false;

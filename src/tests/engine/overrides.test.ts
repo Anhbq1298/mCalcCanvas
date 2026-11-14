@@ -33,5 +33,12 @@ describe('definition overrides', () => {
       const engine = new CalculationEngine();
       expect(() => engine.setDefinitionOverride('load', { value: Number.NaN, unit: 'kN' })).toThrow('finite number');
     });
+    step('scenario values use the same scaled unit labels as worksheet results', () => {
+      const engine = new CalculationEngine();
+      engine.setRegion('f', { latex: 'F\\coloneq100\\mathrm{N}' });
+      engine.setDefinitionOverride('f', { value: 10, unit: '(10·N)' });
+      expect(engine.getResult('f')?.value?.number).toBe(0.1);
+      expect(engine.getResult('f')?.status).toBe('valid');
+    });
   });
 });

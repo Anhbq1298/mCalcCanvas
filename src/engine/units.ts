@@ -54,6 +54,16 @@ export function isUnitSymbol(name: string): boolean {
 
 export type UnitSystemName = 'SI' | 'Imperial';
 
+/** A leading positive multiplier belongs to the display unit, not the quantity. */
+export function splitDisplayUnit(input: string): { scale: number; unit: string } {
+  const text = input.trim().replace(/^\(([^()]*)\)$/, '$1');
+  const match = /^([+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?)\s+(.+)$/i.exec(text);
+  if (!match) return { scale: 1, unit: input };
+  const scale = Number(match[1]);
+  if (!Number.isFinite(scale) || scale <= 0) throw new Error('Use a finite, positive unit multiplier.');
+  return { scale, unit: match[2] };
+}
+
 /**
  * Convert a user-written display unit ("kN·mm", "kN/m²", "MPa") into mathjs
  * syntax. Only registry symbols are accepted.
@@ -68,10 +78,12 @@ export function parseDisplayUnit(input: string): string {
     .replace(/°C/g, 'degC')
     .replace(/°/g, 'deg');
   // Validate every word against the registry (safety: no arbitrary mathjs names).
-  const words = cleaned.match(/[A-Za-z]+/g) ?? [];
+  const { scale, unit } = splitDisplayUnit(cleaned);
+  const words = unit.match(/[A-Za-z]+/g) ?? [];
   for (const w of words) {
     if (!UNITS.has(w)) throw new Error(`Unknown unit "${w}".`);
   }
-  return cleaned.replace(/[A-Za-z]+/g, (w) => UNITS.get(w)!.mathjs);
+  const mapped = unit.replace(/[A-Za-z]+/g, (w) => UNITS.get(w)!.mathjs);
+  return scale === 1 ? mapped : `${scale} ${mapped}`;
 }
 

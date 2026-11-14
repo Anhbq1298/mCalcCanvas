@@ -211,10 +211,12 @@ export class CalculationEngine {
     const region = this.regions.get(id);
     const result = this.results.get(id);
     const value = this.values.get(id);
-    if (!region || !result || result.status !== 'valid' || value === undefined || isVector(value) || !isUnit(value)) return null;
+    if (!region || !result || result.status !== 'valid' || value === undefined || isVector(value)) return null;
+    if (!isUnit(value) && result.kind === 'definition' && result.references.length === 0) return null;
     // Validate formula result units too, before the UI commits a display-unit patch.
     const unit = parseDisplayUnit(unitText);
     const f = formatQuantity(value, { decimals: 12, system: this.settings.unitSystem, targetUnit: unit });
+    if (!isUnit(value)) return null;
     if (region.statement?.kind !== 'definition' || region.statement.params || result.references.length > 0) return null;
     const latex = region.input.latex;
     const at = latex.search(/\\(coloneq|coloneqq|Coloneqq|Coloneq|colonequals|definedas)|:=/);

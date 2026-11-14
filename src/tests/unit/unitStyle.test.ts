@@ -12,7 +12,11 @@ describe('unit styling (display only)', () => {
       expect(resultUnitText(String.raw`\frac{\unit{kN}\cdot\mathrm{m}}{\mathrm{m}^2}`)).toBe('kN m/m^2');
       expect(resultUnitText(String.raw`\mathrm{m}^{-2}`)).toBe('1/m^2');
       expect(resultUnitText('')).toBe('');
-      for (const invalid of [String.raw`\mathrm{kN}+\mathrm{m}`, 'x', String.raw`\sin(m)`, String.raw`m^{0.5}`]) {
+      expect(resultUnitText(String.raw`10\cdot\frac{\mathrm{kN}\cdot\mathrm{m}}{\mathrm{m}^2}`)).toBe('10 kN m/m^2');
+      expect(resultUnitText(String.raw`\frac{\mathrm{kN}}{2\cdot\mathrm{m}}`)).toBe('0.5 kN/m');
+      expect(resultUnitText(String.raw`(2\mathrm{m})^2`)).toBe('4 m^2');
+      expect(resultUnitText(String.raw`0.0000001\mathrm{N}`)).toBe('1e-7 N');
+      for (const invalid of [String.raw`\mathrm{kN}+\mathrm{m}`, 'x', String.raw`\sin(m)`, String.raw`m^{0.5}`, '0N', '-10N', String.raw`\frac{N}{0}`, '10^{400}N']) {
         expect(() => resultUnitText(invalid)).toThrow();
       }
     });

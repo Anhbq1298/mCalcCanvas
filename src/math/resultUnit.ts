@@ -30,6 +30,7 @@ export function resultUnitText(latex: string): string {
   if (statement.kind !== 'expression') throw new Error('Enter a unit, not an equation.');
   const numerator: string[] = [];
   const denominator: string[] = [];
+  let scale = 1;
   const collect = (node: Expr, power = 1): void => {
     if (node.type === 'ident' && UNITS.has(node.name)) {
       const term = node.name + (Math.abs(power) === 1 ? '' : `^${Math.abs(power)}`);
@@ -37,7 +38,11 @@ export function resultUnitText(latex: string): string {
       return;
     }
     if (node.type === 'group') return collect(node.body, power);
-    if (node.type === 'num' && node.value === 1) return;
+    if (node.type === 'num' && node.value > 0) {
+      scale *= node.value ** power;
+      if (!Number.isFinite(scale) || scale <= 0) throw new Error('Use a finite, positive unit multiplier.');
+      return;
+    }
     if (node.type === 'binary' && (node.op === '*' || node.op === '/')) {
       collect(node.left, power);
       collect(node.right, node.op === '/' ? -power : power);
@@ -53,8 +58,9 @@ export function resultUnitText(latex: string): string {
         return;
       }
     }
-    throw new Error('Use known units with products, fractions or integer powers.');
+    throw new Error('Use positive numbers and known units with products, fractions or integer powers.');
   };
   collect(statement.expr);
-  return (numerator.join(' ') || '1') + denominator.map(term => '/' + term).join('');
+  const units = (numerator.join(' ') || '1') + denominator.map(term => '/' + term).join('');
+  return scale === 1 ? units : `${scale} ${units}`;
 }

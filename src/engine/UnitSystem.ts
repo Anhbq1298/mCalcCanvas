@@ -29,7 +29,7 @@ import {
 } from 'mathjs';
 import { CalculationError } from './CalculationErrors';
 import { isComplex, QComplex } from './Complex';
-import { UNITS, parseDisplayUnit, type UnitSystemName } from './units';
+import { UNITS, parseDisplayUnit, splitDisplayUnit, type UnitSystemName } from './units';
 
 export { UNITS, isUnitSymbol, parseDisplayUnit, type UnitSystemName } from './units';
 
@@ -210,7 +210,11 @@ export function quantityFromDisplayValue(value: number, unit: string | null = nu
   if (!Number.isFinite(value)) throw new CalculationError('not-finite', 'Override value must be a finite number.');
   if (!unit?.trim()) return value;
   try {
-    return math.unit(value, parseDisplayUnit(unit));
+    const display = splitDisplayUnit(parseDisplayUnit(unit));
+    if (display.scale !== 1 && isAbsoluteTemperature(math.unit(display.unit))) throw new Error('A Celsius display unit cannot have a multiplier. Use K.');
+    const scaled = value * display.scale;
+    if (!Number.isFinite(scaled)) throw new Error('The unit multiplier makes this value too large.');
+    return math.unit(scaled, display.unit);
   } catch (error) {
     if (error instanceof CalculationError) throw error;
     throw new CalculationError('unknown-unit', error instanceof Error ? error.message : `Invalid unit "${unit}".`);
@@ -292,6 +296,12 @@ MATHJS_TO_DISPLAY.lbm = 'lb';
  * Render a mathjs unit string ("kN m", "kN / m^2") as display text and LaTeX.
  */
 export function formatUnitString(unitStr: string): { text: string; latex: string } {
+  const scaled = splitDisplayUnit(unitStr);
+  if (scaled.scale !== 1) {
+    const base = formatUnitString(scaled.unit);
+    const multiplier = String(scaled.scale).replace(/e([+-]?\d+)$/i, '\\cdot10^{$1}');
+    return { text: `(${scaled.scale}·${base.text})`, latex: `\\left(${multiplier}\\cdot ${base.latex}\\right)` };
+  }
   const parts = unitStr.trim().split(/\s*\/\s*/);
   const fmt = (part: string) => {
     const factors = part.split(/\s+/).filter(Boolean).map((f) => {
@@ -301,7 +311,7 @@ export function formatUnitString(unitStr: string): { text: string; latex: string
     });
     const text = factors.map((f) => f.disp + (f.pow ? superscript(f.pow) : '')).join('·');
     const latex = factors
-      .map((f) => `\\mathrm{${escapeLatexText(f.disp)}}` + (f.pow ? `^{${f.pow}}` : ''))
+      .map((f) => (/^(?:\d|\.)/.test(f.disp) ? f.disp.replace(/e([+-]?\d+)$/i, '\\cdot10^{$1}') : `\\mathrm{${escapeLatexText(f.disp)}}`) + (f.pow ? `^{${f.pow}}` : ''))
       .join('\\cdot ');
     return { text, latex };
   };
@@ -363,7 +373,9 @@ export function formatQuantity(
   let number: number;
   let unitStr = '';
   if (opts.targetUnit) {
-    const target = math.unit(opts.targetUnit);
+    const { scale, unit } = splitDisplayUnit(opts.targetUnit);
+    const target = math.unit(unit);
+    if (scale !== 1 && isAbsoluteTemperature(target)) throw new Error('A Celsius display unit cannot have a multiplier. Use K.');
     if (isAbsoluteTemperature(target) && !isAbsoluteTemperature(q)) {
       throw new Error('A temperature difference or Kelvin value cannot be shown in °C. Use K.');
     }
@@ -371,13 +383,14 @@ export function formatQuantity(
       if (!isDimensionless(target)) {
         throw new Error(`Cannot display a dimensionless value in ${opts.targetUnit}.`);
       }
-      number = q / siValue(target);
+      number = q / (scale * siValue(target));
     } else {
       if (!q.equalBase(target)) {
         throw new Error(`Cannot display ${dimension} in ${formatUnitString(opts.targetUnit).text} (${dimensionName(target)}).`);
       }
-      number = q.toNumber(opts.targetUnit);
+      number = q.toNumber(unit) / scale;
     }
+    if (!Number.isFinite(number)) throw new Error('The display-unit multiplier makes this result too large.');
     unitStr = opts.targetUnit;
   } else if (isAbsoluteTemperature(q)) {
     // Absolute temperatures stay on the scale they were entered in.

@@ -21,6 +21,7 @@ import { configureMathfield, MathfieldElement } from '../../math/mathliveSetup';
 import { handleMathcadKey } from '../../math/mathcadKeys';
 import { fractionUnitLatex, resultUnitText } from '../../math/resultUnit';
 import { UNIT_COLOR } from '../../math/unitStyle';
+import { releaseActiveMathEditor, setActiveMathEditor, setKeyReplayer } from '../../math/activeEditor';
 
 const PAD_X = 4;
 const PAD_Y = 2;
@@ -29,7 +30,7 @@ const PAD_Y = 2;
 export function MathView({ shape, editing, isStatic }: { shape: MathShape; editing: boolean; isStatic: boolean }) {
   const result = useRegionResult(shape.id);
   const resultUnitEditable = !!result?.value?.unitText && !(result.kind === 'definition' && result.references.length === 0);
-  const [unitEditor, setUnitEditor] = useState<{ left: number; top: number } | null>(null);
+  const [unitEditor, setUnitEditor] = useState<{ left: number; top: number; x: number; y: number } | null>(null);
   const closeUnitEditor = useCallback(() => setUnitEditor(null), []);
   const visibleUnit = result?.value?.unitLatex ? fractionUnitLatex(result.value.unitLatex) : undefined;
   const renderedResultUnit = !isStatic && resultUnitEditable && shape.props.displayMode !== 'formula' && (result?.kind !== 'expression' || shape.props.displayMode !== 'auto') ? visibleUnit : undefined;
@@ -151,8 +152,9 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         const r = root.getBoundingClientRect();
         const u = target.getBoundingClientRect();
         const scale = root.offsetWidth ? r.width / root.offsetWidth : 1;
+        stopEditing();
         select([shape.id]);
-        setUnitEditor({ left: (u.left - r.left) / scale, top: (u.top - r.top) / scale });
+        setUnitEditor({ left: (u.left - r.left) / scale, top: (u.top - r.top) / scale, x: event.clientX, y: event.clientY });
       }}
       onDoubleClick={(event) => {
         if ((event.target as Element).closest('[data-result-unit]')) event.stopPropagation();
@@ -214,8 +216,8 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
           </div>
         )}
         {!editing && !isStatic && unitEditor && visibleUnit && (
-          <span className="result-unit-overlay" style={unitEditor}>
-            <InlineResultUnit shape={shape} unitLatex={visibleUnit} direct onDone={closeUnitEditor} />
+          <span className="result-unit-overlay" style={{ left: unitEditor.left, top: unitEditor.top }}>
+            <InlineResultUnit shape={shape} unitLatex={visibleUnit} initialPoint={unitEditor} direct onDone={closeUnitEditor} />
           </span>
         )}
         {!isStatic && <SteelControls id={shape.id} latex={latex}/>}
@@ -233,9 +235,10 @@ function numberPart(text: string, unit: string): string {
 }
 
 /** Result-unit editor shown beside the equation while it is being edited. */
-function InlineResultUnit({ shape, numberText, unitLatex, direct = false, onDone }: { shape: MathShape; numberText?: string; unitLatex: string; direct?: boolean; onDone?: () => void }) {
+function InlineResultUnit({ shape, numberText, unitLatex, direct = false, initialPoint, onDone }: { shape: MathShape; numberText?: string; unitLatex: string; direct?: boolean; initialPoint?: { x: number; y: number }; onDone?: () => void }) {
   const hostRef = useRef<HTMLSpanElement>(null);
   const currentShape = useRef(shape);
+  const clickedPoint = useRef(initialPoint);
   useLayoutEffect(() => { currentShape.current = shape; });
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
@@ -245,8 +248,10 @@ function InlineResultUnit({ shape, numberText, unitLatex, direct = false, onDone
     mf.setAttribute('aria-label', 'Result unit in equation');
     mf.setAttribute('data-testid', 'inline-result-unit');
     mf.className = 'inline-result-unit-input';
-    mf.value = fractionUnitLatex(unitLatex);
+    // Atomic unit symbols keep the next operator outside an upright text run.
+    mf.value = fractionUnitLatex(unitLatex).replace(/\\mathrm\{([A-Za-z]+)\}/g, '\\unit{$1}');
     const state: { committed: string; pending: string | null } = { committed: mf.value, pending: null };
+    let frame = 0;
     const commit = () => {
       const draft = mf.value;
       if (draft === state.committed || draft === state.pending) return;
@@ -262,37 +267,57 @@ function InlineResultUnit({ shape, numberText, unitLatex, direct = false, onDone
         }, (reason: Error) => { state.pending = null; setError(reason.message); });
       } catch (reason) { setError((reason as Error).message); }
     };
-    const focus = () => mf.select();
+    const interacted = () => cancelAnimationFrame(frame);
+    const changed = () => { interacted(); setError(null); };
+    const focus = () => {
+      setActiveMathEditor({ mf, changed });
+      setKeyReplayer(key => {
+        if (!handleMathcadKey(new KeyboardEvent('keydown', { key }), mf, changed)) mf.executeCommand(['typedText', key]);
+        changed();
+      });
+    };
     const blur = () => {
       if (mf.value === state.committed) onDone?.();
       else commit();
     };
     const key = (event: KeyboardEvent) => {
-      event.stopPropagation();
-      if (event.key === 'Enter') { event.preventDefault(); commit(); }
-      else if (event.key === 'Escape') { event.preventDefault(); mf.value = state.committed; mf.blur(); setError(null); onDone?.(); }
-      else if (handleMathcadKey(event, mf, () => setError(null))) event.preventDefault();
+      interacted();
+      if (event.key === 'Enter') { event.preventDefault(); event.stopPropagation(); commit(); }
+      else if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); mf.value = state.committed; mf.blur(); setError(null); onDone?.(); }
+      else if (handleMathcadKey(event, mf, changed)) { event.preventDefault(); event.stopPropagation(); }
     };
     mf.addEventListener('focus', focus);
-    // MathLive's pointer handler can collapse the focus-time selection on pointerup.
-    mf.addEventListener('click', focus);
+    mf.addEventListener('input', changed);
+    mf.addEventListener('pointerdown', interacted);
     mf.addEventListener('keydown', key, { capture: true });
     mf.addEventListener('blur', blur);
-    if (direct) { mf.focus(); mf.select(); }
+    const stop = (event: Event) => event.stopPropagation();
+    for (const type of ['keydown', 'keyup', 'keypress', 'copy', 'cut', 'paste', 'wheel']) mf.addEventListener(type, stop);
+    const startCaret = () => {
+      mf.focus();
+      const point = clickedPoint.current;
+      if (point) mf.position = mf.getOffsetFromPoint(point.x, point.y);
+    };
+    if (direct) startCaret();
+    frame = direct ? requestAnimationFrame(startCaret) : 0;
     return () => {
+      cancelAnimationFrame(frame);
       // Clicking the canvas unmounts the editor before the browser fires blur.
       commit();
       mf.removeEventListener('focus', focus);
-      mf.removeEventListener('click', focus);
+      mf.removeEventListener('input', changed);
+      mf.removeEventListener('pointerdown', interacted);
       mf.removeEventListener('keydown', key, { capture: true });
       mf.removeEventListener('blur', blur);
+      for (const type of ['keydown', 'keyup', 'keypress', 'copy', 'cut', 'paste', 'wheel']) mf.removeEventListener(type, stop);
+      releaseActiveMathEditor(mf);
       mf.remove();
     };
   }, [shape.id, unitLatex, direct, onDone]);
   return (
     <span className="inline-result-unit" onPointerDown={(e) => e.stopPropagation()} onDoubleClick={(e) => e.stopPropagation()}>
       {numberText !== undefined && <span aria-hidden><MathRenderer latex={`= ${numberText}`} /></span>}
-      <span ref={hostRef} title={error ?? 'Select the result unit and type a replacement. Use / for a fraction.'} />
+      <span ref={hostRef} title={error ?? 'Edit units like math. Use / for fractions, ^ for powers, and * for products. Enter or click outside to apply; Escape to cancel.'} />
       {error && <span role="alert" className="text-destructive text-xs">{error}</span>}
     </span>
   );

@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
-import { flushPendingKeys, setActiveMathEditor, setKeyReplayer } from './activeEditor';
+import { flushPendingKeys, releaseActiveMathEditor, setActiveMathEditor, setKeyReplayer } from './activeEditor';
 import { forgetMathcadContext, handleMathcadKey } from './mathcadKeys';
 import { configureMathfield, MathfieldElement } from './mathliveSetup';
 import { convertibleMathWord } from './mathToText';
@@ -45,14 +45,18 @@ export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel
     configureMathfield(mf);
     mf.value = initialLatex.current;
     const changed = () => callbacks.current.onChange(mf.value);
-    setActiveMathEditor({ mf, changed });
-    setKeyReplayer((key) => {
-      const ev = new KeyboardEvent('keydown', { key });
-      if (!handleMathcadKey(ev, mf, changed)) {
-        mf.executeCommand(['typedText', key]);
-        changed();
-      }
-    });
+    const activate = () => {
+      setActiveMathEditor({ mf, changed });
+      setKeyReplayer((key) => {
+        const ev = new KeyboardEvent('keydown', { key });
+        if (!handleMathcadKey(ev, mf, changed)) {
+          mf.executeCommand(['typedText', key]);
+          changed();
+        }
+      });
+    };
+    activate();
+    mf.addEventListener('focus', activate);
 
     const onInput = () => callbacks.current.onChange(mf.value);
     const onKeyDown = (e: KeyboardEvent) => {
@@ -118,8 +122,8 @@ export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel
       mf.removeEventListener('input', onInput);
       mf.removeEventListener('keydown', onKeyDown);
       for (const type of ['keyup', 'keypress', 'copy', 'cut', 'paste', 'wheel']) mf.removeEventListener(type, stop);
-      setActiveMathEditor(null);
-      setKeyReplayer(null);
+      mf.removeEventListener('focus', activate);
+      releaseActiveMathEditor(mf);
       mf.remove();
       fieldRef.current = null;
     };

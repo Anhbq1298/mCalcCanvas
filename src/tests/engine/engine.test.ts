@@ -116,6 +116,27 @@ describe('Test F/G: units', () => {
       e.setRegion('l', { latex: 'L\\coloneq8.5m', displayUnit: 'kN' });
       expect(e.getResult('l')?.error?.code).toBe('display-unit');
     });
+    step('display-unit multipliers compensate the number and preserve downstream quantities', () => {
+      const e = setup({ f: 'F\\coloneq100\\mathrm{N}', r: 'R\\coloneq F', o: 'R=' });
+      for (const [displayUnit, expected] of [['10 N', 10], ['(10·N)', 10], ['0.5 N', 200], ['1e-7 N', 1e9], ['N m/m', 100]] as const) {
+        e.setRegion('r', { latex: 'R\\coloneq F', displayUnit });
+        expect(num(e, 'r')).toBeCloseTo(expected, 6);
+        expect(num(e, 'o')).toBe(0.1); // Default force unit is kN; stored quantity is still 100 N.
+      }
+      e.setRegion('r', { latex: 'R\\coloneq F', displayUnit: '10 N' });
+      expect(e.getResult('r')?.value?.latex).toBe('10\\,\\left(10\\cdot \\mathrm{N}\\right)');
+      for (const displayUnit of ['0 N', '-10 N', '1e400 N', '1e-320 N', '10 m']) {
+        e.setRegion('r', { latex: 'R\\coloneq F', displayUnit });
+        expect(e.getResult('r')?.status).toBe('error');
+      }
+      const dimensionless = setup({ a: 'a\\coloneq20', b: 'b\\coloneq a' });
+      dimensionless.setRegion('b', { latex: 'b\\coloneq a', displayUnit: '10 1' });
+      expect(num(dimensionless, 'b')).toBe(2);
+      expect(() => dimensionless.inputInUnit('b', 'N')).toThrow(/dimensionless/);
+      const temperature = setup({ t: 't\\coloneq20\\mathrm{degC}' });
+      temperature.setRegion('t', { latex: 't\\coloneq20\\mathrm{degC}', displayUnit: '10 degC' });
+      expect(temperature.getResult('t')?.error?.message).toContain('Celsius');
+    });
     step('reports a unit mismatch on addition', () => {
       const e = setup({ a: 'A\\coloneq10m+5kN' });
       expect(e.getResult('a')?.error?.message).toBe('Unit mismatch: Force (kN) cannot be added to Length (m).');

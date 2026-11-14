@@ -34,20 +34,21 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
     await test.step('automatic result units expose a stacked fraction and an outlined editor', async () => {
       await block.locator('[data-result-unit]').click();
       const editor = page.getByTestId('inline-result-unit');
-      await expect(editor).toHaveJSProperty('value', '\\frac{\\mathrm{kN}}{\\mathrm{m}}');
+      await expect(editor).toHaveJSProperty('value', '\\frac{\\unit{kN}}{\\unit{m}}');
       await expect(editor).toHaveCSS('outline-style', 'solid');
       await expect(editor).toHaveCSS('outline-width', '1px');
       await editor.press('Escape');
     });
     await block.dblclick();
     const unit = page.getByTestId('inline-result-unit');
-    await expect(unit).toHaveJSProperty('value', '\\frac{\\mathrm{kN}}{\\mathrm{m}}');
+    await expect(unit).toHaveJSProperty('value', '\\frac{\\unit{kN}}{\\unit{m}}');
     await expect(page.getByTestId('math-edit-block').locator('math-field')).toHaveCount(2);
     await expect(page.getByTestId('math-input')).toHaveCSS('border-top-width', '0px');
     await expect(page.getByTestId('math-input')).toHaveJSProperty('value', 'p\\coloneq w');
     await expect(unit).toHaveCSS('border-top-width', '0px');
     await unit.click();
-    await expect.poll(() => unit.evaluate(el => (el as HTMLElement & { selectionIsCollapsed: boolean }).selectionIsCollapsed)).toBe(false);
+    await expect.poll(() => unit.evaluate(el => (el as HTMLElement & { selectionIsCollapsed: boolean }).selectionIsCollapsed)).toBe(true);
+    await unit.press('Control+a');
     await page.screenshot({ path: testInfo.outputPath('result-unit-edit.png') });
     await page.keyboard.type('N/m');
     await page.keyboard.press('Enter');
@@ -67,13 +68,14 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
     await block.locator('[data-result-unit]').click();
     await expect(page.getByTestId('math-input')).toHaveCount(0);
     expect(await block.boundingBox()).toEqual(fractionBounds);
-    await expect(unit).toHaveJSProperty('value', '\\frac{\\mathrm{N}}{\\mathrm{m}}');
+    await expect(unit).toHaveJSProperty('value', '\\frac{\\unit{N}}{\\unit{m}}');
+    await unit.press('Control+a');
     await page.keyboard.type('kN/m');
     await page.mouse.click(900, 600);
     await expect(page.locator('math-field')).toHaveCount(0);
     await resultOf(page, 'p').toBe('15 kN/m');
     await expect.poll(async () => (await region(page, 'w'))?.latex).toBe(input.latex);
-    await test.step('click a length unit and replace it without Ctrl+A or Enter', async () => {
+    await test.step('click a length unit, select it and replace it without Enter', async () => {
       await addRegion(page, 700, 260, ['L:469mm']);
       const length = (await region(page, 'L'))!;
       await addRegion(page, 700, 400, ['z:L=']);
@@ -86,14 +88,16 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
       expect(await zblock.boundingBox()).toEqual(bounds);
       expect(await zblock.locator('.math-baseline').innerHTML()).toBe(rendered);
       await page.screenshot({ path: testInfo.outputPath('result-unit-direct.png') });
-      await expect(unit).toHaveJSProperty('value', '\\mathrm{m}');
+      await expect(unit).toHaveJSProperty('value', '\\unit{m}');
       await unit.click();
+      await unit.press('Control+a');
       await page.keyboard.type('mm');
       await page.mouse.click(900, 600);
       await resultOf(page, 'z').toBe('469 mm');
       await zblock.locator('[data-result-unit]').click();
-      await expect(unit).toHaveJSProperty('value', '\\mathrm{mm}');
+      await expect(unit).toHaveJSProperty('value', '\\unit{mm}');
       await unit.click();
+      await unit.press('Control+a');
       await page.keyboard.type('cm');
       await page.mouse.click(900, 600);
       await resultOf(page, 'z').toBe('46.9 cm');
@@ -105,6 +109,103 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
     await expect(page.locator('#print-root [data-testid=math-region]')).toHaveCount(4);
     await page.emulateMedia({ media: 'print' });
     await page.pdf({ path: testInfo.outputPath('result-unit.pdf'), preferCSSPageSize: true, printBackground: true });
+  });
+
+  test('result units support normal math editing, scaled units and cancellation', async ({ page }, testInfo) => {
+    await addRegion(page, 500, 280, ['F:100kN']);
+    await addRegion(page, 500, 420, ['M:F*2m=']);
+    const source = (await region(page, 'M'))!;
+    const block = page.locator(`[data-testid=math-region][data-shape-id="${source.id}"]`);
+    const unit = page.getByTestId('inline-result-unit');
+    await test.step('click places a caret and a product can be extended into a fraction', async () => {
+      await block.locator('[data-result-unit]').click({ position: { x: 1, y: 8 } });
+      await expect.poll(() => unit.evaluate(el => (el as HTMLElement & { selectionIsCollapsed: boolean }).selectionIsCollapsed)).toBe(true);
+      await unit.press('End');
+      await page.keyboard.type('*m/m');
+      await expect(unit).toHaveJSProperty('value', '\\unit{kN}\\cdot\\unit{m}\\cdot\\frac{m}{m}');
+      await unit.press('Enter');
+      await resultOf(page, 'M').toBe('200 kN·m·m/m');
+    });
+    await test.step('a numeric multiplier compensates the result and survives reopening', async () => {
+      await block.locator('[data-result-unit]').click();
+      await unit.press('Home');
+      await page.keyboard.type('10*');
+      await page.screenshot({ path: testInfo.outputPath('editable-unit-draft.png') });
+      await unit.press('Enter');
+      await resultOf(page, 'M').toBe('20 (10·kN·m·m/m)');
+      await expect(block).toHaveAttribute('data-latex', source.latex);
+      await page.mouse.click(900, 600);
+      await page.keyboard.press('Control+z');
+      await resultOf(page, 'M').toBe('200 kN·m·m/m');
+      await page.keyboard.press('Control+y');
+      await resultOf(page, 'M').toBe('20 (10·kN·m·m/m)');
+      await page.screenshot({ path: testInfo.outputPath('scaled-unit.png') });
+      await page.reload();
+      await resultOf(page, 'M').toBe('20 (10·kN·m·m/m)');
+      await block.locator('[data-result-unit]').click();
+      await expect(unit).toHaveJSProperty('value', '\\left(\\frac{10\\cdot\\unit{kN}\\cdot\\unit{m}\\cdot\\unit{m}}{\\unit{m}}\\right)');
+      await unit.press('Escape');
+    });
+    await test.step('powers, selection, undo and redo work without committing a draft', async () => {
+      await block.locator('[data-result-unit]').click();
+      await unit.press('Control+a');
+      await page.keyboard.type('kN*m^2');
+      await expect(unit).toHaveJSProperty('value', '\\unit{kN}\\cdot m^2');
+      await resultOf(page, 'M').toBe('20 (10·kN·m·m/m)');
+      await unit.press('Control+z');
+      await expect(unit).not.toHaveJSProperty('value', '\\unit{kN}\\cdot m^2');
+      await unit.press('Control+y');
+      await expect(unit).toHaveJSProperty('value', '\\unit{kN}\\cdot m^2');
+      await unit.press('ArrowRight');
+      await page.keyboard.type('/m');
+      await unit.press('Enter');
+      await resultOf(page, 'M').toBe('200 kN·m²/m');
+    });
+    await test.step('incompatible or incomplete units stay editable and Escape restores the result', async () => {
+      await block.locator('[data-result-unit]').click();
+      await unit.press('Control+a');
+      await page.keyboard.type('s');
+      await unit.press('Enter');
+      await expect(page.getByRole('alert')).toBeVisible();
+      await resultOf(page, 'M').toBe('200 kN·m²/m');
+      await unit.press('Escape');
+      await block.locator('[data-result-unit]').click();
+      await unit.press('Control+a');
+      await page.keyboard.type('kN/');
+      await unit.press('Enter');
+      await expect(page.getByRole('alert')).toBeVisible();
+      await unit.press('Escape');
+    });
+    await test.step('copy and paste stay inside the unit editor', async () => {
+      await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
+      await block.locator('[data-result-unit]').click();
+      await unit.press('Control+a');
+      const saved = await unit.evaluate(el => (el as HTMLElement & { value: string }).value);
+      await unit.press('Control+c');
+      await page.keyboard.type('s');
+      await unit.press('Control+a');
+      await unit.press('Control+v');
+      await expect(unit).toHaveJSProperty('value', saved);
+      await unit.press('Escape');
+      await expect(page.getByTestId('math-region')).toHaveCount(2);
+    });
+    await test.step('ribbon operators insert into the focused unit, not its formula', async () => {
+      await block.dblclick();
+      await unit.click();
+      await unit.press('Control+a');
+      await page.keyboard.type('kN');
+      await page.getByTestId('palette-operators').click();
+      await page.getByTestId('palette-a/b').click();
+      await expect.poll(() => unit.evaluate(el => (el as HTMLElement & { value: string }).value)).toContain('\\frac');
+      await expect(page.getByTestId('math-input')).toHaveJSProperty('value', source.latex.replace(/=\s*$/, ''));
+      await unit.press('Escape');
+      await page.getByTestId('math-input').press('Escape');
+    });
+    await page.mouse.click(900, 600);
+    await page.screenshot({ path: testInfo.outputPath('editable-unit.png') });
+    await page.getByTestId('export-pdf').click();
+    await page.emulateMedia({ media: 'print' });
+    await page.pdf({ path: testInfo.outputPath('editable-unit.pdf'), preferCSSPageSize: true, printBackground: true });
   });
 
   test('compound formulas edit at the clicked term without growing over the next check', async ({ page }, testInfo) => {

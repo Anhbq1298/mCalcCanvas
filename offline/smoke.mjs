@@ -77,6 +77,7 @@ try {
   assert.deepEqual(await resultBlock.boundingBox(), bounds);
   const unit = page.getByTestId('inline-result-unit');
   await unit.click();
+  await unit.press('Control+a');
   await page.keyboard.type('cm');
   await page.mouse.click(900, 600);
   await resultOf(page, 'z').toBe('46.9 cm');
@@ -88,17 +89,27 @@ try {
   const length = await region(page, 'L');
   const formula = page.locator(`[data-testid=math-region][data-shape-id="${length.id}"]`);
   await formula.locator('[data-result-unit]').click();
+  await unit.press('Control+a');
   await page.keyboard.type('mm');
   await page.mouse.click(900, 600);
   await resultOf(page, 'L').toBe('50 mm');
   await formula.locator('[data-result-unit]').click();
-  await expect(unit).toHaveJSProperty('value', '\\mathrm{mm}');
-  await expect.poll(() => unit.evaluate(el => el.selectionIsCollapsed)).toBe(false);
+  await expect(unit).toHaveJSProperty('value', '\\unit{mm}');
+  await expect.poll(() => unit.evaluate(el => el.selectionIsCollapsed)).toBe(true);
+  await unit.press('Control+a');
   await page.keyboard.type('cm');
   await page.mouse.click(900, 600);
   await resultOf(page, 'L').toBe('5 cm');
   assert.equal((await region(page, 'L')).latex, length.latex);
-  console.log('Desktop smoke passed: local protocol, worker calculation, sandbox, persistence, click-to-replace result units.');
+  await formula.locator('[data-result-unit]').click();
+  await unit.press('Home');
+  await page.keyboard.type('10*');
+  await unit.press('End');
+  await page.keyboard.type('*m/m');
+  await unit.press('Enter');
+  await resultOf(page, 'L').toBe('0.5 (10·cm·m/m)');
+  assert.equal((await region(page, 'L')).latex, length.latex);
+  console.log('Desktop smoke passed: local protocol, worker calculation, sandbox, persistence, editable result units.');
 } finally {
   // The isolated smoke profile has no user work; do not wait on unload prompts.
   if (desktop) {
