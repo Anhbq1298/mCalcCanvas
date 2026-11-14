@@ -377,8 +377,21 @@ export function DocumentTab() {
         </Col>
         <Col>
           <Check label="Header & footer" testId="toggle-chrome" checked={settings.showHeaderFooter} onChange={(v) => updateSettings({ showHeaderFooter: v })} />
-          <Check label="Snap to grid" testId="doc-snap" checked={isSnap} onChange={() => commands.toggleSnap()} />
           <Check label="Pages" testId="doc-pages" checked={paged} onChange={(v) => updateSettings({ canvasMode: v ? 'page' : 'free' })} title="Page layout (checked) or a free canvas without pages" />
+        </Col>
+      </Group>
+      <Group label="Snapping">
+        <Col>
+          <Check label="Snap to grid" testId="doc-snap" checked={isSnap} onChange={() => commands.toggleSnap()} />
+          <TBSelect
+            label="Snap spacing for equations and text"
+            testId="doc-snap-spacing"
+            disabled={!isSnap}
+            value={settings.baselineSnap ?? 'major'}
+            width={144}
+            onChange={(v) => updateSettings({ baselineSnap: v as 'major' | 'minor' })}
+            options={[['minor', 'Small squares'], ['major', 'Worksheet lines']]}
+          />
         </Col>
       </Group>
       <Group label="Zoom">

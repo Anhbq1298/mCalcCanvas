@@ -40,6 +40,42 @@ test.describe('optional grid snapping', () => {
     expect(snapped.x % 20).toBe(0);
   });
 
+  test('Document exposes small-square snapping for creation, movement and saved worksheets', async ({ page }, testInfo) => {
+    await openFresh(page);
+    await newBlankWorksheet(page, 'page');
+    await page.getByTestId('format-tab-document').click();
+    const spacing = page.getByTestId('doc-snap-spacing');
+    await expect(spacing).toBeDisabled();
+    await page.getByTestId('doc-snap').check();
+    await spacing.selectOption('minor');
+    await page.getByTestId('format-tab-math').click();
+    const point = await pageToScreen(page, 173, 157);
+    await page.mouse.click(point.x, point.y);
+    await page.keyboard.type('a:1', { delay: 15 });
+    await page.keyboard.press('Enter');
+    await expect.poll(async () => {
+      const [s] = await shapes(page);
+      return { x: s.x, baseline: s.y + baseline(s) };
+    }).toEqual({ x: 176, baseline: 160 }); // Minor squares between the large grid lines, in both directions.
+    await page.getByTestId('math-region').click();
+    await page.keyboard.press('ArrowDown');
+    await expect.poll(async () => {
+      const [s] = await shapes(page);
+      return s.y + baseline(s);
+    }).toBe(180);
+    await page.getByTestId('format-tab-calculation').click();
+    await expect(page.getByTestId('baseline-snap')).toHaveValue('minor');
+    await expect(page.getByTestId('save-state')).toHaveText('Saved');
+    await page.reload();
+    await page.getByTestId('format-tab-document').click();
+    await expect(page.getByTestId('doc-snap')).toBeChecked();
+    await expect(spacing).toHaveValue('minor');
+    await page.screenshot({ path: testInfo.outputPath('small-square-snap.png') });
+    await page.getByTestId('export-pdf').click();
+    await page.emulateMedia({ media: 'print' });
+    await page.pdf({ path: testInfo.outputPath('small-square-snap.pdf'), preferCSSPageSize: true, printBackground: true });
+  });
+
   test('the 3 × 3 grid, regions and selection stay synchronized through zoom levels', async ({ page }, testInfo) => {
     await openFresh(page);
     await newBlankWorksheet(page, 'free');
