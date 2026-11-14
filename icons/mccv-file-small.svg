@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <title>mCalcCanvas worksheet (.mCCV)</title>
+  <path d="M8.5 1.5h11l6 6v21a1.5 1.5 0 0 1-1.5 1.5H8.5A1.5 1.5 0 0 1 7 28.5v-25A1.5 1.5 0 0 1 8.5 1.5z" fill="#ffffff" stroke="#8a9ab0" stroke-linejoin="round"/>
+  <path d="M19.5 1.5V6.5a1 1 0 0 0 1 1h5" fill="#d3e3fd" stroke="#8a9ab0" stroke-linejoin="round"/>
+  <rect x="1.5" y="11" width="19" height="19" rx="3.5" fill="#0b57d0"/>
+  <path d="M18 7V5a1 1 0 0 0-1-1H6.5a.5.5 0 0 0-.4.8l4.5 6a2 2 0 0 1 0 2.4l-4.5 6a.5.5 0 0 0 .4.8H17a1 1 0 0 0 1-1v-2" transform="translate(2.6 11.1) scale(0.79)" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
