@@ -3,6 +3,8 @@ import { describe, it, expect } from 'vitest';
 import { step } from '../step';
 import { CalculationEngine } from '../../engine';
 import { calcKey } from '../../canvas/engineBridge';
+import { planSteelSection } from '../../canvas/steelSections';
+import { sectionById } from '../../engineering/steel/sections';
 import type { Shape, TableShape } from '../../canvas/model/types';
 import { INPUT_TABLE_HEADER_ROWS, inputNameLatex, inputTableColumns, inputTableRegionId } from '../../canvas/inputTable';
 
@@ -50,20 +52,20 @@ describe('EC4 phase-one composite worksheet', () => {
     });
     step('reference forces, connection and bending resistance', () => {
       expect(value('P_{Rd}','kN')).toBeCloseTo(81.6562762521,7);
-      expect(value('\\eta')).toBeCloseTo(0.72162409281,8);
+      expect(value('\\eta')).toBeCloseTo(0.7217750522987195,8);
       expect(value('\\eta_{min}')).toBeCloseTo(0.49,10);
-      expect(value('M_{1.Ed}','kN m')).toBeCloseTo(171.0674748,6);
-      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(469.188257625,6);
-      expect(value('M_{pl.Rd}','kN m')).toBeCloseTo(850.742634375,6);
-      expect(value('M_{Rd}','kN m')).toBeCloseTo(732.504518208868,6);
-      expect(value('M_{Rd.pl}','kN m')).toBeCloseTo(787.060803554457,5);
+      expect(value('M_{1.Ed}','kN m')).toBeCloseTo(171.06110732520003,6);
+      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(469.182288117375,6);
+      expect(value('M_{pl.Rd}','kN m')).toBeCloseTo(850.5873810305293,6);
+      expect(value('M_{Rd}','kN m')).toBeCloseTo(732.3400307180946,6);
+      expect(value('M_{Rd.pl}','kN m')).toBeCloseTo(786.9487843372331,5);
     });
     step('neutral axes follow from the inputs: slab depth and steel PNA differ', () => {
-      expect(value('x_f','mm')).toBeCloseTo(79.875,9);
+      expect(value('x_f','mm')).toBeCloseTo(79.85829411764705,9);
       expect(value('x_c','mm')).toBeCloseTo(57.6397244133,8);
-      expect(value('y_a','mm')).toBeCloseTo(5.985316722873,7);
+      expect(value('y_a','mm')).toBeCloseTo(5.980819814498238,7);
       expect(value('y_a','mm')).toBeLessThan(value('t_f','mm'));
-      expect(value('\\eta_f')).toBeCloseTo(0.404674509804,9);
+      expect(value('\\eta_f')).toBeCloseTo(0.40454997123581393,9);
       expect(Math.abs(value('R_N','kN'))).toBeLessThan(1e-9);
       expect(passes('A_{ac}\\le')).toBe(true);
       expect(passes('\\min\\left(A_{ac}-A_f')).toBe(true);
@@ -71,47 +73,47 @@ describe('EC4 phase-one composite worksheet', () => {
     step('reduced connection moves the steel PNA down, through the flange into the web', () => {
       // n_h = 14: eta = 0.4209 > eta_f, flange branch; n_h = 8: eta = 0.2405, web below the fillet toe.
       e.setDefinitionOverride(studs, { value: 14 });
-      expect(value('y_a','mm')).toBeCloseTo(12.450119409312,7);
-      expect(value('M_{Rd.pl}','kN m')).toBeCloseTo(694.310485488021,5);
+      expect(value('y_a','mm')).toBeCloseTo(12.445622500934352,7);
+      expect(value('M_{Rd.pl}','kN m')).toBeCloseTo(694.2021382787664,5);
       e.setDefinitionOverride(studs, { value: 8 });
-      expect(value('y_a','mm')).toBeCloseTo(86.617080739391,3);
-      expect(value('M_{Rd.pl}','kN m')).toBeCloseTo(612.145793942433,2);
+      expect(value('y_a','mm')).toBeCloseTo(86.73530561340525,3);
+      expect(value('M_{Rd.pl}','kN m')).toBeCloseTo(611.9928142486898,2);
       expect(passes('\\eta_{min}\\le')).toBe(false);
-      expect(value('M_{Rd}','kN m')).toBeCloseTo(426,9); // eta < eta_min: no composite credit
+      expect(value('M_{Rd}','kN m')).toBeCloseTo(425.5811,9); // eta < eta_min: no composite credit
       // n_h = 13: eta = 0.391 lies between the fillet-toe and flange boundaries: the unimplemented branch is flagged.
       e.setDefinitionOverride(studs, { value: 13 });
       expect(passes('\\min\\left(A_{ac}-A_f')).toBe(false);
       e.setDefinitionOverride(studs, null);
-      expect(value('y_a','mm')).toBeCloseTo(5.985316722873,7);
+      expect(value('y_a','mm')).toBeCloseTo(5.980819814498238,7);
     });
     step('construction stability failure remains visible', () => {
-      expect(value('M_{cr}','kN m')).toBeCloseTo(109.24582399696,6);
-      expect(value('M_{b.Rd}','kN m')).toBeCloseTo(91.271498877837,6);
-      expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(1.87427046672,7);
-      expect(value('\\delta_1','mm')).toBeCloseTo(18.329901234568,6);
+      expect(value('M_{cr}','kN m')).toBeCloseTo(109.43069617269316,6);
+      expect(value('M_{b.Rd}','kN m')).toBeCloseTo(91.39834274475413,6);
+      expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(1.8715996613080623,7);
+      expect(value('\\delta_1','mm')).toBeCloseTo(18.3427102904894,6);
     });
     step('load tables: internal forces, stud spacing from the max-moment position, PNA case, staged deflection', () => {
-      expect(value('V_{2.Ed}','kN')).toBeCloseTo(209.7337374,6);
+      expect(value('V_{2.Ed}','kN')).toBeCloseTo(209.7305536626,6);
       expect(value('x_M','m')).toBeCloseTo(3,9);
       expect(value('\\eta_{req}')).toBeCloseTo(0.49,10);
       expect(value('n_{req}')).toBe(17);
       expect(value('n_A')).toBe(24);
       expect(value('n_B')).toBe(25);
       expect(value('n_h')).toBe(24);
-      expect(value('\\mathrm{UR}_{M.x}')).toBeCloseTo(0.66006407439817,8); // just right of the load, 24 studs at 200 mm reach support B
+      expect(value('\\mathrm{UR}_{M.x}')).toBeCloseTo(0.6602693244038408,8); // just right of the load, 24 studs at 200 mm reach support B
       expect(value('n_{P}')).toBe(24);
       expect(value('k_M')).toBe(1);
       expect(value('k_P')).toBe(1);
       expect(value('v_f','kN/m')).toBeCloseTo(653.250210016847,6);
       expect(value('\\mathrm{UR}_{sf}')).toBeCloseTo(0.7173792,7);
       // virtual-work sum on the 200-step grid vs closed-form midspan deflections
-      expect(value('\\delta_{LT}','mm')).toBeCloseTo(6.076147064926,3);
-      expect(value('\\delta_{tr}','mm')).toBeCloseTo(3.763195482790,3);
-      expect(value('\\delta_{slip}','mm')).toBeCloseTo(1.850200836823,3);
-      expect(value('\\delta_{sh}','mm')).toBeCloseTo(5.444690799949,7);
-      expect(value('\\delta_{tot}','mm')).toBeCloseTo(31.054964343218,2);
-      expect(value('\\sigma_{c.bot}','MPa')).toBeCloseTo(0.211129167388,7);
-      expect(value('I_L','mm^4')).toBeCloseTo(633331327.3353621,3);
+      expect(value('\\delta_{LT}','mm')).toBeCloseTo(6.0781879315026375,3);
+      expect(value('\\delta_{tr}','mm')).toBeCloseTo(3.7643549939359073,3);
+      expect(value('\\delta_{slip}','mm')).toBeCloseTo(1.8508975757883905,3);
+      expect(value('\\delta_{sh}','mm')).toBeCloseTo(5.4456150748999255,7);
+      expect(value('\\delta_{tot}','mm')).toBeCloseTo(31.069346760047296,2);
+      expect(value('\\sigma_{c.bot}','MPa')).toBeCloseTo(0.2110624338244728,7);
+      expect(value('I_L','mm^4')).toBeCloseTo(633118674.3617084,3);
     });
     // Load tables: input-table columns, edited cell by cell as a user would (one row per load).
     const live = new Map(tables.map(t => [t.id, t]));
@@ -136,12 +138,12 @@ describe('EC4 phase-one composite worksheet', () => {
       setColumn('a_{j}', [q(3, 'm'), q(3, 'm'), q(6, 'm'), q(6, 'm')]);
       setColumn('c_{Q.j}', ['G', 'Q', 'G', 'Q']);
       setColumn('F_{k.j}', [q(30, 'kN'), q(45, 'kN'), q(10, 'kN'), q(10, 'kN')]);
-      // closed form: maximum 490.6303 kNm at x = 3.0614 m; the 40 mm grid is within w·Δx²/8 = 0.007 kNm
+      // closed form: maximum 490.624 kNm at x = 3.061 m; the 40 mm grid is within w·Δx²/8 = 0.007 kNm
       expect(value('M_{2.Ed}','kN m')).toBeCloseTo(490.630293556811,1);
-      expect(value('V_{2.Ed}','kN')).toBeCloseTo(216.8587374,6);
-      expect(value('M_P','kN m')).toBeCloseTo(490.563257625, 6); // first row: moment under the 3 m load
+      expect(value('V_{2.Ed}','kN')).toBeCloseTo(216.8555536626,6);
+      expect(value('M_P','kN m')).toBeCloseTo(490.557288117375, 6); // first row: moment under the 3 m load
       restore('a_{j}', 'c_{Q.j}', 'F_{k.j}');
-      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(469.188257625,6);
+      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(469.182288117375,6);
     });
     step('area-load rows are pressures times the load width', () => {
       expect(value('g_u','kN/m')).toBeCloseTo(4.5,9); // 1.5 kPa × 3 m
@@ -149,10 +151,10 @@ describe('EC4 phase-one composite worksheet', () => {
       setColumn('x_{2.i}', [q(8, 'm'), q(8, 'm'), q(8, 'm')]);
       setColumn('c_{Q.i}', ['G', 'Q', 'G']);
       setColumn('p_{k.i}', [q(1.5, 'kPa'), q(3, 'kPa'), q(1, 'kPa')]);
-      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(499.563257625,6); // closed form, extra 1 kPa × 3 m permanent
-      expect(value('V_{2.Ed}','kN')).toBeCloseTo(225.9337374,6);
+      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(499.557288117375,6); // closed form, extra 1 kPa × 3 m permanent
+      expect(value('V_{2.Ed}','kN')).toBeCloseTo(225.9305536626,6);
       restore('x_{1.i}', 'x_{2.i}', 'c_{Q.i}', 'p_{k.i}');
-      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(469.188257625,6);
+      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(469.182288117375,6);
     });
     step('a large point load moves the maximum moment and the stud spacing with it', () => {
       setColumn('a_{j}', [q(2, 'm'), q(2, 'm')]);
@@ -168,15 +170,15 @@ describe('EC4 phase-one composite worksheet', () => {
       const prop = region('c_{prop}\\coloneq');
       e.setDefinitionOverride(prop, { value: 1 });
       expect(value('L_{LT}','m')).toBeCloseTo(4,9);
-      expect(value('M_{1.Ed}','kN m')).toBeCloseTo(42.7668687,6);
-      expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(0.215961724294,7);
-      expect(value('\\delta_1','mm')).toBeCloseTo(1.145618827160,7);
-      expect(value('\\delta_g','mm')).toBeCloseTo(4.747716691888,7);
+      expect(value('M_{1.Ed}','kN m')).toBeCloseTo(42.76527683130001,6);
+      expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(0.215929288170264,7);
+      expect(value('\\delta_1','mm')).toBeCloseTo(1.1464193931555875,7);
+      expect(value('\\delta_g','mm')).toBeCloseTo(4.749074859401146,7);
       expect(value('C_s')).toBeCloseTo(0.5,10);
-      expect(value('\\delta_{slip}','mm')).toBeCloseTo(3.083668061372,3);
-      expect(value('\\delta_{tot}','mm')).toBeCloseTo(23.115418100925,2);
+      expect(value('\\delta_{slip}','mm')).toBeCloseTo(3.084829292980651,3);
+      expect(value('\\delta_{tot}','mm')).toBeCloseTo(23.122062152720268,2);
       e.setDefinitionOverride(prop, null);
-      expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(1.87427046672,7);
+      expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(1.8715996613080623,7);
     });
     step('SCI P364 Example 8 (533×165×75 UKB S275, L = 12 m, C25/30): same equations, same results', () => {
       const set: [string, number, string | null][] = [['L\\coloneq',12,'m'],['s_b\\coloneq',3.5,'m'],['h_c\\coloneq',130,'mm'],['f_y\\coloneq',275,'MPa'],
@@ -199,7 +201,7 @@ describe('EC4 phase-one composite worksheet', () => {
       e.setDefinitionOverride(etaMin, null);
       e.setDefinitionOverride(eta, null);
       for (const [start] of set) e.setDefinitionOverride(region(start), null);
-      expect(value('M_{pl.Rd}','kN m')).toBeCloseTo(850.742634375,6);
+      expect(value('M_{pl.Rd}','kN m')).toBeCloseTo(850.5873810305293,6);
     });
     step('SBE Part 4 example A.4 (IPE 400 S355, L = 9 m, two point loads): load tables and resistances', () => {
       const set: [string, number, string | null][] = [['L\\coloneq',9,'m'],['s_b\\coloneq',6,'m'],['h_c\\coloneq',140,'mm'],['\\rho_c\\coloneq',0,'kN/m^3'],
@@ -224,7 +226,7 @@ describe('EC4 phase-one composite worksheet', () => {
       e.setDefinitionOverride(eta, null);
       for (const [start] of set) e.setDefinitionOverride(region(start), null);
       restore('x_{1.i}', 'x_{2.i}', 'c_{Q.i}', 'p_{k.i}', 'a_{j}', 'c_{Q.j}', 'F_{k.j}');
-      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(469.188257625,6);
+      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(469.182288117375,6);
     });
     step('solid-slab example (HK notes, UB 457×152×52 S355, L = 12 m, h_c = 125 mm): PNA in the slab, full connection', () => {
       // section from the BS 4-1 table: 449.8 × 152.4 × 7.6 × 10.9, r 10.2, A 66.6 cm², W_pl 1096 cm³
@@ -243,8 +245,24 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('k_M')).toBe(0);                                        // PNA case 0: in the slab
       for (const [start] of set) e.setDefinitionOverride(region(start), null);
       restore('x_{1.i}', 'x_{2.i}', 'c_{Q.i}', 'p_{k.i}', 'a_{j}', 'c_{Q.j}', 'F_{k.j}');
-      expect(value('M_{pl.Rd}','kN m')).toBeCloseTo(850.742634375,6);
+      expect(value('M_{pl.Rd}','kN m')).toBeCloseTo(850.5873810305293,6);
     });
+    step('section from the library: Browse changes only the Section ID; properties follow', () => {
+      const sec = region('\\mathrm{Section}\\coloneq');
+      expect(sectionById(3148).name).toBe('UB 406x178x60');
+      const patches = planSteelSection(rec as Record<string, Shape>, sec, 1013); // IPE 400
+      const changed = Object.keys(patches).map(id => (rec[id] as Shape & { props: { latex?: string } }).props.latex ?? '');
+      expect(changed.some(l => l.startsWith('\\alpha_{LT}'))).toBe(false);                       // composite's own input kept
+      expect(changed.every(l => l.startsWith('\\mathrm{Section}') || l.includes('\\operatorname{sectionProp}'))).toBe(true);
+      e.setDefinitionOverride(sec, { value: 1013 });
+      expect(value('h_a','mm')).toBe(400);
+      expect(value('W_{pl}','mm^3')).toBeCloseTo(1307150,6);
+      expect(value('M_{a.Rd}','kN m')).toBeCloseTo(1307150 * 355e-6,9);
+      expect(() => planSteelSection(rec as Record<string, Shape>, sec, { h: 400, b: 180, tf: 13.5, tw: 8.6 })).toThrow(); // custom I/H: steel worksheet only
+      e.setDefinitionOverride(sec, null);
+      expect(value('h_a','mm')).toBe(406.4);
+    });
+
     step('three static symbolic figures and three graphs; explicit review status', () => {
       const texts=doc.shapes.filter(s => s.type==='text');
       expect(texts.filter(s=>/^F\d —/.test(s.props.html)).map(s=>s.props.html.slice(0,2))).toEqual(['F1','F2','F3']);

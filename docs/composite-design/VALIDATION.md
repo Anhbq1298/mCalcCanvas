@@ -1,4 +1,7 @@
-# Validation report — Rev F, 14 November 2026
+# Validation report — Rev G, 15 November 2026
+
+Rev G: the steel section comes from the library (UB 406x178x60, ID 3148, Browse); the reference uses the
+same geometry-derived properties (r = 10.0 mm). All Rev F comparisons below were re-run.
 
 ## Passed
 
@@ -6,7 +9,7 @@
 |---|---|
 | `npm run typecheck`, `npm run lint` | pass, 0 warnings |
 | `npm test` | 32 files, 81 tests pass |
-| `npm run test:e2e` (system Chrome) | 71 passed, 2 skipped (visual capture specs) |
+| `npm run test:e2e` (system Chrome) | 72 passed, 2 skipped (visual capture specs) |
 | `python tools/templates/reference_composite.py` | identical to `reference.json` |
 | `npm run templates:columns -- --only=composite --pdf` | no "regions moved by the app" warning |
 
@@ -17,14 +20,14 @@ integration of the filleted steel width for the PNA, and an independent stud cou
 
 | Quantity | Reference | Worksheet |
 |---|---|---|
-| M_Ed (UDL 4.5 + 9 kN/m, P = 30 G + 45 Q kN at 3 m) | 469.188 kNm at 3.0 m | same |
-| V_Ed | 209.734 kN | same |
+| M_Ed (UDL 4.5 + 9 kN/m, P = 30 G + 45 Q kN at 3 m) | 469.182 kNm at 3.0 m | same |
+| V_Ed | 209.731 kN | same |
 | Studs needed per shear span (η_min governs) | 17 | same |
 | Spacing inputs 125 / 200 mm → studs per span | 24 / 25, weaker span 24 | same |
-| Max UR along span from stud count | 0.6601 (just right of the load) | same; > 0.6405 at x_M |
+| Max UR along span from stud count | 0.6603 (just right of the load) | same; > 0.6407 at x_M |
 | PNA case at x_M and under the load | 1 = top flange | same |
-| δ_LT, δ_tr, δ_slip, δ_tot | 6.076, 3.763, 1.850, 31.055 mm | grid virtual work, within 0.0005 mm |
-| Added row 6 m, 10 G + 10 Q kN | M_Ed 490.630 kNm at 3.061 m | 40 mm grid, within 0.007 kNm |
+| δ_LT, δ_tr, δ_slip, δ_tot | 6.078, 3.764, 1.851, 31.069 mm | grid virtual work, within 0.0005 mm |
+| Added row 6 m, 10 G + 10 Q kN | M_Ed 490.624 kNm at 3.061 m | 40 mm grid, within 0.007 kNm |
 | Point load 100 G + 150 Q kN at 2 m | x_M = 2 m, 16 studs at 125 mm | η < η_min check fails |
 
 ## SCI P364 Example 8 (2009/10), run through the worksheet with its inputs

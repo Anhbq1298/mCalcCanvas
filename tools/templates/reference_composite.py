@@ -7,7 +7,9 @@ import json
 from math import ceil, pi, sqrt
 
 
-H, B, TF, TW, RR = 406.4, 177.9, 12.8, 7.9, 10.2
+# Default section: library UB 406x178x60 (BS 4-1 dimensions, geometry-derived properties, catalogue ID 3148)
+H, B, TF, TW, RR = 406.4, 177.9, 12.8, 7.9, 10.0
+A_LIB, I_LIB, IZ_LIB, WPL_LIB, IT_LIB, IW_LIB, M_LIB = 7648.4, 215841000., 12030400., 1198820., 333949., 465197000000., 60.0399
 
 
 def width(y):
@@ -21,7 +23,7 @@ def width(y):
     return TW
 
 
-def plastic(nc, a=7650., fy=355., hc=150., be=2000., n=20000):
+def plastic(nc, a=A_LIB, fy=355., hc=150., be=2000., n=20000):
     """Rigid-plastic sagging state at slab force nc: (xc, ya, M) in mm, mm, N mm.
     Midpoint integration on each piece between the width breakpoints (flange, fillet, web)."""
     aac = (a - nc / fy) / 2
@@ -71,9 +73,9 @@ def mid_deflection(w, loads, ei, L=8000.):
 
 
 def reference():
-    L, A, fy, E, I = 8000., 7650., 355., 210000., 216000000.
+    L, A, fy, E, I = 8000., A_LIB, 355., 210000., I_LIB
     h, hc, be, b, tf = 406.4, 150., 2000., 177.9, 12.8
-    g = 60.1 * 9.81 / 1000 + 25 * .15 * 3
+    g = M_LIB * 9.81 / 1000 + 25 * .15 * 3
     w1 = 1.35 * (g + .5 * 3) + 1.5 * .75 * 3
     w2 = 1.35 * (g + 1.5 * 3) + 1.5 * 3 * 3
     p = min(.8 * 450 * pi * 19**2 / 4 / 1.25,
@@ -81,7 +83,7 @@ def reference():
     nc, na = 24 * p, A * fy
     eta = nc / na
     xf, xc = na / (17 * be), nc / (17 * be)
-    ma = 1.2e6 * fy
+    ma = WPL_LIB * fy
     mf = na * (hc + h / 2 - xf / 2)
     mr = ma + eta * (mf - ma)
     _, ya, direct = plastic(nc)
@@ -92,13 +94,13 @@ def reference():
         _, y_b, m_b = plastic(min(1, studs * p / na) * na)
         branches[f'n_h_{studs}'] = dict(eta=studs * p / na, steel_PNA_mm=y_b,
                                          M_direct_kNm=m_b / 1e6)
-    ncr = pi**2 * E * 12e6 / L**2
-    mcr = 1.127 * ncr * (sqrt(466e9 / 12e6 + 81000 * 333000 / ncr
+    ncr = pi**2 * E * IZ_LIB / L**2
+    mcr = 1.127 * ncr * (sqrt(IW_LIB / IZ_LIB + 81000 * IT_LIB / ncr
                              + (.454 * h / 2)**2) - .454 * h / 2)
     lam = sqrt(ma / mcr)
     phi = .5 * (1 + .34 * (lam - .2) + lam**2)
     chi = min(1, 1 / (phi + sqrt(phi**2 - lam**2)))
-    vrd = (A - 2*b*tf + (7.9+2*10.2)*tf)*fy/sqrt(3)
+    vrd = (A - 2*b*tf + (TW+2*RR)*tf)*fy/sqrt(3)
     trans = {}
     for key, n in [('0', E/33000), ('L', E/33000*(1+1.1*2)),
                    ('s', E/33000*(1+.55*2))]:
@@ -128,7 +130,7 @@ def reference():
         ur_x = max(ur_x, mom(x)/(ma + min(1., n*p/na)*(mf - ma)))
     n_p = int(a/sa + .5) if a <= xm else int((L - a)/sb + .5)
     aac_p = (A - min(na, n_p*p)/fy)/2
-    k_p = 0 if aac_p <= 0 else 1 if aac_p <= b*tf else 2 if aac_p < b*tf + 7.9*10.2 + (2 - pi/2)*10.2**2 else 3
+    k_p = 0 if aac_p <= 0 else 1 if aac_p <= b*tf else 2 if aac_p < b*tf + TW*RR + (2 - pi/2)*RR**2 else 3
     dg = delta(g, I)
     dl = mid_deflection(gu + .3*qu, [(a, gp + .3*qp)], E*trans['L'][2])
     dt = mid_deflection(.7*qu, [(a, .7*qp)], E*trans['0'][2])
@@ -144,8 +146,8 @@ def reference():
     # propped construction (c_prop = 1, k_LT = 0.5): construction span and LTB length L/2;
     # g0 then acts on the long-term composite section and the slip factor is 0.5
     l1 = .5*L
-    ncr1 = pi**2 * E * 12e6 / l1**2
-    mcr1 = 1.127 * ncr1 * (sqrt(466e9 / 12e6 + 81000 * 333000 / ncr1
+    ncr1 = pi**2 * E * IZ_LIB / l1**2
+    mcr1 = 1.127 * ncr1 * (sqrt(IW_LIB / IZ_LIB + 81000 * IT_LIB / ncr1
                                + (.454 * h / 2)**2) - .454 * h / 2)
     lam1 = sqrt(ma / mcr1)
     phi1 = .5 * (1 + .34 * (lam1 - .2) + lam1**2)

@@ -27,8 +27,10 @@ npm run typecheck && npm run lint && npm test && CHROME_PATH=/usr/bin/google-chr
 ## Scope
 
 Simply supported, unpropped, solid 150 mm slab, sagging UDL, 8 m span, 3 m load width,
-UB 406 × 178 × 60 S355 (SCI P363 rounded properties, cross-checked against published tables:
-A 76.5 cm², Iy 21600 cm⁴, Iz 1200 cm⁴ (1203 unrounded), Wpl 1200 cm³, It 33.3 cm⁴, Iw 0.466 dm⁶),
+UB 406 × 178 × 60 S355 from the section library (Rev G: `Section := 3148`, Browse to change; BS 4-1
+dimensions from structuralcodes, Apache-2.0, r = 10.0 mm; properties derived from the geometry like the
+IPE/HE records: A 76.48 cm², Iy 21584 cm⁴, Iz 1203 cm⁴, Wpl 1198.8 cm³, It 33.39 cm⁴, Iw 0.465 dm⁶,
+60.04 kg/m — SCI P363 tables: 76.5, 21600, 1200, 1200, 33.3, 0.466, 60.1 with r = 10.2),
 C30/37, 48 studs Ø19 × 100 in one row. Symmetric steel section, no applied axial force.
 
 ## Plastic neutral axes (Rev D)
@@ -51,9 +53,10 @@ The PNA positions are **results** of geometry, materials and η, not user-select
   It gives composite credit only if η ≥ η_min, studs are ductile (h_sc ≥ 4d), the flange is Class 1
   and the stud pitch restrains the flange (EC4 6.6.5.5(2)); otherwise M_Rd = M_a,Rd.
 
-Section example: η = 0.721624, η_min = 0.49, x_f = 79.875 mm (full connection: slab PNA, steel all in
-tension), x_c = 57.640 mm, y_a = 5.985 mm (inside the 12.8 mm flange), η_f = 0.404675,
-η_fr = 0.3719. M_pl,Rd = 850.74, M_Rd = 732.50 (linear), M_Rd.pl = 787.06 kNm.
+Section example (library UB, Rev G): η = 0.721775, η_min = 0.49, x_f = 79.858 mm (full connection: slab
+PNA, steel all in tension), x_c = 57.640 mm, y_a = 5.981 mm (inside the 12.8 mm flange), η_f = 0.404550.
+M_pl,Rd = 850.59, M_Rd = 732.34 (linear), M_Rd.pl = 786.95 kNm. (Rev F with the SCI table section:
+η 0.721624, y_a 5.985, M_pl,Rd 850.74, M_Rd 732.50, M_Rd.pl 787.06 kNm.)
 
 Main body: one symbolic stress block (F3); the PNA case is reported numerically in section 9.4.
 Annex: the general force model and branch boundaries.

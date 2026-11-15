@@ -70,7 +70,7 @@ controls and the beam-column template retain their original contract.
 
 The worksheet and printed reports display the selected designation, e.g. `Section := HEB 320`, instead of the numeric lookup key. Browse lists sections by name. The underlying numeric definition is preserved for existing documents, property lookup and batch overrides.
 
-Data: IPE/HE from Steel_Section_Database (MIT), geometry-derived properties; W from steelpy (Apache-2.0), AISC values, r = 0. Licences and source files are in `src/engineering/steel/data/`; `tools/templates/import-steel-sections.mjs` rebuilds `catalogue.json`. Check properties against the project section tables.
+Data: IPE/HE from Steel_Section_Database (MIT), geometry-derived properties; W from steelpy (Apache-2.0), AISC values, r = 0; UB/UC (IDs 3000+/3500+) dimensions from structuralcodes (Apache-2.0), properties derived from the geometry with the same methods as IPE/HE (checked: IPE/HE re-derived within 0.001 %). Licences and source files are in `src/engineering/steel/data/`; `tools/templates/import-steel-sections.mjs` rebuilds `catalogue.json`. Check properties against the project section tables.
 
 ### Custom welded I/H
 

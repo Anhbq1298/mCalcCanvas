@@ -1,0 +1,251 @@
+{
+ "series": "UC",
+ "title": "UC – British universal columns",
+ "standard": "BS 4-1 dimensions",
+ "source": "structuralcodes 0.7.3 (Apache-2.0), structuralcodes/geometry/profiles/_uc.py",
+ "units": {
+  "length": "mm"
+ },
+ "profiles": [
+  {
+   "designation": "UC 152x152x23",
+   "geometry": {
+    "h": 152.0,
+    "b": 152.0,
+    "tw": 5.8,
+    "tf": 6.8,
+    "r": 8.0
+   }
+  },
+  {
+   "designation": "UC 152x152x30",
+   "geometry": {
+    "h": 158.0,
+    "b": 153.0,
+    "tw": 6.5,
+    "tf": 9.4,
+    "r": 8.0
+   }
+  },
+  {
+   "designation": "UC 152x152x37",
+   "geometry": {
+    "h": 162.0,
+    "b": 154.0,
+    "tw": 8.0,
+    "tf": 11.5,
+    "r": 8.0
+   }
+  },
+  {
+   "designation": "UC 152x152x44",
+   "geometry": {
+    "h": 166.0,
+    "b": 156.0,
+    "tw": 9.5,
+    "tf": 13.6,
+    "r": 8.0
+   }
+  },
+  {
+   "designation": "UC 152x152x51",
+   "geometry": {
+    "h": 170.0,
+    "b": 157.0,
+    "tw": 11.0,
+    "tf": 15.7,
+    "r": 8.0
+   }
+  },
+  {
+   "designation": "UC 203x203x46",
+   "geometry": {
+    "h": 203.0,
+    "b": 204.0,
+    "tw": 7.2,
+    "tf": 11.0,
+    "r": 13.0
+   }
+  },
+  {
+   "designation": "UC 203x203x52",
+   "geometry": {
+    "h": 206.0,
+    "b": 204.0,
+    "tw": 7.9,
+    "tf": 12.5,
+    "r": 13.0
+   }
+  },
+  {
+   "designation": "UC 203x203x60",
+   "geometry": {
+    "h": 210.0,
+    "b": 206.0,
+    "tw": 9.4,
+    "tf": 14.2,
+    "r": 13.0
+   }
+  },
+  {
+   "designation": "UC 203x203x71",
+   "geometry": {
+    "h": 216.0,
+    "b": 206.0,
+    "tw": 10.0,
+    "tf": 17.3,
+    "r": 13.0
+   }
+  },
+  {
+   "designation": "UC 203x203x86",
+   "geometry": {
+    "h": 222.0,
+    "b": 209.0,
+    "tw": 12.7,
+    "tf": 20.5,
+    "r": 13.0
+   }
+  },
+  {
+   "designation": "UC 203x203x100",
+   "geometry": {
+    "h": 229.0,
+    "b": 210.0,
+    "tw": 14.5,
+    "tf": 23.7,
+    "r": 13.0
+   }
+  },
+  {
+   "designation": "UC 203x203x113",
+   "geometry": {
+    "h": 235.0,
+    "b": 212.0,
+    "tw": 16.3,
+    "tf": 26.9,
+    "r": 13.0
+   }
+  },
+  {
+   "designation": "UC 203x203x127",
+   "geometry": {
+    "h": 241.0,
+    "b": 214.0,
+    "tw": 18.1,
+    "tf": 30.1,
+    "r": 13.0
+   }
+  },
+  {
+   "designation": "UC 254x254x73",
+   "geometry": {
+    "h": 254.0,
+    "b": 255.0,
+    "tw": 8.6,
+    "tf": 14.2,
+    "r": 20.0
+   }
+  },
+  {
+   "designation": "UC 254x254x81",
+   "geometry": {
+    "h": 256.0,
+    "b": 255.0,
+    "tw": 9.4,
+    "tf": 15.6,
+    "r": 20.0
+   }
+  },
+  {
+   "designation": "UC 254x254x89",
+   "geometry": {
+    "h": 260.0,
+    "b": 256.0,
+    "tw": 10.3,
+    "tf": 17.3,
+    "r": 20.0
+   }
+  },
+  {
+   "designation": "UC 254x254x101",
+   "geometry": {
+    "h": 264.0,
+    "b": 257.0,
+    "tw": 11.9,
+    "tf": 19.6,
+    "r": 20.0
+   }
+  },
+  {
+   "designation": "UC 254x254x107",
+   "geometry": {
+    "h": 267.0,
+    "b": 259.0,
+    "tw": 12.8,
+    "tf": 20.5,
+    "r": 20.0
+   }
+  },
+  {
+   "designation": "UC 254x254x115",
+   "geometry": {
+    "h": 269.0,
+    "b": 259.0,
+    "tw": 13.5,
+    "tf": 22.1,
+    "r": 20.0
+   }
+  },
+  {
+   "designation": "UC 254x254x132",
+   "geometry": {
+    "h": 276.0,
+    "b": 261.0,
+    "tw": 15.3,
+    "tf": 25.3,
+    "r": 20.0
+   }
+  },
+  {
+   "designation": "UC 254x254x149",
+   "geometry": {
+    "h": 282.0,
+    "b": 263.0,
+    "tw": 17.3,
+    "tf": 28.4,
+    "r": 20.0
+   }
+  },
+  {
+   "designation": "UC 254x254x167",
+   "geometry": {
+    "h": 289.0,
+    "b": 265.0,
+    "tw": 19.2,
+    "tf": 31.7,
+    "r": 20.0
+   }
+  },
+  {
+   "designation": "UC 305x305x97",
+   "geometry": {
+    "h": 308.0,
+    "b": 305.0,
+    "tw": 9.9,
+    "tf": 15.4,
+    "r": 20.0
+   }
+  },
+  {
+   "designation": "UC 305x305x107",
+   "geometry": {
+    "h": 311.0,
+    "b": 306.0,
+    "tw": 10.9,
+    "tf": 17.0,
+    "r": 20.0
+   }
+  }
+ ]
+}

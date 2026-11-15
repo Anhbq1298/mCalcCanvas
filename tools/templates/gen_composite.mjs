@@ -50,9 +50,15 @@ input('Wet RC density', '\\rho_c', 25, 'kN/m^3');
 input('Reinforcement B500', 'f_{sk}', 500, 'MPa');
 H(3, '1.2 Partial and combination factors (EN recommended; NA to confirm)');
 for (const [sym,val,lab] of [['\\gamma_C',1.5,'Concrete'],['\\gamma_S',1.15,'Reinforcement'],['\\gamma_V',1.25,'Shear connectors'],['\\gamma_{M0}',1,'Steel, cross-section'],['\\gamma_{M1}',1,'Steel, member buckling'],['\\gamma_G',1.35,'Permanent actions'],['\\gamma_Q',1.5,'Variable actions'],['\\psi_2',0.3,'Quasi-permanent, imposed']]) input(lab,sym,val);
-H(3, '1.3 Steel section UB 406 × 178 × 60 (SCI P363)');
-const props = [['h_a',406.4,'mm','Depth'],['b_a',177.9,'mm','Flange width'],['t_f',12.8,'mm','Flange thickness'],['t_w',7.9,'mm','Web thickness'],['r',10.2,'mm','Root radius'],['A_a',7650,'mm^2','Area'],['I_a',216000000,'mm^4','Second moment, major axis'],['I_z',12000000,'mm^4','Second moment, minor axis'],['W_{pl}',1200000,'mm^3','Plastic modulus, major axis'],['I_t',333000,'mm^4','Torsion constant'],['I_w',466000000000,'mm^6','Warping constant'],['m_a',60.1,'kg/m','Mass']];
-for (const [n,v,u,lab] of props) input(lab, n,v,u);
+H(3, '1.3 Steel section (Browse the section library)');
+P('Steel section (Browse to change)', R`\mathrm{Section}\coloneq3148`);
+T('Library: BS 4-1 dimensions, properties from the geometry. Check against project tables.');
+// t_f, t_w, r, I_z, I_t, I_w use the steel library's own definitions so Browse leaves them unchanged.
+const SP = (name, i) => R`${name}\coloneq\operatorname{sectionProp}(\mathrm{Section},${i})`;
+const props = [['h_a',0,'mm',1],['b_a',1,'mm',1],['t_f',3,'mm',1],['t_w',2,'mm',1],['r',4,'mm',1],['A_a',5,'cm^2',2],['I_a',6,'cm^4',0],['I_z',7,'cm^4',0],
+  ['W_{pl}',10,'cm^3',0],['I_t',12,'cm^4',2],['I_w',13,'cm^6',0],['m_a',16,'kg/m',2]];
+for (let i = 0; i < props.length; i += 3)
+  l.ROW(props.slice(i, i + 3).map(([n, k, u, p], j) => [[96, 316, 516][j], SP(n, k), { displayMode: 'result', displayUnit: u, precision: p }]), 0.75);
 H(3, '1.4 Construction stage');
 input('Propping: 0 = unpropped (default), 1 = propped', 'c_{prop}', 0);
 input('If propped: L_LT = k_LT L (prop spacing / span)', 'k_{LT}', 0.5);
