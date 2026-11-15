@@ -74,7 +74,7 @@ label.f { display: flex; flex-direction: column; justify-content: space-between;
 label.f > span { line-height: 1.25; }
 label.f > span em { font-style: normal; }
 label.f > span i, .load-table i, .props i { color: var(--ink); }
-label.f.changed > span::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--amber); margin-right: 5px; vertical-align: 1px; }
+label.f.changed > span:first-child::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--amber); margin-right: 5px; vertical-align: 1px; }
 label.f select, .num-input { color: var(--ink); background: var(--field); border: 1px solid var(--rule); border-radius: 3px; padding: 5px 7px; font-size: 0.90625rem; min-width: 0; width: 100%; min-height: 2rem; }
 label.f select { font-size: 0.875rem; }
 .num-input:hover, label.f select:hover { border-color: var(--ink-2); }
