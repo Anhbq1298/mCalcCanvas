@@ -21,6 +21,18 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(Math.max(...r.vectors.d1v)).toBeCloseTo(r.d1, 6); // construction deflection curve
     expect(Math.max(...r.vectors.dq)).toBeCloseTo(r.dq, 6); // LL curve against its scalar maximum
     expect(r.ga + r.gc).toBeCloseTo(r.g0, 9);
+    expect(r.gsw).toBe(1.35); // fixed self-weight factor
+    // η trend: the deflection is linear in η, so the trend reproduces δ_max at the provided η; bending at η = 1 is M_Ed / M_pl,Rd
+    expect(r.de).toBeCloseTo(r.dmax, 6);
+    expect(r.vectors.etaV.at(-1)).toBeCloseTo(1, 9);
+    expect(r.vectors.urMeta.at(-1)).toBeCloseTo(r.M2 / r.MplRd, 6);
+    expect(r.vectors.urDeta.at(-1)).toBeLessThan(r['UR.d.x']);
+    expect(r.vlEd ?? r.vLEd).toBeGreaterThan(0);
+    expect(r.asfReq / r.asf).toBeCloseTo(r['UR.sf'], 6);
+    expect(m.inputs.some((f) => f.name.includes('G.sw'))).toBe(false); // not a user input
+    m.setInput(m.inputs.find((f) => f.name === '\\gamma_G')!.id, 1.5); // γ_G no longer moves the self-weight
+    expect(m.results().M2).toBeCloseTo(469.182, 2);
+    m.setInput(m.inputs.find((f) => f.name === '\\gamma_G')!.id, 1.35);
     // per-row ULS factor: G rows at 1.0 instead of 1.35 lower M_Ed at 3 m by 0.35 (4.5·3·5/2 + 30·3·5/8) = 31.5 kNm
     const area = m.tables[0], pts0 = m.tables[1];
     m.setTableRows(area.id, [['G', '0', '8', '1.5', '1'], ['Q', '0', '8', '3', '1.5']]);

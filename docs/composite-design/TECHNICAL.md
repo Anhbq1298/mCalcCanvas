@@ -181,3 +181,8 @@ Annex: the general force model and branch boundaries.
 - Construction stage: `δ_1(x) = w_1,k x (L_1³ − 2 L_1 x² + x³) / (24 E_a I_a)` over L_1 (100 intervals) with a chart;
   its peak equals the closed-form δ_1 (unit test).
 - mCompositeBeamDesign: a blank factor takes the pattern default; switching G/Q moves a default factor with it.
+- Self-weight g_0 takes a fixed ULS factor γ_G,sw = 1.35 (EN 1990 Table A1.2(B)); it is not a user input and γ_G
+  no longer moves it (γ_G still applies to formwork and is the default γ_F of G rows).
+- Annex "UR against η": η_v from η_min to 1; UR_M(η) = M_2,Ed / (M_a,Rd + η (M_pl,Rd − M_a,Rd)) and
+  UR_δ(η) = max(δ_x,f + (1 − η) δ_x,0) / δ_lim with δ_x,f the full-interaction curve and δ_x,0 the slip term
+  C_s (κ_a − κ_c). At the provided η it reproduces δ_max (unit test). Plotted on the design page only.

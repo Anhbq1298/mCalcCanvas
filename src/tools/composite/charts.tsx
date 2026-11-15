@@ -18,7 +18,7 @@ function useWidth(fallback: number) {
 import { C, fmt } from './format';
 import { Rich, SvgRich } from './rich';
 
-export interface Series { x: number[]; y: number[]; color: string; label: string; width?: number; dash?: boolean; fill?: boolean }
+export interface Series { x: number[]; y: number[]; color: string; label: string; width?: number; dash?: boolean; fill?: boolean; marker?: boolean }
 
 function ticks(lo: number, hi: number, n = 5): number[] {
   const span = hi - lo || 1;
@@ -43,22 +43,22 @@ function yAt(s: Series, x: number): number {
  * Line chart over x; invertY draws positive values downwards (moments, deflections).
  * Pointer or arrow keys move a crosshair that reads every series at that x.
  */
-export function LineChart({ series, height = 170, invertY = false, xUnit = 'm', yUnit = '', labels = [], label = 'Chart', digits = 1 }: { series: Series[]; height?: number; invertY?: boolean; xUnit?: string; yUnit?: string; labels?: { x: number; y: number; text: string; color: string }[]; label?: string; digits?: number }) {
+export function LineChart({ series, height = 170, invertY = false, xUnit = 'm', yUnit = '', labels = [], label = 'Chart', digits = 1, xName = 'x', xDigits = 2, yMin }: { series: Series[]; height?: number; invertY?: boolean; xUnit?: string; yUnit?: string; labels?: { x: number; y: number; text: string; color: string }[]; label?: string; digits?: number; xName?: string; xDigits?: number; yMin?: number }) {
   const [hx, setHx] = useState<number | null>(null);
   const [box, W] = useWidth(640);
   const H = height, m = { l: 48, r: 14, t: 12, b: 26 };
   const xs = series.flatMap((s) => s.x), ys = series.flatMap((s) => s.y).filter(Number.isFinite).concat(0);
   if (!xs.length) return <div ref={box} className="h-24 text-sm text-slate-500">No data</div>;
   const x0 = Math.min(...xs), x1 = Math.max(...xs);
-  let y0 = Math.min(...ys), y1 = Math.max(...ys);
+  let y0 = yMin ?? Math.min(...ys), y1 = Math.max(...ys);
   const pad = (y1 - y0) * 0.12 || 1;
-  y1 += pad; if (y0 < 0) y0 -= pad;
+  y1 += pad; if (y0 < 0 && yMin === undefined) y0 -= pad;
   const X = (v: number) => m.l + ((v - x0) / (x1 - x0 || 1)) * (W - m.l - m.r);
   const Y = (v: number) => (invertY ? m.t + ((v - y0) / (y1 - y0)) * (H - m.t - m.b) : H - m.b - ((v - y0) / (y1 - y0)) * (H - m.t - m.b));
   const step = (x1 - x0) / 80 || 0.1;
   const clamp = (v: number) => Math.min(x1, Math.max(x0, v));
-  const tip = hx === null ? null : series.map((s) => ({ s, y: yAt(s, hx) }));
-  const tipX = hx === null ? 0 : X(hx), tipW = 150, tipH = 16 + 14 * series.length;
+  const tip = hx === null ? null : series.filter((s) => !s.marker).map((s) => ({ s, y: yAt(s, hx) }));
+  const tipX = hx === null ? 0 : X(hx), tipW = 150, tipH = 16 + 14 * (tip?.length ?? 0);
   const tipLeft = tipX + 10 + tipW > W - m.r ? tipX - 10 - tipW : tipX + 10;
   return (
     <div ref={box}>
@@ -114,7 +114,7 @@ export function LineChart({ series, height = 170, invertY = false, xUnit = 'm', 
           <line x1={tipX} x2={tipX} y1={m.t} y2={H - m.b} stroke="#64748b" strokeDasharray="3 3" />
           {tip.map(({ s, y }, i) => Number.isFinite(y) && <circle key={i} cx={tipX} cy={Y(y)} r="3.5" fill="#fff" stroke={s.color} strokeWidth="2" />)}
           <rect x={tipLeft} y={m.t} width={tipW} height={tipH} rx="4" fill={C.ink} fillOpacity="0.92" />
-          <text x={tipLeft + 8} y={m.t + 13} fontSize="10.5" fill="#C3CBC8" className="num"><SvgRich text={`x = ${fmt(hx, 2)} ${xUnit}`} size={10.5} /></text>
+          <text x={tipLeft + 8} y={m.t + 13} fontSize="10.5" fill="#C3CBC8" className="num"><SvgRich text={`${xName} = ${fmt(hx, xDigits)} ${xUnit}`} size={10.5} /></text>
           {tip.map(({ s, y }, i) => (
             <text key={i} x={tipLeft + 8} y={m.t + 27 + 14 * i} fontSize="10.5" fill="#fff" className="num">
               <tspan fill={s.color === C.blue ? '#8FA2FF' : s.color === C.red ? '#FF7B6E' : s.color === C.green ? '#5FD08F' : s.color}>■ </tspan>
@@ -203,11 +203,11 @@ function useCad(L: number) {
 }
 
 /** Uniformly distributed loads: one arrow array per table row, stacked above the beam. */
-export function UdlDrawing({ L, area, sb, sw }: { L: number; area: AreaLoad[]; sb: number; sw?: { ga: number; gc: number } }) {
+export function UdlDrawing({ L, area, sb, sw }: { L: number; area: AreaLoad[]; sb: number; sw?: { ga: number; gc: number; gF?: number } }) {
   const { box, W, X0, X1, X } = useCad(L);
-  // self-weight first (steel + slab, always full span, γ_G), then one row per table load
+  // self-weight first (steel + slab, always full span, fixed ULS factor γ_G,sw), then one row per table load
   const swRow = sw && Number.isFinite(sw.ga + sw.gc) ? 1 : 0;
-  const band = 36, lab = 15, rows = Math.max(area.length + swRow, 1);
+  const band = 36, lab = 18, rows = Math.max(area.length + swRow, 1);
   const beamY = 10 + rows * (band + lab) + 6;
   const chain = [...new Set([0, L, ...area.flatMap((a) => [a.x1, a.x2])].map((x) => Number(Math.min(Math.max(x, 0), L).toFixed(4))))];
   const H = beamY + (chain.length > 2 ? 72 : 52);
@@ -235,10 +235,10 @@ export function UdlDrawing({ L, area, sb, sw }: { L: number; area: AreaLoad[]; s
           return (
             <g stroke={C.grey} fill="none" strokeWidth={CAD.load}>
               {arrows(X(0), X(L), top, bot, C.grey, '4 2')}
-              <text x={X(0)} y={top - 4} fill={C.grey} stroke="none" fontSize={CAD.font} fontWeight="500">
+              <text x={X(0)} y={top - 7} fill={C.grey} stroke="none" fontSize={CAD.font} fontWeight="500">
                 SW  g{sub('a')}{up(` ${fmt(sw!.ga, 2)} steel + g`)}{sub('c')}{up(` ${fmt(sw!.gc, 2)} slab = `)}
                 <tspan fontWeight="700" className="num">{`${fmt(sw!.ga + sw!.gc, 2)} kN/m`}</tspan>
-                {'  (G, γ'}{sub('G')}{up(')')}
+                {'  ULS γ'}{sub('G,sw')}{up(` ${fmt(sw!.gF ?? NaN, 2)} fixed → ${fmt((sw!.gF ?? NaN) * (sw!.ga + sw!.gc), 2)} kN/m`)}
               </text>
             </g>
           );
@@ -250,7 +250,7 @@ export function UdlDrawing({ L, area, sb, sw }: { L: number; area: AreaLoad[]; s
           return (
             <g key={i} stroke={col} fill="none" strokeWidth={CAD.load}>
               {arrows(X(Math.min(a.x1, a.x2)), X(Math.max(a.x1, a.x2)), top, bot, col)}
-              <text x={X(Math.min(a.x1, a.x2))} y={top - 4} fill={col} stroke="none" fontSize={CAD.font} fontWeight="500">
+              <text x={X(Math.min(a.x1, a.x2))} y={top - 7} fill={col} stroke="none" fontSize={CAD.font} fontWeight="500">
                 {`${a.q ? 'Q' : 'G'}${i + 1}  ${fmt(a.p, 2)} kPa × ${fmt(sb, 2)} m = `}
                 <tspan fontWeight="700" className="num">{`${fmt(a.p * sb, 2)} kN/m`}</tspan>
                 {Number.isFinite(a.gF) && <>{'  ULS γ'}{sub('F')}{up(` ${fmt(a.gF!, 2)} → ${fmt(a.gF! * a.p * sb, 2)} kN/m`)}</>}

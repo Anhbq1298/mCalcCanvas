@@ -186,6 +186,10 @@ export function App() {
   const urDes = res['UR.des'];
   const dMax = composite ? res.dmax : res.dnc;
   const rows = CHECKS.filter(([key, , , basis]) => key !== 'des' && (!basis || (basis === 'c') === composite));
+  // smallest η on the trend with both URs ≤ 1 (read from the worksheet vectors)
+  const etaOkIdx = v.etaV.findIndex((_, i) => v.urMeta[i] <= 1 && v.urDeta[i] <= 1);
+  const etaOk = etaOkIdx >= 0 ? v.etaV[etaOkIdx] : null;
+  const urTop = Math.max(1.1, ...v.urMeta, ...v.urDeta);
   const nFail = shown.filter(([key]) => res[`UR.${key}`] > 1).length;
 
   const sectionProps: [string, string, string, number][] = [
@@ -242,7 +246,7 @@ export function App() {
           <>Point loads F<sub>k</sub> in kN at a from support A; ULS value γ<sub>F</sub>·F<sub>k</sub>. </>
         )}
         Case G/Q sets the SLS combination; γ<sub>F</sub> is the ULS factor of the row (blank = γ<sub>G</sub> {fmt(gammaOf(false), 2)} / γ<sub>Q</sub> {fmt(gammaOf(true), 2)}).
-        {ti === 0 && <> Self-weight g<sub>0</sub> (steel + slab) is added automatically.</>}
+        {ti === 0 && <> Self-weight g<sub>0</sub> (steel + slab) is added automatically with a fixed ULS factor γ<sub>G,sw</sub> = {fmt(res.gsw, 2)} (not editable).</>}
       </p>
     </section>
   );
@@ -311,7 +315,7 @@ export function App() {
             </div>
             <div className="sheet">
               <h3>Uniformly distributed loads</h3>
-              <UdlDrawing L={res.L} area={area} sb={sb} sw={{ ga: res.ga, gc: res.gc }} />
+              <UdlDrawing L={res.L} area={area} sb={sb} sw={{ ga: res.ga, gc: res.gc, gF: res.gsw }} />
               <h3>Point loads</h3>
               <PointDrawing L={res.L} points={points} />
             </div>
@@ -367,6 +371,29 @@ export function App() {
               label={`Deflection, maximum ${fmt(dMax, 1)} mm against a limit of ${fmt(res.dlim, 1)} mm`}
             />
             <Legend items={[{ color: C.blue, label: `1.0 DL + 1.0 LL, max ${fmt(dMax, 1)} mm` }, { color: C.green, label: `LL, max ${fmt(Math.max(...v.dq), 1)} mm` }, { color: C.red, label: `limit L/r = ${fmt(res.dlim, 1)} mm`, dash: true }]} />
+            </section>
+            <section className="sheet-sec" aria-labelledby="h-eta">
+              <div className="sec-head">
+                <h2 id="h-eta">Utilisation against the degree of shear connection η</h2>
+                <span className="hint">η<sub>min</sub> = {fmt(res.etaMin, 2)} to η = 1; provided η = {fmt(res.eta, 3)}{etaOk !== null ? <> · UR ≤ 1 for η ≥ {fmt(etaOk, 2)}</> : <> · UR &gt; 1 over the whole range</>}</span>
+              </div>
+              <LineChart
+                series={[
+                  { x: v.etaV, y: v.urMeta, color: C.blue, label: 'UR_M' },
+                  { x: v.etaV, y: v.urDeta, color: C.green, label: 'UR_δ' },
+                  { x: [v.etaV[0] ?? 0, 1], y: [1, 1], color: C.red, label: 'UR = 1', dash: true, width: 1.2, marker: true },
+                  { x: [res.eta, res.eta], y: [0, urTop], color: C.amber, label: 'η provided', width: 1.4, marker: true },
+                  { x: [res.etaMin, res.etaMin], y: [0, urTop], color: C.grey, label: 'η_min', dash: true, width: 1, marker: true },
+                ]}
+                height={190}
+                xUnit=""
+                xName="η"
+                yMin={0}
+                digits={3}
+                label={`Utilisation against the degree of shear connection: at the provided η ${fmt(res.eta, 3)}, bending ${fmt(res['UR.M.2'], 3)}, deflection ${fmt(res['UR.d.x'], 3)}`}
+              />
+              <Legend items={[{ color: C.blue, label: 'UR_M bending at x_M, (6.3)' }, { color: C.green, label: 'UR_δ deflection, partial interaction' }, { color: C.amber, label: `η provided ${fmt(res.eta, 3)}` }, { color: C.grey, label: `η_min ${fmt(res.etaMin, 3)}`, dash: true }, { color: C.red, label: 'UR = 1', dash: true }]} />
+              <p className="hint">More studs (closer spacing) raise η and lower both URs; η is capped at 1. Other inputs held as entered.</p>
             </section>
           </section>
 
@@ -447,6 +474,24 @@ export function App() {
                 <tr><td>P<sub>Rd</sub> per stud</td><td>{fmt(res.PRd, 2)}</td><td>kN</td></tr>
               </tbody>
             </table>
+          </section>
+          <section aria-labelledby="h-long">
+            <h2 id="h-long">Longitudinal shear in the slab</h2>
+            <p className="hint">EN 1994-1-1 §6.6.6 with EN 1992-1-1 §6.2.4: two planes a-a beside the stud row, half the connector flow to each slab outstand.</p>
+            <table className="props">
+              <caption className="sr-only">Longitudinal shear in the slab</caption>
+              <tbody>
+                <tr><td>Connector flow v<sub>f</sub> = P<sub>Rd</sub>/s<sub>min</sub></td><td>{fmt(res.vf, 1)}</td><td>kN/m</td></tr>
+                <tr><td>Shear stress v<sub>L,Ed</sub> = v<sub>f</sub>/(2h<sub>c</sub>), (6.20)</td><td>{fmt(res.vLEd, 3)}</td><td>MPa</td></tr>
+                <tr><td>Strut angle cot θ<sub>f</sub></td><td>{fmt(res.ctheta, 2)}</td><td></td></tr>
+                <tr><td>Required a<sub>sf,req</sub>, (6.21)</td><td>{fmt(res.asfReq, 0)}</td><td>mm²/m</td></tr>
+                <tr><td>Provided a<sub>sf</sub> (Ø{fmt(res.ds, 0)} at {fmt(res.sf, 0)})</td><td>{fmt(res.asf, 0)}</td><td>mm²/m</td></tr>
+                <tr><td>Transverse reinforcement UR</td><td className={tone(res['UR.sf'])}>{fmt(res['UR.sf'], 3)}</td><td></td></tr>
+                <tr><td>Strut resistance v<sub>L,Rd</sub>, (6.22)</td><td>{fmt(res.vLRd, 2)}</td><td>MPa</td></tr>
+                <tr><td>Concrete strut UR</td><td className={tone(res['UR.L'])}>{fmt(res['UR.L'], 3)}</td><td></td></tr>
+              </tbody>
+            </table>
+            <p className="hint">Not checked: surface b-b around the stud, splitting, anchorage.</p>
           </section>
 
         </div>
