@@ -255,6 +255,7 @@ LINK('pna','General plastic equilibrium and PNA branches', () => {
 });
 H(3, '4.5 Studs and resistance along the span (§6.6.1.3)');
 T('Shear spans run from each support to x_M; a large point load moves x_M and the stud counts.');
+T('If the studs that fit cannot reach η_min, see chapter 6 (non-composite alternative).');
 calc('η needed at x_M (not below η_min)','\\eta_{req}',R`\max\left(\eta_{min},\frac{M_{2.Ed}-M_{a.Rd}}{M_{pl.Rd}-M_{a.Rd}}\right)`, '', false);
 calc('Studs needed in each shear span','n_{req}',R`\mathrm{ceil}\left(\frac{\eta_{req}N_{c.f}}{P_{Rd}}\right)`, '', false);
 check('Studs provided ≥ needed','n_{req}','n_h');
@@ -310,14 +311,47 @@ calc('Strut resistance, (6.22)','v_{L.Rd}',R`\frac{0.6\left(1-\frac{f_{ck}}{250\
 ur('Concrete strut','L','v_{L.Ed}','v_{L.Rd}');
 T('Not checked (gates): surface b-b around the stud, splitting, anchorage, transverse slab bending.');
 
-H(2, '6. SUMMARY BY CODE');
+H(2, '6. NON-COMPOSITE ALTERNATIVE (EN 1993-1-1)');
+l.out[l.out.length - 1].props.pageBreak = true;
+T('Used only if composite action fails: η < η_min, too few studs, or M_Rd(x) < M_Ed(x) (chapter 4).');
+P('Composite action: 1 = yes (ch. 4), 0 = no (ch. 6)', R`c_{comp}\coloneq${IF([R`\eta_{min}\le\eta\land n_{req}\le n_h\land\mathrm{UR}_{M.x}\le1`, '1'], [null, '0'])}`, M({ precision: 0 }));
+T('c_comp = 0, e.g. a large point load near a support: few studs fit between the support and x_M.');
+T('The steel beam alone then carries every permanent-stage load, with no composite credit.');
+T('Studs are a minimum provision that restrains the top flange: L_LT = stud spacing (s ≤ s_max, 4.2).');
+T('Utilisations only; acceptance is in chapter 7 for the design basis used (c_comp).');
+H(3, '6.1 Bending and shear, steel section alone (§6.2.5, §6.2.6)');
+calc('Bending, steel alone, at x_M', R`\mathrm{UR}_{M.nc}`, R`\frac{M_{2.Ed}}{M_{a.Rd}}`);
+calc('Shear, steel web (low shear: see 4.6)', R`\mathrm{UR}_{V.nc}`, R`\frac{V_{2.Ed}}{V_{pl.Rd}}`);
+H(3, '6.2 Lateral-torsional buckling, top flange restrained by the studs (§6.3.2.2)');
+calc('LTB length = largest stud spacing', 'L_{LT.nc}', R`\max\left(s_{sc.A},s_{sc.B}\right)`, 'mm', false);
+calc('Euler force (C1 = 1, z_g = 0)', 'N_{cr.nc}', R`\frac{\pi^2 E_a I_z}{L_{LT.nc}^2}`, 'kN', false);
+calc('Elastic critical moment', 'M_{cr.nc}', R`N_{cr.nc}\sqrt{\frac{I_w}{I_z}+\frac{G_a I_t}{N_{cr.nc}}}`, 'kN m', false);
+calc('Slenderness', '\\lambda_{LT.nc}', R`\sqrt{\frac{W_{pl}f_y}{M_{cr.nc}}}`, '', false);
+calc('(6.56)', '\\Phi_{LT.nc}', R`0.5\left(1+\alpha_{LT}\left(\lambda_{LT.nc}-0.2\right)+\lambda_{LT.nc}^2\right)`, '', false);
+calc('Reduction factor', '\\chi_{LT.nc}', R`\min\left(1,\frac{1}{\Phi_{LT.nc}+\sqrt{\Phi_{LT.nc}^2-\lambda_{LT.nc}^2}}\right)`, '', false);
+calc('(6.55)', 'M_{b.Rd.nc}', R`\frac{\chi_{LT.nc}W_{pl}f_y}{\gamma_{M1}}`, 'kN m', false);
+calc('LTB between studs', R`\mathrm{UR}_{LT.nc}`, R`\frac{M_{2.Ed}}{M_{b.Rd.nc}}`);
+H(3, '6.3 Deflection, steel section alone (characteristic loads)');
+calc('g0 and the load tables on the steel alone', '\\delta_{nc}', R`\frac{5g_0 L^4}{384E_a I_a}+\delta_{a.post}`, 'mm', false);
+calc('Deflection, steel alone', R`\mathrm{UR}_{d.nc}`, R`\frac{\delta_{nc}}{\delta_{lim}}`);
+
+H(2, '7. SUMMARY BY CODE');
+H(3, 'Design basis — composite (chapter 4) or non-composite (chapter 6)');
+P('Composite action achieved (1 = yes, 0 = no)', R`c_{comp}=`, M({ precision: 0 }));
+for (const n of ['M.nc','V.nc','LT.nc','d.nc']) P(`Non-composite utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
+P('Governing utilisation of the design basis used', R`\mathrm{UR}_{des}\coloneq${IF([R`c_{comp}\ge1`, R`\max\left(\mathrm{UR}_{M.2},\mathrm{UR}_{M.x},\mathrm{UR}_{V.2},\mathrm{UR}_{d.2}\right)`], [null, R`\max\left(\mathrm{UR}_{M.nc},\mathrm{UR}_{V.nc},\mathrm{UR}_{LT.nc},\mathrm{UR}_{d.nc}\right)`])}`, M({ precision: 3 }));
+check('Acceptance, permanent stage', '\\mathrm{UR}_{des}', '1');
+T('c_comp = 1: composite design (chapter 4); chapter 6 is for information only.');
+T('c_comp = 0: composite action not achieved; accepted only as non-composite (chapter 6),');
+T('studs as minimum top-flange restraint. Enlarge the section (Browse) if chapter 6 fails.');
 H(3, 'EN 1993-1-1 — construction stage');
 for (const n of ['M.1','V.1','LT','d.1']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
 H(3, 'EN 1994-1-1 — composite beam');
 for (const n of ['M.2','M.x','V.2','d.2']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
 H(3, 'EN 1992-1-1 — slab longitudinal shear');
 for (const n of ['sf','L']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
-T('REVIEW DRAFT. Construction LTB fails as entered; temporary restraint or propping is needed.');
+
+T('REVIEW DRAFT. If UR_LT > 1, the bare beam needs temporary restraint or propping during construction.');
 T('Gates: Singapore NAs; shrinkage history and cracking; surface b-b, splitting and anchorage.');
 LINK('sources','References and SCI cross-check', () => {
  T('SCI P364 (2009/10) Example 8, 533×165×75 S275, L = 12 m, C25/30 — same equations, checked:');

@@ -158,6 +158,40 @@ def reference():
                    delta_construction_mm=5*(g+3.75)*l1**4/(384*E*I),
                    delta_locked_mm=dg_p, delta_slip_mm=dslip_p,
                    delta_total_mm=dg_p+dl+dt+dslip_p+dsh)
+    # Large point load close to support A: 100 G + 150 Q kN at 1.5 m (default area loads kept).
+    # Few studs to x_M -> composite action fails -> non-composite check, LTB length = stud spacing.
+    fn = 1.35*100e3 + 1.5*150e3
+    ra_n, rb_n, mom_n, xm_n = beam(w2, [(1500., fn)])
+    m2n, v2n = mom_n(xm_n), max(ra_n, rb_n)
+    nA_n = int(xm_n/sa + .5)
+    eta_n = min(1., nA_n*p/na)
+    eta_req_n = max(.49, (m2n - ma)/(mf - ma))
+    llt = max(sa, sb)
+    ncr_n = pi**2*E*IZ_LIB/llt**2
+    mcr_n = ncr_n*sqrt(IW_LIB/IZ_LIB + 81000*IT_LIB/ncr_n)
+    lam_n = sqrt(ma/mcr_n)
+    phi_n = .5*(1 + .34*(lam_n - .2) + lam_n**2)
+    chi_n = min(1, 1/(phi_n + sqrt(phi_n**2 - lam_n**2)))
+    d_nc = delta(g, I) + mid_deflection(gu + qu, [(1500., 250e3)], E*I)
+    non_composite = dict(x_M_m=xm_n/1000, M_Ed_kNm=m2n/1e6, V_Ed_kN=v2n/1000, studs_A=nA_n, eta=eta_n,
+                         eta_required=eta_req_n, composite_ok=int(eta_n >= .49 and ceil(eta_req_n*na/p) <= nA_n),
+                         L_LT_mm=llt, M_cr_kNm=mcr_n/1e6, chi_LT=chi_n, UR_M=m2n/ma, UR_LT=m2n/(chi_n*ma),
+                         UR_V=v2n/vrd, delta_mm=d_nc, UR_d=d_nc/(L/250))
+    # Same loads on a deeper library section, UB 533x210x92 (ID 3129): still too few studs for composite
+    # action (eta < eta_min), so it is designed as non-composite and passes.
+    A9, I9, W9, M9, IZ9, IT9, IW9 = 11744.4, 552676000., 2361720., 92.1937, 23891700., 766351., 1596030000000.
+    g9 = M9*9.81/1000 + 25*.15*3
+    w9 = 1.35*(g9 + gu) + 1.5*qu
+    _, _, mom9, xm9 = beam(w9, [(1500., fn)])
+    ma9, na9 = W9*fy, A9*fy
+    ncf9 = min(na9, .85*20*be*hc)
+    ncr9 = pi**2*E*IZ9/llt**2
+    lam9 = sqrt(ma9/(ncr9*sqrt(IW9/IZ9 + 81000*IT9/ncr9)))
+    phi9 = .5*(1 + .34*(lam9 - .2) + lam9**2)
+    chi9 = min(1, 1/(phi9 + sqrt(phi9**2 - lam9**2)))
+    d9 = 5*g9*L**4/(384*E*I9) + mid_deflection(gu + qu, [(1500., 250e3)], E*I9)
+    non_composite['UB533x210x92'] = dict(x_M_m=xm9/1000, M_Ed_kNm=mom9(xm9)/1e6, eta=min(1., int(xm9/sa + .5)*p/ncf9),
+                                         UR_M=mom9(xm9)/ma9, UR_LT=mom9(xm9)/(chi9*ma9), delta_mm=d9, UR_d=d9/(L/250))
     # SCI P364 Example 8 (533x165x75 UKB S275, L = 12 m, b_eff = 3.0 m, slab 130 mm, C25/30)
     na8, fcd8, h8 = 9520*275., 25/1.5, 529.1
     x8 = na8/(.85*fcd8*3000)
@@ -215,7 +249,7 @@ def reference():
                 transverse_required_mm2_m=as_req*1000,
                 transverse_provided_mm2_m=as_prov*1000,
                 UR_transverse=as_req/as_prov,
-                propped=propped, sci_p364_example_8=sci, sbe_part4_example_a4=sbe, hk_solid_slab_ub457=hk,
+                propped=propped, non_composite_point_load_1_5m=non_composite, sci_p364_example_8=sci, sbe_part4_example_a4=sbe, hk_solid_slab_ub457=hk,
                 **{f'I_{k}_mm4':v[2] for k,v in trans.items()})
 
 

@@ -127,3 +127,15 @@ Annex: the general force model and branch boundaries.
 | Surface b-b, splitting, anchorage, transverse slab bending | Pending (gates) |
 | SLS shrinkage history, cracking, slip model adoption | Pending |
 | Fillet-transition branch solver, UB library binding | Not implemented |
+
+## Rev G: non-composite alternative (chapter 6) and design basis
+
+- c_comp = 1 when η ≥ η_min, n_req ≤ n_h and M_Rd(x) ≥ M_Ed(x) along the span (UR_M.x ≤ 1); otherwise 0.
+  Typical trigger: a large point load 1–2 m from a support, so few studs fit between the support and x_M.
+- Chapter 6 (EN 1993-1-1): the steel beam alone carries every permanent-stage load (M_2,Ed, V_2,Ed;
+  deflection of g0 + table loads on I_a). Studs are a minimum provision restraining the top flange:
+  L_LT = max(s_sc,A, s_sc,B), C1 = 1, z_g = 0 (§6.3.2.2). No composite credit.
+- Summary: UR_des = max of chapter 4 when c_comp = 1, of chapter 6 when c_comp = 0; one acceptance check.
+  Chapter 6 shows utilisations only, so a composite design is not shown as failing there.
+- Not covered: restraint stiffness/strength of the studs as bracing (EC3 §6.3.2.1/BB.2), web-post buckling
+  under the point load, and stud spacing above s_max (a separate check in 4.2).

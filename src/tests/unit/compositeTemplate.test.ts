@@ -166,6 +166,33 @@ describe('EC4 phase-one composite worksheet', () => {
       restore('a_{j}', 'c_{Q.j}', 'F_{k.j}');
       expect(value('x_M','m')).toBeCloseTo(3,9);
     });
+    step('large point load near a support: studs cannot give composite action → non-composite design governs', () => {
+      // 100 G + 150 Q kN at 1.5 m: 17 studs to x_M give η 0.511 ≥ η_min, but M_Rd(x) < M_Ed(x) next to the load
+      setColumn('a_{j}', [q(1.5, 'm'), q(1.5, 'm')]); setColumn('c_{Q.j}', ['G', 'Q']); setColumn('F_{k.j}', [q(100, 'kN'), q(150, 'kN')]);
+      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(618.52962,1);          // reference 618.530 at 2.10 m (40 mm grid)
+      expect(value('n_A')).toBe(17);
+      expect(value('\\mathrm{UR}_{M.x}')).toBeGreaterThan(1);
+      expect(value('c_{comp}')).toBe(0);
+      expect(value('L_{LT.nc}','mm')).toBe(200);                           // LTB length = stud spacing
+      expect(value('\\chi_{LT.nc}')).toBe(1);
+      expect(value('\\mathrm{UR}_{M.nc}')).toBeCloseTo(1.45337661797,3);
+      expect(value('\\delta_{nc}','mm')).toBeCloseTo(61.3569021747,2);
+      expect(value('\\mathrm{UR}_{des}')).toBeCloseTo(1.917403192959,3);   // deflection of the bare UB 406 governs
+      expect(passes('\\mathrm{UR}_{des}\\le')).toBe(false);
+      // Browse a deeper section, UB 533x210x92: still no composite action (η < η_min), passes as non-composite
+      const sec = region('\\mathrm{Section}\\coloneq');
+      e.setDefinitionOverride(sec, { value: 3129 });
+      expect(value('\\eta')).toBeCloseTo(0.33295021908,6);
+      expect(value('c_{comp}')).toBe(0);
+      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(621.17806,1);
+      expect(value('\\mathrm{UR}_{LT.nc}')).toBeCloseTo(0.74089958181,3);
+      expect(value('\\mathrm{UR}_{des}')).toBeCloseTo(0.75334848188,3);
+      expect(passes('\\mathrm{UR}_{des}\\le')).toBe(true);
+      e.setDefinitionOverride(sec, null);
+      restore('a_{j}', 'c_{Q.j}', 'F_{k.j}');
+      expect(value('c_{comp}')).toBe(1);                                   // default: composite design
+      expect(value('\\mathrm{UR}_{des}')).toBe(value('\\mathrm{UR}_{d.2}'));   // composite: deflection 31.07/32 mm governs
+    });
     step('propped construction: span and LTB length k_LT L, g0 on the composite section, slip factor 0.5', () => {
       const prop = region('c_{prop}\\coloneq');
       e.setDefinitionOverride(prop, { value: 1 });

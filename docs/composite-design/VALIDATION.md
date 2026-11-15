@@ -91,6 +91,24 @@ load tables set to one UDL over 12 m and no point load.
 Not compared: the notes use a tabulated P_Rk = 76.3 kN (older code); the sheet uses EN 1994 (6.18)/(6.19).
 This is the only solid-slab source here; it covers the slab-PNA branch that SBE A.4 (steel PNA) does not.
 
+## Large point load near a support: non-composite design basis (Rev G)
+
+Point load 100 G + 150 Q kN at 1.5 m (default area loads, studs 125/200 mm). Reference: closed-form beam,
+studs to x_M, EC3 LTB over the stud spacing (`non_composite_point_load_1_5m` in reference.json).
+
+| Quantity | UB 406x178x60 (default) | UB 533x210x92 (Browse, ID 3129) |
+|---|---|---|
+| M_Ed at x_M | 618.53 kNm at 2.10 m | 621.18 kNm at 2.12 m |
+| Studs to x_M, η | 17, 0.511 (≥ η_min) | 17, 0.333 (< η_min) |
+| Composite: UR_M.x | 1.059 → c_comp = 0 | gate fails → c_comp = 0 |
+| L_LT = stud spacing, χ_LT | 200 mm, 1.0 | 200 mm, 1.0 |
+| UR_M.nc = UR_LT.nc | 1.453 | 0.741 |
+| δ_nc, UR_d.nc | 61.36 mm, 1.917 | 24.11 mm, 0.753 |
+| UR_des, acceptance | 1.917, fails | 0.753, passes |
+
+Worksheet matches to the 40 mm grid (unit test). PDFs of both cases: `app-export/CaseA_PointLoad_UB406.pdf`,
+`app-export/CaseB_PointLoad_UB533.pdf`.
+
 ## Propped construction (c_prop = 1, k_LT = 0.5)
 
 Reference: M_1,Ed 42.77 kNm, UR_LT 0.216, δ_1 1.15 mm, δ_g 4.75 mm (on I_L), δ_slip 3.08 mm,
