@@ -491,7 +491,7 @@ export function App() {
           </section>
           <section aria-labelledby="h-long">
             <h2 id="h-long">Longitudinal shear in the slab</h2>
-            <p className="hint">EN 1994-1-1 §6.6.6 with EN 1992-1-1 §6.2.4. v<sub>f</sub> = P<sub>Rd</sub>/s<sub>min</sub> = {fmt(res.vf, 1)} kN/m; f<sub>sd</sub> = {fmt(res.fsd, 1)} MPa; cot θ<sub>f</sub> = {fmt(res.ctheta, 2)}.</p>
+            <p className="hint">EN 1994-1-1 §6.6.6 with EN 1992-1-1 §6.2.4. v<sub>f</sub> = P<sub>Rd</sub>/s<sub>min</sub> = {fmt(res.vf, 1)} kN/m; f<sub>sd</sub> = {fmt(res.fsd, 1)} MPa; ν f<sub>cd</sub> = {fmt(res.vmax, 2)} MPa. cot θ<sub>f</sub> is chosen per surface: the largest value in 1.0–2.0 (EC2 §6.2.4(4)) that keeps the strut within ν f<sub>cd</sub>, which needs the least steel.</p>
             <table className="props shear-table">
               <caption className="sr-only">Longitudinal shear on surfaces a-a and b-b</caption>
               <thead>
@@ -501,11 +501,13 @@ export function App() {
                 <tr><td>Surface length</td><td>2 × {fmt(res.h_c, 0)}</td><td>{fmt(res.lb, 0)}</td><td>mm</td></tr>
                 <tr><td>Flow on the surface</td><td>v<sub>f</sub>/2 each</td><td>v<sub>f</sub></td><td></td></tr>
                 <tr><td>Shear stress v<sub>Ed</sub></td><td>{fmt(res.vLEd, 3)}</td><td>{fmt(res.vbEd, 3)}</td><td>MPa</td></tr>
+                <tr><td>Strut angle cot θ<sub>f</sub> (auto)</td><td>{fmt(res.cta, 3)}</td><td>{fmt(res.ctb, 3)}</td><td></td></tr>
                 <tr><td>Required a<sub>sf</sub>, (6.21)</td><td>{fmt(res.asfReq, 0)}</td><td>{fmt(res.asbReq, 0)}</td><td>mm²/m</td></tr>
                 <tr><td>Bars counted</td><td>A<sub>t</sub> + A<sub>b</sub></td><td>2A<sub>b</sub></td><td></td></tr>
                 <tr><td>Provided a<sub>sf</sub></td><td>{fmt(res.asf, 0)}</td><td>{fmt(res.asb, 0)}</td><td>mm²/m</td></tr>
                 <tr><td>Transverse bars UR</td><td className={tone(res['UR.sf'])}>{fmt(res['UR.sf'], 3)}</td><td className={tone(res['UR.sf.b'])}>{fmt(res['UR.sf.b'], 3)}</td><td></td></tr>
-                <tr><td>Strut v<sub>Ed</sub>/v<sub>L,Rd</sub> ({fmt(res.vLRd, 2)} MPa)</td><td className={tone(res['UR.L'])}>{fmt(res['UR.L'], 3)}</td><td className={tone(res['UR.L.b'])}>{fmt(res['UR.L.b'], 3)}</td><td></td></tr>
+                <tr><td>Strut resistance v<sub>Rd</sub>, (6.22)</td><td>{fmt(res.vLRd, 2)}</td><td>{fmt(res.vbRd, 2)}</td><td>MPa</td></tr>
+                <tr><td>Strut UR v<sub>Ed</sub>/v<sub>Rd</sub></td><td className={tone(res['UR.L'])}>{fmt(res['UR.L'], 3)}</td><td className={tone(res['UR.L.b'])}>{fmt(res['UR.L.b'], 3)}</td><td></td></tr>
               </tbody>
             </table>
             <p className="hint">Bars: top A<sub>t</sub> Ø{fmt(res.dst, 0)} at {fmt(res.sft, 0)} = {fmt(res.at, 0)} mm²/m, bottom A<sub>b</sub> Ø{fmt(res.dsb, 0)} at {fmt(res.sfb, 0)} = {fmt(res.ab, 0)} mm²/m, anchored past each surface (EC2 §8.4). Not checked: c-c/d-d, splitting at edge beams (§6.6.5.3), minimum reinforcement.</p>

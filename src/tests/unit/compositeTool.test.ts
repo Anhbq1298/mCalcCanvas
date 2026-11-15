@@ -29,6 +29,16 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(r.vectors.urDeta.at(-1)).toBeLessThan(r['UR.d.x']);
     expect(r.vlEd ?? r.vLEd).toBeGreaterThan(0);
     expect(r.asfReq / r.asf).toBeCloseTo(r['UR.sf'], 6);
+    // automatic strut angle: cot θ_f = 2 while the strut has room; dense studs push b-b to the largest angle the strut allows
+    expect([r.cta, r.ctb]).toEqual([2, 2]);
+    const sA = m.inputs.find((f) => f.name === 's_{sc.A}')!.id;
+    m.setInput(sA, 80);
+    const dense = m.results();
+    expect(dense.ctb).toBeGreaterThan(1);
+    expect(dense.ctb).toBeLessThan(2);
+    expect(dense['UR.L.b']).toBeCloseTo(1, 9); // the strut is used exactly at the chosen angle
+    expect(dense.asbReq).toBeCloseTo((dense.vf * 1000) / (dense.fsd * dense.ctb), 3); // (6.21), mm²/m
+    m.setInput(sA, 125);
     expect(m.inputs.some((f) => f.name.includes('G.sw'))).toBe(false); // not a user input
     m.setInput(m.inputs.find((f) => f.name === '\\gamma_G')!.id, 1.5); // γ_G no longer moves the self-weight
     expect(m.results().M2).toBeCloseTo(469.182, 2);

@@ -190,3 +190,6 @@ Annex: the general force model and branch boundaries.
   stud head d_head, cot θ_f). Surface a-a: v_f / 2 on each of two planes h_c deep, A_t + A_b (6.6.6.2(3)).
   Surface b-b: l_b = 2h_sc + d_head + b_0 (6.6.6.1(3)), the whole v_f, 2A_b. Both with EC2 (6.21) and the strut (6.22);
   UR_slab = max of the four enters UR_c. Figure F4 and the design page draw each surface in its own oblique view.
+- cot θ_f is no longer an input: on each surface the worksheet takes the largest value in 1.0 … 2.0 (EC2 §6.2.4(4),
+  compression flange) with v_Ed ≤ ν f_cd / (cot θ + 1/cot θ): cot θ = (ρ + √(ρ² − 4))/2, ρ = ν f_cd / v_Ed, clipped
+  to [1, 2]; ρ < 2 gives cot θ = 1 and a strut UR above 1. This is the angle that needs the least transverse steel.
