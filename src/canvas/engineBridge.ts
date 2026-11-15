@@ -5,7 +5,8 @@
  *
  * A math shape is one engine region. A graph is several hidden regions, one
  * per series field (x, y, r, show), keyed at the graph's own reading
- * position, so a graph sees exactly the variables defined above it.
+ * position, so a graph sees exactly the variables defined above it. An input
+ * table is one hidden definition region per named column (inputTable.ts).
  */
 import { engine } from '../store/calculationStore';
 import { useAppStore } from '../store/appStore';
@@ -13,6 +14,7 @@ import { orderKeysEqual, type OrderKey } from '../engine/light';
 import type { RegionInput } from '../engine';
 import { placeShapes, useCanvasStore, type CanvasState } from './model/canvasStore';
 import type { GraphShape, Shape } from './model/types';
+import { inputTableColumns, inputTableRegionId } from './inputTable';
 import { graphRegionId, isDefinitionLatex, type GraphField } from './graphData';
 import { annexInfo } from './annex';
 
@@ -73,6 +75,11 @@ function regionsOf(s: Shape, editingId: string | null, shapes: Record<string, Sh
     });
   } else if (s.type === 'graph') {
     graphRegions(s, out, calcKey(s, shapes));
+  } else if (s.type === 'table') {
+    const key = calcKey(s, shapes);
+    for (const col of inputTableColumns(s)) {
+      out.set(inputTableRegionId(s.id, col.column), { latex: col.latex, displayUnit: null, precision: null, order: [...key, col.column] });
+    }
   }
   return out;
 }

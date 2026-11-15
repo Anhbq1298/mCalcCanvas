@@ -153,7 +153,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
       const defaults = defaultTableProps(rows, columns); const rawCells = Array.isArray(p.cells) ? p.cells : [];
       const cells = Array.from({ length: rows }, (_, rIndex) => { const row = Array.isArray(rawCells[rIndex]) ? rawCells[rIndex] as unknown[] : []; return Array.from({ length: columns }, (_, cIndex) => { const cell = row[cIndex]; return { value: (cell && typeof cell === 'object' ? str((cell as Raw).value) : str(cell)).slice(0, 1000) }; }); });
       const rawWidths = Array.isArray(p.columnWidths) ? p.columnWidths : []; const columnWidths = Array.from({ length: columns }, (_, index) => bounded(rawWidths[index], 112, 48, 600));
-      return { ...base, type: 'table', props: { ...defaults, w: bounded(p.w, columnWidths.reduce((sum, width) => sum + width, 0), 48, SIZE_LIMIT), h: bounded(p.h, rows * 32, 24, SIZE_LIMIT), cells, columnWidths, headerRow: p.headerRow !== false } };
+      return { ...base, type: 'table', props: { ...defaults, w: bounded(p.w, columnWidths.reduce((sum, width) => sum + width, 0), 48, SIZE_LIMIT), h: bounded(p.h, rows * 32, 24, SIZE_LIMIT), cells, columnWidths, headerRow: p.headerRow !== false, ...(p.input === true ? { input: true } : {}) } };
     }
     case 'graph': {
       const styles = ['line', 'marker', 'circle', 'segments', 'area', 'values'];

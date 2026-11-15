@@ -24,7 +24,7 @@ import { escapeHtml, plainTextToHtml } from './sanitize';
 import { sanitizeShape } from '../documents/DocumentSerializer';
 import { clampDelta, clampPoint, clampShapesIntoPage, constrained, crossPoint, nextPrintableTop, nextWritingPoint, printableAt } from './pageConstraint';
 import { PAGE_GAP, pageBox, pageCount, pageSize } from '../export/pageGeometry';
-import { globalLine, lineOccupied, lineRemovable, lineY, pageLines, planLineShift, planSeparation, type LayoutPlan } from './layout';
+import { anchorY, globalLine, lineOccupied, lineRemovable, lineY, pageLines, planLineShift, planSeparation, type LayoutPlan } from './layout';
 import { useAppStore } from '../store/appStore';
 import { buildLibraryShape, SHAPE_LIBRARY } from './shapeLibrary';
 
@@ -156,6 +156,25 @@ export function deleteLineAboveCrosshair(): boolean {
 export function separateRegion(...ids: string[]): void {
   const plan = planSeparation(get().shapes, ids);
   if (plan.patches && Object.keys(plan.patches).length) applyLayout(plan, { history: false });
+}
+
+/**
+ * A table that grew (a row added) pushes the regions below it down by whole
+ * lines, so it never covers the next heading or equation. Regions beside the
+ * table (same or earlier line) stay where they are.
+ */
+export function makeRoomBelow(id: string, oldHeight: number): void {
+  const shapes = get().shapes;
+  const t = shapes[id];
+  if (!t) return;
+  const b = shapeBounds(t);
+  const oldBottom = b.y + oldHeight;
+  const tableLine = globalLine(anchorY(t));
+  const below = Object.values(shapes).filter((s) => s.id !== id && globalLine(anchorY(s)) > tableLine && shapeBounds(s).y >= oldBottom - 4);
+  if (!below.length) return;
+  const first = below.reduce((a, s) => (shapeBounds(s).y < shapeBounds(a).y ? s : a));
+  const lines = Math.ceil((b.y + b.h + 8 - shapeBounds(first).y) / LINE_HEIGHT);
+  if (lines > 0) applyLayout(planLineShift(shapes, globalLine(anchorY(first)), lines, id), { history: false });
 }
 
 /** Apply a layout plan in one store update (adding pages if content was pushed past the last one). */

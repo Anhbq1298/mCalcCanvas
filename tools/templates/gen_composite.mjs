@@ -61,15 +61,18 @@ input('Formwork load (removable)', 'g_{form}', 0.5, 'kPa');
 input('LTB: C1, UDL, fork ends (SN003b)', 'C_1', 1.127);
 input('LTB: C2, load on top flange (SN003b)', 'C_2', 0.454);
 input('LTB: imperfection, curve b (EC3 Table 6.4)', '\\alpha_{LT}', 0.34);
-H(3, '1.5 Composite-stage load tables (add a row to add a load)');
-T('Each column is one variable; each row is one load. Add a row in every column of a table.');
-const COL = (entries, unit) => R`\begin{bmatrix}${entries.map(v => `${v}\\,\\mathrm{${unit}}`).join(R`\\`)}\end{bmatrix}`;
-T('Area loads (pressure × load width s_b): start x_1, end x_2, permanent g_k, imposed q_k', );
-l.ROW([[96, R`x_{1.i}\coloneq${COL([0, 0], 'm')}`, { precision: 3 }], [236, R`x_{2.i}\coloneq${COL([8, 8], 'm')}`, { precision: 3 }],
-  [376, R`g_{k.i}\coloneq${COL([1.5, 0], 'kPa')}`, { precision: 3 }], [536, R`q_{k.i}\coloneq${COL([0, 3], 'kPa')}`, { precision: 3 }]], 1.5);
-T('Point loads: position a, permanent G_k, imposed Q_k');
-l.ROW([[96, R`a_{j}\coloneq${COL([3, 3], 'm')}`, { precision: 3 }], [236, R`G_{k.j}\coloneq${COL([30, 0], 'kN')}`, { precision: 3 }],
-  [376, R`Q_{k.j}\coloneq${COL([0, 45], 'kN')}`, { precision: 3 }]], 1.5);
+H(3, '1.5 Load tables: row 1 variable, row 2 unit, one load per row (add rows; blank rows skipped)');
+const TBL = (x, cols, rows, widths) => ({ id: l.id(), type: 'table', x, y: l.ln(l.st.page, l.st.row) - 8, props: {
+  w: widths.reduce((a, b) => a + b, 0), h: (rows.length + 2) * 32, rows: rows.length + 2, columns: cols.length, columnWidths: widths, headerRow: true, input: true,
+  cells: [cols.map(([n]) => ({ value: n })), cols.map(([, u]) => ({ value: u })), ...rows.map(r => r.map(v => ({ value: v === '' ? '' : String(v) })))] } });
+l.need(5);
+l.textAt(l.st.page, l.st.row, 'Area loads (pressure × s_b), from x_1 to x_2', { size: 13, w: 340 });
+l.textAt(l.st.page, l.st.row, 'Point loads at a', { size: 13, x: 438, w: 276 });
+l.gap(0.5);
+l.need(3.5);
+l.out.push(TBL(76, [['Load pattern', ''], ['x_1.i', 'm'], ['x_2.i', 'm'], ['g_k.i', 'kPa'], ['q_k.i', 'kPa']], [['Finishes', 0, 8, 1.5, 0], ['Office imposed', 0, 8, 0, 3]], [128, 50, 50, 56, 56]));
+l.out.push(TBL(438, [['Load pattern', ''], ['a_j', 'm'], ['G_k.j', 'kN'], ['Q_k.j', 'kN']], [['Beam reaction G', 3, 30, 0], ['Beam reaction Q', 3, 0, 45]], [124, 48, 50, 54]));
+l.gap(3.5);
 H(3, '1.6 Shear connection and slab reinforcement');
 input('Stud diameter', 'd_{sc}', 19, 'mm');
 input('Stud height after welding', 'h_{sc}', 100, 'mm');

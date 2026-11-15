@@ -3,7 +3,8 @@ import { describe, it, expect } from 'vitest';
 import { step } from '../step';
 import { CalculationEngine } from '../../engine';
 import { calcKey } from '../../canvas/engineBridge';
-import type { Shape } from '../../canvas/model/types';
+import type { Shape, TableShape } from '../../canvas/model/types';
+import { INPUT_TABLE_HEADER_ROWS, inputNameLatex, inputTableColumns, inputTableRegionId } from '../../canvas/inputTable';
 
 // Independent references: tools/templates/reference_composite.py (docs/composite-design/reference.json) and,
 // for the PNA branches, a numerical integration of the rolled width with circular root fillets
@@ -14,10 +15,16 @@ describe('EC4 phase-one composite worksheet', () => {
     const rec = Object.fromEntries(doc.shapes.map(s => [s.id, s]));
     const e = new CalculationEngine({ unitSystem:'SI' });
     const math = doc.shapes.filter(s => s.type === 'math');
+    const tables = doc.shapes.filter((s): s is TableShape => s.type === 'table' && !!s.props.input);
+    // Input tables register exactly as the canvas bridge does: one definition per column.
+    const registerTable = (t: TableShape) => {
+      for (const c of inputTableColumns(t)) e.setRegion(inputTableRegionId(t.id, c.column), { latex: c.latex, order: [...calcKey(t, rec), c.column] as never, displayUnit: null, precision: null });
+    };
     e.batch(() => {
       for (const s of math) e.setRegion(s.id, {
         latex:s.props.latex, order:calcKey(s,rec), displayUnit:s.props.displayUnit || null, precision:null,
       });
+      for (const t of tables) registerTable(t);
     });
     const value = (name:string, unit:string|null = null) => {
       e.setRegion('probe',{latex:`${name}=`,order:[1e9] as never,displayUnit:unit,precision:null});
@@ -36,6 +43,10 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(math.flatMap(s => {
         const r=e.getResult(s.id);return r?.status === 'error' ? [`${s.props.latex}: ${r.error?.message}`] : [];
       })).toEqual([]);
+      expect(tables.flatMap(t => inputTableColumns(t).flatMap(c => {
+        const r = e.getResult(inputTableRegionId(t.id, c.column)); return r?.status === 'valid' ? [] : [`${c.latex}: ${r?.error?.message}`];
+      }))).toEqual([]);
+      expect(tables.flatMap(t => inputTableColumns(t).map(c => c.name))).toEqual(['x_1.i', 'x_2.i', 'g_k.i', 'q_k.i', 'a_j', 'G_k.j', 'Q_k.j']);
     });
     step('reference forces, connection and bending resistance', () => {
       expect(value('P_{Rd}','kN')).toBeCloseTo(81.6562762521,7);
@@ -102,16 +113,25 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('\\sigma_{c.bot}','MPa')).toBeCloseTo(0.211129167388,7);
       expect(value('I_L','mm^4')).toBeCloseTo(633331327.3353621,3);
     });
-    // Load tables: one column region per variable, one row per load.
-    const original = new Map<string, string>();
+    // Load tables: input-table columns, edited cell by cell as a user would (one row per load).
+    const live = new Map(tables.map(t => [t.id, t]));
+    const columnOf = (name: string) => {
+      for (const t of tables) for (let c = 0; c < t.props.columns; c++) if (inputNameLatex(t.props.cells[0][c].value) === name) return { id: t.id, c };
+      throw new Error(`no table column ${name}`);
+    };
     const setColumn = (name: string, entries: string[] | null) => {
-      const id = region(`${name}\\coloneq`);
-      if (!original.has(id)) original.set(id, (math.find(s => s.id === id) as Extract<Shape, { type: 'math' }>).props.latex);
-      const latex = entries ? `${name}\\coloneq\\begin{bmatrix}${entries.join('\\\\')}\\end{bmatrix}` : original.get(id)!;
-      e.setRegion(id, { latex, order: calcKey(rec[id], rec), displayUnit: null, precision: null });
+      const { id, c } = columnOf(name);
+      const orig = tables.find(t => t.id === id)!, cur = live.get(id)!;
+      const values = entries ?? orig.props.cells.slice(INPUT_TABLE_HEADER_ROWS).map(r => r[c].value);
+      const n = Math.max(cur.props.rows - INPUT_TABLE_HEADER_ROWS, values.length);
+      const cells = Array.from({ length: n + INPUT_TABLE_HEADER_ROWS }, (_, r) => Array.from({ length: cur.props.columns }, (_, k) =>
+        ({ value: k === c && r >= INPUT_TABLE_HEADER_ROWS ? values[r - INPUT_TABLE_HEADER_ROWS] ?? '' : cur.props.cells[r]?.[k]?.value ?? '' })));
+      const next: TableShape = { ...cur, props: { ...cur.props, rows: cells.length, cells } };
+      live.set(id, next);
+      registerTable(next);
     };
     const restore = (...names: string[]) => names.forEach((n) => setColumn(n, null));
-    const q = (v: number, u: string) => `${v}\\,\\mathrm{${u}}`;
+    const q = (v: number, _unit: string) => String(v); // the unit sits in the table's unit row
     step('adding a table row adds a load', () => {
       setColumn('a_{j}', [q(3, 'm'), q(3, 'm'), q(6, 'm')]);
       setColumn('G_{k.j}', [q(30, 'kN'), q(0, 'kN'), q(10, 'kN')]);

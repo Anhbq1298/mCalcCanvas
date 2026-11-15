@@ -122,7 +122,8 @@ export interface DrawProps {
   strokeWidth: number;
 }
 export interface TableCell { value: string; }
-export interface TableProps { w: number; h: number; rows: number; columns: number; cells: TableCell[][]; columnWidths: number[]; headerRow: boolean; }
+/** input: Mathcad Prime input table – row 1 variable names, row 2 units, then one value per row; each column defines a variable (see inputTable.ts). */
+export interface TableProps { w: number; h: number; rows: number; columns: number; cells: TableCell[][]; columnWidths: number[]; headerRow: boolean; input?: boolean; }
 
 /** House style for new graphs: Roboto, light lemon background, no grid, axes through the origin. */
 export const DEFAULT_GRAPH_STYLE = { grid: false, axesAtOrigin: true, font: 'Roboto', background: '#fff9c4' } as const;

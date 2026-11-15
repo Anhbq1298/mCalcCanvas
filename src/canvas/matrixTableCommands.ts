@@ -1,4 +1,4 @@
-import { createMathRegion, createTableRegion, insertionPoint } from './canvasActions';
+import { createMathRegion, createTableRegion, insertionPoint, makeRoomBelow } from './canvasActions';
 import { transaction, updateShape, useCanvasStore } from './model/canvasStore';
 import type { MathShape, TableCell, TableShape } from './model/types';
 
@@ -115,7 +115,9 @@ export function applyGridCommand(command: GridCommand): void {
     }
     const rows = cells.length;
     const columns = widths.length;
+    const oldHeight = table.props.h;
     updateShape(table.id, { props: { cells, rows, columns, columnWidths: widths, w: widths.reduce((sum, width) => sum + width, 0), h: rows * 32 } }, { history: false });
+    if (rows * 32 > oldHeight) makeRoomBelow(table.id, oldHeight);
     useCanvasStore.setState({ activeGridCell: { shapeId: table.id, row: nextRow, column: nextColumn } });
   });
 }
