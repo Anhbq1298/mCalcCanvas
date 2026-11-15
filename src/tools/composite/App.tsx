@@ -308,12 +308,6 @@ export function App() {
                   </select>
                 </label>
                 <p className="hint wide">{section ? `${section.name} · ${section.standard} · ${fmt(section.values.mass, 1)} kg/m` : ''}</p>
-                <div className="wide">
-                  <button type="button" className="btn" data-testid="optimize-open" onClick={() => { setOptFamily(family); dialogRef.current?.showModal(); }}>
-                    Optimize section…
-                  </button>
-                  {opt?.result?.best && !opt.running && <p className="hint">Last optimisation: {opt.result.best.name}, {fmt(opt.result.best.mass, 1)} kg/m.</p>}
-                </div>
               </div>
             </section>
             {loadTable(areaT, 0)}
@@ -418,7 +412,13 @@ export function App() {
           {/* ── Verdict ── */}
           <section className="verdict-panel" id="verdict" tabIndex={-1} aria-labelledby="h-verdict">
             <div className="pin panel">
-            <h2 id="h-verdict">Check</h2>
+            <div className="check-head">
+              <h2 id="h-verdict">Check</h2>
+              <button type="button" className="btn" data-testid="optimize-open" onClick={() => { setOptFamily(family); dialogRef.current?.showModal(); }}>
+                Optimize section…
+              </button>
+            </div>
+            {opt?.result?.best && !opt.running && <p className="hint">Last optimisation: {opt.result.best.name}, {fmt(opt.result.best.mass, 1)} kg/m.</p>}
             <div data-testid="verdict" aria-live="polite" aria-atomic="true">
               <div className="verdict">
                 <span className={`ratio ${pass ? 'pass' : 'fail'}`} data-testid="ur-max">{fmt(overall, 3)}</span>

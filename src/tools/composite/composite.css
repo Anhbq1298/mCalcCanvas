@@ -100,6 +100,10 @@ td { padding: 2px 4px; border-bottom: 1px solid color-mix(in srgb, var(--rule) 5
 .rowbtn { width: 26px; height: 26px; border: 1px solid var(--rule); background: var(--field); border-radius: 3px; cursor: pointer; line-height: 1; font-size: 1.0625rem; }
 .rowbtn:hover { border-color: var(--ink-2); }
 .optimize { display: flex; flex-direction: column; gap: 4px; }
+/* Check panel header with the optimizer button */
+.check-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 0.5rem; }
+.check-head h2 { margin: 0; }
+
 /* Optimize dialog (native <dialog>: focus trap, Esc to close) */
 .opt-dialog { margin: auto; max-height: calc(100vh - 2rem); overflow: auto; border: 1px solid var(--ink); border-radius: 4px; padding: 0; width: min(36rem, calc(100vw - 2rem)); background: var(--sheet); color: var(--ink); box-shadow: 0 12px 40px rgb(31 42 48 / 0.25); }
 .opt-dialog::backdrop { background: rgb(31 42 48 / 0.35); }
