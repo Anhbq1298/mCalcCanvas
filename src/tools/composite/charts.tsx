@@ -16,7 +16,7 @@ function ticks(lo: number, hi: number, n = 5): number[] {
 }
 
 /** Line chart over x; invertY draws positive values downwards (moments, deflections). */
-export function LineChart({ series, height = 170, invertY = false, xUnit = 'm', yUnit = '', labels = [] }: { series: Series[]; height?: number; invertY?: boolean; xUnit?: string; yUnit?: string; labels?: { x: number; y: number; text: string; color: string }[] }) {
+export function LineChart({ series, height = 170, invertY = false, xUnit = 'm', yUnit = '', labels = [], label = 'Chart' }: { series: Series[]; height?: number; invertY?: boolean; xUnit?: string; yUnit?: string; labels?: { x: number; y: number; text: string; color: string }[]; label?: string }) {
   const W = 640, H = height, m = { l: 48, r: 14, t: 12, b: 26 };
   const xs = series.flatMap((s) => s.x), ys = series.flatMap((s) => s.y).concat(0);
   if (!xs.length) return <div className="h-24 text-sm text-slate-500">No data</div>;
@@ -27,15 +27,15 @@ export function LineChart({ series, height = 170, invertY = false, xUnit = 'm', 
   const X = (v: number) => m.l + ((v - x0) / (x1 - x0 || 1)) * (W - m.l - m.r);
   const Y = (v: number) => (invertY ? m.t + ((v - y0) / (y1 - y0)) * (H - m.t - m.b) : H - m.b - ((v - y0) / (y1 - y0)) * (H - m.t - m.b));
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img">
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={label}>
       {ticks(y0, y1).map((t) => (
         <g key={`y${t}`}>
           <line x1={m.l} x2={W - m.r} y1={Y(t)} y2={Y(t)} stroke="#eef2f6" />
-          <text x={m.l - 6} y={Y(t) + 3.5} fontSize="10" textAnchor="end" fill={C.muted}>{t}</text>
+          <text x={m.l - 6} y={Y(t) + 3.5} fontSize="10" textAnchor="end" fill="#475569">{t}</text>
         </g>
       ))}
       {ticks(x0, x1, 8).map((t) => (
-        <text key={`x${t}`} x={X(t)} y={H - 8} fontSize="10" textAnchor="middle" fill={C.muted}>{t}</text>
+        <text key={`x${t}`} x={X(t)} y={H - 8} fontSize="10" textAnchor="middle" fill="#475569">{t}</text>
       ))}
       <line x1={m.l} x2={W - m.r} y1={Y(0)} y2={Y(0)} stroke={C.ink} strokeWidth="1" />
       <text x={6} y={m.t + 8} fontSize="10" fill={C.muted}>{yUnit}</text>

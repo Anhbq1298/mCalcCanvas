@@ -1,9 +1,56 @@
 @import 'tailwindcss';
 @source './';
 
+/* design-system/calccanvas/MASTER.md + pages/composite-design-tool.md (UI/UX Pro Max): Swiss minimal, navy, dense dashboard */
 @theme {
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --color-primary: #1e3a5f;
+  --color-on-primary: #ffffff;
+  --color-secondary: #2563eb;
+  --color-background: #f8fafc;
+  --color-foreground: #0f172a;
+  --color-card: #ffffff;
+  --color-muted: #f1f3f5;
+  --color-muted-foreground: #475569;
+  --color-border: #e4e7eb;
+  --color-input: #fffbeb;
+  --color-input-ink: #1e40af;
+  --color-ring: #2563eb;
 }
 
-body { font-family: var(--font-sans); }
+:root { color-scheme: light; accent-color: var(--color-primary); }
+body { font-family: var(--font-sans); background: var(--color-background); color: var(--color-foreground); line-height: 1.5; }
 sub { font-size: 0.72em; }
+
+.card { background: var(--color-card); border: 1px solid var(--color-border); border-radius: 0.5rem; padding: 1rem; box-shadow: 0 1px 2px rgb(0 0 0 / 0.05); }
+.chart-title { margin: 0.75rem 0 0.25rem; font-size: 0.75rem; font-weight: 500; color: var(--color-muted-foreground); }
+
+/* Inputs: light-yellow fill with blue figures, the worksheet convention for inputs */
+.field {
+  min-height: 2rem; border: 1px solid #cbd2da; border-radius: 0.3rem; background: var(--color-input); color: var(--color-input-ink);
+  padding: 0.2rem 0.4rem; font-size: 0.8125rem; font-variant-numeric: tabular-nums;
+}
+select.field { background: #fff; color: var(--color-foreground); text-align: left; }
+.field[aria-invalid='true'] { border-color: #b91c1c; background: #fef2f2; }
+
+.btn { min-height: 2.25rem; border-radius: 0.375rem; padding: 0.375rem 0.85rem; font-size: 0.8125rem; font-weight: 500; transition: background-color 0.2s, border-color 0.2s; }
+.btn-primary { background: var(--color-primary); color: var(--color-on-primary); }
+.btn-primary:hover { background: #16304f; }
+.btn-secondary { background: #fff; border: 1px solid #cbd2da; }
+.btn-secondary:hover { background: var(--color-muted); }
+.btn-link { font-size: 0.8125rem; font-weight: 500; color: var(--color-secondary); min-height: 2rem; }
+.btn-link:hover { text-decoration: underline; }
+.icon-btn { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 0.3rem; color: #475569; }
+.icon-btn:hover { color: #b91c1c; background: #fef2f2; }
+.badge { display: inline-flex; align-items: center; border-radius: 0.375rem; padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600; }
+
+:where(a, button, input, select):focus-visible { outline: 2px solid var(--color-ring); outline-offset: 2px; }
+.skip { position: absolute; left: -9999px; top: 0.5rem; z-index: 20; }
+.skip:focus { left: 0.5rem; background: #fff; padding: 0.5rem 0.75rem; border-radius: 0.375rem; box-shadow: 0 4px 6px rgb(0 0 0 / 0.1); }
+
+/* Touch: 44 px targets (UI/UX Pro Max §2) */
+@media (pointer: coarse) {
+  .field, .btn, .btn-link, .icon-btn { min-height: 2.75rem; }
+  .icon-btn { width: 2.75rem; height: 2.75rem; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
