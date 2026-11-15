@@ -5,7 +5,9 @@ import { FunctionsMenu } from '../../components/ribbon/MatrixMenus';
 import { describe, expect, it, vi } from 'vitest';
 import { applyGridCommand, matrixLatex } from '../../canvas/matrixTableCommands';
 import { loadShapes, useCanvasStore } from '../../canvas/model/canvasStore';
-import { defaultTableProps } from '../../canvas/model/types';
+import { defaultTableProps, type TableShape } from '../../canvas/model/types';
+import { inputTableColumns, inputNameLatex, inputUnitLatex, isVariableHeader } from '../../canvas/inputTable';
+import { CalculationEngine } from '../../engine';
 import { sanitizeShape } from '../../documents/DocumentSerializer';
 import { step } from '../step';
 
@@ -35,6 +37,35 @@ describe('matrix and table regions', () => {
       const shape = sanitizeShape({ id: 't', type: 'table', x: 10, y: 20, props: { ...defaultTableProps(2, 2), cells: [[{ value: 'fck' }, { value: '40 MPa' }], [{ value: 'b' }, { value: '500 mm' }]] } });
       expect(shape?.type).toBe('table');
       if (shape?.type === 'table') expect(shape.props.cells[1][1].value).toBe('500 mm');
+    });
+
+    step('input table: each named column defines a variable (names, units, blank rows)', () => {
+      expect(inputNameLatex('G_k.j')).toBe('G_{k.j}');
+      expect(inputNameLatex('x_{1.i}')).toBe('x_{1.i}');
+      expect(isVariableHeader('Load pattern')).toBe(false);
+      expect(inputNameLatex('Load pattern c_Q.i')).toBe('c_{Q.i}');
+      expect(inputTableColumns({ id: 'p', type: 'table', x: 0, y: 0, props: { ...defaultTableProps(4, 1), input: true, cells: [[{ value: 'Load pattern c_Q.i' }], [{ value: 'G/Q' }], [{ value: 'g' }], [{ value: 'Q' }]] } })[0].latex)
+        .toBe('c_{Q.i}\\coloneq\\begin{bmatrix}0\\\\1\\end{bmatrix}');
+      expect(isVariableHeader('G_k.j') && isVariableHeader('x_{1.i}') && isVariableHeader('\\eta')).toBe(true);
+      expect(inputUnitLatex('kN/m^2')).toBe('\\mathrm{kN}/\\mathrm{m}^2');
+      const t: TableShape = { id: 't', type: 'table', x: 0, y: 0, props: { ...defaultTableProps(5, 3), input: true, cells: [
+        [{ value: 'a_j' }, { value: 'G_k.j' }, { value: 'Load pattern' }],
+        [{ value: 'm' }, { value: 'kN' }, { value: '' }],
+        [{ value: '3' }, { value: '30' }, { value: 'Secondary beam' }],
+        [{ value: '' }, { value: '' }, { value: 'label only: skipped' }],
+        [{ value: '4,5' }, { value: '1e1' }, { value: 'Plant' }],
+      ] } };
+      const cols = inputTableColumns(t);
+      expect(cols.map(c => c.name)).toEqual(['a_j', 'G_k.j']);
+      const e = new CalculationEngine({ unitSystem: 'SI' });
+      cols.forEach((c, i) => e.setRegion(`c${i}`, { latex: c.latex, order: [0, i], displayUnit: null, precision: null }));
+      e.setRegion('p', { latex: '\\mathrm{sum}\\left(\\mathrm{col}\\left(a_{j},0\\right)\\right)=', order: [1], displayUnit: 'm', precision: null });
+      expect(e.getResult('p')?.value?.number).toBeCloseTo(7.5, 9);
+      e.setRegion('s', { latex: '\\mathrm{sum}\\left(\\mathrm{col}\\left(G_{k.j},0\\right)\\right)=', order: [2], displayUnit: 'kN', precision: null });
+      expect(e.getResult('s')?.value?.number).toBeCloseTo(40, 9);
+      expect(inputTableColumns({ ...t, props: { ...t.props, input: false } })).toEqual([]);
+      const saved = sanitizeShape({ ...t });
+      expect(saved?.type === 'table' && saved.props.input).toBe(true);
     });
 
     step('adds and removes rows as one table operation', () => {

@@ -66,6 +66,8 @@ export interface TextProps {
   textStyle?: TextStyleId;
   /** Annex role (see canvas/annex.ts): the ANNEX title, an annex heading, or a link to one. */
   annex?: AnnexRole;
+  /** Start a new page here when the print / template layout is planned (a section that must stay on its own page). */
+  pageBreak?: boolean;
 }
 
 /**
@@ -120,13 +122,16 @@ export interface DrawProps {
   strokeWidth: number;
 }
 export interface TableCell { value: string; }
-export interface TableProps { w: number; h: number; rows: number; columns: number; cells: TableCell[][]; columnWidths: number[]; headerRow: boolean; }
+/** input: Mathcad Prime input table – row 1 variable names, row 2 units, then one value per row; each column defines a variable (see inputTable.ts). */
+export interface TableProps { w: number; h: number; rows: number; columns: number; cells: TableCell[][]; columnWidths: number[]; headerRow: boolean; input?: boolean; }
 
 /** House style for new graphs: Roboto, light lemon background, no grid, axes through the origin. */
 export const DEFAULT_GRAPH_STYLE = { grid: false, axesAtOrigin: true, font: 'Roboto', background: '#fff9c4' } as const;
 
-/** segments: like line, but r holds a group id per point; a change of id starts a new piece. */
-export type GraphSeriesStyle = 'line' | 'marker' | 'circle' | 'segments';
+/** segments: like line, but r holds a group id per point; a change of id starts a new piece.
+ * area: line with the region between it and y = 0 filled (internal-force diagrams).
+ * values: markers labelled with their y value (peaks, support values). */
+export type GraphSeriesStyle = 'line' | 'marker' | 'circle' | 'segments' | 'area' | 'values';
 
 /** One data series of an X-Y graph. x, y, r and show are LaTeX expressions evaluated by the engine. */
 export interface GraphSeries {
@@ -157,6 +162,8 @@ export interface GraphProps {
   yUnit: string;
   /** Same scale on both axes (sections, plans). */
   equalAxes: boolean;
+  /** Positive y drawn downwards (bending moment on the tension side); tick values keep their sign. */
+  invertY?: boolean;
   grid: boolean;
   /** Axis lines drawn through (0, 0); tick values stay on the bottom and left edges. */
   axesAtOrigin: boolean;

@@ -1,6 +1,24 @@
 import { useCallback } from 'react';
 import { setActiveGridCell, startEditing, updateShape, useCanvasStore } from '../model/canvasStore';
 import type { TableShape } from '../model/types';
+import { INPUT_TABLE_HEADER_ROWS, headerParts, inputNameLatex, inputTableRegionId, isVariableHeader } from '../inputTable';
+import { useRegionResult } from '../../store/calculationStore';
+
+/** `G_{k.j}` → G<sub>k.j</sub>, italic base (drawing-style variable name). */
+function NameLabel({ name }: { name: string }) {
+  const m = /^([^_]+)_\{?(.*?)\}?$/.exec(inputNameLatex(name));
+  if (!m) return <i>{name}</i>;
+  return <><i>{m[1].replace(/^\\/, '')}</i><sub>{m[2]}</sub></>;
+}
+
+/** Header cell of an input-table column, red with the engine message when the column is invalid. */
+function InputHeader({ shapeId, column, name }: { shapeId: string; column: number; name: string }) {
+  const r = useRegionResult(inputTableRegionId(shapeId, column));
+  const error = r?.status === 'error' ? r.error?.message ?? 'Invalid column' : null;
+  if (!isVariableHeader(name)) return <span>{name || '\u00a0'}</span>;
+  const { caption } = headerParts(name);
+  return <span className={error ? 'is-error' : undefined} title={error ?? undefined}>{caption && <>{caption} </>}<NameLabel name={name} /></span>;
+}
 
 export function TableView({ shape, editing, isStatic }: { shape: TableShape; editing: boolean; isStatic: boolean }) {
   const active = useCanvasStore((s) => s.activeGridCell?.shapeId === shape.id ? s.activeGridCell : null);
@@ -10,7 +28,7 @@ export function TableView({ shape, editing, isStatic }: { shape: TableShape; edi
     updateShape(shape.id, { props: { cells } }, { history: false });
   }, [shape]);
   return (
-    <div className="cc-table-region" data-testid="table-region" style={{ width: shape.props.w, minHeight: shape.props.h }}>
+    <div className={'cc-table-region' + (shape.props.input ? ' is-input' : '')} data-testid="table-region" style={{ width: shape.props.w, minHeight: shape.props.h }}>
       <table>
         <tbody>
           {shape.props.cells.map((row, r) => (
@@ -18,7 +36,7 @@ export function TableView({ shape, editing, isStatic }: { shape: TableShape; edi
               {row.map((cell, c) => {
                 const selected = active?.row === r && active.column === c;
                 return (
-                  <td key={c} className={(shape.props.headerRow && r === 0 ? 'is-header ' : '') + (selected ? 'is-active' : '')} style={{ width: shape.props.columnWidths[c] }}>
+                  <td key={c} className={((shape.props.headerRow && r === 0) || (shape.props.input && r < INPUT_TABLE_HEADER_ROWS) ? 'is-header ' : '') + (shape.props.input && r === 1 ? 'is-unit ' : '') + (shape.props.input && !isVariableHeader(shape.props.cells[0]?.[c]?.value ?? '') ? 'is-label ' : '') + (selected ? 'is-active' : '')} style={{ width: shape.props.columnWidths[c] }}>
                     {editing && !isStatic ? (
                       <input
                         aria-label={`Table cell ${r + 1}, ${c + 1}`}
@@ -39,7 +57,7 @@ export function TableView({ shape, editing, isStatic }: { shape: TableShape; edi
                         }}
                       />
                     ) : (
-                      <button type="button" tabIndex={-1} onDoubleClick={() => startEditing(shape.id)} onClick={() => setActiveGridCell(shape.id, r, c)}>{cell.value || '\u00a0'}</button>
+                      <button type="button" tabIndex={-1} onDoubleClick={() => startEditing(shape.id)} onClick={() => setActiveGridCell(shape.id, r, c)}>{shape.props.input && r === 0 ? <InputHeader shapeId={shape.id} column={c} name={cell.value} /> : cell.value || '\u00a0'}</button>
                     )}
                   </td>
                 );

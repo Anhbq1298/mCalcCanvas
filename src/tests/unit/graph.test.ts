@@ -8,7 +8,7 @@ import { step } from '../step';
 import '../../canvas/canvasActions';
 import { newGraphSeries } from '../../canvas/canvasActions';
 import { connectEngine, graphRegionId } from '../../canvas/engineBridge';
-import { buildGraphData, dataRange, niceStep, seriesSources } from '../../canvas/graphData';
+import { buildGraphData, dataRange, niceStep, seriesSources, valueLabel } from '../../canvas/graphData';
 import { addShapes, deleteShapes, loadShapes, updateShapes, useCanvasStore } from '../../canvas/model/canvasStore';
 import { DEFAULT_GRAPH_STYLE, DEFAULT_MATH_PROPS, type GraphProps, type GraphSeries, type GraphShape, type Shape } from '../../canvas/model/types';
 import { parseDocument } from '../../documents/DocumentSerializer';
@@ -147,6 +147,9 @@ describe('graph helpers', () => {
       expect(niceStep(0.3)).toBe(0.05);
     });
     resetEach();
+    step('value labels: about four significant figures, no trailing zeros', () => {
+      expect([469.18826, 209.7, 100, 12.5, 0.5, -3.25, 0].map(valueLabel)).toEqual(['469.2', '209.7', '100', '12.5', '0.5', '-3.25', '0']);
+    });
     step('data range includes circle radii', () => {
       const r = dataRange([{ series: series({}), xs: [0, 10], ys: [0, 0], rs: [2, 2] }]);
       expect(r).toEqual({ x: { min: -2, max: 12 }, y: { min: -2, max: 2 } });
@@ -186,6 +189,20 @@ describe('graph files', () => {
         shapes: [{ id: 'g', type: 'graph', x: 0, y: 0, props: { grid: true, axesAtOrigin: false, font: 'Comic', background: '#ffffff', series: [] } }],
       });
       expect((doc.shapes[0] as GraphShape).props).toMatchObject({ grid: true, axesAtOrigin: false, font: 'Roboto', background: '#ffffff' });
+    });
+    resetEach();
+    step('keeps an inverted y axis and the diagram styles', () => {
+      const doc = parseDocument({
+        format: 'calccanvas', version: DOCUMENT_VERSION, id: 'd', title: 't',
+        shapes: [
+          { id: 'g', type: 'graph', x: 0, y: 0, props: { invertY: true, series: [{ x: 'x', y: 'y', style: 'area' }, { x: 'x', y: 'y', style: 'values' }] } },
+          { id: 'h', type: 'graph', x: 0, y: 300, props: { invertY: 'yes', series: [] } },
+        ],
+      });
+      const [g, h] = doc.shapes as GraphShape[];
+      expect(g.props.invertY).toBe(true);
+      expect(g.props.series.map((q) => q.style)).toEqual(['area', 'values']);
+      expect(h.props.invertY).toBeUndefined();
     });
     resetEach();
     step('sanitises graph shapes', () => {

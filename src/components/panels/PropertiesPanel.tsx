@@ -3,7 +3,7 @@ import { useId, useState, type ReactNode } from 'react';
 import { updateShape, useCanvasStore } from '../../canvas/model/canvasStore';
 import { shapeBounds } from '../../canvas/model/geometry';
 import { formatEditingText, hasTextSelection } from '../../canvas/textFormatting';
-import { fontStack, TEXT_FONTS, type DrawShape, type GraphProps, type GraphSeries, type GraphShape, type LineShape, type MathDisplayMode, type MathShape, type RectShape, type Shape, type TextShape } from '../../canvas/model/types';
+import { fontStack, TEXT_FONTS, type DrawShape, type GraphProps, type GraphSeries, type GraphShape, type LineShape, type MathDisplayMode, type MathShape, type RectShape, type Shape, type TableShape, type TextShape } from '../../canvas/model/types';
 import { newGraphSeries } from '../../canvas/canvasActions';
 import { MathInput } from '../../math/MathInput';
 import { SeriesSources } from './SeriesSources';
@@ -522,6 +522,8 @@ function SeriesEditor({ shapeId, series, index, onChange, onDelete }: { shapeId:
           <option value="marker">Markers</option>
           <option value="circle">Circles (radius r)</option>
           <option value="segments">Segments (group g)</option>
+          <option value="area">Filled area (diagram)</option>
+          <option value="values">Values (labelled points)</option>
         </select>
         <select aria-label="Line width / marker size" className={inputCls + ' h-7 w-20 cursor-pointer'} value={series.width} onChange={(e) => onChange({ width: Number(e.target.value) })}>
           {[0.75, 1, 1.5, 2, 3, 4].map((v) => (
@@ -537,6 +539,17 @@ function SeriesEditor({ shapeId, series, index, onChange, onDelete }: { shapeId:
         <MathInput label="Show when" testId={tid('show')} value={series.show} onCommit={(show) => onChange({ show })} />
       </div>
     </div>
+  );
+}
+
+function TableProperties({ shape }: { shape: TableShape }) {
+  return (
+    <Section title="Table">
+      <label className="flex cursor-pointer items-center gap-2 text-[13px]">
+        <input type="checkbox" data-testid="table-prop-input" className="h-4 w-4 cursor-pointer accent-accent" checked={!!shape.props.input} onChange={(e) => updateShape(shape.id, { props: { input: e.target.checked } })} />
+        Input table: row 1 names, row 2 units, one value per row
+      </label>
+    </Section>
   );
 }
 
@@ -557,6 +570,10 @@ function GraphProperties({ shape }: { shape: GraphShape }) {
         <label className="flex cursor-pointer items-center gap-2 text-[13px]">
           <input type="checkbox" className="h-4 w-4 cursor-pointer accent-accent" checked={shape.props.equalAxes} onChange={(e) => update({ equalAxes: e.target.checked })} />
           Equal axes (1:1 scale)
+        </label>
+        <label className="flex cursor-pointer items-center gap-2 text-[13px]">
+          <input type="checkbox" data-testid="graph-prop-inverty" className="h-4 w-4 cursor-pointer accent-accent" checked={!!shape.props.invertY} onChange={(e) => update({ invertY: e.target.checked })} />
+          Positive y downwards (moment on the tension side)
         </label>
         <label className="flex cursor-pointer items-center gap-2 text-[13px]">
           <input type="checkbox" className="h-4 w-4 cursor-pointer accent-accent" checked={shape.props.grid} onChange={(e) => update({ grid: e.target.checked })} />
@@ -719,6 +736,7 @@ export function PropertiesPanel() {
         {selected.type === 'text' && <TextProperties shape={selected} />}
         {(selected.type === 'rect' || selected.type === 'line' || selected.type === 'draw') && <StrokeProperties shape={selected} />}
         {selected.type === 'graph' && <GraphProperties shape={selected} />}
+        {selected.type === 'table' && <TableProperties shape={selected} />}
         {selected.type === 'image' && (
           <Section title="Image">
             <p className="text-[12px] leading-relaxed text-muted-foreground">Drag a corner to resize; the aspect ratio is kept (hold Shift to stretch).</p>

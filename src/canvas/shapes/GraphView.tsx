@@ -2,7 +2,7 @@ import { memo, useContext } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useCalculationStore } from '../../store/calculationStore';
 import { ReportResults } from '../../store/reportResults';
-import { buildGraphData, graphRegionId, dataRange, GRAPH_FIELDS, niceStep, tickLabel, type Range } from '../graphData';
+import { buildGraphData, graphRegionId, dataRange, GRAPH_FIELDS, niceStep, tickLabel, valueLabel, type Range } from '../graphData';
 import { fontStack, type GraphShape } from '../model/types';
 
 export const GraphView = memo(function GraphView({ shape }: { shape: GraphShape }) {
@@ -12,7 +12,7 @@ export const GraphView = memo(function GraphView({ shape }: { shape: GraphShape 
   const results = report ? ids.map((id) => report[id]) : live;
   const byId = new Map(ids.map((id, i) => [id, results[i]]));
   const data = buildGraphData(shape, (id) => byId.get(id));
-  const { w, h, title, xLabel, yLabel, equalAxes, grid, axesAtOrigin, background } = shape.props;
+  const { w, h, title, xLabel, yLabel, equalAxes, grid, axesAtOrigin, background, invertY } = shape.props;
   const FONT = fontStack(shape.props.font);
 
   // Legend: one or more rows under the x-axis label, items wrapped to the plot width.
@@ -60,7 +60,7 @@ export const GraphView = memo(function GraphView({ shape }: { shape: GraphShape 
       y = { min: cy - ph / s / 2, max: cy + ph / s / 2 };
     }
     const X = (v: number) => m.l + (v - x.min) * sx;
-    const Y = (v: number) => m.t + ph - (v - y.min) * sy;
+    const Y = (v: number) => (invertY ? m.t + (v - y.min) * sy : m.t + ph - (v - y.min) * sy);
     const stepX = niceStep(x.max - x.min);
     const stepY = equalAxes ? stepX : niceStep(y.max - y.min);
     const ticks = (r: Range, step: number) => {
@@ -118,6 +118,18 @@ export const GraphView = memo(function GraphView({ shape }: { shape: GraphShape 
                 </g>
               );
             }
+            if (series.style === 'area') {
+              const pts = p.xs.map((v, i) => `${X(v).toFixed(2)},${Y(p.ys[i]).toFixed(2)}`);
+              const base = Y(Math.min(Math.max(0, y.min), y.max)).toFixed(2);
+              const fill = `${X(p.xs[0]).toFixed(2)},${base} ${pts.join(' ')} ${X(p.xs[p.xs.length - 1]).toFixed(2)},${base}`;
+              return (
+                <g key={series.id} {...common}>
+                  <polygon points={fill} fill={series.color} fillOpacity={0.14} stroke="none" />
+                  <polyline points={pts.join(' ')} fill="none" stroke={series.color} strokeWidth={series.width} strokeLinejoin="round" />
+                </g>
+              );
+            }
+            if (series.style === 'values') return null; // drawn unclipped below
             if (series.style === 'line') {
               const pts = p.xs.map((v, i) => `${X(v).toFixed(2)},${Y(p.ys[i]).toFixed(2)}`).join(' ');
               return <polyline key={series.id} {...common} points={pts} fill="none" stroke={series.color} strokeWidth={series.width} strokeLinejoin="round" />;
@@ -131,6 +143,30 @@ export const GraphView = memo(function GraphView({ shape }: { shape: GraphShape 
             );
           })}
         </g>
+        {data.plots.filter((p) => p.series.style === 'values').map((p) => {
+          const { series } = p;
+          const common = { 'data-testid': 'graph-series', 'data-series': series.id, 'data-points': p.xs.length } as const;
+          // Label away from the zero line: above positive values (below when the y axis is inverted).
+          return (
+            <g key={series.id} {...common} fill={series.color} fontSize={10.5} fontFamily={FONT} fontWeight={600}>
+              {p.xs.map((v, i) => {
+                const py = Y(p.ys[i]);
+                // Away from the zero line, but kept inside the plot so it never meets the tick labels.
+                let up = (p.ys[i] >= 0) !== !!invertY;
+                if (!up && py + 14 > m.t + ph) up = true;
+                else if (up && py - 16 < m.t) up = false;
+                return (
+                  <g key={i}>
+                    <circle cx={X(v)} cy={py} r={series.width + 1} />
+                    <text x={X(v)} y={py + (up ? -6 : 14)} textAnchor={X(v) < m.l + 30 ? 'start' : X(v) > m.l + pw - 30 ? 'end' : 'middle'}>
+                      {valueLabel(p.ys[i])}
+                    </text>
+                  </g>
+                );
+              })}
+            </g>
+          );
+        })}
       </>
     );
   }
@@ -170,7 +206,7 @@ export const GraphView = memo(function GraphView({ shape }: { shape: GraphShape 
         <g fontSize={10} fontFamily={FONT} fill="#334155" data-testid="graph-legend">
           {legend.map((p, i) => (
             <g key={p.series.id} transform={`translate(${m.l + legendPos[i].x} ${h - legendH + 10 + legendPos[i].row * LEG_ROW})`}>
-              {p.series.style === 'line' || p.series.style === 'segments' ? (
+              {p.series.style === 'line' || p.series.style === 'segments' || p.series.style === 'area' ? (
                 <line x1={0} x2={14} y1={-3} y2={-3} stroke={p.series.color} strokeWidth={2} />
               ) : (
                 <circle cx={7} cy={-3} r={3.5} fill={p.series.color} fillOpacity={p.series.style === 'circle' ? 0.35 : 1} stroke={p.series.color} />

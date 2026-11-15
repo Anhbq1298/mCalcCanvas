@@ -4,6 +4,8 @@ import { optimizeTemplateLayout } from '../../canvas/templateLayout';
 import { CalculationEngine } from '../../engine/CalculationEngine';
 import { buildDisplay, flowColumnVectors } from '../../math/MathFormatter';
 import { DEFAULT_MATH_PROPS, DEFAULT_TEXT_PROPS, type Shape } from '../../canvas/model/types';
+import { parseDocument } from '../../documents/DocumentSerializer';
+import { DOCUMENT_VERSION } from '../../documents/DocumentTypes';
 
 const math = (id: string, x: number, y: number, w = 180, h = 40): Shape => ({ id, type: 'math', x, y, props: { ...DEFAULT_MATH_PROPS, latex: id, w, h } });
 describe('template and print layout', () => {
@@ -44,6 +46,15 @@ describe('template and print layout', () => {
       expect(buildDisplay('L\\coloneq6\\,\\mathrm{m}',result,'value').latex).toBe(result.value!.latex);
       expect(buildDisplay('L\\coloneq6\\,\\mathrm{m}',result,'result').latex).toContain('L=');
       expect(e.getResult('span')!.defines).toBe('L');
+    });
+    step('a heading marked pageBreak starts a new page; the file keeps the mark', () => {
+      const breakHeading: Shape = { id: 'h2', type: 'text', x: 76, y: 200, props: { ...DEFAULT_TEXT_PROPS, html: 'Loading', heading: 2, w: 600, h: 24, pageBreak: true } };
+      const plan = optimizeTemplateLayout([math('a', 76, 80), breakHeading, math('b', 76, 240)]);
+      expect(plan.pages).toBe(2);
+      expect(plan.shapes[1].y).toBe(1123 + 48 + 60);
+      expect(plan.shapes[2].y).toBeGreaterThan(plan.shapes[1].y);
+      const doc = parseDocument({ format: 'calccanvas', version: DOCUMENT_VERSION, id: 'd', title: 't', shapes: [breakHeading, { ...breakHeading, id: 'h3', props: { ...breakHeading.props, pageBreak: 'yes' } }] });
+      expect(doc.shapes.map(s => (s.props as { pageBreak?: boolean }).pageBreak)).toEqual([true, undefined]);
     });
     step('print atoms keep engineering table rows and diagrams intact', () => {
       const shapes=[{...math('a',76,60,260,200),printGroupId:'panel'}, {...math('b',400,80,200,40),printGroupId:'panel'}];

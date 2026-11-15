@@ -119,13 +119,16 @@ export function planSteelSection(shapes: Record<string, Shape>, id: string, choi
   const required = [...propertyKeys.slice(0, 16).map(k => sectionSymbols[k]), ...sectionCurveDefinitions.map(c => c.symbol)];
   if (custom && required.some(symbol => !regions.has(nameOf(symbol)))) throw new Error('Custom I/H requires the section-property and buckling equations from the steel beam-column worksheet.');
   const patches: Record<string, ShapePatch> = { [id]: { props: { latex: SECTION_DEF + (custom ? 0 : choice) } } };
+  // Only regions that already read the section are rewritten: another worksheet (the composite beam)
+  // may use the same names (t_f, r, α_LT) for its own inputs.
+  const linked = (shape: MathShape | undefined): shape is MathShape => !!shape && shape.props.latex.includes('\\mathrm{Section}');
   for (const key of propertyKeys) {
     const shape = regions.get(nameOf(sectionSymbols[key]));
-    if (shape) patches[shape.id] = { props: { latex: custom ? customPropertyDefinition(key, choice) : libraryPropertyDefinition(key), displayMode: 'result' } };
+    if (linked(shape)) patches[shape.id] = { props: { latex: custom ? customPropertyDefinition(key, choice) : libraryPropertyDefinition(key), displayMode: 'result' } };
   }
   for (const curve of sectionCurveDefinitions) {
     const shape = regions.get(nameOf(curve.symbol));
-    if (shape) patches[shape.id] = { props: { latex: curve.latex } };
+    if (linked(shape)) patches[shape.id] = { props: { latex: curve.latex } };
   }
   // Older worksheets may still describe the whole check as rolled-only.
   const notes = [

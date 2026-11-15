@@ -178,6 +178,27 @@ test.describe('own canvas engine', () => {
     expect((t.props.cells as { value: string }[][])[0][0].value).toBe('fck');
   });
 
+  test('input table: a named column defines a variable used below; a new row adds an entry', async ({ page }) => {
+    await page.getByTestId('format-tab-matrices').click();
+    await page.mouse.click(300, 200);
+    await page.getByTestId('insert-table').click();
+    await page.getByRole('gridcell', { name: '3 by 1', exact: true }).click();
+    await page.getByTestId('toggle-properties').click();
+    await page.getByTestId('table-prop-input').check();
+    await page.getByTestId('toggle-properties').click();
+    if (!(await page.getByLabel('Table cell 1, 1').isVisible())) await page.getByTestId('table-region').locator('button').first().dblclick();
+    await page.getByLabel('Table cell 1, 1').fill('g');
+    await page.getByLabel('Table cell 2, 1').fill('kN');
+    await page.getByLabel('Table cell 3, 1').fill('30');
+    await page.getByTestId('grid-insert-below').click();
+    await page.getByLabel('Table cell 4, 1').fill('12,5');
+    await page.keyboard.press('Escape');
+    await page.keyboard.press('Escape');
+    await page.getByTestId('format-tab-math').click();
+    await addRegion(page, 300, 420, ['g=']);
+    await expect.poll(async () => (await regions(page)).find((r) => r.latex.startsWith('g'))?.result ?? '', { timeout: 8000 }).toMatch(/30[^0-9.]+12\.5/);
+  });
+
   test('draw and resize a rectangle, draw a line', async ({ page }) => {
     await page.getByTestId('format-tab-insert').click();
     await page.getByTestId('tool-rect').click();
