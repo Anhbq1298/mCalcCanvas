@@ -186,8 +186,9 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('L_{LT.nc}','mm')).toBe(200);                           // LTB length = stud spacing
       expect(value('\\chi_{LT.nc}')).toBe(1);
       expect(value('\\mathrm{UR}_{M.nc}')).toBeCloseTo(1.45337661797,3);
-      expect(value('\\delta_{nc}','mm')).toBeCloseTo(61.3569021747,2);
-      expect(value('\\mathrm{UR}_{des}')).toBeCloseTo(1.917403192959,3);   // deflection of the bare UB 406 governs
+      expect(value('\\delta_{nc}','mm')).toBeCloseTo(61.6797314581,2);   // bare steel, maximum along the span
+      expect(value('\\max\\left(\\delta_{x.d}\\right)','mm')).toBe(value('\\delta_{nc}','mm'));   // chart plots the bare steel
+      expect(value('\\mathrm{UR}_{des}')).toBeCloseTo(1.927491608067,3);   // deflection of the bare UB 406 governs
       // code-compliance checks (reference: tools/templates/reference_composite.py, web_checks)
       expect(value('\\mathrm{UR}_{MV}')).toBeCloseTo(1.06017,4);           // EC4 6.2.2.4, composite M–V
       expect(value('\\mathrm{UR}_{MV.nc}')).toBeCloseTo(1.45336,4);        // EC3 6.2.8 (6.30)
@@ -212,6 +213,7 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('c_{comp}')).toBe(1);                                   // default: composite design
       expect(shown('NOT DESIGNED AS COMPOSITE')).toBe(false);
       expect(shown('Design basis: COMPOSITE')).toBe(true);
+      expect(value('\\max\\left(\\delta_{x.d}\\right)','mm')).toBe(value('\\delta_{max}','mm'));   // chart plots the composite
       expect(value('\\mathrm{UR}_{des}')).toBe(value('\\mathrm{UR}_{d.x}'));   // composite: deflection along the span governs
       // 4.9: reference deflection_curve (closed form, 1 mm steps): 31.0771 mm at 3.94 m, 29.2243 mm with η = 1
       expect(value('\\delta_{max}','mm')).toBeCloseTo(31.0770932273,2);

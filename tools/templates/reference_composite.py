@@ -250,7 +250,8 @@ def reference():
     lam_n = sqrt(ma/mcr_n)
     phi_n = .5*(1 + .34*(lam_n - .2) + lam_n**2)
     chi_n = min(1, 1/(phi_n + sqrt(phi_n**2 - lam_n**2)))
-    d_nc = delta(g, I) + mid_deflection(gu + qu, [(1500., 250e3)], E*I)
+    # Rev G: maximum along the span (closed form, 1 mm steps), as the worksheet's bare-steel curve
+    d_nc = max(deflection_at(x, g + gu + qu, [(1500., 250e3)], E*I) for x in [L*i/8000 for i in range(8001)])
     non_composite = dict(x_M_m=xm_n/1000, M_Ed_kNm=m2n/1e6, V_Ed_kN=v2n/1000, studs_A=nA_n, eta=eta_n,
                          eta_required=eta_req_n, composite_ok=int(eta_n >= .49 and ceil(eta_req_n*na/p) <= nA_n),
                          L_LT_mm=llt, M_cr_kNm=mcr_n/1e6, chi_LT=chi_n, UR_M=m2n/ma, UR_LT=m2n/(chi_n*ma),
@@ -267,7 +268,7 @@ def reference():
     lam9 = sqrt(ma9/(ncr9*sqrt(IW9/IZ9 + 81000*IT9/ncr9)))
     phi9 = .5*(1 + .34*(lam9 - .2) + lam9**2)
     chi9 = min(1, 1/(phi9 + sqrt(phi9**2 - lam9**2)))
-    d9 = 5*g9*L**4/(384*E*I9) + mid_deflection(gu + qu, [(1500., 250e3)], E*I9)
+    d9 = max(deflection_at(x, g9 + gu + qu, [(1500., 250e3)], E*I9) for x in [L*i/8000 for i in range(8001)])
     non_composite['UB533x210x92'] = dict(x_M_m=xm9/1000, M_Ed_kNm=mom9(xm9)/1e6, eta=min(1., int(xm9/sa + .5)*p/ncf9),
                                          UR_M=mom9(xm9)/ma9, UR_LT=mom9(xm9)/(chi9*ma9), delta_mm=d9, UR_d=d9/(L/250))
     # SCI P364 Example 8 (533x165x75 UKB S275, L = 12 m, b_eff = 3.0 m, slab 130 mm, C25/30)

@@ -271,6 +271,7 @@ calc('Degree of connection at x','\\eta_x',IF([R`n_x P_{Rd}\ge N_{c.f}`, '1'], [
 calc('Resistance at x, (6.3)','M_{Rd.x}',R`M_{a.Rd}+\eta_x\left(M_{pl.Rd}-M_{a.Rd}\right)`,'kN m','fo');
 calc('Max utilisation along the span','\\mathrm{UR}_{M.x}',R`\max\left(\frac{M_v}{M_{Rd.x}}\right)`,'',false);
 check('Acceptance at every section','\\mathrm{UR}_{M.x}','1');
+P('Composite action achieved: 1 = yes, 0 = no (bare steel, chapter 6)', R`c_{comp}\coloneq${IF([R`\eta_{min}\le\eta\land n_{req}\le n_h\land\mathrm{UR}_{M.x}\le1`, '1'], [null, '0'])}`, M({ precision: 0 }));
 DIAGRAM(190, { title: 'M_Ed(x) and M_Rd(x) from the studs provided (tension side down)', xUnit: 'm', yUnit: 'kN m', invertY: true, series: [S('med', 'M_Ed(x)', ['x_v', 'M_v'], 'area', '#b91c1c', 1.5), S('mrd', 'M_Rd(x) from studs', ['x_v', 'M_{Rd.x}'], 'line', '#1e3a5f', 2)] });
 calc('Studs, nearer support to each P','n_{P}',IF([R`a_P\le x_M`, R`\mathrm{floor}\left(\frac{a_P}{s_{sc.A}}+0.5\right)`], [null, R`\mathrm{floor}\left(\frac{L-a_P}{s_{sc.B}}+0.5\right)`]),'',false);
 calc('Slab force under each point load','N_{c.P}',IF([R`n_P P_{Rd}\ge N_{c.f}`, R`N_{c.f}`], [null, R`n_P P_{Rd}`]),'kN',false);
@@ -361,13 +362,22 @@ P('Deflection at u, partial interaction', R`d_p(u)\coloneq d_w(u,\kappa_p)`, M(u
 P('Deflection at u, imposed load alone', R`d_q(u)\coloneq d_w(u,\kappa_q)`, M(units('')));
 calc('Deflection along the span, 1.0 DL + 1.0 LL', '\\delta_x', R`\mathrm{map}\left(d_p,x_v\right)`, 'mm', 'fo');
 calc('Deflection along the span, LL alone', '\\delta_{x.q}', R`\mathrm{map}\left(d_q,x_v\right)`, 'mm', 'fo');
+calc('Bare steel: curvature of g0 and the table loads on I_a', '\\kappa_s', R`\frac{g_0 x_v\left(L-x_v\right)}{2E_a I_a}+\kappa_a`, 'm^-1', 'fo');
+P('Deflection at u, bare steel', R`d_{st}(u)\coloneq d_w(u,\kappa_s)`, M(units('')));
+P('Deflection at u, LL on bare steel', R`d_{qs}(u)\coloneq d_w\left(u,\frac{\mathrm{map}\left(M_s,x_v,0,1\right)}{E_a I_a}\right)`, M(units('')));
+calc('Bare steel, 1.0 DL + 1.0 LL', '\\delta_{x.s}', R`\mathrm{map}\left(d_{st},x_v\right)`, 'mm', 'fo');
+calc('Bare steel, LL alone', '\\delta_{x.qs}', R`\mathrm{map}\left(d_{qs},x_v\right)`, 'mm', 'fo');
+P('Plotted: composite if c_comp = 1, bare steel if 0', R`\delta_{x.d}\coloneq${IF([R`c_{comp}\ge1`, R`\delta_x`], [null, R`\delta_{x.s}`])}`, M({ ...units('mm'), ...fo }));
+P('Plotted LL, same basis', R`\delta_{q.d}\coloneq${IF([R`c_{comp}\ge1`, R`\delta_{x.q}`], [null, R`\delta_{x.qs}`])}`, M({ ...units('mm'), ...fo }));
 calc('Maximum LL deflection', '\\delta_{q.max}', R`\max\left(\delta_{x.q}\right)`, 'mm', false);
 calc('Maximum deflection', '\\delta_{max}', R`\max\left(\delta_x\right)`, 'mm', false);
-DIAGRAM(170, { title: 'Deflection δ(x), permanent stage (downward)', xUnit: 'm', yUnit: 'mm', invertY: true, series: [
-  S('dp', '1.0 DL + 1.0 LL', ['x_v', '\\delta_x'], 'line', '#1d4ed8', 2),
-  S('dq', 'LL', ['x_v', '\\delta_{x.q}'], 'line', '#059669', 1.5),
+DIAGRAM(170, { title: 'Deflection δ(x), permanent stage: composite if c_comp = 1, bare steel if 0 (downward)', xUnit: 'm', yUnit: 'mm', invertY: true, series: [
+  S('dp', '1.0 DL + 1.0 LL', ['x_v', '\\delta_{x.d}'], 'line', '#1d4ed8', 2),
+  S('dq', 'LL', ['x_v', '\\delta_{q.d}'], 'line', '#059669', 1.5),
   S('dl', 'limit L / r_lim', [R`\mathrm{stack}\left(0\,\mathrm{m},L\right)`, R`\mathrm{stack}\left(\delta_{lim},\delta_{lim}\right)`], 'line', '#b91c1c', 1.5, { dash: true })] });
 ur('Maximum deflection along the span','d.x','\\delta_{max}','\\delta_{lim}');
+T('c_comp = 0: the chart shows the bare steel; UR_d,x above is for information, chapter 6 checks UR_d,nc.');
+Object.assign(l.out[l.out.length - 1].props, { showWhen: R`c_{comp}<1`, color: '#b91c1c' });
 H(2, '5. EN 1992-1-1 — SLAB LONGITUDINAL SHEAR (EC4 §6.6.6, EC2 §6.2.4)');
 T('Two vertical planes a-a beside the stud row; half the connector flow to each slab outstand.');
 calc('Reinforcement design strength', 'f_{sd}', R`\frac{f_{sk}}{\gamma_S}`, 'MPa', false);
@@ -383,7 +393,7 @@ T('Not checked (gates): surface b-b around the stud, splitting, anchorage, trans
 H(2, '6. NON-COMPOSITE ALTERNATIVE (EN 1993-1-1, EN 1993-1-5)');
 l.out[l.out.length - 1].props.pageBreak = true;
 T('Used only if composite action fails: η < η_min, too few studs, or M_Rd(x) < M_Ed(x) (chapter 4).');
-P('Composite action: 1 = yes (ch. 4), 0 = no (ch. 6)', R`c_{comp}\coloneq${IF([R`\eta_{min}\le\eta\land n_{req}\le n_h\land\mathrm{UR}_{M.x}\le1`, '1'], [null, '0'])}`, M({ precision: 0 }));
+P('Composite action: 1 = yes (ch. 4), 0 = no (ch. 6)', R`c_{comp}=`, M({ precision: 0 }));
 T('Bare steel beam for all permanent-stage loads, no composite credit. Studs at s ≤ s_max restrain the');
 T('top flange (EN 1994-1-1 §6.4.1(1)), so L_LT = stud spacing. Deflection on the steel section alone.');
 LINK('noncomp', 'Non-composite alternative: steel section alone', () => {
@@ -412,7 +422,7 @@ LINK('noncomp', 'Non-composite alternative: steel section alone', () => {
  calc('Elastic moment resistance, steel', 'M_{el.Rd}', R`\frac{2I_a}{h_a}f_{yd}`, 'kN m', false);
  calc('(7.2) as a utilisation', R`\mathrm{UR}_{FM.nc}`, R`c_{F.P}\max\left(\overrightarrow{\frac{\frac{F_{loc}}{F_{Rd.a}}+0.8\frac{M_P}{M_{el.Rd}}}{1.4}}\right)`, '', false);
  T('Deflection, steel section alone (characteristic loads)');
- calc('g0 and the load tables on the steel alone', '\\delta_{nc}', R`\frac{5g_0 L^4}{384E_a I_a}+\delta_{a.post}`, 'mm', false);
+ calc('g0 and the load tables on the steel alone, maximum along the span (4.9)', '\\delta_{nc}', R`\max\left(\delta_{x.s}\right)`, 'mm', false);
  calc('Deflection, steel alone', R`\mathrm{UR}_{d.nc}`, R`\frac{\delta_{nc}}{\delta_{lim}}`);
 });
 T('Key results (calculated in the annex):');
