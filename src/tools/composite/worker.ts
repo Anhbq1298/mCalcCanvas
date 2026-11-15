@@ -10,7 +10,10 @@ export type ToWorker =
   | { kind: 'input'; id: string; value: number }
   | { kind: 'section'; id: number }
   | { kind: 'table'; id: string; rows: string[][] }
-  | { kind: 'report'; request: number } | { kind: 'hello' };
+  | { kind: 'report'; request: number } | { kind: 'hello' }
+  | { kind: 'optimize'; family: string };
+
+export type { OptimizeResult } from './model';
 
 const model = new CompositeModel(raw);
 const post = (msg: unknown) => (self as unknown as DedicatedWorkerGlobalScope).postMessage(msg);
@@ -23,6 +26,7 @@ self.onmessage = (ev: MessageEvent<ToWorker>) => {
   else if (m.kind === 'section') model.setSection(m.id);
   else if (m.kind === 'table') model.setTableRows(m.id, m.rows);
   else if (m.kind === 'report') return post({ kind: 'report', request: m.request, doc: model.reportDocument() });
+  else if (m.kind === 'optimize') post({ kind: 'opt-done', result: model.optimizeSection(m.family, (i, n, name) => post({ kind: 'opt-progress', i, n, name })) });
   // Several edits in a row: calculate once, after the queue is empty.
   if (pending) return;
   pending = true;

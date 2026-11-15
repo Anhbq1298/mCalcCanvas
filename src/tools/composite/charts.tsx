@@ -106,7 +106,7 @@ export function LineChart({ series, height = 170, invertY = false, xUnit = 'm', 
       {labels.map((l, i) => (
         <g key={i}>
           <circle cx={X(l.x)} cy={Y(l.y)} r="3" fill={l.color} />
-          <text x={X(l.x)} y={Y(l.y) + (invertY ? 14 : -7)} className="num" fontSize="10.5" fontWeight="600" textAnchor="middle" fill={l.color} paintOrder="stroke" stroke="#fff" strokeWidth="3">{l.text}</text>
+          <text x={X(l.x)} y={Y(l.y) + (invertY ? 14 : -7)} className="num" fontSize="10.5" fontWeight="600" textAnchor="middle" fill={l.color} paintOrder="stroke" stroke="#fff" strokeWidth="3"><SvgRich text={l.text} size={10.5} /></text>
         </g>
       ))}
       {tip && hx !== null && (
@@ -441,6 +441,7 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
   const surfaces = which === 'a'
     ? [-aX, aX].map((X) => pts(P(X, 0, 0), P(X, h_c, 0), P(X, h_c, depth), P(X, 0, depth)))
     : [pts(P(-bX, 0, 0), P(-bX, hsc, 0), P(-bX, hsc, depth), P(-bX, 0, depth)), pts(P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(-bX, hsc, depth)), pts(P(bX, 0, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(bX, 0, depth))];
+  const barsZ = [0.2, 0.4, 0.6, 0.8, 1].map((f) => f * depth); // five more bars back along the span
   const crossings = which === 'a' ? [-aX, aX].flatMap((X) => [[X, yTopBar], [X, yBotBar]]) : [[-bX, yBotBar], [bX, yBotBar]];
   const arrowA = P(-halfW * 0.7, h_c, depth * 0.15), arrowB = P(-halfW * 0.7, h_c, depth * 0.8);
   const ang = (Math.atan2(arrowB[1] - arrowA[1], arrowB[0] - arrowA[0]) * 180) / Math.PI;
@@ -449,6 +450,13 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={which === 'a' ? `Surface a-a: two vertical planes through the slab depth ${fmt(h_c, 0)} mm at the flange edges, along the span, crossed by top and bottom bars` : `Surface b-b: trough around the studs, length ${fmt(r.lb, 0)} mm, along the span, crossed by the bottom bars twice`}>
         <polygon points={top} fill="#EEF1EF" stroke={ink} strokeWidth={CAD.geo} strokeLinejoin="round" />
         <polygon points={side} fill="#DCE1DE" stroke={ink} strokeWidth={CAD.geo} strokeLinejoin="round" />
+        {/* transverse bars repeated along the span (spacing indicative), seen through the concrete */}
+        {barsZ.map((z) => (
+          <g key={z}>
+            <line x1={P(-halfW + 6, yTopBar, z)[0]} y1={P(-halfW + 6, yTopBar, z)[1]} x2={P(halfW - 6, yTopBar, z)[0]} y2={P(halfW - 6, yTopBar, z)[1]} stroke={C.muted} strokeWidth={1.2} strokeOpacity={which === 'b' ? 0.45 : 0.9} />
+            <line x1={P(-halfW + 6, yBotBar, z)[0]} y1={P(-halfW + 6, yBotBar, z)[1]} x2={P(halfW - 6, yBotBar, z)[0]} y2={P(halfW - 6, yBotBar, z)[1]} stroke={C.muted} strokeWidth={1.2} />
+          </g>
+        ))}
         {/* the surface, shaded, seen through the concrete */}
         {surfaces.map((q, i) => <polygon key={i} points={q} fill={col} fillOpacity={0.16} stroke={col} strokeWidth={1.2} strokeLinejoin="round" />)}
         {/* cut face: concrete, steel flange, front stud, bars */}
@@ -459,12 +467,14 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
           <rect x={cx - d / 2} y={yBot - (hsc - 10) * k} width={d} height={(hsc - 10) * k} />
           <rect x={cx - hd / 2} y={yBot - hsc * k} width={hd} height={10 * k} />
         </g>
-        {[yTopBar, yBotBar].map((y) => <line key={y} x1={P(-halfW + 6, y, 0)[0]} x2={P(halfW - 6, y, 0)[0]} y1={P(0, y, 0)[1]} y2={P(0, y, 0)[1]} stroke={ink} strokeWidth={2.2} />)}
+{[yTopBar, yBotBar].map((y) => <line key={y} x1={P(-halfW + 6, y, 0)[0]} x2={P(halfW - 6, y, 0)[0]} y1={P(0, y, 0)[1]} y2={P(0, y, 0)[1]} stroke={ink} strokeWidth={2.2} />)}
         {/* the surface trace on the cut face, and where the bars cross it */}
         {which === 'a'
           ? [-aX, aX].map((X) => <line key={X} x1={P(X, 0, 0)[0]} x2={P(X, 0, 0)[0]} y1={yBot} y2={yTop} stroke={col} strokeWidth={2} />)
           : <polyline points={pts(P(-bX, 0, 0), P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, 0, 0))} fill="none" stroke={col} strokeWidth={2} />}
         {crossings.map(([X, Y]) => <circle key={`${X}${Y}`} cx={P(X, Y, 0)[0]} cy={P(X, Y, 0)[1]} r={4} fill={col} stroke="#fff" strokeWidth={1} />)}
+        {barsZ.flatMap((z) => crossings.map(([X, Y]) => <circle key={`${z}${X}${Y}`} cx={P(X, Y, z)[0]} cy={P(X, Y, z)[1]} r={2.6} fill={col} />))}
+        <text x={W - 4} y={yBot + 14} textAnchor="end" fill={C.muted} fontSize={CAD.font - 1}>{`bars @ ${fmt(which === 'b' ? r.sfb : Math.min(r.sft, r.sfb), 0)} mm, indicative`}</text>
         {/* longitudinal shear on the outstand, along the span */}
         <line x1={arrowA[0]} y1={arrowA[1]} x2={arrowB[0]} y2={arrowB[1]} stroke={C.blue} strokeWidth={1.6} />
         <path d="M0,0 l-9,-3.5 l0,7 z" fill={C.blue} transform={`translate(${arrowB[0]} ${arrowB[1]}) rotate(${ang})`} />

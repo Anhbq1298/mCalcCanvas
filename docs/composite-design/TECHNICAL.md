@@ -193,3 +193,8 @@ Annex: the general force model and branch boundaries.
 - cot θ_f is no longer an input: on each surface the worksheet takes the largest value in 1.0 … 2.0 (EC2 §6.2.4(4),
   compression flange) with v_Ed ≤ ν f_cd / (cot θ + 1/cot θ): cot θ = (ρ + √(ρ² − 4))/2, ρ = ν f_cd / v_Ed, clipped
   to [1, 2]; ρ < 2 gives cot θ = 1 and a strut UR above 1. This is the angle that needs the least transverse steel.
+- The η trend (annex A.3 and the design-page charts) was removed at the user's request.
+- Design page: "Optimize: lightest <family>" tries every section of the family by increasing mass and keeps the
+  first with governing UR ≤ 1 over every check of the design basis in use, construction stage included
+  (CompositeModel.optimizeSection; unit test checks every lighter section fails). Without one, the section is restored.
+- Longitudinal shear views show the bars repeated along the span (spacing indicative).

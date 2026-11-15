@@ -4,6 +4,7 @@
  * calculation: this model only finds its inputs, overrides them, and reads results.
  * No formula is duplicated here.
  */
+import { sections } from '../../engineering/steel/sections';
 import { CalculationEngine } from '../../engine';
 import { calcKey } from '../../canvas/calcOrder';
 import { inputTableColumns, inputTableRegionId } from '../../canvas/inputTable';
@@ -50,7 +51,7 @@ const SCALARS: Probe[] = [
   ['at', 'a_t', 'mm^2/m'], ['ab', 'a_b', 'mm^2/m'], ['lb', 'l_b', 'mm'], ['vbEd', 'v_{b.Ed}', 'MPa'], ['asbReq', 'a_{sf.b.req}', 'mm^2/m'], ['asb', 'a_{sf.b}', 'mm^2/m'],
   ['dhead', 'd_{head}', 'mm'], ['hsc', 'h_{sc}', 'mm'], ['dsc', 'd_{sc}', 'mm'], ['b0', 'b_0', 'mm'],
   // deflection
-  ['dmax', '\\delta_{max}', 'mm'], ['de', '\\delta_{e}', 'mm'], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
+  ['dmax', '\\delta_{max}', 'mm'], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
 ];
 
 /** Utilisations by code, in report order: [key, label, clause, basis]. basis: c = composite only, n = non-composite only. */
@@ -78,8 +79,26 @@ export const CHECKS: [string, string, string, '' | 'c' | 'n'][] = [
   ['des', 'Permanent stage, design basis used', 'Summary', ''],
 ];
 
+/**
+ * The governing utilisation the page shows: every check of the design basis in use (composite or bare
+ * steel), construction stage included. The section optimiser uses the same rule.
+ */
+export interface OptimizeResult { family: string; tried: number; total: number; best: { id: number; name: string; mass: number; ur: number; label: string } | null }
+
+export function governingCheck(res: Results): { ur: number; key: string; label: string } {
+  const composite = res.comp >= 1;
+  const shown = CHECKS.filter(([key, , , basis]) => key !== 'des' && (!basis || (basis === 'c') === composite));
+  let g = { ur: -Infinity, key: '', label: '' };
+  for (const [key, label] of shown) {
+    const u = res[`UR.${key}`];
+    if (!Number.isFinite(u)) return { ur: Infinity, key, label }; // a check that cannot be evaluated never passes
+    if (u > g.ur) g = { ur: u, key, label };
+  }
+  return g;
+}
+
 const VECTORS: Probe[] = [
-  ['x', 'x_v', 'm'], ['V', 'V_v', 'kN'], ['M', 'M_v', 'kN m'], ['MRdx', 'M_{Rd.x}', 'kN m'], ['d', '\\delta_{x.d}', 'mm'], ['dq', '\\delta_{q.d}', 'mm'], ['x1v', 'x_{1.v}', 'm'], ['d1v', '\\delta_{1.v}', 'mm'], ['etaV', '\\eta_v', null], ['urMeta', '\\mathrm{UR}_{M.\\eta}', null], ['urDeta', '\\mathrm{UR}_{d.\\eta}', null],
+  ['x', 'x_v', 'm'], ['V', 'V_v', 'kN'], ['M', 'M_v', 'kN m'], ['MRdx', 'M_{Rd.x}', 'kN m'], ['d', '\\delta_{x.d}', 'mm'], ['dq', '\\delta_{q.d}', 'mm'], ['x1v', 'x_{1.v}', 'm'], ['d1v', '\\delta_{1.v}', 'mm'],
 ];
 
 const DEF = /^(.*?)\\coloneq\s*(-?\d+(?:\.\d+)?)(?:\\,\\mathrm\{([^}]*)\})?$/;
@@ -186,6 +205,27 @@ export class CompositeModel {
     const next: TableShape = { ...t, props: { ...t.props, rows: cells.length, cells } };
     this.tableShapes.set(id, next);
     this.registerTable(next);
+  }
+
+  /**
+   * Lightest section of a family that passes every check (governing UR ≤ 1, construction stage included):
+   * candidates by increasing mass, the first that passes is the lightest. Without one, the section is restored.
+   */
+  optimizeSection(family: string, progress?: (i: number, n: number, name: string) => void): OptimizeResult {
+    const start = this.sectionId;
+    const cands = sections.filter((s) => s.family === family && Number.isFinite(s.values.mass)).sort((a, b) => a.values.mass - b.values.mass);
+    let tried = 0;
+    for (const s of cands) {
+      tried++;
+      progress?.(tried, cands.length, s.name);
+      this.setSection(s.id);
+      const r = this.results();
+      if (r.errors.length) continue;
+      const g = governingCheck(r);
+      if (g.ur <= 1) return { family, tried, total: cands.length, best: { id: s.id, name: s.name, mass: s.values.mass, ur: g.ur, label: g.label } };
+    }
+    this.setSection(start);
+    return { family, tried, total: cands.length, best: null };
   }
 
   results(): Results {

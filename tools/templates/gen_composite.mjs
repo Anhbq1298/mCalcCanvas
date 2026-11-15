@@ -392,18 +392,6 @@ DIAGRAM(170, { title: 'Deflection δ(x), permanent stage: composite if c_comp = 
 ur('Maximum deflection along the span','d.x','\\delta_{max}','\\delta_{lim}');
 T('c_comp = 0: the chart shows the bare steel; UR_d,x above is for information, chapter 6 checks UR_d,nc.');
 Object.assign(l.out[l.out.length - 1].props, { showWhen: R`c_{comp}<1`, color: '#b91c1c' });
-LINK('etatrend', 'Utilisation against the degree of shear connection η (trend for the design page)', () => {
- T('Bending (6.3) and the partial-interaction deflection are linear in η; UR at η from η_min to 1, other inputs unchanged.');
- calc('Degrees of shear connection', '\\eta_v', R`\mathrm{seq}\left(\min\left(\eta_{min},0.95\right),1,0.01\right)`, '', 'fo');
- calc('Bending at x_M, M_Ed / (M_a,Rd + η (M_pl,Rd − M_a,Rd))', '\\mathrm{UR}_{M.\\eta}', R`\overrightarrow{\frac{M_{2.Ed}}{M_{a.Rd}+\eta_v\left(M_{pl.Rd}-M_{a.Rd}\right)}}`, '', 'fo');
- P('Deflection at u, full interaction (η = 1)', R`d_f(u)\coloneq d_w\left(u,\kappa_g+\kappa_c+\kappa_{sh}\right)`, M(units('')));
- P('Deflection at u, slip term at η = 0', R`d_0(u)\coloneq d_w\left(u,C_s\left(\kappa_a-\kappa_c\right)\right)`, M(units('')));
- calc('Full-interaction curve', '\\delta_{x.f}', R`\mathrm{map}\left(d_f,x_v\right)`, 'mm', 'fo');
- calc('Slip curve per unit (1 − η)', '\\delta_{x.0}', R`\mathrm{map}\left(d_0,x_v\right)`, 'mm', 'fo');
- P('Maximum deflection at a degree e', R`D_e(e)\coloneq\max\left(\delta_{x.f}+\left(1-e\right)\delta_{x.0}\right)`, M(units('')));
- calc('Deflection, δ_max(η) / δ_lim', '\\mathrm{UR}_{d.\\eta}', R`\frac{\mathrm{map}\left(D_e,\eta_v\right)}{\delta_{lim}}`, '', 'fo');
- calc('Check: at the provided η this equals δ_max', '\\delta_{e}', R`D_e\left(\eta\right)`, 'mm', false);
-});
 H(2, '5. SLAB LONGITUDINAL SHEAR (EC4 §6.6.6, EC2 §6.2.4)');
 fig('F4', 'Shear surfaces a-a and b-b along the beam (EC4 Figure 6.15)', 'shear3d', 6.5);
 T('Surface lengths and bars counted per EC4 §6.6.6.1(3) and §6.6.6.2(3) (b_0 = 0 for a single stud row); bars anchored past each surface to EN 1992-1-1 §8.4.');

@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { CompositeModel } from '../../tools/composite/model';
+import { CompositeModel, governingCheck } from '../../tools/composite/model';
+import { sections } from '../../engineering/steel/sections';
 import { parseDocument } from '../../documents/DocumentSerializer';
 
 // mCompositeBeamDesign runs the worksheet itself: its results are the worksheet's (compositeTemplate.test.ts).
@@ -22,11 +23,6 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(Math.max(...r.vectors.dq)).toBeCloseTo(r.dq, 6); // LL curve against its scalar maximum
     expect(r.ga + r.gc).toBeCloseTo(r.g0, 9);
     expect(r.gsw).toBe(1.35); // fixed self-weight factor
-    // η trend: the deflection is linear in η, so the trend reproduces δ_max at the provided η; bending at η = 1 is M_Ed / M_pl,Rd
-    expect(r.de).toBeCloseTo(r.dmax, 6);
-    expect(r.vectors.etaV.at(-1)).toBeCloseTo(1, 9);
-    expect(r.vectors.urMeta.at(-1)).toBeCloseTo(r.M2 / r.MplRd, 6);
-    expect(r.vectors.urDeta.at(-1)).toBeLessThan(r['UR.d.x']);
     expect(r.vlEd ?? r.vLEd).toBeGreaterThan(0);
     expect(r.asfReq / r.asf).toBeCloseTo(r['UR.sf'], 6);
     // automatic strut angle: cot θ_f = 2 while the strut has room; dense studs push b-b to the largest angle the strut allows
@@ -80,4 +76,30 @@ describe('mCompositeBeamDesign headless model', () => {
     const again = new CompositeModel(JSON.stringify(reopened));
     expect(again.results()['UR.des']).toBeCloseTo(m.results()['UR.des'], 9);
   }, 120_000);
+
+  it('optimizes the section: the lightest UB that passes every check, lighter ones fail', () => {
+    const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+    const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
+    set('L', 5); set('s_b', 2.5); set('h_c', 200);
+    m.setTableRows(m.tables[0].id, [['G', '0', '5', '5', ''], ['Q', '0', '5', '3', '']]);
+    m.setTableRows(m.tables[1].id, [['G', '0.8', '30', '']]);
+    const seen: string[] = [];
+    const out = m.optimizeSection('UB', (_i, _n, name) => seen.push(name));
+    expect(out.best).not.toBeNull();
+    expect(m.sectionId).toBe(out.best!.id);
+    const r = m.results();
+    expect(governingCheck(r).ur).toBeLessThanOrEqual(1);
+    expect(out.best!.ur).toBeCloseTo(governingCheck(r).ur, 9);
+    expect(seen).toHaveLength(out.tried);
+    // every lighter UB tried before it fails (or cannot be evaluated)
+    const lighter = sections.filter((s) => s.family === 'UB' && s.values.mass < out.best!.mass);
+    expect(lighter.length).toBe(out.tried - 1);
+    for (const s of lighter) { m.setSection(s.id); expect(governingCheck(m.results()).ur).toBeGreaterThan(1); }
+    // nothing passes: the section is restored
+    set('L', 30);
+    m.setSection(3148);
+    expect(m.optimizeSection('IPE').best).toBeNull();
+    expect(m.sectionId).toBe(3148);
+  }, 300_000);
 });
+

@@ -35,3 +35,16 @@ test('mCompositeBeamDesign calculates, follows a large point load and hands the 
   await expect(report.locator('[data-testid=math-region][data-latex^="\\\\mathrm{Section}\\\\coloneq3129"]')).toHaveCount(1);
   await expect(report.locator('[data-testid=math-region][data-latex^="\\\\mathrm{UR}_{des}\\\\le"]').first()).toBeAttached();
 });
+
+test('mCompositeBeamDesign optimizes the section to the lightest one that passes', async ({ page }) => {
+  test.setTimeout(180_000);
+  await page.goto('/composite/');
+  await expect(page.getByTestId('ur-des')).toHaveText('0.971');
+  await page.getByTestId('optimize').click();
+  await expect(page.getByTestId('optimize-status')).toContainText('Lightest UB passing all checks', { timeout: 150_000 });
+  await expect(page.getByTestId('optimize')).toBeEnabled();
+  const ur = Number(await page.getByTestId('ur-max').textContent());
+  expect(ur).toBeLessThanOrEqual(1);
+  const chosen = await page.getByTestId('optimize-status').locator('b').textContent();
+  await expect(page.getByTestId('section-select').locator('option:checked')).toHaveText(chosen!);
+});

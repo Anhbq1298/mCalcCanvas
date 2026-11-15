@@ -8,8 +8,8 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { sections } from '../../engineering/steel/sections';
-import { CHECKS, type InputField, type LoadTable, type Results } from './model';
-import type { ToWorker } from './worker';
+import { CHECKS, governingCheck, type InputField, type LoadTable, type Results } from './model';
+import type { OptimizeResult, ToWorker } from './worker';
 import { Legend, LineChart, PointDrawing, SectionDrawing, ShearSurface3D, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
 import { headerParts } from '../../canvas/inputTable';
 import { C, fmt } from './format';
@@ -91,6 +91,7 @@ export function App() {
   const [busy, setBusy] = useState(false);
   const [values, setValues] = useState<Record<string, number>>({});
   const [family, setFamily] = useState('UB');
+  const [opt, setOpt] = useState<{ running: boolean; i?: number; n?: number; name?: string; result?: OptimizeResult } | null>(null);
   const reportReq = useRef(0);
   const reportCb = useRef<((doc: unknown) => void) | null>(null);
 
@@ -104,6 +105,8 @@ export function App() {
         setState((s) => (s ? { ...s, results: m.results, tables: m.tables, sectionId: m.sectionId } : s));
         setBusy(false);
       } else if (m.kind === 'report' && m.request === reportReq.current) reportCb.current?.(m.doc);
+      else if (m.kind === 'opt-progress') setOpt({ running: true, i: m.i, n: m.n, name: m.name });
+      else if (m.kind === 'opt-done') setOpt({ running: false, result: m.result });
     };
     worker.addEventListener('message', onMessage);
     worker.postMessage({ kind: 'hello' } satisfies ToWorker); // asked for once listening, so the first results cannot be missed
@@ -140,8 +143,9 @@ export function App() {
   const v = res.vectors;
   const composite = res.comp >= 1;
   const shown = CHECKS.filter(([key, , , basis]) => key !== 'des' && (!basis || (basis === 'c') === composite));
-  const overall = Math.max(...shown.map(([key]) => res[`UR.${key}`]).filter(Number.isFinite));
-  const governing = shown.reduce((g, c) => (res[`UR.${c[0]}`] > res[`UR.${g[0]}`] ? c : g), shown[0]);
+  const gov = governingCheck(res);
+  const overall = gov.ur;
+  const governing = shown.find(([key]) => key === gov.key) ?? shown[0];
   const section = sections.find((s) => s.id === state.sectionId);
   const pass = overall <= 1;
 
@@ -186,10 +190,6 @@ export function App() {
   const urDes = res['UR.des'];
   const dMax = composite ? res.dmax : res.dnc;
   const rows = CHECKS.filter(([key, , , basis]) => key !== 'des' && (!basis || (basis === 'c') === composite));
-  // smallest η on the trend with both URs ≤ 1 (read from the worksheet vectors)
-  const etaOkIdx = v.etaV.findIndex((_, i) => v.urMeta[i] <= 1 && v.urDeta[i] <= 1);
-  const etaOk = etaOkIdx >= 0 ? v.etaV[etaOkIdx] : null;
-  const urTop = Math.max(1.1, ...v.urMeta, ...v.urDeta);
   const nFail = shown.filter(([key]) => res[`UR.${key}`] > 1).length;
 
   const sectionProps: [string, string, string, number][] = [
@@ -286,7 +286,29 @@ export function App() {
                     {sections.filter((x) => x.family === family).map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}
                   </select>
                 </label>
-                <p className="hint wide">{section ? `${section.name} · ${section.standard}` : ''}</p>
+                <p className="hint wide">{section ? `${section.name} · ${section.standard} · ${fmt(section.values.mass, 1)} kg/m` : ''}</p>
+                <div className="wide optimize">
+                  <button
+                    type="button"
+                    className="btn"
+                    data-testid="optimize"
+                    disabled={opt?.running}
+                    onClick={() => { setOpt({ running: true }); setBusy(true); worker.postMessage({ kind: 'optimize', family } satisfies ToWorker); }}
+                    title={`Try every ${family} section from the lightest up and keep the first that passes all checks`}
+                  >
+                    {opt?.running ? 'Optimizing…' : `Optimize: lightest ${family}`}
+                  </button>
+                  <p className="hint" role="status" data-testid="optimize-status">
+                    {opt?.running && opt.n ? <>Checking {opt.i}/{opt.n}: {opt.name}</> : null}
+                    {!opt?.running && opt?.result ? (
+                      opt.result.best ? (
+                        <>Lightest {opt.result.family} passing all checks: <b>{opt.result.best.name}</b> ({fmt(opt.result.best.mass, 1)} kg/m), governing UR {fmt(opt.result.best.ur, 3)} (<Rich text={opt.result.best.label} />). Checked {opt.result.tried} of {opt.result.total}, lightest first.</>
+                      ) : (
+                        <span className="error">No {opt.result.family} section passes all checks with these inputs; the section is unchanged.</span>
+                      )
+                    ) : null}
+                  </p>
+                </div>
               </div>
             </section>
             {loadTable(areaT, 0)}
@@ -385,29 +407,6 @@ export function App() {
               label={`Deflection, maximum ${fmt(dMax, 1)} mm against a limit of ${fmt(res.dlim, 1)} mm`}
             />
             <Legend items={[{ color: C.blue, label: `1.0 DL + 1.0 LL, max ${fmt(dMax, 1)} mm` }, { color: C.green, label: `LL, max ${fmt(Math.max(...v.dq), 1)} mm` }, { color: C.red, label: `limit L/r = ${fmt(res.dlim, 1)} mm`, dash: true }]} />
-            </section>
-            <section className="sheet-sec" aria-labelledby="h-eta">
-              <div className="sec-head">
-                <h2 id="h-eta">Utilisation against the degree of shear connection η</h2>
-                <span className="hint">η<sub>min</sub> = {fmt(res.etaMin, 2)} to η = 1; provided η = {fmt(res.eta, 3)}{etaOk !== null ? <> · UR ≤ 1 for η ≥ {fmt(etaOk, 2)}</> : <> · UR &gt; 1 over the whole range</>}</span>
-              </div>
-              <LineChart
-                series={[
-                  { x: v.etaV, y: v.urMeta, color: C.blue, label: 'UR_M' },
-                  { x: v.etaV, y: v.urDeta, color: C.green, label: 'UR_δ' },
-                  { x: [v.etaV[0] ?? 0, 1], y: [1, 1], color: C.red, label: 'UR = 1', dash: true, width: 1.2, marker: true },
-                  { x: [res.eta, res.eta], y: [0, urTop], color: C.amber, label: 'η provided', width: 1.4, marker: true },
-                  { x: [res.etaMin, res.etaMin], y: [0, urTop], color: C.grey, label: 'η_min', dash: true, width: 1, marker: true },
-                ]}
-                height={190}
-                xUnit=""
-                xName="η"
-                yMin={0}
-                digits={3}
-                label={`Utilisation against the degree of shear connection: at the provided η ${fmt(res.eta, 3)}, bending ${fmt(res['UR.M.2'], 3)}, deflection ${fmt(res['UR.d.x'], 3)}`}
-              />
-              <Legend items={[{ color: C.blue, label: 'UR_M bending at x_M, (6.3)' }, { color: C.green, label: 'UR_δ deflection, partial interaction' }, { color: C.amber, label: `η provided ${fmt(res.eta, 3)}` }, { color: C.grey, label: `η_min ${fmt(res.etaMin, 3)}`, dash: true }, { color: C.red, label: 'UR = 1', dash: true }]} />
-              <p className="hint">More studs (closer spacing) raise η and lower both URs; η is capped at 1. Other inputs held as entered.</p>
             </section>
           </section>
 
