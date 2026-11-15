@@ -225,6 +225,17 @@ export async function initDocuments(): Promise<void> {
   await engine.ready();
   // ?template=<id> always starts a new worksheet from that template (link-friendly);
   // the parameter is removed so a reload reopens the worksheet instead of creating another.
+  // ?open=handoff opens a worksheet handed over by a tool page (mCompositeBeamDesign's report).
+  if (new URLSearchParams(window.location.search).get('open') === 'handoff') {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('open');
+    window.history.replaceState(null, '', url);
+    const handed = takeHandoff();
+    if (handed) {
+      await openFile(new File([handed], 'Composite_Beam_EC4.mCCV'));
+      return;
+    }
+  }
   const asked = new URLSearchParams(window.location.search).get('template');
   if (asked && templateById(asked as TemplateId)) {
     const url = new URL(window.location.href);
@@ -251,6 +262,18 @@ export async function initDocuments(): Promise<void> {
     console.warn('Saved worksheets are unavailable here', e);
   }
   await newDocument({ template: firstRunTemplate() });
+}
+
+const HANDOFF_KEY = 'calccanvas.handoff';
+/** A worksheet left in localStorage by a tool page; read once and removed. */
+function takeHandoff(): string | null {
+  try {
+    const v = localStorage.getItem(HANDOFF_KEY);
+    localStorage.removeItem(HANDOFF_KEY);
+    return v;
+  } catch {
+    return null;
+  }
 }
 
 const DEFAULT_TEMPLATE_VERSION = 'rc-beam-1';

@@ -9,6 +9,9 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
     chunkSizeWarningLimit: 4000,
+    // Two pages: the mCalcCanvas editor and mCompositeBeamDesign (composite/), which runs the
+    // composite beam worksheet on the same engine.
+    rollupOptions: { input: { main: fileURLToPath(new URL('./index.html', import.meta.url)), composite: fileURLToPath(new URL('./composite/index.html', import.meta.url)) } },
   },
   test: {
     include: ['src/tests/engine/**/*.test.ts', 'src/tests/unit/**/*.test.ts'],
