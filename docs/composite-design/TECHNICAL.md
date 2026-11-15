@@ -137,5 +137,20 @@ Annex: the general force model and branch boundaries.
   L_LT = max(s_sc,A, s_sc,B), C1 = 1, z_g = 0 (§6.3.2.2). No composite credit.
 - Summary: UR_des = max of chapter 4 when c_comp = 1, of chapter 6 when c_comp = 0; one acceptance check.
   Chapter 6 shows utilisations only, so a composite design is not shown as failing there.
-- Not covered: restraint stiffness/strength of the studs as bracing (EC3 §6.3.2.1/BB.2), web-post buckling
-  under the point load, and stud spacing above s_max (a separate check in 4.2).
+
+## Rev G: code-compliance additions
+
+- **M–V interaction.** Composite, EN 1994-1-1 §6.2.2.4(2): where |V_Ed| > 0.5 V_pl,Rd the web yield is reduced;
+  implemented as M_V,Rd = M_Rd − ρ(M_Rd − M_f,Rd), ρ = (2|V_Ed|/V_pl,Rd − 1)², with M_f,Rd the steel flanges
+  alone (a lower bound: the slab's contribution to M_f,Rd is ignored). Non-composite, EN 1993-1-1 §6.2.8, (6.30).
+  Checked on the 200-interval grid and 1 mm either side of every point load (M_Rd from the studs there).
+- **Transverse forces on the web**, EN 1994-1-1 §6.5 → EN 1993-1-5 §6: type (a) under point loads on the top
+  flange (k_F = 6, unstiffened), type (c) at a beam end bearing on its support (c = 0); l_y with m2 dropped if
+  λ_F ≤ 0.5; inputs c_F,P / c_F,S switch the checks off for loads framed into the web or end connections.
+  Interaction (7.2): η2 + 0.8η1 ≤ 1.4; η1 = M_Ed/M_Rd,P (composite, plastic, Class 1 — an assumption to
+  confirm) and M_Ed/M_el,Rd of the steel section (non-composite, (4.14) gross section).
+- **LTB of the non-composite beam**: EN 1994-1-1 §6.4.1(1) — the top flange attached to a laterally stable slab
+  by connectors to §6.6 is laterally stable; applied when both stud spacings ≤ s_max (§6.6.5.5), otherwise the
+  full span is taken as unrestrained.
+- Still not covered: bearing stiffener design when (6.14) fails, the stud restraint force (EC3 §6.3.2.1 /
+  Annex BB), and the load-position limits of type (a) close to a beam end.

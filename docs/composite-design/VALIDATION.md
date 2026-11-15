@@ -104,7 +104,19 @@ studs to x_M, EC3 LTB over the stud spacing (`non_composite_point_load_1_5m` in 
 | L_LT = stud spacing, χ_LT | 200 mm, 1.0 | 200 mm, 1.0 |
 | UR_M.nc = UR_LT.nc | 1.453 | 0.741 |
 | δ_nc, UR_d.nc | 61.36 mm, 1.917 | 24.11 mm, 0.753 |
-| UR_des, acceptance | 1.917, fails | 0.753, passes |
+| UR_des, acceptance (Rev G) | 1.917, fails | 0.925, passes (support web bearing governs) |
+
+Rev G code-compliance checks on the same cases (reference `web_and_shear_checks`, worksheet within 1e-4):
+
+| Check | Default | 1.5 m, UB 406 | 1.5 m, UB 533 |
+|---|---|---|---|
+| UR_MV, EC4 §6.2.2.4 | 0.660 | 1.060 | 0.622 |
+| UR_MV,nc, EC3 (6.30) | 1.102 | 1.453 | 0.741 |
+| F_Rd type (a) / type (c) | 544.4 / 333.4 kN | same | 832.3 / 471.9 kN |
+| UR_F,P (6.14) | 0.198 | 0.661 | 0.433 |
+| UR_F,S (6.14), support | 0.629 | **1.304** | **0.925** |
+| UR_FM (7.2), composite / steel | 0.508 / 0.853 | 1.076 / 1.400 | 0.664 / 0.786 |
+| UR_des | 0.971 (deflection) | 1.917 | 0.925 (support bearing) |
 
 Worksheet matches to the 40 mm grid (unit test). PDFs of both cases: `app-export/CaseA_PointLoad_UB406.pdf`,
 `app-export/CaseB_PointLoad_UB533.pdf`.

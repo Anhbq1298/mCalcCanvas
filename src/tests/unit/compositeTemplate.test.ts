@@ -178,6 +178,12 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('\\mathrm{UR}_{M.nc}')).toBeCloseTo(1.45337661797,3);
       expect(value('\\delta_{nc}','mm')).toBeCloseTo(61.3569021747,2);
       expect(value('\\mathrm{UR}_{des}')).toBeCloseTo(1.917403192959,3);   // deflection of the bare UB 406 governs
+      // code-compliance checks (reference: tools/templates/reference_composite.py, web_checks)
+      expect(value('\\mathrm{UR}_{MV}')).toBeCloseTo(1.06017,4);           // EC4 6.2.2.4, composite M–V
+      expect(value('\\mathrm{UR}_{MV.nc}')).toBeCloseTo(1.45336,4);        // EC3 6.2.8 (6.30)
+      expect(value('\\mathrm{UR}_{F.P}')).toBeCloseTo(0.66122,4);          // EN 1993-1-5 §6, type (a)
+      expect(value('\\mathrm{UR}_{F.S}')).toBeCloseTo(1.30398,4);          // type (c) at the support
+      expect(value('\\mathrm{UR}_{FM.nc}')).toBeCloseTo(1.39986,4);        // (7.2) with M_el
       expect(passes('\\mathrm{UR}_{des}\\le')).toBe(false);
       // Browse a deeper section, UB 533x210x92: still no composite action (η < η_min), passes as non-composite
       const sec = region('\\mathrm{Section}\\coloneq');
@@ -186,12 +192,20 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('c_{comp}')).toBe(0);
       expect(value('M_{2.Ed}','kN m')).toBeCloseTo(621.17806,1);
       expect(value('\\mathrm{UR}_{LT.nc}')).toBeCloseTo(0.74089958181,3);
-      expect(value('\\mathrm{UR}_{des}')).toBeCloseTo(0.75334848188,3);
+      expect(value('\\mathrm{UR}_{MV.nc}')).toBeCloseTo(0.74090,4);        // no shear reduction at x_M
+      expect(value('F_{Rd.c}','kN')).toBeCloseTo(471.92179,3);
+      expect(value('\\mathrm{UR}_{FM.nc}')).toBeCloseTo(0.78573,4);
+      expect(value('\\mathrm{UR}_{des}')).toBeCloseTo(0.92480,4);          // support web bearing (6.14) governs
       expect(passes('\\mathrm{UR}_{des}\\le')).toBe(true);
       e.setDefinitionOverride(sec, null);
       restore('a_{j}', 'c_{Q.j}', 'F_{k.j}');
       expect(value('c_{comp}')).toBe(1);                                   // default: composite design
       expect(value('\\mathrm{UR}_{des}')).toBe(value('\\mathrm{UR}_{d.2}'));   // composite: deflection 31.07/32 mm governs
+      expect(value('F_{Rd.a}','kN')).toBeCloseTo(544.44972,3); expect(value('\\lambda_{F.a}')).toBeCloseTo(0.74164,4);
+      expect(value('l_{y.c}','mm')).toBeCloseTo(181.17687,3);
+      expect(value('\\mathrm{UR}_{MV}')).toBeCloseTo(0.66027,4);
+      expect(value('\\mathrm{UR}_{F.P}')).toBeCloseTo(0.19837,4); expect(value('\\mathrm{UR}_{F.S}')).toBeCloseTo(0.62909,4);
+      expect(value('\\mathrm{UR}_{FM}')).toBeCloseTo(0.50778,4); expect(value('c_{rest}')).toBe(1);
     });
     step('propped construction: span and LTB length k_LT L, g0 on the composite section, slip factor 0.5', () => {
       const prop = region('c_{prop}\\coloneq');

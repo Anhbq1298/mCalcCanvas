@@ -4,7 +4,7 @@ Geometry/properties are explicit published inputs. The steel PNA is found by num
 integration of the rolled width (circular root fillets), not by the worksheet's branch formulas.
 """
 import json
-from math import ceil, pi, sqrt
+from math import ceil, floor, pi, sqrt
 
 
 # Default section: library UB 406x178x60 (BS 4-1 dimensions, geometry-derived properties, catalogue ID 3148)
@@ -62,6 +62,60 @@ def beam(w, loads, L=8000.):
     xm = max(cand, key=m)
     return ra, rb, m, xm
 
+
+# --- Rev G code-compliance checks: EC4 6.2.2.4 / EC3 6.2.8 M-V interaction (on the 200-interval grid and
+# either side of each point load), EN 1993-1-5 §6 patch loading (type (a) under point loads, type (c) at the
+# supports, c = 0) and (7.2) interaction. Section properties from the library catalogue (same as the sheet).
+import json as _json, os as _os
+_CAT = {s['id']: s['values'] for s in _json.load(open(_os.path.join(_os.path.dirname(__file__), '../../src/engineering/steel/data/catalogue.json')))}
+
+def web_checks(sid, pts, L=8000., sa=125., sb=200., ssP=100., ssS=100.):
+    v=_CAT[sid]; h,b,tf,tw,r,A,I,W=v['h'],v['b'],v['tf'],v['tw'],v['r'],v['A'],v['Iy'],v['Wpl_y']
+    fy=355.; E=210000.; gG,gQ=1.35,1.5
+    g0=v['mass']*9.81/1000+25e-6*150*3000
+    gu,qu=4.5,9.0
+    w=gG*(g0+gu)+gQ*qu
+    P=[(a, gG*G*1e3+gQ*Q*1e3) for a,G,Q in pts]
+    ra=w*L/2+sum(F*(L-a)/L for a,F in P)
+    M=lambda x: ra*x-w*x*x/2-sum(F*max(0.,x-a) for a,F in P)
+    V=lambda x: ra-w*x-sum(F for a,F in P if x>a)
+    xs=[L*i/200 for i in range(201)]; Mv=[M(x) for x in xs]; Vv=[V(x) for x in xs]
+    xm=xs[Mv.index(max(Mv))]
+    ma=W*fy; na=A*fy; ncf=min(na,.85*20*2000*150)
+    pr=min(.8*450*pi*19**2/4/1.25,.29*19**2*sqrt(30*33000)/1.25)
+    xf=ncf/(.85*20*2000); mpl=na*(150+h/2-xf/2)  # slab PNA (valid here)
+    av=A-2*b*tf+(tw+2*r)*tf; vpl=av*fy/sqrt(3)
+    mfr=b*tf*(h-tf)*fy
+    nx=lambda x: floor(x/sa+.5) if x<=xm else floor((L-x)/sb+.5)
+    mrd=lambda n: ma+min(1.,n*pr/ncf)*(mpl-ma)
+    rho=lambda vv: (2*vv/vpl-1)**2 if vv>.5*vpl else 0.
+    ur_mv=max(Mv[i]/(mrd(nx(x))-rho(abs(Vv[i]))*(mrd(nx(x))-mfr)) for i,x in enumerate(xs))
+    hw=h-2*tf; Aw=hw*tw
+    urnc=max(Mv[i]/((W-Aw**2/(4*tw)*rho(abs(Vv[i])))*fy) for i in range(201))
+    for a,F in P:
+        vp=max(abs(V(a-1)),abs(V(a+1)))
+        nP=floor(a/sa+.5) if a<=xm else floor((L-a)/sb+.5)
+        mR=mrd(nP)
+        ur_mv=max(ur_mv, M(a)/(mR-rho(vp)*(mR-mfr)))
+        urnc=max(urnc, M(a)/((W-Aw**2/(4*tw)*rho(vp))*fy))
+    m1=b/tw; m2=.02*(hw/tf)**2
+    def patch(ly_fn, kF):
+        Fcr=.9*kF*E*tw**3/hw
+        ly=ly_fn(m2); lam=sqrt(ly*tw*fy/Fcr)
+        if lam<=.5: ly=ly_fn(0.); lam=sqrt(ly*tw*fy/Fcr)
+        return fy*min(1,.5/lam)*ly*tw, lam, ly
+    Fa,lama,lya=patch(lambda m: ssP+2*tf*(1+sqrt(m1+m)),6.)
+    kc=min(6,2+6*ssS/hw); le=min(kc*E*tw**2/(2*fy*hw),ssS)
+    Fc,lamc,lyc=patch(lambda m: min(le+tf*sqrt(m1/2+(le/tf)**2+m), le+tf*sqrt(m1+m)),kc)
+    floc={}
+    for a,F in P: floc[a]=floc.get(a,0)+F
+    urFP=max(floc.values())/Fa if P else 0
+    urFS=max(ra, w*L+sum(F for _,F in P)-ra)/Fc
+    mel=2*I/h*fy
+    urFM=max((floc[a]/Fa+.8*M(a)/mrd(floor(a/sa+.5) if a<=xm else floor((L-a)/sb+.5)))/1.4 for a,_ in P)
+    urFMnc=max((floc[a]/Fa+.8*M(a)/mel)/1.4 for a,_ in P)
+    return dict(x_M=xm, V_pl=vpl/1e3, M_fRd=mfr/1e6, UR_MV=ur_mv, UR_MV_nc=urnc, F_Rd_a=Fa/1e3, lam_a=lama, l_y_a=lya, F_Rd_c=Fc/1e3, lam_c=lamc, l_y_c=lyc, l_e=le,
+                UR_FP=urFP, UR_FS=urFS, UR_FM=urFM, UR_FM_nc=urFMnc, M_el=mel/1e6)
 
 def mid_deflection(w, loads, ei, L=8000.):
     """Midspan deflection: 5wL^4/384EI plus P a (3L^2 - 4a^2)/48EI per point load (a <= L/2)."""
@@ -249,7 +303,7 @@ def reference():
                 transverse_required_mm2_m=as_req*1000,
                 transverse_provided_mm2_m=as_prov*1000,
                 UR_transverse=as_req/as_prov,
-                propped=propped, non_composite_point_load_1_5m=non_composite, sci_p364_example_8=sci, sbe_part4_example_a4=sbe, hk_solid_slab_ub457=hk,
+                propped=propped, non_composite_point_load_1_5m=non_composite, web_and_shear_checks=dict(default=web_checks(3148, [(3000., 30, 0), (3000., 0, 45)]), point_load_1_5m_UB406=web_checks(3148, [(1500., 100, 0), (1500., 0, 150)]), point_load_1_5m_UB533=web_checks(3129, [(1500., 100, 0), (1500., 0, 150)])), sci_p364_example_8=sci, sbe_part4_example_a4=sbe, hk_solid_slab_ub457=hk,
                 **{f'I_{k}_mm4':v[2] for k,v in trans.items()})
 
 
