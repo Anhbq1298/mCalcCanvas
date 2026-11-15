@@ -85,11 +85,15 @@ export const CHECKS: [string, string, string, '' | 'c' | 'n'][] = [
  */
 export interface OptimizeResult { family: string; maxDepth: number | null; tried: number; total: number; best: { id: number; name: string; mass: number; ur: number; label: string } | null }
 
-export function governingCheck(res: Results): { ur: number; key: string; label: string } {
+/** Checks that need the deflection curves: unknown in a screening model. */
+export const DEFLECTION_CHECKS = ['d.x', 'd.nc'];
+
+export function governingCheck(res: Results, skip: readonly string[] = []): { ur: number; key: string; label: string } {
   const composite = res.comp >= 1;
   const shown = CHECKS.filter(([key, , , basis]) => key !== 'des' && (!basis || (basis === 'c') === composite));
   let g = { ur: -Infinity, key: '', label: '' };
   for (const [key, label] of shown) {
+    if (skip.includes(key)) continue;
     const u = res[`UR.${key}`];
     if (!Number.isFinite(u)) return { ur: Infinity, key, label }; // a check that cannot be evaluated never passes
     if (u > g.ur) g = { ur: u, key, label };
@@ -115,8 +119,21 @@ export class CompositeModel {
   private readonly tableShapes = new Map<string, TableShape>();
   private readonly values = new Map<string, { value: number; unit: string }>();
 
-  constructor(raw: string) {
+  /**
+   * screening: the deflection curves (map of d_w over the span, two thirds of the calculation time) are
+   * left out, so only the checks in DEFLECTION_CHECKS are unknown; every other result is the full one.
+   * Used by the optimiser to reject sections quickly.
+   */
+  constructor(raw: string, options: { screening?: boolean } = {}) {
     this.doc = JSON.parse(raw);
+    if (options.screening) {
+      for (const s of this.doc.shapes) {
+        if (s.type === 'math' && /\\mathrm\{map\}\\left\(d_/.test((s as MathShape).props.latex)) {
+          const m = s as MathShape;
+          m.props = { ...m.props, latex: m.props.latex.replace(/\\coloneq[\s\S]*$/, '\\coloneq 0\\,\\mathrm{mm}') };
+        }
+      }
+    }
     const shapes = this.doc.shapes;
     this.rec = Object.fromEntries(shapes.map((s) => [s.id, s]));
     const loading = shapes.find((s) => s.type === 'text' && text((s as TextShape).props.html).startsWith('2. LOADING'));
@@ -211,7 +228,7 @@ export class CompositeModel {
    * Lightest section of a family that passes every check (governing UR ≤ 1, construction stage included):
    * candidates by increasing mass, the first that passes is the lightest. Without one, the section is restored.
    */
-  optimizeSection(family: string, progress?: (i: number, n: number, name: string) => void, maxDepth: number | null = null): OptimizeResult {
+  optimizeSection(family: string, progress?: (i: number, n: number, name: string) => void, maxDepth: number | null = null, screen?: CompositeModel): OptimizeResult {
     const start = this.sectionId;
     // optional depth limit h ≤ maxDepth (mm), e.g. from the ceiling void
     const cands = sections
@@ -221,6 +238,11 @@ export class CompositeModel {
     for (const s of cands) {
       tried++;
       progress?.(tried, cands.length, s.name);
+      if (screen) {
+        screen.setSection(s.id);
+        const q = screen.results();
+        if (!q.errors.length && governingCheck(q, DEFLECTION_CHECKS).ur > 1) continue;
+      }
       this.setSection(s.id);
       const r = this.results();
       if (r.errors.length) continue;

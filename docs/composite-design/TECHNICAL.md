@@ -198,3 +198,8 @@ Annex: the general force model and branch boundaries.
   first with governing UR ≤ 1 over every check of the design basis in use, construction stage included
   (CompositeModel.optimizeSection; unit test checks every lighter section fails). Without one, the section is restored.
 - Longitudinal shear views show the bars repeated along the span (spacing indicative).
+- Optimizer speed: sections are checked by a pool of up to 4 workers (started in the background after load);
+  each first runs a screening model without the four deflection curves (about 3× faster, identical other
+  checks — unit test), and only survivors get the full worksheet. The lightest passing section is the same as
+  the serial search (unit test). Section-independent table-load vectors (M_U,v, M_s,qp, …) are now their own
+  annex regions, and the unit-load moment m_w has no IF. Default case: 6.2 s → 1.4 s on 2 cores.

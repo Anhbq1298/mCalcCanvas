@@ -13,6 +13,7 @@ import type { OptimizeResult, ToWorker } from './worker';
 import { Legend, LineChart, PointDrawing, SectionDrawing, ShearSurface3D, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
 import { headerParts } from '../../canvas/inputTable';
 import { C, fmt } from './format';
+import { optimizeParallel, warmOptimizer } from './optimizer';
 import { Rich } from './rich';
 
 const HANDOFF_KEY = 'calccanvas.handoff'; // read once by mCalcCanvas (?open=handoff)
@@ -92,7 +93,7 @@ export function App() {
   const [values, setValues] = useState<Record<string, number>>({});
   const [family, setFamily] = useState('UB');
   const [hMax, setHMax] = useState('');
-  const [opt, setOpt] = useState<{ running: boolean; i?: number; n?: number; name?: string; result?: OptimizeResult } | null>(null);
+  const [opt, setOpt] = useState<{ running: boolean; i?: number; n?: number; name?: string; result?: OptimizeResult; seconds?: number } | null>(null);
   const reportReq = useRef(0);
   const reportCb = useRef<((doc: unknown) => void) | null>(null);
 
@@ -100,6 +101,8 @@ export function App() {
     const onMessage = (ev: MessageEvent) => {
       const m = ev.data;
       if (m.kind === 'init') {
+        // build the optimiser's worker models in the background, after the page is up
+        setTimeout(() => warmOptimizer({ values: {}, tables: m.tables.map((t: LoadTable) => ({ id: t.id, rows: t.rows })) }), 2500);
         setState({ inputs: m.inputs, tables: m.tables, sectionId: m.sectionId, results: m.results, defaults: { tables: m.tables, sectionId: m.sectionId } });
         setFamily(sections.find((s) => s.id === m.sectionId)?.family ?? 'UB');
       } else if (m.kind === 'results') {
@@ -312,17 +315,27 @@ export function App() {
                     className="btn"
                     data-testid="optimize"
                     disabled={opt?.running || (hMax.trim() !== '' && !(Number(hMax) > 0))}
-                    onClick={() => { setOpt({ running: true }); setBusy(true); worker.postMessage({ kind: 'optimize', family, maxDepth: hMax.trim() ? Number(hMax) : null } satisfies ToWorker); }}
+                    onClick={async () => {
+                      const maxDepth = hMax.trim() ? Number(hMax) : null;
+                      const cands = sections
+                        .filter((x) => x.family === family && Number.isFinite(x.values.mass) && (maxDepth === null || x.values.h <= maxDepth + 1e-9))
+                        .sort((a, b) => a.values.mass - b.values.mass);
+                      setOpt({ running: true });
+                      const t0 = performance.now();
+                      const result = await optimizeParallel(family, cands, maxDepth, { values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) }, (i, n, name) => setOpt({ running: true, i, n, name }));
+                      setOpt({ running: false, result, seconds: (performance.now() - t0) / 1000 });
+                      if (result.best) send({ kind: 'section', id: result.best.id });
+                    }}
                     title={`Try every ${family} section from the lightest up and keep the first that passes all checks`}
                   >
                     {opt?.running ? 'Optimizing…' : `Optimize: lightest ${family}`}
                   </button>
                   </div>
                   <p className="hint" role="status" data-testid="optimize-status">
-                    {opt?.running && opt.n ? <>Checking {opt.i}/{opt.n}: {opt.name}</> : null}
+                    {opt?.running && opt.n ? <>Checked {opt.i} of {opt.n}: {opt.name}</> : null}
                     {!opt?.running && opt?.result ? (
                       opt.result.best ? (
-                        <>Lightest {opt.result.family}{opt.result.maxDepth !== null ? <> with h ≤ {fmt(opt.result.maxDepth, 0)} mm</> : null} passing all checks: <b>{opt.result.best.name}</b> ({fmt(opt.result.best.mass, 1)} kg/m, h = {fmt(sections.find((x) => x.id === opt.result!.best!.id)?.values.h ?? NaN, 1)} mm), governing UR {fmt(opt.result.best.ur, 3)} (<Rich text={opt.result.best.label} />). Checked {opt.result.tried} of {opt.result.total}, lightest first.</>
+                        <>Lightest {opt.result.family}{opt.result.maxDepth !== null ? <> with h ≤ {fmt(opt.result.maxDepth, 0)} mm</> : null} passing all checks: <b>{opt.result.best.name}</b> ({fmt(opt.result.best.mass, 1)} kg/m, h = {fmt(sections.find((x) => x.id === opt.result!.best!.id)?.values.h ?? NaN, 1)} mm), governing UR {fmt(opt.result.best.ur, 3)} (<Rich text={opt.result.best.label} />). Checked {opt.result.tried} of {opt.result.total}, lightest first{opt.seconds !== undefined ? `, ${fmt(opt.seconds, 1)} s` : ''}.</>
                       ) : (
                         <span className="error">No {opt.result.family} section{opt.result.maxDepth !== null ? <> with h ≤ {fmt(opt.result.maxDepth, 0)} mm</> : null} passes all checks with these inputs ({opt.result.total} tried); the section is unchanged.</span>
                       )

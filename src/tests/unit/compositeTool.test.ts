@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { CompositeModel, governingCheck } from '../../tools/composite/model';
+import { CHECKS, CompositeModel, DEFLECTION_CHECKS, governingCheck } from '../../tools/composite/model';
 import { sections } from '../../engineering/steel/sections';
 import { parseDocument } from '../../documents/DocumentSerializer';
 
@@ -111,5 +111,23 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(m.optimizeSection('IPE').best).toBeNull();
     expect(m.sectionId).toBe(3148);
   }, 300_000);
+
+  it('screening model (no deflection curves) gives every other check exactly; optimizing with it picks the same section', () => {
+    const raw = readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8');
+    const full = new CompositeModel(raw), screen = new CompositeModel(raw, { screening: true });
+    const ub = sections.filter((s) => s.family === 'UB').sort((a, b) => a.values.mass - b.values.mass);
+    for (const s of ub.filter((_, i) => i % 9 === 0)) {
+      full.setSection(s.id); screen.setSection(s.id);
+      const a = full.results(), b = screen.results();
+      expect(b.errors).toEqual([]);
+      for (const [key] of CHECKS) if (!DEFLECTION_CHECKS.includes(key) && key !== 'des') expect(b[`UR.${key}`]).toBe(a[`UR.${key}`]);
+    }
+    full.setSection(3148);
+    const t0 = performance.now(); const serial = full.optimizeSection('UB'); const t1 = performance.now();
+    full.setSection(3148);
+    const fast = full.optimizeSection('UB', undefined, null, screen); const t2 = performance.now();
+    expect(fast).toEqual(serial);
+    expect(t2 - t1).toBeLessThan((t1 - t0) * 0.75);
+  }, 600_000);
 });
 

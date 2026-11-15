@@ -43,10 +43,11 @@ test('mCompositeBeamDesign optimizes the section to the lightest one that passes
   await page.getByTestId('optimize').click();
   await expect(page.getByTestId('optimize-status')).toContainText('Lightest UB passing all checks', { timeout: 150_000 });
   await expect(page.getByTestId('optimize')).toBeEnabled();
-  const ur = Number(await page.getByTestId('ur-max').textContent());
-  expect(ur).toBeLessThanOrEqual(1);
   const chosen = await page.getByTestId('optimize-status').locator('b').textContent();
-  await expect(page.getByTestId('section-select').locator('option:checked')).toHaveText(chosen!);
+  // the page recalculates the chosen section, then shows it and its governing UR
+  await expect(page.getByTestId('section-select').locator('option:checked')).toHaveText(chosen!, { timeout: 30_000 });
+  await expect(page.locator('.status')).toHaveText('Up to date', { timeout: 30_000 });
+  await expect.poll(async () => Number(await page.getByTestId('ur-max').textContent()), { timeout: 30_000 }).toBeLessThanOrEqual(1);
   // a depth limit: the result reports it, and an invalid limit disables the button
   await page.getByTestId('hmax').fill('abc');
   await expect(page.getByTestId('optimize')).toBeDisabled();
