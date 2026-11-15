@@ -106,10 +106,10 @@ export function compositeFigures(l) {
         support(xa, yb, false); support(xb, yb, true);
         line(xa, 56, xb, 56, { w: 0.9 });
         for (let i = 0; i <= 10; i++) { const x = xa + (i * (xb - xa)) / 10; line(x, 56, x, yb - 3, { arrow: true, w: 0.8, head: 9 }); }
-        text(xa + 4, 46, 'area loads: (g_k,i , q_k,i) × s_b  (x_1,i to x_2,i)', { size: 11 });
+        text(xa + 4, 46, 'area loads: p_k,i × s_b  (x_1,i to x_2,i)', { size: 11 });
         for (const x of [300, 520]) line(x, 2, x, yb - 3, { arrow: true, w: 1.8 });
         text(306, 8, 'P_1 (G_k,1 , Q_k,1)', { size: 11 });
-        text(514, 24, 'P_j (G_k,j , Q_k,j)', { size: 11, a: 'r' });
+        text(514, 24, 'P_j = F_k,j', { size: 11, a: 'r' });
         dim(xa, yb, 300, yb, 'a_1', { off: 24, at: yb + 8 });
         dim(xa, yb, 520, yb, 'a_j', { off: 40, at: yb + 8 });
         dim(xa, yb, xb, yb, 'L', { off: 56, at: yb + 8, it: true });

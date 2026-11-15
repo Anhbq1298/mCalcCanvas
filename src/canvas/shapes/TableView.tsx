@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { setActiveGridCell, startEditing, updateShape, useCanvasStore } from '../model/canvasStore';
 import type { TableShape } from '../model/types';
-import { INPUT_TABLE_HEADER_ROWS, inputNameLatex, inputTableRegionId, isVariableHeader } from '../inputTable';
+import { INPUT_TABLE_HEADER_ROWS, headerParts, inputNameLatex, inputTableRegionId, isVariableHeader } from '../inputTable';
 import { useRegionResult } from '../../store/calculationStore';
 
 /** `G_{k.j}` → G<sub>k.j</sub>, italic base (drawing-style variable name). */
@@ -16,7 +16,8 @@ function InputHeader({ shapeId, column, name }: { shapeId: string; column: numbe
   const r = useRegionResult(inputTableRegionId(shapeId, column));
   const error = r?.status === 'error' ? r.error?.message ?? 'Invalid column' : null;
   if (!isVariableHeader(name)) return <span>{name || '\u00a0'}</span>;
-  return <span className={error ? 'is-error' : undefined} title={error ?? undefined}><NameLabel name={name} /></span>;
+  const { caption } = headerParts(name);
+  return <span className={error ? 'is-error' : undefined} title={error ?? undefined}>{caption && <>{caption} </>}<NameLabel name={name} /></span>;
 }
 
 export function TableView({ shape, editing, isStatic }: { shape: TableShape; editing: boolean; isStatic: boolean }) {

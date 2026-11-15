@@ -18,7 +18,7 @@ export function inputTableRegionId(shapeId: string, column: number): string {
 
 /** `G_k.j` → `G_{k.j}`; braces, Greek commands and plain names are kept. */
 export function inputNameLatex(name: string): string {
-  const t = name.trim();
+  const t = headerParts(name).variable ?? name.trim();
   const m = /^([^_]+)_(.+)$/.exec(t);
   if (!m || m[2].startsWith('{')) return t;
   return `${m[1]}_{${m[2]}}`;
@@ -29,6 +29,16 @@ export function inputUnitLatex(unit: string): string {
   return unit.trim().replace(/\s+/g, '\\,').replace(/·|\*/g, '\\cdot ').replace(/[A-Za-zµΩ°]+/g, (u) => `\\mathrm{${u}}`);
 }
 
+/** Unit row `G/Q`: a load-pattern column, G (permanent) → 0, Q (variable) → 1. */
+export function isPatternUnit(unit: string): boolean {
+  return /^\s*G\s*\/\s*Q\s*$/i.test(unit);
+}
+
+function patternLatex(v: string): string {
+  const t = v.trim().toUpperCase();
+  return t === 'G' ? '0' : t === 'Q' ? '1' : v.trim() || '\\placeholder{}';
+}
+
 /** Value cell: numbers only (comma decimal accepted); anything else is left for the engine to reject. */
 function valueLatex(v: string): string {
   const t = v.trim().replace(/^(-?\d+),(\d+)$/, '$1.$2');
@@ -37,9 +47,23 @@ function valueLatex(v: string): string {
   return m[2] ? `${m[1]}\\cdot10^{${m[2]}}` : m[1];
 }
 
-/** A header that is a variable name (`a_j`, `G_k.j`, `x_{1.i}`, `\eta`); anything else (e.g. `Load pattern`) is a label column. */
+const VARIABLE = /^\\?[A-Za-z][A-Za-z0-9]*(_(\{[^{}\s]+\}|[A-Za-z0-9.,]+))?$/;
+
+/**
+ * Header parts: `a_j` → variable only; `Load pattern c_Q.i` → caption plus the
+ * variable (last word); `Load pattern` → caption only (a label column).
+ */
+export function headerParts(name: string): { caption: string; variable: string | null } {
+  const t = name.trim();
+  if (VARIABLE.test(t)) return { caption: '', variable: t };
+  const m = /^(.*\S)\s+(\S+)$/.exec(t);
+  if (m && VARIABLE.test(m[2]) && /[_\\]/.test(m[2])) return { caption: m[1], variable: m[2] };
+  return { caption: t, variable: null };
+}
+
+/** A header that names a variable (`a_j`, `G_k.j`, `Load pattern c_Q.i`); otherwise a label column. */
 export function isVariableHeader(name: string): boolean {
-  return /^\\?[A-Za-z][A-Za-z0-9]*(_(\{[^{}\s]+\}|[A-Za-z0-9.,]+))?$/.test(name.trim());
+  return headerParts(name).variable !== null;
 }
 
 export interface InputColumn { column: number; name: string; latex: string }
@@ -55,8 +79,10 @@ export function inputTableColumns(shape: TableShape): InputColumn[] {
   for (let c = 0; c < shape.props.columns; c++) {
     const name = cells[0]?.[c]?.value.trim() ?? '';
     if (!name || !isVariableHeader(name) || !rows.length) continue;
-    const unit = inputUnitLatex(cells[1]?.[c]?.value ?? '');
-    const entries = rows.map((row) => `${valueLatex(row[c]?.value ?? '')}${unit ? `\\,${unit}` : ''}`);
+    const unitText = cells[1]?.[c]?.value ?? '';
+    const pattern = isPatternUnit(unitText);
+    const unit = pattern ? '' : inputUnitLatex(unitText);
+    const entries = rows.map((row) => (pattern ? patternLatex(row[c]?.value ?? '') : `${valueLatex(row[c]?.value ?? '')}${unit ? `\\,${unit}` : ''}`));
     out.push({ column: c, name, latex: `${inputNameLatex(name)}\\coloneq\\begin{bmatrix}${entries.join('\\\\')}\\end{bmatrix}` });
   }
   return out;

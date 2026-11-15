@@ -43,6 +43,9 @@ describe('matrix and table regions', () => {
       expect(inputNameLatex('G_k.j')).toBe('G_{k.j}');
       expect(inputNameLatex('x_{1.i}')).toBe('x_{1.i}');
       expect(isVariableHeader('Load pattern')).toBe(false);
+      expect(inputNameLatex('Load pattern c_Q.i')).toBe('c_{Q.i}');
+      expect(inputTableColumns({ id: 'p', type: 'table', x: 0, y: 0, props: { ...defaultTableProps(4, 1), input: true, cells: [[{ value: 'Load pattern c_Q.i' }], [{ value: 'G/Q' }], [{ value: 'g' }], [{ value: 'Q' }]] } })[0].latex)
+        .toBe('c_{Q.i}\\coloneq\\begin{bmatrix}0\\\\1\\end{bmatrix}');
       expect(isVariableHeader('G_k.j') && isVariableHeader('x_{1.i}') && isVariableHeader('\\eta')).toBe(true);
       expect(inputUnitLatex('kN/m^2')).toBe('\\mathrm{kN}/\\mathrm{m}^2');
       const t: TableShape = { id: 't', type: 'table', x: 0, y: 0, props: { ...defaultTableProps(5, 3), input: true, cells: [

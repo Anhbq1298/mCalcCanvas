@@ -72,11 +72,11 @@ Annex: the general force model and branch boundaries.
 
 ## Rev E: load tables, stud spacing and PNA case
 
-- Composite-stage loads are input tables (Mathcad Prime style, Rev G): a "Load pattern" label column first,
-  then row 1 the variable name, row 2 the unit, one row per load; each column defines an n×1 matrix read with col(·, 0). Area loads x_1,i, x_2,i,
-  g_k,i, q_k,i (kPa, multiplied by the load width s_b); point loads a_j, G_k,j, Q_k,j (kN). Add a row
-  (Matrices/Tables → Insert below) for a new load; the content below moves down; blank rows are skipped. Point loads are assumed to
-  act after composite action; the construction stage keeps its UDL. The example splits finishes and
+- Composite-stage loads are input tables (Mathcad Prime style, Rev G), one row per load. Area loads:
+  load pattern c_Q,i (G or Q), x_1,i, x_2,i, p_k,i (kPa, times the load width s_b); point loads: c_Q,j,
+  a_j, F_k,j (kN). One value column serves both patterns: G rows go to g, Q rows to q (G → 0, Q → 1).
+  Add a row (Matrices/Tables → Insert below) for a new load; the content below moves down.
+  Point loads are assumed to act after composite action; the construction stage keeps its UDL. The example splits finishes and
   imposed load (and G and Q of the point load) into two rows each.
 - M(x), V(x) on a 200-step grid (annex A.1, user functions with factors cG, cQ); M_Ed is the larger of
   the grid maximum and the moments under the point loads (grid error ≤ wΔx²/8). Graphs M_Ed, V_Ed.

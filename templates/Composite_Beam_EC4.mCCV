@@ -1493,7 +1493,7 @@
       "props": {
         "w": 630,
         "h": 21,
-        "html": "1.5 Load tables: row 1 variable, row 2 unit, one load per row (add rows; blank rows skipped)",
+        "html": "1.5 Load tables: one row per load; pattern G = permanent, Q = imposed",
         "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
@@ -1540,20 +1540,19 @@
         "w": 340,
         "h": 128,
         "rows": 4,
-        "columns": 5,
+        "columns": 4,
         "columnWidths": [
-          128,
-          50,
-          50,
-          56,
-          56
+          142,
+          64,
+          64,
+          70
         ],
         "headerRow": true,
         "input": true,
         "cells": [
           [
             {
-              "value": "Load pattern"
+              "value": "Load pattern c_Q.i"
             },
             {
               "value": "x_1.i"
@@ -1562,15 +1561,12 @@
               "value": "x_2.i"
             },
             {
-              "value": "g_k.i"
-            },
-            {
-              "value": "q_k.i"
+              "value": "p_k.i"
             }
           ],
           [
             {
-              "value": ""
+              "value": "G/Q"
             },
             {
               "value": "m"
@@ -1580,14 +1576,11 @@
             },
             {
               "value": "kPa"
-            },
-            {
-              "value": "kPa"
             }
           ],
           [
             {
-              "value": "Finishes"
+              "value": "G"
             },
             {
               "value": "0"
@@ -1597,23 +1590,17 @@
             },
             {
               "value": "1.5"
-            },
-            {
-              "value": "0"
             }
           ],
           [
             {
-              "value": "Office imposed"
+              "value": "Q"
             },
             {
               "value": "0"
             },
             {
               "value": "8"
-            },
-            {
-              "value": "0"
             },
             {
               "value": "3"
@@ -1631,67 +1618,54 @@
         "w": 276,
         "h": 128,
         "rows": 4,
-        "columns": 4,
+        "columns": 3,
         "columnWidths": [
-          124,
-          48,
-          50,
-          54
+          142,
+          64,
+          70
         ],
         "headerRow": true,
         "input": true,
         "cells": [
           [
             {
-              "value": "Load pattern"
+              "value": "Load pattern c_Q.j"
             },
             {
               "value": "a_j"
             },
             {
-              "value": "G_k.j"
-            },
-            {
-              "value": "Q_k.j"
+              "value": "F_k.j"
             }
           ],
           [
             {
-              "value": ""
+              "value": "G/Q"
             },
             {
               "value": "m"
             },
             {
               "value": "kN"
-            },
-            {
-              "value": "kN"
             }
           ],
           [
             {
-              "value": "Beam reaction G"
+              "value": "G"
             },
             {
               "value": "3"
             },
             {
               "value": "30"
-            },
-            {
-              "value": "0"
             }
           ],
           [
             {
-              "value": "Beam reaction Q"
+              "value": "Q"
             },
             {
               "value": "3"
-            },
-            {
-              "value": "0"
             },
             {
               "value": "45"
@@ -2820,9 +2794,9 @@
       "x": 120,
       "y": 4099,
       "props": {
-        "w": 314,
+        "w": 255,
         "h": 16,
-        "html": "area loads: (<i>g</i><sub>k,i</sub> , <i>q</i><sub>k,i</sub>) × <i>s</i><sub>b</sub>  (<i>x</i><sub>1,i</sub> to <i>x</i><sub>2,i</sub>)",
+        "html": "area loads: <i>p</i><sub>k,i</sub> × <i>s</i><sub>b</sub>  (<i>x</i><sub>1,i</sub> to <i>x</i><sub>2,i</sub>)",
         "fontFamily": "Roboto",
         "fontSize": 11,
         "color": "#111111",
@@ -2905,12 +2879,12 @@
     {
       "id": "s_ec4_4j",
       "type": "text",
-      "x": 474,
+      "x": 520,
       "y": 4077,
       "props": {
-        "w": 116,
+        "w": 70,
         "h": 16,
-        "html": "<i>P</i><sub>j</sub> (<i>G</i><sub>k,j</sub> , <i>Q</i><sub>k,j</sub>)",
+        "html": "<i>P</i><sub>j</sub> = <i>F</i><sub>k,j</sub>",
         "fontFamily": "Roboto",
         "fontSize": 11,
         "color": "#111111",
@@ -12805,7 +12779,7 @@
       "props": {
         "w": 304,
         "h": 18,
-        "html": "Table column a_{j} as a vector",
+        "html": "Table column c_{Q.i} as a vector (G → 0, Q → 1)",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -12819,10 +12793,10 @@
       "x": 396,
       "y": 18516,
       "props": {
-        "w": 181,
+        "w": 168,
         "h": 26,
         "baseline": 18,
-        "latex": "a_P\\coloneq \\mathrm{col}\\left(a_{j},0\\right)",
+        "latex": "c_u\\coloneq \\mathrm{col}\\left(c_{Q.i},0\\right)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": 3,
@@ -12840,7 +12814,7 @@
       "props": {
         "w": 304,
         "h": 18,
-        "html": "Table column G_{k.j} as a vector",
+        "html": "Table column p_{k.i} as a vector",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -12854,10 +12828,10 @@
       "x": 396,
       "y": 18548,
       "props": {
-        "w": 214,
+        "w": 213,
         "h": 26,
         "baseline": 18,
-        "latex": "G_P\\coloneq \\mathrm{col}\\left(G_{k.j},0\\right)",
+        "latex": "p_u\\coloneq \\mathrm{col}\\left(p_{k.i},0\\right)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": 3,
@@ -12875,7 +12849,7 @@
       "props": {
         "w": 304,
         "h": 18,
-        "html": "Table column Q_{k.j} as a vector",
+        "html": "Table column a_{j} as a vector",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -12889,10 +12863,10 @@
       "x": 396,
       "y": 18580,
       "props": {
-        "w": 214,
+        "w": 181,
         "h": 26,
         "baseline": 18,
-        "latex": "Q_P\\coloneq \\mathrm{col}\\left(Q_{k.j},0\\right)",
+        "latex": "a_P\\coloneq \\mathrm{col}\\left(a_{j},0\\right)",
         "displayMode": "formulaResult",
         "displayUnit": "",
         "precision": 3,
@@ -12906,11 +12880,11 @@
       "id": "s_ec4_lk",
       "type": "text",
       "x": 76,
-      "y": 18804,
+      "y": 18801,
       "props": {
         "w": 304,
         "h": 18,
-        "html": "Line loads from the area loads, g_k × s_b",
+        "html": "Table column c_{Q.j} as a vector (G → 0, Q → 1)",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -12924,12 +12898,12 @@
       "x": 396,
       "y": 18796,
       "props": {
-        "w": 226,
-        "h": 34,
-        "baseline": 21,
-        "latex": "g_u\\coloneq s_b\\,\\mathrm{col}\\left(g_{k.i},0\\right)",
+        "w": 172,
+        "h": 26,
+        "baseline": 18,
+        "latex": "c_P\\coloneq \\mathrm{col}\\left(c_{Q.j},0\\right)",
         "displayMode": "formulaResult",
-        "displayUnit": "kN/m",
+        "displayUnit": "",
         "precision": 3,
         "autoSize": true,
         "fontSize": 16,
@@ -12941,11 +12915,11 @@
       "id": "s_ec4_lm",
       "type": "text",
       "x": 76,
-      "y": 18844,
+      "y": 18833,
       "props": {
         "w": 304,
         "h": 18,
-        "html": "Line loads from the area loads, q_k × s_b",
+        "html": "Table column F_{k.j} as a vector",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -12957,14 +12931,14 @@
       "id": "s_ec4_ln",
       "type": "math",
       "x": 396,
-      "y": 18836,
+      "y": 18828,
       "props": {
-        "w": 212,
-        "h": 34,
-        "baseline": 21,
-        "latex": "q_u\\coloneq s_b\\,\\mathrm{col}\\left(q_{k.i},0\\right)",
+        "w": 222,
+        "h": 26,
+        "baseline": 18,
+        "latex": "F_P\\coloneq \\mathrm{col}\\left(F_{k.j},0\\right)",
         "displayMode": "formulaResult",
-        "displayUnit": "kN/m",
+        "displayUnit": "",
         "precision": 3,
         "autoSize": true,
         "fontSize": 16,
@@ -12976,11 +12950,11 @@
       "id": "s_ec4_lo",
       "type": "text",
       "x": 76,
-      "y": 18881,
+      "y": 18873,
       "props": {
         "w": 304,
         "h": 18,
-        "html": "Loaded lengths",
+        "html": "Permanent line loads, p_k × s_b on G rows",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -12992,7 +12966,147 @@
       "id": "s_ec4_lp",
       "type": "math",
       "x": 396,
-      "y": 18876,
+      "y": 18860,
+      "props": {
+        "w": 227,
+        "h": 39,
+        "baseline": 26,
+        "latex": "g_u\\coloneq s_b\\overrightarrow{p_u\\left(1-c_u\\right)}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN/m",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_lo"
+    },
+    {
+      "id": "s_ec4_lq",
+      "type": "text",
+      "x": 76,
+      "y": 18913,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Imposed line loads, p_k × s_b on Q rows",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_lq"
+    },
+    {
+      "id": "s_ec4_lr",
+      "type": "math",
+      "x": 396,
+      "y": 18905,
+      "props": {
+        "w": 171,
+        "h": 34,
+        "baseline": 21,
+        "latex": "q_u\\coloneq s_b\\overrightarrow{p_u c_u}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN/m",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_lq"
+    },
+    {
+      "id": "s_ec4_ls",
+      "type": "text",
+      "x": 76,
+      "y": 18958,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Permanent point loads (G rows)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_ls"
+    },
+    {
+      "id": "s_ec4_lt",
+      "type": "math",
+      "x": 396,
+      "y": 18945,
+      "props": {
+        "w": 221,
+        "h": 34,
+        "baseline": 26,
+        "latex": "G_P\\coloneq \\overrightarrow{F_P\\left(1-c_P\\right)}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_ls"
+    },
+    {
+      "id": "s_ec4_lu",
+      "type": "text",
+      "x": 76,
+      "y": 18997,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Imposed point loads (Q rows)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_lu"
+    },
+    {
+      "id": "s_ec4_lv",
+      "type": "math",
+      "x": 396,
+      "y": 18985,
+      "props": {
+        "w": 179,
+        "h": 33,
+        "baseline": 25,
+        "latex": "Q_P\\coloneq \\overrightarrow{F_P c_P}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_lu"
+    },
+    {
+      "id": "s_ec4_lw",
+      "type": "text",
+      "x": 76,
+      "y": 19029,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Loaded lengths",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_lw"
+    },
+    {
+      "id": "s_ec4_lx",
+      "type": "math",
+      "x": 396,
+      "y": 19024,
       "props": {
         "w": 175,
         "h": 26,
@@ -13005,13 +13119,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_lo"
+      "printGroupId": "s_ec4_pg_lw"
     },
     {
-      "id": "s_ec4_lq",
+      "id": "s_ec4_ly",
       "type": "text",
       "x": 76,
-      "y": 18923,
+      "y": 19071,
       "props": {
         "w": 304,
         "h": 18,
@@ -13021,13 +13135,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_lq"
+      "printGroupId": "s_ec4_pg_ly"
     },
     {
-      "id": "s_ec4_lr",
+      "id": "s_ec4_lz",
       "type": "math",
       "x": 396,
-      "y": 18908,
+      "y": 19056,
       "props": {
         "w": 224,
         "h": 41,
@@ -13040,157 +13154,17 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_lq"
-    },
-    {
-      "id": "s_ec4_ls",
-      "type": "text",
-      "x": 76,
-      "y": 19020,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Left-part moment per unit row load",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_ls"
-    },
-    {
-      "id": "s_ec4_lt",
-      "type": "math",
-      "x": 396,
-      "y": 18955,
-      "props": {
-        "w": 245,
-        "h": 154,
-        "baseline": 18,
-        "latex": "m_u(x)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ x\\le x_{u1}\\\\\\quad\\left\\Vert\\displaystyle 0\\,\\mathrm{m^2}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ x\\ge x_{u2}\\\\\\quad\\left\\Vert\\displaystyle l_u\\left(x-\\frac{x_{u1}+x_{u2}}{2}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\frac{\\left(x-x_{u1}\\right)^2}{2}\\right.\\end{array}",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_ls"
-    },
-    {
-      "id": "s_ec4_lu",
-      "type": "text",
-      "x": 76,
-      "y": 19180,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Row load left of x per unit load",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_lu"
-    },
-    {
-      "id": "s_ec4_lv",
-      "type": "math",
-      "x": 396,
-      "y": 19115,
-      "props": {
-        "w": 178,
-        "h": 122,
-        "baseline": 18,
-        "latex": "v_u(x)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ x\\le x_{u1}\\\\\\quad\\left\\Vert\\displaystyle 0\\,\\mathrm{m}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ x\\ge x_{u2}\\\\\\quad\\left\\Vert\\displaystyle l_u\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle x-x_{u1}\\right.\\end{array}",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_lu"
-    },
-    {
-      "id": "s_ec4_lw",
-      "type": "text",
-      "x": 76,
-      "y": 19288,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Lever of each point load to the right of x",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_lw"
-    },
-    {
-      "id": "s_ec4_lx",
-      "type": "math",
-      "x": 396,
-      "y": 19243,
-      "props": {
-        "w": 163,
-        "h": 83,
-        "baseline": 18,
-        "latex": "m_P(x)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ x>a_P\\\\\\quad\\left\\Vert\\displaystyle x-a_P\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\,\\mathrm{m}\\right.\\end{array}",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_lw"
-    },
-    {
-      "id": "s_ec4_ly",
-      "type": "text",
-      "x": 76,
-      "y": 19377,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Point loads left of x (1) or not (0)",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_ly"
-    },
-    {
-      "id": "s_ec4_lz",
-      "type": "math",
-      "x": 396,
-      "y": 19332,
-      "props": {
-        "w": 148,
-        "h": 83,
-        "baseline": 18,
-        "latex": "h_P(x)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ x>a_P\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
       "printGroupId": "s_ec4_pg_ly"
     },
     {
       "id": "s_ec4_m0",
       "type": "text",
       "x": 76,
-      "y": 19426,
+      "y": 19168,
       "props": {
         "w": 304,
         "h": 18,
-        "html": "Moment per unit row load",
+        "html": "Left-part moment per unit row load",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -13202,12 +13176,12 @@
       "id": "s_ec4_m1",
       "type": "math",
       "x": 396,
-      "y": 19421,
+      "y": 19103,
       "props": {
-        "w": 149,
-        "h": 26,
+        "w": 245,
+        "h": 154,
         "baseline": 18,
-        "latex": "k_u(x)\\coloneq r_u x-m_u(x)",
+        "latex": "m_u(x)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ x\\le x_{u1}\\\\\\quad\\left\\Vert\\displaystyle 0\\,\\mathrm{m^2}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ x\\ge x_{u2}\\\\\\quad\\left\\Vert\\displaystyle l_u\\left(x-\\frac{x_{u1}+x_{u2}}{2}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\frac{\\left(x-x_{u1}\\right)^2}{2}\\right.\\end{array}",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": 3,
@@ -13221,11 +13195,11 @@
       "id": "s_ec4_m2",
       "type": "text",
       "x": 76,
-      "y": 19462,
+      "y": 19328,
       "props": {
         "w": 304,
         "h": 18,
-        "html": "Moment at x per unit point load",
+        "html": "Row load left of x per unit load",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -13237,12 +13211,12 @@
       "id": "s_ec4_m3",
       "type": "math",
       "x": 396,
-      "y": 19453,
+      "y": 19263,
       "props": {
-        "w": 196,
-        "h": 35,
-        "baseline": 22,
-        "latex": "k_P(x)\\coloneq\\frac{L-a_P}{L}x-m_P(x)",
+        "w": 178,
+        "h": 122,
+        "baseline": 18,
+        "latex": "v_u(x)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ x\\le x_{u1}\\\\\\quad\\left\\Vert\\displaystyle 0\\,\\mathrm{m}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ x\\ge x_{u2}\\\\\\quad\\left\\Vert\\displaystyle l_u\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle x-x_{u1}\\right.\\end{array}",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": 3,
@@ -13256,11 +13230,11 @@
       "id": "s_ec4_m4",
       "type": "text",
       "x": 76,
-      "y": 19494,
+      "y": 19436,
       "props": {
-        "w": 630,
+        "w": 304,
         "h": 18,
-        "html": "Moment from the tables with factors cG on g, G and cQ on q, Q",
+        "html": "Lever of each point load to the right of x",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -13271,13 +13245,13 @@
     {
       "id": "s_ec4_m5",
       "type": "math",
-      "x": 96,
-      "y": 19509,
+      "x": 396,
+      "y": 19391,
       "props": {
-        "w": 486,
-        "h": 26,
+        "w": 163,
+        "h": 83,
         "baseline": 18,
-        "latex": "M_s(x,c_G,c_Q)\\coloneq\\mathrm{dot}\\left(c_G g_u+c_Q q_u,k_u(x)\\right)+\\mathrm{dot}\\left(c_G G_P+c_Q Q_P,k_P(x)\\right)",
+        "latex": "m_P(x)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ x>a_P\\\\\\quad\\left\\Vert\\displaystyle x-a_P\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\,\\mathrm{m}\\right.\\end{array}",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": 3,
@@ -13291,11 +13265,11 @@
       "id": "s_ec4_m6",
       "type": "text",
       "x": 76,
-      "y": 19541,
+      "y": 19525,
       "props": {
-        "w": 630,
+        "w": 304,
         "h": 18,
-        "html": "Shear from the tables with the same factors",
+        "html": "Point loads left of x (1) or not (0)",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -13306,13 +13280,13 @@
     {
       "id": "s_ec4_m7",
       "type": "math",
-      "x": 96,
-      "y": 19572,
+      "x": 396,
+      "y": 19480,
       "props": {
-        "w": 595,
-        "h": 35,
-        "baseline": 22,
-        "latex": "V_s(x,c_G,c_Q)\\coloneq\\mathrm{dot}\\left(c_G g_u+c_Q q_u,r_u-v_u(x)\\right)+\\mathrm{dot}\\left(c_G G_P+c_Q Q_P,\\frac{L-a_P}{L}-h_P(x)\\right)",
+        "w": 148,
+        "h": 83,
+        "baseline": 18,
+        "latex": "h_P(x)\\coloneq\\begin{array}{||l}\\mathrm{if}\\ x>a_P\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": 3,
@@ -13326,11 +13300,11 @@
       "id": "s_ec4_m8",
       "type": "text",
       "x": 76,
-      "y": 19618,
+      "y": 19574,
       "props": {
         "w": 304,
         "h": 18,
-        "html": "Points along the span, 200 intervals",
+        "html": "Moment per unit row load",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -13342,7 +13316,147 @@
       "id": "s_ec4_m9",
       "type": "math",
       "x": 396,
-      "y": 19613,
+      "y": 19569,
+      "props": {
+        "w": 149,
+        "h": 26,
+        "baseline": 18,
+        "latex": "k_u(x)\\coloneq r_u x-m_u(x)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_m8"
+    },
+    {
+      "id": "s_ec4_ma",
+      "type": "text",
+      "x": 76,
+      "y": 19610,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Moment at x per unit point load",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_ma"
+    },
+    {
+      "id": "s_ec4_mb",
+      "type": "math",
+      "x": 396,
+      "y": 19601,
+      "props": {
+        "w": 196,
+        "h": 35,
+        "baseline": 22,
+        "latex": "k_P(x)\\coloneq\\frac{L-a_P}{L}x-m_P(x)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_ma"
+    },
+    {
+      "id": "s_ec4_mc",
+      "type": "text",
+      "x": 76,
+      "y": 19642,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Moment from the tables with factors cG on g, G and cQ on q, Q",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_mc"
+    },
+    {
+      "id": "s_ec4_md",
+      "type": "math",
+      "x": 96,
+      "y": 19657,
+      "props": {
+        "w": 486,
+        "h": 26,
+        "baseline": 18,
+        "latex": "M_s(x,c_G,c_Q)\\coloneq\\mathrm{dot}\\left(c_G g_u+c_Q q_u,k_u(x)\\right)+\\mathrm{dot}\\left(c_G G_P+c_Q Q_P,k_P(x)\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_mc"
+    },
+    {
+      "id": "s_ec4_me",
+      "type": "text",
+      "x": 76,
+      "y": 19689,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Shear from the tables with the same factors",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_me"
+    },
+    {
+      "id": "s_ec4_mf",
+      "type": "math",
+      "x": 96,
+      "y": 19720,
+      "props": {
+        "w": 595,
+        "h": 35,
+        "baseline": 22,
+        "latex": "V_s(x,c_G,c_Q)\\coloneq\\mathrm{dot}\\left(c_G g_u+c_Q q_u,r_u-v_u(x)\\right)+\\mathrm{dot}\\left(c_G G_P+c_Q Q_P,\\frac{L-a_P}{L}-h_P(x)\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_me"
+    },
+    {
+      "id": "s_ec4_mg",
+      "type": "text",
+      "x": 76,
+      "y": 19766,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Points along the span, 200 intervals",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_mg"
+    },
+    {
+      "id": "s_ec4_mh",
+      "type": "math",
+      "x": 396,
+      "y": 19761,
       "props": {
         "w": 158,
         "h": 26,
@@ -13355,13 +13469,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_m8"
+      "printGroupId": "s_ec4_pg_mg"
     },
     {
-      "id": "s_ec4_ma",
+      "id": "s_ec4_mi",
       "type": "text",
       "x": 76,
-      "y": 19645,
+      "y": 19967,
       "props": {
         "w": 630,
         "h": 18,
@@ -13371,13 +13485,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_ma"
+      "printGroupId": "s_ec4_pg_mi"
     },
     {
-      "id": "s_ec4_mb",
+      "id": "s_ec4_mj",
       "type": "math",
       "x": 96,
-      "y": 19674,
+      "y": 19996,
       "props": {
         "w": 329,
         "h": 37,
@@ -13390,13 +13504,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_ma"
+      "printGroupId": "s_ec4_pg_mi"
     },
     {
-      "id": "s_ec4_mc",
+      "id": "s_ec4_mk",
       "type": "text",
       "x": 76,
-      "y": 19725,
+      "y": 20047,
       "props": {
         "w": 304,
         "h": 18,
@@ -13406,13 +13520,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_mc"
+      "printGroupId": "s_ec4_pg_mk"
     },
     {
-      "id": "s_ec4_md",
+      "id": "s_ec4_ml",
       "type": "math",
       "x": 396,
-      "y": 19717,
+      "y": 20039,
       "props": {
         "w": 309,
         "h": 34,
@@ -13425,13 +13539,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_mc"
+      "printGroupId": "s_ec4_pg_mk"
     },
     {
-      "id": "s_ec4_me",
+      "id": "s_ec4_mm",
       "type": "text",
       "x": 76,
-      "y": 19967,
+      "y": 20079,
       "props": {
         "w": 630,
         "h": 18,
@@ -13441,13 +13555,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_me"
+      "printGroupId": "s_ec4_pg_mm"
     },
     {
-      "id": "s_ec4_mf",
+      "id": "s_ec4_mn",
       "type": "math",
       "x": 96,
-      "y": 19996,
+      "y": 20108,
       "props": {
         "w": 535,
         "h": 37,
@@ -13460,13 +13574,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_me"
+      "printGroupId": "s_ec4_pg_mm"
     },
     {
-      "id": "s_ec4_mg",
+      "id": "s_ec4_mo",
       "type": "text",
       "x": 76,
-      "y": 20039,
+      "y": 20151,
       "props": {
         "w": 630,
         "h": 18,
@@ -13476,13 +13590,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_mg"
+      "printGroupId": "s_ec4_pg_mo"
     },
     {
-      "id": "s_ec4_mh",
+      "id": "s_ec4_mp",
       "type": "math",
       "x": 96,
-      "y": 20054,
+      "y": 20166,
       "props": {
         "w": 375,
         "h": 26,
@@ -13495,13 +13609,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_mg"
+      "printGroupId": "s_ec4_pg_mo"
     },
     {
-      "id": "s_ec4_mi",
+      "id": "s_ec4_mq",
       "type": "text",
       "x": 76,
-      "y": 20086,
+      "y": 20198,
       "props": {
         "w": 630,
         "h": 18,
@@ -13511,13 +13625,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_mi"
+      "printGroupId": "s_ec4_pg_mq"
     },
     {
-      "id": "s_ec4_mj",
+      "id": "s_ec4_mr",
       "type": "math",
       "x": 96,
-      "y": 20101,
+      "y": 20213,
       "props": {
         "w": 347,
         "h": 26,
@@ -13530,13 +13644,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_mi"
+      "printGroupId": "s_ec4_pg_mq"
     },
     {
-      "id": "s_ec4_mk",
+      "id": "s_ec4_ms",
       "type": "text",
       "x": 76,
-      "y": 20133,
+      "y": 20245,
       "props": {
         "w": 630,
         "h": 18,
@@ -13546,13 +13660,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_mk"
+      "printGroupId": "s_ec4_pg_ms"
     },
     {
-      "id": "s_ec4_ml",
+      "id": "s_ec4_mt",
       "type": "math",
       "x": 96,
-      "y": 20148,
+      "y": 20260,
       "props": {
         "w": 406,
         "h": 26,
@@ -13565,13 +13679,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_mk"
+      "printGroupId": "s_ec4_pg_ms"
     },
     {
-      "id": "s_ec4_mm",
+      "id": "s_ec4_mu",
       "type": "text",
       "x": 76,
-      "y": 20186,
+      "y": 20298,
       "props": {
         "w": 630,
         "h": 24,
@@ -13588,10 +13702,10 @@
       }
     },
     {
-      "id": "s_ec4_mn",
+      "id": "s_ec4_mv",
       "type": "text",
       "x": 76,
-      "y": 20222,
+      "y": 20334,
       "props": {
         "w": 630,
         "h": 21,
@@ -13604,10 +13718,10 @@
       }
     },
     {
-      "id": "s_ec4_mo",
+      "id": "s_ec4_mw",
       "type": "text",
       "x": 76,
-      "y": 20249,
+      "y": 20361,
       "props": {
         "w": 630,
         "h": 19,
@@ -13619,10 +13733,10 @@
       }
     },
     {
-      "id": "s_ec4_mp",
+      "id": "s_ec4_mx",
       "type": "text",
       "x": 76,
-      "y": 20274,
+      "y": 20386,
       "props": {
         "w": 630,
         "h": 19,
@@ -13634,10 +13748,10 @@
       }
     },
     {
-      "id": "s_ec4_mq",
+      "id": "s_ec4_my",
       "type": "text",
       "x": 76,
-      "y": 20299,
+      "y": 20411,
       "props": {
         "w": 630,
         "h": 19,
@@ -13649,10 +13763,10 @@
       }
     },
     {
-      "id": "s_ec4_mr",
+      "id": "s_ec4_mz",
       "type": "text",
       "x": 76,
-      "y": 20324,
+      "y": 20436,
       "props": {
         "w": 630,
         "h": 19,
@@ -13664,10 +13778,10 @@
       }
     },
     {
-      "id": "s_ec4_ms",
+      "id": "s_ec4_n0",
       "type": "text",
       "x": 76,
-      "y": 20349,
+      "y": 20461,
       "props": {
         "w": 630,
         "h": 19,
@@ -13679,10 +13793,10 @@
       }
     },
     {
-      "id": "s_ec4_mt",
+      "id": "s_ec4_n1",
       "type": "text",
       "x": 76,
-      "y": 20374,
+      "y": 20486,
       "props": {
         "w": 630,
         "h": 19,
@@ -13694,10 +13808,10 @@
       }
     },
     {
-      "id": "s_ec4_mu",
+      "id": "s_ec4_n2",
       "type": "text",
       "x": 76,
-      "y": 20405,
+      "y": 20517,
       "props": {
         "w": 630,
         "h": 21,
@@ -13710,10 +13824,10 @@
       }
     },
     {
-      "id": "s_ec4_mv",
+      "id": "s_ec4_n3",
       "type": "text",
       "x": 76,
-      "y": 20432,
+      "y": 20544,
       "props": {
         "w": 630,
         "h": 19,
@@ -13725,10 +13839,10 @@
       }
     },
     {
-      "id": "s_ec4_mw",
+      "id": "s_ec4_n4",
       "type": "text",
       "x": 76,
-      "y": 20457,
+      "y": 20569,
       "props": {
         "w": 630,
         "h": 19,
@@ -13740,10 +13854,10 @@
       }
     },
     {
-      "id": "s_ec4_mx",
+      "id": "s_ec4_n5",
       "type": "text",
       "x": 76,
-      "y": 20482,
+      "y": 20594,
       "props": {
         "w": 630,
         "h": 19,
@@ -13755,10 +13869,10 @@
       }
     },
     {
-      "id": "s_ec4_my",
+      "id": "s_ec4_n6",
       "type": "text",
       "x": 76,
-      "y": 20507,
+      "y": 20619,
       "props": {
         "w": 630,
         "h": 19,
@@ -13770,10 +13884,10 @@
       }
     },
     {
-      "id": "s_ec4_mz",
+      "id": "s_ec4_n7",
       "type": "text",
       "x": 76,
-      "y": 20532,
+      "y": 20644,
       "props": {
         "w": 630,
         "h": 19,
@@ -13785,10 +13899,10 @@
       }
     },
     {
-      "id": "s_ec4_n0",
+      "id": "s_ec4_n8",
       "type": "text",
       "x": 76,
-      "y": 20557,
+      "y": 20669,
       "props": {
         "w": 630,
         "h": 19,
@@ -13800,10 +13914,10 @@
       }
     },
     {
-      "id": "s_ec4_n1",
+      "id": "s_ec4_n9",
       "type": "text",
       "x": 76,
-      "y": 20626,
+      "y": 20738,
       "props": {
         "w": 304,
         "h": 18,
@@ -13813,13 +13927,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_n1"
+      "printGroupId": "s_ec4_pg_n9"
     },
     {
-      "id": "s_ec4_n2",
+      "id": "s_ec4_na",
       "type": "math",
       "x": 396,
-      "y": 20582,
+      "y": 20694,
       "props": {
         "w": 222,
         "h": 105,
@@ -13832,13 +13946,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_n1"
+      "printGroupId": "s_ec4_pg_n9"
     },
     {
-      "id": "s_ec4_n3",
+      "id": "s_ec4_nb",
       "type": "text",
       "x": 76,
-      "y": 20699,
+      "y": 20811,
       "props": {
         "w": 630,
         "h": 24,
@@ -13855,10 +13969,10 @@
       }
     },
     {
-      "id": "s_ec4_n4",
+      "id": "s_ec4_nc",
       "type": "text",
       "x": 76,
-      "y": 20729,
+      "y": 20841,
       "props": {
         "w": 630,
         "h": 19,
@@ -13870,10 +13984,10 @@
       }
     },
     {
-      "id": "s_ec4_n5",
+      "id": "s_ec4_nd",
       "type": "text",
       "x": 76,
-      "y": 20754,
+      "y": 20866,
       "props": {
         "w": 630,
         "h": 19,
@@ -13885,10 +13999,10 @@
       }
     },
     {
-      "id": "s_ec4_n6",
+      "id": "s_ec4_ne",
       "type": "text",
       "x": 76,
-      "y": 20779,
+      "y": 20891,
       "props": {
         "w": 630,
         "h": 19,
@@ -13900,10 +14014,10 @@
       }
     },
     {
-      "id": "s_ec4_n7",
+      "id": "s_ec4_nf",
       "type": "text",
       "x": 76,
-      "y": 20804,
+      "y": 20916,
       "props": {
         "w": 630,
         "h": 19,
@@ -13915,10 +14029,10 @@
       }
     },
     {
-      "id": "s_ec4_n8",
+      "id": "s_ec4_ng",
       "type": "text",
       "x": 76,
-      "y": 20829,
+      "y": 20941,
       "props": {
         "w": 630,
         "h": 19,
@@ -13930,10 +14044,10 @@
       }
     },
     {
-      "id": "s_ec4_n9",
+      "id": "s_ec4_nh",
       "type": "text",
       "x": 76,
-      "y": 20854,
+      "y": 21138,
       "props": {
         "w": 630,
         "h": 19,
@@ -13945,10 +14059,10 @@
       }
     },
     {
-      "id": "s_ec4_na",
+      "id": "s_ec4_ni",
       "type": "text",
       "x": 76,
-      "y": 20879,
+      "y": 21163,
       "props": {
         "w": 630,
         "h": 19,
@@ -13960,10 +14074,10 @@
       }
     },
     {
-      "id": "s_ec4_nb",
+      "id": "s_ec4_nj",
       "type": "text",
       "x": 76,
-      "y": 20904,
+      "y": 21188,
       "props": {
         "w": 630,
         "h": 19,
@@ -13975,10 +14089,10 @@
       }
     },
     {
-      "id": "s_ec4_nc",
+      "id": "s_ec4_nk",
       "type": "text",
       "x": 76,
-      "y": 20929,
+      "y": 21213,
       "props": {
         "w": 630,
         "h": 19,
@@ -13990,10 +14104,10 @@
       }
     },
     {
-      "id": "s_ec4_nd",
+      "id": "s_ec4_nl",
       "type": "text",
       "x": 76,
-      "y": 21138,
+      "y": 21238,
       "props": {
         "w": 630,
         "h": 19,
@@ -14005,10 +14119,10 @@
       }
     },
     {
-      "id": "s_ec4_ne",
+      "id": "s_ec4_nm",
       "type": "text",
       "x": 76,
-      "y": 21163,
+      "y": 21263,
       "props": {
         "w": 630,
         "h": 19,
@@ -14020,10 +14134,10 @@
       }
     },
     {
-      "id": "s_ec4_nf",
+      "id": "s_ec4_nn",
       "type": "text",
       "x": 76,
-      "y": 21188,
+      "y": 21288,
       "props": {
         "w": 630,
         "h": 19,
@@ -14035,10 +14149,10 @@
       }
     },
     {
-      "id": "s_ec4_ng",
+      "id": "s_ec4_no",
       "type": "text",
       "x": 76,
-      "y": 21213,
+      "y": 21313,
       "props": {
         "w": 630,
         "h": 19,
@@ -14050,10 +14164,10 @@
       }
     },
     {
-      "id": "s_ec4_nh",
+      "id": "s_ec4_np",
       "type": "text",
       "x": 76,
-      "y": 21238,
+      "y": 21338,
       "props": {
         "w": 630,
         "h": 19,

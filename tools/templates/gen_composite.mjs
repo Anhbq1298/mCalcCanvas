@@ -61,7 +61,7 @@ input('Formwork load (removable)', 'g_{form}', 0.5, 'kPa');
 input('LTB: C1, UDL, fork ends (SN003b)', 'C_1', 1.127);
 input('LTB: C2, load on top flange (SN003b)', 'C_2', 0.454);
 input('LTB: imperfection, curve b (EC3 Table 6.4)', '\\alpha_{LT}', 0.34);
-H(3, '1.5 Load tables: row 1 variable, row 2 unit, one load per row (add rows; blank rows skipped)');
+H(3, '1.5 Load tables: one row per load; pattern G = permanent, Q = imposed');
 const TBL = (x, cols, rows, widths) => ({ id: l.id(), type: 'table', x, y: l.ln(l.st.page, l.st.row) - 8, props: {
   w: widths.reduce((a, b) => a + b, 0), h: (rows.length + 2) * 32, rows: rows.length + 2, columns: cols.length, columnWidths: widths, headerRow: true, input: true,
   cells: [cols.map(([n]) => ({ value: n })), cols.map(([, u]) => ({ value: u })), ...rows.map(r => r.map(v => ({ value: v === '' ? '' : String(v) })))] } });
@@ -70,8 +70,8 @@ l.textAt(l.st.page, l.st.row, 'Area loads (pressure × s_b), from x_1 to x_2', {
 l.textAt(l.st.page, l.st.row, 'Point loads at a', { size: 13, x: 438, w: 276 });
 l.gap(0.5);
 l.need(3.5);
-l.out.push(TBL(76, [['Load pattern', ''], ['x_1.i', 'm'], ['x_2.i', 'm'], ['g_k.i', 'kPa'], ['q_k.i', 'kPa']], [['Finishes', 0, 8, 1.5, 0], ['Office imposed', 0, 8, 0, 3]], [128, 50, 50, 56, 56]));
-l.out.push(TBL(438, [['Load pattern', ''], ['a_j', 'm'], ['G_k.j', 'kN'], ['Q_k.j', 'kN']], [['Beam reaction G', 3, 30, 0], ['Beam reaction Q', 3, 0, 45]], [124, 48, 50, 54]));
+l.out.push(TBL(76, [['Load pattern c_Q.i', 'G/Q'], ['x_1.i', 'm'], ['x_2.i', 'm'], ['p_k.i', 'kPa']], [['G', 0, 8, 1.5], ['Q', 0, 8, 3]], [142, 64, 64, 70]));
+l.out.push(TBL(438, [['Load pattern c_Q.j', 'G/Q'], ['a_j', 'm'], ['F_k.j', 'kN']], [['G', 3, 30], ['Q', 3, 45]], [142, 64, 70]));
 l.gap(3.5);
 H(3, '1.6 Shear connection and slab reinforcement');
 input('Stud diameter', 'd_{sc}', 19, 'mm');
@@ -102,10 +102,12 @@ fig('F1', 'Composite-stage loading (rows of the load tables)', 'loads', 4);
 LINK('forces', 'Internal forces along the span from the load tables', () => {
  calc('Diagram step (200 intervals)', '\\Delta x', R`\frac{L}{200}`, 'mm', false);
  T('Table columns as vectors (row 0 first). Simply supported beam, x from support A.');
- for (const [n, t] of [['x_{u1}','x_{1.i}'],['x_{u2}','x_{2.i}'],['a_P','a_{j}'],['G_P','G_{k.j}'],['Q_P','Q_{k.j}']])
-  calc(`Table column ${t} as a vector`, n, R`\mathrm{col}\left(${t},0\right)`, '', false);
- calc('Line loads from the area loads, g_k × s_b', 'g_u', R`s_b\,\mathrm{col}\left(g_{k.i},0\right)`, 'kN/m', false);
- calc('Line loads from the area loads, q_k × s_b', 'q_u', R`s_b\,\mathrm{col}\left(q_{k.i},0\right)`, 'kN/m', false);
+ for (const [n, t] of [['x_{u1}','x_{1.i}'],['x_{u2}','x_{2.i}'],['c_u','c_{Q.i}'],['p_u','p_{k.i}'],['a_P','a_{j}'],['c_P','c_{Q.j}'],['F_P','F_{k.j}']])
+  calc(`Table column ${t} as a vector${t.startsWith('c_') ? ' (G → 0, Q → 1)' : ''}`, n, R`\mathrm{col}\left(${t},0\right)`, '', false);
+ calc('Permanent line loads, p_k × s_b on G rows', 'g_u', R`s_b\overrightarrow{p_u\left(1-c_u\right)}`, 'kN/m', false);
+ calc('Imposed line loads, p_k × s_b on Q rows', 'q_u', R`s_b\overrightarrow{p_u c_u}`, 'kN/m', false);
+ calc('Permanent point loads (G rows)', 'G_P', R`\overrightarrow{F_P\left(1-c_P\right)}`, 'kN', false);
+ calc('Imposed point loads (Q rows)', 'Q_P', R`\overrightarrow{F_P c_P}`, 'kN', false);
  calc('Loaded lengths', 'l_u', R`x_{u2}-x_{u1}`, 'm', false);
  calc('Reaction at A per unit distributed load', 'r_u', R`\frac{l_u\left(L-\frac{x_{u1}+x_{u2}}{2}\right)}{L}`, 'm', false);
  P('Left-part moment per unit row load', R`m_u(x)\coloneq${IF([R`x\le x_{u1}`, R`0\,\mathrm{m^2}`], [R`x\ge x_{u2}`, R`l_u\left(x-\frac{x_{u1}+x_{u2}}{2}\right)`], [null, R`\frac{\left(x-x_{u1}\right)^2}{2}`])}`, M(units('')));
