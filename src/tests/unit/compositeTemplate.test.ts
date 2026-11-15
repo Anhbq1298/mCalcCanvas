@@ -56,7 +56,7 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(tables.flatMap(t => inputTableColumns(t).flatMap(c => {
         const r = e.getResult(inputTableRegionId(t.id, c.column)); return r?.status === 'valid' ? [] : [`${c.latex}: ${r?.error?.message}`];
       }))).toEqual([]);
-      expect(tables.flatMap(t => inputTableColumns(t).map(c => c.name))).toEqual(['Load pattern c_Q.i', 'x_1.i', 'x_2.i', 'p_k.i', 'ULS factor \\gamma_F.i', 'Load pattern c_Q.j', 'a_j', 'F_k.j', 'ULS factor \\gamma_F.j']);
+      expect(tables.flatMap(t => inputTableColumns(t).map(c => c.name))).toEqual(['Case c_Q.i', 'x_1.i', 'x_2.i', 'p_k.i', 'ULS \\gamma_F.i', 'Case c_Q.j', 'a_j', 'F_k.j', 'ULS \\gamma_F.j']);
     });
     step('reference forces, connection and bending resistance', () => {
       expect(value('P_{Rd}','kN')).toBeCloseTo(81.6562762521,7);

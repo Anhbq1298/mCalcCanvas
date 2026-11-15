@@ -4,11 +4,14 @@ import type { TableShape } from '../model/types';
 import { INPUT_TABLE_HEADER_ROWS, headerParts, inputNameLatex, inputTableRegionId, isVariableHeader } from '../inputTable';
 import { useRegionResult } from '../../store/calculationStore';
 
-/** `G_{k.j}` → G<sub>k.j</sub>, italic base (drawing-style variable name). */
+const GREEK: Record<string, string> = { alpha: 'α', beta: 'β', gamma: 'γ', delta: 'δ', varepsilon: 'ε', epsilon: 'ε', eta: 'η', theta: 'θ', kappa: 'κ', lambda: 'λ', mu: 'μ', nu: 'ν', xi: 'ξ', rho: 'ρ', sigma: 'σ', tau: 'τ', varphi: 'φ', phi: 'φ', chi: 'χ', psi: 'ψ', omega: 'ω', Delta: 'Δ', Sigma: 'Σ', Phi: 'Φ' };
+const greek = (t: string) => t.replace(/\\([A-Za-z]+)/g, (_w, g: string) => GREEK[g] ?? g);
+
+/** `G_{k.j}` → G<sub>k.j</sub>, `\gamma_{F.i}` → γ<sub>F.i</sub>: italic base (drawing-style variable name). */
 function NameLabel({ name }: { name: string }) {
   const m = /^([^_]+)_\{?(.*?)\}?$/.exec(inputNameLatex(name));
-  if (!m) return <i>{name}</i>;
-  return <><i>{m[1].replace(/^\\/, '')}</i><sub>{m[2]}</sub></>;
+  if (!m) return <i>{greek(name)}</i>;
+  return <><i>{greek(m[1])}</i><sub>{greek(m[2])}</sub></>;
 }
 
 /** Header cell of an input-table column, red with the engine message when the column is invalid. */

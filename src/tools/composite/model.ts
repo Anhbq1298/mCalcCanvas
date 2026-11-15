@@ -177,7 +177,12 @@ export class CompositeModel {
       return row;
     });
     table.rows = rows.map((r) => [...r]);
-    const cells = [t.props.cells[0], t.props.cells[1], ...rows.map((r) => r.map((v) => ({ value: v })))];
+    // An input table needs at least one row to define its columns; with none, the engine (and the report)
+    // get a single zero load (point loads at mid-span) instead of keeping the previous rows.
+    const L = this.inputs.find((f) => f.name === 'L');
+    const zero = table.headers.map((h, j) => (j === 0 ? 'G' : j === fi ? String(gamma('\\gamma_G', 1.35)) : /^a_/.test(h.trim()) ? String((L ? this.values.get(L.id)?.value ?? L.value : 0) / 2) : '0'));
+    const engineRows = rows.length ? rows : [zero];
+    const cells = [t.props.cells[0], t.props.cells[1], ...engineRows.map((r) => r.map((v) => ({ value: v })))];
     const next: TableShape = { ...t, props: { ...t.props, rows: cells.length, cells } };
     this.tableShapes.set(id, next);
     this.registerTable(next);

@@ -76,10 +76,12 @@ l.textAt(l.st.page, l.st.row, 'Area loads (pressure × s_b), from x_1 to x_2', {
 l.textAt(l.st.page, l.st.row, 'Point loads at a', { size: 13, x: 438, w: 276 });
 l.gap(0.5);
 l.need(3.5);
-l.out.push(TBL(76, [['Load pattern c_Q.i', 'G/Q'], ['x_1.i', 'm'], ['x_2.i', 'm'], ['p_k.i', 'kPa'], ['ULS factor \\gamma_F.i', '']], [['G', 0, 8, 1.5, 1.35], ['Q', 0, 8, 3, 1.5]], [112, 50, 50, 58, 70]));
-l.out.push(TBL(438, [['Load pattern c_Q.j', 'G/Q'], ['a_j', 'm'], ['F_k.j', 'kN'], ['ULS factor \\gamma_F.j', '']], [['G', 3, 30, 1.35], ['Q', 3, 45, 1.5]], [106, 46, 58, 70]));
+l.out.push(TBL(76, [['Case c_Q.i', 'G/Q'], ['x_1.i', 'm'], ['x_2.i', 'm'], ['p_k.i', 'kPa'], ['ULS \\gamma_F.i', '']], [['G', 0, 8, 1.5, 1.35], ['Q', 0, 8, 3, 1.5]], [96, 46, 46, 52, 88]));
+l.out.push(TBL(438, [['Case c_Q.j', 'G/Q'], ['a_j', 'm'], ['F_k.j', 'kN'], ['ULS \\gamma_F.j', '']], [['G', 3, 30, 1.35], ['Q', 3, 45, 1.5]], [90, 42, 54, 88]));
 l.gap(3.5);
-T('Enter area loads p_k in kPa: the line load p_k s_b and its ULS value γ_F p_k s_b are calculated (annex A.1). Load pattern G/Q sets the SLS combination (ψ_2, deflection); γ_F is the ULS factor of each row (default γ_G = 1.35, γ_Q = 1.5). Self-weight g_0 (steel + wet slab) is added automatically with the fixed ULS factor γ_G.sw = 1.35.');
+T('Area loads p_k in kPa: the line load p_k s_b and its ULS value γ_F p_k s_b are calculated (annex A.1).');
+T('Case G/Q sets the SLS combination; γ_F is the ULS factor of the row (default 1.35 G, 1.5 Q).');
+T('Self-weight g_0 (steel + wet slab) is added automatically with the fixed ULS factor γ_G.sw = 1.35.');
 H(3, '1.6 Shear connection');
 input('Stud diameter', 'd_{sc}', 19, 'mm');
 input('Stud height after welding', 'h_{sc}', 100, 'mm');

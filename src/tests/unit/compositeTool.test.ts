@@ -51,6 +51,15 @@ describe('mCompositeBeamDesign headless model', () => {
     m.setTableRows(area.id, [['G', '0', '8', '1.5', ''], ['Q', '0', '8', '3']]); // blank or missing factor: γ_G / γ_Q
     m.setTableRows(pts0.id, [['G', '3', '30'], ['Q', '3', '45']]);
     expect(m.results().M2).toBeCloseTo(469.182, 2);
+    // deleting every point load really removes them (the engine gets one zero load, not the old rows)
+    m.setTableRows(pts0.id, []);
+    const noPoint = m.results();
+    m.setTableRows(pts0.id, [['G', '4', '0']]);
+    expect(noPoint.errors).toEqual([]);
+    expect(noPoint.M2).toBeCloseTo(m.results().M2, 6);
+    expect(noPoint.M2).toBeLessThan(469.182 - 100);
+    expect(m.tables[1].rows).toEqual([['G', '4', '0', '1.35']]);
+    m.setTableRows(pts0.id, [['G', '3', '30'], ['Q', '3', '45']]);
     // large point load near support A: composite action fails, bare steel governs
     const pts = m.tables[1];
     m.setTableRows(pts.id, [['G', '1.5', '100'], ['Q', '1.5', '150']]);
