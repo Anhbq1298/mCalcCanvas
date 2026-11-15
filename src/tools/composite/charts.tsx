@@ -409,3 +409,71 @@ export function SectionDrawing({ r }: { r: Record<string, number>; showPna?: boo
     </div>
   );
 }
+
+/**
+ * Longitudinal shear surface (EC4 §6.6.6.1, Figure 6.15) on an oblique CAD view of a slab segment on the
+ * beam, one surface per drawing so nothing overlaps: 'a' = the two vertical planes a-a through h_c at the
+ * flange edges (crossed by top and bottom bars), 'b' = the trough b-b around the studs over
+ * 2h_sc + d_head + b_0 (crossed by the bottom bars twice). Surfaces are shaded and run the whole span.
+ * The cross-section (front face) is to scale; the length is not. Bar levels are schematic.
+ */
+export function ShearSurface3D({ r, which }: { r: Record<string, number>; which: 'a' | 'b' }) {
+  const [box, W] = useWidth(330);
+  const { h_c, b_a, t_f, t_w, hsc, dhead, b0, dsc } = r;
+  if (![h_c, b_a, t_f, t_w, hsc, dhead].every(Number.isFinite)) return <div ref={box} />;
+  const zx = 0.62, zy = 0.36;
+  const depth = W * 0.34; // drawn length along the span
+  const segPx = W - 28 - depth * zx; // slab segment width on screen
+  const segMm = Math.max(2.4 * b_a, 3.2 * (dhead + (b0 || 0)), 380);
+  const k = Math.min(segPx / segMm, 110 / h_c);
+  const halfW = segPx / 2 / k;
+  const yTop = 22 + depth * zy, yBot = yTop + h_c * k, cx = 14 + segPx / 2;
+  const P = (X: number, Y: number, Z: number) => [cx + X * k + Z * zx, yBot - Y * k - Z * zy] as const;
+  const pts = (...q: (readonly number[])[]) => q.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+  const ink = C.ink, teal = '#0F766E', col = which === 'a' ? C.red : teal;
+  const yTopBar = h_c - 30, yBotBar = 30;
+  const aX = b_a / 2, bX = dhead / 2 + (b0 || 0) / 2;
+  const d = Math.max(3, (Number.isFinite(dsc) ? dsc : 19) * k), hd = dhead * k;
+  const H = yBot + t_f * k + 30;
+  // faces of the slab (top, right) as filled polygons drawn first, cut face last
+  const top = pts(P(-halfW, h_c, 0), P(halfW, h_c, 0), P(halfW, h_c, depth), P(-halfW, h_c, depth));
+  const side = pts(P(halfW, 0, 0), P(halfW, 0, depth), P(halfW, h_c, depth), P(halfW, h_c, 0));
+  const surfaces = which === 'a'
+    ? [-aX, aX].map((X) => pts(P(X, 0, 0), P(X, h_c, 0), P(X, h_c, depth), P(X, 0, depth)))
+    : [pts(P(-bX, 0, 0), P(-bX, hsc, 0), P(-bX, hsc, depth), P(-bX, 0, depth)), pts(P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(-bX, hsc, depth)), pts(P(bX, 0, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(bX, 0, depth))];
+  const crossings = which === 'a' ? [-aX, aX].flatMap((X) => [[X, yTopBar], [X, yBotBar]]) : [[-bX, yBotBar], [bX, yBotBar]];
+  const arrowA = P(-halfW * 0.7, h_c, depth * 0.15), arrowB = P(-halfW * 0.7, h_c, depth * 0.8);
+  const ang = (Math.atan2(arrowB[1] - arrowA[1], arrowB[0] - arrowA[0]) * 180) / Math.PI;
+  return (
+    <div ref={box}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={which === 'a' ? `Surface a-a: two vertical planes through the slab depth ${fmt(h_c, 0)} mm at the flange edges, along the span, crossed by top and bottom bars` : `Surface b-b: trough around the studs, length ${fmt(r.lb, 0)} mm, along the span, crossed by the bottom bars twice`}>
+        <polygon points={top} fill="#EEF1EF" stroke={ink} strokeWidth={CAD.geo} strokeLinejoin="round" />
+        <polygon points={side} fill="#DCE1DE" stroke={ink} strokeWidth={CAD.geo} strokeLinejoin="round" />
+        {/* the surface, shaded, seen through the concrete */}
+        {surfaces.map((q, i) => <polygon key={i} points={q} fill={col} fillOpacity={0.16} stroke={col} strokeWidth={1.2} strokeLinejoin="round" />)}
+        {/* cut face: concrete, steel flange, front stud, bars */}
+        <rect x={P(-halfW, 0, 0)[0]} y={yTop} width={segPx} height={yBot - yTop} fill="#F6F8F7" fillOpacity={0.55} stroke={ink} strokeWidth={CAD.geo} />
+        <rect x={P(-b_a / 2, 0, 0)[0]} y={yBot} width={b_a * k} height={t_f * k} fill="#C8CBC3" stroke={ink} strokeWidth={CAD.geo} />
+        <rect x={cx - Math.max(1.5, (t_w * k) / 2)} y={yBot + t_f * k} width={Math.max(3, t_w * k)} height={24} fill="#C8CBC3" stroke={ink} strokeWidth={CAD.geo} />
+        <g fill="#C8CBC3" stroke={ink} strokeWidth={1}>
+          <rect x={cx - d / 2} y={yBot - (hsc - 10) * k} width={d} height={(hsc - 10) * k} />
+          <rect x={cx - hd / 2} y={yBot - hsc * k} width={hd} height={10 * k} />
+        </g>
+        {[yTopBar, yBotBar].map((y) => <line key={y} x1={P(-halfW + 6, y, 0)[0]} x2={P(halfW - 6, y, 0)[0]} y1={P(0, y, 0)[1]} y2={P(0, y, 0)[1]} stroke={ink} strokeWidth={2.2} />)}
+        {/* the surface trace on the cut face, and where the bars cross it */}
+        {which === 'a'
+          ? [-aX, aX].map((X) => <line key={X} x1={P(X, 0, 0)[0]} x2={P(X, 0, 0)[0]} y1={yBot} y2={yTop} stroke={col} strokeWidth={2} />)
+          : <polyline points={pts(P(-bX, 0, 0), P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, 0, 0))} fill="none" stroke={col} strokeWidth={2} />}
+        {crossings.map(([X, Y]) => <circle key={`${X}${Y}`} cx={P(X, Y, 0)[0]} cy={P(X, Y, 0)[1]} r={4} fill={col} stroke="#fff" strokeWidth={1} />)}
+        {/* longitudinal shear on the outstand, along the span */}
+        <line x1={arrowA[0]} y1={arrowA[1]} x2={arrowB[0]} y2={arrowB[1]} stroke={C.blue} strokeWidth={1.6} />
+        <path d="M0,0 l-9,-3.5 l0,7 z" fill={C.blue} transform={`translate(${arrowB[0]} ${arrowB[1]}) rotate(${ang})`} />
+        <text x={arrowA[0] - 2} y={arrowA[1] - 6} fill={C.blue} fontSize={CAD.font} fontWeight="700"><SvgRich text="v_f" size={CAD.font} /></text>
+        {/* label on the far end of the surface */}
+        {which === 'a'
+          ? [-aX, aX].map((X) => <text key={X} x={P(X, h_c, depth)[0]} y={P(X, h_c, depth)[1] - 5} textAnchor="middle" fill={col} fontSize={CAD.font + 1} fontWeight="700">a</text>)
+          : <text x={P(0, hsc, depth)[0]} y={P(0, h_c, depth)[1] - 5} textAnchor="middle" fill={col} fontSize={CAD.font + 1} fontWeight="700">b</text>}
+      </svg>
+    </div>
+  );
+}

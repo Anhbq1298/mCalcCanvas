@@ -186,3 +186,7 @@ Annex: the general force model and branch boundaries.
 - Annex "UR against η": η_v from η_min to 1; UR_M(η) = M_2,Ed / (M_a,Rd + η (M_pl,Rd − M_a,Rd)) and
   UR_δ(η) = max(δ_x,f + (1 − η) δ_x,0) / δ_lim with δ_x,f the full-interaction curve and δ_x,0 the slip term
   C_s (κ_a − κ_c). At the provided η it reproduces δ_max (unit test). Plotted on the design page only.
+- Slab longitudinal shear (EC4 §6.6.6): inputs grouped in 1.7 (top bars d_s,t / s_f,t, bottom bars d_s,b / s_f,b,
+  stud head d_head, cot θ_f). Surface a-a: v_f / 2 on each of two planes h_c deep, A_t + A_b (6.6.6.2(3)).
+  Surface b-b: l_b = 2h_sc + d_head + b_0 (6.6.6.1(3)), the whole v_f, 2A_b. Both with EC2 (6.21) and the strut (6.22);
+  UR_slab = max of the four enters UR_c. Figure F4 and the design page draw each surface in its own oblique view.

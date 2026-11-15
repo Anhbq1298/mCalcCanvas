@@ -220,7 +220,13 @@ def reference():
     sig = mqp(xq)*(yl - hc)/(nl*il)
     vl = vf/(2*hc)
     as_req = vl*hc/((500/1.15)*2)
-    as_prov = pi*10**2/(4*150)
+    a_t = a_b = pi*10**2/(4*150)            # top and bottom bars, Ø10 at 150 (per mm)
+    as_prov = a_t + a_b                     # surface a-a: A_t + A_b (EC4 6.6.6.2(3))
+    l_b = 2*100 + 32 + 0                    # surface b-b: 2 h_sc + d_head + b_0 (EC4 6.6.6.1(3))
+    v_b = vf/l_b
+    asb_req = v_b*l_b/((500/1.15)*2)
+    asb_prov = 2*a_b                        # b-b crossed by the bottom bars twice
+    v_rd = .6*(1-30/250)*(30/1.5)/(2+.5)
     # propped construction (c_prop = 1, k_LT = 0.5): construction span and LTB length L/2;
     # g0 then acts on the long-term composite section and the slip factor is 0.5
     l1 = .5*L
@@ -327,7 +333,9 @@ def reference():
                 delta_total_mm=dg+dl+dt+dslip+dsh, deflection_curve=deflection_curve,
                 transverse_required_mm2_m=as_req*1000,
                 transverse_provided_mm2_m=as_prov*1000,
-                UR_transverse=as_req/as_prov,
+                UR_transverse=as_req/as_prov, UR_strut_aa=vl/v_rd,
+                surface_bb=dict(length_mm=l_b, v_Ed_MPa=v_b, required_mm2_m=asb_req*1000, provided_mm2_m=asb_prov*1000,
+                                UR_transverse=asb_req/asb_prov, UR_strut=v_b/v_rd),
                 propped=propped, non_composite_point_load_1_5m=non_composite, web_and_shear_checks=dict(default=web_checks(3148, [(3000., 30, 0), (3000., 0, 45)]), point_load_1_5m_UB406=web_checks(3148, [(1500., 100, 0), (1500., 0, 150)]), point_load_1_5m_UB533=web_checks(3129, [(1500., 100, 0), (1500., 0, 150)])), sci_p364_example_8=sci, sbe_part4_example_a4=sbe, hk_solid_slab_ub457=hk,
                 **{f'I_{k}_mm4':v[2] for k,v in trans.items()})
 

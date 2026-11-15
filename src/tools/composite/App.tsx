@@ -10,7 +10,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { sections } from '../../engineering/steel/sections';
 import { CHECKS, type InputField, type LoadTable, type Results } from './model';
 import type { ToWorker } from './worker';
-import { Legend, LineChart, PointDrawing, SectionDrawing, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
+import { Legend, LineChart, PointDrawing, SectionDrawing, ShearSurface3D, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
 import { headerParts } from '../../canvas/inputTable';
 import { C, fmt } from './format';
 import { Rich } from './rich';
@@ -343,6 +343,20 @@ export function App() {
               <div className="sec-head"><h2 id="h-pna-d">Plastic stress block at x<sub>M</sub></h2><span className="hint">PNA {['in the slab', 'in the top flange', 'in the fillet', 'in the web'][res.kM] ?? '–'}</span></div>
               <SectionDrawing r={res} showPna />
             </section>
+            <section className="sheet-sec" aria-labelledby="h-shear3d">
+              <div className="sec-head"><h2 id="h-shear3d">Longitudinal shear surfaces a-a and b-b</h2><span className="hint">EN 1994-1-1 §6.6.6.1, Figure 6.15; both surfaces run the whole length of the beam</span></div>
+              <div className="surfaces">
+                <figure>
+                  <ShearSurface3D r={res} which="a" />
+                  <figcaption><b className="c-a">a-a</b>: two vertical planes through h<sub>c</sub> = {fmt(res.h_c, 0)} mm at the flange edges; v<sub>f</sub>/2 on each; crossed by top and bottom bars, A<sub>t</sub> + A<sub>b</sub> = {fmt(res.asf, 0)} mm²/m; v<sub>Ed</sub> = {fmt(res.vLEd, 2)} MPa.</figcaption>
+                </figure>
+                <figure>
+                  <ShearSurface3D r={res} which="b" />
+                  <figcaption><b className="c-b">b-b</b>: around the studs, l<sub>b</sub> = 2h<sub>sc</sub> + d<sub>head</sub> + b<sub>0</sub> = {fmt(res.lb, 0)} mm; the whole v<sub>f</sub>; crossed by the bottom bars twice, 2A<sub>b</sub> = {fmt(res.asb, 0)} mm²/m; v<sub>Ed</sub> = {fmt(res.vbEd, 2)} MPa.</figcaption>
+                </figure>
+              </div>
+              <p className="hint">Front face = cross-section to scale; the length along the span is not. Bars counted must be anchored past each surface (EC2 §8.4). v<sub>f</sub> = P<sub>Rd</sub>/s<sub>min</sub> = {fmt(res.vf, 0)} kN/m pulls the slab outstand along the beam.</p>
+            </section>
             <section className="sheet-sec" aria-labelledby="h-defl1">
               <div className="sec-head"><h2 id="h-defl1">Deflection, construction stage (steel alone)</h2><span className="hint">w<sub>1,k</sub> = g<sub>0</sub> + (g<sub>form</sub> + q<sub>con</sub>)·s<sub>b</sub> = {fmt(res.w1k, 2)} kN/m over L<sub>1</sub> = {fmt(res.L1, 2)} m</span></div>
               <LineChart
@@ -477,21 +491,24 @@ export function App() {
           </section>
           <section aria-labelledby="h-long">
             <h2 id="h-long">Longitudinal shear in the slab</h2>
-            <p className="hint">EN 1994-1-1 §6.6.6 with EN 1992-1-1 §6.2.4: two planes a-a beside the stud row, half the connector flow to each slab outstand.</p>
-            <table className="props">
-              <caption className="sr-only">Longitudinal shear in the slab</caption>
+            <p className="hint">EN 1994-1-1 §6.6.6 with EN 1992-1-1 §6.2.4. v<sub>f</sub> = P<sub>Rd</sub>/s<sub>min</sub> = {fmt(res.vf, 1)} kN/m; f<sub>sd</sub> = {fmt(res.fsd, 1)} MPa; cot θ<sub>f</sub> = {fmt(res.ctheta, 2)}.</p>
+            <table className="props shear-table">
+              <caption className="sr-only">Longitudinal shear on surfaces a-a and b-b</caption>
+              <thead>
+                <tr><th scope="col"></th><th scope="col">a-a</th><th scope="col">b-b</th><th scope="col"></th></tr>
+              </thead>
               <tbody>
-                <tr><td>Connector flow v<sub>f</sub> = P<sub>Rd</sub>/s<sub>min</sub></td><td>{fmt(res.vf, 1)}</td><td>kN/m</td></tr>
-                <tr><td>Shear stress v<sub>L,Ed</sub> = v<sub>f</sub>/(2h<sub>c</sub>), (6.20)</td><td>{fmt(res.vLEd, 3)}</td><td>MPa</td></tr>
-                <tr><td>Strut angle cot θ<sub>f</sub></td><td>{fmt(res.ctheta, 2)}</td><td></td></tr>
-                <tr><td>Required a<sub>sf,req</sub>, (6.21)</td><td>{fmt(res.asfReq, 0)}</td><td>mm²/m</td></tr>
-                <tr><td>Provided a<sub>sf</sub> (Ø{fmt(res.ds, 0)} at {fmt(res.sf, 0)})</td><td>{fmt(res.asf, 0)}</td><td>mm²/m</td></tr>
-                <tr><td>Transverse reinforcement UR</td><td className={tone(res['UR.sf'])}>{fmt(res['UR.sf'], 3)}</td><td></td></tr>
-                <tr><td>Strut resistance v<sub>L,Rd</sub>, (6.22)</td><td>{fmt(res.vLRd, 2)}</td><td>MPa</td></tr>
-                <tr><td>Concrete strut UR</td><td className={tone(res['UR.L'])}>{fmt(res['UR.L'], 3)}</td><td></td></tr>
+                <tr><td>Surface length</td><td>2 × {fmt(res.h_c, 0)}</td><td>{fmt(res.lb, 0)}</td><td>mm</td></tr>
+                <tr><td>Flow on the surface</td><td>v<sub>f</sub>/2 each</td><td>v<sub>f</sub></td><td></td></tr>
+                <tr><td>Shear stress v<sub>Ed</sub></td><td>{fmt(res.vLEd, 3)}</td><td>{fmt(res.vbEd, 3)}</td><td>MPa</td></tr>
+                <tr><td>Required a<sub>sf</sub>, (6.21)</td><td>{fmt(res.asfReq, 0)}</td><td>{fmt(res.asbReq, 0)}</td><td>mm²/m</td></tr>
+                <tr><td>Bars counted</td><td>A<sub>t</sub> + A<sub>b</sub></td><td>2A<sub>b</sub></td><td></td></tr>
+                <tr><td>Provided a<sub>sf</sub></td><td>{fmt(res.asf, 0)}</td><td>{fmt(res.asb, 0)}</td><td>mm²/m</td></tr>
+                <tr><td>Transverse bars UR</td><td className={tone(res['UR.sf'])}>{fmt(res['UR.sf'], 3)}</td><td className={tone(res['UR.sf.b'])}>{fmt(res['UR.sf.b'], 3)}</td><td></td></tr>
+                <tr><td>Strut v<sub>Ed</sub>/v<sub>L,Rd</sub> ({fmt(res.vLRd, 2)} MPa)</td><td className={tone(res['UR.L'])}>{fmt(res['UR.L'], 3)}</td><td className={tone(res['UR.L.b'])}>{fmt(res['UR.L.b'], 3)}</td><td></td></tr>
               </tbody>
             </table>
-            <p className="hint">Not checked: surface b-b around the stud, splitting, anchorage.</p>
+            <p className="hint">Bars: top A<sub>t</sub> Ø{fmt(res.dst, 0)} at {fmt(res.sft, 0)} = {fmt(res.at, 0)} mm²/m, bottom A<sub>b</sub> Ø{fmt(res.dsb, 0)} at {fmt(res.sfb, 0)} = {fmt(res.ab, 0)} mm²/m, anchored past each surface (EC2 §8.4). Not checked: c-c/d-d, splitting at edge beams (§6.6.5.3), minimum reinforcement.</p>
           </section>
 
         </div>

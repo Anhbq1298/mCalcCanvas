@@ -56,8 +56,17 @@
     "UR": 0.9711591633531284
   },
   "transverse_required_mm2_m": 375.6188707596872,
-  "transverse_provided_mm2_m": 523.598775598299,
-  "UR_transverse": 0.7173792,
+  "transverse_provided_mm2_m": 1047.197551196598,
+  "UR_transverse": 0.3586896,
+  "UR_strut_aa": 0.5155067945208707,
+  "surface_bb": {
+    "length_mm": 232,
+    "v_Ed_MPa": 2.815733663865721,
+    "required_mm2_m": 751.2377415193744,
+    "provided_mm2_m": 1047.197551196598,
+    "UR_transverse": 0.7173792,
+    "UR_strut": 0.666603613604574
+  },
   "propped": {
     "M1_Ed_kNm": 42.7652768313,
     "UR_LTB": 0.21592928817026397,

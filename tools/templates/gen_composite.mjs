@@ -80,21 +80,25 @@ l.out.push(TBL(76, [['Load pattern c_Q.i', 'G/Q'], ['x_1.i', 'm'], ['x_2.i', 'm'
 l.out.push(TBL(438, [['Load pattern c_Q.j', 'G/Q'], ['a_j', 'm'], ['F_k.j', 'kN'], ['ULS factor \\gamma_F.j', '']], [['G', 3, 30, 1.35], ['Q', 3, 45, 1.5]], [106, 46, 58, 70]));
 l.gap(3.5);
 T('Enter area loads p_k in kPa: the line load p_k s_b and its ULS value γ_F p_k s_b are calculated (annex A.1). Load pattern G/Q sets the SLS combination (ψ_2, deflection); γ_F is the ULS factor of each row (default γ_G = 1.35, γ_Q = 1.5). Self-weight g_0 (steel + wet slab) is added automatically with the fixed ULS factor γ_G.sw = 1.35.');
-H(3, '1.6 Shear connection and slab reinforcement');
+H(3, '1.6 Shear connection');
 input('Stud diameter', 'd_{sc}', 19, 'mm');
 input('Stud height after welding', 'h_{sc}', 100, 'mm');
 input('Stud ultimate strength', 'f_u', 450, 'MPa');
 input('Stud spacing, support A to max moment', 's_{sc.A}', 125, 'mm');
 input('Stud spacing, max moment to support B', 's_{sc.B}', 200, 'mm');
-input('Transverse bar diameter, one layer', 'd_s', 10, 'mm');
-input('Transverse bar spacing', 's_f', 150, 'mm');
+H(3, '1.7 Slab transverse reinforcement (longitudinal shear, EC4 §6.6.6)');
+input('Top transverse bar diameter (A_t)', 'd_{s.t}', 10, 'mm');
+input('Top transverse bar spacing', 's_{f.t}', 150, 'mm');
+input('Bottom transverse bar diameter (A_b)', 'd_{s.b}', 10, 'mm');
+input('Bottom transverse bar spacing', 's_{f.b}', 150, 'mm');
+input('Stud head diameter', 'd_{head}', 32, 'mm');
 input('Strut angle cot θ_f, 1 to 2 (EC2)', 'c_{theta}', 2);
-H(3, '1.7 Point loads and supports on the web (EN 1993-1-5 §6)');
+H(3, '1.8 Point loads and supports on the web (EN 1993-1-5 §6)');
 input('Point loads on top flange (1) or framed in (0)', 'c_{F.P}', 1);
 input('Stiff bearing length under a point load', 's_{s.P}', 100, 'mm');
 input('Beam bears on supports (1) or end connection (0)', 'c_{F.S}', 1);
 input('Stiff bearing length at a support', 's_{s.S}', 100, 'mm');
-H(3, '1.8 Serviceability');
+H(3, '1.9 Serviceability');
 input('Creep coefficient', '\\varphi', 2);
 input('Free shrinkage strain', '\\varepsilon_{cs}', 0.0003);
 input('Deflection limit L / r_lim', 'r_{lim}', 250);
@@ -399,17 +403,28 @@ LINK('etatrend', 'Utilisation against the degree of shear connection η (trend f
  calc('Deflection, δ_max(η) / δ_lim', '\\mathrm{UR}_{d.\\eta}', R`\frac{\mathrm{map}\left(D_e,\eta_v\right)}{\delta_{lim}}`, '', 'fo');
  calc('Check: at the provided η this equals δ_max', '\\delta_{e}', R`D_e\left(\eta\right)`, 'mm', false);
 });
-H(2, '5. EN 1992-1-1 — SLAB LONGITUDINAL SHEAR (EC4 §6.6.6, EC2 §6.2.4)');
-T('Two vertical planes a-a beside the stud row; half the connector flow to each slab outstand.');
+H(2, '5. SLAB LONGITUDINAL SHEAR (EC4 §6.6.6, EC2 §6.2.4)');
+fig('F4', 'Shear surfaces a-a and b-b along the beam (EC4 Figure 6.15)', 'shear3d', 6.5);
+T('Surface lengths and bars counted per EC4 §6.6.6.1(3) and §6.6.6.2(3) (b_0 = 0 for a single stud row); bars anchored past each surface to EN 1992-1-1 §8.4.');
 calc('Reinforcement design strength', 'f_{sd}', R`\frac{f_{sk}}{\gamma_S}`, 'MPa', false);
 calc('Connector flow at the closest spacing','v_f',R`\frac{P_{Rd}}{\min\left(s_{sc.A},s_{sc.B}\right)}`,'kN/m', false);
+calc('Top bars per unit length','a_t',R`\frac{\pi d_{s.t}^2}{4s_{f.t}}`,'mm^2/m', false);
+calc('Bottom bars per unit length','a_b',R`\frac{\pi d_{s.b}^2}{4s_{f.b}}`,'mm^2/m', false);
+calc('Strut resistance, (6.22)','v_{L.Rd}',R`\frac{0.6\left(1-\frac{f_{ck}}{250\,\mathrm{MPa}}\right)f_{cd}}{c_{theta}+1/c_{theta}}`,'MPa', false);
+H(3, '5.1 Surface a-a');
 calc('Shear stress on a-a, (6.20)','v_{L.Ed}',R`\frac{v_f}{2h_c}`,'MPa', false);
 calc('Required steel, (6.21)','a_{sf.req}',R`\frac{v_{L.Ed} h_c}{f_{sd}c_{theta}}`,'mm^2/m', false);
-calc('Provided steel per plane','a_{sf}',R`\frac{\pi d_s^2}{4s_f}`,'mm^2/m', false);
-ur('Transverse reinforcement','sf','a_{sf.req}','a_{sf}');
-calc('Strut resistance, (6.22)','v_{L.Rd}',R`\frac{0.6\left(1-\frac{f_{ck}}{250\,\mathrm{MPa}}\right)f_{cd}}{c_{theta}+1/c_{theta}}`,'MPa', false);
-ur('Concrete strut','L','v_{L.Ed}','v_{L.Rd}');
-T('Not checked (gates): surface b-b around the stud, splitting, anchorage, transverse slab bending.');
+calc('Provided, A_t + A_b','a_{sf}',R`a_t+a_b`,'mm^2/m', false);
+ur('Transverse reinforcement, a-a','sf','a_{sf.req}','a_{sf}');
+ur('Concrete strut, a-a','L','v_{L.Ed}','v_{L.Rd}');
+H(3, '5.2 Surface b-b around the studs');
+calc('Length of surface b-b','l_b',R`2h_{sc}+d_{head}+b_0`,'mm', false);
+calc('Shear stress on b-b','v_{b.Ed}',R`\frac{v_f}{l_b}`,'MPa', false);
+calc('Required steel, (6.21) with h_f = l_b','a_{sf.b.req}',R`\frac{v_{b.Ed} l_b}{f_{sd}c_{theta}}`,'mm^2/m', false);
+calc('Provided, 2A_b','a_{sf.b}',R`2a_b`,'mm^2/m', false);
+ur('Transverse reinforcement, b-b','sf.b','a_{sf.b.req}','a_{sf.b}');
+ur('Concrete strut, b-b','L.b','v_{b.Ed}','v_{L.Rd}');
+T('Not checked: surfaces c-c / d-d (haunches, sheeting), splitting at edge beams (§6.6.5.3), anchorage lengths, minimum reinforcement (EC2 §9.2.2(5)), transverse slab bending.');
 
 H(2, '6. NON-COMPOSITE ALTERNATIVE (EN 1993-1-1, EN 1993-1-5)');
 l.out[l.out.length - 1].props.pageBreak = true;
@@ -458,7 +473,8 @@ const WHEN_OK = (cond, ...lines) => { for (const t of lines) { T(t); l.out[l.out
 WHEN_OK(R`c_{comp}\ge1`, 'Design basis: COMPOSITE (chapter 4). Chapter 6 is for information only.');
 WHEN(R`c_{comp}<1`, 'NOT DESIGNED AS COMPOSITE: designed as a bare steel beam (chapter 6); see the note below.');
 P('Web checks, both bases (4.7)', R`\mathrm{UR}_{F}\coloneq\max\left(\mathrm{UR}_{F.P},\mathrm{UR}_{F.S}\right)`, M({ precision: 3 }));
-P('Governing utilisation, composite (chapter 4)', R`\mathrm{UR}_{c}\coloneq\max\left(\mathrm{UR}_{M.2},\mathrm{UR}_{M.x},\mathrm{UR}_{MV},\mathrm{UR}_{V.2},\mathrm{UR}_{F},\mathrm{UR}_{FM},\mathrm{UR}_{d.x}\right)`, M({ precision: 3 }));
+P('Slab longitudinal shear, a-a and b-b (chapter 5)', R`\mathrm{UR}_{slab}\coloneq\max\left(\mathrm{UR}_{sf},\mathrm{UR}_{L},\mathrm{UR}_{sf.b},\mathrm{UR}_{L.b}\right)`, M({ precision: 3 }));
+P('Governing utilisation, composite (chapters 4 and 5)', R`\mathrm{UR}_{c}\coloneq\max\left(\mathrm{UR}_{M.2},\mathrm{UR}_{M.x},\mathrm{UR}_{MV},\mathrm{UR}_{V.2},\mathrm{UR}_{F},\mathrm{UR}_{FM},\mathrm{UR}_{d.x},\mathrm{UR}_{slab}\right)`, M({ precision: 3 }));
 P('Governing utilisation, non-composite (chapter 6)', R`\mathrm{UR}_{nc}\coloneq\max\left(\mathrm{UR}_{M.nc},\mathrm{UR}_{MV.nc},\mathrm{UR}_{V.nc},\mathrm{UR}_{LT.nc},\mathrm{UR}_{F},\mathrm{UR}_{FM.nc},\mathrm{UR}_{d.nc}\right)`, M({ precision: 3 }));
 P('Governing utilisation of the design basis used', R`\mathrm{UR}_{des}\coloneq${IF([R`c_{comp}\ge1`, R`\mathrm{UR}_{c}`], [null, R`\mathrm{UR}_{nc}`])}`, M({ precision: 3 }));
 check('Acceptance, permanent stage', '\\mathrm{UR}_{des}', '1');
@@ -467,8 +483,8 @@ H(3, 'EN 1993-1-1 — construction stage');
 for (const n of ['M.1','V.1','LT','d.1']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
 H(3, 'EN 1994-1-1 — composite beam');
 for (const n of ['M.2','M.x','MV','V.2','F.P','F.S','FM','d.2','d.x']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
-H(3, 'EN 1992-1-1 — slab longitudinal shear');
-for (const n of ['sf','L']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
+H(3, 'EN 1994-1-1 §6.6.6 / EN 1992-1-1 — slab longitudinal shear (a-a, b-b)');
+for (const n of ['sf','L','sf.b','L.b']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
 
 WHEN(R`c_{comp}<1`,
   'NOT DESIGNED AS COMPOSITE: the studs that fit cannot give composite action (η < η_min,',
@@ -477,7 +493,7 @@ WHEN(R`c_{comp}<1`,
   'alone; LTB length = stud spacing (top flange restrained, s ≤ s_max, EN 1994-1-1 §6.4.1(1), §6.6.5.5);',
   'UR uses the steel-alone deflection, not the composite one. If it fails, enlarge the section (Browse).');
 T('REVIEW DRAFT. If UR_LT > 1, the bare beam needs temporary restraint or propping during construction.');
-T('Gates: Singapore NAs; shrinkage history and cracking; surface b-b, splitting and anchorage.');
+T('Gates: Singapore NAs; shrinkage history and cracking; surfaces c-c/d-d, splitting and anchorage lengths.');
 LINK('sources','References and SCI cross-check', () => {
  T('SCI P364 (2009/10) Example 8, 533×165×75 S275, L = 12 m, C25/30 — same equations, checked:');
  T('  P_c,Rd 73.7 kN (6.19 governs), η_min 0.50, x_c 61.5 mm, M_pl,Rd 952.4 kNm, M_Rd 715.7 kNm (6.3).');

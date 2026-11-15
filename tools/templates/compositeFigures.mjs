@@ -139,6 +139,49 @@ export function compositeFigures(l) {
         text(X0, yb + 18, 'T (−)  |  C (+)', { a: 'c', size: 11, c: grey }); text(560, yb + 18, 'N_c + C_a = T_a', { a: 'c', size: 11, c: grey });
         text(0, yb + 42, 'Symbolic. Blue: concrete depth x_c; red: steel PNA y_a, a separate axis (flange or web branch).', { size: 11, c: grey, w: W });
         text(0, yb + 60, 'The branch and all values are calculated in section 9.2; the design M_Rd uses EC4 (6.3).', { size: 11, c: grey, w: W });
+      } else if (mode === 'shear3d') {
+        // Two oblique views of a slab segment on the beam, one shear surface each (EC4 Figure 6.15):
+        // a-a = vertical planes through h_c at the flange edges; b-b = the trough around the studs. No hidden lines.
+        const teal = '#0f766e', hc = 64, B = 220, Lz = 150, zx = 0.55, zy = 0.32;
+        const panel = (ox, which) => {
+          const col = which === 'a' ? red : teal;
+          const P = (X, Y, Z) => [ox + 10 + B / 2 + X + zx * Z, 150 - Y - zy * Z];
+          const L3 = (p, q, o = {}) => line(p[0], p[1], q[0], q[1], o);
+          const h = B / 2;
+          // slab: cut face, top face, right face
+          rect(P(-h, hc, 0)[0], P(-h, hc, 0)[1], B, hc);
+          L3(P(-h, hc, 0), P(-h, hc, Lz)); L3(P(h, hc, 0), P(h, hc, Lz)); L3(P(-h, hc, Lz), P(h, hc, Lz));
+          L3(P(h, 0, 0), P(h, 0, Lz)); L3(P(h, 0, Lz), P(h, hc, Lz));
+          // steel flange and web stub, front stud
+          rect(P(-34, 0, 0)[0], 150, 68, 6); rect(P(-2, 0, 0)[0], 156, 4, 22);
+          rect(P(-3, 0, 0)[0], 150 - 38, 6, 38, { w: 0.9 }); rect(P(-8, 0, 0)[0], 150 - 43, 16, 5, { w: 0.9 });
+          // transverse bars on the cut face
+          L3(P(-h + 6, hc - 14, 0), P(h - 6, hc - 14, 0), { w: 2 }); L3(P(-h + 6, 14, 0), P(h - 6, 14, 0), { w: 2 });
+          // the surface: trace on the cut face (bold), far end, and its long edges
+          if (which === 'a') {
+            for (const X of [-34, 34]) {
+              L3(P(X, 0, 0), P(X, hc, 0), { c: col, w: 2 }); L3(P(X, 0, Lz), P(X, hc, Lz), { c: col, w: 1.2 });
+              L3(P(X, hc, 0), P(X, hc, Lz), { c: col, w: 1.2 }); L3(P(X, 0, 0), P(X, 0, Lz), { c: col, w: 1.2 });
+              for (const Y of [hc - 14, 14]) rect(P(X, Y, 0)[0] - 3, P(X, Y, 0)[1] - 3, 6, 6, { c: col, w: 2 });
+              text(P(X, hc, Lz)[0], P(X, hc, Lz)[1] - 9, 'a', { a: 'c', size: 12, c: col, bold: true });
+            }
+          } else {
+            const U = [[-10, 0], [-10, 46], [10, 46], [10, 0]];
+            for (let i = 0; i < 3; i++) { L3(P(...U[i], 0), P(...U[i + 1], 0), { c: col, w: 2 }); L3(P(...U[i], Lz), P(...U[i + 1], Lz), { c: col, w: 1.2 }); }
+            for (const [X, Y] of U) L3(P(X, Y, 0), P(X, Y, Lz), { c: col, w: 1.2 });
+            for (const X of [-10, 10]) rect(P(X, 14, 0)[0] - 3, P(X, 14, 0)[1] - 3, 6, 6, { c: col, w: 2 });
+            text(P(0, hc, Lz)[0], P(0, hc, Lz)[1] - 9, 'b', { a: 'c', size: 12, c: col, bold: true });
+          }
+          // longitudinal shear on the slab outstand, along the span
+          L3(P(-h + 22, hc, 20), P(-h + 22, hc, 120), { c: blue, w: 1.6, arrow: true });
+          text(P(-h + 22, hc, 20)[0] - 4, P(-h + 22, hc, 20)[1] - 10, 'v_f', { size: 11, c: blue, bold: true });
+        };
+        panel(0, 'a'); panel(322, 'b');
+        text(0, 196, 'a-a: vertical planes through h_c beside the studs;', { size: 11, c: red, w: 310 });
+        text(0, 212, 'v_f / 2 on each; crossed by top + bottom bars, A_t + A_b', { size: 11, w: 310 });
+        text(322, 196, 'b-b: around the studs, length 2h_sc + d_head + b_0;', { size: 11, c: teal, w: 310 });
+        text(322, 212, 'the whole v_f; crossed by the bottom bars twice, 2A_b', { size: 11, w: 310 });
+        text(0, 236, 'Both surfaces run the whole length of the beam; the front face is the cross-section (schematic).', { size: 11, c: grey, w: W });
       }
       l.gap(rows);
     });

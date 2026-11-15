@@ -115,7 +115,13 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('k_M')).toBe(1);
       expect(value('k_P')).toBe(1);
       expect(value('v_f','kN/m')).toBeCloseTo(653.250210016847,6);
-      expect(value('\\mathrm{UR}_{sf}')).toBeCloseTo(0.7173792,7);
+      // slab longitudinal shear (reference.json): a-a with A_t + A_b, b-b around the studs with 2A_b
+      expect(value('\\mathrm{UR}_{sf}')).toBeCloseTo(0.3586896,7);
+      expect(value('\\mathrm{UR}_{L}')).toBeCloseTo(0.5155067945208707,7);
+      expect(value('l_b','mm')).toBeCloseTo(232,9);
+      expect(value('v_{b.Ed}','MPa')).toBeCloseTo(2.815733663865721,7);
+      expect(value('\\mathrm{UR}_{sf.b}')).toBeCloseTo(0.7173792,7);
+      expect(value('\\mathrm{UR}_{L.b}')).toBeCloseTo(0.666603613604574,7);
       // virtual-work sum on the 200-step grid vs closed-form midspan deflections
       expect(value('\\delta_{LT}','mm')).toBeCloseTo(6.0781879315026375,3);
       expect(value('\\delta_{tr}','mm')).toBeCloseTo(3.7643549939359073,3);
@@ -333,9 +339,9 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('h_a','mm')).toBe(406.4);
     });
 
-    step('three static symbolic figures and five graphs (V, M, construction δ_1(x), M_Rd(x), δ(x)); explicit review status', () => {
+    step('four static symbolic figures and five graphs (V, M, construction δ_1(x), M_Rd(x), δ(x)); explicit review status', () => {
       const texts=doc.shapes.filter(s => s.type==='text');
-      expect(texts.filter(s=>/^F\d —/.test(s.props.html)).map(s=>s.props.html.slice(0,2))).toEqual(['F1','F2','F3']);
+      expect(texts.filter(s=>/^F\d —/.test(s.props.html)).map(s=>s.props.html.slice(0,2))).toEqual(['F1','F2','F3','F4']);
       expect(texts.some(s=>s.props.html.includes('<i>h</i><sub>c</sub>'))).toBe(true);
       expect(doc.shapes.filter(s=>s.type==='graph')).toHaveLength(5);
       expect(doc.shapes.some(s=>s.type==='image')).toBe(false);

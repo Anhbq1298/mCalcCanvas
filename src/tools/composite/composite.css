@@ -123,6 +123,11 @@ td { padding: 2px 4px; border-bottom: 1px solid color-mix(in srgb, var(--rule) 5
 .results > section > h2 { margin-top: 0; }
 .results .hint { margin: 0.25rem 0 0.5rem; }
 .results .props { columns: 1; }
+.surfaces { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem 1.25rem; }
+@media (max-width: 720px) { .surfaces { grid-template-columns: 1fr; } }
+.surfaces figure { margin: 0; min-width: 0; }
+.surfaces figcaption { font-size: 0.78125rem; color: var(--ink-2); line-height: 1.35; margin-top: 2px; }
+.surfaces .c-a { color: var(--fail); } .surfaces .c-b { color: #0F766E; }
 .stage-table { margin: 0.25rem 1rem 1rem; width: calc(100% - 2rem); font-size: 0.8125rem; }
 
 /* ── Verdict ── */
@@ -155,6 +160,10 @@ td.pass, b.pass { color: var(--pass); } td.warn, b.warn { color: var(--warn); } 
 .legend > span { display: inline-flex; align-items: center; gap: 6px; }
 .props { font-size: 0.8125rem; }
 .props td:nth-child(2) { font-weight: 500; }
+.shear-table th { text-align: right; }
+.shear-table td:nth-child(3) { font-weight: 500; color: var(--ink); font-size: 0.8125rem; width: auto; padding-left: 4px; }
+.shear-table td:nth-child(4) { width: 3.5rem; color: var(--ink-2); font-size: 0.75rem; }
+.shear-table td.pass { color: var(--pass); } .shear-table td.warn { color: var(--warn); } .shear-table td.fail { color: var(--fail); }
 .props td:nth-child(3) { width: 3.5rem; color: var(--ink-2); font-size: 0.75rem; }
 .note { color: var(--ink-2); font-size: 0.75rem; padding: 0.625rem 1.25rem 1.125rem; border-top: 1px solid var(--rule); margin: 0; }
 
