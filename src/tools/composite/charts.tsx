@@ -1,5 +1,5 @@
 /** Small SVG charts and drawings for mCompositeBeamDesign (no dependencies). */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 
 /** Width of an element in CSS px, so SVG text is drawn at its real size. */
 function useWidth(fallback: number) {
@@ -16,6 +16,7 @@ function useWidth(fallback: number) {
 }
 
 import { C, fmt } from './format';
+import { Rich, SvgRich } from './rich';
 
 export interface Series { x: number[]; y: number[]; color: string; label: string; width?: number; dash?: boolean; fill?: boolean }
 
@@ -113,11 +114,11 @@ export function LineChart({ series, height = 170, invertY = false, xUnit = 'm', 
           <line x1={tipX} x2={tipX} y1={m.t} y2={H - m.b} stroke="#64748b" strokeDasharray="3 3" />
           {tip.map(({ s, y }, i) => Number.isFinite(y) && <circle key={i} cx={tipX} cy={Y(y)} r="3.5" fill="#fff" stroke={s.color} strokeWidth="2" />)}
           <rect x={tipLeft} y={m.t} width={tipW} height={tipH} rx="4" fill={C.ink} fillOpacity="0.92" />
-          <text x={tipLeft + 8} y={m.t + 13} fontSize="10.5" fill="#C3CBC8" className="num">{`x = ${fmt(hx, 2)} ${xUnit}`}</text>
+          <text x={tipLeft + 8} y={m.t + 13} fontSize="10.5" fill="#C3CBC8" className="num"><SvgRich text={`x = ${fmt(hx, 2)} ${xUnit}`} size={10.5} /></text>
           {tip.map(({ s, y }, i) => (
             <text key={i} x={tipLeft + 8} y={m.t + 27 + 14 * i} fontSize="10.5" fill="#fff" className="num">
               <tspan fill={s.color === C.blue ? '#8FA2FF' : s.color === C.red ? '#FF7B6E' : s.color === C.green ? '#5FD08F' : s.color}>■ </tspan>
-              {`${s.label} ${fmt(y, digits)} ${yUnit}`}
+              <SvgRich text={`${s.label} ${fmt(y, digits)} ${yUnit}`} size={10.5} />
             </text>
           ))}
         </g>
@@ -133,7 +134,7 @@ export function Legend({ items }: { items: { color: string; label: string; dash?
       {items.map((it) => (
         <span key={it.label}>
           <svg width="18" height="6"><line x1="0" x2="18" y1="3" y2="3" stroke={it.color} strokeWidth="2.5" strokeDasharray={it.dash ? '4 3' : undefined} /></svg>
-          {it.label}
+          <Rich text={it.label} />
         </span>
       ))}
     </div>
@@ -243,31 +244,33 @@ export function UdlDrawing({ L, area, sb }: { L: number; area: AreaLoad[]; sb: n
 /** Point loads: arrows scaled to F, labelled, with a chained dimension to every load from A. */
 export function PointDrawing({ L, points }: { L: number; points: PointLoad[] }) {
   const { box, W, X0, X1, X } = useCad(L);
-  const beamY = 104, H = beamY + 72;
-  const maxF = Math.max(1e-9, ...points.map((p) => Math.abs(p.F)));
   const groups = new Map<number, PointLoad[]>();
   points.forEach((p) => groups.set(p.a, [...(groups.get(p.a) ?? []), p]));
+  const maxT = Math.max(1e-9, ...[...groups.values()].map((ps) => ps.reduce((t, p) => t + Math.abs(p.F), 0)));
+  const stack = Math.max(1, ...[...groups.values()].map((ps) => ps.length));
+  const beamY = 92 + 14 * stack, H = beamY + 72;
   return (
     <div ref={box}>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={`Point loads: ${points.map((p) => `${p.q ? 'Q' : 'G'} ${fmt(p.F, 1)} kN at ${fmt(p.a, 2)} m`).join('; ') || 'none'}`}>
         {points.length === 0 && <text x={W / 2} y={beamY - 30} textAnchor="middle" fill={C.muted} fontSize={CAD.font}>No point loads</text>}
-        {[...groups.entries()].map(([a, ps], gi) =>
-          ps.map((p, j) => {
-            const len = 30 + 52 * (Math.abs(p.F) / maxF);
-            const x = X(a) + (j - (ps.length - 1) / 2) * 12;
-            const col = layer(p.q);
-            const right = j >= (ps.length - 1) / 2;
-            return (
-              <g key={`${gi}-${j}`} stroke={col} fill="none">
-                <line x1={x} x2={x} y1={beamY - 2 - len} y2={beamY - 9} strokeWidth={1.6} />
-                <path d={`M${x - 4},${beamY - 11} L${x},${beamY - 2} L${x + 4},${beamY - 11} z`} fill={col} stroke="none" />
-                <text x={x + (ps.length > 1 ? (right ? 5 : -5) : 0)} y={beamY - 6 - len} textAnchor={ps.length > 1 ? (right ? 'start' : 'end') : 'middle'} fill={col} stroke="none" fontSize={CAD.font} fontWeight="500">
+        {[...groups.entries()].map(([a, ps], gi) => {
+          // Loads at the same position share one arrow on the exact station; labels stack, Q above G.
+          const x = X(a), total = ps.reduce((t, p) => t + Math.abs(p.F), 0);
+          const len = 30 + 52 * Math.min(1, total / maxT);
+          const col = ps.length === 1 ? layer(ps[0].q) : C.ink;
+          const sorted = [...ps].sort((p, q) => Number(p.q) - Number(q.q));
+          return (
+            <g key={gi}>
+              <line x1={x} x2={x} y1={beamY - 2 - len} y2={beamY - 9} stroke={col} strokeWidth={1.6} />
+              <path d={`M${x - 4},${beamY - 11} L${x},${beamY - 2} L${x + 4},${beamY - 11} z`} fill={col} />
+              {sorted.map((p, j) => (
+                <text key={j} x={x} y={beamY - 7 - len - 14 * j} textAnchor="middle" fill={layer(p.q)} fontSize={CAD.font} fontWeight="500">
                   {`${p.q ? 'Q' : 'G'} `}<tspan fontWeight="700" className="num">{`${fmt(p.F, 1)} kN`}</tspan>
                 </text>
-              </g>
-            );
-          }),
-        )}
+              ))}
+            </g>
+          );
+        })}
         <Beam X0={X0} X1={X1} y={beamY} />
         <DimChain stations={[0, L, ...points.map((p) => p.a)]} X={X} y={beamY + 44} yTop={beamY + 26} />
         <DimChain stations={[0, L]} X={X} y={beamY + 64} yTop={beamY + 48} />
@@ -277,52 +280,106 @@ export function PointDrawing({ L, points }: { L: number; points: PointLoad[] }) 
 }
 
 /**
- * Composite section to scale (slab b_eff × h_c over the I section). With showPna, the plastic
- * stress block beside it. Drawn in a ~300 unit wide box so its text keeps its real size in a card.
+ * Plastic stress block at x_M, drawn as a CAD section: hatched concrete (AR-CONC) and steel (ANSI31),
+ * break lines on a wide slab, chained level dimensions, a centre-line PNA, and the rectangular
+ * stress diagram (compression left of the zero axis, tension right) with its values.
+ * Partial interaction gives two neutral axes: the concrete is stressed to x_c, the steel PNA is y_a
+ * below the steel top (worksheet §EC4 6.2.1.3, k_M = 0 slab, 1 flange, 2 fillet, 3 web).
  */
-export function SectionDrawing({ r, showPna }: { r: Record<string, number>; showPna: boolean }) {
+export function SectionDrawing({ r }: { r: Record<string, number>; showPna?: boolean }) {
+  const [box, W] = useWidth(520);
+  const uid = useId().replace(/:/g, '');
   const { h_a, b_a, t_f, t_w, h_c, b_eff } = r;
-  if (![h_a, b_a, t_f, t_w, h_c, b_eff].every(Number.isFinite)) return null;
-  const W = 300, H = 236, top = 22;
-  const room = showPna ? 150 : 250; // width available for the slab
+  if (![h_a, b_a, t_f, t_w, h_c, b_eff].every(Number.isFinite)) return <div ref={box} />;
+  const kM = r.kM, xc = Math.min(r.xc, h_c), ya = kM >= 1 ? r.ya : 0;
+  const H = 292, top = 36, depth = 220;
   const total = h_c + h_a;
-  const sc = Math.min(190 / total, (room * 0.62) / b_a);
-  const cx = showPna ? 84 : W / 2;
+  const room = Math.min(200, W * 0.36);
+  const sc = Math.min(depth / total, (room * 0.6) / b_a);
+  const dimX = 34, cx = dimX + 26 + room / 2;
   const broken = b_eff * sc > room;
-  const slabW = Math.min(b_eff * sc, room);
+  const slabW = Math.min(b_eff * sc, room), sL = cx - slabW / 2, sR = cx + slabW / 2;
   const Y = (mm: number) => top + mm * sc;
-  const xa = cx - (b_a * sc) / 2;
-  const kM = r.kM, xc = showPna ? (kM === 0 ? r.xf : r.xc) : NaN, ya = r.ya;
-  const sx = cx + slabW / 2 + 18, w = 22, lx = sx + w + 6;
-  const pnaY = kM >= 1 ? Y(h_c + ya) : Y(h_c);
+  const xa = cx - (b_a * sc) / 2, bf = b_a * sc, tw2 = (t_w * sc) / 2;
+  const bw = 44, axis = Math.max(sR + 40 + bw, cx + room / 2 + 40 + bw), lx = axis + bw + 12;
+  const yPna = kM >= 1 ? Y(h_c + ya) : Y(xc);
+  const steel = `M${xa},${Y(h_c)} h${bf} v${t_f * sc} H${cx + tw2} V${Y(total - t_f)} H${xa + bf} v${t_f * sc} h${-bf} v${-t_f * sc} H${cx - tw2} V${Y(h_c + t_f)} H${xa} z`;
+  const brk = (x: number, dir: number) => {
+    const y0 = Y(0) - 5, y1 = Y(h_c) + 5, m = (y0 + y1) / 2;
+    return `M${x},${y0} V${m - 6} l${3 * dir},3 l${-6 * dir},6 l${3 * dir},3 V${y1}`;
+  };
+  // labels on the right of the stress diagram, pushed apart so they never overlap
+  const labels: { y: number; lines: [string, string, string][]; color: string }[] = [
+    { y: (Y(0) + Y(xc)) / 2, lines: [['0.85 f', 'cd', ''], ['N', 'c', ` = ${fmt(r.Nc, 0)} kN`], ['x', 'c', ` = ${fmt(xc, 1)} mm`]], color: C.blue },
+    ...(kM >= 1 ? [{ y: (Y(h_c) + yPna) / 2, lines: [['f', 'yd', ''], ['compression', '', '']] as [string, string, string][], color: C.blue }] : []),
+    { y: (yPna + Y(total)) / 2, lines: [['f', 'yd', ''], ['tension', '', '']], color: C.red },
+  ];
+  let last = -Infinity;
+  for (const l of labels) { l.y = Math.max(l.y - 6, last + 16); last = l.y + 13 * (l.lines.length - 1); }
+  const vdim = (x: number, a: number, b: number, text: string, side = -1) => (
+    <g key={`${x}${a}`} stroke={C.muted} strokeWidth={CAD.dim}>
+      <line x1={x} x2={x} y1={a} y2={b} />
+      {[a, b].map((y) => <line key={y} x1={x - 4} x2={x + 4} y1={y + 4} y2={y - 4} stroke={C.ink} strokeWidth={1.2} />)}
+      <text x={x + side * 5} y={(a + b) / 2} transform={`rotate(-90 ${x + side * 5} ${(a + b) / 2})`} textAnchor="middle" fill={C.ink} stroke="none" fontSize={CAD.font - 1} className="num"><SvgRich text={text} size={CAD.font - 1} /></text>
+    </g>
+  );
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="mx-auto w-full max-w-[22rem]" role="img" aria-label={showPna ? `Plastic stress block, concrete depth ${fmt(xc, 1)} mm` : 'Composite section'} style={{ fontSize: 11 }}>
-      <rect x={cx - slabW / 2} y={Y(0)} width={slabW} height={h_c * sc} fill={C.concrete} stroke={C.muted} />
-      {broken && [cx - slabW / 2, cx + slabW / 2].map((x, i) => (
-        <path key={i} d={`M${x},${Y(0) - 4} l${i ? 4 : -4},${(h_c * sc) / 3 + 4} l${i ? -8 : 8},${(h_c * sc) / 3} l${i ? 4 : -4},${(h_c * sc) / 3 + 4}`} fill="none" stroke={C.muted} strokeWidth="1.2" />
-      ))}
-      <path
-        d={`M${xa},${Y(h_c)} h${b_a * sc} v${t_f * sc} h${-(b_a - t_w) * sc / 2} V${Y(h_c + h_a - t_f)} h${(b_a - t_w) * sc / 2} v${t_f * sc} h${-b_a * sc} v${-t_f * sc} h${(b_a - t_w) * sc / 2} V${Y(h_c + t_f)} h${-(b_a - t_w) * sc / 2} z`}
-        fill="#E3E8E6" stroke={C.ink} strokeWidth="1.2"
-      />
-      {showPna && Number.isFinite(xc) && <rect x={cx - slabW / 2} y={Y(0)} width={slabW} height={Math.min(xc, h_c) * sc} fill={C.blue} fillOpacity="0.28" />}
-      {showPna && kM >= 1 && Number.isFinite(ya) && <line x1={cx - slabW / 2} x2={sx + w} y1={pnaY} y2={pnaY} stroke={C.red} strokeWidth="1.5" strokeDasharray="5 3" />}
-      {showPna && Number.isFinite(xc) && (
-        <g>
-          <rect x={sx} y={Y(0)} width={w} height={Math.min(xc, h_c) * sc} fill={C.blue} fillOpacity="0.4" />
-          <text x={lx} y={Y(0) + 9} fill={C.blue}>0.85 f<tspan fontSize="8" dy="2">cd</tspan></text>
-          <text x={lx} y={Y(0) + 23} fill={C.blue}>{`x = ${fmt(xc, 1)} mm`}</text>
-          {kM >= 1 && <rect x={sx} y={Y(h_c)} width={w} height={Math.max(0, pnaY - Y(h_c))} fill={C.red} fillOpacity="0.4" />}
-          <rect x={sx} y={pnaY} width={w} height={Y(h_c + h_a) - pnaY} fill={C.green} fillOpacity="0.32" />
-          {kM >= 1 && <text x={lx} y={Math.max(pnaY + 4, Y(0) + 38)} fill={C.red}>{`PNA ${fmt(ya, 1)} mm`}</text>}
-          {kM >= 1 && <text x={lx} y={Math.max(pnaY + 17, Y(0) + 51)} fill={C.red}>below steel top</text>}
-          <text x={lx} y={Y(h_c + h_a) - 18} fill={C.green}>f<tspan fontSize="8" dy="2">yd</tspan></text>
-          <text x={lx} y={Y(h_c + h_a) - 4} fill={C.green}>tension</text>
+    <div ref={box}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={`Plastic stress block at x_M: concrete stressed to ${fmt(xc, 1)} mm, ${kM >= 1 ? `steel PNA ${fmt(ya, 1)} mm below the steel top` : 'PNA in the slab'}`}>
+        <defs>
+          <pattern id={`${uid}c`} width="14" height="14" patternUnits="userSpaceOnUse">
+            <circle cx="3" cy="4" r="0.7" fill={C.muted} /><circle cx="10" cy="10" r="0.6" fill={C.muted} /><path d="M9,2 l2.2,3.4 h-4.4 z M2,9.5 l1.8,2.8 h-3.6 z" fill="none" stroke={C.muted} strokeWidth="0.5" />
+          </pattern>
+          <pattern id={`${uid}s`} width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke={C.ink} strokeWidth="0.45" /></pattern>
+          <pattern id={`${uid}b`} width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke={C.blue} strokeWidth="0.8" /></pattern>
+          <pattern id={`${uid}r`} width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="5" stroke={C.red} strokeWidth="0.8" /></pattern>
+        </defs>
+
+        {/* b_eff */}
+        <g stroke={C.muted} strokeWidth={CAD.dim}>
+          <line x1={sL} x2={sR} y1={top - 14} y2={top - 14} />
+          {[sL, sR].map((x) => <g key={x}><line x1={x} x2={x} y1={top - 20} y2={top - 3} /><line x1={x - 4} x2={x + 4} y1={top - 10} y2={top - 18} stroke={C.ink} strokeWidth={1.2} /></g>)}
+          <text x={cx} y={top - 18} textAnchor="middle" fill={C.ink} stroke="none" fontSize={CAD.font - 1} className="num"><SvgRich text={`b_eff = ${fmt(b_eff, 0)}${broken ? ' (broken)' : ''}`} size={CAD.font - 1} /></text>
         </g>
-      )}
-      <text x={cx} y={13} textAnchor="middle" fill={C.muted}>{`b_eff = ${fmt(b_eff, 0)} mm${broken ? ' (cut)' : ''}`}</text>
-      <text x={cx - slabW / 2 + 6} y={Y(h_c / 2) + 4} fill={C.ink}>{`h_c = ${fmt(h_c, 0)}`}</text>
-      <text x={cx + (t_w * sc) / 2 + 5} y={Y(h_c + h_a / 2)} fill={C.muted}>{`h_a = ${fmt(h_a, 1)}`}</text>
-    </svg>
+
+        {/* section */}
+        <rect x={sL} y={Y(0)} width={slabW} height={h_c * sc} fill={`url(#${uid}c)`} stroke={C.ink} strokeWidth={CAD.geo} />
+        {broken && <><path d={brk(sL, -1)} fill={C.sheet} stroke={C.ink} strokeWidth={CAD.dim} /><path d={brk(sR, 1)} fill={C.sheet} stroke={C.ink} strokeWidth={CAD.dim} /></>}
+        <path d={steel} fill={`url(#${uid}s)`} stroke={C.ink} strokeWidth={CAD.geo} />
+
+        {/* level dimensions */}
+        {[Y(0), Y(h_c), Y(total)].map((y) => <line key={y} x1={dimX - 6} x2={sL - 4} y1={y} y2={y} stroke={C.muted} strokeWidth={CAD.dim} />)}
+        {vdim(dimX, Y(0), Y(h_c), `h_c ${fmt(h_c, 0)}`)}
+        {vdim(dimX, Y(h_c), Y(total), `h_a ${fmt(h_a, 1)}`)}
+
+        {/* extension lines to the stress diagram */}
+        {[Y(0), Y(h_c), Y(total)].map((y) => <line key={`e${y}`} x1={Math.max(sR, xa + bf) + 4} x2={axis + bw} y1={y} y2={y} stroke={C.rule} strokeWidth={CAD.dim} strokeDasharray="3 2" />)}
+
+        {/* stress diagram */}
+        <rect x={axis - bw} y={Y(0)} width={bw} height={Y(xc) - Y(0)} fill={`url(#${uid}b)`} stroke={C.blue} strokeWidth={1} />
+        {kM >= 1 && <rect x={axis - bw} y={Y(h_c)} width={bw} height={Math.max(0.8, yPna - Y(h_c))} fill={`url(#${uid}b)`} stroke={C.blue} strokeWidth={1} />}
+        <rect x={axis} y={Math.max(yPna, Y(h_c))} width={bw} height={Y(total) - Math.max(yPna, Y(h_c))} fill={`url(#${uid}r)`} stroke={C.red} strokeWidth={1} />
+        <line x1={axis} x2={axis} y1={Y(0) - 8} y2={Y(total) + 8} stroke={C.ink} strokeWidth={CAD.geo} />
+        <text x={axis - bw / 2} y={Y(total) + 18} textAnchor="middle" fill={C.blue} fontSize={CAD.font - 1.5}>C</text>
+        <text x={axis + bw / 2} y={Y(total) + 18} textAnchor="middle" fill={C.red} fontSize={CAD.font - 1.5}>T</text>
+        {xc < h_c - 0.5 && vdim(axis - bw - 10, Y(0), Y(xc), '', -1)}
+
+        {/* PNA, centre line */}
+        <line x1={dimX - 10} x2={axis + bw + 6} y1={yPna} y2={yPna} stroke={C.red} strokeWidth={0.9} strokeDasharray="10 3 2 3" />
+        <text x={dimX + 8} y={yPna - 4} fill={C.red} fontSize={CAD.font - 0.5} fontWeight="700">PNA</text>
+        {kM >= 1 && <text x={dimX + 8} y={yPna + 13} fill={C.red} fontSize={CAD.font - 1.5} className="num">y<tspan fontSize={CAD.font - 4} dy="3">a</tspan><tspan dy="-3">{` ${fmt(ya, 1)}`}</tspan></text>}
+
+        {/* values */}
+        {labels.map((l, i) => (
+          <g key={i} fill={l.color} fontSize={CAD.font}>
+            {l.lines.map(([t, sub, tail], j) => (
+              <text key={j} x={lx} y={l.y + 13 * j} fontWeight={j ? 400 : 700} className={j ? 'num' : ''}>
+                {t}{sub && <tspan fontSize={CAD.font - 3} dy="3">{sub}</tspan>}{tail && <tspan dy={sub ? -3 : 0}>{tail}</tspan>}
+              </text>
+            ))}
+          </g>
+        ))}
+      </svg>
+    </div>
   );
 }

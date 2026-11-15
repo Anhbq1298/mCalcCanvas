@@ -115,7 +115,7 @@ td { padding: 2px 4px; border-bottom: 1px solid color-mix(in srgb, var(--rule) 5
 .sheet-sec { border-top: 1px solid var(--rule); padding: 0.75rem 1rem 1rem; }
 .sec-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-bottom: 4px; }
 .sec-head h2 { margin: 0; }
-.sheet-sec svg[aria-label^='Plastic'] { max-width: 20rem; margin: 0; }
+.sheet-sec svg[aria-label^='Plastic'] { max-width: 40rem; }
 .results > section > h2 { margin-top: 0; }
 .results .props { columns: 1; }
 .stage-table { margin: 0.25rem 1rem 1rem; width: calc(100% - 2rem); font-size: 0.8125rem; }

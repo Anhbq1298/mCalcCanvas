@@ -12,6 +12,7 @@ import { CHECKS, type InputField, type LoadTable, type Results } from './model';
 import type { ToWorker } from './worker';
 import { Legend, LineChart, PointDrawing, SectionDrawing, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
 import { C, fmt } from './format';
+import { Rich } from './rich';
 
 const HANDOFF_KEY = 'calccanvas.handoff'; // read once by mCalcCanvas (?open=handoff)
 const GREEK: Record<string, string> = { gamma: 'γ', psi: 'ψ', varphi: 'φ', varepsilon: 'ε', alpha: 'α', rho: 'ρ', eta: 'η', delta: 'δ', theta: 'θ', kappa: 'κ', chi: 'χ', lambda: 'λ' };
@@ -27,7 +28,7 @@ function Sym({ latex }: { latex: string }) {
   return (
     <span className="sym">
       <i>{base}</i>
-      {m[2] && <sub>{m[2]}</sub>}
+      {m[2] && <sub>{m[2].replace(/\\?([a-z]{3,})/g, (w, g: string) => GREEK[g] ?? w)}</sub>}
     </span>
   );
 }
@@ -276,8 +277,8 @@ export function App() {
                 <h2 id={`h-group-${gi}`}>{g}</h2>
                 <div className="fields">
                   {fields.map((f) => (
-                    <label key={f.id} className={`f ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`} title={f.label}>
-                      <span><Sym latex={f.name} />{f.unit ? ` (${unit(f.unit)})` : ''} <em>{f.label}</em></span>
+                    <label key={f.id} className={`f ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
+                      <span><Sym latex={f.name} />{f.unit ? ` (${unit(f.unit)})` : ''} <em><Rich text={f.label} /></em></span>
                       <NumberField id={`in-${f.id}`} label={f.name} value={String(value(f))} onCommit={(nv) => setInput(f, nv)} />
                     </label>
                   ))}
@@ -347,7 +348,7 @@ export function App() {
             <div data-testid="verdict" aria-live="polite" aria-atomic="true">
               <div className="verdict">
                 <span className={`ratio ${pass ? 'pass' : 'fail'}`} data-testid="ur-max">{fmt(overall, 3)}</span>
-                <span className="what">governing UR<br />{governing[1]}</span>
+                <span className="what">governing UR<br /><Rich text={governing[1]} /></span>
                 <span className={`tag ${pass ? 'pass' : 'fail'}`}>{pass ? 'PASS' : 'FAIL'}</span>
               </div>
               <p className="basis">
@@ -371,7 +372,7 @@ export function App() {
                   const u = res[`UR.${key}`];
                   return (
                     <tr key={key} className={key === governing[0] ? 'gov' : ''}>
-                      <td>{label}<span className="clause">{clause}</span></td>
+                      <td><Rich text={label} /><span className="clause">{clause}</span></td>
                       <td className={tone(u)}>
                         {fmt(u, 3)}
                         {u > 1 && <span className="sr-only"> (fails)</span>}
@@ -421,7 +422,7 @@ export function App() {
 
         </div>
       </main>
-      <p className="note">Review draft. Results come from the mCalcCanvas worksheet Composite_Beam_EC4 (verified against SCI P364, SBE Part 4 and an independent reference); confirm National Annex values before use.</p>
+      <p className="note">Review draft. Results come from the mCalcCanvas composite beam worksheet to EC4 (verified against SCI P364, SBE Part 4 and an independent reference); confirm National Annex values before use.</p>
     </>
   );
 }
