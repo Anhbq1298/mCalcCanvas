@@ -47,4 +47,10 @@ test('mCompositeBeamDesign optimizes the section to the lightest one that passes
   expect(ur).toBeLessThanOrEqual(1);
   const chosen = await page.getByTestId('optimize-status').locator('b').textContent();
   await expect(page.getByTestId('section-select').locator('option:checked')).toHaveText(chosen!);
+  // a depth limit: the result reports it, and an invalid limit disables the button
+  await page.getByTestId('hmax').fill('abc');
+  await expect(page.getByTestId('optimize')).toBeDisabled();
+  await page.getByTestId('hmax').fill('460');
+  await page.getByTestId('optimize').click();
+  await expect(page.getByTestId('optimize-status')).toContainText(/with h ≤ 460 mm/, { timeout: 150_000 });
 });

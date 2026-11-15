@@ -83,7 +83,7 @@ export const CHECKS: [string, string, string, '' | 'c' | 'n'][] = [
  * The governing utilisation the page shows: every check of the design basis in use (composite or bare
  * steel), construction stage included. The section optimiser uses the same rule.
  */
-export interface OptimizeResult { family: string; tried: number; total: number; best: { id: number; name: string; mass: number; ur: number; label: string } | null }
+export interface OptimizeResult { family: string; maxDepth: number | null; tried: number; total: number; best: { id: number; name: string; mass: number; ur: number; label: string } | null }
 
 export function governingCheck(res: Results): { ur: number; key: string; label: string } {
   const composite = res.comp >= 1;
@@ -211,9 +211,12 @@ export class CompositeModel {
    * Lightest section of a family that passes every check (governing UR ≤ 1, construction stage included):
    * candidates by increasing mass, the first that passes is the lightest. Without one, the section is restored.
    */
-  optimizeSection(family: string, progress?: (i: number, n: number, name: string) => void): OptimizeResult {
+  optimizeSection(family: string, progress?: (i: number, n: number, name: string) => void, maxDepth: number | null = null): OptimizeResult {
     const start = this.sectionId;
-    const cands = sections.filter((s) => s.family === family && Number.isFinite(s.values.mass)).sort((a, b) => a.values.mass - b.values.mass);
+    // optional depth limit h ≤ maxDepth (mm), e.g. from the ceiling void
+    const cands = sections
+      .filter((s) => s.family === family && Number.isFinite(s.values.mass) && (maxDepth === null || s.values.h <= maxDepth + 1e-9))
+      .sort((a, b) => a.values.mass - b.values.mass);
     let tried = 0;
     for (const s of cands) {
       tried++;
@@ -222,10 +225,10 @@ export class CompositeModel {
       const r = this.results();
       if (r.errors.length) continue;
       const g = governingCheck(r);
-      if (g.ur <= 1) return { family, tried, total: cands.length, best: { id: s.id, name: s.name, mass: s.values.mass, ur: g.ur, label: g.label } };
+      if (g.ur <= 1) return { family, maxDepth, tried, total: cands.length, best: { id: s.id, name: s.name, mass: s.values.mass, ur: g.ur, label: g.label } };
     }
     this.setSection(start);
-    return { family, tried, total: cands.length, best: null };
+    return { family, maxDepth, tried, total: cands.length, best: null };
   }
 
   results(): Results {

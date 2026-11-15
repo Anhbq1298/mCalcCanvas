@@ -95,6 +95,16 @@ describe('mCompositeBeamDesign headless model', () => {
     const lighter = sections.filter((s) => s.family === 'UB' && s.values.mass < out.best!.mass);
     expect(lighter.length).toBe(out.tried - 1);
     for (const s of lighter) { m.setSection(s.id); expect(governingCheck(m.results()).ur).toBeGreaterThan(1); }
+    // depth limit: only sections with h ≤ h_max; the lightest of those that passes, lighter ones within the limit fail
+    const lim = out.best!.id && sections.find((s) => s.id === out.best!.id)!.values.h - 1;
+    const limited = m.optimizeSection('UB', undefined, lim);
+    expect(limited.maxDepth).toBe(lim);
+    if (limited.best) {
+      expect(sections.find((s) => s.id === limited.best!.id)!.values.h).toBeLessThanOrEqual(lim);
+      expect(limited.best.mass).toBeGreaterThanOrEqual(out.best!.mass);
+      for (const s of sections.filter((x) => x.family === 'UB' && x.values.h <= lim && x.values.mass < limited.best!.mass)) { m.setSection(s.id); expect(governingCheck(m.results()).ur).toBeGreaterThan(1); }
+    }
+    expect(limited.total).toBe(sections.filter((x) => x.family === 'UB' && x.values.h <= lim).length);
     // nothing passes: the section is restored
     set('L', 30);
     m.setSection(3148);

@@ -91,6 +91,7 @@ export function App() {
   const [busy, setBusy] = useState(false);
   const [values, setValues] = useState<Record<string, number>>({});
   const [family, setFamily] = useState('UB');
+  const [hMax, setHMax] = useState('');
   const [opt, setOpt] = useState<{ running: boolean; i?: number; n?: number; name?: string; result?: OptimizeResult } | null>(null);
   const reportReq = useRef(0);
   const reportCb = useRef<((doc: unknown) => void) | null>(null);
@@ -288,23 +289,42 @@ export function App() {
                 </label>
                 <p className="hint wide">{section ? `${section.name} · ${section.standard} · ${fmt(section.values.mass, 1)} kg/m` : ''}</p>
                 <div className="wide optimize">
+                  <div className="optimize-row">
+                  <label className="f" htmlFor="hmax">
+                    <span>Max depth h<sub>max</sub> (mm), blank = no limit</span>
+                    <input
+                      id="hmax"
+                      data-testid="hmax"
+                      className="num-input"
+                      type="text"
+                      inputMode="decimal"
+                      autoComplete="off"
+                      placeholder="no limit"
+                      aria-invalid={hMax.trim() !== '' && !(Number(hMax) > 0)}
+                      aria-describedby={hMax.trim() !== '' && !(Number(hMax) > 0) ? 'hmax-error' : undefined}
+                      value={hMax}
+                      onChange={(e) => setHMax(e.target.value)}
+                    />
+                    {hMax.trim() !== '' && !(Number(hMax) > 0) && <span id="hmax-error" className="field-error">Error: enter a depth in mm, e.g. 350</span>}
+                  </label>
                   <button
                     type="button"
                     className="btn"
                     data-testid="optimize"
-                    disabled={opt?.running}
-                    onClick={() => { setOpt({ running: true }); setBusy(true); worker.postMessage({ kind: 'optimize', family } satisfies ToWorker); }}
+                    disabled={opt?.running || (hMax.trim() !== '' && !(Number(hMax) > 0))}
+                    onClick={() => { setOpt({ running: true }); setBusy(true); worker.postMessage({ kind: 'optimize', family, maxDepth: hMax.trim() ? Number(hMax) : null } satisfies ToWorker); }}
                     title={`Try every ${family} section from the lightest up and keep the first that passes all checks`}
                   >
                     {opt?.running ? 'Optimizing…' : `Optimize: lightest ${family}`}
                   </button>
+                  </div>
                   <p className="hint" role="status" data-testid="optimize-status">
                     {opt?.running && opt.n ? <>Checking {opt.i}/{opt.n}: {opt.name}</> : null}
                     {!opt?.running && opt?.result ? (
                       opt.result.best ? (
-                        <>Lightest {opt.result.family} passing all checks: <b>{opt.result.best.name}</b> ({fmt(opt.result.best.mass, 1)} kg/m), governing UR {fmt(opt.result.best.ur, 3)} (<Rich text={opt.result.best.label} />). Checked {opt.result.tried} of {opt.result.total}, lightest first.</>
+                        <>Lightest {opt.result.family}{opt.result.maxDepth !== null ? <> with h ≤ {fmt(opt.result.maxDepth, 0)} mm</> : null} passing all checks: <b>{opt.result.best.name}</b> ({fmt(opt.result.best.mass, 1)} kg/m, h = {fmt(sections.find((x) => x.id === opt.result!.best!.id)?.values.h ?? NaN, 1)} mm), governing UR {fmt(opt.result.best.ur, 3)} (<Rich text={opt.result.best.label} />). Checked {opt.result.tried} of {opt.result.total}, lightest first.</>
                       ) : (
-                        <span className="error">No {opt.result.family} section passes all checks with these inputs; the section is unchanged.</span>
+                        <span className="error">No {opt.result.family} section{opt.result.maxDepth !== null ? <> with h ≤ {fmt(opt.result.maxDepth, 0)} mm</> : null} passes all checks with these inputs ({opt.result.total} tried); the section is unchanged.</span>
                       )
                     ) : null}
                   </p>
