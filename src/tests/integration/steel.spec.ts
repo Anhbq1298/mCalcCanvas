@@ -152,3 +152,13 @@ test.describe('Steel beam-column template', () => {
     });
   });
 });
+
+test.describe('Composite beam template', () => {
+  test('opens from the template list and evaluates without errors', async ({ page }) => {
+    test.setTimeout(120_000);
+    await openFresh(page, 'composite-beam');
+    await page.evaluate(() => (window as unknown as { __calccanvas: { idle(): Promise<void> } }).__calccanvas.idle());
+    await expect(page.locator('[data-testid=math-region][data-status=error]')).toHaveCount(0);
+    await resultOf(page, 'c_{comp}\\coloneq').toBe('1');
+  });
+});

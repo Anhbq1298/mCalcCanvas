@@ -10,12 +10,13 @@ import { parseDocument } from './DocumentSerializer';
 import rcCircularColumn from '../../templates/RC_Circular_Column_Check.mCCV?raw';
 import rcRectangularColumn from '../../templates/RC_Rectangular_Column_Check.mCCV?raw';
 import steelBeamColumn from '../../templates/Steel_Beam_Column_EC3.mCCV?raw';
+import compositeBeam from '../../templates/Composite_Beam_EC4.mCCV?raw';
 import { escapeHtml } from '../canvas/sanitize';
 import { demoWorksheetShapes } from './demoWorksheet';
 import { A4, PAGE_GAP } from '../export/pageGeometry';
 import { compactTemplate } from './templatePresentation';
 
-export type TemplateId = 'blank' | 'steel-beam' | 'steel-beam-column' | 'rc-beam' | 'rc-circular-column' | 'rc-rectangular-column';
+export type TemplateId = 'blank' | 'steel-beam' | 'steel-beam-column' | 'rc-beam' | 'rc-circular-column' | 'rc-rectangular-column' | 'composite-beam';
 
 interface WorksheetTemplate {
   id: TemplateId;
@@ -52,6 +53,7 @@ function fileTemplate(raw: string) {
 const circular = fileTemplate(rcCircularColumn);
 const rectangular = fileTemplate(rcRectangularColumn);
 const steelColumn = fileTemplate(steelBeamColumn);
+const composite = fileTemplate(compositeBeam);
 
 function builder() {
   const out: Shape[] = [];
@@ -210,6 +212,12 @@ export const TEMPLATES: WorksheetTemplate[] = [
     name: 'Steel beam-column check (EN 1993-1-1)',
     description: 'Library or custom welded I/H section (h, b, tf, tw): classification, section resistance, flexural, torsional and lateral-torsional buckling, Annex B interaction, UR checks. Default data: JRC worked example (HEB 320).',
     ...steelColumn,
+  },
+  {
+    id: 'composite-beam',
+    name: 'Composite beam (EN 1994-1-1)',
+    description: 'Simply supported composite beam, solid slab: construction and composite stages, load tables (area and point loads, G/Q), studs along the span, partial connection, M–V and web checks, SLS, slab shear, and a non-composite alternative. Section from the library (Browse).',
+    ...composite,
   },
 ];
 
