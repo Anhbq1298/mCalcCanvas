@@ -200,7 +200,18 @@ describe('EC4 phase-one composite worksheet', () => {
       e.setDefinitionOverride(sec, null);
       restore('a_{j}', 'c_{Q.j}', 'F_{k.j}');
       expect(value('c_{comp}')).toBe(1);                                   // default: composite design
-      expect(value('\\mathrm{UR}_{des}')).toBe(value('\\mathrm{UR}_{d.2}'));   // composite: deflection 31.07/32 mm governs
+      expect(value('\\mathrm{UR}_{des}')).toBe(value('\\mathrm{UR}_{d.x}'));   // composite: deflection along the span governs
+      // 4.9: reference deflection_curve (closed form, 1 mm steps): 31.0771 mm at 3.94 m, 29.2243 mm with η = 1
+      expect(value('\\delta_{max}','mm')).toBeCloseTo(31.0770932273,2);
+      expect(value('\\delta_{pi}','mm')).toBeCloseTo(31.0770932273 - 29.2243152997,2);
+      expect(value('\\delta_{max}','mm')).toBeGreaterThanOrEqual(value('\\delta_{tot}','mm'));
+      // wider stud spacing → lower η → more slip deflection (and the reverse)
+      const d0 = value('\\delta_{max}','mm'), eta0 = value('\\eta');
+      for (const r of ['s_{sc.A}\\coloneq','s_{sc.B}\\coloneq']) e.setDefinitionOverride(region(r), { value: 300, unit: 'mm' });
+      expect(value('\\eta')).toBeLessThan(eta0);
+      expect(value('\\delta_{max}','mm')).toBeGreaterThan(d0);
+      for (const r of ['s_{sc.A}\\coloneq','s_{sc.B}\\coloneq']) e.setDefinitionOverride(region(r), null);
+      expect(value('\\delta_{max}','mm')).toBeCloseTo(d0,9);
       expect(value('F_{Rd.a}','kN')).toBeCloseTo(544.44972,3); expect(value('\\lambda_{F.a}')).toBeCloseTo(0.74164,4);
       expect(value('l_{y.c}','mm')).toBeCloseTo(181.17687,3);
       expect(value('\\mathrm{UR}_{MV}')).toBeCloseTo(0.66027,4);
@@ -304,11 +315,11 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('h_a','mm')).toBe(406.4);
     });
 
-    step('three static symbolic figures and three graphs; explicit review status', () => {
+    step('three static symbolic figures and five graphs (V, M, M_Rd(η), M_Rd(x), δ(x)); explicit review status', () => {
       const texts=doc.shapes.filter(s => s.type==='text');
       expect(texts.filter(s=>/^F\d —/.test(s.props.html)).map(s=>s.props.html.slice(0,2))).toEqual(['F1','F2','F3']);
       expect(texts.some(s=>s.props.html.includes('<i>h</i><sub>c</sub>'))).toBe(true);
-      expect(doc.shapes.filter(s=>s.type==='graph')).toHaveLength(3);
+      expect(doc.shapes.filter(s=>s.type==='graph')).toHaveLength(5);
       expect(doc.shapes.some(s=>s.type==='image')).toBe(false);
       expect(texts.some(s=>s.props.html.includes('Singapore NA verification is outstanding'))).toBe(true);
     });

@@ -48,6 +48,12 @@
   "delta_slip_mm": 1.8508975757883905,
   "delta_shrinkage_mm": 5.445615074899925,
   "delta_total_mm": 31.069346760047296,
+  "deflection_curve": {
+    "delta_max_mm": 31.077093227300107,
+    "x_at_max_m": 3.942,
+    "delta_max_full_interaction_mm": 29.224315299734393,
+    "UR": 0.9711591633531284
+  },
   "transverse_required_mm2_m": 375.6188707596872,
   "transverse_provided_mm2_m": 523.598775598299,
   "UR_transverse": 0.7173792,

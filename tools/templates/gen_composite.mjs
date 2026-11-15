@@ -239,6 +239,12 @@ calc('Rigid-plastic resistance at N_c','M_{Rd.pl}',R`T_a z_T-f_{yd}Q_{ac}-\frac{
 P('Design resistance, linear interaction (6.3); bare steel if a gate fails',R`M_{Rd}\coloneq${IF([R`\eta_{min}\le\eta\land4d_{sc}\le h_{sc}\land\beta_f\le9`, R`M_{a.Rd}+\eta\left(M_{pl.Rd}-M_{a.Rd}\right)`], [null, R`M_{a.Rd}`])}`,M(units('kN m')));
 check('Linear interaction ≤ rigid-plastic', 'M_{Rd}', 'M_{Rd.pl}');
 ur('Composite bending at x_M','M.2','M_{2.Ed}','M_{Rd}');
+T('(6.3): M_Rd = M_a,Rd at η = 0 to M_pl,Rd at η = 1, linear; valid for η ≥ η_min.');
+DIAGRAM(170, { title: 'M_Rd against degree of shear connection η (6.3)', xUnit: '', yUnit: 'kN m', series: [
+  S('ln', 'M_Rd = M_a,Rd + η(M_pl,Rd − M_a,Rd)', [R`\mathrm{stack}\left(0,1\right)`, R`\mathrm{stack}\left(M_{a.Rd},M_{pl.Rd}\right)`], 'line', '#1e3a5f', 2),
+  S('ed', 'M_Ed', [R`\mathrm{stack}\left(0,1\right)`, R`\mathrm{stack}\left(M_{2.Ed},M_{2.Ed}\right)`], 'line', '#b91c1c', 1.5),
+  S('mn', 'η_min', [R`\mathrm{stack}\left(\eta_{min},\eta_{min}\right)`, R`\mathrm{stack}\left(0M_{pl.Rd},M_{pl.Rd}\right)`], 'line', '#9ca3af', 1),
+  S('dp', 'design point (η, M_Rd)', ['\\eta', 'M_{Rd}'], 'values', '#1e3a5f', 1.5)] });
 P('PNA case at x_M: 0 slab, 1 flange, 2 fillet, 3 web',R`k_M\coloneq${IF([R`A_{ac}\le0\,\mathrm{mm^2}`, '0'], [R`A_{ac}\le A_f`, '1'], [R`A_{ac}<A_{fr}`, '2'], [null, '3'])}`,M({ precision: 0 }));
 fig('F3','Plastic stress block at partial connection (symbolic)','pna',7.5);
 LINK('pna','General plastic equilibrium and PNA branches', () => {
@@ -345,6 +351,27 @@ ur('Total deflection','d.2','\\delta_{tot}','\\delta_{lim}');
 calc('Max sustained post-curing moment','M_{qp}',R`\max\left(\mathrm{map}\left(M_s,x_v,1,\psi_2\right)\right)`,'kN m',false);
 calc('Slab bottom stress (+ compression)','\\sigma_{c.bot}',R`\frac{M_{qp}\left(y_L-h_c\right)}{n_L I_L}`,'MPa', false);
 
+H(3, '4.9 Deflection along the span: 1.0 DL + 1.0 LL with partial interaction');
+T('1.0 (g0 + G) + 1.0 Q, split as in 4.8 (ψ2 Q on I_L, the rest on I_0), plus shrinkage.');
+T('Slip as in 4.8, at every x: δ = δ_c + C_s (1 − η)(δ_a − δ_c).');
+T('Fewer studs (larger spacing) lower η and add deflection; closer studs reduce it.');
+P('Unit-load moment at x for a unit load at u', R`m_w(u,x)\coloneq${IF([R`x\le u`, R`\frac{x\left(L-u\right)}{L}`], [null, R`\frac{u\left(L-x\right)}{L}`])}`, M(units('')));
+calc('Curvature of g0 (steel alone if unpropped)', '\\kappa_g', IF([R`c_{prop}\ge1`, R`\frac{g_0 x_v\left(L-x_v\right)}{2E_a I_L}`], [null, R`\frac{g_0 x_v\left(L-x_v\right)}{2E_a I_a}`]), 'm^-1', 'fo');
+calc('Curvature of the table loads, composite (full interaction)', '\\kappa_c', R`\frac{\mathrm{map}\left(M_s,x_v,1,\psi_2\right)}{E_a I_L}+\frac{\mathrm{map}\left(M_s,x_v,0,1-\psi_2\right)}{E_a I_0}`, 'm^-1', 'fo');
+calc('Curvature of the table loads on the steel alone', '\\kappa_a', R`\frac{\mathrm{map}\left(M_s,x_v,1,1\right)}{E_a I_a}`, 'm^-1', 'fo');
+calc('Curvature, partial interaction, plus shrinkage', '\\kappa_p', R`\kappa_g+\kappa_c+C_s\left(1-\eta\right)\left(\kappa_a-\kappa_c\right)+\kappa_{sh}`, 'm^-1', 'fo');
+P('Deflection at u from a curvature vector', R`d_w(u,\kappa)\coloneq\Delta x\,\mathrm{sum}\left(\kappa\,m_w(u,x_v)\right)`, M(units('')));
+P('Deflection at u, partial interaction', R`d_p(u)\coloneq d_w(u,\kappa_p)`, M(units('')));
+P('Deflection at u, full interaction (η = 1)', R`d_f(u)\coloneq d_w(u,\kappa_g+\kappa_c+\kappa_{sh})`, M(units('')));
+calc('Deflection along the span, partial interaction', '\\delta_x', R`\mathrm{map}\left(d_p,x_v\right)`, 'mm', 'fo');
+calc('Same, full interaction', '\\delta_{x.f}', R`\mathrm{map}\left(d_f,x_v\right)`, 'mm', 'fo');
+calc('Maximum deflection', '\\delta_{max}', R`\max\left(\delta_x\right)`, 'mm', false);
+calc('Increase from partial interaction', '\\delta_{pi}', R`\delta_{max}-\max\left(\delta_{x.f}\right)`, 'mm', false);
+DIAGRAM(170, { title: 'Deflection δ(x), 1.0 DL + 1.0 LL (downward)', xUnit: 'm', yUnit: 'mm', invertY: true, series: [
+  S('dp', 'partial interaction (studs provided)', ['x_v', '\\delta_x'], 'area', '#1d4ed8', 2),
+  S('df', 'full interaction (η = 1)', ['x_v', '\\delta_{x.f}'], 'line', '#64748b', 1.5),
+  S('dl', 'limit L / r_lim', [R`\mathrm{stack}\left(0\,\mathrm{m},L\right)`, R`\mathrm{stack}\left(\delta_{lim},\delta_{lim}\right)`], 'line', '#b91c1c', 1)] });
+ur('Maximum deflection along the span','d.x','\\delta_{max}','\\delta_{lim}');
 H(2, '5. EN 1992-1-1 — SLAB LONGITUDINAL SHEAR (EC4 §6.6.6, EC2 §6.2.4)');
 T('Two vertical planes a-a beside the stud row; half the connector flow to each slab outstand.');
 calc('Reinforcement design strength', 'f_{sd}', R`\frac{f_{sk}}{\gamma_S}`, 'MPa', false);
@@ -398,7 +425,7 @@ H(3, 'Design basis — composite (chapter 4) or non-composite (chapter 6)');
 P('Composite action achieved (1 = yes, 0 = no)', R`c_{comp}=`, M({ precision: 0 }));
 for (const n of ['M.nc','MV.nc','V.nc','LT.nc','FM.nc','d.nc']) P(`Non-composite utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
 P('Web checks, both bases (4.7)', R`\mathrm{UR}_{F}\coloneq\max\left(\mathrm{UR}_{F.P},\mathrm{UR}_{F.S}\right)`, M({ precision: 3 }));
-P('Governing utilisation, composite (chapter 4)', R`\mathrm{UR}_{c}\coloneq\max\left(\mathrm{UR}_{M.2},\mathrm{UR}_{M.x},\mathrm{UR}_{MV},\mathrm{UR}_{V.2},\mathrm{UR}_{F},\mathrm{UR}_{FM},\mathrm{UR}_{d.2}\right)`, M({ precision: 3 }));
+P('Governing utilisation, composite (chapter 4)', R`\mathrm{UR}_{c}\coloneq\max\left(\mathrm{UR}_{M.2},\mathrm{UR}_{M.x},\mathrm{UR}_{MV},\mathrm{UR}_{V.2},\mathrm{UR}_{F},\mathrm{UR}_{FM},\mathrm{UR}_{d.x}\right)`, M({ precision: 3 }));
 P('Governing utilisation, non-composite (chapter 6)', R`\mathrm{UR}_{nc}\coloneq\max\left(\mathrm{UR}_{M.nc},\mathrm{UR}_{MV.nc},\mathrm{UR}_{V.nc},\mathrm{UR}_{LT.nc},\mathrm{UR}_{F},\mathrm{UR}_{FM.nc},\mathrm{UR}_{d.nc}\right)`, M({ precision: 3 }));
 P('Governing utilisation of the design basis used', R`\mathrm{UR}_{des}\coloneq${IF([R`c_{comp}\ge1`, R`\mathrm{UR}_{c}`], [null, R`\mathrm{UR}_{nc}`])}`, M({ precision: 3 }));
 check('Acceptance, permanent stage', '\\mathrm{UR}_{des}', '1');
@@ -408,7 +435,7 @@ T('studs as minimum top-flange restraint. Enlarge the section (Browse) if chapte
 H(3, 'EN 1993-1-1 — construction stage');
 for (const n of ['M.1','V.1','LT','d.1']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
 H(3, 'EN 1994-1-1 — composite beam');
-for (const n of ['M.2','M.x','MV','V.2','F.P','F.S','FM','d.2']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
+for (const n of ['M.2','M.x','MV','V.2','F.P','F.S','FM','d.2','d.x']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
 H(3, 'EN 1992-1-1 — slab longitudinal shear');
 for (const n of ['sf','L']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
 

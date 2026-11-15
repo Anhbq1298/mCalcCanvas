@@ -117,6 +117,15 @@ def web_checks(sid, pts, L=8000., sa=125., sb=200., ssP=100., ssS=100.):
     return dict(x_M=xm, V_pl=vpl/1e3, M_fRd=mfr/1e6, UR_MV=ur_mv, UR_MV_nc=urnc, F_Rd_a=Fa/1e3, lam_a=lama, l_y_a=lya, F_Rd_c=Fc/1e3, lam_c=lamc, l_y_c=lyc, l_e=le,
                 UR_FP=urFP, UR_FS=urFS, UR_FM=urFM, UR_FM_nc=urFMnc, M_el=mel/1e6)
 
+def deflection_at(x, w, loads, ei, L=8000.):
+    """Deflection at x (closed form): full-span UDL w plus point loads [(a, P)]."""
+    d = w*x*(L**3 - 2*L*x*x + x**3)/24
+    for a, P in loads:
+        b = L - a
+        d += P*b*x*(L*L - b*b - x*x)/(6*L) if x <= a else P*a*(L - x)*(2*L*x - x*x - a*a)/(6*L)
+    return d/ei
+
+
 def mid_deflection(w, loads, ei, L=8000.):
     """Midspan deflection: 5wL^4/384EI plus P a (3L^2 - 4a^2)/48EI per point load (a <= L/2)."""
     d = 5 * w * L**4 / 384
@@ -191,6 +200,17 @@ def reference():
     dslip = .3*(1-eta)*(mid_deflection(gu+qu, [(a, gp+qp)], E*I)-dl-dt)
     ns,ys,is_ = trans['s']
     dsh = (E/ns*be*hc*.0003)*(ys-hc/2)/(E*is_)*L**2/8
+    # Rev G: deflection along the span, 1.0 DL + 1.0 LL, same split and slip rule as at midspan, maximum over x
+    ksh = (E/ns*be*hc*.0003)*(ys-hc/2)/(E*is_)
+    def dx(x, slip=True):
+        dl_x = deflection_at(x, gu + .3*qu, [(a, gp + .3*qp)], E*trans['L'][2])
+        dt_x = deflection_at(x, .7*qu, [(a, .7*qp)], E*trans['0'][2])
+        da_x = deflection_at(x, gu + qu, [(a, gp + qp)], E*I)
+        return deflection_at(x, g, [], E*I) + dl_x + dt_x + (.3*(1-eta)*(da_x - dl_x - dt_x) if slip else 0) + ksh*x*(L - x)/2
+    xs_d = [L*i/8000 for i in range(8001)]
+    dmax = max(dx(x) for x in xs_d); xdmax = max(xs_d, key=dx)
+    deflection_curve = dict(delta_max_mm=dmax, x_at_max_m=xdmax/1000, delta_max_full_interaction_mm=max(dx(x, False) for x in xs_d),
+                            UR=dmax/(L/250))
     _, _, mqp, xq = beam(gu + .3*qu, [(a, gp + .3*qp)])
     nl, yl, il = trans['L']
     sig = mqp(xq)*(yl - hc)/(nl*il)
@@ -299,7 +319,7 @@ def reference():
                 UR_V2=v2/vrd, delta_construction_mm=delta(g+3.75,I),
                 delta_locked_mm=dg, delta_long_mm=dl, delta_transient_mm=dt,
                 delta_slip_mm=dslip, delta_shrinkage_mm=dsh,
-                delta_total_mm=dg+dl+dt+dslip+dsh,
+                delta_total_mm=dg+dl+dt+dslip+dsh, deflection_curve=deflection_curve,
                 transverse_required_mm2_m=as_req*1000,
                 transverse_provided_mm2_m=as_prov*1000,
                 UR_transverse=as_req/as_prov,
