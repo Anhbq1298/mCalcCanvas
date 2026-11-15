@@ -312,5 +312,5 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(doc.shapes.some(s=>s.type==='image')).toBe(false);
       expect(texts.some(s=>s.props.html.includes('Singapore NA verification is outstanding'))).toBe(true);
     });
-  });
+  }, 120_000); // one long engine walk; CI runners need more than the 5 s default
 });
