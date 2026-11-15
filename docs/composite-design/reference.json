@@ -51,6 +51,7 @@
   "deflection_curve": {
     "delta_max_mm": 31.077093227300107,
     "x_at_max_m": 3.942,
+    "delta_LL_max_mm": 7.052628667859932,
     "delta_max_full_interaction_mm": 29.224315299734393,
     "UR": 0.9711591633531284
   },

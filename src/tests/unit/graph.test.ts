@@ -195,13 +195,14 @@ describe('graph files', () => {
       const doc = parseDocument({
         format: 'calccanvas', version: DOCUMENT_VERSION, id: 'd', title: 't',
         shapes: [
-          { id: 'g', type: 'graph', x: 0, y: 0, props: { invertY: true, series: [{ x: 'x', y: 'y', style: 'area' }, { x: 'x', y: 'y', style: 'values' }] } },
+          { id: 'g', type: 'graph', x: 0, y: 0, props: { invertY: true, series: [{ x: 'x', y: 'y', style: 'area', dash: true }, { x: 'x', y: 'y', style: 'values', dash: 'yes' }] } },
           { id: 'h', type: 'graph', x: 0, y: 300, props: { invertY: 'yes', series: [] } },
         ],
       });
       const [g, h] = doc.shapes as GraphShape[];
       expect(g.props.invertY).toBe(true);
       expect(g.props.series.map((q) => q.style)).toEqual(['area', 'values']);
+      expect(g.props.series.map((q) => q.dash)).toEqual([true, undefined]); // dashed lines: true only
       expect(h.props.invertY).toBeUndefined();
     });
     resetEach();

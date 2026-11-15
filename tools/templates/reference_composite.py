@@ -209,7 +209,11 @@ def reference():
         return deflection_at(x, g, [], E*I) + dl_x + dt_x + (.3*(1-eta)*(da_x - dl_x - dt_x) if slip else 0) + ksh*x*(L - x)/2
     xs_d = [L*i/8000 for i in range(8001)]
     dmax = max(dx(x) for x in xs_d); xdmax = max(xs_d, key=dx)
-    deflection_curve = dict(delta_max_mm=dmax, x_at_max_m=xdmax/1000, delta_max_full_interaction_mm=max(dx(x, False) for x in xs_d),
+    def dq(x):
+        c = deflection_at(x, .3*qu, [(a, .3*qp)], E*trans['L'][2]) + deflection_at(x, .7*qu, [(a, .7*qp)], E*trans['0'][2])
+        return c + .3*(1-eta)*(deflection_at(x, qu, [(a, qp)], E*I) - c)
+    deflection_curve = dict(delta_max_mm=dmax, x_at_max_m=xdmax/1000, delta_LL_max_mm=max(dq(x) for x in xs_d),
+                            delta_max_full_interaction_mm=max(dx(x, False) for x in xs_d),
                             UR=dmax/(L/250))
     _, _, mqp, xq = beam(gu + .3*qu, [(a, gp + .3*qp)])
     nl, yl, il = trans['L']

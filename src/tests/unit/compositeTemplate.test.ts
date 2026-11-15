@@ -203,7 +203,7 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('\\mathrm{UR}_{des}')).toBe(value('\\mathrm{UR}_{d.x}'));   // composite: deflection along the span governs
       // 4.9: reference deflection_curve (closed form, 1 mm steps): 31.0771 mm at 3.94 m, 29.2243 mm with η = 1
       expect(value('\\delta_{max}','mm')).toBeCloseTo(31.0770932273,2);
-      expect(value('\\delta_{pi}','mm')).toBeCloseTo(31.0770932273 - 29.2243152997,2);
+      expect(value('\\delta_{q.max}','mm')).toBeCloseTo(7.052628667859932,2);   // reference delta_LL_max_mm
       expect(value('\\delta_{max}','mm')).toBeGreaterThanOrEqual(value('\\delta_{tot}','mm'));
       // wider stud spacing → lower η → more slip deflection (and the reverse)
       const d0 = value('\\delta_{max}','mm'), eta0 = value('\\eta');
@@ -315,11 +315,11 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('h_a','mm')).toBe(406.4);
     });
 
-    step('three static symbolic figures and five graphs (V, M, M_Rd(η), M_Rd(x), δ(x)); explicit review status', () => {
+    step('three static symbolic figures and four graphs (V, M, M_Rd(x), δ(x)); explicit review status', () => {
       const texts=doc.shapes.filter(s => s.type==='text');
       expect(texts.filter(s=>/^F\d —/.test(s.props.html)).map(s=>s.props.html.slice(0,2))).toEqual(['F1','F2','F3']);
       expect(texts.some(s=>s.props.html.includes('<i>h</i><sub>c</sub>'))).toBe(true);
-      expect(doc.shapes.filter(s=>s.type==='graph')).toHaveLength(5);
+      expect(doc.shapes.filter(s=>s.type==='graph')).toHaveLength(4);
       expect(doc.shapes.some(s=>s.type==='image')).toBe(false);
       expect(texts.some(s=>s.props.html.includes('Singapore NA verification is outstanding'))).toBe(true);
     });

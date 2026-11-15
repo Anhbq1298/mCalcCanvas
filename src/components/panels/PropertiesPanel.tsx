@@ -532,6 +532,12 @@ function SeriesEditor({ shapeId, series, index, onChange, onDelete }: { shapeId:
             </option>
           ))}
         </select>
+        {(series.style === 'line' || series.style === 'segments' || series.style === 'area') && (
+          <label className="flex cursor-pointer items-center gap-1 text-[12px]">
+            <input type="checkbox" data-testid={tid('dash')} className="h-3.5 w-3.5 cursor-pointer accent-accent" checked={!!series.dash} onChange={(e) => onChange({ dash: e.target.checked })} />
+            Dashed
+          </label>
+        )}
       </div>
       <SeriesSources shapeId={shapeId} seriesId={series.id} index={index} />
       <div className="space-y-1">

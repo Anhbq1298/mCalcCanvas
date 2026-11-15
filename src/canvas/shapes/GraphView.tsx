@@ -113,7 +113,7 @@ export const GraphView = memo(function GraphView({ shape }: { shape: GraphShape 
                 pieces[pieces.length - 1].push(`${X(v).toFixed(2)},${Y(p.ys[i]).toFixed(2)}`);
               });
               return (
-                <g key={series.id} {...common} data-pieces={pieces.length} fill="none" stroke={series.color} strokeWidth={series.width} strokeLinejoin="round" strokeLinecap="round">
+                <g key={series.id} {...common} data-pieces={pieces.length} fill="none" stroke={series.color} strokeWidth={series.width} strokeLinejoin="round" strokeLinecap="round" strokeDasharray={series.dash ? '6 4' : undefined}>
                   {pieces.map((pts, j) => (pts.length > 1 ? <polyline key={j} points={pts.join(' ')} /> : null))}
                 </g>
               );
@@ -125,14 +125,14 @@ export const GraphView = memo(function GraphView({ shape }: { shape: GraphShape 
               return (
                 <g key={series.id} {...common}>
                   <polygon points={fill} fill={series.color} fillOpacity={0.14} stroke="none" />
-                  <polyline points={pts.join(' ')} fill="none" stroke={series.color} strokeWidth={series.width} strokeLinejoin="round" />
+                  <polyline points={pts.join(' ')} fill="none" stroke={series.color} strokeWidth={series.width} strokeLinejoin="round" strokeDasharray={series.dash ? '6 4' : undefined} />
                 </g>
               );
             }
             if (series.style === 'values') return null; // drawn unclipped below
             if (series.style === 'line') {
               const pts = p.xs.map((v, i) => `${X(v).toFixed(2)},${Y(p.ys[i]).toFixed(2)}`).join(' ');
-              return <polyline key={series.id} {...common} points={pts} fill="none" stroke={series.color} strokeWidth={series.width} strokeLinejoin="round" />;
+              return <polyline key={series.id} {...common} points={pts} fill="none" stroke={series.color} strokeWidth={series.width} strokeLinejoin="round" strokeDasharray={series.dash ? '6 4' : undefined} />;
             }
             return (
               <g key={series.id} {...common} fill={series.color} fillOpacity={series.style === 'circle' ? 0.35 : 1} stroke={series.color} strokeWidth={series.style === 'circle' ? series.width : 0}>
@@ -207,7 +207,7 @@ export const GraphView = memo(function GraphView({ shape }: { shape: GraphShape 
           {legend.map((p, i) => (
             <g key={p.series.id} transform={`translate(${m.l + legendPos[i].x} ${h - legendH + 10 + legendPos[i].row * LEG_ROW})`}>
               {p.series.style === 'line' || p.series.style === 'segments' || p.series.style === 'area' ? (
-                <line x1={0} x2={14} y1={-3} y2={-3} stroke={p.series.color} strokeWidth={2} />
+                <line x1={0} x2={14} y1={-3} y2={-3} stroke={p.series.color} strokeWidth={2} strokeDasharray={p.series.dash ? '4 2' : undefined} />
               ) : (
                 <circle cx={7} cy={-3} r={3.5} fill={p.series.color} fillOpacity={p.series.style === 'circle' ? 0.35 : 1} stroke={p.series.color} />
               )}

@@ -155,11 +155,10 @@ Annex: the general force model and branch boundaries.
 - Still not covered: bearing stiffener design when (6.14) fails, the stud restraint force (EC3 §6.3.2.1 /
   Annex BB), and the load-position limits of type (a) close to a beam end.
 
-## Rev G: interaction chart and deflection along the span
+## Rev G: deflection along the span
 
-- §4.4: chart of M_Rd against η by (6.3), from M_a,Rd (η = 0) to M_pl,Rd (η = 1), with M_Ed, η_min and the design point.
 - §4.9: deflection δ(x) for 1.0 (g0 + G) + 1.0 Q plus shrinkage, split as at midspan (ψ2 Q long-term on I_L, the rest
   on I_0; g0 on I_a unpropped, I_L propped) with the partial-interaction slip rule δ = δ_c + C_s(1 − η)(δ_a − δ_c) applied at
-  every point (C_s 0.3 unpropped, 0.5 propped). Virtual work on the 200-interval grid; chart shows partial and full
-  interaction and the limit. UR_d,x = max δ(x) / (L/r_lim) replaces the midspan value in UR_c. Default: 31.08 mm at 3.94 m
+  every point (C_s 0.3 unpropped, 0.5 propped). Virtual work on the 200-interval grid; the permanent-stage chart
+  shows 1.0 DL + 1.0 LL, LL alone (7.05 mm max, same split and slip rule) and the limit (dashed). UR_d,x = max δ(x) / (L/r_lim) replaces the midspan value in UR_c. Default: 31.08 mm at 3.94 m
   (closed-form reference 31.0771 mm), of which 1.85 mm is slip. Wider stud spacing lowers η and increases δ.

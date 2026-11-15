@@ -239,12 +239,6 @@ calc('Rigid-plastic resistance at N_c','M_{Rd.pl}',R`T_a z_T-f_{yd}Q_{ac}-\frac{
 P('Design resistance, linear interaction (6.3); bare steel if a gate fails',R`M_{Rd}\coloneq${IF([R`\eta_{min}\le\eta\land4d_{sc}\le h_{sc}\land\beta_f\le9`, R`M_{a.Rd}+\eta\left(M_{pl.Rd}-M_{a.Rd}\right)`], [null, R`M_{a.Rd}`])}`,M(units('kN m')));
 check('Linear interaction ≤ rigid-plastic', 'M_{Rd}', 'M_{Rd.pl}');
 ur('Composite bending at x_M','M.2','M_{2.Ed}','M_{Rd}');
-T('(6.3): M_Rd = M_a,Rd at η = 0 to M_pl,Rd at η = 1, linear; valid for η ≥ η_min.');
-DIAGRAM(170, { title: 'M_Rd against degree of shear connection η (6.3)', xUnit: '', yUnit: 'kN m', series: [
-  S('ln', 'M_Rd = M_a,Rd + η(M_pl,Rd − M_a,Rd)', [R`\mathrm{stack}\left(0,1\right)`, R`\mathrm{stack}\left(M_{a.Rd},M_{pl.Rd}\right)`], 'line', '#1e3a5f', 2),
-  S('ed', 'M_Ed', [R`\mathrm{stack}\left(0,1\right)`, R`\mathrm{stack}\left(M_{2.Ed},M_{2.Ed}\right)`], 'line', '#b91c1c', 1.5),
-  S('mn', 'η_min', [R`\mathrm{stack}\left(\eta_{min},\eta_{min}\right)`, R`\mathrm{stack}\left(0M_{pl.Rd},M_{pl.Rd}\right)`], 'line', '#9ca3af', 1),
-  S('dp', 'design point (η, M_Rd)', ['\\eta', 'M_{Rd}'], 'values', '#1e3a5f', 1.5)] });
 P('PNA case at x_M: 0 slab, 1 flange, 2 fillet, 3 web',R`k_M\coloneq${IF([R`A_{ac}\le0\,\mathrm{mm^2}`, '0'], [R`A_{ac}\le A_f`, '1'], [R`A_{ac}<A_{fr}`, '2'], [null, '3'])}`,M({ precision: 0 }));
 fig('F3','Plastic stress block at partial connection (symbolic)','pna',7.5);
 LINK('pna','General plastic equilibrium and PNA branches', () => {
@@ -361,16 +355,18 @@ calc('Curvature of the table loads, composite (full interaction)', '\\kappa_c', 
 calc('Curvature of the table loads on the steel alone', '\\kappa_a', R`\frac{\mathrm{map}\left(M_s,x_v,1,1\right)}{E_a I_a}`, 'm^-1', 'fo');
 calc('Curvature, partial interaction, plus shrinkage', '\\kappa_p', R`\kappa_g+\kappa_c+C_s\left(1-\eta\right)\left(\kappa_a-\kappa_c\right)+\kappa_{sh}`, 'm^-1', 'fo');
 P('Deflection at u from a curvature vector', R`d_w(u,\kappa)\coloneq\Delta x\,\mathrm{sum}\left(\kappa\,m_w(u,x_v)\right)`, M(units('')));
+calc('Curvature of Q alone, composite (ψ2 Q on I_L, the rest on I_0)', '\\kappa_{q.c}', R`\frac{\mathrm{map}\left(M_s,x_v,0,\psi_2\right)}{E_a I_L}+\frac{\mathrm{map}\left(M_s,x_v,0,1-\psi_2\right)}{E_a I_0}`, 'm^-1', 'fo');
+calc('Curvature of Q alone, partial interaction', '\\kappa_q', R`\kappa_{q.c}+C_s\left(1-\eta\right)\left(\frac{\mathrm{map}\left(M_s,x_v,0,1\right)}{E_a I_a}-\kappa_{q.c}\right)`, 'm^-1', 'fo');
 P('Deflection at u, partial interaction', R`d_p(u)\coloneq d_w(u,\kappa_p)`, M(units('')));
-P('Deflection at u, full interaction (η = 1)', R`d_f(u)\coloneq d_w(u,\kappa_g+\kappa_c+\kappa_{sh})`, M(units('')));
-calc('Deflection along the span, partial interaction', '\\delta_x', R`\mathrm{map}\left(d_p,x_v\right)`, 'mm', 'fo');
-calc('Same, full interaction', '\\delta_{x.f}', R`\mathrm{map}\left(d_f,x_v\right)`, 'mm', 'fo');
+P('Deflection at u, imposed load alone', R`d_q(u)\coloneq d_w(u,\kappa_q)`, M(units('')));
+calc('Deflection along the span, 1.0 DL + 1.0 LL', '\\delta_x', R`\mathrm{map}\left(d_p,x_v\right)`, 'mm', 'fo');
+calc('Deflection along the span, LL alone', '\\delta_{x.q}', R`\mathrm{map}\left(d_q,x_v\right)`, 'mm', 'fo');
+calc('Maximum LL deflection', '\\delta_{q.max}', R`\max\left(\delta_{x.q}\right)`, 'mm', false);
 calc('Maximum deflection', '\\delta_{max}', R`\max\left(\delta_x\right)`, 'mm', false);
-calc('Increase from partial interaction', '\\delta_{pi}', R`\delta_{max}-\max\left(\delta_{x.f}\right)`, 'mm', false);
-DIAGRAM(170, { title: 'Deflection δ(x), 1.0 DL + 1.0 LL (downward)', xUnit: 'm', yUnit: 'mm', invertY: true, series: [
-  S('dp', 'partial interaction (studs provided)', ['x_v', '\\delta_x'], 'area', '#1d4ed8', 2),
-  S('df', 'full interaction (η = 1)', ['x_v', '\\delta_{x.f}'], 'line', '#64748b', 1.5),
-  S('dl', 'limit L / r_lim', [R`\mathrm{stack}\left(0\,\mathrm{m},L\right)`, R`\mathrm{stack}\left(\delta_{lim},\delta_{lim}\right)`], 'line', '#b91c1c', 1)] });
+DIAGRAM(170, { title: 'Deflection δ(x), permanent stage (downward)', xUnit: 'm', yUnit: 'mm', invertY: true, series: [
+  S('dp', '1.0 DL + 1.0 LL', ['x_v', '\\delta_x'], 'line', '#1d4ed8', 2),
+  S('dq', 'LL', ['x_v', '\\delta_{x.q}'], 'line', '#059669', 1.5),
+  S('dl', 'limit L / r_lim', [R`\mathrm{stack}\left(0\,\mathrm{m},L\right)`, R`\mathrm{stack}\left(\delta_{lim},\delta_{lim}\right)`], 'line', '#b91c1c', 1.5, { dash: true })] });
 ur('Maximum deflection along the span','d.x','\\delta_{max}','\\delta_{lim}');
 H(2, '5. EN 1992-1-1 — SLAB LONGITUDINAL SHEAR (EC4 §6.6.6, EC2 §6.2.4)');
 T('Two vertical planes a-a beside the stud row; half the connector flow to each slab outstand.');

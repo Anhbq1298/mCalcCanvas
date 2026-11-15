@@ -171,6 +171,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           color: color(q.color, '#1e3a5f'),
           width: bounded(q.width, 1.5, 0.25, 20),
           show: latex(q.show),
+          ...(q.dash === true ? { dash: true } : {}),
         }));
       return {
         ...base,

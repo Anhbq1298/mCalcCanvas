@@ -149,6 +149,8 @@ export interface GraphSeries {
   width: number;
   /** Optional condition (e.g. n_{set}\ge2); empty = always shown. */
   show: string;
+  /** Dashed line (styles line, segments, area outline). */
+  dash?: boolean;
 }
 
 export interface GraphProps {
