@@ -128,6 +128,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           ...(p.textStyle === 'title' || p.textStyle === 'subtitle' ? { textStyle: p.textStyle } : {}),
           ...annexRole(p.annex),
           ...(p.pageBreak === true ? { pageBreak: true } : {}),
+          ...(typeof p.showWhen === 'string' && p.showWhen.trim() ? { showWhen: p.showWhen.slice(0, 2000) } : {}),
         },
       };
     case 'image': {

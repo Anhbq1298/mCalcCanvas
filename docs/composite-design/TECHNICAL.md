@@ -162,3 +162,12 @@ Annex: the general force model and branch boundaries.
   every point (C_s 0.3 unpropped, 0.5 propped). Virtual work on the 200-interval grid; the permanent-stage chart
   shows 1.0 DL + 1.0 LL, LL alone (7.05 mm max, same split and slip rule) and the limit (dashed). UR_d,x = max δ(x) / (L/r_lim) replaces the midspan value in UR_c. Default: 31.08 mm at 3.94 m
   (closed-form reference 31.0771 mm), of which 1.85 mm is slip. Wider stud spacing lowers η and increases δ.
+
+## Rev G: layout of the non-composite alternative
+
+- Chapter 6 on the main pages keeps c_comp, the basis (bare steel, L_LT = stud spacing, steel-alone deflection) and the
+  key results (L_LT,nc, χ_LT,nc, δ_nc, UR_MV,nc, UR_LT,nc, UR_FM,nc, UR_d,nc); the full calculation is annex A.3.
+- Summary: a one-line design-basis note under c_comp and, when c_comp = 0, a red note at the end of the summary: not
+  designed as composite; bare steel to EN 1993-1-1 / EN 1993-1-5 with L_LT = stud spacing; UR from the steel-alone
+  deflection. These are conditional texts (new app feature: Text → "Print only when", props.showWhen): printed only
+  while the condition holds, greyed out on screen otherwise.

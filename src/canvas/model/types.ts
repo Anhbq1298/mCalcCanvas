@@ -68,6 +68,8 @@ export interface TextProps {
   annex?: AnnexRole;
   /** Start a new page here when the print / template layout is planned (a section that must stay on its own page). */
   pageBreak?: boolean;
+  /** Optional condition (e.g. c_{comp}<1): the text is printed only while it holds; on screen it is greyed out. */
+  showWhen?: string;
 }
 
 /**

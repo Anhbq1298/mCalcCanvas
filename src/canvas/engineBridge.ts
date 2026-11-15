@@ -15,6 +15,7 @@ import type { RegionInput } from '../engine';
 import { placeShapes, useCanvasStore, type CanvasState } from './model/canvasStore';
 import type { GraphShape, Shape } from './model/types';
 import { inputTableColumns, inputTableRegionId } from './inputTable';
+import { textShowRegionId } from './textShow';
 import { graphRegionId, isDefinitionLatex, type GraphField } from './graphData';
 import { annexInfo } from './annex';
 
@@ -75,6 +76,9 @@ function regionsOf(s: Shape, editingId: string | null, shapes: Record<string, Sh
     });
   } else if (s.type === 'graph') {
     graphRegions(s, out, calcKey(s, shapes));
+  } else if (s.type === 'text' && s.props.showWhen?.trim()) {
+    // A conditional text: its condition is a hidden region at the text's reading position.
+    out.set(textShowRegionId(s.id), { latex: s.props.showWhen, displayUnit: null, precision: null, order: calcKey(s, shapes) });
   } else if (s.type === 'table') {
     const key = calcKey(s, shapes);
     for (const col of inputTableColumns(s)) {

@@ -14238,7 +14238,7 @@
       "props": {
         "w": 630,
         "h": 24,
-        "html": "6. NON-COMPOSITE ALTERNATIVE (EN 1993-1-1)",
+        "html": "6. NON-COMPOSITE ALTERNATIVE (EN 1993-1-1, EN 1993-1-5)",
         "fontFamily": "Roboto",
         "fontSize": 16,
         "color": "#0f172a",
@@ -14305,7 +14305,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "c_comp = 0, e.g. a large point load near a support: few studs fit between the support and x_M.",
+        "html": "Bare steel beam for all permanent-stage loads, no composite credit. Studs at s ≤ s_max restrain the",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -14320,7 +14320,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "The steel beam alone then carries every permanent-stage load, with no composite credit.",
+        "html": "top flange (EN 1994-1-1 §6.4.1(1)), so L_LT = stud spacing. Deflection on the steel section alone.",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -14334,23 +14334,27 @@
       "y": 22518,
       "props": {
         "w": 630,
-        "h": 19,
-        "html": "Studs are a minimum provision that restrains the top flange: L_LT = stud spacing (s ≤ s_max, 4.2).",
+        "h": 24,
+        "html": "",
         "fontFamily": "Roboto",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
+        "fontSize": 14,
+        "color": "#2563eb",
+        "align": "left",
+        "annex": {
+          "kind": "link",
+          "target": "noncomp"
+        }
       }
     },
     {
       "id": "s_ec4_nv",
       "type": "text",
       "x": 76,
-      "y": 22543,
+      "y": 22548,
       "props": {
         "w": 630,
         "h": 19,
-        "html": "Utilisations only; acceptance is in chapter 7 for the design basis used (c_comp).",
+        "html": "Key results (calculated in the annex):",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -14359,64 +14363,70 @@
     },
     {
       "id": "s_ec4_nw",
-      "type": "text",
-      "x": 76,
-      "y": 22574,
-      "props": {
-        "w": 630,
-        "h": 21,
-        "html": "6.1 Bending, shear and M–V interaction, steel section alone (§6.2.5, §6.2.6, §6.2.8)",
-        "fontFamily": "Roboto",
-        "fontSize": 14,
-        "color": "#334155",
-        "align": "left",
-        "heading": 3
-      }
-    },
-    {
-      "id": "s_ec4_nx",
-      "type": "text",
-      "x": 76,
-      "y": 22640,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Bending, steel alone, at x_M",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_nx"
-    },
-    {
-      "id": "s_ec4_ny",
       "type": "math",
-      "x": 396,
-      "y": 22601,
+      "x": 96,
+      "y": 22573,
       "props": {
-        "w": 194,
-        "h": 96,
-        "baseline": 52,
-        "latex": "\\mathrm{UR}_{M.nc}\\coloneq \\frac{M_{2.Ed}}{M_{a.Rd}}",
-        "displayMode": "full",
-        "displayUnit": "",
+        "w": 125,
+        "h": 26,
+        "baseline": 18,
+        "latex": "L_{LT.nc}=",
+        "displayMode": "auto",
+        "displayUnit": "mm",
         "precision": 3,
         "autoSize": true,
         "fontSize": 16,
         "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_nx"
+      }
+    },
+    {
+      "id": "s_ec4_nx",
+      "type": "math",
+      "x": 316,
+      "y": 22573,
+      "props": {
+        "w": 79,
+        "h": 26,
+        "baseline": 18,
+        "latex": "\\chi_{LT.nc}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a",
+        "math": {
+          "precision": 3
+        }
+      }
+    },
+    {
+      "id": "s_ec4_ny",
+      "type": "math",
+      "x": 496,
+      "y": 22573,
+      "props": {
+        "w": 123,
+        "h": 26,
+        "baseline": 18,
+        "latex": "\\delta_{nc}=",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
     },
     {
       "id": "s_ec4_nz",
       "type": "text",
       "x": 76,
-      "y": 22743,
+      "y": 22610,
       "props": {
         "w": 304,
         "h": 18,
-        "html": "Shear, steel web",
+        "html": "Utilisation MV.nc",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -14428,847 +14438,7 @@
       "id": "s_ec4_o0",
       "type": "math",
       "x": 396,
-      "y": 22703,
-      "props": {
-        "w": 166,
-        "h": 98,
-        "baseline": 53,
-        "latex": "\\mathrm{UR}_{V.nc}\\coloneq \\frac{V_{2.Ed}}{V_{pl.Rd}}",
-        "displayMode": "full",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_nz"
-    },
-    {
-      "id": "s_ec4_o1",
-      "type": "text",
-      "x": 76,
-      "y": 22812,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Web area",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_o1"
-    },
-    {
-      "id": "s_ec4_o2",
-      "type": "math",
-      "x": 396,
-      "y": 22807,
-      "props": {
-        "w": 188,
-        "h": 26,
-        "baseline": 18,
-        "latex": "A_w\\coloneq h_w t_w",
-        "displayMode": "formulaResult",
-        "displayUnit": "mm^2",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_o1"
-    },
-    {
-      "id": "s_ec4_o3",
-      "type": "text",
-      "x": 76,
-      "y": 22852,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "(6.30) along the span, ρ from 4.6",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_o3"
-    },
-    {
-      "id": "s_ec4_o4",
-      "type": "math",
-      "x": 396,
-      "y": 22839,
-      "props": {
-        "w": 218,
-        "h": 43,
-        "baseline": 26,
-        "latex": "M_{V.nc.x}\\coloneq \\left(W_{pl}-\\frac{A_w^2}{4t_w}\\rho_v\\right)f_{yd}",
-        "displayMode": "formula",
-        "displayUnit": "kN m",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_o3"
-    },
-    {
-      "id": "s_ec4_o5",
-      "type": "text",
-      "x": 76,
-      "y": 22901,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "(6.30) under each point load",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_o5"
-    },
-    {
-      "id": "s_ec4_o6",
-      "type": "math",
-      "x": 396,
-      "y": 22888,
-      "props": {
-        "w": 223,
-        "h": 43,
-        "baseline": 26,
-        "latex": "M_{V.nc.P}\\coloneq \\left(W_{pl}-\\frac{A_w^2}{4t_w}\\rho_P\\right)f_{yd}",
-        "displayMode": "formula",
-        "displayUnit": "kN m",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_o5"
-    },
-    {
-      "id": "s_ec4_o7",
-      "type": "text",
-      "x": 76,
-      "y": 22937,
-      "props": {
-        "w": 630,
-        "h": 18,
-        "html": "Bending with shear",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_o7"
-    },
-    {
-      "id": "s_ec4_o8",
-      "type": "math",
-      "x": 96,
-      "y": 22956,
-      "props": {
-        "w": 446,
-        "h": 61,
-        "baseline": 34,
-        "latex": "\\mathrm{UR}_{MV.nc}\\coloneq \\max\\left(\\max\\left(\\overrightarrow{\\frac{M_v}{M_{V.nc.x}}}\\right),\\max\\left(\\overrightarrow{\\frac{M_P}{M_{V.nc.P}}}\\right)\\right)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_o7"
-    },
-    {
-      "id": "s_ec4_o9",
-      "type": "text",
-      "x": 76,
-      "y": 23029,
-      "props": {
-        "w": 630,
-        "h": 21,
-        "html": "6.2 Lateral-torsional buckling (EN 1994-1-1 §6.4.1(1); EN 1993-1-1 §6.3.2.2)",
-        "fontFamily": "Roboto",
-        "fontSize": 14,
-        "color": "#334155",
-        "align": "left",
-        "heading": 3
-      }
-    },
-    {
-      "id": "s_ec4_oa",
-      "type": "text",
-      "x": 76,
-      "y": 23056,
-      "props": {
-        "w": 630,
-        "h": 19,
-        "html": "EN 1994-1-1 §6.4.1(1): a steel flange attached to the slab by shear connection to §6.6 may be",
-        "fontFamily": "Roboto",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_ec4_ob",
-      "type": "text",
-      "x": 76,
-      "y": 23081,
-      "props": {
-        "w": 630,
-        "h": 19,
-        "html": "taken as laterally stable if the slab is laterally stable. Applied when s ≤ s_max (§6.6.5.5);",
-        "fontFamily": "Roboto",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_ec4_oc",
-      "type": "text",
-      "x": 76,
-      "y": 23106,
-      "props": {
-        "w": 630,
-        "h": 19,
-        "html": "L_LT is then the stud spacing (χ_LT = 1). Otherwise the full span is used as unrestrained.",
-        "fontFamily": "Roboto",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_ec4_od",
-      "type": "text",
-      "x": 76,
-      "y": 23176,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Top flange restrained by the studs (1) or not (0)",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_od"
-    },
-    {
-      "id": "s_ec4_oe",
-      "type": "math",
-      "x": 396,
-      "y": 23131,
-      "props": {
-        "w": 299,
-        "h": 83,
-        "baseline": 18,
-        "latex": "c_{rest}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ s_{sc.A}\\le s_{max}\\land s_{sc.B}\\le s_{max}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_od"
-    },
-    {
-      "id": "s_ec4_of",
-      "type": "text",
-      "x": 76,
-      "y": 23265,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "LTB length",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_of"
-    },
-    {
-      "id": "s_ec4_og",
-      "type": "math",
-      "x": 396,
-      "y": 23220,
-      "props": {
-        "w": 297,
-        "h": 83,
-        "baseline": 18,
-        "latex": "L_{LT.nc}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ c_{rest}\\ge1\\\\\\quad\\left\\Vert\\displaystyle \\max\\left(s_{sc.A},s_{sc.B}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle L\\right.\\end{array}",
-        "displayMode": "auto",
-        "displayUnit": "mm",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_of"
-    },
-    {
-      "id": "s_ec4_oh",
-      "type": "text",
-      "x": 76,
-      "y": 23491,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Euler force (C1 = 1, z_g = 0)",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_oh"
-    },
-    {
-      "id": "s_ec4_oi",
-      "type": "math",
-      "x": 396,
-      "y": 23480,
-      "props": {
-        "w": 242,
-        "h": 42,
-        "baseline": 24,
-        "latex": "N_{cr.nc}\\coloneq \\frac{\\pi^2 E_a I_z}{L_{LT.nc}^2}",
-        "displayMode": "formulaResult",
-        "displayUnit": "kN",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_oh"
-    },
-    {
-      "id": "s_ec4_oj",
-      "type": "text",
-      "x": 76,
-      "y": 23528,
-      "props": {
-        "w": 630,
-        "h": 18,
-        "html": "Elastic critical moment",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_oj"
-    },
-    {
-      "id": "s_ec4_ok",
-      "type": "math",
-      "x": 96,
-      "y": 23555,
-      "props": {
-        "w": 357,
-        "h": 43,
-        "baseline": 26,
-        "latex": "M_{cr.nc}\\coloneq N_{cr.nc}\\sqrt{\\frac{I_w}{I_z}+\\frac{G_a I_t}{N_{cr.nc}}}",
-        "displayMode": "formulaResult",
-        "displayUnit": "kN m",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_oj"
-    },
-    {
-      "id": "s_ec4_ol",
-      "type": "text",
-      "x": 76,
-      "y": 23618,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Slenderness",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_ol"
-    },
-    {
-      "id": "s_ec4_om",
-      "type": "math",
-      "x": 396,
-      "y": 23604,
-      "props": {
-        "w": 205,
-        "h": 43,
-        "baseline": 27,
-        "latex": "\\lambda_{LT.nc}\\coloneq \\sqrt{\\frac{W_{pl}f_y}{M_{cr.nc}}}",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_ol"
-    },
-    {
-      "id": "s_ec4_on",
-      "type": "text",
-      "x": 76,
-      "y": 23653,
-      "props": {
-        "w": 630,
-        "h": 18,
-        "html": "(6.56)",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_on"
-    },
-    {
-      "id": "s_ec4_oo",
-      "type": "math",
-      "x": 96,
-      "y": 23668,
-      "props": {
-        "w": 381,
-        "h": 26,
-        "baseline": 18,
-        "latex": "\\Phi_{LT.nc}\\coloneq 0.5\\left(1+\\alpha_{LT}\\left(\\lambda_{LT.nc}-0.2\\right)+\\lambda_{LT.nc}^2\\right)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_on"
-    },
-    {
-      "id": "s_ec4_op",
-      "type": "text",
-      "x": 76,
-      "y": 23700,
-      "props": {
-        "w": 630,
-        "h": 18,
-        "html": "Reduction factor",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_op"
-    },
-    {
-      "id": "s_ec4_oq",
-      "type": "math",
-      "x": 96,
-      "y": 23723,
-      "props": {
-        "w": 349,
-        "h": 52,
-        "baseline": 30,
-        "latex": "\\chi_{LT.nc}\\coloneq \\min\\left(1,\\frac{1}{\\Phi_{LT.nc}+\\sqrt{\\Phi_{LT.nc}^2-\\lambda_{LT.nc}^2}}\\right)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_op"
-    },
-    {
-      "id": "s_ec4_or",
-      "type": "text",
-      "x": 76,
-      "y": 23792,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "(6.55)",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_or"
-    },
-    {
-      "id": "s_ec4_os",
-      "type": "math",
-      "x": 396,
-      "y": 23781,
-      "props": {
-        "w": 293,
-        "h": 40,
-        "baseline": 24,
-        "latex": "M_{b.Rd.nc}\\coloneq \\frac{\\chi_{LT.nc}W_{pl}f_y}{\\gamma_{M1}}",
-        "displayMode": "formulaResult",
-        "displayUnit": "kN m",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_or"
-    },
-    {
-      "id": "s_ec4_ot",
-      "type": "text",
-      "x": 76,
-      "y": 23866,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "LTB",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_ot"
-    },
-    {
-      "id": "s_ec4_ou",
-      "type": "math",
-      "x": 396,
-      "y": 23827,
-      "props": {
-        "w": 198,
-        "h": 96,
-        "baseline": 52,
-        "latex": "\\mathrm{UR}_{LT.nc}\\coloneq \\frac{M_{2.Ed}}{M_{b.Rd.nc}}",
-        "displayMode": "full",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_ot"
-    },
-    {
-      "id": "s_ec4_ov",
-      "type": "text",
-      "x": 76,
-      "y": 23935,
-      "props": {
-        "w": 630,
-        "h": 21,
-        "html": "6.3 Web under point loads, steel alone (EN 1993-1-5 §6, §7.2)",
-        "fontFamily": "Roboto",
-        "fontSize": 14,
-        "color": "#334155",
-        "align": "left",
-        "heading": 3
-      }
-    },
-    {
-      "id": "s_ec4_ow",
-      "type": "text",
-      "x": 76,
-      "y": 23962,
-      "props": {
-        "w": 630,
-        "h": 19,
-        "html": "η2 as in 4.7 (same web). η1 = M_Ed / M_el,Rd of the steel section, (4.14) with gross W_el.",
-        "fontFamily": "Roboto",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_ec4_ox",
-      "type": "text",
-      "x": 76,
-      "y": 24016,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Elastic moment resistance, steel",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_ox"
-    },
-    {
-      "id": "s_ec4_oy",
-      "type": "math",
-      "x": 396,
-      "y": 23987,
-      "props": {
-        "w": 245,
-        "h": 37,
-        "baseline": 22,
-        "latex": "M_{el.Rd}\\coloneq \\frac{2I_a}{h_a}f_{yd}",
-        "displayMode": "formulaResult",
-        "displayUnit": "kN m",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_ox"
-    },
-    {
-      "id": "s_ec4_oz",
-      "type": "text",
-      "x": 76,
-      "y": 24040,
-      "props": {
-        "w": 630,
-        "h": 18,
-        "html": "(7.2) as a utilisation",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_oz"
-    },
-    {
-      "id": "s_ec4_p0",
-      "type": "math",
-      "x": 96,
-      "y": 24072,
-      "props": {
-        "w": 355,
-        "h": 73,
-        "baseline": 41,
-        "latex": "\\mathrm{UR}_{FM.nc}\\coloneq c_{F.P}\\max\\left(\\overrightarrow{\\frac{\\frac{F_{loc}}{F_{Rd.a}}+0.8\\frac{M_P}{M_{el.Rd}}}{1.4}}\\right)",
-        "displayMode": "formulaResult",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_oz"
-    },
-    {
-      "id": "s_ec4_p1",
-      "type": "text",
-      "x": 76,
-      "y": 24157,
-      "props": {
-        "w": 630,
-        "h": 21,
-        "html": "6.4 Deflection, steel section alone (characteristic loads)",
-        "fontFamily": "Roboto",
-        "fontSize": 14,
-        "color": "#334155",
-        "align": "left",
-        "heading": 3
-      }
-    },
-    {
-      "id": "s_ec4_p2",
-      "type": "text",
-      "x": 76,
-      "y": 24196,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "g0 and the load tables on the steel alone",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_p2"
-    },
-    {
-      "id": "s_ec4_p3",
-      "type": "math",
-      "x": 396,
-      "y": 24184,
-      "props": {
-        "w": 262,
-        "h": 40,
-        "baseline": 25,
-        "latex": "\\delta_{nc}\\coloneq \\frac{5g_0 L^4}{384E_a I_a}+\\delta_{a.post}",
-        "displayMode": "formulaResult",
-        "displayUnit": "mm",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_p2"
-    },
-    {
-      "id": "s_ec4_p4",
-      "type": "text",
-      "x": 76,
-      "y": 24269,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Deflection, steel alone",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_p4"
-    },
-    {
-      "id": "s_ec4_p5",
-      "type": "math",
-      "x": 396,
-      "y": 24230,
-      "props": {
-        "w": 155,
-        "h": 96,
-        "baseline": 52,
-        "latex": "\\mathrm{UR}_{d.nc}\\coloneq \\frac{\\delta_{nc}}{\\delta_{lim}}",
-        "displayMode": "full",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_p4"
-    },
-    {
-      "id": "s_ec4_p6",
-      "type": "text",
-      "x": 76,
-      "y": 24338,
-      "props": {
-        "w": 630,
-        "h": 24,
-        "html": "7. SUMMARY BY CODE",
-        "fontFamily": "Roboto",
-        "fontSize": 16,
-        "color": "#0f172a",
-        "align": "left",
-        "heading": 2
-      }
-    },
-    {
-      "id": "s_ec4_p7",
-      "type": "text",
-      "x": 76,
-      "y": 24374,
-      "props": {
-        "w": 630,
-        "h": 21,
-        "html": "Design basis — composite (chapter 4) or non-composite (chapter 6)",
-        "fontFamily": "Roboto",
-        "fontSize": 14,
-        "color": "#334155",
-        "align": "left",
-        "heading": 3
-      }
-    },
-    {
-      "id": "s_ec4_p8",
-      "type": "text",
-      "x": 76,
-      "y": 24406,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Composite action achieved (1 = yes, 0 = no)",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_p8"
-    },
-    {
-      "id": "s_ec4_p9",
-      "type": "math",
-      "x": 396,
-      "y": 24401,
-      "props": {
-        "w": 71,
-        "h": 26,
-        "baseline": 18,
-        "latex": "c_{comp}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 0,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_p8"
-    },
-    {
-      "id": "s_ec4_pa",
-      "type": "text",
-      "x": 76,
-      "y": 24438,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Non-composite utilisation M.nc",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_pa"
-    },
-    {
-      "id": "s_ec4_pb",
-      "type": "math",
-      "x": 396,
-      "y": 24433,
-      "props": {
-        "w": 117,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{M.nc}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_pa"
-    },
-    {
-      "id": "s_ec4_pc",
-      "type": "text",
-      "x": 76,
-      "y": 24656,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Non-composite utilisation MV.nc",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_pc"
-    },
-    {
-      "id": "s_ec4_pd",
-      "type": "math",
-      "x": 396,
-      "y": 24651,
+      "y": 22605,
       "props": {
         "w": 126,
         "h": 25,
@@ -15281,34 +14451,34 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_pc"
+      "printGroupId": "s_ec4_pg_nz"
     },
     {
-      "id": "s_ec4_pe",
+      "id": "s_ec4_o1",
       "type": "text",
       "x": 76,
-      "y": 24687,
+      "y": 22641,
       "props": {
         "w": 304,
         "h": 18,
-        "html": "Non-composite utilisation V.nc",
+        "html": "Utilisation LT.nc",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_pe"
+      "printGroupId": "s_ec4_pg_o1"
     },
     {
-      "id": "s_ec4_pf",
+      "id": "s_ec4_o2",
       "type": "math",
       "x": 396,
-      "y": 24682,
+      "y": 22636,
       "props": {
-        "w": 122,
+        "w": 121,
         "h": 25,
         "baseline": 18,
-        "latex": "\\mathrm{UR}_{V.nc}=",
+        "latex": "\\mathrm{UR}_{LT.nc}=",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": 3,
@@ -15316,17 +14486,864 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_pe"
+      "printGroupId": "s_ec4_pg_o1"
+    },
+    {
+      "id": "s_ec4_o3",
+      "type": "text",
+      "x": 76,
+      "y": 22672,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Utilisation FM.nc",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_o3"
+    },
+    {
+      "id": "s_ec4_o4",
+      "type": "math",
+      "x": 396,
+      "y": 22667,
+      "props": {
+        "w": 134,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{FM.nc}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_o3"
+    },
+    {
+      "id": "s_ec4_o5",
+      "type": "text",
+      "x": 76,
+      "y": 22703,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Utilisation d.nc",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_o5"
+    },
+    {
+      "id": "s_ec4_o6",
+      "type": "math",
+      "x": 396,
+      "y": 22698,
+      "props": {
+        "w": 111,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{d.nc}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_o5"
+    },
+    {
+      "id": "s_ec4_o7",
+      "type": "text",
+      "x": 76,
+      "y": 22735,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "7. SUMMARY BY CODE",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_ec4_o8",
+      "type": "text",
+      "x": 76,
+      "y": 22771,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "Design basis — composite (chapter 4) or non-composite (chapter 6)",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_ec4_o9",
+      "type": "text",
+      "x": 76,
+      "y": 22803,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Composite action achieved (1 = yes, 0 = no)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_o9"
+    },
+    {
+      "id": "s_ec4_oa",
+      "type": "math",
+      "x": 396,
+      "y": 22798,
+      "props": {
+        "w": 71,
+        "h": 26,
+        "baseline": 18,
+        "latex": "c_{comp}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_o9"
+    },
+    {
+      "id": "s_ec4_ob",
+      "type": "text",
+      "x": 76,
+      "y": 22830,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Design basis: COMPOSITE (chapter 4). Chapter 6 is for information only.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left",
+        "showWhen": "c_{comp}\\ge1"
+      }
+    },
+    {
+      "id": "s_ec4_oc",
+      "type": "text",
+      "x": 76,
+      "y": 22855,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "NOT DESIGNED AS COMPOSITE: designed as a bare steel beam (chapter 6); see the note below.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#b91c1c",
+        "align": "left",
+        "showWhen": "c_{comp}<1"
+      }
+    },
+    {
+      "id": "s_ec4_od",
+      "type": "text",
+      "x": 76,
+      "y": 22885,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Web checks, both bases (4.7)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_od"
+    },
+    {
+      "id": "s_ec4_oe",
+      "type": "math",
+      "x": 396,
+      "y": 22880,
+      "props": {
+        "w": 265,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{F}\\coloneq\\max\\left(\\mathrm{UR}_{F.P},\\mathrm{UR}_{F.S}\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_od"
+    },
+    {
+      "id": "s_ec4_of",
+      "type": "text",
+      "x": 76,
+      "y": 22911,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Governing utilisation, composite (chapter 4)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_of"
+    },
+    {
+      "id": "s_ec4_og",
+      "type": "math",
+      "x": 96,
+      "y": 22926,
+      "props": {
+        "w": 506,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{c}\\coloneq\\max\\left(\\mathrm{UR}_{M.2},\\mathrm{UR}_{M.x},\\mathrm{UR}_{MV},\\mathrm{UR}_{V.2},\\mathrm{UR}_{F},\\mathrm{UR}_{FM},\\mathrm{UR}_{d.x}\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_of"
+    },
+    {
+      "id": "s_ec4_oh",
+      "type": "text",
+      "x": 76,
+      "y": 22957,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Governing utilisation, non-composite (chapter 6)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_oh"
+    },
+    {
+      "id": "s_ec4_oi",
+      "type": "math",
+      "x": 96,
+      "y": 22972,
+      "props": {
+        "w": 560,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{nc}\\coloneq\\max\\left(\\mathrm{UR}_{M.nc},\\mathrm{UR}_{MV.nc},\\mathrm{UR}_{V.nc},\\mathrm{UR}_{LT.nc},\\mathrm{UR}_{F},\\mathrm{UR}_{FM.nc},\\mathrm{UR}_{d.nc}\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_oh"
+    },
+    {
+      "id": "s_ec4_oj",
+      "type": "text",
+      "x": 76,
+      "y": 23048,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Governing utilisation of the design basis used",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_oj"
+    },
+    {
+      "id": "s_ec4_ok",
+      "type": "math",
+      "x": 396,
+      "y": 23003,
+      "props": {
+        "w": 229,
+        "h": 83,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{des}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ c_{comp}\\ge1\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{UR}_{c}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{UR}_{nc}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_oj"
+    },
+    {
+      "id": "s_ec4_ol",
+      "type": "text",
+      "x": 76,
+      "y": 23097,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Acceptance, permanent stage",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_ol"
+    },
+    {
+      "id": "s_ec4_om",
+      "type": "math",
+      "x": 396,
+      "y": 23092,
+      "props": {
+        "w": 218,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{des}\\le 1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_ol"
+    },
+    {
+      "id": "s_ec4_on",
+      "type": "text",
+      "x": 76,
+      "y": 23129,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "EN 1993-1-1 — construction stage",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_ec4_oo",
+      "type": "text",
+      "x": 76,
+      "y": 23161,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Utilisation M.1",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_oo"
+    },
+    {
+      "id": "s_ec4_op",
+      "type": "math",
+      "x": 396,
+      "y": 23156,
+      "props": {
+        "w": 119,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{M.1}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_oo"
+    },
+    {
+      "id": "s_ec4_oq",
+      "type": "text",
+      "x": 76,
+      "y": 23192,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Utilisation V.1",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_oq"
+    },
+    {
+      "id": "s_ec4_or",
+      "type": "math",
+      "x": 396,
+      "y": 23187,
+      "props": {
+        "w": 116,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{V.1}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_oq"
+    },
+    {
+      "id": "s_ec4_os",
+      "type": "text",
+      "x": 76,
+      "y": 23223,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Utilisation LT",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_os"
+    },
+    {
+      "id": "s_ec4_ot",
+      "type": "math",
+      "x": 396,
+      "y": 23218,
+      "props": {
+        "w": 106,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{LT}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_os"
+    },
+    {
+      "id": "s_ec4_ou",
+      "type": "text",
+      "x": 76,
+      "y": 23254,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Utilisation d.1",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_ou"
+    },
+    {
+      "id": "s_ec4_ov",
+      "type": "math",
+      "x": 396,
+      "y": 23249,
+      "props": {
+        "w": 113,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{d.1}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_ou"
+    },
+    {
+      "id": "s_ec4_ow",
+      "type": "text",
+      "x": 76,
+      "y": 23480,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "EN 1994-1-1 — composite beam",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_ec4_ox",
+      "type": "text",
+      "x": 76,
+      "y": 23512,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Utilisation M.2",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_ox"
+    },
+    {
+      "id": "s_ec4_oy",
+      "type": "math",
+      "x": 396,
+      "y": 23507,
+      "props": {
+        "w": 119,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{M.2}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_ox"
+    },
+    {
+      "id": "s_ec4_oz",
+      "type": "text",
+      "x": 76,
+      "y": 23543,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Utilisation M.x",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_oz"
+    },
+    {
+      "id": "s_ec4_p0",
+      "type": "math",
+      "x": 396,
+      "y": 23538,
+      "props": {
+        "w": 120,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{M.x}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_oz"
+    },
+    {
+      "id": "s_ec4_p1",
+      "type": "text",
+      "x": 76,
+      "y": 23574,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Utilisation MV",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_p1"
+    },
+    {
+      "id": "s_ec4_p2",
+      "type": "math",
+      "x": 396,
+      "y": 23569,
+      "props": {
+        "w": 120,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{MV}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_p1"
+    },
+    {
+      "id": "s_ec4_p3",
+      "type": "text",
+      "x": 76,
+      "y": 23605,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Utilisation V.2",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_p3"
+    },
+    {
+      "id": "s_ec4_p4",
+      "type": "math",
+      "x": 396,
+      "y": 23600,
+      "props": {
+        "w": 116,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{V.2}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_p3"
+    },
+    {
+      "id": "s_ec4_p5",
+      "type": "text",
+      "x": 76,
+      "y": 23636,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Utilisation F.P",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_p5"
+    },
+    {
+      "id": "s_ec4_p6",
+      "type": "math",
+      "x": 396,
+      "y": 23631,
+      "props": {
+        "w": 119,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{F.P}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_p5"
+    },
+    {
+      "id": "s_ec4_p7",
+      "type": "text",
+      "x": 76,
+      "y": 23667,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Utilisation F.S",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_p7"
+    },
+    {
+      "id": "s_ec4_p8",
+      "type": "math",
+      "x": 396,
+      "y": 23662,
+      "props": {
+        "w": 118,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{F.S}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_p7"
+    },
+    {
+      "id": "s_ec4_p9",
+      "type": "text",
+      "x": 76,
+      "y": 23698,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Utilisation FM",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_p9"
+    },
+    {
+      "id": "s_ec4_pa",
+      "type": "math",
+      "x": 396,
+      "y": 23693,
+      "props": {
+        "w": 119,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{FM}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_p9"
+    },
+    {
+      "id": "s_ec4_pb",
+      "type": "text",
+      "x": 76,
+      "y": 23729,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Utilisation d.2",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_pb"
+    },
+    {
+      "id": "s_ec4_pc",
+      "type": "math",
+      "x": 396,
+      "y": 23724,
+      "props": {
+        "w": 113,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{d.2}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_pb"
+    },
+    {
+      "id": "s_ec4_pd",
+      "type": "text",
+      "x": 76,
+      "y": 23760,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Utilisation d.x",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_pd"
+    },
+    {
+      "id": "s_ec4_pe",
+      "type": "math",
+      "x": 396,
+      "y": 23755,
+      "props": {
+        "w": 114,
+        "h": 25,
+        "baseline": 18,
+        "latex": "\\mathrm{UR}_{d.x}=",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_pd"
+    },
+    {
+      "id": "s_ec4_pf",
+      "type": "text",
+      "x": 76,
+      "y": 23792,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "EN 1992-1-1 — slab longitudinal shear",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
     },
     {
       "id": "s_ec4_pg",
       "type": "text",
       "x": 76,
-      "y": 24718,
+      "y": 23824,
       "props": {
         "w": 304,
         "h": 18,
-        "html": "Non-composite utilisation LT.nc",
+        "html": "Utilisation sf",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -15338,12 +15355,12 @@
       "id": "s_ec4_ph",
       "type": "math",
       "x": 396,
-      "y": 24713,
+      "y": 23819,
       "props": {
-        "w": 121,
+        "w": 110,
         "h": 25,
         "baseline": 18,
-        "latex": "\\mathrm{UR}_{LT.nc}=",
+        "latex": "\\mathrm{UR}_{sf}=",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": 3,
@@ -15357,11 +15374,11 @@
       "id": "s_ec4_pi",
       "type": "text",
       "x": 76,
-      "y": 24749,
+      "y": 23855,
       "props": {
         "w": 304,
         "h": 18,
-        "html": "Non-composite utilisation FM.nc",
+        "html": "Utilisation L",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -15373,12 +15390,12 @@
       "id": "s_ec4_pj",
       "type": "math",
       "x": 396,
-      "y": 24744,
+      "y": 23850,
       "props": {
-        "w": 134,
+        "w": 106,
         "h": 25,
         "baseline": 18,
-        "latex": "\\mathrm{UR}_{FM.nc}=",
+        "latex": "\\mathrm{UR}_{L}=",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": 3,
@@ -15392,835 +15409,87 @@
       "id": "s_ec4_pk",
       "type": "text",
       "x": 76,
-      "y": 24780,
+      "y": 23881,
       "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Non-composite utilisation d.nc",
+        "w": 630,
+        "h": 19,
+        "html": "NOT DESIGNED AS COMPOSITE: the studs that fit cannot give composite action (η &lt; η_min,",
         "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_pk"
+        "fontSize": 13,
+        "color": "#b91c1c",
+        "align": "left",
+        "showWhen": "c_{comp}<1"
+      }
     },
     {
       "id": "s_ec4_pl",
-      "type": "math",
-      "x": 396,
-      "y": 24775,
+      "type": "text",
+      "x": 76,
+      "y": 23906,
       "props": {
-        "w": 111,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{d.nc}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_pk"
+        "w": 630,
+        "h": 19,
+        "html": "too few studs, or M_Rd(x) &lt; M_Ed(x), e.g. a large point load close to a support).",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#b91c1c",
+        "align": "left",
+        "showWhen": "c_{comp}<1"
+      }
     },
     {
       "id": "s_ec4_pm",
       "type": "text",
       "x": 76,
-      "y": 24811,
+      "y": 23931,
       "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Web checks, both bases (4.7)",
+        "w": 630,
+        "h": 19,
+        "html": "Designed as a BARE STEEL beam (chapter 6, annex): EN 1993-1-1 and EN 1993-1-5 met by the steel",
         "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_pm"
+        "fontSize": 13,
+        "color": "#b91c1c",
+        "align": "left",
+        "showWhen": "c_{comp}<1"
+      }
     },
     {
       "id": "s_ec4_pn",
-      "type": "math",
-      "x": 396,
-      "y": 24806,
+      "type": "text",
+      "x": 76,
+      "y": 23956,
       "props": {
-        "w": 265,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{F}\\coloneq\\max\\left(\\mathrm{UR}_{F.P},\\mathrm{UR}_{F.S}\\right)",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_pm"
+        "w": 630,
+        "h": 19,
+        "html": "alone; LTB length = stud spacing (top flange restrained, s ≤ s_max, EN 1994-1-1 §6.4.1(1), §6.6.5.5);",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#b91c1c",
+        "align": "left",
+        "showWhen": "c_{comp}<1"
+      }
     },
     {
       "id": "s_ec4_po",
       "type": "text",
       "x": 76,
-      "y": 24837,
+      "y": 23981,
       "props": {
         "w": 630,
-        "h": 18,
-        "html": "Governing utilisation, composite (chapter 4)",
+        "h": 19,
+        "html": "UR uses the steel-alone deflection, not the composite one. If it fails, enlarge the section (Browse).",
         "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_po"
+        "fontSize": 13,
+        "color": "#b91c1c",
+        "align": "left",
+        "showWhen": "c_{comp}<1"
+      }
     },
     {
       "id": "s_ec4_pp",
-      "type": "math",
-      "x": 96,
-      "y": 24852,
-      "props": {
-        "w": 506,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{c}\\coloneq\\max\\left(\\mathrm{UR}_{M.2},\\mathrm{UR}_{M.x},\\mathrm{UR}_{MV},\\mathrm{UR}_{V.2},\\mathrm{UR}_{F},\\mathrm{UR}_{FM},\\mathrm{UR}_{d.x}\\right)",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_po"
-    },
-    {
-      "id": "s_ec4_pq",
       "type": "text",
       "x": 76,
-      "y": 24883,
-      "props": {
-        "w": 630,
-        "h": 18,
-        "html": "Governing utilisation, non-composite (chapter 6)",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_pq"
-    },
-    {
-      "id": "s_ec4_pr",
-      "type": "math",
-      "x": 96,
-      "y": 24898,
-      "props": {
-        "w": 560,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{nc}\\coloneq\\max\\left(\\mathrm{UR}_{M.nc},\\mathrm{UR}_{MV.nc},\\mathrm{UR}_{V.nc},\\mathrm{UR}_{LT.nc},\\mathrm{UR}_{F},\\mathrm{UR}_{FM.nc},\\mathrm{UR}_{d.nc}\\right)",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_pq"
-    },
-    {
-      "id": "s_ec4_ps",
-      "type": "text",
-      "x": 76,
-      "y": 24974,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Governing utilisation of the design basis used",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_ps"
-    },
-    {
-      "id": "s_ec4_pt",
-      "type": "math",
-      "x": 396,
-      "y": 24929,
-      "props": {
-        "w": 229,
-        "h": 83,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{des}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ c_{comp}\\ge1\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{UR}_{c}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{UR}_{nc}\\right.\\end{array}",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_ps"
-    },
-    {
-      "id": "s_ec4_pu",
-      "type": "text",
-      "x": 76,
-      "y": 25023,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Acceptance, permanent stage",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_pu"
-    },
-    {
-      "id": "s_ec4_pv",
-      "type": "math",
-      "x": 396,
-      "y": 25018,
-      "props": {
-        "w": 218,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{des}\\le 1",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_pu"
-    },
-    {
-      "id": "s_ec4_pw",
-      "type": "text",
-      "x": 76,
-      "y": 25049,
-      "props": {
-        "w": 630,
-        "h": 19,
-        "html": "c_comp = 1: composite design (chapter 4); chapter 6 is for information only.",
-        "fontFamily": "Roboto",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_ec4_px",
-      "type": "text",
-      "x": 76,
-      "y": 25074,
-      "props": {
-        "w": 630,
-        "h": 19,
-        "html": "c_comp = 0: composite action not achieved; accepted only as non-composite (chapter 6),",
-        "fontFamily": "Roboto",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_ec4_py",
-      "type": "text",
-      "x": 76,
-      "y": 25099,
-      "props": {
-        "w": 630,
-        "h": 19,
-        "html": "studs as minimum top-flange restraint. Enlarge the section (Browse) if chapter 6 fails.",
-        "fontFamily": "Roboto",
-        "fontSize": 13,
-        "color": "#475569",
-        "align": "left"
-      }
-    },
-    {
-      "id": "s_ec4_pz",
-      "type": "text",
-      "x": 76,
-      "y": 25130,
-      "props": {
-        "w": 630,
-        "h": 21,
-        "html": "EN 1993-1-1 — construction stage",
-        "fontFamily": "Roboto",
-        "fontSize": 14,
-        "color": "#334155",
-        "align": "left",
-        "heading": 3
-      }
-    },
-    {
-      "id": "s_ec4_q0",
-      "type": "text",
-      "x": 76,
-      "y": 25162,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Utilisation M.1",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_q0"
-    },
-    {
-      "id": "s_ec4_q1",
-      "type": "math",
-      "x": 396,
-      "y": 25157,
-      "props": {
-        "w": 119,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{M.1}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_q0"
-    },
-    {
-      "id": "s_ec4_q2",
-      "type": "text",
-      "x": 76,
-      "y": 25193,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Utilisation V.1",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_q2"
-    },
-    {
-      "id": "s_ec4_q3",
-      "type": "math",
-      "x": 396,
-      "y": 25188,
-      "props": {
-        "w": 116,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{V.1}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_q2"
-    },
-    {
-      "id": "s_ec4_q4",
-      "type": "text",
-      "x": 76,
-      "y": 25224,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Utilisation LT",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_q4"
-    },
-    {
-      "id": "s_ec4_q5",
-      "type": "math",
-      "x": 396,
-      "y": 25219,
-      "props": {
-        "w": 106,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{LT}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_q4"
-    },
-    {
-      "id": "s_ec4_q6",
-      "type": "text",
-      "x": 76,
-      "y": 25255,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Utilisation d.1",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_q6"
-    },
-    {
-      "id": "s_ec4_q7",
-      "type": "math",
-      "x": 396,
-      "y": 25250,
-      "props": {
-        "w": 113,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{d.1}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_q6"
-    },
-    {
-      "id": "s_ec4_q8",
-      "type": "text",
-      "x": 76,
-      "y": 25287,
-      "props": {
-        "w": 630,
-        "h": 21,
-        "html": "EN 1994-1-1 — composite beam",
-        "fontFamily": "Roboto",
-        "fontSize": 14,
-        "color": "#334155",
-        "align": "left",
-        "heading": 3
-      }
-    },
-    {
-      "id": "s_ec4_q9",
-      "type": "text",
-      "x": 76,
-      "y": 25319,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Utilisation M.2",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_q9"
-    },
-    {
-      "id": "s_ec4_qa",
-      "type": "math",
-      "x": 396,
-      "y": 25314,
-      "props": {
-        "w": 119,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{M.2}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_q9"
-    },
-    {
-      "id": "s_ec4_qb",
-      "type": "text",
-      "x": 76,
-      "y": 25350,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Utilisation M.x",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_qb"
-    },
-    {
-      "id": "s_ec4_qc",
-      "type": "math",
-      "x": 396,
-      "y": 25345,
-      "props": {
-        "w": 120,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{M.x}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_qb"
-    },
-    {
-      "id": "s_ec4_qd",
-      "type": "text",
-      "x": 76,
-      "y": 25381,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Utilisation MV",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_qd"
-    },
-    {
-      "id": "s_ec4_qe",
-      "type": "math",
-      "x": 396,
-      "y": 25376,
-      "props": {
-        "w": 120,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{MV}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_qd"
-    },
-    {
-      "id": "s_ec4_qf",
-      "type": "text",
-      "x": 76,
-      "y": 25412,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Utilisation V.2",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_qf"
-    },
-    {
-      "id": "s_ec4_qg",
-      "type": "math",
-      "x": 396,
-      "y": 25407,
-      "props": {
-        "w": 116,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{V.2}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_qf"
-    },
-    {
-      "id": "s_ec4_qh",
-      "type": "text",
-      "x": 76,
-      "y": 25443,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Utilisation F.P",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_qh"
-    },
-    {
-      "id": "s_ec4_qi",
-      "type": "math",
-      "x": 396,
-      "y": 25438,
-      "props": {
-        "w": 119,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{F.P}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_qh"
-    },
-    {
-      "id": "s_ec4_qj",
-      "type": "text",
-      "x": 76,
-      "y": 25474,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Utilisation F.S",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_qj"
-    },
-    {
-      "id": "s_ec4_qk",
-      "type": "math",
-      "x": 396,
-      "y": 25469,
-      "props": {
-        "w": 118,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{F.S}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_qj"
-    },
-    {
-      "id": "s_ec4_ql",
-      "type": "text",
-      "x": 76,
-      "y": 25505,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Utilisation FM",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_ql"
-    },
-    {
-      "id": "s_ec4_qm",
-      "type": "math",
-      "x": 396,
-      "y": 25500,
-      "props": {
-        "w": 119,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{FM}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_ql"
-    },
-    {
-      "id": "s_ec4_qn",
-      "type": "text",
-      "x": 76,
-      "y": 25536,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Utilisation d.2",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_qn"
-    },
-    {
-      "id": "s_ec4_qo",
-      "type": "math",
-      "x": 396,
-      "y": 25531,
-      "props": {
-        "w": 113,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{d.2}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_qn"
-    },
-    {
-      "id": "s_ec4_qp",
-      "type": "text",
-      "x": 76,
-      "y": 25567,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Utilisation d.x",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_qp"
-    },
-    {
-      "id": "s_ec4_qq",
-      "type": "math",
-      "x": 396,
-      "y": 25562,
-      "props": {
-        "w": 114,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{d.x}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_qp"
-    },
-    {
-      "id": "s_ec4_qr",
-      "type": "text",
-      "x": 76,
-      "y": 25599,
-      "props": {
-        "w": 630,
-        "h": 21,
-        "html": "EN 1992-1-1 — slab longitudinal shear",
-        "fontFamily": "Roboto",
-        "fontSize": 14,
-        "color": "#334155",
-        "align": "left",
-        "heading": 3
-      }
-    },
-    {
-      "id": "s_ec4_qs",
-      "type": "text",
-      "x": 76,
-      "y": 25631,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Utilisation sf",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_qs"
-    },
-    {
-      "id": "s_ec4_qt",
-      "type": "math",
-      "x": 396,
-      "y": 25626,
-      "props": {
-        "w": 110,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{sf}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_qs"
-    },
-    {
-      "id": "s_ec4_qu",
-      "type": "text",
-      "x": 76,
-      "y": 25827,
-      "props": {
-        "w": 304,
-        "h": 18,
-        "html": "Utilisation L",
-        "fontFamily": "Roboto",
-        "fontSize": 12,
-        "color": "#475569",
-        "align": "left"
-      },
-      "printGroupId": "s_ec4_pg_qu"
-    },
-    {
-      "id": "s_ec4_qv",
-      "type": "math",
-      "x": 396,
-      "y": 25822,
-      "props": {
-        "w": 106,
-        "h": 25,
-        "baseline": 18,
-        "latex": "\\mathrm{UR}_{L}=",
-        "displayMode": "auto",
-        "displayUnit": "",
-        "precision": 3,
-        "autoSize": true,
-        "fontSize": 16,
-        "color": "#0f172a"
-      },
-      "printGroupId": "s_ec4_pg_qu"
-    },
-    {
-      "id": "s_ec4_qw",
-      "type": "text",
-      "x": 76,
-      "y": 25853,
+      "y": 24006,
       "props": {
         "w": 630,
         "h": 19,
@@ -16232,10 +15501,10 @@
       }
     },
     {
-      "id": "s_ec4_qx",
+      "id": "s_ec4_pq",
       "type": "text",
       "x": 76,
-      "y": 25878,
+      "y": 24031,
       "props": {
         "w": 630,
         "h": 19,
@@ -16247,10 +15516,10 @@
       }
     },
     {
-      "id": "s_ec4_qy",
+      "id": "s_ec4_pr",
       "type": "text",
       "x": 76,
-      "y": 25903,
+      "y": 24056,
       "props": {
         "w": 630,
         "h": 24,
@@ -16266,10 +15535,10 @@
       }
     },
     {
-      "id": "s_ec4_qz",
+      "id": "s_ec4_ps",
       "type": "text",
       "x": 76,
-      "y": 25945,
+      "y": 24098,
       "props": {
         "w": 630,
         "h": 29,
@@ -16285,10 +15554,10 @@
       }
     },
     {
-      "id": "s_ec4_r0",
+      "id": "s_ec4_pt",
       "type": "text",
       "x": 76,
-      "y": 25986,
+      "y": 24139,
       "props": {
         "w": 630,
         "h": 24,
@@ -16305,10 +15574,10 @@
       }
     },
     {
-      "id": "s_ec4_r1",
+      "id": "s_ec4_pu",
       "type": "text",
       "x": 76,
-      "y": 26024,
+      "y": 24177,
       "props": {
         "w": 304,
         "h": 18,
@@ -16318,13 +15587,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_r1"
+      "printGroupId": "s_ec4_pg_pu"
     },
     {
-      "id": "s_ec4_r2",
+      "id": "s_ec4_pv",
       "type": "math",
       "x": 396,
-      "y": 26016,
+      "y": 24169,
       "props": {
         "w": 144,
         "h": 34,
@@ -16337,13 +15606,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_r1"
+      "printGroupId": "s_ec4_pg_pu"
     },
     {
-      "id": "s_ec4_r3",
+      "id": "s_ec4_pw",
       "type": "text",
       "x": 76,
-      "y": 26056,
+      "y": 24209,
       "props": {
         "w": 630,
         "h": 19,
@@ -16355,10 +15624,10 @@
       }
     },
     {
-      "id": "s_ec4_r4",
+      "id": "s_ec4_px",
       "type": "text",
       "x": 76,
-      "y": 26086,
+      "y": 24239,
       "props": {
         "w": 304,
         "h": 18,
@@ -16368,13 +15637,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_r4"
+      "printGroupId": "s_ec4_pg_px"
     },
     {
-      "id": "s_ec4_r5",
+      "id": "s_ec4_py",
       "type": "math",
       "x": 396,
-      "y": 26081,
+      "y": 24234,
       "props": {
         "w": 193,
         "h": 26,
@@ -16387,13 +15656,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_r4"
+      "printGroupId": "s_ec4_pg_px"
     },
     {
-      "id": "s_ec4_r6",
+      "id": "s_ec4_pz",
       "type": "text",
       "x": 76,
-      "y": 26118,
+      "y": 24271,
       "props": {
         "w": 304,
         "h": 18,
@@ -16403,13 +15672,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_r6"
+      "printGroupId": "s_ec4_pg_pz"
     },
     {
-      "id": "s_ec4_r7",
+      "id": "s_ec4_q0",
       "type": "math",
       "x": 396,
-      "y": 26113,
+      "y": 24266,
       "props": {
         "w": 193,
         "h": 26,
@@ -16422,13 +15691,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_r6"
+      "printGroupId": "s_ec4_pg_pz"
     },
     {
-      "id": "s_ec4_r8",
+      "id": "s_ec4_q1",
       "type": "text",
       "x": 76,
-      "y": 26150,
+      "y": 24303,
       "props": {
         "w": 304,
         "h": 18,
@@ -16438,13 +15707,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_r8"
+      "printGroupId": "s_ec4_pg_q1"
     },
     {
-      "id": "s_ec4_r9",
+      "id": "s_ec4_q2",
       "type": "math",
       "x": 396,
-      "y": 26145,
+      "y": 24298,
       "props": {
         "w": 168,
         "h": 26,
@@ -16457,13 +15726,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_r8"
+      "printGroupId": "s_ec4_pg_q1"
     },
     {
-      "id": "s_ec4_ra",
+      "id": "s_ec4_q3",
       "type": "text",
       "x": 76,
-      "y": 26182,
+      "y": 24335,
       "props": {
         "w": 304,
         "h": 18,
@@ -16473,13 +15742,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_ra"
+      "printGroupId": "s_ec4_pg_q3"
     },
     {
-      "id": "s_ec4_rb",
+      "id": "s_ec4_q4",
       "type": "math",
       "x": 396,
-      "y": 26177,
+      "y": 24330,
       "props": {
         "w": 213,
         "h": 26,
@@ -16492,13 +15761,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_ra"
+      "printGroupId": "s_ec4_pg_q3"
     },
     {
-      "id": "s_ec4_rc",
+      "id": "s_ec4_q5",
       "type": "text",
       "x": 76,
-      "y": 26214,
+      "y": 24367,
       "props": {
         "w": 304,
         "h": 18,
@@ -16508,13 +15777,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_rc"
+      "printGroupId": "s_ec4_pg_q5"
     },
     {
-      "id": "s_ec4_rd",
+      "id": "s_ec4_q6",
       "type": "math",
       "x": 396,
-      "y": 26209,
+      "y": 24362,
       "props": {
         "w": 181,
         "h": 26,
@@ -16527,13 +15796,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_rc"
+      "printGroupId": "s_ec4_pg_q5"
     },
     {
-      "id": "s_ec4_re",
+      "id": "s_ec4_q7",
       "type": "text",
       "x": 76,
-      "y": 26246,
+      "y": 24399,
       "props": {
         "w": 304,
         "h": 18,
@@ -16543,13 +15812,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_re"
+      "printGroupId": "s_ec4_pg_q7"
     },
     {
-      "id": "s_ec4_rf",
+      "id": "s_ec4_q8",
       "type": "math",
       "x": 396,
-      "y": 26241,
+      "y": 24394,
       "props": {
         "w": 172,
         "h": 26,
@@ -16562,13 +15831,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_re"
+      "printGroupId": "s_ec4_pg_q7"
     },
     {
-      "id": "s_ec4_rg",
+      "id": "s_ec4_q9",
       "type": "text",
       "x": 76,
-      "y": 26278,
+      "y": 24431,
       "props": {
         "w": 304,
         "h": 18,
@@ -16578,13 +15847,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_rg"
+      "printGroupId": "s_ec4_pg_q9"
     },
     {
-      "id": "s_ec4_rh",
+      "id": "s_ec4_qa",
       "type": "math",
       "x": 396,
-      "y": 26273,
+      "y": 24426,
       "props": {
         "w": 222,
         "h": 26,
@@ -16597,13 +15866,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_rg"
+      "printGroupId": "s_ec4_pg_q9"
     },
     {
-      "id": "s_ec4_ri",
+      "id": "s_ec4_qb",
       "type": "text",
       "x": 76,
-      "y": 26318,
+      "y": 24664,
       "props": {
         "w": 304,
         "h": 18,
@@ -16613,13 +15882,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_ri"
+      "printGroupId": "s_ec4_pg_qb"
     },
     {
-      "id": "s_ec4_rj",
+      "id": "s_ec4_qc",
       "type": "math",
       "x": 396,
-      "y": 26305,
+      "y": 24651,
       "props": {
         "w": 227,
         "h": 39,
@@ -16632,13 +15901,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_ri"
+      "printGroupId": "s_ec4_pg_qb"
     },
     {
-      "id": "s_ec4_rk",
+      "id": "s_ec4_qd",
       "type": "text",
       "x": 76,
-      "y": 26358,
+      "y": 24704,
       "props": {
         "w": 304,
         "h": 18,
@@ -16648,13 +15917,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_rk"
+      "printGroupId": "s_ec4_pg_qd"
     },
     {
-      "id": "s_ec4_rl",
+      "id": "s_ec4_qe",
       "type": "math",
       "x": 396,
-      "y": 26350,
+      "y": 24696,
       "props": {
         "w": 171,
         "h": 34,
@@ -16667,13 +15936,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_rk"
+      "printGroupId": "s_ec4_pg_qd"
     },
     {
-      "id": "s_ec4_rm",
+      "id": "s_ec4_qf",
       "type": "text",
       "x": 76,
-      "y": 26403,
+      "y": 24749,
       "props": {
         "w": 304,
         "h": 18,
@@ -16683,13 +15952,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_rm"
+      "printGroupId": "s_ec4_pg_qf"
     },
     {
-      "id": "s_ec4_rn",
+      "id": "s_ec4_qg",
       "type": "math",
       "x": 396,
-      "y": 26390,
+      "y": 24736,
       "props": {
         "w": 221,
         "h": 34,
@@ -16702,13 +15971,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_rm"
+      "printGroupId": "s_ec4_pg_qf"
     },
     {
-      "id": "s_ec4_ro",
+      "id": "s_ec4_qh",
       "type": "text",
       "x": 76,
-      "y": 26442,
+      "y": 24788,
       "props": {
         "w": 304,
         "h": 18,
@@ -16718,13 +15987,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_ro"
+      "printGroupId": "s_ec4_pg_qh"
     },
     {
-      "id": "s_ec4_rp",
+      "id": "s_ec4_qi",
       "type": "math",
       "x": 396,
-      "y": 26430,
+      "y": 24776,
       "props": {
         "w": 179,
         "h": 33,
@@ -16737,13 +16006,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_ro"
+      "printGroupId": "s_ec4_pg_qh"
     },
     {
-      "id": "s_ec4_rq",
+      "id": "s_ec4_qj",
       "type": "text",
       "x": 76,
-      "y": 26474,
+      "y": 24820,
       "props": {
         "w": 304,
         "h": 18,
@@ -16753,13 +16022,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_rq"
+      "printGroupId": "s_ec4_pg_qj"
     },
     {
-      "id": "s_ec4_rr",
+      "id": "s_ec4_qk",
       "type": "math",
       "x": 396,
-      "y": 26469,
+      "y": 24815,
       "props": {
         "w": 175,
         "h": 26,
@@ -16772,13 +16041,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_rq"
+      "printGroupId": "s_ec4_pg_qj"
     },
     {
-      "id": "s_ec4_rs",
+      "id": "s_ec4_ql",
       "type": "text",
       "x": 76,
-      "y": 26516,
+      "y": 24862,
       "props": {
         "w": 304,
         "h": 18,
@@ -16788,13 +16057,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_rs"
+      "printGroupId": "s_ec4_pg_ql"
     },
     {
-      "id": "s_ec4_rt",
+      "id": "s_ec4_qm",
       "type": "math",
       "x": 396,
-      "y": 26501,
+      "y": 24847,
       "props": {
         "w": 224,
         "h": 41,
@@ -16807,13 +16076,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_rs"
+      "printGroupId": "s_ec4_pg_ql"
     },
     {
-      "id": "s_ec4_ru",
+      "id": "s_ec4_qn",
       "type": "text",
       "x": 76,
-      "y": 26613,
+      "y": 24959,
       "props": {
         "w": 304,
         "h": 18,
@@ -16823,13 +16092,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_ru"
+      "printGroupId": "s_ec4_pg_qn"
     },
     {
-      "id": "s_ec4_rv",
+      "id": "s_ec4_qo",
       "type": "math",
       "x": 396,
-      "y": 26548,
+      "y": 24894,
       "props": {
         "w": 245,
         "h": 154,
@@ -16842,13 +16111,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_ru"
+      "printGroupId": "s_ec4_pg_qn"
     },
     {
-      "id": "s_ec4_rw",
+      "id": "s_ec4_qp",
       "type": "text",
       "x": 76,
-      "y": 27058,
+      "y": 25119,
       "props": {
         "w": 304,
         "h": 18,
@@ -16858,13 +16127,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_rw"
+      "printGroupId": "s_ec4_pg_qp"
     },
     {
-      "id": "s_ec4_rx",
+      "id": "s_ec4_qq",
       "type": "math",
       "x": 396,
-      "y": 26993,
+      "y": 25054,
       "props": {
         "w": 178,
         "h": 122,
@@ -16877,13 +16146,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_rw"
+      "printGroupId": "s_ec4_pg_qp"
     },
     {
-      "id": "s_ec4_ry",
+      "id": "s_ec4_qr",
       "type": "text",
       "x": 76,
-      "y": 27166,
+      "y": 25227,
       "props": {
         "w": 304,
         "h": 18,
@@ -16893,13 +16162,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_ry"
+      "printGroupId": "s_ec4_pg_qr"
     },
     {
-      "id": "s_ec4_rz",
+      "id": "s_ec4_qs",
       "type": "math",
       "x": 396,
-      "y": 27121,
+      "y": 25182,
       "props": {
         "w": 163,
         "h": 83,
@@ -16912,13 +16181,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_ry"
+      "printGroupId": "s_ec4_pg_qr"
     },
     {
-      "id": "s_ec4_s0",
+      "id": "s_ec4_qt",
       "type": "text",
       "x": 76,
-      "y": 27255,
+      "y": 25316,
       "props": {
         "w": 304,
         "h": 18,
@@ -16928,13 +16197,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_s0"
+      "printGroupId": "s_ec4_pg_qt"
     },
     {
-      "id": "s_ec4_s1",
+      "id": "s_ec4_qu",
       "type": "math",
       "x": 396,
-      "y": 27210,
+      "y": 25271,
       "props": {
         "w": 148,
         "h": 83,
@@ -16947,13 +16216,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_s0"
+      "printGroupId": "s_ec4_pg_qt"
     },
     {
-      "id": "s_ec4_s2",
+      "id": "s_ec4_qv",
       "type": "text",
       "x": 76,
-      "y": 27304,
+      "y": 25365,
       "props": {
         "w": 304,
         "h": 18,
@@ -16963,13 +16232,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_s2"
+      "printGroupId": "s_ec4_pg_qv"
     },
     {
-      "id": "s_ec4_s3",
+      "id": "s_ec4_qw",
       "type": "math",
       "x": 396,
-      "y": 27299,
+      "y": 25360,
       "props": {
         "w": 149,
         "h": 26,
@@ -16982,13 +16251,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_s2"
+      "printGroupId": "s_ec4_pg_qv"
     },
     {
-      "id": "s_ec4_s4",
+      "id": "s_ec4_qx",
       "type": "text",
       "x": 76,
-      "y": 27340,
+      "y": 25401,
       "props": {
         "w": 304,
         "h": 18,
@@ -16998,13 +16267,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_s4"
+      "printGroupId": "s_ec4_pg_qx"
     },
     {
-      "id": "s_ec4_s5",
+      "id": "s_ec4_qy",
       "type": "math",
       "x": 396,
-      "y": 27331,
+      "y": 25392,
       "props": {
         "w": 196,
         "h": 35,
@@ -17017,13 +16286,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_s4"
+      "printGroupId": "s_ec4_pg_qx"
     },
     {
-      "id": "s_ec4_s6",
+      "id": "s_ec4_qz",
       "type": "text",
       "x": 76,
-      "y": 27372,
+      "y": 25433,
       "props": {
         "w": 630,
         "h": 18,
@@ -17033,13 +16302,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_s6"
+      "printGroupId": "s_ec4_pg_qz"
     },
     {
-      "id": "s_ec4_s7",
+      "id": "s_ec4_r0",
       "type": "math",
       "x": 96,
-      "y": 27387,
+      "y": 25448,
       "props": {
         "w": 486,
         "h": 26,
@@ -17052,13 +16321,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_s6"
+      "printGroupId": "s_ec4_pg_qz"
     },
     {
-      "id": "s_ec4_s8",
+      "id": "s_ec4_r1",
       "type": "text",
       "x": 76,
-      "y": 27419,
+      "y": 25480,
       "props": {
         "w": 630,
         "h": 18,
@@ -17068,13 +16337,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_s8"
+      "printGroupId": "s_ec4_pg_r1"
     },
     {
-      "id": "s_ec4_s9",
+      "id": "s_ec4_r2",
       "type": "math",
       "x": 96,
-      "y": 27450,
+      "y": 25511,
       "props": {
         "w": 595,
         "h": 35,
@@ -17087,13 +16356,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_s8"
+      "printGroupId": "s_ec4_pg_r1"
     },
     {
-      "id": "s_ec4_sa",
+      "id": "s_ec4_r3",
       "type": "text",
       "x": 76,
-      "y": 27496,
+      "y": 25557,
       "props": {
         "w": 304,
         "h": 18,
@@ -17103,13 +16372,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_sa"
+      "printGroupId": "s_ec4_pg_r3"
     },
     {
-      "id": "s_ec4_sb",
+      "id": "s_ec4_r4",
       "type": "math",
       "x": 396,
-      "y": 27491,
+      "y": 25552,
       "props": {
         "w": 158,
         "h": 26,
@@ -17122,13 +16391,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_sa"
+      "printGroupId": "s_ec4_pg_r3"
     },
     {
-      "id": "s_ec4_sc",
+      "id": "s_ec4_r5",
       "type": "text",
       "x": 76,
-      "y": 27523,
+      "y": 25584,
       "props": {
         "w": 630,
         "h": 18,
@@ -17138,13 +16407,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_sc"
+      "printGroupId": "s_ec4_pg_r5"
     },
     {
-      "id": "s_ec4_sd",
+      "id": "s_ec4_r6",
       "type": "math",
       "x": 96,
-      "y": 27552,
+      "y": 25613,
       "props": {
         "w": 329,
         "h": 37,
@@ -17157,13 +16426,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_sc"
+      "printGroupId": "s_ec4_pg_r5"
     },
     {
-      "id": "s_ec4_se",
+      "id": "s_ec4_r7",
       "type": "text",
       "x": 76,
-      "y": 27603,
+      "y": 25830,
       "props": {
         "w": 304,
         "h": 18,
@@ -17173,13 +16442,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_se"
+      "printGroupId": "s_ec4_pg_r7"
     },
     {
-      "id": "s_ec4_sf",
+      "id": "s_ec4_r8",
       "type": "math",
       "x": 396,
-      "y": 27595,
+      "y": 25822,
       "props": {
         "w": 309,
         "h": 34,
@@ -17192,13 +16461,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_se"
+      "printGroupId": "s_ec4_pg_r7"
     },
     {
-      "id": "s_ec4_sg",
+      "id": "s_ec4_r9",
       "type": "text",
       "x": 76,
-      "y": 27635,
+      "y": 25862,
       "props": {
         "w": 630,
         "h": 18,
@@ -17208,13 +16477,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_sg"
+      "printGroupId": "s_ec4_pg_r9"
     },
     {
-      "id": "s_ec4_sh",
+      "id": "s_ec4_ra",
       "type": "math",
       "x": 96,
-      "y": 27664,
+      "y": 25891,
       "props": {
         "w": 535,
         "h": 37,
@@ -17227,13 +16496,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_sg"
+      "printGroupId": "s_ec4_pg_r9"
     },
     {
-      "id": "s_ec4_si",
+      "id": "s_ec4_rb",
       "type": "text",
       "x": 76,
-      "y": 27707,
+      "y": 25934,
       "props": {
         "w": 630,
         "h": 18,
@@ -17243,13 +16512,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_si"
+      "printGroupId": "s_ec4_pg_rb"
     },
     {
-      "id": "s_ec4_sj",
+      "id": "s_ec4_rc",
       "type": "math",
       "x": 96,
-      "y": 27722,
+      "y": 25949,
       "props": {
         "w": 375,
         "h": 26,
@@ -17262,13 +16531,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_si"
+      "printGroupId": "s_ec4_pg_rb"
     },
     {
-      "id": "s_ec4_sk",
+      "id": "s_ec4_rd",
       "type": "text",
       "x": 76,
-      "y": 27754,
+      "y": 25981,
       "props": {
         "w": 630,
         "h": 18,
@@ -17278,13 +16547,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_sk"
+      "printGroupId": "s_ec4_pg_rd"
     },
     {
-      "id": "s_ec4_sl",
+      "id": "s_ec4_re",
       "type": "math",
       "x": 96,
-      "y": 27769,
+      "y": 25996,
       "props": {
         "w": 347,
         "h": 26,
@@ -17297,13 +16566,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_sk"
+      "printGroupId": "s_ec4_pg_rd"
     },
     {
-      "id": "s_ec4_sm",
+      "id": "s_ec4_rf",
       "type": "text",
       "x": 76,
-      "y": 27801,
+      "y": 26028,
       "props": {
         "w": 630,
         "h": 18,
@@ -17313,13 +16582,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_sm"
+      "printGroupId": "s_ec4_pg_rf"
     },
     {
-      "id": "s_ec4_sn",
+      "id": "s_ec4_rg",
       "type": "math",
       "x": 96,
-      "y": 27816,
+      "y": 26043,
       "props": {
         "w": 406,
         "h": 26,
@@ -17332,13 +16601,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_sm"
+      "printGroupId": "s_ec4_pg_rf"
     },
     {
-      "id": "s_ec4_so",
+      "id": "s_ec4_rh",
       "type": "text",
       "x": 76,
-      "y": 27854,
+      "y": 26081,
       "props": {
         "w": 630,
         "h": 24,
@@ -17355,10 +16624,10 @@
       }
     },
     {
-      "id": "s_ec4_sp",
+      "id": "s_ec4_ri",
       "type": "text",
       "x": 76,
-      "y": 27890,
+      "y": 26117,
       "props": {
         "w": 630,
         "h": 21,
@@ -17371,10 +16640,10 @@
       }
     },
     {
-      "id": "s_ec4_sq",
+      "id": "s_ec4_rj",
       "type": "text",
       "x": 76,
-      "y": 27917,
+      "y": 26144,
       "props": {
         "w": 630,
         "h": 19,
@@ -17386,10 +16655,10 @@
       }
     },
     {
-      "id": "s_ec4_sr",
+      "id": "s_ec4_rk",
       "type": "text",
       "x": 76,
-      "y": 27942,
+      "y": 26169,
       "props": {
         "w": 630,
         "h": 19,
@@ -17401,10 +16670,10 @@
       }
     },
     {
-      "id": "s_ec4_ss",
+      "id": "s_ec4_rl",
       "type": "text",
       "x": 76,
-      "y": 27967,
+      "y": 26194,
       "props": {
         "w": 630,
         "h": 19,
@@ -17416,10 +16685,10 @@
       }
     },
     {
-      "id": "s_ec4_st",
+      "id": "s_ec4_rm",
       "type": "text",
       "x": 76,
-      "y": 28164,
+      "y": 26219,
       "props": {
         "w": 630,
         "h": 19,
@@ -17431,10 +16700,10 @@
       }
     },
     {
-      "id": "s_ec4_su",
+      "id": "s_ec4_rn",
       "type": "text",
       "x": 76,
-      "y": 28189,
+      "y": 26244,
       "props": {
         "w": 630,
         "h": 19,
@@ -17446,10 +16715,10 @@
       }
     },
     {
-      "id": "s_ec4_sv",
+      "id": "s_ec4_ro",
       "type": "text",
       "x": 76,
-      "y": 28214,
+      "y": 26269,
       "props": {
         "w": 630,
         "h": 19,
@@ -17461,10 +16730,10 @@
       }
     },
     {
-      "id": "s_ec4_sw",
+      "id": "s_ec4_rp",
       "type": "text",
       "x": 76,
-      "y": 28245,
+      "y": 26300,
       "props": {
         "w": 630,
         "h": 21,
@@ -17477,10 +16746,10 @@
       }
     },
     {
-      "id": "s_ec4_sx",
+      "id": "s_ec4_rq",
       "type": "text",
       "x": 76,
-      "y": 28272,
+      "y": 26327,
       "props": {
         "w": 630,
         "h": 19,
@@ -17492,10 +16761,10 @@
       }
     },
     {
-      "id": "s_ec4_sy",
+      "id": "s_ec4_rr",
       "type": "text",
       "x": 76,
-      "y": 28297,
+      "y": 26352,
       "props": {
         "w": 630,
         "h": 19,
@@ -17507,10 +16776,10 @@
       }
     },
     {
-      "id": "s_ec4_sz",
+      "id": "s_ec4_rs",
       "type": "text",
       "x": 76,
-      "y": 28322,
+      "y": 26377,
       "props": {
         "w": 630,
         "h": 19,
@@ -17522,10 +16791,10 @@
       }
     },
     {
-      "id": "s_ec4_t0",
+      "id": "s_ec4_rt",
       "type": "text",
       "x": 76,
-      "y": 28347,
+      "y": 26402,
       "props": {
         "w": 630,
         "h": 19,
@@ -17537,10 +16806,10 @@
       }
     },
     {
-      "id": "s_ec4_t1",
+      "id": "s_ec4_ru",
       "type": "text",
       "x": 76,
-      "y": 28372,
+      "y": 26427,
       "props": {
         "w": 630,
         "h": 19,
@@ -17552,10 +16821,10 @@
       }
     },
     {
-      "id": "s_ec4_t2",
+      "id": "s_ec4_rv",
       "type": "text",
       "x": 76,
-      "y": 28397,
+      "y": 26452,
       "props": {
         "w": 630,
         "h": 19,
@@ -17567,10 +16836,10 @@
       }
     },
     {
-      "id": "s_ec4_t3",
+      "id": "s_ec4_rw",
       "type": "text",
       "x": 76,
-      "y": 28466,
+      "y": 26521,
       "props": {
         "w": 304,
         "h": 18,
@@ -17580,13 +16849,13 @@
         "color": "#475569",
         "align": "left"
       },
-      "printGroupId": "s_ec4_pg_t3"
+      "printGroupId": "s_ec4_pg_rw"
     },
     {
-      "id": "s_ec4_t4",
+      "id": "s_ec4_rx",
       "type": "math",
       "x": 396,
-      "y": 28422,
+      "y": 26477,
       "props": {
         "w": 214,
         "h": 105,
@@ -17599,13 +16868,818 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "printGroupId": "s_ec4_pg_t3"
+      "printGroupId": "s_ec4_pg_rw"
+    },
+    {
+      "id": "s_ec4_ry",
+      "type": "text",
+      "x": 76,
+      "y": 26594,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "Non-composite alternative: steel section alone",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2,
+        "annex": {
+          "kind": "heading",
+          "id": "noncomp"
+        }
+      }
+    },
+    {
+      "id": "s_ec4_rz",
+      "type": "text",
+      "x": 76,
+      "y": 26624,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Bending, shear and M–V interaction, steel section alone (§6.2.5, §6.2.6, §6.2.8)",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_ec4_s0",
+      "type": "text",
+      "x": 76,
+      "y": 26688,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Bending, steel alone, at x_M",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_s0"
+    },
+    {
+      "id": "s_ec4_s1",
+      "type": "math",
+      "x": 396,
+      "y": 26649,
+      "props": {
+        "w": 194,
+        "h": 96,
+        "baseline": 52,
+        "latex": "\\mathrm{UR}_{M.nc}\\coloneq \\frac{M_{2.Ed}}{M_{a.Rd}}",
+        "displayMode": "full",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_s0"
+    },
+    {
+      "id": "s_ec4_s2",
+      "type": "text",
+      "x": 76,
+      "y": 27033,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Shear, steel web",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_s2"
+    },
+    {
+      "id": "s_ec4_s3",
+      "type": "math",
+      "x": 396,
+      "y": 26993,
+      "props": {
+        "w": 166,
+        "h": 98,
+        "baseline": 53,
+        "latex": "\\mathrm{UR}_{V.nc}\\coloneq \\frac{V_{2.Ed}}{V_{pl.Rd}}",
+        "displayMode": "full",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_s2"
+    },
+    {
+      "id": "s_ec4_s4",
+      "type": "text",
+      "x": 76,
+      "y": 27102,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Web area",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_s4"
+    },
+    {
+      "id": "s_ec4_s5",
+      "type": "math",
+      "x": 396,
+      "y": 27097,
+      "props": {
+        "w": 188,
+        "h": 26,
+        "baseline": 18,
+        "latex": "A_w\\coloneq h_w t_w",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm^2",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_s4"
+    },
+    {
+      "id": "s_ec4_s6",
+      "type": "text",
+      "x": 76,
+      "y": 27142,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "(6.30) along the span, ρ from 4.6",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_s6"
+    },
+    {
+      "id": "s_ec4_s7",
+      "type": "math",
+      "x": 396,
+      "y": 27129,
+      "props": {
+        "w": 218,
+        "h": 43,
+        "baseline": 26,
+        "latex": "M_{V.nc.x}\\coloneq \\left(W_{pl}-\\frac{A_w^2}{4t_w}\\rho_v\\right)f_{yd}",
+        "displayMode": "formula",
+        "displayUnit": "kN m",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_s6"
+    },
+    {
+      "id": "s_ec4_s8",
+      "type": "text",
+      "x": 76,
+      "y": 27191,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "(6.30) under each point load",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_s8"
+    },
+    {
+      "id": "s_ec4_s9",
+      "type": "math",
+      "x": 396,
+      "y": 27178,
+      "props": {
+        "w": 223,
+        "h": 43,
+        "baseline": 26,
+        "latex": "M_{V.nc.P}\\coloneq \\left(W_{pl}-\\frac{A_w^2}{4t_w}\\rho_P\\right)f_{yd}",
+        "displayMode": "formula",
+        "displayUnit": "kN m",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_s8"
+    },
+    {
+      "id": "s_ec4_sa",
+      "type": "text",
+      "x": 76,
+      "y": 27227,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Bending with shear",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_sa"
+    },
+    {
+      "id": "s_ec4_sb",
+      "type": "math",
+      "x": 96,
+      "y": 27246,
+      "props": {
+        "w": 446,
+        "h": 61,
+        "baseline": 34,
+        "latex": "\\mathrm{UR}_{MV.nc}\\coloneq \\max\\left(\\max\\left(\\overrightarrow{\\frac{M_v}{M_{V.nc.x}}}\\right),\\max\\left(\\overrightarrow{\\frac{M_P}{M_{V.nc.P}}}\\right)\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_sa"
+    },
+    {
+      "id": "s_ec4_sc",
+      "type": "text",
+      "x": 76,
+      "y": 27313,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Lateral-torsional buckling (EN 1994-1-1 §6.4.1(1); EN 1993-1-1 §6.3.2.2)",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_ec4_sd",
+      "type": "text",
+      "x": 76,
+      "y": 27338,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "EN 1994-1-1 §6.4.1(1): a steel flange attached to the slab by shear connection to §6.6 may be",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_ec4_se",
+      "type": "text",
+      "x": 76,
+      "y": 27363,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "taken as laterally stable if the slab is laterally stable. Applied when s ≤ s_max (§6.6.5.5);",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_ec4_sf",
+      "type": "text",
+      "x": 76,
+      "y": 27388,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "L_LT is then the stud spacing (χ_LT = 1). Otherwise the full span is used as unrestrained.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_ec4_sg",
+      "type": "text",
+      "x": 76,
+      "y": 27458,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Top flange restrained by the studs (1) or not (0)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_sg"
+    },
+    {
+      "id": "s_ec4_sh",
+      "type": "math",
+      "x": 396,
+      "y": 27413,
+      "props": {
+        "w": 299,
+        "h": 83,
+        "baseline": 18,
+        "latex": "c_{rest}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ s_{sc.A}\\le s_{max}\\land s_{sc.B}\\le s_{max}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_sg"
+    },
+    {
+      "id": "s_ec4_si",
+      "type": "text",
+      "x": 76,
+      "y": 27547,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "LTB length",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_si"
+    },
+    {
+      "id": "s_ec4_sj",
+      "type": "math",
+      "x": 396,
+      "y": 27502,
+      "props": {
+        "w": 297,
+        "h": 83,
+        "baseline": 18,
+        "latex": "L_{LT.nc}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ c_{rest}\\ge1\\\\\\quad\\left\\Vert\\displaystyle \\max\\left(s_{sc.A},s_{sc.B}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle L\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_si"
+    },
+    {
+      "id": "s_ec4_sk",
+      "type": "text",
+      "x": 76,
+      "y": 27602,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Euler force (C1 = 1, z_g = 0)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_sk"
+    },
+    {
+      "id": "s_ec4_sl",
+      "type": "math",
+      "x": 396,
+      "y": 27591,
+      "props": {
+        "w": 242,
+        "h": 42,
+        "baseline": 24,
+        "latex": "N_{cr.nc}\\coloneq \\frac{\\pi^2 E_a I_z}{L_{LT.nc}^2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_sk"
+    },
+    {
+      "id": "s_ec4_sm",
+      "type": "text",
+      "x": 76,
+      "y": 27639,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Elastic critical moment",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_sm"
+    },
+    {
+      "id": "s_ec4_sn",
+      "type": "math",
+      "x": 96,
+      "y": 27666,
+      "props": {
+        "w": 357,
+        "h": 43,
+        "baseline": 26,
+        "latex": "M_{cr.nc}\\coloneq N_{cr.nc}\\sqrt{\\frac{I_w}{I_z}+\\frac{G_a I_t}{N_{cr.nc}}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_sm"
+    },
+    {
+      "id": "s_ec4_so",
+      "type": "text",
+      "x": 76,
+      "y": 27729,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Slenderness",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_so"
+    },
+    {
+      "id": "s_ec4_sp",
+      "type": "math",
+      "x": 396,
+      "y": 27715,
+      "props": {
+        "w": 205,
+        "h": 43,
+        "baseline": 27,
+        "latex": "\\lambda_{LT.nc}\\coloneq \\sqrt{\\frac{W_{pl}f_y}{M_{cr.nc}}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_so"
+    },
+    {
+      "id": "s_ec4_sq",
+      "type": "text",
+      "x": 76,
+      "y": 27764,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "(6.56)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_sq"
+    },
+    {
+      "id": "s_ec4_sr",
+      "type": "math",
+      "x": 96,
+      "y": 27779,
+      "props": {
+        "w": 381,
+        "h": 26,
+        "baseline": 18,
+        "latex": "\\Phi_{LT.nc}\\coloneq 0.5\\left(1+\\alpha_{LT}\\left(\\lambda_{LT.nc}-0.2\\right)+\\lambda_{LT.nc}^2\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_sq"
+    },
+    {
+      "id": "s_ec4_ss",
+      "type": "text",
+      "x": 76,
+      "y": 27811,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Reduction factor",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_ss"
+    },
+    {
+      "id": "s_ec4_st",
+      "type": "math",
+      "x": 96,
+      "y": 27834,
+      "props": {
+        "w": 349,
+        "h": 52,
+        "baseline": 30,
+        "latex": "\\chi_{LT.nc}\\coloneq \\min\\left(1,\\frac{1}{\\Phi_{LT.nc}+\\sqrt{\\Phi_{LT.nc}^2-\\lambda_{LT.nc}^2}}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_ss"
+    },
+    {
+      "id": "s_ec4_su",
+      "type": "text",
+      "x": 76,
+      "y": 27903,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "(6.55)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_su"
+    },
+    {
+      "id": "s_ec4_sv",
+      "type": "math",
+      "x": 396,
+      "y": 27892,
+      "props": {
+        "w": 293,
+        "h": 40,
+        "baseline": 24,
+        "latex": "M_{b.Rd.nc}\\coloneq \\frac{\\chi_{LT.nc}W_{pl}f_y}{\\gamma_{M1}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_su"
+    },
+    {
+      "id": "s_ec4_sw",
+      "type": "text",
+      "x": 76,
+      "y": 28203,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "LTB",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_sw"
+    },
+    {
+      "id": "s_ec4_sx",
+      "type": "math",
+      "x": 396,
+      "y": 28164,
+      "props": {
+        "w": 198,
+        "h": 96,
+        "baseline": 52,
+        "latex": "\\mathrm{UR}_{LT.nc}\\coloneq \\frac{M_{2.Ed}}{M_{b.Rd.nc}}",
+        "displayMode": "full",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_sw"
+    },
+    {
+      "id": "s_ec4_sy",
+      "type": "text",
+      "x": 76,
+      "y": 28266,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Web under point loads, steel alone (EN 1993-1-5 §6, §7.2)",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_ec4_sz",
+      "type": "text",
+      "x": 76,
+      "y": 28291,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "η2 as in 4.7 (same web). η1 = M_Ed / M_el,Rd of the steel section, (4.14) with gross W_el.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_ec4_t0",
+      "type": "text",
+      "x": 76,
+      "y": 28345,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Elastic moment resistance, steel",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_t0"
+    },
+    {
+      "id": "s_ec4_t1",
+      "type": "math",
+      "x": 396,
+      "y": 28316,
+      "props": {
+        "w": 245,
+        "h": 37,
+        "baseline": 22,
+        "latex": "M_{el.Rd}\\coloneq \\frac{2I_a}{h_a}f_{yd}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_t0"
+    },
+    {
+      "id": "s_ec4_t2",
+      "type": "text",
+      "x": 76,
+      "y": 28369,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "(7.2) as a utilisation",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_t2"
+    },
+    {
+      "id": "s_ec4_t3",
+      "type": "math",
+      "x": 96,
+      "y": 28401,
+      "props": {
+        "w": 355,
+        "h": 73,
+        "baseline": 41,
+        "latex": "\\mathrm{UR}_{FM.nc}\\coloneq c_{F.P}\\max\\left(\\overrightarrow{\\frac{\\frac{F_{loc}}{F_{Rd.a}}+0.8\\frac{M_P}{M_{el.Rd}}}{1.4}}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_t2"
+    },
+    {
+      "id": "s_ec4_t4",
+      "type": "text",
+      "x": 76,
+      "y": 28480,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Deflection, steel section alone (characteristic loads)",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
     },
     {
       "id": "s_ec4_t5",
       "type": "text",
       "x": 76,
-      "y": 28539,
+      "y": 28517,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "g0 and the load tables on the steel alone",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_t5"
+    },
+    {
+      "id": "s_ec4_t6",
+      "type": "math",
+      "x": 396,
+      "y": 28505,
+      "props": {
+        "w": 262,
+        "h": 40,
+        "baseline": 25,
+        "latex": "\\delta_{nc}\\coloneq \\frac{5g_0 L^4}{384E_a I_a}+\\delta_{a.post}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_t5"
+    },
+    {
+      "id": "s_ec4_t7",
+      "type": "text",
+      "x": 76,
+      "y": 28590,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Deflection, steel alone",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "printGroupId": "s_ec4_pg_t7"
+    },
+    {
+      "id": "s_ec4_t8",
+      "type": "math",
+      "x": 396,
+      "y": 28551,
+      "props": {
+        "w": 155,
+        "h": 96,
+        "baseline": 52,
+        "latex": "\\mathrm{UR}_{d.nc}\\coloneq \\frac{\\delta_{nc}}{\\delta_{lim}}",
+        "displayMode": "full",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "printGroupId": "s_ec4_pg_t7"
+    },
+    {
+      "id": "s_ec4_t9",
+      "type": "text",
+      "x": 76,
+      "y": 28659,
       "props": {
         "w": 630,
         "h": 24,
@@ -17622,10 +17696,10 @@
       }
     },
     {
-      "id": "s_ec4_t6",
+      "id": "s_ec4_ta",
       "type": "text",
       "x": 76,
-      "y": 28569,
+      "y": 28689,
       "props": {
         "w": 630,
         "h": 19,
@@ -17637,10 +17711,10 @@
       }
     },
     {
-      "id": "s_ec4_t7",
+      "id": "s_ec4_tb",
       "type": "text",
       "x": 76,
-      "y": 28594,
+      "y": 28714,
       "props": {
         "w": 630,
         "h": 19,
@@ -17652,10 +17726,10 @@
       }
     },
     {
-      "id": "s_ec4_t8",
+      "id": "s_ec4_tc",
       "type": "text",
       "x": 76,
-      "y": 28619,
+      "y": 28739,
       "props": {
         "w": 630,
         "h": 19,
@@ -17667,10 +17741,10 @@
       }
     },
     {
-      "id": "s_ec4_t9",
+      "id": "s_ec4_td",
       "type": "text",
       "x": 76,
-      "y": 28644,
+      "y": 28764,
       "props": {
         "w": 630,
         "h": 19,
@@ -17682,10 +17756,10 @@
       }
     },
     {
-      "id": "s_ec4_ta",
+      "id": "s_ec4_te",
       "type": "text",
       "x": 76,
-      "y": 28669,
+      "y": 28789,
       "props": {
         "w": 630,
         "h": 19,
@@ -17697,10 +17771,10 @@
       }
     },
     {
-      "id": "s_ec4_tb",
+      "id": "s_ec4_tf",
       "type": "text",
       "x": 76,
-      "y": 28694,
+      "y": 28814,
       "props": {
         "w": 630,
         "h": 19,
@@ -17712,10 +17786,10 @@
       }
     },
     {
-      "id": "s_ec4_tc",
+      "id": "s_ec4_tg",
       "type": "text",
       "x": 76,
-      "y": 28719,
+      "y": 28839,
       "props": {
         "w": 630,
         "h": 19,
@@ -17727,10 +17801,10 @@
       }
     },
     {
-      "id": "s_ec4_td",
+      "id": "s_ec4_th",
       "type": "text",
       "x": 76,
-      "y": 28744,
+      "y": 28864,
       "props": {
         "w": 630,
         "h": 19,
@@ -17742,10 +17816,10 @@
       }
     },
     {
-      "id": "s_ec4_te",
+      "id": "s_ec4_ti",
       "type": "text",
       "x": 76,
-      "y": 28769,
+      "y": 28889,
       "props": {
         "w": 630,
         "h": 19,
@@ -17757,10 +17831,10 @@
       }
     },
     {
-      "id": "s_ec4_tf",
+      "id": "s_ec4_tj",
       "type": "text",
       "x": 76,
-      "y": 28794,
+      "y": 28914,
       "props": {
         "w": 630,
         "h": 19,
@@ -17772,10 +17846,10 @@
       }
     },
     {
-      "id": "s_ec4_tg",
+      "id": "s_ec4_tk",
       "type": "text",
       "x": 76,
-      "y": 28819,
+      "y": 28939,
       "props": {
         "w": 630,
         "h": 19,
@@ -17787,10 +17861,10 @@
       }
     },
     {
-      "id": "s_ec4_th",
+      "id": "s_ec4_tl",
       "type": "text",
       "x": 76,
-      "y": 28844,
+      "y": 28964,
       "props": {
         "w": 630,
         "h": 19,
@@ -17802,10 +17876,10 @@
       }
     },
     {
-      "id": "s_ec4_ti",
+      "id": "s_ec4_tm",
       "type": "text",
       "x": 76,
-      "y": 28869,
+      "y": 28989,
       "props": {
         "w": 630,
         "h": 19,
@@ -17817,10 +17891,10 @@
       }
     },
     {
-      "id": "s_ec4_tj",
+      "id": "s_ec4_tn",
       "type": "text",
       "x": 76,
-      "y": 28894,
+      "y": 29014,
       "props": {
         "w": 630,
         "h": 19,

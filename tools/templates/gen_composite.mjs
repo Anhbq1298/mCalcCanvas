@@ -380,54 +380,58 @@ calc('Strut resistance, (6.22)','v_{L.Rd}',R`\frac{0.6\left(1-\frac{f_{ck}}{250\
 ur('Concrete strut','L','v_{L.Ed}','v_{L.Rd}');
 T('Not checked (gates): surface b-b around the stud, splitting, anchorage, transverse slab bending.');
 
-H(2, '6. NON-COMPOSITE ALTERNATIVE (EN 1993-1-1)');
+H(2, '6. NON-COMPOSITE ALTERNATIVE (EN 1993-1-1, EN 1993-1-5)');
 l.out[l.out.length - 1].props.pageBreak = true;
 T('Used only if composite action fails: η < η_min, too few studs, or M_Rd(x) < M_Ed(x) (chapter 4).');
 P('Composite action: 1 = yes (ch. 4), 0 = no (ch. 6)', R`c_{comp}\coloneq${IF([R`\eta_{min}\le\eta\land n_{req}\le n_h\land\mathrm{UR}_{M.x}\le1`, '1'], [null, '0'])}`, M({ precision: 0 }));
-T('c_comp = 0, e.g. a large point load near a support: few studs fit between the support and x_M.');
-T('The steel beam alone then carries every permanent-stage load, with no composite credit.');
-T('Studs are a minimum provision that restrains the top flange: L_LT = stud spacing (s ≤ s_max, 4.2).');
-T('Utilisations only; acceptance is in chapter 7 for the design basis used (c_comp).');
-H(3, '6.1 Bending, shear and M–V interaction, steel section alone (§6.2.5, §6.2.6, §6.2.8)');
-calc('Bending, steel alone, at x_M', R`\mathrm{UR}_{M.nc}`, R`\frac{M_{2.Ed}}{M_{a.Rd}}`);
-calc('Shear, steel web', R`\mathrm{UR}_{V.nc}`, R`\frac{V_{2.Ed}}{V_{pl.Rd}}`);
-calc('Web area', 'A_w', R`h_w t_w`, 'mm^2', false);
-calc('(6.30) along the span, ρ from 4.6', 'M_{V.nc.x}', R`\left(W_{pl}-\frac{A_w^2}{4t_w}\rho_v\right)f_{yd}`, 'kN m', 'fo');
-calc('(6.30) under each point load', 'M_{V.nc.P}', R`\left(W_{pl}-\frac{A_w^2}{4t_w}\rho_P\right)f_{yd}`, 'kN m', 'fo');
-calc('Bending with shear', R`\mathrm{UR}_{MV.nc}`, R`\max\left(\max\left(\overrightarrow{\frac{M_v}{M_{V.nc.x}}}\right),\max\left(\overrightarrow{\frac{M_P}{M_{V.nc.P}}}\right)\right)`, '', false);
-H(3, '6.2 Lateral-torsional buckling (EN 1994-1-1 §6.4.1(1); EN 1993-1-1 §6.3.2.2)');
-T('EN 1994-1-1 §6.4.1(1): a steel flange attached to the slab by shear connection to §6.6 may be');
-T('taken as laterally stable if the slab is laterally stable. Applied when s ≤ s_max (§6.6.5.5);');
-T('L_LT is then the stud spacing (χ_LT = 1). Otherwise the full span is used as unrestrained.');
-P('Top flange restrained by the studs (1) or not (0)', R`c_{rest}\coloneq${IF([R`s_{sc.A}\le s_{max}\land s_{sc.B}\le s_{max}`, '1'], [null, '0'])}`, M({ precision: 0 }));
-P('LTB length', R`L_{LT.nc}\coloneq${IF([R`c_{rest}\ge1`, R`\max\left(s_{sc.A},s_{sc.B}\right)`], [null, 'L'])}`, M(units('mm')));
-calc('Euler force (C1 = 1, z_g = 0)', 'N_{cr.nc}', R`\frac{\pi^2 E_a I_z}{L_{LT.nc}^2}`, 'kN', false);
-calc('Elastic critical moment', 'M_{cr.nc}', R`N_{cr.nc}\sqrt{\frac{I_w}{I_z}+\frac{G_a I_t}{N_{cr.nc}}}`, 'kN m', false);
-calc('Slenderness', '\\lambda_{LT.nc}', R`\sqrt{\frac{W_{pl}f_y}{M_{cr.nc}}}`, '', false);
-calc('(6.56)', '\\Phi_{LT.nc}', R`0.5\left(1+\alpha_{LT}\left(\lambda_{LT.nc}-0.2\right)+\lambda_{LT.nc}^2\right)`, '', false);
-calc('Reduction factor', '\\chi_{LT.nc}', R`\min\left(1,\frac{1}{\Phi_{LT.nc}+\sqrt{\Phi_{LT.nc}^2-\lambda_{LT.nc}^2}}\right)`, '', false);
-calc('(6.55)', 'M_{b.Rd.nc}', R`\frac{\chi_{LT.nc}W_{pl}f_y}{\gamma_{M1}}`, 'kN m', false);
-calc('LTB', R`\mathrm{UR}_{LT.nc}`, R`\frac{M_{2.Ed}}{M_{b.Rd.nc}}`);
-H(3, '6.3 Web under point loads, steel alone (EN 1993-1-5 §6, §7.2)');
-T('η2 as in 4.7 (same web). η1 = M_Ed / M_el,Rd of the steel section, (4.14) with gross W_el.');
-calc('Elastic moment resistance, steel', 'M_{el.Rd}', R`\frac{2I_a}{h_a}f_{yd}`, 'kN m', false);
-calc('(7.2) as a utilisation', R`\mathrm{UR}_{FM.nc}`, R`c_{F.P}\max\left(\overrightarrow{\frac{\frac{F_{loc}}{F_{Rd.a}}+0.8\frac{M_P}{M_{el.Rd}}}{1.4}}\right)`, '', false);
-H(3, '6.4 Deflection, steel section alone (characteristic loads)');
-calc('g0 and the load tables on the steel alone', '\\delta_{nc}', R`\frac{5g_0 L^4}{384E_a I_a}+\delta_{a.post}`, 'mm', false);
-calc('Deflection, steel alone', R`\mathrm{UR}_{d.nc}`, R`\frac{\delta_{nc}}{\delta_{lim}}`);
+T('Bare steel beam for all permanent-stage loads, no composite credit. Studs at s ≤ s_max restrain the');
+T('top flange (EN 1994-1-1 §6.4.1(1)), so L_LT = stud spacing. Deflection on the steel section alone.');
+LINK('noncomp', 'Non-composite alternative: steel section alone', () => {
+ T('Bending, shear and M–V interaction, steel section alone (§6.2.5, §6.2.6, §6.2.8)');
+ calc('Bending, steel alone, at x_M', R`\mathrm{UR}_{M.nc}`, R`\frac{M_{2.Ed}}{M_{a.Rd}}`);
+ calc('Shear, steel web', R`\mathrm{UR}_{V.nc}`, R`\frac{V_{2.Ed}}{V_{pl.Rd}}`);
+ calc('Web area', 'A_w', R`h_w t_w`, 'mm^2', false);
+ calc('(6.30) along the span, ρ from 4.6', 'M_{V.nc.x}', R`\left(W_{pl}-\frac{A_w^2}{4t_w}\rho_v\right)f_{yd}`, 'kN m', 'fo');
+ calc('(6.30) under each point load', 'M_{V.nc.P}', R`\left(W_{pl}-\frac{A_w^2}{4t_w}\rho_P\right)f_{yd}`, 'kN m', 'fo');
+ calc('Bending with shear', R`\mathrm{UR}_{MV.nc}`, R`\max\left(\max\left(\overrightarrow{\frac{M_v}{M_{V.nc.x}}}\right),\max\left(\overrightarrow{\frac{M_P}{M_{V.nc.P}}}\right)\right)`, '', false);
+ T('Lateral-torsional buckling (EN 1994-1-1 §6.4.1(1); EN 1993-1-1 §6.3.2.2)');
+ T('EN 1994-1-1 §6.4.1(1): a steel flange attached to the slab by shear connection to §6.6 may be');
+ T('taken as laterally stable if the slab is laterally stable. Applied when s ≤ s_max (§6.6.5.5);');
+ T('L_LT is then the stud spacing (χ_LT = 1). Otherwise the full span is used as unrestrained.');
+ P('Top flange restrained by the studs (1) or not (0)', R`c_{rest}\coloneq${IF([R`s_{sc.A}\le s_{max}\land s_{sc.B}\le s_{max}`, '1'], [null, '0'])}`, M({ precision: 0 }));
+ P('LTB length', R`L_{LT.nc}\coloneq${IF([R`c_{rest}\ge1`, R`\max\left(s_{sc.A},s_{sc.B}\right)`], [null, 'L'])}`, M(units('mm')));
+ calc('Euler force (C1 = 1, z_g = 0)', 'N_{cr.nc}', R`\frac{\pi^2 E_a I_z}{L_{LT.nc}^2}`, 'kN', false);
+ calc('Elastic critical moment', 'M_{cr.nc}', R`N_{cr.nc}\sqrt{\frac{I_w}{I_z}+\frac{G_a I_t}{N_{cr.nc}}}`, 'kN m', false);
+ calc('Slenderness', '\\lambda_{LT.nc}', R`\sqrt{\frac{W_{pl}f_y}{M_{cr.nc}}}`, '', false);
+ calc('(6.56)', '\\Phi_{LT.nc}', R`0.5\left(1+\alpha_{LT}\left(\lambda_{LT.nc}-0.2\right)+\lambda_{LT.nc}^2\right)`, '', false);
+ calc('Reduction factor', '\\chi_{LT.nc}', R`\min\left(1,\frac{1}{\Phi_{LT.nc}+\sqrt{\Phi_{LT.nc}^2-\lambda_{LT.nc}^2}}\right)`, '', false);
+ calc('(6.55)', 'M_{b.Rd.nc}', R`\frac{\chi_{LT.nc}W_{pl}f_y}{\gamma_{M1}}`, 'kN m', false);
+ calc('LTB', R`\mathrm{UR}_{LT.nc}`, R`\frac{M_{2.Ed}}{M_{b.Rd.nc}}`);
+ T('Web under point loads, steel alone (EN 1993-1-5 §6, §7.2)');
+ T('η2 as in 4.7 (same web). η1 = M_Ed / M_el,Rd of the steel section, (4.14) with gross W_el.');
+ calc('Elastic moment resistance, steel', 'M_{el.Rd}', R`\frac{2I_a}{h_a}f_{yd}`, 'kN m', false);
+ calc('(7.2) as a utilisation', R`\mathrm{UR}_{FM.nc}`, R`c_{F.P}\max\left(\overrightarrow{\frac{\frac{F_{loc}}{F_{Rd.a}}+0.8\frac{M_P}{M_{el.Rd}}}{1.4}}\right)`, '', false);
+ T('Deflection, steel section alone (characteristic loads)');
+ calc('g0 and the load tables on the steel alone', '\\delta_{nc}', R`\frac{5g_0 L^4}{384E_a I_a}+\delta_{a.post}`, 'mm', false);
+ calc('Deflection, steel alone', R`\mathrm{UR}_{d.nc}`, R`\frac{\delta_{nc}}{\delta_{lim}}`);
+});
+T('Key results (calculated in the annex):');
+l.ROW([[96, R`L_{LT.nc}=`, units('mm')], [316, R`\chi_{LT.nc}=`, M({ precision: 3 })], [496, R`\delta_{nc}=`, units('mm')]], 1);
+for (const n of ['MV.nc','LT.nc','FM.nc','d.nc']) P(`Utilisation ${n}`, R`\mathrm{UR}_{${n}}=`, M({ precision: 3 }));
 
 H(2, '7. SUMMARY BY CODE');
 H(3, 'Design basis — composite (chapter 4) or non-composite (chapter 6)');
 P('Composite action achieved (1 = yes, 0 = no)', R`c_{comp}=`, M({ precision: 0 }));
-for (const n of ['M.nc','MV.nc','V.nc','LT.nc','FM.nc','d.nc']) P(`Non-composite utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
+const WHEN = (cond, ...lines) => { for (const t of lines) { T(t); Object.assign(l.out[l.out.length - 1].props, { showWhen: cond, color: '#b91c1c' }); } };
+const WHEN_OK = (cond, ...lines) => { for (const t of lines) { T(t); l.out[l.out.length - 1].props.showWhen = cond; } };
+WHEN_OK(R`c_{comp}\ge1`, 'Design basis: COMPOSITE (chapter 4). Chapter 6 is for information only.');
+WHEN(R`c_{comp}<1`, 'NOT DESIGNED AS COMPOSITE: designed as a bare steel beam (chapter 6); see the note below.');
 P('Web checks, both bases (4.7)', R`\mathrm{UR}_{F}\coloneq\max\left(\mathrm{UR}_{F.P},\mathrm{UR}_{F.S}\right)`, M({ precision: 3 }));
 P('Governing utilisation, composite (chapter 4)', R`\mathrm{UR}_{c}\coloneq\max\left(\mathrm{UR}_{M.2},\mathrm{UR}_{M.x},\mathrm{UR}_{MV},\mathrm{UR}_{V.2},\mathrm{UR}_{F},\mathrm{UR}_{FM},\mathrm{UR}_{d.x}\right)`, M({ precision: 3 }));
 P('Governing utilisation, non-composite (chapter 6)', R`\mathrm{UR}_{nc}\coloneq\max\left(\mathrm{UR}_{M.nc},\mathrm{UR}_{MV.nc},\mathrm{UR}_{V.nc},\mathrm{UR}_{LT.nc},\mathrm{UR}_{F},\mathrm{UR}_{FM.nc},\mathrm{UR}_{d.nc}\right)`, M({ precision: 3 }));
 P('Governing utilisation of the design basis used', R`\mathrm{UR}_{des}\coloneq${IF([R`c_{comp}\ge1`, R`\mathrm{UR}_{c}`], [null, R`\mathrm{UR}_{nc}`])}`, M({ precision: 3 }));
 check('Acceptance, permanent stage', '\\mathrm{UR}_{des}', '1');
-T('c_comp = 1: composite design (chapter 4); chapter 6 is for information only.');
-T('c_comp = 0: composite action not achieved; accepted only as non-composite (chapter 6),');
-T('studs as minimum top-flange restraint. Enlarge the section (Browse) if chapter 6 fails.');
+
 H(3, 'EN 1993-1-1 — construction stage');
 for (const n of ['M.1','V.1','LT','d.1']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
 H(3, 'EN 1994-1-1 — composite beam');
@@ -435,6 +439,12 @@ for (const n of ['M.2','M.x','MV','V.2','F.P','F.S','FM','d.2','d.x']) P(`Utilis
 H(3, 'EN 1992-1-1 — slab longitudinal shear');
 for (const n of ['sf','L']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
 
+WHEN(R`c_{comp}<1`,
+  'NOT DESIGNED AS COMPOSITE: the studs that fit cannot give composite action (η < η_min,',
+  'too few studs, or M_Rd(x) < M_Ed(x), e.g. a large point load close to a support).',
+  'Designed as a BARE STEEL beam (chapter 6, annex): EN 1993-1-1 and EN 1993-1-5 met by the steel',
+  'alone; LTB length = stud spacing (top flange restrained, s ≤ s_max, EN 1994-1-1 §6.4.1(1), §6.6.5.5);',
+  'UR uses the steel-alone deflection, not the composite one. If it fails, enlarge the section (Browse).');
 T('REVIEW DRAFT. If UR_LT > 1, the bare beam needs temporary restraint or propping during construction.');
 T('Gates: Singapore NAs; shrinkage history and cracking; surface b-b, splitting and anchorage.');
 LINK('sources','References and SCI cross-check', () => {

@@ -328,6 +328,10 @@ function TextProperties({ shape }: { shape: TextShape }) {
   return (
     <Section title="Text">
       <div className="space-y-1">
+        <span className="block text-[12px] font-medium text-muted-foreground">Print only when (optional, e.g. c_comp &lt; 1)</span>
+        <MathInput label="Print only when" testId="text-prop-show-when" value={shape.props.showWhen ?? ''} onCommit={(showWhen) => update({ showWhen: showWhen.trim() ? showWhen : undefined })} />
+      </div>
+      <div className="space-y-1">
         <span className="block text-[12px] font-medium text-muted-foreground">Formatting</span>
         <div className="flex flex-wrap gap-1">
           <FormatButton label="Bold (Ctrl+B)" icon={Bold} command="bold" disabled={!editing} />

@@ -4,6 +4,7 @@ import { step } from '../step';
 import { CalculationEngine } from '../../engine';
 import { calcKey } from '../../canvas/engineBridge';
 import { planSteelSection } from '../../canvas/steelSections';
+import { conditionHolds, textShowRegionId } from '../../canvas/textShow';
 import { sectionById } from '../../engineering/steel/sections';
 import type { Shape, TableShape } from '../../canvas/model/types';
 import { INPUT_TABLE_HEADER_ROWS, inputNameLatex, inputTableColumns, inputTableRegionId } from '../../canvas/inputTable';
@@ -18,6 +19,7 @@ describe('EC4 phase-one composite worksheet', () => {
     const e = new CalculationEngine({ unitSystem:'SI' });
     const math = doc.shapes.filter(s => s.type === 'math');
     const tables = doc.shapes.filter((s): s is TableShape => s.type === 'table' && !!s.props.input);
+    const conditional = doc.shapes.filter(s => s.type === 'text' && !!(s.props as { showWhen?: string }).showWhen);
     // Input tables register exactly as the canvas bridge does: one definition per column.
     const registerTable = (t: TableShape) => {
       for (const c of inputTableColumns(t)) e.setRegion(inputTableRegionId(t.id, c.column), { latex: c.latex, order: [...calcKey(t, rec), c.column] as never, displayUnit: null, precision: null });
@@ -27,7 +29,13 @@ describe('EC4 phase-one composite worksheet', () => {
         latex:s.props.latex, order:calcKey(s,rec), displayUnit:s.props.displayUnit || null, precision:null,
       });
       for (const t of tables) registerTable(t);
+      for (const t of conditional) e.setRegion(textShowRegionId(t.id), { latex: (t.props as { showWhen: string }).showWhen, order: calcKey(t, rec), displayUnit: null, precision: null });
     });
+    const shown = (fragment: string) => {
+      const t = conditional.find(x => (x.props as { html: string }).html.includes(fragment));
+      if (!t) throw new Error(`no conditional text ${fragment}`);
+      return conditionHolds(e.getResult(textShowRegionId(t.id)) as never);
+    };
     const value = (name:string, unit:string|null = null) => {
       e.setRegion('probe',{latex:`${name}=`,order:[1e9] as never,displayUnit:unit,precision:null});
       const r=e.getResult('probe');
@@ -173,6 +181,8 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('n_A')).toBe(17);
       expect(value('\\mathrm{UR}_{M.x}')).toBeGreaterThan(1);
       expect(value('c_{comp}')).toBe(0);
+      expect(shown('NOT DESIGNED AS COMPOSITE')).toBe(true);            // summary text box appears
+      expect(shown('Design basis: COMPOSITE')).toBe(false);
       expect(value('L_{LT.nc}','mm')).toBe(200);                           // LTB length = stud spacing
       expect(value('\\chi_{LT.nc}')).toBe(1);
       expect(value('\\mathrm{UR}_{M.nc}')).toBeCloseTo(1.45337661797,3);
@@ -200,6 +210,8 @@ describe('EC4 phase-one composite worksheet', () => {
       e.setDefinitionOverride(sec, null);
       restore('a_{j}', 'c_{Q.j}', 'F_{k.j}');
       expect(value('c_{comp}')).toBe(1);                                   // default: composite design
+      expect(shown('NOT DESIGNED AS COMPOSITE')).toBe(false);
+      expect(shown('Design basis: COMPOSITE')).toBe(true);
       expect(value('\\mathrm{UR}_{des}')).toBe(value('\\mathrm{UR}_{d.x}'));   // composite: deflection along the span governs
       // 4.9: reference deflection_curve (closed form, 1 mm steps): 31.0771 mm at 3.94 m, 29.2243 mm with η = 1
       expect(value('\\delta_{max}','mm')).toBeCloseTo(31.0770932273,2);

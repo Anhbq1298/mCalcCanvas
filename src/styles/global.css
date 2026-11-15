@@ -420,6 +420,10 @@ body {
 }
 .annex-unlinked { color: var(--color-muted-foreground); }
 .annex-bad { color: #b91c1c; font-size: 0.85em; font-weight: 400; margin-left: 0.6em; }
+.text-region--condition-off { opacity: 0.3; outline: 1px dashed #94a3b8; outline-offset: 2px; }
+@media print {
+  .text-region--condition-off { visibility: hidden; }
+}
 @media print {
   .annex-back { display: none; }
 }

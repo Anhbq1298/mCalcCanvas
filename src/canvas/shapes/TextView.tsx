@@ -6,6 +6,8 @@ import { fontStack, PARAGRAPH_STYLES, TEXT_STYLES, type TextShape } from '../mod
 import { escapeHtml, plainTextToHtml, sanitizeHtml } from '../sanitize';
 import { annexInfo, annexNumber, blockTitle, pageNumberOf } from '../annex';
 import { useAppStore } from '../../store/appStore';
+import { useRegionResult } from '../../store/calculationStore';
+import { conditionHolds, textShowRegionId } from '../textShow';
 
 /**
  * Rich text region. While editing it is a contentEditable box (Ctrl+B/I/U
@@ -15,6 +17,8 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
   const ref = useRef<HTMLDivElement>(null);
   const { html, w, fontSize, color, align, fontFamily, heading, textStyle } = shape.props;
   const annexHtml = useAnnexHtml(shape);
+  const showResult = useRegionResult(textShowRegionId(shape.id));
+  const hiddenByCondition = !!shape.props.showWhen?.trim() && !conditionHolds(showResult);
 
   useSeparateAfterEditing(shape.id, editing, isStatic);
 
@@ -90,8 +94,10 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
   return (
     <div
       ref={ref}
-      className={shape.props.annex?.kind === 'link' ? 'text-region text-region--annex-link' : 'text-region'}
+      className={(shape.props.annex?.kind === 'link' ? 'text-region text-region--annex-link' : 'text-region') + (hiddenByCondition ? ' text-region--condition-off' : '')}
       data-testid="text-region"
+      data-condition={shape.props.showWhen?.trim() ? (hiddenByCondition ? 'off' : 'on') : undefined}
+      title={hiddenByCondition ? `Not printed: ${shape.props.showWhen} does not hold` : undefined}
       data-heading={heading || undefined}
       data-text-style={textStyle}
       data-annex={shape.props.annex?.kind}
