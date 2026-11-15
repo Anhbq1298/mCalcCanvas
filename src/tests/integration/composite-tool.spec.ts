@@ -36,22 +36,26 @@ test('mCompositeBeamDesign calculates, follows a large point load and hands the 
   await expect(report.locator('[data-testid=math-region][data-latex^="\\\\mathrm{UR}_{des}\\\\le"]').first()).toBeAttached();
 });
 
-test('mCompositeBeamDesign optimizes the section to the lightest one that passes', async ({ page }) => {
-  test.setTimeout(180_000);
+test('mCompositeBeamDesign optimizes the section in a dialog with strength and deflection targets', async ({ page }) => {
+  test.setTimeout(240_000);
   await page.goto('/composite/');
   await expect(page.getByTestId('ur-des')).toHaveText('0.971');
-  await page.getByTestId('optimize').click();
-  await expect(page.getByTestId('optimize-status')).toContainText('Lightest UB passing all checks', { timeout: 150_000 });
-  await expect(page.getByTestId('optimize')).toBeEnabled();
-  const chosen = await page.getByTestId('optimize-status').locator('b').textContent();
-  // the page recalculates the chosen section, then shows it and its governing UR
-  await expect(page.getByTestId('section-select').locator('option:checked')).toHaveText(chosen!, { timeout: 30_000 });
-  await expect(page.locator('.status')).toHaveText('Up to date', { timeout: 30_000 });
-  await expect.poll(async () => Number(await page.getByTestId('ur-max').textContent()), { timeout: 30_000 }).toBeLessThanOrEqual(1);
-  // a depth limit: the result reports it, and an invalid limit disables the button
-  await page.getByTestId('hmax').fill('abc');
+  await page.getByTestId('optimize-open').click();
+  await expect(page.getByRole('dialog', { name: 'Optimize section' })).toBeVisible();
+  await page.getByTestId('t-strength').fill('abc');
   await expect(page.getByTestId('optimize')).toBeDisabled();
-  await page.getByTestId('hmax').fill('460');
+  await page.getByTestId('t-strength').fill('0.9');
+  await page.getByTestId('t-defl').fill('0.8');
   await page.getByTestId('optimize').click();
-  await expect(page.getByTestId('optimize-status')).toContainText(/with h ≤ 460 mm/, { timeout: 150_000 });
+  await expect(page.getByTestId('optimize-status')).toContainText('Lightest UB', { timeout: 200_000 });
+  const res = page.getByTestId('optimize-result');
+  const strength = Number((await res.locator('tr').nth(2).locator('td').nth(1).textContent())!.split(' ')[0]);
+  const defl = Number((await res.locator('tr').nth(3).locator('td').nth(1).textContent())!.split(' ')[0]);
+  expect(strength).toBeLessThanOrEqual(0.9);
+  expect(defl).toBeLessThanOrEqual(0.8);
+  const chosen = (await res.locator('tr').nth(0).locator('td').nth(1).textContent())!;
+  await page.getByTestId('optimize-apply').click();
+  await expect(page.getByRole('dialog')).toBeHidden();
+  await expect(page.getByTestId('section-select').locator('option:checked')).toHaveText(chosen, { timeout: 30_000 });
+  await expect(page.locator('.status')).toHaveText('Up to date', { timeout: 30_000 });
 });

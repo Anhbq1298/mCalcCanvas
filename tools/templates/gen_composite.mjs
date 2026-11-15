@@ -103,6 +103,7 @@ H(3, '1.9 Serviceability');
 input('Creep coefficient', '\\varphi', 2);
 input('Free shrinkage strain', '\\varepsilon_{cs}', 0.0003);
 input('Deflection limit L / r_lim', 'r_{lim}', 250);
+input('Precamber w_c, % of the self-weight (g_0) deflection; 0 = none', 'c_{cam}', 0);
 
 H(2, '2. LOADING');
 l.out[l.out.length - 1].props.pageBreak = true; // loading starts on its own page
@@ -390,10 +391,14 @@ P('Deflection at u, bare steel', R`d_{st}(u)\coloneq d_w(u,\kappa_s)`, M(units('
 P('Deflection at u, LL on bare steel', R`d_{qs}(u)\coloneq d_w\left(u,\frac{M_{q.k}}{E_a I_a}\right)`, M(units('')));
 calc('Bare steel, 1.0 DL + 1.0 LL', '\\delta_{x.s}', R`\mathrm{map}\left(d_{st},x_v\right)`, 'mm', 'fo');
 calc('Bare steel, LL alone', '\\delta_{x.qs}', R`\mathrm{map}\left(d_{qs},x_v\right)`, 'mm', 'fo');
-P('Plotted: composite if c_comp = 1, bare steel if 0', R`\delta_{x.d}\coloneq${IF([R`c_{comp}\ge1`, R`\delta_x`], [null, R`\delta_{x.s}`])}`, M({ ...units('mm'), ...fo }));
+T('Precamber (EN 1990 A1.4.3): w_max = w_tot − w_c, with w_c a share c_cam of the deflection under the self-weight g_0, in its shape.');
+calc('Self-weight deflection along the span, g_0 on the section of κ_g', '\\delta_{g.v}', IF([R`c_{prop}\ge1`, R`\overrightarrow{\frac{g_0 x_v\left(L^3-2Lx_v^2+x_v^3\right)}{24E_a I_L}}`], [null, R`\overrightarrow{\frac{g_0 x_v\left(L^3-2Lx_v^2+x_v^3\right)}{24E_a I_a}}`]), 'mm', 'fo');
+calc('Precamber along the span', 'w_{c.v}', R`\frac{c_{cam}}{100}\delta_{g.v}`, 'mm', 'fo');
+calc('Precamber at mid-span', 'w_c', R`\max\left(w_{c.v}\right)`, 'mm', false);
+P('Plotted: composite if c_comp = 1, bare steel if 0, less the precamber', R`\delta_{x.d}\coloneq${IF([R`c_{comp}\ge1`, R`\delta_x-w_{c.v}`], [null, R`\delta_{x.s}-w_{c.v}`])}`, M({ ...units('mm'), ...fo }));
 P('Plotted LL, same basis', R`\delta_{q.d}\coloneq${IF([R`c_{comp}\ge1`, R`\delta_{x.q}`], [null, R`\delta_{x.qs}`])}`, M({ ...units('mm'), ...fo }));
 calc('Maximum LL deflection', '\\delta_{q.max}', R`\max\left(\delta_{x.q}\right)`, 'mm', false);
-calc('Maximum deflection', '\\delta_{max}', R`\max\left(\delta_x\right)`, 'mm', false);
+calc('Maximum deflection, total less precamber', '\\delta_{max}', R`\max\left(\delta_x-w_{c.v}\right)`, 'mm', false);
 DIAGRAM(170, { title: 'Deflection δ(x), permanent stage: composite if c_comp = 1, bare steel if 0 (downward)', xUnit: 'm', yUnit: 'mm', invertY: true, series: [
   S('dp', '1.0 DL + 1.0 LL', ['x_v', '\\delta_{x.d}'], 'line', '#1d4ed8', 2),
   S('dq', 'LL', ['x_v', '\\delta_{q.d}'], 'line', '#059669', 1.5),
@@ -463,7 +468,7 @@ LINK('noncomp', 'Non-composite alternative: steel section alone', () => {
  calc('Elastic moment resistance, steel', 'M_{el.Rd}', R`\frac{2I_a}{h_a}f_{yd}`, 'kN m', false);
  calc('(7.2) as a utilisation', R`\mathrm{UR}_{FM.nc}`, R`c_{F.P}\max\left(\overrightarrow{\frac{\frac{F_{loc}}{F_{Rd.a}}+0.8\frac{M_P}{M_{el.Rd}}}{1.4}}\right)`, '', false);
  T('Deflection, steel section alone (characteristic loads)');
- calc('g0 and the load tables on the steel alone, maximum along the span (4.9)', '\\delta_{nc}', R`\max\left(\delta_{x.s}\right)`, 'mm', false);
+ calc('g0 and the load tables on the steel alone, maximum along the span (4.9), less the precamber', '\\delta_{nc}', R`\max\left(\delta_{x.s}-w_{c.v}\right)`, 'mm', false);
  calc('Deflection, steel alone', R`\mathrm{UR}_{d.nc}`, R`\frac{\delta_{nc}}{\delta_{lim}}`);
 });
 T('Key results (calculated in the annex):');

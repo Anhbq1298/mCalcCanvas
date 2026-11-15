@@ -5,7 +5,7 @@
  * passing section wins — the same answer as checking them one by one (CompositeModel.optimizeSection).
  */
 import type { SteelSection } from '../../engineering/steel/sections';
-import type { OptimizeResult } from './model';
+import type { Governing, OptimizeResult, Targets } from './model';
 import type { ToWorker } from './worker';
 
 let pool: Worker[] = [];
@@ -31,27 +31,29 @@ export function optimizeParallel(
   family: string,
   candidates: SteelSection[],
   maxDepth: number | null,
+  targets: Targets,
   state: { values: Record<string, number>; tables: { id: string; rows: string[][] }[] },
   progress: (done: number, total: number, name: string) => void,
 ): Promise<OptimizeResult> {
   const workers = ensurePool();
   const run = ++token;
   const total = candidates.length;
-  const ur = new Map<number, { ur: number; label: string }>(); // candidate index → governing check
+  const res = new Map<number, { pass: boolean; strength?: Governing; deflection?: Governing }>(); // candidate index → outcome
   let next = 0, done = 0, bestIdx = Infinity;
   return new Promise((resolve) => {
     const finish = () => {
       workers.forEach((w) => (w.onmessage = null));
       const b = Number.isFinite(bestIdx) ? candidates[bestIdx] : null;
       const tried = Number.isFinite(bestIdx) ? bestIdx + 1 : total; // lightest-first count, as in the serial search
-      resolve({ family, maxDepth, tried, total, best: b ? { id: b.id, name: b.name, mass: b.values.mass, ur: ur.get(bestIdx)!.ur, label: ur.get(bestIdx)!.label } : null });
+      const o = Number.isFinite(bestIdx) ? res.get(bestIdx)! : null;
+      resolve({ family, maxDepth, targets, tried, total, best: b && o ? { id: b.id, name: b.name, mass: b.values.mass, h: b.values.h, strength: o.strength!, deflection: o.deflection! } : null });
     };
     // all lighter candidates are back: the answer cannot change any more
-    const settled = () => (Number.isFinite(bestIdx) ? [...Array(bestIdx).keys()].every((i) => ur.has(i)) : done === total);
+    const settled = () => (Number.isFinite(bestIdx) ? [...Array(bestIdx).keys()].every((i) => res.has(i)) : done === total);
     const feed = (w: Worker) => {
       if (next >= total || next > bestIdx) return false;
       const i = next++;
-      w.postMessage({ kind: 'evaluate', id: candidates[i].id, token: run * 100000 + i } satisfies ToWorker);
+      w.postMessage({ kind: 'evaluate', id: candidates[i].id, token: run * 100000 + i, targets } satisfies ToWorker);
       return true;
     };
     if (!total) return finish();
@@ -63,8 +65,8 @@ export function optimizeParallel(
         if (m.kind !== 'evaluated' || Math.floor(m.token / 100000) !== run) return;
         const i = m.token % 100000;
         busy--; done++;
-        ur.set(i, { ur: m.ur, label: m.label });
-        if (m.ur <= 1 && i < bestIdx) bestIdx = i;
+        res.set(i, { pass: m.pass, strength: m.strength, deflection: m.deflection });
+        if (m.pass && i < bestIdx) bestIdx = i;
         progress(done, total, candidates[i].name);
         if (settled()) return finish();
         if (feed(w)) busy++;

@@ -4,17 +4,16 @@
  * scrolling stay responsive while it recalculates (no long task on the main thread).
  */
 import raw from '../../../templates/Composite_Beam_EC4.mCCV?raw';
-import { CompositeModel, DEFLECTION_CHECKS, governingCheck } from './model';
+import { CompositeModel, governingSplit, screenPasses, type Targets } from './model';
 
 export type ToWorker =
   | { kind: 'input'; id: string; value: number }
   | { kind: 'section'; id: number }
   | { kind: 'table'; id: string; rows: string[][] }
   | { kind: 'report'; request: number } | { kind: 'hello' }
-  | { kind: 'optimize'; family: string; maxDepth: number | null }
   // optimizer pool: copy the page's inputs, then check one section at a time
   | { kind: 'state'; values: Record<string, number>; tables: { id: string; rows: string[][] }[] }
-  | { kind: 'evaluate'; id: number; token: number };
+  | { kind: 'evaluate'; id: number; token: number; targets: Targets };
 
 export type { OptimizeResult } from './model';
 
@@ -35,24 +34,23 @@ self.onmessage = (ev: MessageEvent<ToWorker>) => {
     return;
   }
   if (m.kind === 'evaluate') {
-    // 1. screening model: a check other than deflection above 1 fails the section for certain
+    // 1. screening model (no deflection curves): a failing strength or construction-deflection check is final
     if (screen) {
       screen.setSection(m.id);
-      const s = screen.results();
-      const g = s.errors.length ? null : governingCheck(s, DEFLECTION_CHECKS);
-      if (g && g.ur > 1) return post({ kind: 'evaluated', token: m.token, id: m.id, ur: g.ur, label: g.label, screened: true });
+      const q = screen.results();
+      if (!q.errors.length && !screenPasses(q, m.targets)) return post({ kind: 'evaluated', token: m.token, id: m.id, pass: false });
     }
     // 2. full worksheet
     model.setSection(m.id);
     const r = model.results();
-    const g = r.errors.length ? { ur: Infinity, label: 'worksheet error' } : governingCheck(r);
-    return post({ kind: 'evaluated', token: m.token, id: m.id, ur: g.ur, label: g.label });
+    if (r.errors.length) return post({ kind: 'evaluated', token: m.token, id: m.id, pass: false });
+    const g = governingSplit(r);
+    return post({ kind: 'evaluated', token: m.token, id: m.id, pass: g.strength.ur <= m.targets.strength && g.deflection.ur <= m.targets.deflection, ...g });
   }
   if (m.kind === 'input') model.setInput(m.id, m.value);
   else if (m.kind === 'section') model.setSection(m.id);
   else if (m.kind === 'table') model.setTableRows(m.id, m.rows);
   else if (m.kind === 'report') return post({ kind: 'report', request: m.request, doc: model.reportDocument() });
-  else if (m.kind === 'optimize') post({ kind: 'opt-done', result: model.optimizeSection(m.family, (i, n, name) => post({ kind: 'opt-progress', i, n, name }), m.maxDepth) });
   // Several edits in a row: calculate once, after the queue is empty.
   if (pending) return;
   pending = true;

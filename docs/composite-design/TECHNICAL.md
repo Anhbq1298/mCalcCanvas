@@ -203,3 +203,9 @@ Annex: the general force model and branch boundaries.
   checks — unit test), and only survivors get the full worksheet. The lightest passing section is the same as
   the serial search (unit test). Section-independent table-load vectors (M_U,v, M_s,qp, …) are now their own
   annex regions, and the unit-load moment m_w has no IF. Default case: 6.2 s → 1.4 s on 2 cores.
+- Precamber (input c_cam, % of the self-weight deflection, default 0): w_c(x) = c_cam/100 · δ_g(x) with
+  δ_g = g_0 x (L³ − 2Lx² + x³)/(24 E I) on the section of κ_g; δ_max and δ_nc are maxima of the total less w_c
+  (EN 1990 A1.4.3, w_max = w_tot − w_c). Construction and LL deflections are not cambered. Unit test.
+- Optimizer dialog: family, h_max, target max UR for strength (all checks except SLS_CHECKS) and for
+  deflection (d.1, d.x / d.nc), precamber (the worksheet input). The result shows both governing checks and is
+  applied with "Use <section>".

@@ -93,6 +93,10 @@ export function App() {
   const [values, setValues] = useState<Record<string, number>>({});
   const [family, setFamily] = useState('UB');
   const [hMax, setHMax] = useState('');
+  const [optFamily, setOptFamily] = useState('UB');
+  const [tStrength, setTStrength] = useState('1.00');
+  const [tDefl, setTDefl] = useState('1.00');
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const [opt, setOpt] = useState<{ running: boolean; i?: number; n?: number; name?: string; result?: OptimizeResult; seconds?: number } | null>(null);
   const reportReq = useRef(0);
   const reportCb = useRef<((doc: unknown) => void) | null>(null);
@@ -201,6 +205,19 @@ export function App() {
     ['I_a', 'I_a', 'cm⁴', 0], ['W_{pl}', 'W_pl', 'cm³', 1], ['m_a', 'm_a', 'kg/m', 1], ['b_{eff}', 'b_eff', 'mm', 0], ['I_0', 'I_0', 'cm⁴', 0], ['I_L', 'I_L', 'cm⁴', 0],
     ['M_{a.Rd}', 'MaRd', 'kNm', 1], ['M_{pl.Rd}', 'MplRd', 'kNm', 1], ['V_{pl.Rd}', 'VplRd', 'kN', 1],
   ];
+  const okNum = (t: string, blankOk = false) => (blankOk && !t.trim()) || (NUMBER.test(t) && Number(t) > 0);
+  const camberField = inputs.find((f) => f.name === 'c_{cam}');
+  const runOptimize = async () => {
+    const maxDepth = hMax.trim() ? Number(hMax) : null;
+    const targets = { strength: Number(tStrength), deflection: Number(tDefl) };
+    const cands = sections
+      .filter((x) => x.family === optFamily && Number.isFinite(x.values.mass) && (maxDepth === null || x.values.h <= maxDepth + 1e-9))
+      .sort((a, b) => a.values.mass - b.values.mass);
+    setOpt({ running: true });
+    const t0 = performance.now();
+    const result = await optimizeParallel(optFamily, cands, maxDepth, targets, { values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) }, (i, n, name) => setOpt({ running: true, i, n, name }));
+    setOpt({ running: false, result, seconds: (performance.now() - t0) / 1000 });
+  };
   const loadTable = (t: LoadTable, ti: number) => (
     <section aria-labelledby={`h-table-${ti}`} key={t.id}>
       <h2 id={`h-table-${ti}`}>{ti === 0 ? 'Distributed loads' : 'Point loads'}</h2>
@@ -291,56 +308,11 @@ export function App() {
                   </select>
                 </label>
                 <p className="hint wide">{section ? `${section.name} · ${section.standard} · ${fmt(section.values.mass, 1)} kg/m` : ''}</p>
-                <div className="wide optimize">
-                  <div className="optimize-row">
-                  <label className="f" htmlFor="hmax">
-                    <span>Max depth h<sub>max</sub> (mm), blank = no limit</span>
-                    <input
-                      id="hmax"
-                      data-testid="hmax"
-                      className="num-input"
-                      type="text"
-                      inputMode="decimal"
-                      autoComplete="off"
-                      placeholder="no limit"
-                      aria-invalid={hMax.trim() !== '' && !(Number(hMax) > 0)}
-                      aria-describedby={hMax.trim() !== '' && !(Number(hMax) > 0) ? 'hmax-error' : undefined}
-                      value={hMax}
-                      onChange={(e) => setHMax(e.target.value)}
-                    />
-                    {hMax.trim() !== '' && !(Number(hMax) > 0) && <span id="hmax-error" className="field-error">Error: enter a depth in mm, e.g. 350</span>}
-                  </label>
-                  <button
-                    type="button"
-                    className="btn"
-                    data-testid="optimize"
-                    disabled={opt?.running || (hMax.trim() !== '' && !(Number(hMax) > 0))}
-                    onClick={async () => {
-                      const maxDepth = hMax.trim() ? Number(hMax) : null;
-                      const cands = sections
-                        .filter((x) => x.family === family && Number.isFinite(x.values.mass) && (maxDepth === null || x.values.h <= maxDepth + 1e-9))
-                        .sort((a, b) => a.values.mass - b.values.mass);
-                      setOpt({ running: true });
-                      const t0 = performance.now();
-                      const result = await optimizeParallel(family, cands, maxDepth, { values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) }, (i, n, name) => setOpt({ running: true, i, n, name }));
-                      setOpt({ running: false, result, seconds: (performance.now() - t0) / 1000 });
-                      if (result.best) send({ kind: 'section', id: result.best.id });
-                    }}
-                    title={`Try every ${family} section from the lightest up and keep the first that passes all checks`}
-                  >
-                    {opt?.running ? 'Optimizing…' : `Optimize: lightest ${family}`}
+                <div className="wide">
+                  <button type="button" className="btn" data-testid="optimize-open" onClick={() => { setOptFamily(family); dialogRef.current?.showModal(); }}>
+                    Optimize section…
                   </button>
-                  </div>
-                  <p className="hint" role="status" data-testid="optimize-status">
-                    {opt?.running && opt.n ? <>Checked {opt.i} of {opt.n}: {opt.name}</> : null}
-                    {!opt?.running && opt?.result ? (
-                      opt.result.best ? (
-                        <>Lightest {opt.result.family}{opt.result.maxDepth !== null ? <> with h ≤ {fmt(opt.result.maxDepth, 0)} mm</> : null} passing all checks: <b>{opt.result.best.name}</b> ({fmt(opt.result.best.mass, 1)} kg/m, h = {fmt(sections.find((x) => x.id === opt.result!.best!.id)?.values.h ?? NaN, 1)} mm), governing UR {fmt(opt.result.best.ur, 3)} (<Rich text={opt.result.best.label} />). Checked {opt.result.tried} of {opt.result.total}, lightest first{opt.seconds !== undefined ? `, ${fmt(opt.seconds, 1)} s` : ''}.</>
-                      ) : (
-                        <span className="error">No {opt.result.family} section{opt.result.maxDepth !== null ? <> with h ≤ {fmt(opt.result.maxDepth, 0)} mm</> : null} passes all checks with these inputs ({opt.result.total} tried); the section is unchanged.</span>
-                      )
-                    ) : null}
-                  </p>
+                  {opt?.result?.best && !opt.running && <p className="hint">Last optimisation: {opt.result.best.name}, {fmt(opt.result.best.mass, 1)} kg/m.</p>}
                 </div>
               </div>
             </section>
@@ -547,6 +519,78 @@ export function App() {
 
         </div>
       </main>
+      <dialog ref={dialogRef} className="opt-dialog" aria-labelledby="opt-title" onClose={() => undefined}>
+        <form method="dialog" className="opt-form" onSubmit={(e) => e.preventDefault()} noValidate>
+          <header className="opt-head">
+            <h2 id="opt-title">Optimize section</h2>
+            <button type="button" className="rowbtn" aria-label="Close" onClick={() => dialogRef.current?.close()}>×</button>
+          </header>
+          <p className="hint">Tries every section of the family from the lightest up and keeps the first that meets both targets, for the design basis in use (composite or bare steel), construction stage included. Other inputs stay as entered.</p>
+          <div className="fields">
+            <label className="f"><span>Family</span>
+              <select data-testid="opt-family" value={optFamily} onChange={(e) => setOptFamily(e.target.value)}>
+                {FAMILIES.map((f) => <option key={f}>{f}</option>)}
+              </select>
+            </label>
+            <label className="f"><span>Max depth h<sub>max</sub> (mm)</span>
+              <input data-testid="hmax" className="num-input" type="text" inputMode="decimal" autoComplete="off" placeholder="no limit" value={hMax} onChange={(e) => setHMax(e.target.value)}
+                aria-invalid={!okNum(hMax, true)} aria-describedby={!okNum(hMax, true) ? 'hmax-error' : undefined} />
+              {!okNum(hMax, true) && <span id="hmax-error" className="field-error">Error: a depth in mm, e.g. 350, or blank</span>}
+            </label>
+            <label className="f"><span>Target max UR, strength (ULS)</span>
+              <input data-testid="t-strength" className="num-input" type="text" inputMode="decimal" autoComplete="off" value={tStrength} onChange={(e) => setTStrength(e.target.value)}
+                aria-invalid={!okNum(tStrength)} aria-describedby={!okNum(tStrength) ? 'ts-error' : undefined} />
+              {!okNum(tStrength) && <span id="ts-error" className="field-error">Error: a ratio, e.g. 0.90</span>}
+            </label>
+            <label className="f"><span>Target max UR, deflection (SLS)</span>
+              <input data-testid="t-defl" className="num-input" type="text" inputMode="decimal" autoComplete="off" value={tDefl} onChange={(e) => setTDefl(e.target.value)}
+                aria-invalid={!okNum(tDefl)} aria-describedby={!okNum(tDefl) ? 'td-error' : undefined} />
+              {!okNum(tDefl) && <span id="td-error" className="field-error">Error: a ratio, e.g. 0.80</span>}
+            </label>
+            {camberField && (
+              <label className="f wide" htmlFor={`opt-${camberField.id}`}>
+                <span>Precamber w<sub>c</sub>, % of the self-weight deflection (g<sub>0</sub>); also used in the design and the report</span>
+                <NumberField id={`opt-${camberField.id}`} label="c_cam" value={String(value(camberField))} onCommit={(nv) => setInput(camberField, nv)} />
+                <span className="hint">Now w<sub>c</sub> = {fmt(res.wc, 1)} mm at mid-span; deflection checks use w<sub>tot</sub> − w<sub>c</sub> (EN 1990 A1.4.3); construction and LL deflections are not cambered.</span>
+              </label>
+            )}
+          </div>
+          <div className="opt-actions">
+            <button type="button" className="btn primary" data-testid="optimize" disabled={opt?.running || !okNum(hMax, true) || !okNum(tStrength) || !okNum(tDefl)} onClick={runOptimize}>
+              {opt?.running ? 'Optimizing…' : `Find the lightest ${optFamily}`}
+            </button>
+            <p className="hint" role="status" data-testid="optimize-status">
+              {opt?.running && opt.n ? <>Checked {opt.i} of {opt.n}: {opt.name}</> : null}
+              {!opt?.running && opt?.result ? (
+                opt.result.best ? (
+                  <>Lightest {opt.result.family}{opt.result.maxDepth !== null ? <> with h ≤ {fmt(opt.result.maxDepth, 0)} mm</> : null} meeting UR ≤ {fmt(opt.result.targets.strength, 2)} strength and ≤ {fmt(opt.result.targets.deflection, 2)} deflection: <b>{opt.result.best.name}</b>. Checked {opt.result.tried} of {opt.result.total}{opt.seconds !== undefined ? `, ${fmt(opt.seconds, 1)} s` : ''}.</>
+                ) : (
+                  <span className="error">No {opt.result.family} section{opt.result.maxDepth !== null ? <> with h ≤ {fmt(opt.result.maxDepth, 0)} mm</> : null} meets the targets ({opt.result.total} tried).</span>
+                )
+              ) : null}
+            </p>
+            {!opt?.running && opt?.result?.best && (
+              <table className="opt-result" data-testid="optimize-result">
+                <caption className="sr-only">Optimised section</caption>
+                <tbody>
+                  <tr><td>Section</td><td>{opt.result.best.name}</td></tr>
+                  <tr><td>Mass / depth h</td><td>{fmt(opt.result.best.mass, 1)} kg/m / {fmt(opt.result.best.h, 1)} mm</td></tr>
+                  <tr><td>Strength UR (target {fmt(opt.result.targets.strength, 2)})</td><td className={tone(opt.result.best.strength.ur)}>{fmt(opt.result.best.strength.ur, 3)} · <Rich text={opt.result.best.strength.label} /></td></tr>
+                  <tr><td>Deflection UR (target {fmt(opt.result.targets.deflection, 2)})</td><td className={tone(opt.result.best.deflection.ur)}>{fmt(opt.result.best.deflection.ur, 3)} · <Rich text={opt.result.best.deflection.label} /></td></tr>
+                </tbody>
+              </table>
+            )}
+            <div className="opt-buttons">
+              {!opt?.running && opt?.result?.best && (
+                <button type="button" className="btn primary" data-testid="optimize-apply" onClick={() => { send({ kind: 'section', id: opt.result!.best!.id }); setFamily(opt.result!.family); dialogRef.current?.close(); }}>
+                  Use {opt.result.best.name}
+                </button>
+              )}
+              <button type="button" className="btn" onClick={() => dialogRef.current?.close()}>Close</button>
+            </div>
+          </div>
+        </form>
+      </dialog>
       <p className="note">Review draft. Results come from the mCalcCanvas composite beam worksheet to EC4 (verified against SCI P364, SBE Part 4 and an independent reference); confirm National Annex values before use.</p>
     </>
   );

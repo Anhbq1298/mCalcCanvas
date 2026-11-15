@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { CHECKS, CompositeModel, DEFLECTION_CHECKS, governingCheck } from '../../tools/composite/model';
+import { CHECKS, CompositeModel, DEFLECTION_CHECKS, governingCheck, governingSplit } from '../../tools/composite/model';
 import { sections } from '../../engineering/steel/sections';
 import { parseDocument } from '../../documents/DocumentSerializer';
 
@@ -84,12 +84,12 @@ describe('mCompositeBeamDesign headless model', () => {
     m.setTableRows(m.tables[0].id, [['G', '0', '5', '5', ''], ['Q', '0', '5', '3', '']]);
     m.setTableRows(m.tables[1].id, [['G', '0.8', '30', '']]);
     const seen: string[] = [];
-    const out = m.optimizeSection('UB', (_i, _n, name) => seen.push(name));
+    const out = m.optimizeSection('UB', { progress: (_i, _n, name) => seen.push(name) });
     expect(out.best).not.toBeNull();
     expect(m.sectionId).toBe(out.best!.id);
     const r = m.results();
     expect(governingCheck(r).ur).toBeLessThanOrEqual(1);
-    expect(out.best!.ur).toBeCloseTo(governingCheck(r).ur, 9);
+    expect(Math.max(out.best!.strength.ur, out.best!.deflection.ur)).toBeCloseTo(governingCheck(r).ur, 9);
     expect(seen).toHaveLength(out.tried);
     // every lighter UB tried before it fails (or cannot be evaluated)
     const lighter = sections.filter((s) => s.family === 'UB' && s.values.mass < out.best!.mass);
@@ -97,7 +97,7 @@ describe('mCompositeBeamDesign headless model', () => {
     for (const s of lighter) { m.setSection(s.id); expect(governingCheck(m.results()).ur).toBeGreaterThan(1); }
     // depth limit: only sections with h ≤ h_max; the lightest of those that passes, lighter ones within the limit fail
     const lim = out.best!.id && sections.find((s) => s.id === out.best!.id)!.values.h - 1;
-    const limited = m.optimizeSection('UB', undefined, lim);
+    const limited = m.optimizeSection('UB', { maxDepth: lim });
     expect(limited.maxDepth).toBe(lim);
     if (limited.best) {
       expect(sections.find((s) => s.id === limited.best!.id)!.values.h).toBeLessThanOrEqual(lim);
@@ -125,9 +125,38 @@ describe('mCompositeBeamDesign headless model', () => {
     full.setSection(3148);
     const t0 = performance.now(); const serial = full.optimizeSection('UB'); const t1 = performance.now();
     full.setSection(3148);
-    const fast = full.optimizeSection('UB', undefined, null, screen); const t2 = performance.now();
+    const fast = full.optimizeSection('UB', { screen }); const t2 = performance.now();
     expect(fast).toEqual(serial);
     expect(t2 - t1).toBeLessThan((t1 - t0) * 0.75);
+  }, 600_000);
+
+  it('precamber reduces the permanent deflection (EN 1990 A1.4.3) and the optimiser honours separate targets', () => {
+    const raw = readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8');
+    const m = new CompositeModel(raw);
+    const r0 = m.results();
+    expect(r0.wc).toBe(0);
+    const cam = m.inputs.find((f) => f.name === 'c_{cam}')!;
+    m.setInput(cam.id, 80);
+    const r = m.results();
+    // w_c = 0.8 × 5 g0 L⁴ / (384 E I_a) (unpropped, steel alone)
+    expect(r.wc).toBeCloseTo((0.8 * 5 * r.g0 * r.L ** 4 * 1e12) / (384 * 210000 * r.I_a * 1e4), 3);
+    expect(r.dmax).toBeLessThan(r0.dmax);
+    expect(r.dmax).toBeGreaterThan(r0.dmax - r.wc - 1e-9);
+    expect(Math.max(...r.vectors.d)).toBeCloseTo(r.dmax, 9); // the chart shows the net curve
+    expect(r.dq).toBeCloseTo(r0.dq, 9); // LL alone is not cambered
+    // targets: a stricter strength target can only give a heavier (or equal) section; each criterion holds
+    const screen = new CompositeModel(raw, { screening: true });
+    screen.setInput(cam.id, 80);
+    const loose = m.optimizeSection('UB', { screen, targets: { strength: 1, deflection: 1 } });
+    const strict = m.optimizeSection('UB', { screen, targets: { strength: 0.8, deflection: 0.5 } });
+    expect(strict.best!.mass).toBeGreaterThanOrEqual(loose.best!.mass);
+    expect(strict.best!.strength.ur).toBeLessThanOrEqual(0.8);
+    expect(strict.best!.deflection.ur).toBeLessThanOrEqual(0.5);
+    for (const s of sections.filter((x) => x.family === 'UB' && x.values.mass < strict.best!.mass)) {
+      m.setSection(s.id);
+      const g = governingSplit(m.results());
+      expect(g.strength.ur > 0.8 || g.deflection.ur > 0.5).toBe(true);
+    }
   }, 600_000);
 });
 

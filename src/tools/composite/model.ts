@@ -51,7 +51,7 @@ const SCALARS: Probe[] = [
   ['at', 'a_t', 'mm^2/m'], ['ab', 'a_b', 'mm^2/m'], ['lb', 'l_b', 'mm'], ['vbEd', 'v_{b.Ed}', 'MPa'], ['asbReq', 'a_{sf.b.req}', 'mm^2/m'], ['asb', 'a_{sf.b}', 'mm^2/m'],
   ['dhead', 'd_{head}', 'mm'], ['hsc', 'h_{sc}', 'mm'], ['dsc', 'd_{sc}', 'mm'], ['b0', 'b_0', 'mm'],
   // deflection
-  ['dmax', '\\delta_{max}', 'mm'], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
+  ['dmax', '\\delta_{max}', 'mm'], ['wc', 'w_c', 'mm'], ['ccam', 'c_{cam}', null], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
 ];
 
 /** Utilisations by code, in report order: [key, label, clause, basis]. basis: c = composite only, n = non-composite only. */
@@ -83,7 +83,27 @@ export const CHECKS: [string, string, string, '' | 'c' | 'n'][] = [
  * The governing utilisation the page shows: every check of the design basis in use (composite or bare
  * steel), construction stage included. The section optimiser uses the same rule.
  */
-export interface OptimizeResult { family: string; maxDepth: number | null; tried: number; total: number; best: { id: number; name: string; mass: number; ur: number; label: string } | null }
+/** Serviceability (deflection) checks; every other check of the basis in use counts as strength. */
+export const SLS_CHECKS = ['d.1', 'd.x', 'd.nc'];
+
+export interface Targets { strength: number; deflection: number }
+export interface Governing { ur: number; key: string; label: string }
+export interface OptimizeResult {
+  family: string; maxDepth: number | null; targets: Targets; tried: number; total: number;
+  best: { id: number; name: string; mass: number; h: number; strength: Governing; deflection: Governing } | null;
+}
+
+/** Governing strength and deflection checks of the basis in use (skip: checks not available, as in screening). */
+export function governingSplit(res: Results, skip: readonly string[] = []): { strength: Governing; deflection: Governing } {
+  const pick = (sls: boolean) => governingCheck(res, [...skip, ...CHECKS.map(([k]) => k).filter((k) => SLS_CHECKS.includes(k) !== sls)]);
+  return { strength: pick(false), deflection: pick(true) };
+}
+
+/** Screening model: can the section still pass? (strength complete; of deflection only the construction check) */
+export function screenPasses(res: Results, t: Targets): boolean {
+  const g = governingSplit(res, DEFLECTION_CHECKS);
+  return g.strength.ur <= t.strength && g.deflection.ur <= t.deflection;
+}
 
 /** Checks that need the deflection curves: unknown in a screening model. */
 export const DEFLECTION_CHECKS = ['d.x', 'd.nc'];
@@ -228,7 +248,11 @@ export class CompositeModel {
    * Lightest section of a family that passes every check (governing UR ≤ 1, construction stage included):
    * candidates by increasing mass, the first that passes is the lightest. Without one, the section is restored.
    */
-  optimizeSection(family: string, progress?: (i: number, n: number, name: string) => void, maxDepth: number | null = null, screen?: CompositeModel): OptimizeResult {
+  optimizeSection(
+    family: string,
+    opts: { maxDepth?: number | null; targets?: Targets; screen?: CompositeModel; progress?: (i: number, n: number, name: string) => void } = {},
+  ): OptimizeResult {
+    const maxDepth = opts.maxDepth ?? null, targets = opts.targets ?? { strength: 1, deflection: 1 }, screen = opts.screen;
     const start = this.sectionId;
     // optional depth limit h ≤ maxDepth (mm), e.g. from the ceiling void
     const cands = sections
@@ -237,20 +261,21 @@ export class CompositeModel {
     let tried = 0;
     for (const s of cands) {
       tried++;
-      progress?.(tried, cands.length, s.name);
+      opts.progress?.(tried, cands.length, s.name);
       if (screen) {
         screen.setSection(s.id);
         const q = screen.results();
-        if (!q.errors.length && governingCheck(q, DEFLECTION_CHECKS).ur > 1) continue;
+        if (!q.errors.length && !screenPasses(q, targets)) continue;
       }
       this.setSection(s.id);
       const r = this.results();
       if (r.errors.length) continue;
-      const g = governingCheck(r);
-      if (g.ur <= 1) return { family, maxDepth, tried, total: cands.length, best: { id: s.id, name: s.name, mass: s.values.mass, ur: g.ur, label: g.label } };
+      const g = governingSplit(r);
+      if (g.strength.ur <= targets.strength && g.deflection.ur <= targets.deflection)
+        return { family, maxDepth, targets, tried, total: cands.length, best: { id: s.id, name: s.name, mass: s.values.mass, h: s.values.h, ...g } };
     }
     this.setSection(start);
-    return { family, maxDepth, tried, total: cands.length, best: null };
+    return { family, maxDepth, targets, tried, total: cands.length, best: null };
   }
 
   results(): Results {
