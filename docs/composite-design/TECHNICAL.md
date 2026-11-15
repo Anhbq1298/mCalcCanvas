@@ -171,3 +171,13 @@ Annex: the general force model and branch boundaries.
   designed as composite; bare steel to EN 1993-1-1 / EN 1993-1-5 with L_LT = stud spacing; UR from the steel-alone
   deflection. These are conditional texts (new app feature: Text → "Print only when", props.showWhen): printed only
   while the condition holds, greyed out on screen otherwise.
+
+## Rev G: per-row ULS factor, construction deflection curve
+
+- Both load tables carry a column `ULS factor γ_F` (defaults γ_G = 1.35 on G rows, γ_Q = 1.5 on Q rows).
+  ULS internal forces use `M_U(x) = dot(w_U, k_u(x)) + dot(F_U, k_P(x))` with `w_U = γ_F p_k s_b`, `F_U = γ_F F_k`
+  (and the matching `V_U`); self-weight g_0 keeps γ_G. The G/Q pattern still decides the SLS combination
+  (ψ_2 and the deflection curvatures). With the default factors every result is unchanged.
+- Construction stage: `δ_1(x) = w_1,k x (L_1³ − 2 L_1 x² + x³) / (24 E_a I_a)` over L_1 (100 intervals) with a chart;
+  its peak equals the closed-form δ_1 (unit test).
+- mCompositeBeamDesign: a blank factor takes the pattern default; switching G/Q moves a default factor with it.

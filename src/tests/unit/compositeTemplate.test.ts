@@ -56,7 +56,7 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(tables.flatMap(t => inputTableColumns(t).flatMap(c => {
         const r = e.getResult(inputTableRegionId(t.id, c.column)); return r?.status === 'valid' ? [] : [`${c.latex}: ${r?.error?.message}`];
       }))).toEqual([]);
-      expect(tables.flatMap(t => inputTableColumns(t).map(c => c.name))).toEqual(['Load pattern c_Q.i', 'x_1.i', 'x_2.i', 'p_k.i', 'Load pattern c_Q.j', 'a_j', 'F_k.j']);
+      expect(tables.flatMap(t => inputTableColumns(t).map(c => c.name))).toEqual(['Load pattern c_Q.i', 'x_1.i', 'x_2.i', 'p_k.i', 'ULS factor \\gamma_F.i', 'Load pattern c_Q.j', 'a_j', 'F_k.j', 'ULS factor \\gamma_F.j']);
     });
     step('reference forces, connection and bending resistance', () => {
       expect(value('P_{Rd}','kN')).toBeCloseTo(81.6562762521,7);
@@ -99,6 +99,8 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('M_{b.Rd}','kN m')).toBeCloseTo(91.39834274475413,6);
       expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(1.8715996613080623,7);
       expect(value('\\delta_1','mm')).toBeCloseTo(18.3427102904894,6);
+      // the construction deflection curve peaks at mid-span with the closed-form 5wL⁴/384EI
+      expect(value('\\max\\left(\\delta_{1.v}\\right)','mm')).toBeCloseTo(18.3427102904894,6);
     });
     step('load tables: internal forces, stud spacing from the max-moment position, PNA case, staged deflection', () => {
       expect(value('V_{2.Ed}','kN')).toBeCloseTo(209.7305536626,6);
@@ -139,6 +141,8 @@ describe('EC4 phase-one composite worksheet', () => {
       const next: TableShape = { ...cur, props: { ...cur.props, rows: cells.length, cells } };
       live.set(id, next);
       registerTable(next);
+      // the ULS factor follows the load pattern (γ_G = 1.35 on G rows, γ_Q = 1.5 on Q rows)
+      if (name === 'c_{Q.i}' || name === 'c_{Q.j}') setColumn(name === 'c_{Q.i}' ? '\\gamma_{F.i}' : '\\gamma_{F.j}', values.map((v) => (v.trim().toUpperCase() === 'Q' ? '1.5' : '1.35')));
     };
     const restore = (...names: string[]) => names.forEach((n) => setColumn(n, null));
     const q = (v: number, _unit: string) => String(v); // the unit sits in the table's unit row
@@ -329,11 +333,11 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('h_a','mm')).toBe(406.4);
     });
 
-    step('three static symbolic figures and four graphs (V, M, M_Rd(x), δ(x)); explicit review status', () => {
+    step('three static symbolic figures and five graphs (V, M, construction δ_1(x), M_Rd(x), δ(x)); explicit review status', () => {
       const texts=doc.shapes.filter(s => s.type==='text');
       expect(texts.filter(s=>/^F\d —/.test(s.props.html)).map(s=>s.props.html.slice(0,2))).toEqual(['F1','F2','F3']);
       expect(texts.some(s=>s.props.html.includes('<i>h</i><sub>c</sub>'))).toBe(true);
-      expect(doc.shapes.filter(s=>s.type==='graph')).toHaveLength(4);
+      expect(doc.shapes.filter(s=>s.type==='graph')).toHaveLength(5);
       expect(doc.shapes.some(s=>s.type==='image')).toBe(false);
       expect(texts.some(s=>s.props.html.includes('Singapore NA verification is outstanding'))).toBe(true);
     });

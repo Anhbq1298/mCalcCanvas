@@ -76,9 +76,10 @@ l.textAt(l.st.page, l.st.row, 'Area loads (pressure × s_b), from x_1 to x_2', {
 l.textAt(l.st.page, l.st.row, 'Point loads at a', { size: 13, x: 438, w: 276 });
 l.gap(0.5);
 l.need(3.5);
-l.out.push(TBL(76, [['Load pattern c_Q.i', 'G/Q'], ['x_1.i', 'm'], ['x_2.i', 'm'], ['p_k.i', 'kPa']], [['G', 0, 8, 1.5], ['Q', 0, 8, 3]], [142, 64, 64, 70]));
-l.out.push(TBL(438, [['Load pattern c_Q.j', 'G/Q'], ['a_j', 'm'], ['F_k.j', 'kN']], [['G', 3, 30], ['Q', 3, 45]], [142, 64, 70]));
+l.out.push(TBL(76, [['Load pattern c_Q.i', 'G/Q'], ['x_1.i', 'm'], ['x_2.i', 'm'], ['p_k.i', 'kPa'], ['ULS factor \\gamma_F.i', '']], [['G', 0, 8, 1.5, 1.35], ['Q', 0, 8, 3, 1.5]], [112, 50, 50, 58, 70]));
+l.out.push(TBL(438, [['Load pattern c_Q.j', 'G/Q'], ['a_j', 'm'], ['F_k.j', 'kN'], ['ULS factor \\gamma_F.j', '']], [['G', 3, 30, 1.35], ['Q', 3, 45, 1.5]], [106, 46, 58, 70]));
 l.gap(3.5);
+T('Enter area loads p_k in kPa: the line load p_k s_b and its ULS value γ_F p_k s_b are calculated (annex A.1). Load pattern G/Q sets the SLS combination (ψ_2, deflection); γ_F is the ULS factor of each row (default γ_G = 1.35, γ_Q = 1.5). Self-weight g_0 (steel + wet slab) is added automatically with γ_G.');
 H(3, '1.6 Shear connection and slab reinforcement');
 input('Stud diameter', 'd_{sc}', 19, 'mm');
 input('Stud height after welding', 'h_{sc}', 100, 'mm');
@@ -113,12 +114,14 @@ fig('F1', 'Composite-stage loading (rows of the load tables)', 'loads', 4);
 LINK('forces', 'Internal forces along the span from the load tables', () => {
  calc('Diagram step (200 intervals)', '\\Delta x', R`\frac{L}{200}`, 'mm', false);
  T('Table columns as vectors (row 0 first). Simply supported beam, x from support A.');
- for (const [n, t] of [['x_{u1}','x_{1.i}'],['x_{u2}','x_{2.i}'],['c_u','c_{Q.i}'],['p_u','p_{k.i}'],['a_P','a_{j}'],['c_P','c_{Q.j}'],['F_P','F_{k.j}']])
+ for (const [n, t] of [['x_{u1}','x_{1.i}'],['x_{u2}','x_{2.i}'],['c_u','c_{Q.i}'],['p_u','p_{k.i}'],['a_P','a_{j}'],['c_P','c_{Q.j}'],['F_P','F_{k.j}'],['\\gamma_u','\\gamma_{F.i}'],['\\gamma_P','\\gamma_{F.j}']])
   calc(`Table column ${t} as a vector${t.startsWith('c_') ? ' (G → 0, Q → 1)' : ''}`, n, R`\mathrm{col}\left(${t},0\right)`, '', false);
  calc('Permanent line loads, p_k × s_b on G rows', 'g_u', R`s_b\overrightarrow{p_u\left(1-c_u\right)}`, 'kN/m', false);
  calc('Imposed line loads, p_k × s_b on Q rows', 'q_u', R`s_b\overrightarrow{p_u c_u}`, 'kN/m', false);
  calc('Permanent point loads (G rows)', 'G_P', R`\overrightarrow{F_P\left(1-c_P\right)}`, 'kN', false);
  calc('Imposed point loads (Q rows)', 'Q_P', R`\overrightarrow{F_P c_P}`, 'kN', false);
+ calc('Design line loads per row, γ_F p_k s_b (ULS)', 'w_U', R`s_b\overrightarrow{\gamma_u p_u}`, 'kN/m', false);
+ calc('Design point loads per row, γ_F F_k (ULS)', 'F_U', R`\overrightarrow{\gamma_P F_P}`, 'kN', false);
  calc('Loaded lengths', 'l_u', R`x_{u2}-x_{u1}`, 'm', false);
  calc('Reaction at A per unit distributed load', 'r_u', R`\frac{l_u\left(L-\frac{x_{u1}+x_{u2}}{2}\right)}{L}`, 'm', false);
  P('Left-part moment per unit row load', R`m_u(x)\coloneq${IF([R`x\le x_{u1}`, R`0\,\mathrm{m^2}`], [R`x\ge x_{u2}`, R`l_u\left(x-\frac{x_{u1}+x_{u2}}{2}\right)`], [null, R`\frac{\left(x-x_{u1}\right)^2}{2}`])}`, M(units('')));
@@ -129,10 +132,12 @@ LINK('forces', 'Internal forces along the span from the load tables', () => {
  P('Moment at x per unit point load', R`k_P(x)\coloneq\frac{L-a_P}{L}x-m_P(x)`, M(units('')));
  P('Moment from the tables with factors cG on g, G and cQ on q, Q', R`M_s(x,c_G,c_Q)\coloneq\mathrm{dot}\left(c_G g_u+c_Q q_u,k_u(x)\right)+\mathrm{dot}\left(c_G G_P+c_Q Q_P,k_P(x)\right)`, M(units('')));
  P('Shear from the tables with the same factors', R`V_s(x,c_G,c_Q)\coloneq\mathrm{dot}\left(c_G g_u+c_Q q_u,r_u-v_u(x)\right)+\mathrm{dot}\left(c_G G_P+c_Q Q_P,\frac{L-a_P}{L}-h_P(x)\right)`, M(units('')));
+ P('ULS moment from the tables, each row with its own γ_F', R`M_U(x)\coloneq\mathrm{dot}\left(w_U,k_u(x)\right)+\mathrm{dot}\left(F_U,k_P(x)\right)`, M(units('')));
+ P('ULS shear from the tables, each row with its own γ_F', R`V_U(x)\coloneq\mathrm{dot}\left(w_U,r_u-v_u(x)\right)+\mathrm{dot}\left(F_U,\frac{L-a_P}{L}-h_P(x)\right)`, M(units('')));
  calc('Points along the span, 200 intervals', 'x_v', R`\mathrm{seq}\left(0\,\mathrm{m},L,\Delta x\right)`, 'm', 'fo');
- calc('Design bending moment along the span', 'M_v', R`\gamma_G g_0\frac{x_v\left(L-x_v\right)}{2}+\mathrm{map}\left(M_s,x_v,\gamma_G,\gamma_Q\right)`, 'kN m', 'fo');
- calc('Design shear force along the span', 'V_v', R`\gamma_G g_0\left(\frac{L}{2}-x_v\right)+\mathrm{map}\left(V_s,x_v,\gamma_G,\gamma_Q\right)`, 'kN', 'fo');
- calc('Design moments under the point loads', 'M_P', R`\gamma_G g_0\frac{a_P\left(L-a_P\right)}{2}+\mathrm{map}\left(M_s,a_P,\gamma_G,\gamma_Q\right)`, 'kN m', false);
+ calc('Design bending moment along the span', 'M_v', R`\gamma_G g_0\frac{x_v\left(L-x_v\right)}{2}+\mathrm{map}\left(M_U,x_v\right)`, 'kN m', 'fo');
+ calc('Design shear force along the span', 'V_v', R`\gamma_G g_0\left(\frac{L}{2}-x_v\right)+\mathrm{map}\left(V_U,x_v\right)`, 'kN', 'fo');
+ calc('Design moments under the point loads', 'M_P', R`\gamma_G g_0\frac{a_P\left(L-a_P\right)}{2}+\mathrm{map}\left(M_U,a_P\right)`, 'kN m', false);
  calc('Maximum design moment', 'M_{2.Ed}', R`\max\left(\max\left(M_v\right),\max\left(M_P\right)\right)`, 'kN m', false);
  calc('Position of the maximum moment', 'x_M', R`\mathrm{at}\left(x_v,\mathrm{at}\left(\mathrm{match}\left(\max\left(M_v\right),M_v\right),0\right)\right)`, 'm', false);
  calc('Maximum design shear (support)', 'V_{2.Ed}', R`\max\left(\mathrm{at}\left(V_v,0\right),-\mathrm{at}\left(V_v,\mathrm{last}\left(V_v\right)\right)\right)`, 'kN', false);
@@ -175,6 +180,9 @@ calc('Characteristic construction load', 'w_{1.k}', R`g_0+\left(g_{form}+q_{con}
 calc('Steel-only deflection', '\\delta_1', R`\frac{5w_{1.k}L_1^4}{384E_a I_a}`, 'mm', false);
 calc('Limit', '\\delta_{lim}', R`\frac{L}{r_{lim}}`, 'mm', false);
 ur('Construction deflection','d.1','\\delta_1','\\delta_{lim}');
+calc('Points along the construction span, 100 intervals', 'x_{1.v}', R`\mathrm{seq}\left(0\,\mathrm{m},L_1,\frac{L_1}{100}\right)`, 'm', 'fo');
+calc('Construction deflection along the span, w_1,k on the steel alone', '\\delta_{1.v}', R`\overrightarrow{\frac{w_{1.k}x_{1.v}\left(L_1^3-2L_1x_{1.v}^2+x_{1.v}^3\right)}{24E_a I_a}}`, 'mm', 'fo');
+DIAGRAM(120, { title: 'Construction-stage deflection (steel alone, 1.0 × characteristic load)', xUnit: 'm', yUnit: 'mm', invertY: true, series: [S('d1', 'construction δ_1(x)', ['x_{1.v}', '\\delta_{1.v}'], 'line', '#1d4ed8', 1.5), S('d1l', 'limit L / r_lim', [R`\mathrm{stack}\left(0\,\mathrm{m},L_1\right)`, R`\mathrm{stack}\left(\delta_{lim},\delta_{lim}\right)`], 'line', '#b91c1c', 1.2, { dash: true })] });
 
 H(2, '4. EN 1994-1-1 — COMPOSITE BEAM, PERMANENT STAGE');
 fig('F2', 'Composite section — notation', 'section', 7);
@@ -286,8 +294,8 @@ T('ρ = (2|V_Ed|/V_pl,Rd − 1)². M_f,Rd taken as the steel flanges alone (lowe
 calc('Plastic moment of the steel flanges alone', 'M_{f.Rd}', R`b_a t_f\left(h_a-t_f\right)f_{yd}`, 'kN m', false);
 calc('|V_Ed| along the span', 'V_a', R`\overrightarrow{\left|V_v\right|}`, 'kN', 'fo');
 calc('Shear factor along the span', '\\rho_v', IF([R`V_a>0.5V_{pl.Rd}`, R`\overrightarrow{\left(\frac{2V_a}{V_{pl.Rd}}-1\right)^2}`], [null, '0']), '', 'fo');
-calc('|V_Ed| just left of each point load', 'V_{P.L}', R`\overrightarrow{\left|\gamma_G g_0\left(\frac{L}{2}-a_P\right)+\mathrm{map}\left(V_s,a_P-1\,\mathrm{mm},\gamma_G,\gamma_Q\right)\right|}`, 'kN', 'fo');
-calc('|V_Ed| just right of each point load', 'V_{P.R}', R`\overrightarrow{\left|\gamma_G g_0\left(\frac{L}{2}-a_P\right)+\mathrm{map}\left(V_s,a_P+1\,\mathrm{mm},\gamma_G,\gamma_Q\right)\right|}`, 'kN', 'fo');
+calc('|V_Ed| just left of each point load', 'V_{P.L}', R`\overrightarrow{\left|\gamma_G g_0\left(\frac{L}{2}-a_P\right)+\mathrm{map}\left(V_U,a_P-1\,\mathrm{mm}\right)\right|}`, 'kN', 'fo');
+calc('|V_Ed| just right of each point load', 'V_{P.R}', R`\overrightarrow{\left|\gamma_G g_0\left(\frac{L}{2}-a_P\right)+\mathrm{map}\left(V_U,a_P+1\,\mathrm{mm}\right)\right|}`, 'kN', 'fo');
 calc('Larger of the two', 'V_P', R`\overrightarrow{\frac{V_{P.L}+V_{P.R}+\left|V_{P.L}-V_{P.R}\right|}{2}}`, 'kN', 'fo');
 calc('Shear factor under each point load', '\\rho_P', IF([R`V_P>0.5V_{pl.Rd}`, R`\overrightarrow{\left(\frac{2V_P}{V_{pl.Rd}}-1\right)^2}`], [null, '0']), '', 'fo');
 calc('M_Rd under each point load, (6.3) with N_c,P', 'M_{Rd.P}', R`M_{a.Rd}+\overrightarrow{\frac{N_{c.P}}{N_{c.f}}}\left(M_{pl.Rd}-M_{a.Rd}\right)`, 'kN m', 'fo');
@@ -301,7 +309,7 @@ T('beam end bearing on its support (c = 0). Set c_F,P / c_F,S = 0 where loads ar
 calc('Web depth between flanges', 'h_w', R`h_a-2t_f`, 'mm', false);
 calc('(6.8)', 'm_1', R`\frac{b_a}{t_w}`, '', false);
 calc('(6.9), used if λ_F > 0.5', 'm_2', R`0.02\left(\frac{h_w}{t_f}\right)^2`, '', false);
-calc('Design point loads per row', 'F_d', R`\gamma_G G_P+\gamma_Q Q_P`, 'kN', 'fo');
+calc('Design point loads per row', 'F_d', R`F_U`, 'kN', 'fo');
 P('Rows at the same position as x (1) or not (0)', R`e_P(x)\coloneq${IF([R`\left|a_P-x\right|<1\,\mathrm{mm}`, '1'], [null, '0'])}`, M(units('')));
 P('Total design point load at x', R`F_x(x)\coloneq\mathrm{dot}\left(F_d,e_P(x)\right)`, M(units('')));
 calc('Total point load at each loaded position', 'F_{loc}', R`\mathrm{map}\left(F_x,a_P\right)`, 'kN', 'fo');

@@ -35,7 +35,7 @@ type Probe = [key: string, latex: string, unit: string | null];
 const SCALARS: Probe[] = [
   // loading
   ['M2', 'M_{2.Ed}', 'kN m'], ['xM', 'x_M', 'm'], ['V2', 'V_{2.Ed}', 'kN'], ['M1', 'M_{1.Ed}', 'kN m'], ['w1', 'w_{1.Ed}', 'kN/m'],
-  ['g0', 'g_0', 'kN/m'], ['L', 'L', 'm'], ['L1', 'L_1', 'm'],
+  ['g0', 'g_0', 'kN/m'], ['ga', 'g_a', 'kN/m'], ['gc', 'g_c', 'kN/m'], ['w1k', 'w_{1.k}', 'kN/m'], ['d1', '\\delta_1', 'mm'], ['L', 'L', 'm'], ['L1', 'L_1', 'm'],
   // section
   ['h_a', 'h_a', 'mm'], ['b_a', 'b_a', 'mm'], ['t_f', 't_f', 'mm'], ['t_w', 't_w', 'mm'], ['r', 'r', 'mm'], ['A_a', 'A_a', 'cm^2'],
   ['I_a', 'I_a', 'cm^4'], ['I_z', 'I_z', 'cm^4'], ['W_pl', 'W_{pl}', 'cm^3'], ['I_t', 'I_t', 'cm^4'], ['I_w', 'I_w', 'cm^6'], ['m_a', 'm_a', 'kg/m'],
@@ -73,7 +73,7 @@ export const CHECKS: [string, string, string, '' | 'c' | 'n'][] = [
 ];
 
 const VECTORS: Probe[] = [
-  ['x', 'x_v', 'm'], ['V', 'V_v', 'kN'], ['M', 'M_v', 'kN m'], ['MRdx', 'M_{Rd.x}', 'kN m'], ['d', '\\delta_{x.d}', 'mm'], ['dq', '\\delta_{q.d}', 'mm'],
+  ['x', 'x_v', 'm'], ['V', 'V_v', 'kN'], ['M', 'M_v', 'kN m'], ['MRdx', 'M_{Rd.x}', 'kN m'], ['d', '\\delta_{x.d}', 'mm'], ['dq', '\\delta_{q.d}', 'mm'], ['x1v', 'x_{1.v}', 'm'], ['d1v', '\\delta_{1.v}', 'mm'],
 ];
 
 const DEF = /^(.*?)\\coloneq\s*(-?\d+(?:\.\d+)?)(?:\\,\\mathrm\{([^}]*)\})?$/;
@@ -131,7 +131,9 @@ export class CompositeModel {
         if (s.type === 'math') e.setRegion(s.id, { latex: (s as MathShape).props.latex, order: calcKey(s, this.rec), displayUnit: (s as MathShape).props.displayUnit || null, precision: null });
         if (s.type === 'table' && (s as TableShape).props.input) this.registerTable(s as TableShape);
       }
-      [...SCALARS, ...VECTORS].forEach(([key, latex, unit], i) => e.setRegion(`probe:${key}`, { latex: `${latex}=`, order: [1e9, i] as never, displayUnit: unit, precision: null }));
+      SCALARS.forEach(([key, latex, unit], i) => e.setRegion(`probe:${key}`, { latex: `${latex}=`, order: [1e9, i] as never, displayUnit: unit, precision: null }));
+      // vectors probe under their own prefix, so a scalar and a vector may share a key (dq)
+      VECTORS.forEach(([key, latex, unit], i) => e.setRegion(`probe:v.${key}`, { latex: `${latex}=`, order: [1e9, 300 + i] as never, displayUnit: unit, precision: null }));
       CHECKS.forEach(([key], i) => e.setRegion(`probe:UR.${key}`, { latex: `\\mathrm{UR}_{${key}}=`, order: [1e9, 500 + i] as never, displayUnit: null, precision: null }));
     });
   }
@@ -160,6 +162,14 @@ export class CompositeModel {
     const t = this.tableShapes.get(id);
     const table = this.tables.find((x) => x.id === id);
     if (!t || !table) return;
+    // A blank ULS factor (or a row without that column) takes the pattern default, γ_G or γ_Q.
+    const fi = table.headers.findIndex((h) => /gamma_\{?F/.test(h));
+    const gamma = (name: string, d: number) => this.values.get(this.inputs.find((f) => f.name === name)?.id ?? '')?.value ?? this.inputs.find((f) => f.name === name)?.value ?? d;
+    rows = rows.map((r) => {
+      const row = table.headers.map((_, j) => r[j] ?? '');
+      if (fi >= 0 && !row[fi].trim()) row[fi] = String(row[0].trim().toUpperCase() === 'Q' ? gamma('\\gamma_Q', 1.5) : gamma('\\gamma_G', 1.35));
+      return row;
+    });
     table.rows = rows.map((r) => [...r]);
     const cells = [t.props.cells[0], t.props.cells[1], ...rows.map((r) => r.map((v) => ({ value: v })))];
     const next: TableShape = { ...t, props: { ...t.props, rows: cells.length, cells } };
@@ -178,7 +188,7 @@ export class CompositeModel {
       out[`UR.${key}`] = r?.status === 'valid' ? r.value!.number : NaN;
     }
     for (const [key] of VECTORS) {
-      const r = this.e.getResult(`probe:${key}`);
+      const r = this.e.getResult(`probe:v.${key}`);
       out.vectors[key] = r?.status === 'valid' ? (r.value!.items ?? []) : [];
     }
     for (const s of this.doc.shapes) {

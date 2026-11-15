@@ -18,6 +18,17 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(r.comp).toBe(1);
     expect(r.vectors.x).toHaveLength(201);
     expect(Math.max(...r.vectors.d)).toBeCloseTo(r.dmax, 6);
+    expect(Math.max(...r.vectors.d1v)).toBeCloseTo(r.d1, 6); // construction deflection curve
+    expect(Math.max(...r.vectors.dq)).toBeCloseTo(r.dq, 6); // LL curve against its scalar maximum
+    expect(r.ga + r.gc).toBeCloseTo(r.g0, 9);
+    // per-row ULS factor: G rows at 1.0 instead of 1.35 lower M_Ed at 3 m by 0.35 (4.5·3·5/2 + 30·3·5/8) = 31.5 kNm
+    const area = m.tables[0], pts0 = m.tables[1];
+    m.setTableRows(area.id, [['G', '0', '8', '1.5', '1'], ['Q', '0', '8', '3', '1.5']]);
+    m.setTableRows(pts0.id, [['G', '3', '30', '1'], ['Q', '3', '45', '1.5']]);
+    expect(m.results().M2).toBeCloseTo(469.182 - 31.5, 2);
+    m.setTableRows(area.id, [['G', '0', '8', '1.5', ''], ['Q', '0', '8', '3']]); // blank or missing factor: γ_G / γ_Q
+    m.setTableRows(pts0.id, [['G', '3', '30'], ['Q', '3', '45']]);
+    expect(m.results().M2).toBeCloseTo(469.182, 2);
     // large point load near support A: composite action fails, bare steel governs
     const pts = m.tables[1];
     m.setTableRows(pts.id, [['G', '1.5', '100'], ['Q', '1.5', '150']]);

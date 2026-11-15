@@ -11,6 +11,7 @@ import { sections } from '../../engineering/steel/sections';
 import { CHECKS, type InputField, type LoadTable, type Results } from './model';
 import type { ToWorker } from './worker';
 import { Legend, LineChart, PointDrawing, SectionDrawing, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
+import { headerParts } from '../../canvas/inputTable';
 import { C, fmt } from './format';
 import { Rich } from './rich';
 
@@ -128,12 +129,14 @@ export function App() {
 
   const { inputs, tables, results: res } = state;
   const value = (f: InputField) => values[f.id] ?? f.value;
+  const gammaOf = (q: boolean) => { const f = inputs.find((x) => x.name === (q ? '\\gamma_Q' : '\\gamma_G')); return f ? value(f) : q ? 1.5 : 1.35; };
+  const factorCol = (t: LoadTable) => t.headers.findIndex((h) => /gamma_\{?F/.test(h));
   const groups = [...inputs.reduce((g, f) => g.set(f.group, [...(g.get(f.group) ?? []), f]), new Map<string, InputField[]>()).entries()];
   const sb = value(inputs.find((f) => f.name === 's_b')!);
   const [areaT, pointT] = tables;
   const filled = (r: string[]) => r.slice(1).some((x) => x.trim());
-  const area: AreaLoad[] = areaT.rows.filter(filled).map((r) => ({ q: r[0].trim().toUpperCase() === 'Q', x1: Number(r[1]), x2: Number(r[2]), p: Number(r[3]) }));
-  const points: PointLoad[] = pointT.rows.filter(filled).map((r) => ({ q: r[0].trim().toUpperCase() === 'Q', a: Number(r[1]), F: Number(r[2]) }));
+  const area: AreaLoad[] = areaT.rows.filter(filled).map((r) => ({ q: r[0].trim().toUpperCase() === 'Q', x1: Number(r[1]), x2: Number(r[2]), p: Number(r[3]), gF: Number(r[4]) }));
+  const points: PointLoad[] = pointT.rows.filter(filled).map((r) => ({ q: r[0].trim().toUpperCase() === 'Q', a: Number(r[1]), F: Number(r[2]), gF: Number(r[3]) }));
   const v = res.vectors;
   const composite = res.comp >= 1;
   const shown = CHECKS.filter(([key, , , basis]) => key !== 'des' && (!basis || (basis === 'c') === composite));
@@ -198,7 +201,7 @@ export function App() {
         <thead>
           <tr>
             {t.headers.map((h, j) => (
-              <th key={j} scope="col">{j === 0 ? 'Case' : <><Sym latex={h.replace(/_(\S+)$/, '_{$1}')} /> {t.units[j] ? `(${unit(t.units[j])})` : ''}</>}</th>
+              <th key={j} scope="col" title={headerParts(h).caption || undefined}>{j === 0 ? 'Case' : <><Sym latex={(headerParts(h).variable ?? h).replace(/_([^{\s]+)$/, '_{$1}').replace(/\.[ij]\}$/, '}')} />{j === factorCol(t) ? <span className="th-note"> ULS</span> : null} {t.units[j] ? `(${unit(t.units[j])})` : ''}</>}</th>
             ))}
             <th><span className="sr-only">Delete</span></th>
           </tr>
@@ -209,7 +212,10 @@ export function App() {
               {row.map((cell, j) => (
                 <td key={j}>
                   {j === 0 ? (
-                    <select aria-label={`Load pattern, row ${i + 1}`} className={cell.trim().toUpperCase() === 'Q' ? 'case-q' : 'case-g'} value={cell.trim().toUpperCase() === 'Q' ? 'Q' : 'G'} onChange={(e) => setRows(t, t.rows.map((r, k) => (k === i ? r.map((c, m) => (m === 0 ? e.target.value : c)) : r)))}>
+                    <select aria-label={`Load pattern, row ${i + 1}`} className={cell.trim().toUpperCase() === 'Q' ? 'case-q' : 'case-g'} value={cell.trim().toUpperCase() === 'Q' ? 'Q' : 'G'} onChange={(e) => {
+                      const fi = factorCol(t), q = e.target.value === 'Q';
+                      setRows(t, t.rows.map((r, k) => (k !== i ? r : r.map((c, m) => (m === 0 ? e.target.value : m === fi && (!c.trim() || Number(c) === gammaOf(!q)) ? String(gammaOf(q)) : c)))));
+                    }}>
                       <option value="G">G</option>
                       <option value="Q">Q</option>
                     </select>
@@ -226,9 +232,18 @@ export function App() {
         </tbody>
       </table>
       <div className="tablefoot">
-        <button type="button" className="btn" onClick={() => setRows(t, [...t.rows, t.headers.map((_, j) => (j === 0 ? 'G' : '0'))])}>+ Add load</button>
+        <button type="button" className="btn" onClick={() => setRows(t, [...t.rows, t.headers.map((_, j) => (j === 0 ? 'G' : j === factorCol(t) ? String(gammaOf(false)) : '0'))])}>+ Add load</button>
         <span className="count">{t.rows.length} row{t.rows.length === 1 ? '' : 's'}</span>
       </div>
+      <p className="hint table-note">
+        {ti === 0 ? (
+          <>Enter area loads p<sub>k</sub> in kPa: the line load p<sub>k</sub>·s<sub>b</sub> (s<sub>b</sub> = {fmt(sb, 2)} m) and its ULS value γ<sub>F</sub>·p<sub>k</sub>·s<sub>b</sub> are calculated. </>
+        ) : (
+          <>Point loads F<sub>k</sub> in kN at a from support A; ULS value γ<sub>F</sub>·F<sub>k</sub>. </>
+        )}
+        Case G/Q sets the SLS combination; γ<sub>F</sub> is the ULS factor of the row (blank = γ<sub>G</sub> {fmt(gammaOf(false), 2)} / γ<sub>Q</sub> {fmt(gammaOf(true), 2)}).
+        {ti === 0 && <> Self-weight g<sub>0</sub> (steel + slab) is added automatically.</>}
+      </p>
     </section>
   );
 
@@ -291,12 +306,12 @@ export function App() {
           <section className="stage" aria-labelledby="h-loading">
             <div className="stagebar">
               <h2 id="h-loading">Loading</h2>
-              <span className="hint">span L = {fmt(res.L, 2)} m · beam spacing s<sub>b</sub> = {fmt(sb, 2)} m · self-weight g<sub>0</sub> = {fmt(res.g0, 2)} kN/m (in G)</span>
+              <span className="hint">span L = {fmt(res.L, 2)} m · beam spacing s<sub>b</sub> = {fmt(sb, 2)} m · self-weight g<sub>0</sub> = {fmt(res.g0, 2)} kN/m</span>
               <span className="layers"><i className="lg" /> G permanent <i className="lq" /> Q variable</span>
             </div>
             <div className="sheet">
               <h3>Uniformly distributed loads</h3>
-              <UdlDrawing L={res.L} area={area} sb={sb} />
+              <UdlDrawing L={res.L} area={area} sb={sb} sw={{ ga: res.ga, gc: res.gc }} />
               <h3>Point loads</h3>
               <PointDrawing L={res.L} points={points} />
             </div>
@@ -324,8 +339,22 @@ export function App() {
               <div className="sec-head"><h2 id="h-pna-d">Plastic stress block at x<sub>M</sub></h2><span className="hint">PNA {['in the slab', 'in the top flange', 'in the fillet', 'in the web'][res.kM] ?? '–'}</span></div>
               <SectionDrawing r={res} showPna />
             </section>
+            <section className="sheet-sec" aria-labelledby="h-defl1">
+              <div className="sec-head"><h2 id="h-defl1">Deflection, construction stage (steel alone)</h2><span className="hint">w<sub>1,k</sub> = g<sub>0</sub> + (g<sub>form</sub> + q<sub>con</sub>)·s<sub>b</sub> = {fmt(res.w1k, 2)} kN/m over L<sub>1</sub> = {fmt(res.L1, 2)} m</span></div>
+              <LineChart
+                series={[
+                  { x: v.x1v, y: v.d1v, color: C.blue, label: 'δ_1' },
+                  { x: [v.x1v[0] ?? 0, v.x1v[v.x1v.length - 1] ?? 1], y: [res.dlim, res.dlim], color: C.red, label: 'limit', dash: true, width: 1.2 },
+                ]}
+                height={170}
+                invertY
+                yUnit="mm"
+                label={`Construction deflection, maximum ${fmt(res.d1, 1)} mm against a limit of ${fmt(res.dlim, 1)} mm`}
+              />
+              <Legend items={[{ color: C.blue, label: `δ_1(x), steel alone, max ${fmt(res.d1, 1)} mm` }, { color: C.red, label: `limit L/r = ${fmt(res.dlim, 1)} mm`, dash: true }]} />
+            </section>
             <section className="sheet-sec" aria-labelledby="h-defl">
-              <div className="sec-head"><h2 id="h-defl">Deflection, {composite ? 'composite (partial interaction)' : 'bare steel'}</h2><span className="hint">1.0 DL + 1.0 LL, permanent stage</span></div>
+              <div className="sec-head"><h2 id="h-defl">Deflection, permanent stage, {composite ? 'composite (partial interaction)' : 'bare steel'}</h2><span className="hint">1.0 DL + 1.0 LL, permanent stage</span></div>
             <LineChart
               series={[
                 { x: v.x, y: v.d, color: C.blue, label: 'DL+LL' },

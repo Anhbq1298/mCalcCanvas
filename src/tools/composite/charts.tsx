@@ -134,15 +134,15 @@ export function Legend({ items }: { items: { color: string; label: string; dash?
       {items.map((it) => (
         <span key={it.label}>
           <svg width="18" height="6"><line x1="0" x2="18" y1="3" y2="3" stroke={it.color} strokeWidth="2.5" strokeDasharray={it.dash ? '4 3' : undefined} /></svg>
-          <Rich text={it.label} />
+          <span><Rich text={it.label} /></span>
         </span>
       ))}
     </div>
   );
 }
 
-export interface AreaLoad { x1: number; x2: number; p: number; q: boolean }
-export interface PointLoad { a: number; F: number; q: boolean }
+export interface AreaLoad { x1: number; x2: number; p: number; q: boolean; gF?: number }
+export interface PointLoad { a: number; F: number; q: boolean; gF?: number }
 
 /* ── CAD-style load drawings ────────────────────────────────────────────────
  * Drawn like a structural GA sketch: hairline geometry, pinned and roller supports
@@ -203,32 +203,57 @@ function useCad(L: number) {
 }
 
 /** Uniformly distributed loads: one arrow array per table row, stacked above the beam. */
-export function UdlDrawing({ L, area, sb }: { L: number; area: AreaLoad[]; sb: number }) {
+export function UdlDrawing({ L, area, sb, sw }: { L: number; area: AreaLoad[]; sb: number; sw?: { ga: number; gc: number } }) {
   const { box, W, X0, X1, X } = useCad(L);
-  const band = 36, lab = 15, rows = Math.max(area.length, 1);
+  // self-weight first (steel + slab, always full span, γ_G), then one row per table load
+  const swRow = sw && Number.isFinite(sw.ga + sw.gc) ? 1 : 0;
+  const band = 36, lab = 15, rows = Math.max(area.length + swRow, 1);
   const beamY = 10 + rows * (band + lab) + 6;
   const chain = [...new Set([0, L, ...area.flatMap((a) => [a.x1, a.x2])].map((x) => Number(Math.min(Math.max(x, 0), L).toFixed(4))))];
   const H = beamY + (chain.length > 2 ? 72 : 52);
+  const arrows = (xa: number, xb: number, top: number, bot: number, col: string, dash?: string) => {
+    const n = Math.max(2, Math.round((xb - xa) / 22));
+    return (
+      <>
+        <line x1={xa} x2={xb} y1={top} y2={top} strokeWidth={CAD.geo} strokeDasharray={dash} />
+        {Array.from({ length: n + 1 }, (_, k) => xa + ((xb - xa) * k) / n).map((x, k) => (
+          <g key={k}>
+            <line x1={x} x2={x} y1={top} y2={bot - 5} strokeDasharray={dash} />
+            <path d={`M${x - 3},${bot - 6} L${x},${bot} L${x + 3},${bot - 6} z`} fill={col} stroke="none" />
+          </g>
+        ))}
+      </>
+    );
+  };
+  const sub = (t: string) => <tspan fontSize={CAD.font * 0.72} dy="3">{t}</tspan>;
+  const up = (t: string) => <tspan dy="-3">{t}</tspan>;
   return (
     <div ref={box}>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={`Distributed loads: ${area.map((a) => `${a.q ? 'Q' : 'G'} ${fmt(a.p * sb, 2)} kN/m from ${fmt(a.x1, 2)} to ${fmt(a.x2, 2)} m`).join('; ') || 'none'}`}>
-        {area.length === 0 && <text x={W / 2} y={beamY - 20} textAnchor="middle" fill={C.muted} fontSize={CAD.font}>No distributed loads</text>}
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={`Distributed loads: ${swRow ? `self-weight ${fmt(sw!.ga + sw!.gc, 2)} kN/m; ` : ''}${area.map((a) => `${a.q ? 'Q' : 'G'} ${fmt(a.p * sb, 2)} kN/m from ${fmt(a.x1, 2)} to ${fmt(a.x2, 2)} m`).join('; ') || 'no table loads'}`}>
+        {swRow === 1 && (() => {
+          const top = 10 + lab, bot = top + band - 4;
+          return (
+            <g stroke={C.grey} fill="none" strokeWidth={CAD.load}>
+              {arrows(X(0), X(L), top, bot, C.grey, '4 2')}
+              <text x={X(0)} y={top - 4} fill={C.grey} stroke="none" fontSize={CAD.font} fontWeight="500">
+                SW  g{sub('a')}{up(` ${fmt(sw!.ga, 2)} steel + g`)}{sub('c')}{up(` ${fmt(sw!.gc, 2)} slab = `)}
+                <tspan fontWeight="700" className="num">{`${fmt(sw!.ga + sw!.gc, 2)} kN/m`}</tspan>
+                {'  (G, γ'}{sub('G')}{up(')')}
+              </text>
+            </g>
+          );
+        })()}
+        {area.length + swRow === 0 && <text x={W / 2} y={beamY - 20} textAnchor="middle" fill={C.muted} fontSize={CAD.font}>No distributed loads</text>}
         {area.map((a, i) => {
-          const top = 10 + i * (band + lab) + lab, bot = top + band - 4;
-          const xa = X(Math.min(a.x1, a.x2)), xb = X(Math.max(a.x1, a.x2)), n = Math.max(2, Math.round((xb - xa) / 22));
+          const top = 10 + (i + swRow) * (band + lab) + lab, bot = top + band - 4;
           const col = layer(a.q);
           return (
             <g key={i} stroke={col} fill="none" strokeWidth={CAD.load}>
-              <line x1={xa} x2={xb} y1={top} y2={top} strokeWidth={CAD.geo} />
-              {Array.from({ length: n + 1 }, (_, k) => xa + ((xb - xa) * k) / n).map((x, k) => (
-                <g key={k}>
-                  <line x1={x} x2={x} y1={top} y2={bot - 5} />
-                  <path d={`M${x - 3},${bot - 6} L${x},${bot} L${x + 3},${bot - 6} z`} fill={col} stroke="none" />
-                </g>
-              ))}
-              <text x={xa} y={top - 4} fill={col} stroke="none" fontSize={CAD.font} fontWeight="500">
+              {arrows(X(Math.min(a.x1, a.x2)), X(Math.max(a.x1, a.x2)), top, bot, col)}
+              <text x={X(Math.min(a.x1, a.x2))} y={top - 4} fill={col} stroke="none" fontSize={CAD.font} fontWeight="500">
                 {`${a.q ? 'Q' : 'G'}${i + 1}  ${fmt(a.p, 2)} kPa × ${fmt(sb, 2)} m = `}
                 <tspan fontWeight="700" className="num">{`${fmt(a.p * sb, 2)} kN/m`}</tspan>
+                {Number.isFinite(a.gF) && <>{'  ULS γ'}{sub('F')}{up(` ${fmt(a.gF!, 2)} → ${fmt(a.gF! * a.p * sb, 2)} kN/m`)}</>}
               </text>
             </g>
           );
@@ -266,6 +291,7 @@ export function PointDrawing({ L, points }: { L: number; points: PointLoad[] }) 
               {sorted.map((p, j) => (
                 <text key={j} x={x} y={beamY - 7 - len - 14 * j} textAnchor="middle" fill={layer(p.q)} fontSize={CAD.font} fontWeight="500">
                   {`${p.q ? 'Q' : 'G'} `}<tspan fontWeight="700" className="num">{`${fmt(p.F, 1)} kN`}</tspan>
+                  {Number.isFinite(p.gF) && <>{'  ×'}<tspan className="num">{fmt(p.gF!, 2)}</tspan></>}
                 </text>
               ))}
             </g>
