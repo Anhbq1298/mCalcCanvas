@@ -90,7 +90,28 @@ export interface Targets { strength: number; deflection: number }
 export interface Governing { ur: number; key: string; label: string }
 export interface OptimizeResult {
   family: string; maxDepth: number | null; targets: Targets; tried: number; total: number;
-  best: { id: number; name: string; mass: number; h: number; strength: Governing; deflection: Governing } | null;
+  best: { id: number; name: string; mass: number; h: number; sc: number; bar: number; composite: boolean; strength: Governing; deflection: Governing } | null;
+}
+
+/** Detail choices the optimiser tries for every section: uniform stud spacing and both transverse bar diameters. */
+export const STUD_SPACINGS = [200, 175, 150, 125, 100]; // mm, widest (cheapest) first
+export const BAR_DIAMETERS = [10, 12, 13]; // mm, smallest first
+export const DETAIL_INPUTS = { scA: 's_{sc.A}', scB: 's_{sc.B}', barT: 'd_{s.t}', barB: 'd_{s.b}' } as const;
+
+/** bare: the bare-steel fallback (current stud and bar details, composite action not required). */
+export interface Candidate { id: number; name: string; mass: number; h: number; sc: number; scB: number; bar: number; bare: boolean }
+
+/**
+ * Composite designs first: every section × bar × spacing, lightest section first, cheapest detail first within a
+ * section, each one required to reach composite action. Only when none passes, the sections again as bare steel
+ * with the details as they are now (stud spacing and bars then have no effect).
+ */
+export function candidatesFor(secs: { id: number; name: string; values: { mass: number; h: number } }[], current: { sc: number; scB: number; bar: number }): Candidate[] {
+  const c = (s: (typeof secs)[number], sc: number, scB: number, bar: number, bare: boolean): Candidate => ({ id: s.id, name: s.name, mass: s.values.mass, h: s.values.h, sc, scB, bar, bare });
+  return [
+    ...secs.flatMap((s) => BAR_DIAMETERS.flatMap((bar) => STUD_SPACINGS.map((sc) => c(s, sc, sc, bar, false)))),
+    ...secs.map((s) => c(s, current.sc, current.scB, current.bar, true)),
+  ];
 }
 
 /** Governing strength and deflection checks of the basis in use (skip: checks not available, as in screening). */
@@ -122,7 +143,7 @@ export function governingCheck(res: Results, skip: readonly string[] = []): { ur
 }
 
 const VECTORS: Probe[] = [
-  ['x', 'x_v', 'm'], ['V', 'V_v', 'kN'], ['M', 'M_v', 'kN m'], ['MRdx', 'M_{Rd.x}', 'kN m'], ['d', '\\delta_{x.d}', 'mm'], ['dq', '\\delta_{q.d}', 'mm'], ['x1v', 'x_{1.v}', 'm'], ['d1v', '\\delta_{1.v}', 'mm'],
+  ['x', 'x_v', 'm'], ['V', 'V_v', 'kN'], ['M', 'M_v', 'kN m'], ['MRdx', 'M_{Rd.x}', 'kN m'], ['d', '\\delta_{x.d}', 'mm'], ['dq', '\\delta_{q.d}', 'mm'], ['x1v', 'x_{1.v}', 'm'], ['d1v', '\\delta_{1.v}', 'mm'], ['nx', 'n_{x}', null],
 ];
 
 const DEF = /^(.*?)\\coloneq\s*(-?\d+(?:\.\d+)?)(?:\\,\\mathrm\{([^}]*)\})?$/;
@@ -204,6 +225,20 @@ export class CompositeModel {
     for (const c of inputTableColumns(t)) this.e.setRegion(inputTableRegionId(t.id, c.column), { latex: c.latex, order: [...calcKey(t, this.rec), c.column] as never, displayUnit: null, precision: null });
   }
 
+  /** Write one detail candidate into the worksheet: uniform stud spacing and both bar diameters. */
+  setDetail(c: { sc: number; bar: number; scB?: number }): void {
+    const id = (name: string) => this.inputs.find((f) => f.name === name)!.id;
+    this.setInput(id(DETAIL_INPUTS.scA), c.sc);
+    this.setInput(id(DETAIL_INPUTS.scB), c.scB ?? c.sc);
+    this.setInput(id(DETAIL_INPUTS.barT), c.bar);
+    this.setInput(id(DETAIL_INPUTS.barB), c.bar);
+  }
+
+  detail(): { sc: number; scB: number; bar: number } {
+    const id = (name: string) => this.inputs.find((f) => f.name === name)!.id;
+    return { sc: this.inputValue(id(DETAIL_INPUTS.scA)), scB: this.inputValue(id(DETAIL_INPUTS.scB)), bar: this.inputValue(id(DETAIL_INPUTS.barT)) };
+  }
+
   setInput(id: string, value: number): void {
     const f = this.inputs.find((x) => x.id === id);
     if (!f || !Number.isFinite(value)) return;
@@ -255,26 +290,30 @@ export class CompositeModel {
     const maxDepth = opts.maxDepth ?? null, targets = opts.targets ?? { strength: 1, deflection: 1 }, screen = opts.screen;
     const start = this.sectionId;
     // optional depth limit h ≤ maxDepth (mm), e.g. from the ceiling void
-    const cands = sections
+    const keep = this.detail();
+    const cands = candidatesFor(sections
       .filter((s) => s.family === family && Number.isFinite(s.values.mass) && (maxDepth === null || s.values.h <= maxDepth + 1e-9))
-      .sort((a, b) => a.values.mass - b.values.mass);
+      .sort((a, b) => a.values.mass - b.values.mass), keep);
     let tried = 0;
-    for (const s of cands) {
+    for (const c of cands) {
       tried++;
-      opts.progress?.(tried, cands.length, s.name);
+      opts.progress?.(tried, cands.length, c.name);
       if (screen) {
-        screen.setSection(s.id);
+        screen.setSection(c.id);
+        screen.setDetail(c);
         const q = screen.results();
-        if (!q.errors.length && !screenPasses(q, targets)) continue;
+        if (!q.errors.length && (!screenPasses(q, targets) || (!c.bare && q.comp < 1))) continue;
       }
-      this.setSection(s.id);
+      this.setSection(c.id);
+      this.setDetail(c);
       const r = this.results();
       if (r.errors.length) continue;
       const g = governingSplit(r);
-      if (g.strength.ur <= targets.strength && g.deflection.ur <= targets.deflection)
-        return { family, maxDepth, targets, tried, total: cands.length, best: { id: s.id, name: s.name, mass: s.values.mass, h: s.values.h, ...g } };
+      if (g.strength.ur <= targets.strength && g.deflection.ur <= targets.deflection && (c.bare || r.comp >= 1))
+        return { family, maxDepth, targets, tried, total: cands.length, best: { id: c.id, name: c.name, mass: c.mass, h: c.h, sc: c.sc, bar: c.bar, composite: r.comp >= 1, ...g } };
     }
     this.setSection(start);
+    this.setDetail(keep);
     return { family, maxDepth, targets, tried, total: cands.length, best: null };
   }
 

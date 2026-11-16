@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { CHECKS, CompositeModel, DEFLECTION_CHECKS, governingCheck, governingSplit } from '../../tools/composite/model';
+import { BAR_DIAMETERS, CHECKS, CompositeModel, DEFLECTION_CHECKS, governingCheck, governingSplit, STUD_SPACINGS } from '../../tools/composite/model';
 import { sections } from '../../engineering/steel/sections';
 import { parseDocument } from '../../documents/DocumentSerializer';
 
@@ -91,10 +91,13 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(governingCheck(r).ur).toBeLessThanOrEqual(1);
     expect(Math.max(out.best!.strength.ur, out.best!.deflection.ur)).toBeCloseTo(governingCheck(r).ur, 9);
     expect(seen).toHaveLength(out.tried);
-    // every lighter UB tried before it fails (or cannot be evaluated)
+    // every lighter UB is tried with every bar × spacing before the winner, and fails with the winning detail
     const lighter = sections.filter((s) => s.family === 'UB' && s.values.mass < out.best!.mass);
-    expect(lighter.length).toBe(out.tried - 1);
-    for (const s of lighter) { m.setSection(s.id); expect(governingCheck(m.results()).ur).toBeGreaterThan(1); }
+    const before = BAR_DIAMETERS.indexOf(out.best!.bar) * STUD_SPACINGS.length + STUD_SPACINGS.indexOf(out.best!.sc);
+    expect(out.tried - 1).toBe(lighter.length * BAR_DIAMETERS.length * STUD_SPACINGS.length + before);
+    expect(out.total).toBe(sections.filter((s) => s.family === 'UB').length * (BAR_DIAMETERS.length * STUD_SPACINGS.length + 1)); // + the bare-steel fallback pass
+    expect(out.best!.composite).toBe(true);
+    for (const s of lighter) { m.setSection(s.id); m.setDetail(out.best!); expect(governingCheck(m.results()).ur).toBeGreaterThan(1); }
     // depth limit: only sections with h ≤ h_max; the lightest of those that passes, lighter ones within the limit fail
     const lim = out.best!.id && sections.find((s) => s.id === out.best!.id)!.values.h - 1;
     const limited = m.optimizeSection('UB', { maxDepth: lim });
@@ -102,9 +105,9 @@ describe('mCompositeBeamDesign headless model', () => {
     if (limited.best) {
       expect(sections.find((s) => s.id === limited.best!.id)!.values.h).toBeLessThanOrEqual(lim);
       expect(limited.best.mass).toBeGreaterThanOrEqual(out.best!.mass);
-      for (const s of sections.filter((x) => x.family === 'UB' && x.values.h <= lim && x.values.mass < limited.best!.mass)) { m.setSection(s.id); expect(governingCheck(m.results()).ur).toBeGreaterThan(1); }
+      for (const s of sections.filter((x) => x.family === 'UB' && x.values.h <= lim && x.values.mass < limited.best!.mass)) { m.setSection(s.id); m.setDetail(limited.best!); expect(governingCheck(m.results()).ur).toBeGreaterThan(1); }
     }
-    expect(limited.total).toBe(sections.filter((x) => x.family === 'UB' && x.values.h <= lim).length);
+    expect(limited.total).toBe(sections.filter((x) => x.family === 'UB' && x.values.h <= lim).length * (BAR_DIAMETERS.length * STUD_SPACINGS.length + 1));
     // nothing passes: the section is restored
     set('L', 30);
     m.setSection(3148);

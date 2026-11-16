@@ -13,7 +13,7 @@ export type ToWorker =
   | { kind: 'report'; request: number } | { kind: 'hello' }
   // optimizer pool: copy the page's inputs, then check one section at a time
   | { kind: 'state'; values: Record<string, number>; tables: { id: string; rows: string[][] }[] }
-  | { kind: 'evaluate'; id: number; token: number; targets: Targets };
+  | { kind: 'evaluate'; id: number; sc: number; scB: number; bar: number; bare: boolean; token: number; targets: Targets };
 
 export type { OptimizeResult } from './model';
 
@@ -37,15 +37,17 @@ self.onmessage = (ev: MessageEvent<ToWorker>) => {
     // 1. screening model (no deflection curves): a failing strength or construction-deflection check is final
     if (screen) {
       screen.setSection(m.id);
+      screen.setDetail(m);
       const q = screen.results();
-      if (!q.errors.length && !screenPasses(q, m.targets)) return post({ kind: 'evaluated', token: m.token, id: m.id, pass: false });
+      if (!q.errors.length && (!screenPasses(q, m.targets) || (!m.bare && q.comp < 1))) return post({ kind: 'evaluated', token: m.token, id: m.id, pass: false });
     }
     // 2. full worksheet
     model.setSection(m.id);
+    model.setDetail(m);
     const r = model.results();
     if (r.errors.length) return post({ kind: 'evaluated', token: m.token, id: m.id, pass: false });
     const g = governingSplit(r);
-    return post({ kind: 'evaluated', token: m.token, id: m.id, pass: g.strength.ur <= m.targets.strength && g.deflection.ur <= m.targets.deflection, ...g });
+    return post({ kind: 'evaluated', token: m.token, id: m.id, pass: g.strength.ur <= m.targets.strength && g.deflection.ur <= m.targets.deflection && (m.bare || r.comp >= 1), composite: r.comp >= 1, ...g });
   }
   if (m.kind === 'input') model.setInput(m.id, m.value);
   else if (m.kind === 'section') model.setSection(m.id);

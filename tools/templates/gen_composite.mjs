@@ -64,9 +64,6 @@ input('Propping: 0 = unpropped (default), 1 = propped', 'c_{prop}', 0);
 input('If propped: L_LT = k_LT L (prop spacing / span)', 'k_{LT}', 0.5);
 input('Construction imposed load', 'q_{con}', 0.75, 'kPa');
 input('Formwork load (removable)', 'g_{form}', 0.5, 'kPa');
-input('LTB: C1, UDL, fork ends (SN003b)', 'C_1', 1.127);
-input('LTB: C2, load on top flange (SN003b)', 'C_2', 0.454);
-input('LTB: imperfection, curve b (EC3 Table 6.4)', '\\alpha_{LT}', 0.34);
 H(3, '1.5 Load tables: one row per load; pattern G = permanent, Q = imposed');
 const TBL = (x, cols, rows, widths) => ({ id: l.id(), type: 'table', x, y: l.ln(l.st.page, l.st.row) - 8, props: {
   w: widths.reduce((a, b) => a + b, 0), h: (rows.length + 2) * 32, rows: rows.length + 2, columns: cols.length, columnWidths: widths, headerRow: true, input: true,
@@ -182,6 +179,9 @@ ur('Construction shear','V.1','V_{1.Ed}','V_{pl.Rd}');
 check('Low shear: no M-V reduction', 'V_{1.Ed}', '0.5V_{pl.Rd}');
 H(3, '3.3 Lateral-torsional buckling (§6.3.2.2; Mcr from SCI SN003b)');
 T('No restraint credit from wet slab or formwork. Unpropped: fork ends over L; propped: L_LT = k_LT L.');
+P('LTB: C1 for a UDL, fork ends (SN003b), a fixed value, not an input', R`C_1\coloneq1.127`, M({ precision: 3 }));
+P('LTB: C2 for the load on the top flange (SN003b), fixed', R`C_2\coloneq0.454`, M({ precision: 3 }));
+P('Imperfection, EC3 Table 6.4: rolled I, h/b ≤ 2 curve a, else b', R`\alpha_{LT}\coloneq${IF([R`\frac{h_a}{b_a}\le2`, '0.21'], [null, '0.34'])}`, M({ precision: 2 }));
 calc('Unrestrained length', 'L_{LT}', 'L_1', 'm', false);
 calc('Load height above shear centre (top flange)', 'z_g', R`\frac{h_a}{2}`, 'mm', false);
 calc('Euler force, minor axis', 'N_{cr}', R`\frac{\pi^2 E_a I_z}{L_{LT}^2}`, 'kN', false);

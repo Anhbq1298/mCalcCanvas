@@ -8,12 +8,15 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { sections } from '../../engineering/steel/sections';
-import { CHECKS, governingCheck, type InputField, type LoadTable, type Results } from './model';
+import { CHECKS, candidatesFor, governingCheck, type InputField, type LoadTable, type Results } from './model';
 import type { OptimizeResult, ToWorker } from './worker';
-import { Legend, LineChart, PointDrawing, SectionDrawing, ShearSurface3D, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
+import { Legend, LineChart, LongSection, PointDrawing, SectionDrawing, ShearSurface3D, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
 import { headerParts } from '../../canvas/inputTable';
 import { C, fmt } from './format';
 import { optimizeParallel, warmOptimizer } from './optimizer';
+
+/** One state of the inputs: input values, load-table rows and section, for undo/redo. */
+type Snap = { values: Record<string, number>; rows: Record<string, string[][]>; sectionId: number };
 import { Rich } from './rich';
 
 const HANDOFF_KEY = 'calccanvas.handoff'; // read once by mCalcCanvas (?open=handoff)
@@ -97,6 +100,7 @@ export function App() {
   const [tStrength, setTStrength] = useState('1.00');
   const [tDefl, setTDefl] = useState('1.00');
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const loadRef = useRef<HTMLDialogElement>(null);
   const [opt, setOpt] = useState<{ running: boolean; i?: number; n?: number; name?: string; result?: OptimizeResult; seconds?: number } | null>(null);
   const reportReq = useRef(0);
   const reportCb = useRef<((doc: unknown) => void) | null>(null);
@@ -121,8 +125,26 @@ export function App() {
     return () => worker.removeEventListener('message', onMessage);
   }, [worker]);
 
+  const history = useRef<{ past: Snap[]; future: Snap[] }>({ past: [], future: [] });
+  const replaying = useRef(false);
+  const recordRef = useRef<() => void>(() => {});
+  const undoRef = useRef<() => void>(() => {});
+  const redoRef = useRef<() => void>(() => {});
+  const [hist, setHist] = useState({ past: 0, future: 0 });
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement | null;
+      if (el && el.closest('input, textarea, select, [contenteditable="true"]')) return;
+      const k = e.key.toLowerCase();
+      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && k === 'z') { e.preventDefault(); undoRef.current(); }
+      else if (((e.ctrlKey || e.metaKey) && e.shiftKey && k === 'z') || (e.ctrlKey && k === 'y')) { e.preventDefault(); redoRef.current(); }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
   const send = (msg: ToWorker) => {
     if (msg.kind !== 'report') setBusy(true);
+    if (!replaying.current && (msg.kind === 'input' || msg.kind === 'table' || msg.kind === 'section')) recordRef.current();
     worker.postMessage(msg);
   };
   const withReport = (fn: (doc: unknown) => void) => {
@@ -165,6 +187,43 @@ export function App() {
     setState((s) => s && { ...s, tables: s.tables.map((x) => (x.id === t.id ? { ...x, rows } : x)) });
     send({ kind: 'table', id: t.id, rows });
   };
+  const snap = (): Snap => ({ values: Object.fromEntries(inputs.map((f) => [f.id, value(f)])), rows: Object.fromEntries(tables.map((t) => [t.id, t.rows])), sectionId: state.sectionId });
+  const record = () => {
+    const h = history.current;
+    h.past.push(snap());
+    if (h.past.length > 100) h.past.shift();
+    h.future = [];
+    setHist({ past: h.past.length, future: 0 });
+  };
+  const apply = (t: Snap) => {
+    replaying.current = true;
+    try {
+      inputs.forEach((f) => { const nv = t.values[f.id]; if (nv !== undefined && nv !== value(f)) setInput(f, nv); });
+      tables.forEach((tb) => { const rows = t.rows[tb.id]; if (rows && JSON.stringify(rows) !== JSON.stringify(tb.rows)) setRows(tb, rows); });
+      if (t.sectionId !== state.sectionId) { send({ kind: 'section', id: t.sectionId }); setFamily(sections.find((x) => x.id === t.sectionId)?.family ?? family); }
+    } finally {
+      replaying.current = false;
+    }
+  };
+  const undo = () => {
+    const h = history.current;
+    const prev = h.past.pop();
+    if (!prev) return;
+    h.future.push(snap());
+    apply(prev);
+    setHist({ past: h.past.length, future: h.future.length });
+  };
+  const redo = () => {
+    const h = history.current;
+    const nxt = h.future.pop();
+    if (!nxt) return;
+    h.past.push(snap());
+    apply(nxt);
+    setHist({ past: h.past.length, future: h.future.length });
+  };
+  recordRef.current = record;
+  undoRef.current = undo;
+  redoRef.current = redo;
   const download = () =>
     withReport((doc) => {
       const a = document.createElement('a');
@@ -184,17 +243,6 @@ export function App() {
     });
 
   const changed = (f: InputField) => f.id in values && values[f.id] !== f.value;
-  const nChanged = inputs.filter(changed).length + (state.sectionId !== state.defaults.sectionId || JSON.stringify(tables) !== JSON.stringify(state.defaults.tables) ? 1 : 0);
-  const reset = () => {
-    const d = state.defaults;
-    inputs.filter(changed).forEach((f) => send({ kind: 'input', id: f.id, value: f.value }));
-    setValues({});
-    d.tables.forEach((t) => setRows(t, t.rows));
-    if (state.sectionId !== d.sectionId) {
-      send({ kind: 'section', id: d.sectionId });
-      setFamily(sections.find((x) => x.id === d.sectionId)?.family ?? 'UB');
-    }
-  };
   const urDes = res['UR.des'];
   const dMax = composite ? res.dmax : res.dnc;
   const rows = CHECKS.filter(([key, , , basis]) => key !== 'des' && (!basis || (basis === 'c') === composite));
@@ -210,9 +258,11 @@ export function App() {
   const runOptimize = async () => {
     const maxDepth = hMax.trim() ? Number(hMax) : null;
     const targets = { strength: Number(tStrength), deflection: Number(tDefl) };
-    const cands = sections
+    const dv = (name: string) => value(inputs.find((x) => x.name === name)!);
+    const current = { sc: dv('s_{sc.A}'), scB: dv('s_{sc.B}'), bar: dv('d_{s.t}') };
+    const cands = candidatesFor(sections
       .filter((x) => x.family === optFamily && Number.isFinite(x.values.mass) && (maxDepth === null || x.values.h <= maxDepth + 1e-9))
-      .sort((a, b) => a.values.mass - b.values.mass);
+      .sort((a, b) => a.values.mass - b.values.mass), current);
     setOpt({ running: true });
     const t0 = performance.now();
     const result = await optimizeParallel(optFamily, cands, maxDepth, targets, { values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) }, (i, n, name) => setOpt({ running: true, i, n, name }));
@@ -280,7 +330,8 @@ export function App() {
         <span className="hint">Simply supported composite beam · EN 1994-1-1 · solid slab · mCalcCanvas engine</span>
         <span className={`status ${busy ? 'busy' : ''}`} aria-hidden="true">{busy ? 'Calculating…' : 'Up to date'}</span>
         <div className="exports" role="group" aria-label="Report">
-          <button type="button" onClick={reset} disabled={!nChanged} className="btn export" title="Back to the worksheet's default inputs">Reset{nChanged ? ` (${nChanged})` : ''}</button>
+          <button type="button" onClick={undo} disabled={hist.past === 0} className="btn export" title="Undo (Ctrl+Z)">Undo</button>
+          <button type="button" onClick={redo} disabled={hist.future === 0} className="btn export" title="Redo (Ctrl+Shift+Z)">Redo</button>
           <button type="button" onClick={download} className="btn export" title="Download the worksheet with these inputs; it reopens in mCalcCanvas">
             <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.5h5.5L13 5v9.5H4z" fill="none" strokeWidth="1.3" strokeLinejoin="round" /><path d="M9.5 1.5V5H13" fill="none" strokeWidth="1.3" strokeLinejoin="round" /><path d="M8.5 7.5v4.5M6.5 10l2 2 2-2" fill="none" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
             .mCCV
@@ -310,17 +361,22 @@ export function App() {
                 <p className="hint wide">{section ? `${section.name} · ${section.standard} · ${fmt(section.values.mass, 1)} kg/m` : ''}</p>
               </div>
             </section>
-            {loadTable(areaT, 0)}
-            {loadTable(pointT, 1)}
             {groups.map(([g, fields], gi) => (
               <section key={g} aria-labelledby={`h-group-${gi}`}>
                 <h2 id={`h-group-${gi}`}>{g}</h2>
                 <div className="fields">
                   {fields.map((f) => (
+                    f.name === 'c_{prop}' ? (
+                      <label key={f.id} className={`f check ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
+                        <span><Sym latex={f.name} /> <em><Rich text={f.label} /></em></span>
+                        <input id={`in-${f.id}`} type="checkbox" checked={value(f) >= 1} onChange={(e) => setInput(f, e.target.checked ? 1 : 0)} />
+                      </label>
+                    ) : (
                     <label key={f.id} className={`f ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
                       <span><Sym latex={f.name} />{f.unit ? ` (${unit(f.unit)})` : ''} <em><Rich text={f.label} /></em></span>
                       <NumberField id={`in-${f.id}`} label={f.name} value={String(value(f))} onCommit={(nv) => setInput(f, nv)} />
                     </label>
+                    )
                   ))}
                 </div>
               </section>
@@ -333,6 +389,7 @@ export function App() {
               <h2 id="h-loading">Loading</h2>
               <span className="hint">span L = {fmt(res.L, 2)} m · beam spacing s<sub>b</sub> = {fmt(sb, 2)} m · self-weight g<sub>0</sub> = {fmt(res.g0, 2)} kN/m</span>
               <span className="layers"><i className="lg" /> G permanent <i className="lq" /> Q variable</span>
+              <button type="button" className="btn" data-testid="load-open" onClick={() => loadRef.current?.showModal()}>Modify load</button>
             </div>
             <div className="sheet">
               <h3>Uniformly distributed loads</h3>
@@ -358,6 +415,25 @@ export function App() {
             <h3>Moment M<sub>Ed</sub> and resistance M<sub>Rd</sub>(x) from the studs</h3>
             <LineChart series={[{ x: v.x, y: v.M, color: C.red, label: 'M_Ed', fill: true }, ...(composite ? [{ x: v.x, y: v.MRdx, color: C.blue, label: 'M_Rd' }] : [])]} height={160} invertY yUnit="kNm" labels={[{ x: res.xM, y: res.M2, text: fmt(res.M2, 1), color: C.red }]} label={`Bending moment diagram, maximum ${fmt(res.M2, 1)} kNm at ${fmt(res.xM, 2)} m`} />
             <Legend items={[{ color: C.red, label: 'M_Ed(x)' }, ...(composite ? [{ color: C.blue, label: 'M_Rd(x), studs provided' }] : [])]} />
+            {composite && (() => {
+              // moment-driven need at each x: (M_Ed(x) − M_a.Rd)/(M_pl.Rd − M_a.Rd) of N_c.f, over P_Rd
+              const nM = v.x.map((_, i) => {
+                const M = v.M[i];
+                return M > res.MaRd ? Math.ceil(((M - res.MaRd) / (res.MplRd - res.MaRd)) * res.Ncf / res.PRd - 1e-9) : 0;
+              });
+              const floor = Math.ceil(res.etaMin * res.Ncf / res.PRd - 1e-9);
+              return (
+                <>
+                  <h3>Studs needed along the span</h3>
+                  <LineChart series={[
+                    { x: v.x, y: nM, color: C.red, label: 'n from M_Ed(x)' },
+                    { x: v.x, y: v.x.map(() => floor), color: C.muted, label: 'η_min floor', dash: true },
+                    { x: v.x, y: v.nx, color: C.blue, label: 'n_x provided' },
+                  ]} height={150} yMin={0} digits={0} yUnit="studs" label={`Studs needed from M_Ed(x), η_min floor ${floor}, provided along the span`} />
+                  <Legend items={[{ color: C.red, label: 'n from M_Ed(x)' }, { color: C.muted, label: `η_min floor (${floor} studs)`, dash: true }, { color: C.blue, label: 'n_x provided (support to x)' }]} />
+                </>
+              );
+            })()}
           </section>
 
             <section className="sheet-sec" aria-labelledby="h-pna-d">
@@ -374,6 +450,10 @@ export function App() {
                 <figure>
                   <ShearSurface3D r={res} which="b" />
                   <figcaption><b className="c-b">b-b</b>: around the studs, l<sub>b</sub> = 2h<sub>sc</sub> + d<sub>head</sub> + b<sub>0</sub> = {fmt(res.lb, 0)} mm; the whole v<sub>f</sub>; crossed by the bottom bars twice, 2A<sub>b</sub> = {fmt(res.asb, 0)} mm²/m; v<sub>Ed</sub> = {fmt(res.vbEd, 2)} MPa.</figcaption>
+                </figure>
+                <figure className="wide">
+                  <LongSection r={res} />
+                  <figcaption>Longitudinal section along the span through the studs: stud spacing s<sub>f.b</sub> = {fmt(res.sfb, 0)} mm, slab depth h<sub>c</sub> = {fmt(res.h_c, 0)} mm, drawn to scale. Red band = a-a over the slab depth; teal band = b-b over the stud height.</figcaption>
                 </figure>
               </div>
               <p className="hint">Front face = cross-section to scale; the length along the span is not. Bars counted must be anchored past each surface (EC2 §8.4). v<sub>f</sub> = P<sub>Rd</sub>/s<sub>min</sub> = {fmt(res.vf, 0)} kN/m pulls the slab outstand along the beam.</p>
@@ -519,13 +599,27 @@ export function App() {
 
         </div>
       </main>
+      <dialog ref={loadRef} className="opt-dialog load-dialog" aria-labelledby="load-title">
+        <div className="opt-form">
+          <header className="opt-head">
+            <h2 id="load-title">Modify load</h2>
+            <button type="button" className="rowbtn" aria-label="Close" onClick={() => loadRef.current?.close()}>×</button>
+          </header>
+          <p className="hint">Area and point loads act on the beam and update the diagrams and checks as you change them. Other inputs are in the panel on the left.</p>
+          {loadTable(areaT, 0)}
+          {loadTable(pointT, 1)}
+          <div className="opt-actions">
+            <button type="button" className="btn primary" onClick={() => loadRef.current?.close()}>Done</button>
+          </div>
+        </div>
+      </dialog>
       <dialog ref={dialogRef} className="opt-dialog" aria-labelledby="opt-title" onClose={() => undefined}>
         <form method="dialog" className="opt-form" onSubmit={(e) => e.preventDefault()} noValidate>
           <header className="opt-head">
             <h2 id="opt-title">Optimize section</h2>
             <button type="button" className="rowbtn" aria-label="Close" onClick={() => dialogRef.current?.close()}>×</button>
           </header>
-          <p className="hint">Tries every section of the family from the lightest up and keeps the first that meets both targets, for the design basis in use (composite or bare steel), construction stage included. Other inputs stay as entered.</p>
+          <p className="hint">Tries every section of the family from the lightest up, and for each one stud spacing 200 → 100 mm (uniform) and transverse bars Ø10, Ø12, Ø13. Keeps the first combination that reaches composite action and meets both targets, with every check including longitudinal shear, construction stage included. Only if none does, the sections are tried as bare steel. Loads and other inputs stay as entered.</p>
           <div className="fields">
             <label className="f"><span>Family</span>
               <select data-testid="opt-family" value={optFamily} onChange={(e) => setOptFamily(e.target.value)}>
@@ -575,6 +669,9 @@ export function App() {
                 <tbody>
                   <tr><td>Section</td><td>{opt.result.best.name}</td></tr>
                   <tr><td>Mass / depth h</td><td>{fmt(opt.result.best.mass, 1)} kg/m / {fmt(opt.result.best.h, 1)} mm</td></tr>
+                  <tr><td>Design basis</td><td>{opt.result.best.composite ? 'Composite' : 'Bare steel: no stud and bar arrangement reaches composite action'}</td></tr>
+                  {opt.result.best.composite && <tr><td>Stud spacing s<sub>sc</sub> (both)</td><td>{opt.result.best.sc} mm</td></tr>}
+                  {opt.result.best.composite && <tr><td>Transverse bars Ø (both)</td><td>{opt.result.best.bar} mm</td></tr>}
                   <tr><td>Strength UR (target {fmt(opt.result.targets.strength, 2)})</td><td className={tone(opt.result.best.strength.ur)}>{fmt(opt.result.best.strength.ur, 3)} · <Rich text={opt.result.best.strength.label} /></td></tr>
                   <tr><td>Deflection UR (target {fmt(opt.result.targets.deflection, 2)})</td><td className={tone(opt.result.best.deflection.ur)}>{fmt(opt.result.best.deflection.ur, 3)} · <Rich text={opt.result.best.deflection.label} /></td></tr>
                 </tbody>
@@ -582,7 +679,16 @@ export function App() {
             )}
             <div className="opt-buttons">
               {!opt?.running && opt?.result?.best && (
-                <button type="button" className="btn primary" data-testid="optimize-apply" onClick={() => { send({ kind: 'section', id: opt.result!.best!.id }); setFamily(opt.result!.family); dialogRef.current?.close(); }}>
+                <button type="button" className="btn primary" data-testid="optimize-apply" onClick={() => {
+                  const b = opt.result!.best!;
+                  send({ kind: 'section', id: b.id });
+                  setFamily(opt.result!.family);
+                  for (const [name, v] of [['s_{sc.A}', b.sc], ['s_{sc.B}', b.sc], ['d_{s.t}', b.bar], ['d_{s.b}', b.bar]] as const) {
+                    const f = inputs.find((x) => x.name === name);
+                    if (f) setInput(f, v);
+                  }
+                  dialogRef.current?.close();
+                }}>
                   Use {opt.result.best.name}
                 </button>
               )}

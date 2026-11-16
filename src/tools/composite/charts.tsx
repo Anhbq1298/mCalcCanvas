@@ -431,6 +431,16 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
   const P = (X: number, Y: number, Z: number) => [cx + X * k + Z * zx, yBot - Y * k - Z * zy] as const;
   const pts = (...q: (readonly number[])[]) => q.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
   const ink = C.ink, teal = '#0F766E', col = which === 'a' ? C.red : teal;
+  const slabLine = '#B3BCC1', slabW = 0.35; // slab outline: light and fine, so the rebar reads first
+  const rebar = { stroke: ink, strokeWidth: 2 }; // all rebar: one weight, one colour
+  const stud = { fill: '#C8CBC3', stroke: ink, strokeWidth: 0.8 }; // stud: cut section, solid, finer than the rebar
+  // a rebar line at (y, z); the stud is opaque and drawn over it
+  const rebarLines = (y: number, z: number, key: string) => {
+    const cover = 30; // rebar pulled in from the slab faces by the cover
+    const xL = P(-halfW + cover, y, z)[0], xR = P(halfW - cover, y, z)[0], yS = P(0, y, z)[1];
+    const segs = [[xL, xR]];
+    return segs.map(([a, b], i) => <line key={`${key}${i}`} x1={a} x2={b} y1={yS} y2={yS} {...rebar} />);
+  };
   const yTopBar = h_c - 30, yBotBar = 30;
   const aX = b_a / 2, bX = dhead / 2 + (b0 || 0) / 2;
   const d = Math.max(3, (Number.isFinite(dsc) ? dsc : 19) * k), hd = dhead * k;
@@ -442,38 +452,36 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
     ? [-aX, aX].map((X) => pts(P(X, 0, 0), P(X, h_c, 0), P(X, h_c, depth), P(X, 0, depth)))
     : [pts(P(-bX, 0, 0), P(-bX, hsc, 0), P(-bX, hsc, depth), P(-bX, 0, depth)), pts(P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(-bX, hsc, depth)), pts(P(bX, 0, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(bX, 0, depth))];
   const barsZ = [0.2, 0.4, 0.6, 0.8, 1].map((f) => f * depth); // five more bars back along the span
-  const crossings = which === 'a' ? [-aX, aX].flatMap((X) => [[X, yTopBar], [X, yBotBar]]) : [[-bX, yBotBar], [bX, yBotBar]];
   const arrowA = P(-halfW * 0.7, h_c, depth * 0.15), arrowB = P(-halfW * 0.7, h_c, depth * 0.8);
   const ang = (Math.atan2(arrowB[1] - arrowA[1], arrowB[0] - arrowA[0]) * 180) / Math.PI;
   return (
     <div ref={box}>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={which === 'a' ? `Surface a-a: two vertical planes through the slab depth ${fmt(h_c, 0)} mm at the flange edges, along the span, crossed by top and bottom bars` : `Surface b-b: trough around the studs, length ${fmt(r.lb, 0)} mm, along the span, crossed by the bottom bars twice`}>
-        <polygon points={top} fill="#EEF1EF" stroke={ink} strokeWidth={CAD.geo} strokeLinejoin="round" />
-        <polygon points={side} fill="#DCE1DE" stroke={ink} strokeWidth={CAD.geo} strokeLinejoin="round" />
+        <polygon points={top} fill="#EEF1EF" stroke={slabLine} strokeWidth={slabW} strokeLinejoin="round" />
+        <polygon points={side} fill="#DCE1DE" stroke={slabLine} strokeWidth={slabW} strokeLinejoin="round" />
         {/* transverse bars repeated along the span (spacing indicative), seen through the concrete */}
         {barsZ.map((z) => (
           <g key={z}>
-            <line x1={P(-halfW + 6, yTopBar, z)[0]} y1={P(-halfW + 6, yTopBar, z)[1]} x2={P(halfW - 6, yTopBar, z)[0]} y2={P(halfW - 6, yTopBar, z)[1]} stroke={C.muted} strokeWidth={1.2} strokeOpacity={which === 'b' ? 0.45 : 0.9} />
-            <line x1={P(-halfW + 6, yBotBar, z)[0]} y1={P(-halfW + 6, yBotBar, z)[1]} x2={P(halfW - 6, yBotBar, z)[0]} y2={P(halfW - 6, yBotBar, z)[1]} stroke={C.muted} strokeWidth={1.2} />
+            {rebarLines(yTopBar, z, 't')}
+            {rebarLines(yBotBar, z, 'b')}
           </g>
         ))}
         {/* the surface, shaded, seen through the concrete */}
-        {surfaces.map((q, i) => <polygon key={i} points={q} fill={col} fillOpacity={0.16} stroke={col} strokeWidth={1.2} strokeLinejoin="round" />)}
+        {surfaces.map((q, i) => <polygon key={i} points={q} fill={col} fillOpacity={0.16} stroke={col} strokeWidth={1.2} strokeDasharray="6 4" strokeLinejoin="round" />)}
         {/* cut face: concrete, steel flange, front stud, bars */}
-        <rect x={P(-halfW, 0, 0)[0]} y={yTop} width={segPx} height={yBot - yTop} fill="#F6F8F7" fillOpacity={0.55} stroke={ink} strokeWidth={CAD.geo} />
+        <rect x={P(-halfW, 0, 0)[0]} y={yTop} width={segPx} height={yBot - yTop} fill="#F6F8F7" fillOpacity={0.55} stroke={slabLine} strokeWidth={slabW} />
         <rect x={P(-b_a / 2, 0, 0)[0]} y={yBot} width={b_a * k} height={t_f * k} fill="#C8CBC3" stroke={ink} strokeWidth={CAD.geo} />
         <rect x={cx - Math.max(1.5, (t_w * k) / 2)} y={yBot + t_f * k} width={Math.max(3, t_w * k)} height={24} fill="#C8CBC3" stroke={ink} strokeWidth={CAD.geo} />
-        <g fill="#C8CBC3" stroke={ink} strokeWidth={1}>
+        {/* cut-face bars first, then the stud over them */}
+        {[yTopBar, yBotBar].map((y) => <g key={y}>{rebarLines(y, 0, 'f')}</g>)}
+        <g {...stud}>
           <rect x={cx - d / 2} y={yBot - (hsc - 10) * k} width={d} height={(hsc - 10) * k} />
           <rect x={cx - hd / 2} y={yBot - hsc * k} width={hd} height={10 * k} />
         </g>
-{[yTopBar, yBotBar].map((y) => <line key={y} x1={P(-halfW + 6, y, 0)[0]} x2={P(halfW - 6, y, 0)[0]} y1={P(0, y, 0)[1]} y2={P(0, y, 0)[1]} stroke={ink} strokeWidth={2.2} />)}
         {/* the surface trace on the cut face, and where the bars cross it */}
         {which === 'a'
-          ? [-aX, aX].map((X) => <line key={X} x1={P(X, 0, 0)[0]} x2={P(X, 0, 0)[0]} y1={yBot} y2={yTop} stroke={col} strokeWidth={2} />)
-          : <polyline points={pts(P(-bX, 0, 0), P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, 0, 0))} fill="none" stroke={col} strokeWidth={2} />}
-        {crossings.map(([X, Y]) => <circle key={`${X}${Y}`} cx={P(X, Y, 0)[0]} cy={P(X, Y, 0)[1]} r={4} fill={col} stroke="#fff" strokeWidth={1} />)}
-        {barsZ.flatMap((z) => crossings.map(([X, Y]) => <circle key={`${z}${X}${Y}`} cx={P(X, Y, z)[0]} cy={P(X, Y, z)[1]} r={2.6} fill={col} />))}
+          ? [-aX, aX].map((X) => <line key={X} x1={P(X, 0, 0)[0]} x2={P(X, 0, 0)[0]} y1={yBot} y2={yTop} stroke={col} strokeWidth={2} strokeDasharray="6 4" />)
+          : <polyline points={pts(P(-bX, 0, 0), P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, 0, 0))} fill="none" stroke={col} strokeWidth={2} strokeDasharray="6 4" />}
         <text x={W - 4} y={yBot + 14} textAnchor="end" fill={C.muted} fontSize={CAD.font - 1}>{`bars @ ${fmt(which === 'b' ? r.sfb : Math.min(r.sft, r.sfb), 0)} mm, indicative`}</text>
         {/* longitudinal shear on the outstand, along the span */}
         <line x1={arrowA[0]} y1={arrowA[1]} x2={arrowB[0]} y2={arrowB[1]} stroke={C.blue} strokeWidth={1.6} />
@@ -483,6 +491,80 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
         {which === 'a'
           ? [-aX, aX].map((X) => <text key={X} x={P(X, h_c, depth)[0]} y={P(X, h_c, depth)[1] - 5} textAnchor="middle" fill={col} fontSize={CAD.font + 1} fontWeight="700">a</text>)
           : <text x={P(0, hsc, depth)[0]} y={P(0, h_c, depth)[1] - 5} textAnchor="middle" fill={col} fontSize={CAD.font + 1} fontWeight="700">b</text>}
+      </svg>
+    </div>
+  );
+}
+
+/** Longitudinal section: side elevation along the span through a stud line, drawn to scale. */
+export function LongSection({ r }: { r: Record<string, number> }) {
+  const [box, W] = useWidth(720);
+  const { h_c, t_f, hsc, dhead, dsc, dsb, dst, sfb, sft } = r;
+  if (![h_c, t_f, hsc, dhead, sfb].every(Number.isFinite)) return <div ref={box} />;
+  const n = 4, pitch = sfb, lenMm = n * pitch;
+  const ink = C.ink, teal = '#0F766E', slabLine = '#B3BCC1', slabW = 0.35;
+  const dStud = Number.isFinite(dsc) ? dsc : 19;
+  const k = Math.min((W - 80) / lenMm, 300 / (hsc + h_c + t_f));
+  const x0 = 46, top = 40;
+  const yOf = (Y: number) => top + (h_c - Y) * k; // Y in mm above the slab soffit
+  const X = (x: number) => x0 + x * k;
+  const H = yOf(-t_f) + 96;
+  const bottomBar = 30, topBar = h_c - 30;
+  const studX = Array.from({ length: n }, (_, i) => i * pitch + pitch / 2);
+  const dimY = yOf(-t_f) + 22; // stud spacing dimension sits under the flange
+  const hasTop = Number.isFinite(sft) && sft > 0 && Number.isFinite(dst);
+  const hasBot = Number.isFinite(dsb);
+  const topX = hasTop ? X(sft) : 0;
+  const botX = X(3 * pitch); // a bar between studs clear of the stud-spacing dimension
+  const belowY = yOf(-t_f) + 62;
+  return (
+    <div ref={box}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={`Longitudinal section along the span through the studs, stud spacing ${fmt(sfb, 0)} mm, slab depth ${fmt(h_c, 0)} mm`}>
+        {/* slab, steel top flange and studs cut on the section line */}
+        <rect x={X(0)} y={yOf(h_c)} width={lenMm * k} height={h_c * k} fill="#F6F8F7" stroke={slabLine} strokeWidth={slabW} />
+        {/* shear surface: a-a along the whole slab depth, b-b over the stud height */}
+        <rect x={X(0)} y={yOf(h_c)} width={lenMm * k} height={h_c * k} fill={C.red} fillOpacity={0.1} />
+        <rect x={X(0)} y={yOf(hsc)} width={lenMm * k} height={hsc * k} fill={teal} fillOpacity={0.16} stroke={teal} strokeWidth={1} />
+        <rect x={X(0)} y={yOf(0)} width={lenMm * k} height={t_f * k} fill="#C8CBC3" stroke={ink} strokeWidth={CAD.geo} />
+        {/* transverse bars cut by the section: dots at both bar levels, between the studs */}
+        {Array.from({ length: n + 1 }, (_, j) => (
+          <circle key={`b${j}`} cx={X(j * pitch)} cy={yOf(bottomBar)} r={3.2} fill={ink} />
+        ))}
+        {hasTop && Array.from({ length: Math.floor(lenMm / sft) + 1 }, (_, j) => (
+          <circle key={`t${j}`} cx={X(j * sft)} cy={yOf(topBar)} r={3.2} fill={ink} />
+        ))}
+        {/* studs: cut through their axis, finer line than the rebar */}
+        {studX.map((x) => (
+          <g key={x} fill="#C8CBC3" stroke={ink} strokeWidth={0.8}>
+            <rect x={X(x) - (dStud * k) / 2} y={yOf(hsc - 10)} width={dStud * k} height={(hsc - 10) * k} />
+            <rect x={X(x) - (dhead * k) / 2} y={yOf(hsc)} width={dhead * k} height={10 * k} />
+          </g>
+        ))}
+        {/* dimensions: stud spacing and slab depth */}
+        <g stroke={C.muted} strokeWidth={CAD.dim}>
+          <line x1={X(studX[0])} x2={X(studX[1])} y1={dimY} y2={dimY} />
+          <line x1={X(studX[0])} x2={X(studX[0])} y1={dimY - 4} y2={dimY + 4} />
+          <line x1={X(studX[1])} x2={X(studX[1])} y1={dimY - 4} y2={dimY + 4} />
+          <line x1={X(0) - 14} x2={X(0) - 14} y1={yOf(h_c)} y2={yOf(0)} />
+          <line x1={X(0) - 18} x2={X(0) - 10} y1={yOf(h_c)} y2={yOf(h_c)} />
+          <line x1={X(0) - 18} x2={X(0) - 10} y1={yOf(0)} y2={yOf(0)} />
+        </g>
+        <text x={(X(studX[0]) + X(studX[1])) / 2} y={dimY + 13} textAnchor="middle" fill={C.muted} fontSize={CAD.font - 1}><SvgRich text="s_{f.b}" size={CAD.font - 1} /></text>
+        <text x={X(0) - 18} y={(yOf(h_c) + yOf(0)) / 2} textAnchor="end" dominantBaseline="middle" fill={C.muted} fontSize={CAD.font - 1}><SvgRich text="h_c" size={CAD.font - 1} /></text>
+        {/* rebar callouts: leader from the bar, text kept outside the concrete */}
+        {hasTop && (
+          <g stroke={C.muted} strokeWidth={CAD.dim} fill="none">
+            <polyline points={`${topX},${yOf(topBar) - 4} ${topX + 14},${top - 12} ${topX + 20},${top - 12}`} />
+            <text x={topX + 23} y={top - 9} fill={ink} stroke="none" fontSize={CAD.font - 1}><SvgRich text={`\u00d8${fmt(dst, 0)} @ s_{f.t} = ${fmt(sft, 0)} mm`} size={CAD.font - 1} /></text>
+          </g>
+        )}
+        {hasBot && (
+          <g stroke={C.muted} strokeWidth={CAD.dim} fill="none">
+            <polyline points={`${botX},${yOf(bottomBar) + 4} ${botX + 14},${belowY} ${botX + 20},${belowY}`} />
+            <text x={botX + 23} y={belowY + 4} fill={ink} stroke="none" fontSize={CAD.font - 1}><SvgRich text={`\u00d8${fmt(dsb, 0)} @ s_{f.b} = ${fmt(sfb, 0)} mm`} size={CAD.font - 1} /></text>
+          </g>
+        )}
+        <text x={X(lenMm) + 4} y={yOf(0) + 4} fill={C.muted} fontSize={CAD.font - 1}>…</text>
       </svg>
     </div>
   );
