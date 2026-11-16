@@ -117,13 +117,15 @@ export interface DesignCriteria extends Targets {
   studs: 'uniform' | 'segmented' | 'prefer-uniform';
   /** Transverse bar diameters to try, smallest first. */
   bars: number[];
+  /** Transverse bar spacings to try (mm, top and bottom alike); absent = the spacing stays as entered. */
+  barSpacings?: number[];
   /** Camber rules; null keeps the precamber inputs as entered. Lengths in mm, minSpan in m. */
   camber: { pct: number; min: number; max: number; step: number; minSpan: number } | null;
   /** Section fixed (stud button): construction-stage checks are left out. */
   detail?: boolean;
 }
 export interface Design {
-  pass: boolean; composite: boolean; sc: number; scB: number; nr?: number; bar: number; eta: number;
+  pass: boolean; composite: boolean; sc: number; scB: number; nr?: number; bar: number; sf?: number; eta: number;
   studs: number; camber: number; strength: Governing; deflection: Governing; evals: number;
   /** Stud distribution of the result (prefer-uniform resolves to one of the two). */
   layout?: 'uniform' | 'segmented';
@@ -201,7 +203,7 @@ export function designSection(model: CompositeModel, screen: CompositeModel | nu
   let camber = p.wc;
   if (c.camber) { camber = camberFor(c.camber, p.L, p.dgmax, p.cprop >= 1); for (const m of models) set(m, 'w_{c.0}', camber); }
   const over = (r: Results, keys: string[]) => keys.some((k) => !(r[`UR.${k}`] <= c.strength));
-  const done = (r: Results, d: { sc: number; scB: number; nr?: number; bar: number }): Design => ({ layout: d.sc === d.scB ? 'uniform' : 'segmented', pass: true, composite: r.comp >= 1, ...d, eta: r.eta, studs: r.nA + r.nB, camber, ...governingSplit(r, skip), evals });
+  const done = (r: Results, d: { sc: number; scB: number; nr?: number; bar: number; sf?: number }): Design => ({ layout: d.sc === d.scB ? 'uniform' : 'segmented', pass: true, composite: r.comp >= 1, ...d, eta: r.eta, studs: r.nA + r.nB, camber, ...governingSplit(r, skip), evals });
   const passes = (r: Results, composite: boolean) => {
     if (r.errors.length || (composite && (r.comp < 1 || !etaInRange(r.eta, c)))) return false;
     const g = governingSplit(r, skip);
@@ -216,23 +218,33 @@ export function designSection(model: CompositeModel, screen: CompositeModel | nu
   const plans = studPlans(p, c);
   if (!plans.length) return fail(true);
   /** One layout: bars from the smallest up; 'next' = a denser layout may still work, 'stop' = it cannot. */
+  // Transverse bars: every diameter × spacing, least steel first. The bar checks are proportional to
+  // 1 / area, so a failing one tells the area needed and the list is entered at that point.
+  const rebar = c.bars.flatMap((bar) => (c.barSpacings?.length ? c.barSpacings : [undefined]).map((sf) => ({ bar, sf, area: (Math.PI * bar * bar) / 4 / (sf ?? 1) })))
+    .sort((a, b) => a.area - b.area || a.bar - b.bar);
+  const heavier = (k: number, r: Results) => {
+    const need = rebar[k].area * (Math.max(...SLAB_BAR_CHECKS.map((x) => r[`UR.${x}`])) / c.strength) * (1 - 1e-9);
+    const n = rebar.findIndex((x, i) => i > k && x.area >= need);
+    return n < 0 && k < rebar.length - 1 && !Number.isFinite(need) ? k + 1 : n;
+  };
   const tryPlan = (plan: (typeof plans)[number]): Design | 'next' | 'hopeless' => {
-    for (const bar of c.bars) {
+    for (let k = 0; k >= 0 && k < rebar.length;) {
+      const d = { ...plan, bar: rebar[k].bar, ...(rebar[k].sf !== undefined ? { sf: rebar[k].sf } : {}) };
       if (screen) {
-        screen.setDetail({ ...plan, bar });
+        screen.setDetail(d);
         const q = screen.results(); evals++;
         if (q.errors.length) return 'next';
         if (q.comp < 1 || !etaInRange(q.eta, c) || !screenPasses(q, c, skip)) {
-          if (over(q, SLAB_BAR_CHECKS) && bar !== c.bars[c.bars.length - 1]) continue;
+          if (over(q, SLAB_BAR_CHECKS)) { const n = heavier(k, q); if (n > k) { k = n; continue; } }
           // hopeless: something other than the slab fails although this is the densest layout
           const g = governingSplit(q, [...DEFLECTION_CHECKS, ...skip, ...SLAB_CHECKS]);
           return g.strength.ur > c.strength || g.deflection.ur > c.deflection || q.eta < Math.max(c.etaMin ?? 0, q.etaMin) - 1e-9 ? 'hopeless' : 'next';
         }
       }
-      model.setDetail({ ...plan, bar });
+      model.setDetail(d);
       const r = model.results(); evals++;
-      if (passes(r, true)) return done(r, { ...plan, bar });
-      if (over(r, SLAB_BAR_CHECKS) && bar !== c.bars[c.bars.length - 1]) continue;
+      if (passes(r, true)) return done(r, d);
+      if (over(r, SLAB_BAR_CHECKS)) { const n = heavier(k, r); if (n > k) { k = n; continue; } }
       const g = governingSplit(r, [...skip, ...SLAB_CHECKS]);
       return !r.errors.length && (g.strength.ur > c.strength || g.deflection.ur > c.deflection) ? 'hopeless' : 'next';
     }
@@ -253,6 +265,7 @@ export function designSection(model: CompositeModel, screen: CompositeModel | nu
 /** Detail choices the optimiser tries for every section: uniform stud spacing and both transverse bar diameters. */
 export const STUD_SPACINGS = [200, 175, 150, 125, 100]; // mm, widest (cheapest) first
 export const BAR_DIAMETERS = [10, 12, 13]; // mm, smallest first
+export const BAR_SPACINGS = [200, 175, 150, 125, 100]; // mm
 export const DETAIL_INPUTS = { scA: 's_{sc.A}', scB: 's_{sc.B}', barT: 'd_{s.t}', barB: 'd_{s.b}' } as const;
 
 /** bare: the bare-steel fallback (current stud and bar details, composite action not required). */

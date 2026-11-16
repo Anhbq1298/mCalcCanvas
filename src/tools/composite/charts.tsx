@@ -675,3 +675,146 @@ export function LongSection({ r }: { r: Record<string, number> }) {
     </div>
   );
 }
+
+/**
+ * Beam on the loading sheet, CAD style: the longitudinal section A–B over the whole span (slab, deck, steel
+ * beam, studs at their spacing each side of x_M) and the cross-section 1–1. Lengths along the span are to
+ * scale; depths are drawn larger when the beam would otherwise be too thin to read.
+ */
+export function BeamCad({ r, name }: { r: Record<string, number>; name: string }) {
+  const [box, W] = useWidth(720);
+  const uid = useId().replace(/:/g, '');
+  const { L, h_c, h_a, b_a, t_f, t_w, hsc, dsc, dhead } = r;
+  if (![L, h_c, h_a, b_a, t_f, t_w, hsc].every((v) => Number.isFinite(v) && v > 0)) return <div ref={box} />;
+  const ink = C.ink, dimC = C.muted, slabFill = '#EEF1EF';
+  const hpe = r.hpe > 0 ? r.hpe : 0, across = hpe > 0 && r.ctr >= 1, along = hpe > 0 && !across, re = r.cre >= 1;
+  const Lmm = L * 1000, D = h_c + h_a;
+  const secW = W >= 560 ? 190 : 0; // cross-section beside the elevation when there is room, else below
+  const X0 = 62, X1 = W - secW - 34;
+  const kh = (X1 - X0) / Lmm, kv = Math.max(kh, 112 / D);
+  const top = 46, yS = top + h_c * kv, yB = yS + h_a * kv; // slab top, steel top, steel bottom
+  const X = (mm: number) => X0 + mm * kh, Yup = (mm: number) => yS - mm * kv; // mm above the steel top
+  const xM = Math.min(Math.max(r.xM * 1000, 0), Lmm);
+  const sA = r.sA > 0 ? r.sA : NaN, sB = r.sB > 0 ? r.sB : NaN;
+  // studs: from each support towards x_M at the spacing of that side (ribs fix the positions on a transverse deck)
+  const studs: number[] = [];
+  const first = (s: number) => (across ? r.er / 2 : s / 2);
+  if (sA > 0) for (let x = first(sA); x <= xM + 1e-6; x += sA) studs.push(x);
+  if (sB > 0) for (let x = Lmm - first(sB); x > xM + 1e-6; x -= sB) studs.push(x);
+  const dPx = Math.max(1, (dsc || 19) * kh), hdPx = Math.max(dPx + 1.5, (dhead || 32) * kh);
+  const tick = (x: number, y: number, key?: string | number) => <line key={key} x1={x - 4} x2={x + 4} y1={y + 4} y2={y - 4} stroke={ink} strokeWidth={1.2} />;
+  const txt = (x: number, y: number, t: string, anchor: 'start' | 'middle' | 'end' = 'middle', col = ink) => <text x={x} y={y} textAnchor={anchor} fill={col} stroke="none" fontSize={CAD.font - 0.5} className="num"><SvgRich text={t} size={CAD.font - 0.5} /></text>;
+  const hatch = (cx: number, gy: number) => (
+    <g stroke={ink} strokeWidth={CAD.dim}>
+      <line x1={cx - 14} x2={cx + 14} y1={gy} y2={gy} strokeWidth={CAD.geo} />
+      {[-12, -6, 0, 6, 12].map((d) => <line key={d} x1={cx + d} y1={gy} x2={cx + d - 5} y2={gy + 5} />)}
+    </g>
+  );
+  const dimY = yB + 46, H1 = dimY + 30;
+  const cutX = X(xM > Lmm * 0.85 ? Lmm * 0.06 : Lmm * 0.94); // clear of the stud notes
+  // ── cross-section 1–1 ──
+  const sx0 = secW ? W - secW + 6 : 30, sw = secW ? secW - 16 : W - 60, sTop = secW ? top : H1 + 34;
+  const slabMm = Math.max(2.4 * b_a, 420);
+  const ks = Math.min((sw - 46) / slabMm, 150 / D);
+  const cx = sx0 + 40 + (slabMm * ks) / 2, SY = (mm: number) => sTop + mm * ks; // mm below the slab top
+  const sL = cx - (slabMm * ks) / 2, sR = cx + (slabMm * ks) / 2;
+  const H = Math.max(H1, SY(D) + 44) + (secW ? 0 : 0);
+  const nre = r.nre >= 2 ? 2 : 1, studXs = nre === 2 ? [-Math.min(b_a / 4, 50), Math.min(b_a / 4, 50)] : [0];
+  const zig = (x: number, y0: number, y1: number) => `M${x},${y0 - 5} L${x},${y0 + (y1 - y0) * 0.35} l-4,${(y1 - y0) * 0.1} l8,${(y1 - y0) * 0.1} l-4,${(y1 - y0) * 0.1} L${x},${y1 + 5}`;
+  return (
+    <div ref={box}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={`Longitudinal section of the beam, span ${fmt(L, 2)} m, ${name}, slab ${fmt(h_c, 0)} mm, studs at ${fmt(sA, 0)} and ${fmt(sB, 0)} mm; cross-section 1–1`}>
+        <defs>
+          <clipPath id={`${uid}e`}><rect x={X0} y={top} width={X1 - X0} height={h_c * kv + 0.5} /></clipPath>
+          <clipPath id={`${uid}s`}><rect x={sL} y={sTop - 1} width={sR - sL} height={h_c * ks + 2} /></clipPath>
+        </defs>
+        {/* ── longitudinal section A–B ── */}
+        <rect x={X0} y={top} width={X1 - X0} height={h_c * kv} fill={slabFill} stroke={ink} strokeWidth={CAD.geo} />
+        {across && (
+          <g clipPath={`url(#${uid}e)`}>
+            {deckVoids(0, Lmm, r.er / 2, hpe, r.br, r.er, re).map((q, i) => <polygon key={i} points={q.map(([x, y]) => `${X(x)},${Yup(y)}`).join(' ')} fill={C.sheet} stroke={ink} strokeWidth={0.6} strokeLinejoin="round" />)}
+          </g>
+        )}
+        {along && <line x1={X0} x2={X1} y1={Yup(hpe)} y2={Yup(hpe)} stroke={ink} strokeWidth={CAD.dim} strokeDasharray="6 3" />}
+        <g fill="#C8CBC3" stroke={ink} strokeWidth={0.5}>
+          {studs.map((x, i) => (
+            <g key={i}>
+              <rect x={X(x) - dPx / 2} y={Yup(hsc)} width={dPx} height={hsc * kv} />
+              <rect x={X(x) - hdPx / 2} y={Yup(hsc)} width={hdPx} height={Math.max(1.5, 10 * kv)} />
+            </g>
+          ))}
+        </g>
+        <rect x={X0} y={yS} width={X1 - X0} height={h_a * kv} fill={C.sheet} stroke={ink} strokeWidth={CAD.geo} />
+        <line x1={X0} x2={X1} y1={yS + t_f * kv} y2={yS + t_f * kv} stroke={ink} strokeWidth={CAD.dim} />
+        <line x1={X0} x2={X1} y1={yB - t_f * kv} y2={yB - t_f * kv} stroke={ink} strokeWidth={CAD.dim} />
+        {/* supports */}
+        <g fill={C.sheet} stroke={ink} strokeWidth={CAD.geo}>
+          <path d={`M${X0},${yB + 1} l-8,13 h16 z`} />
+          <path d={`M${X1},${yB + 1} l-8,11 h16 z`} />
+          <circle cx={X1 - 4} cy={yB + 15} r="2" strokeWidth={CAD.dim} /><circle cx={X1 + 4} cy={yB + 15} r="2" strokeWidth={CAD.dim} />
+        </g>
+        {hatch(X0, yB + 14.5)}{hatch(X1, yB + 18)}
+        {txt(X0 - 18, yB + 20, 'A', 'end')}{txt(X1 + 18, yB + 20, 'B', 'start')}
+        {/* stud zones each side of the maximum moment */}
+        <line x1={X(xM)} x2={X(xM)} y1={top - 22} y2={yB + 6} stroke={dimC} strokeWidth={CAD.dim} strokeDasharray="10 3 2 3" />
+        {txt(X(xM), top - 26, `x_M ${fmt(r.xM, 2)} m`, 'middle', dimC)}
+        {xM > 1 && Number.isFinite(r.nA) && txt((X0 + X(xM)) / 2, top - 8, `${fmt(r.nA, 0)} studs @ ${fmt(sA, 0)}`)}
+        {Lmm - xM > 1 && Number.isFinite(r.nB) && txt((X(xM) + X1) / 2, top - 8, `${fmt(r.nB, 0)} studs @ ${fmt(sB, 0)}`)}
+        {/* section mark 1–1 */}
+        <g stroke={ink} strokeWidth={1.6}>
+          <line x1={cutX} x2={cutX} y1={top - 14} y2={top - 2} /><line x1={cutX} x2={cutX} y1={yB + 2} y2={yB + 14} />
+        </g>
+        {txt(cutX + 5, top - 4, '1', 'start')}{txt(cutX + 5, yB + 14, '1', 'start')}
+        {/* depth and span dimensions */}
+        <g stroke={dimC} strokeWidth={CAD.dim}>
+          <line x1={X0 - 18} x2={X0 - 18} y1={top} y2={yB} />
+          {[top, yS, yB].map((y) => <g key={y}><line x1={X0 - 24} x2={X0 - 4} y1={y} y2={y} />{tick(X0 - 18, y)}</g>)}
+        </g>
+        {txt(X0 - 27, (top + yS) / 2 + 4, `h_c ${fmt(h_c, 0)}`, 'end')}
+        {txt(X0 - 27, (yS + yB) / 2 + 4, `h_a ${fmt(h_a, 0)}`, 'end')}
+        <DimChain stations={xM > 1 && Lmm - xM > 1 ? [0, r.xM, L] : [0, L]} X={(v) => X0 + (v / L) * (X1 - X0)} y={dimY} yTop={yB + 24} />
+        {txt(X0, H1 - 4, `Longitudinal section A–B, ${name}${kv > kh * 1.01 ? `; depths drawn ×${fmt(kv / kh, 1)}` : ''}${hpe > 0 ? `; deck ribs ${across ? 'perpendicular' : 'parallel'}` : ''}`, 'start', dimC)}
+
+        {/* ── cross-section 1–1 ── */}
+        <rect x={sL} y={SY(0)} width={sR - sL} height={h_c * ks} fill={slabFill} stroke="none" />
+        <line x1={sL} x2={sR} y1={SY(0)} y2={SY(0)} stroke={ink} strokeWidth={CAD.geo} />
+        {!along && <line x1={sL} x2={sR} y1={SY(h_c)} y2={SY(h_c)} stroke={ink} strokeWidth={CAD.geo} />}
+        {along && (
+          <g clipPath={`url(#${uid}s)`}>
+            <line x1={sL} x2={sR} y1={SY(h_c)} y2={SY(h_c)} stroke={ink} strokeWidth={CAD.geo} />
+            {deckVoids(-slabMm / 2, slabMm / 2, 0, hpe, r.br, r.er, re).map((q, i) => <polygon key={i} points={q.map(([x, y]) => `${cx + x * ks},${SY(h_c - y)}`).join(' ')} fill={C.sheet} stroke={ink} strokeWidth={CAD.geo} strokeLinejoin="round" />)}
+          </g>
+        )}
+        {across && <line x1={sL} x2={sR} y1={SY(h_c - hpe)} y2={SY(h_c - hpe)} stroke={ink} strokeWidth={CAD.dim} strokeDasharray="6 3" />}
+        <path d={`${zig(sL, SY(0), SY(h_c))} ${zig(sR, SY(0), SY(h_c))}`} fill="none" stroke={ink} strokeWidth={CAD.dim} />
+        {/* transverse bars, top and bottom */}
+        <line x1={sL + 4} x2={sR - 4} y1={SY(30)} y2={SY(30)} stroke={ink} strokeWidth={1.8} />
+        <line x1={sL + 4} x2={sR - 4} y1={SY(h_c - hpe - 30)} y2={SY(h_c - hpe - 30)} stroke={ink} strokeWidth={1.8} />
+        {/* steel section */}
+        <g fill={C.sheet} stroke={ink} strokeWidth={CAD.geo} strokeLinejoin="round">
+          <path d={`M${cx - (b_a / 2) * ks},${SY(h_c)} h${b_a * ks} v${t_f * ks} h${-((b_a - t_w) / 2) * ks} v${(h_a - 2 * t_f) * ks} h${((b_a - t_w) / 2) * ks} v${t_f * ks} h${-b_a * ks} v${-t_f * ks} h${((b_a - t_w) / 2) * ks} v${-(h_a - 2 * t_f) * ks} h${-((b_a - t_w) / 2) * ks} z`} />
+        </g>
+        <g fill="#C8CBC3" stroke={ink} strokeWidth={0.8}>
+          {studXs.map((x) => (
+            <g key={x}>
+              <rect x={cx + x * ks - Math.max(2, (dsc || 19) * ks) / 2} y={SY(h_c - hsc)} width={Math.max(2, (dsc || 19) * ks)} height={hsc * ks} />
+              <rect x={cx + x * ks - Math.max(3.4, (dhead || 32) * ks) / 2} y={SY(h_c - hsc)} width={Math.max(3.4, (dhead || 32) * ks)} height={Math.max(2, 10 * ks)} />
+            </g>
+          ))}
+        </g>
+        {/* dimensions */}
+        <g stroke={dimC} strokeWidth={CAD.dim}>
+          <line x1={sL - 16} x2={sL - 16} y1={SY(0)} y2={SY(D)} />
+          {[0, h_c, D].map((y) => <g key={y}><line x1={sL - 22} x2={sL - 6} y1={SY(y)} y2={SY(y)} />{tick(sL - 16, SY(y))}</g>)}
+          <line x1={cx - (b_a / 2) * ks} x2={cx + (b_a / 2) * ks} y1={SY(D) + 14} y2={SY(D) + 14} />
+          {[-1, 1].map((k) => <g key={k}><line x1={cx + k * (b_a / 2) * ks} x2={cx + k * (b_a / 2) * ks} y1={SY(D) + 3} y2={SY(D) + 19} />{tick(cx + k * (b_a / 2) * ks, SY(D) + 14)}</g>)}
+        </g>
+        <text transform={`translate(${sL - 20},${SY(h_c / 2)}) rotate(-90)`} textAnchor="middle" fill={ink} fontSize={CAD.font - 1} className="num">{fmt(h_c, 0)}</text>
+        <text transform={`translate(${sL - 20},${SY(h_c + h_a / 2)}) rotate(-90)`} textAnchor="middle" fill={ink} fontSize={CAD.font - 1} className="num">{fmt(h_a, 0)}</text>
+        {txt(cx, SY(D) + 11, `b_a ${fmt(b_a, 0)}`)}
+        {txt(cx, SY(D) + 36, `Section 1–1${Number.isFinite(r.b_eff) ? `, b_eff ${fmt(r.b_eff, 0)}` : ''}`, 'middle', dimC)}
+      </svg>
+    </div>
+  );
+}
+

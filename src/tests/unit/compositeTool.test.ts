@@ -298,6 +298,15 @@ describe('mCompositeBeamDesign headless model', () => {
     r = m.results();
     expect(r.nA + r.nB).toBeLessThan(seg.studs);
     expect(r.comp < 1 || r['UR.des'] > 1).toBe(true);
+    // transverse bars: the lightest diameter and spacing that pass; one step lighter fails a bar check
+    const rb = designSection(m, screen, id('UB 457x191x89'), { ...base, barSpacings: [200, 175, 150, 125, 100] }, 'composite');
+    expect(rb.pass).toBe(true);
+    expect(rb.studs).toBe(seg.studs);
+    const area = (d: { bar: number; sf?: number }) => (Math.PI * d.bar ** 2) / 4 / d.sf!;
+    m.setDetail(rb);
+    expect(Math.max(m.results()['UR.sf'], m.results()['UR.sf.b'])).toBeLessThanOrEqual(1);
+    const lighter = [10, 12, 13].flatMap((bar) => [200, 175, 150, 125, 100].map((sf) => ({ bar, sf }))).filter((d) => area(d) < area(rb) - 1e-9).sort((p, q) => area(q) - area(p))[0];
+    if (lighter) { m.setDetail({ ...rb, ...lighter }); expect(Math.max(m.results()['UR.sf'], m.results()['UR.sf.b'])).toBeGreaterThan(1); }
     const uni = designSection(m, screen, id('UB 457x191x89'), { ...base, studs: 'uniform' }, 'composite');
     expect(uni.pass).toBe(true);
     expect(uni.scB).toBe(uni.sc);

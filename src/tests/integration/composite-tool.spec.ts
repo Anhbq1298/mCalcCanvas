@@ -66,7 +66,7 @@ test('mCompositeBeamDesign optimizes the section in a dialog with strength and d
   expect(sa % 5).toBe(0);
   expect(sb).toBe(sa);
   expect(Number(await cell('Studs on the beam'))).toBeGreaterThan(10);
-  expect([10, 12, 13]).toContain(Number((await cell('Transverse bars')).split(' ')[0]));
+  expect(await cell('Transverse bars')).toMatch(/^Ø1[023] @ (200|175|150|125|100) mm$/);
   expect(await cell('Camber')).toBe('none');
   const chosen = await cell('Section');
   // a cap on the degree of connection, segmented studs and a camber rule change the answer's details, not its validity

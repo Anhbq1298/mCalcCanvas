@@ -8,9 +8,9 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { sections } from '../../engineering/steel/sections';
-import { BAR_DIAMETERS, CHECKS, governingCheck, type DesignCriteria, type InputField, type LoadTable, type Results } from './model';
+import { BAR_DIAMETERS, BAR_SPACINGS, CHECKS, governingCheck, type DesignCriteria, type InputField, type LoadTable, type Results } from './model';
 import type { OptimizeResult, ToWorker } from './worker';
-import { DeckProfile, Legend, LineChart, LongSection, PointDrawing, SectionDrawing, ShearSurface3D, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
+import { BeamCad, DeckProfile, Legend, LineChart, LongSection, PointDrawing, SectionDrawing, ShearSurface3D, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
 import { headerParts } from '../../canvas/inputTable';
 import { C, fmt } from './format';
 import { optimizeDesign, warmOptimizer } from './optimizer';
@@ -300,7 +300,7 @@ export function App() {
   const runOptimize = async () => {
     const criteria: DesignCriteria = {
       strength: Number(tStrength), deflection: Number(tDefl), etaMin: etaReq.trim() ? Number(etaReq) / 100 : 0, etaMax: etaCap.trim() ? Number(etaCap) / 100 : 1,
-      studs: studMode, bars: BAR_DIAMETERS,
+      studs: studMode, bars: BAR_DIAMETERS, barSpacings: BAR_SPACINGS,
       camber: camAuto ? { pct: Number(cam.pct), min: Number(cam.min), max: Number(cam.max), step: Number(cam.step), minSpan: Number(cam.minSpan) } : null,
     };
     setOpt({ running: true });
@@ -470,6 +470,8 @@ export function App() {
               <button type="button" className="btn" data-testid="load-open" onClick={() => loadRef.current?.showModal()}>Modify load</button>
             </div>
             <div className="sheet">
+              <h3>Beam: longitudinal section and cross-section</h3>
+              <BeamCad r={res} name={sections.find((x) => x.id === state.sectionId)?.name ?? ''} />
               <h3>Uniformly distributed loads</h3>
               <UdlDrawing L={res.L} area={area} sb={sb} sw={{ ga: res.ga, gc: res.gc, gF: res.gsw }} />
               <h3>Point loads</h3>
@@ -752,7 +754,7 @@ export function App() {
             <h2 id="opt-title">Optimize section</h2>
             <button type="button" className="rowbtn" aria-label="Close" onClick={() => dialogRef.current?.close()}>×</button>
           </header>
-          <p className="hint">Designs every allowed section, lightest first: camber from the rules, then the fewest studs and the smallest transverse bar (Ø10, Ø12, Ø13) that pass every check, construction stage and longitudinal shear included. The lightest section wins. Only if no section works as composite are the sections tried as bare steel. Loads and other inputs stay as entered.</p>
+          <p className="hint">Designs every allowed section, lightest first: camber from the rules, then the fewest studs and the lightest transverse bars (Ø10, Ø12, Ø13 at 200 to 100 mm) that pass every check, construction stage and longitudinal shear included. The lightest section wins. Only if no section works as composite are the sections tried as bare steel. Loads and other inputs stay as entered.</p>
           <fieldset className="crit">
             <legend>Sections</legend>
             <div className="fams" role="group" aria-label="Families">
@@ -867,7 +869,7 @@ export function App() {
                   {opt.result.best.composite && <tr><td>Stud spacing s<sub>sc</sub> (A / B)</td><td>{opt.result.best.sc} / {opt.result.best.scB ?? opt.result.best.sc} mm{opt.result.best.nr ? `, ${opt.result.best.nr} per rib` : opt.result.best.layout ? `, ${opt.result.best.layout}` : ''}</td></tr>}
                   {opt.result.best.composite && <tr><td>Studs on the beam</td><td>{fmt(opt.result.best.studs ?? NaN, 0)}</td></tr>}
                   {opt.result.best.composite && opt.result.best.eta !== undefined && <tr><td>Degree of shear connection η</td><td>{fmt(opt.result.best.eta * 100, 0)} %</td></tr>}
-                  {opt.result.best.composite && <tr><td>Transverse bars Ø (both)</td><td>{opt.result.best.bar} mm</td></tr>}
+                  {opt.result.best.composite && <tr><td>Transverse bars (top and bottom)</td><td>Ø{opt.result.best.bar}{opt.result.best.sf ? ` @ ${opt.result.best.sf} mm` : ' mm'}</td></tr>}
                   <tr><td>Camber</td><td>{(opt.result.best.camber ?? 0) > 0 ? `${fmt(opt.result.best.camber!, 0)} mm` : 'none'}</td></tr>
                   <tr><td>Strength UR (target {fmt(opt.result.targets.strength, 2)})</td><td className={tone(opt.result.best.strength.ur)}>{fmt(opt.result.best.strength.ur, 3)} · <Rich text={opt.result.best.strength.label} /></td></tr>
                   <tr><td>Deflection UR (target {fmt(opt.result.targets.deflection, 2)})</td><td className={tone(opt.result.best.deflection.ur)}>{fmt(opt.result.best.deflection.ur, 3)} · <Rich text={opt.result.best.deflection.label} /></td></tr>
@@ -881,7 +883,7 @@ export function App() {
                   send({ kind: 'section', id: b.id });
                   setFamily(sections.find((x) => x.id === b.id)!.family);
                   const put = (name: string, v: number) => { const f = inputs.find((x) => x.name === name); if (f && value(f) !== v) setInput(f, v); };
-                  if (b.composite) { put('s_{sc.A}', b.sc); put('s_{sc.B}', b.scB ?? b.sc); put('d_{s.t}', b.bar); put('d_{s.b}', b.bar); if (b.nr) put('n_r', b.nr); }
+                  if (b.composite) { put('s_{sc.A}', b.sc); put('s_{sc.B}', b.scB ?? b.sc); put('d_{s.t}', b.bar); put('d_{s.b}', b.bar); if (b.sf) { put('s_{f.t}', b.sf); put('s_{f.b}', b.sf); } if (b.nr) put('n_r', b.nr); }
                   if (camAuto) { put('c_{cam}', 0); put('w_{c.0}', b.camber ?? 0); }
                   dialogRef.current?.close();
                 }}>

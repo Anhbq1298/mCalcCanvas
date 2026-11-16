@@ -74,7 +74,7 @@ export function optimizeDesign(
     const s = b ? secs[b.i] : null;
     return {
       family: label, maxDepth: null, targets: criteria, tried, total,
-      best: b && s ? { id: s.id, name: s.name, mass: s.mass, h: s.h, sc: b.d.sc, scB: b.d.scB, bar: b.d.bar, nr: b.d.nr, eta: b.d.eta, studs: b.d.studs, camber: b.d.camber, layout: b.d.layout, composite: b.d.composite, strength: b.d.strength, deflection: b.d.deflection } : null,
+      best: b && s ? { id: s.id, name: s.name, mass: s.mass, h: s.h, sc: b.d.sc, scB: b.d.scB, bar: b.d.bar, sf: b.d.sf, nr: b.d.nr, eta: b.d.eta, studs: b.d.studs, camber: b.d.camber, layout: b.d.layout, composite: b.d.composite, strength: b.d.strength, deflection: b.d.deflection } : null,
     };
   })();
 }
