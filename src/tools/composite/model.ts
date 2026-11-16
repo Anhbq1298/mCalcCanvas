@@ -93,8 +93,10 @@ export const SLS_CHECKS = ['d.1', 'd.x', 'd.nc', 'fn', 'fn.nc'];
 /** Construction-stage checks of the steel beam alone: they do not depend on the studs or the slab bars. */
 export const CONSTRUCTION_CHECKS = ['M.1', 'V.1', 'LT', 'd.1'];
 
-/** etaMin: project minimum degree of shear connection (0…1) for a composite result, on top of the code minimum. */
-export interface Targets { strength: number; deflection: number; etaMin?: number }
+/** etaMin / etaMax: project range of the degree of shear connection (0…1) for a composite result, on top of the code minimum. */
+export interface Targets { strength: number; deflection: number; etaMin?: number; etaMax?: number }
+/** Degree of shear connection inside the project range. */
+export const etaInRange = (eta: number, t: Targets): boolean => eta >= (t.etaMin ?? 0) - 1e-9 && eta <= (t.etaMax ?? 1) + 1e-9;
 export interface Governing { ur: number; key: string; label: string }
 export interface OptimizeResult {
   family: string; maxDepth: number | null; targets: Targets; tried: number; total: number;
@@ -317,14 +319,14 @@ export class CompositeModel {
         screen.setSection(c.id);
         screen.setDetail(c);
         const q = screen.results();
-        if (!q.errors.length && (!screenPasses(q, targets) || (!c.bare && (q.comp < 1 || q.eta < (targets.etaMin ?? 0) - 1e-9)))) continue;
+        if (!q.errors.length && (!screenPasses(q, targets) || (!c.bare && (q.comp < 1 || !etaInRange(q.eta, targets))))) continue;
       }
       this.setSection(c.id);
       this.setDetail(c);
       const r = this.results();
       if (r.errors.length) continue;
       const g = governingSplit(r);
-      if (g.strength.ur <= targets.strength && g.deflection.ur <= targets.deflection && (c.bare || (r.comp >= 1 && r.eta >= (targets.etaMin ?? 0) - 1e-9)))
+      if (g.strength.ur <= targets.strength && g.deflection.ur <= targets.deflection && (c.bare || (r.comp >= 1 && etaInRange(r.eta, targets))))
         return { family, maxDepth, targets, tried, total: cands.length, best: { id: c.id, name: c.name, mass: c.mass, h: c.h, sc: c.sc, bar: c.bar, eta: r.eta, composite: r.comp >= 1, ...g } };
     }
     this.setSection(start);

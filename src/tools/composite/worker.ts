@@ -4,7 +4,7 @@
  * scrolling stay responsive while it recalculates (no long task on the main thread).
  */
 import raw from '../../../templates/Composite_Beam_EC4.mCCV?raw';
-import { CONSTRUCTION_CHECKS, CompositeModel, governingSplit, screenPasses, type Targets } from './model';
+import { CONSTRUCTION_CHECKS, CompositeModel, etaInRange, governingSplit, screenPasses, type Targets } from './model';
 
 export type ToWorker =
   | { kind: 'input'; id: string; value: number }
@@ -39,7 +39,7 @@ self.onmessage = (ev: MessageEvent<ToWorker>) => {
       screen.setSection(m.id);
       screen.setDetail(m);
       const q = screen.results();
-      if (!q.errors.length && (!screenPasses(q, m.targets, m.detail ? CONSTRUCTION_CHECKS : []) || (!m.bare && (q.comp < 1 || q.eta < (m.targets.etaMin ?? 0) - 1e-9)))) return post({ kind: 'evaluated', token: m.token, id: m.id, pass: false });
+      if (!q.errors.length && (!screenPasses(q, m.targets, m.detail ? CONSTRUCTION_CHECKS : []) || (!m.bare && (q.comp < 1 || !etaInRange(q.eta, m.targets))))) return post({ kind: 'evaluated', token: m.token, id: m.id, pass: false });
     }
     // 2. full worksheet
     model.setSection(m.id);
@@ -47,7 +47,7 @@ self.onmessage = (ev: MessageEvent<ToWorker>) => {
     const r = model.results();
     if (r.errors.length) return post({ kind: 'evaluated', token: m.token, id: m.id, pass: false });
     const g = governingSplit(r, m.detail ? CONSTRUCTION_CHECKS : []);
-    return post({ kind: 'evaluated', token: m.token, id: m.id, pass: g.strength.ur <= m.targets.strength && g.deflection.ur <= m.targets.deflection && (m.bare || (r.comp >= 1 && r.eta >= (m.targets.etaMin ?? 0) - 1e-9)), composite: r.comp >= 1, eta: r.eta, ...g });
+    return post({ kind: 'evaluated', token: m.token, id: m.id, pass: g.strength.ur <= m.targets.strength && g.deflection.ur <= m.targets.deflection && (m.bare || (r.comp >= 1 && etaInRange(r.eta, m.targets))), composite: r.comp >= 1, eta: r.eta, ...g });
   }
   if (m.kind === 'input') model.setInput(m.id, m.value);
   else if (m.kind === 'section') model.setSection(m.id);
