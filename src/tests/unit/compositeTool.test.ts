@@ -224,4 +224,35 @@ describe('mCompositeBeamDesign headless model', () => {
     cmp(r, ref.parallel);
     expect([r.sA, r.sB, r.cbb, r.ape, r.LLT]).toEqual([125, 200, 1, 0, 8]);
   }, 120_000);
+
+  // Published example: Steel Buildings in Europe, Multi-storey Part 4, A.3 (secondary beam, IPE 270 S355, L 7.5 m,
+  // 120 slab on a 58 mm transverse deck, b_0 82 mm, 19 x 100 studs, C25/30). Slab weight set to its 7.2 kN/m.
+  it('steel deck mode reproduces the published SBE Part 4 example A.3', () => {
+    const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+    const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
+    m.setSection(sections.find((x) => x.name === 'IPE 270')!.id);
+    set('L', 7.5); set('s_b', 3); set('h_c', 120); set('c_{deck}', 1); set('h_p', 58); set('b_r', 82); set('e_r', 207); set('n_r', 1);
+    set('f_{ck}', 25); set('E_{cm}', 31); set('g_p', 0); set('\\rho_c', 7.2 / (3 * (0.12 - 0.058 * (1 - 82 / 207))));
+    set('s_{sc.A}', 207); set('s_{sc.B}', 207); // 36 studs on the beam, 18 per shear span
+    m.setTableRows(m.tables[0].id, [['G', '0', '7.5', '0.75', ''], ['Q', '0', '7.5', '2.5', '']]);
+    m.setTableRows(m.tables[1].id, []);
+    const r = m.results();
+    expect(r.errors).toEqual([]);
+    expect(r.M2).toBeCloseTo(172.2, 1); // M_Ed
+    expect(r.kt).toBeCloseTo(0.717, 3); // (6.23)
+    expect(r.PRd).toBeCloseTo(52.86, 1);
+    expect(r.nh).toBe(18);
+    expect(r.NcRd).toBeCloseTo(1647, 0); // 0.85 f_cd b_eff (h - h_p)
+    expect(r.Ncf).toBeCloseTo(1631, 0); // N_pl,a governs
+    expect(r.Nc / 952).toBeCloseTo(1, 2);
+    expect(r.etaMin).toBeCloseTo(0.475, 9);
+    expect(r.eta).toBeCloseTo(0.583, 3); // published 0.578 = 952 / 1647 (concrete force, not the smaller N_pl,a)
+    expect(r.ya).toBeCloseTo(7, 0); // PNA 263 mm above the bottom of the 270 mm section
+    expect(r.vLEd).toBeCloseTo(2.05, 1); // a-a, h_f = 62 mm
+    // published M_Rd 301.7 kNm puts N_c at mid-depth of the 62 mm topping; here N_c acts at x_c / 2 (§6.2.1.3)
+    expect(r.MRdpl).toBeCloseTo(314.9, 0);
+    expect((r.MRdpl - (r.Nc * (62 / 2 - r.xc / 2)) / 1000) / 301.7).toBeCloseTo(1, 2); // 302.4, +0.2 %
+    expect(r.MRd).toBeLessThan(301.7); // design value: linear interaction (6.3), conservative
+  }, 120_000);
 });
+

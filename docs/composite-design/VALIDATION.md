@@ -139,3 +139,25 @@ Reference: M_1,Ed 42.77 kNm, UR_LT 0.216, δ_1 1.15 mm, δ_g 4.75 mm (on I_L), �
 
 `app-export/Composite_Beam_EC4_RevE_app.pdf` (22 pages) was exported by the app and every page was
 inspected; `app-pages-contact.png` shows all pages.
+
+## Profiled steel deck: SBE Part 4, example A.3 (published)
+
+IPE 270 S355, L 7.5 m, spacing 3 m, 120 slab on a 58 mm transverse deck (b_0 82 mm), one 19 x 100 stud per rib, 36 studs, C25/30.
+Run through the worksheet in deck mode (compositeTool.test.ts).
+
+| Quantity | Published | Worksheet | Note |
+|---|---|---|---|
+| M_Ed | 172.2 kNm | 172.16 kNm | match |
+| k_t (6.23) | 0.717 | 0.7166 | match (published limit 0.75 is for holed sheeting; not governing) |
+| P_Rd | 52.86 kN | 52.84 kN | match |
+| N_c,Rd / N_pl,a | 1647 / 1631 kN | 1646.9 / 1631.0 kN | match |
+| N_c (18 studs) | 952 kN | 951.1 kN | match |
+| η | 0.578 | 0.583 | published divides by 1647; worksheet by min(N_c,Rd, N_pl,a) |
+| η_min (6.12) | 0.475 | 0.475 | match |
+| Steel PNA | 263 mm from the bottom | 7.1 mm below the top (262.9) | match |
+| v_Ed on a-a, h_f 62 mm | 2.05 MPa | 2.06 MPa | match (published averages over the shear span) |
+| M_Rd rigid-plastic | 301.7 kNm | 314.9 kNm | published puts N_c at mid-depth of the topping; with that lever the worksheet gives 302.4 (+0.2 %) |
+| M_Rd used in design | – | 285.0 kNm | linear interaction (6.3), conservative |
+
+Clause wording checked against published text: k_t / Table 6.2 limits (0.85, 1.0, 0.70 through-deck), h_p ≤ 85 mm, b_0 ≥ h_p, and the §6.6.1.2(3) conditions for (6.16).
+
