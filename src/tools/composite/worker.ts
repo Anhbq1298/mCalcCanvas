@@ -13,7 +13,7 @@ export type ToWorker =
   | { kind: 'report'; request: number } | { kind: 'hello' }
   // optimizer pool: copy the page's inputs, then check one section at a time
   | { kind: 'state'; values: Record<string, number>; tables: { id: string; rows: string[][] }[] }
-  | { kind: 'evaluate'; id: number; sc: number; scB: number; bar: number; sf?: number; bare: boolean; detail?: boolean; token: number; targets: Targets };
+  | { kind: 'evaluate'; id: number; sc: number; scB: number; bar: number; sf?: number; nr?: number; bare: boolean; detail?: boolean; token: number; targets: Targets };
 
 export type { OptimizeResult } from './model';
 

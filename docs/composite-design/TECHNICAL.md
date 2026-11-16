@@ -209,3 +209,20 @@ Annex: the general force model and branch boundaries.
 - Optimizer dialog: family, h_max, target max UR for strength (all checks except SLS_CHECKS) and for
   deflection (d.1, d.x / d.nc), precamber (the worksheet input). The result shows both governing checks and is
   applied with "Use <section>".
+
+## Profiled steel deck (worksheet 1.11)
+
+- `c_deck` 0 = solid slab (default, results unchanged), 1 = composite slab on a deck; `c_par` 0 = ribs transverse, 1 = parallel.
+- h_c is the overall depth; h_t = h_c − h_p is the concrete above the deck. Rib concrete counts for weight only
+  (g_c = ρ_c s_b (h_c − h_p (1 − b_r/e_r)) + g_p s_b); it is neglected for N_c,Rd, the transformed sections and I_dyn in both
+  orientations (§6.2.1.2(1)(d); conservative for parallel ribs).
+- Studs: P_Rd = k_d × solid value; k_t (6.23) ≤ Table 6.2 (through-deck welding, d ≤ 20 mm), f_u ≤ 450 MPa; k_l (6.22).
+  Transverse ribs: n_r studs per rib, spacing in effect = nearest multiple of the pitch. η_min: (6.16) when §6.6.1.2(3) is met, else (6.12).
+- §6.6.5.5(2) flange limit (22 / 15 t_f ε) now applies only when the flange is not Class 1 by itself (both slab types).
+- Longitudinal shear: h_f = h_t on a-a; l_b = 2(h_sc − h_p) + d_head + b_0; b-b not required with transverse ribs (§6.6.6.4(2));
+  optional deck contribution A_pe f_yp,d on a-a (6.25). cot θ is chosen with a 0.1 % margin so the strut UR is 0.999, not 1.000.
+- Construction: a transverse deck fixed to the flange gives L_LT = e_r (c_LT.d, SCI P300 practice).
+- Not covered: (6.26) discontinuous deck, two-stud transverse spacing, deck as formwork, slab design, re-entrant profile drawing.
+- Verification: `tools/templates/reference_deck.py` (hand calculation) → `reference_deck.json`, compared in compositeTool.test.ts;
+  the SCI P354 example section (UB 406x178x67, 130 slab on 60 deck) gives I_dyn 81 759 cm4 against 81 745 published.
+

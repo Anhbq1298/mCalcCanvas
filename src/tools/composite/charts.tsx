@@ -312,12 +312,76 @@ export function PointDrawing({ L, points }: { L: number; points: PointLoad[] }) 
  * Partial interaction gives two neutral axes: the concrete is stressed to x_c, the steel PNA is y_a
  * below the steel top (worksheet §EC4 6.2.1.3, k_M = 0 slab, 1 flange, 2 fillet, 3 web).
  */
+/**
+ * Open trapezoidal deck, schematic: concrete ribs of mean width br at pitch er sit on the flange, one centred on c.
+ * Returns the voids under the crests between the ribs as quads [x, y], y up from the flange, covering xa … xb.
+ */
+function deckVoids(xa: number, xb: number, c: number, hp: number, br: number, er: number): [number, number][][] {
+  if (!(hp > 0 && er > 0 && br > 0 && br < er)) return [];
+  const t = Math.min(0.15 * hp, ((er - br) / 2) * 0.6);
+  const out: [number, number][][] = [];
+  for (let k = Math.floor((xa - c) / er) - 1; c + k * er < xb + er; k++) {
+    const x0 = c + k * er, x1 = x0 + er;
+    out.push([[x0 + br / 2 - t, 0], [x0 + br / 2 + t, hp], [x1 - br / 2 - t, hp], [x1 - br / 2 + t, 0]]);
+  }
+  return out;
+}
+
+/** Deck profile with its dimensions (two pitches, a stud in the first rib), for the Define deck dialog. */
+export function DeckProfile({ hc, hp, br, er, hsc, dsc, nr }: { hc: number; hp: number; br: number; er: number; hsc: number; dsc: number; nr: number }) {
+  const [box, W] = useWidth(420);
+  const uid = useId().replace(/:/g, '');
+  if (![hc, hp, br, er, hsc].every((v) => Number.isFinite(v) && v > 0) || hp >= hc) return <div ref={box} />;
+  const len = 2 * er, k = Math.min((W - 110) / len, 120 / hc), x0 = 64, top = 26;
+  const X = (x: number) => x0 + x * k, Y = (y: number) => top + (hc - y) * k; // y up from the flange
+  const voids = deckVoids(0, len, er / 2, hp, br, er);
+  const H = Y(0) + 46, ink = C.ink;
+  const d = Math.max(3, (Number.isFinite(dsc) ? dsc : 19) * k);
+  const studs = nr >= 2 ? [er / 2 - br / 4, er / 2 + br / 4] : [er / 2];
+  const tick = (x: number, y: number) => <line key={`${x}${y}`} x1={x - 4} x2={x + 4} y1={y + 4} y2={y - 4} stroke={ink} strokeWidth={1.2} />;
+  const txt = (x: number, y: number, t: string, anchor: 'middle' | 'end' | 'start' = 'middle') => <text x={x} y={y} textAnchor={anchor} fill={ink} stroke="none" fontSize={CAD.font - 1} className="num"><SvgRich text={t} size={CAD.font - 1} /></text>;
+  return (
+    <div ref={box}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={`Deck profile: depth ${fmt(hp, 0)} mm, rib width ${fmt(br, 0)} mm, pitch ${fmt(er, 0)} mm, slab ${fmt(hc, 0)} mm overall`}>
+        <defs><clipPath id={`${uid}k`}><rect x={X(0)} y={top - 2} width={len * k} height={hc * k + 4} /></clipPath></defs>
+        <rect x={X(0)} y={Y(hc)} width={len * k} height={hc * k} fill="#EEF1EF" stroke="#B3BCC1" strokeWidth={0.5} />
+        <g clipPath={`url(#${uid}k)`}>
+          {voids.map((q, i) => <polygon key={i} points={q.map(([x, y]) => `${X(x)},${Y(y)}`).join(' ')} fill={C.sheet} stroke={ink} strokeWidth={CAD.geo} strokeLinejoin="round" />)}
+        </g>
+        <line x1={X(0)} x2={X(len)} y1={Y(0)} y2={Y(0)} stroke={ink} strokeWidth={CAD.geo} />
+        {studs.map((x) => (
+          <g key={x} fill="#C8CBC3" stroke={ink} strokeWidth={0.8}>
+            <rect x={X(x) - d / 2} y={Y(hsc - 10)} width={d} height={(hsc - 10) * k} />
+            <rect x={X(x) - d * 0.85} y={Y(hsc)} width={d * 1.7} height={10 * k} />
+          </g>
+        ))}
+        <g stroke={C.muted} strokeWidth={CAD.dim}>
+          {/* pitch */}
+          <line x1={X(er / 2)} x2={X(1.5 * er)} y1={Y(0) + 30} y2={Y(0) + 30} />
+          {[er / 2, 1.5 * er].map((x) => <g key={x}><line x1={X(x)} x2={X(x)} y1={Y(0) + 4} y2={Y(0) + 35} />{tick(X(x), Y(0) + 30)}</g>)}
+          {txt(X(er), Y(0) + 26, `e_r ${fmt(er, 0)}`)}
+          {/* rib width */}
+          <line x1={X(er / 2 - br / 2)} x2={X(er / 2 + br / 2)} y1={Y(0) + 13} y2={Y(0) + 13} />
+          {[er / 2 - br / 2, er / 2 + br / 2].map((x) => <g key={x}>{tick(X(x), Y(0) + 13)}</g>)}
+          {txt(X(er / 2 + br / 2) + 8, Y(0) + 17, `b_r ${fmt(br, 0)}`, 'start')}
+          {/* depths */}
+          <line x1={x0 - 14} x2={x0 - 14} y1={Y(hc)} y2={Y(0)} />
+          {[hc, hp, 0].map((y) => <g key={y}><line x1={x0 - 20} x2={x0 - 2} y1={Y(y)} y2={Y(y)} />{tick(x0 - 14, Y(y))}</g>)}
+          {txt(x0 - 22, (Y(hc) + Y(hp)) / 2 + 4, `h_t ${fmt(hc - hp, 0)}`, 'end')}
+          {txt(x0 - 22, (Y(hp) + Y(0)) / 2 + 4, `h_p ${fmt(hp, 0)}`, 'end')}
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 export function SectionDrawing({ r }: { r: Record<string, number>; showPna?: boolean }) {
   const [box, W] = useWidth(520);
   const uid = useId().replace(/:/g, '');
   const { h_a, b_a, t_f, t_w, h_c, b_eff } = r;
   if (![h_a, b_a, t_f, t_w, h_c, b_eff].every(Number.isFinite)) return <div ref={box} />;
   const kM = r.kM, xc = Math.min(r.xc, h_c), ya = kM >= 1 ? r.ya : 0;
+  const hpe = r.hpe > 0 ? r.hpe : 0, ribsAcross = hpe > 0 && r.ctr >= 1, ribsAlong = hpe > 0 && !ribsAcross;
   const H = 292, top = 36, depth = 220;
   const total = h_c + h_a;
   const room = Math.min(200, W * 0.36);
@@ -356,6 +420,7 @@ export function SectionDrawing({ r }: { r: Record<string, number>; showPna?: boo
           <pattern id={`${uid}c`} width="14" height="14" patternUnits="userSpaceOnUse">
             <circle cx="3" cy="4" r="0.7" fill={C.muted} /><circle cx="10" cy="10" r="0.6" fill={C.muted} /><path d="M9,2 l2.2,3.4 h-4.4 z M2,9.5 l1.8,2.8 h-3.6 z" fill="none" stroke={C.muted} strokeWidth="0.5" />
           </pattern>
+          <clipPath id={`${uid}k`}><rect x={sL} y={Y(0) - 1} width={slabW} height={h_c * sc + 2} /></clipPath>
           <pattern id={`${uid}s`} width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke={C.ink} strokeWidth="0.45" /></pattern>
           <pattern id={`${uid}b`} width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke={C.blue} strokeWidth="0.8" /></pattern>
           <pattern id={`${uid}r`} width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="5" stroke={C.red} strokeWidth="0.8" /></pattern>
@@ -370,6 +435,14 @@ export function SectionDrawing({ r }: { r: Record<string, number>; showPna?: boo
 
         {/* section */}
         <rect x={sL} y={Y(0)} width={slabW} height={h_c * sc} fill={`url(#${uid}c)`} stroke={C.ink} strokeWidth={CAD.geo} />
+        {/* deck: ribs parallel to the beam are cut by this section; transverse ribs show as the crest line beyond */}
+        {ribsAlong && (
+          <g clipPath={`url(#${uid}k)`}>
+            {deckVoids(-slabW / 2 / sc, slabW / 2 / sc, 0, hpe, r.br, r.er).map((q, i) => <polygon key={i} points={q.map(([x, y]) => `${cx + x * sc},${Y(h_c - y)}`).join(' ')} fill={C.sheet} stroke={C.ink} strokeWidth={CAD.geo} strokeLinejoin="round" />)}
+          </g>
+        )}
+        {ribsAcross && <line x1={sL} x2={sR} y1={Y(h_c - hpe)} y2={Y(h_c - hpe)} stroke={C.ink} strokeWidth={CAD.dim} strokeDasharray="6 3" />}
+        {hpe > 0 && <text x={sR} y={Y(h_c) + 26} textAnchor="end" fill={C.muted} fontSize={CAD.font - 1.5} className="num"><SvgRich text={`deck h_p ${fmt(hpe, 0)}, ribs ${ribsAcross ? 'transverse' : 'parallel'}`} size={CAD.font - 1.5} /></text>}
         {broken && <><path d={brk(sL, -1)} fill={C.sheet} stroke={C.ink} strokeWidth={CAD.dim} /><path d={brk(sR, 1)} fill={C.sheet} stroke={C.ink} strokeWidth={CAD.dim} /></>}
         <path d={steel} fill={`url(#${uid}s)`} stroke={C.ink} strokeWidth={CAD.geo} />
 
@@ -419,8 +492,10 @@ export function SectionDrawing({ r }: { r: Record<string, number>; showPna?: boo
  */
 export function ShearSurface3D({ r, which }: { r: Record<string, number>; which: 'a' | 'b' }) {
   const [box, W] = useWidth(330);
+  const uid = useId().replace(/:/g, '');
   const { h_c, b_a, t_f, t_w, hsc, dhead, b0, dsc } = r;
   if (![h_c, b_a, t_f, t_w, hsc, dhead].every(Number.isFinite)) return <div ref={box} />;
+  const hpe = r.hpe > 0 ? r.hpe : 0, ribsAcross = hpe > 0 && r.ctr >= 1, ribsAlong = hpe > 0 && !ribsAcross; // surfaces start above the deck
   const zx = 0.62, zy = 0.36;
   const depth = W * 0.34; // drawn length along the span
   const segPx = W - 28 - depth * zx; // slab segment width on screen
@@ -441,7 +516,7 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
     const segs = [[xL, xR]];
     return segs.map(([a, b], i) => <line key={`${key}${i}`} x1={a} x2={b} y1={yS} y2={yS} {...rebar} />);
   };
-  const yTopBar = h_c - 30, yBotBar = 30;
+  const yTopBar = h_c - 30, yBotBar = hpe + 30;
   const aX = b_a / 2, bX = dhead / 2 + (b0 || 0) / 2;
   const d = Math.max(3, (Number.isFinite(dsc) ? dsc : 19) * k), hd = dhead * k;
   const H = yBot + t_f * k + 30;
@@ -449,14 +524,14 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
   const top = pts(P(-halfW, h_c, 0), P(halfW, h_c, 0), P(halfW, h_c, depth), P(-halfW, h_c, depth));
   const side = pts(P(halfW, 0, 0), P(halfW, 0, depth), P(halfW, h_c, depth), P(halfW, h_c, 0));
   const surfaces = which === 'a'
-    ? [-aX, aX].map((X) => pts(P(X, 0, 0), P(X, h_c, 0), P(X, h_c, depth), P(X, 0, depth)))
-    : [pts(P(-bX, 0, 0), P(-bX, hsc, 0), P(-bX, hsc, depth), P(-bX, 0, depth)), pts(P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(-bX, hsc, depth)), pts(P(bX, 0, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(bX, 0, depth))];
+    ? [-aX, aX].map((X) => pts(P(X, hpe, 0), P(X, h_c, 0), P(X, h_c, depth), P(X, hpe, depth)))
+    : [pts(P(-bX, hpe, 0), P(-bX, hsc, 0), P(-bX, hsc, depth), P(-bX, hpe, depth)), pts(P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(-bX, hsc, depth)), pts(P(bX, hpe, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(bX, hpe, depth))];
   const barsZ = [0.2, 0.4, 0.6, 0.8, 1].map((f) => f * depth); // five more bars back along the span
   const arrowA = P(-halfW * 0.7, h_c, depth * 0.15), arrowB = P(-halfW * 0.7, h_c, depth * 0.8);
   const ang = (Math.atan2(arrowB[1] - arrowA[1], arrowB[0] - arrowA[0]) * 180) / Math.PI;
   return (
     <div ref={box}>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={which === 'a' ? `Surface a-a: two vertical planes through the slab depth ${fmt(h_c, 0)} mm at the flange edges, along the span, crossed by top and bottom bars` : `Surface b-b: trough around the studs, length ${fmt(r.lb, 0)} mm, along the span, crossed by the bottom bars twice`}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={which === 'a' ? `Surface a-a: two vertical planes through the concrete depth ${fmt(h_c - hpe, 0)} mm at the flange edges, along the span, crossed by top and bottom bars` : `Surface b-b: trough around the studs, length ${fmt(r.lb, 0)} mm, along the span, crossed by the bottom bars twice`}>
         <polygon points={top} fill="#EEF1EF" stroke={slabLine} strokeWidth={slabW} strokeLinejoin="round" />
         <polygon points={side} fill="#DCE1DE" stroke={slabLine} strokeWidth={slabW} strokeLinejoin="round" />
         {/* transverse bars repeated along the span (spacing indicative), seen through the concrete */}
@@ -470,6 +545,14 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
         {surfaces.map((q, i) => <polygon key={i} points={q} fill={col} fillOpacity={0.16} stroke={col} strokeWidth={1.2} strokeDasharray="6 4" strokeLinejoin="round" />)}
         {/* cut face: concrete, steel flange, front stud, bars */}
         <rect x={P(-halfW, 0, 0)[0]} y={yTop} width={segPx} height={yBot - yTop} fill="#F6F8F7" fillOpacity={0.55} stroke={slabLine} strokeWidth={slabW} />
+        {/* deck on the cut face: profile if the ribs run along the beam, crest line if they run across */}
+        {ribsAlong && (
+          <g clipPath={`url(#${uid}k)`}>
+            {deckVoids(-halfW, halfW, 0, hpe, r.br, r.er).map((q, i) => <polygon key={i} points={q.map(([x, y]) => P(x, y, 0).join(',')).join(' ')} fill={C.sheet} stroke={ink} strokeWidth={0.9} strokeLinejoin="round" />)}
+          </g>
+        )}
+        {ribsAcross && <line x1={P(-halfW, 0, 0)[0]} x2={P(halfW, 0, 0)[0]} y1={yBot - hpe * k} y2={yBot - hpe * k} stroke={ink} strokeWidth={0.9} strokeDasharray="6 3" />}
+        <defs><clipPath id={`${uid}k`}><rect x={P(-halfW, 0, 0)[0]} y={yTop} width={segPx} height={yBot - yTop + 1} /></clipPath></defs>
         <rect x={P(-b_a / 2, 0, 0)[0]} y={yBot} width={b_a * k} height={t_f * k} fill="#C8CBC3" stroke={ink} strokeWidth={CAD.geo} />
         <rect x={cx - Math.max(1.5, (t_w * k) / 2)} y={yBot + t_f * k} width={Math.max(3, t_w * k)} height={24} fill="#C8CBC3" stroke={ink} strokeWidth={CAD.geo} />
         {/* cut-face bars first, then the stud over them */}
@@ -480,8 +563,8 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
         </g>
         {/* the surface trace on the cut face, and where the bars cross it */}
         {which === 'a'
-          ? [-aX, aX].map((X) => <line key={X} x1={P(X, 0, 0)[0]} x2={P(X, 0, 0)[0]} y1={yBot} y2={yTop} stroke={col} strokeWidth={2} strokeDasharray="6 4" />)
-          : <polyline points={pts(P(-bX, 0, 0), P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, 0, 0))} fill="none" stroke={col} strokeWidth={2} strokeDasharray="6 4" />}
+          ? [-aX, aX].map((X) => <line key={X} x1={P(X, 0, 0)[0]} x2={P(X, 0, 0)[0]} y1={yBot - hpe * k} y2={yTop} stroke={col} strokeWidth={2} strokeDasharray="6 4" />)
+          : <polyline points={pts(P(-bX, hpe, 0), P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, hpe, 0))} fill="none" stroke={col} strokeWidth={2} strokeDasharray="6 4" />}
         <text x={W - 4} y={yBot + 14} textAnchor="end" fill={C.muted} fontSize={CAD.font - 1}>{`bars @ ${fmt(which === 'b' ? r.sfb : Math.min(r.sft, r.sfb), 0)} mm, indicative`}</text>
         {/* longitudinal shear on the outstand, along the span */}
         <line x1={arrowA[0]} y1={arrowA[1]} x2={arrowB[0]} y2={arrowB[1]} stroke={C.blue} strokeWidth={1.6} />
@@ -499,9 +582,11 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
 /** Longitudinal section: side elevation along the span through a stud line, drawn to scale. */
 export function LongSection({ r }: { r: Record<string, number> }) {
   const [box, W] = useWidth(720);
+  const uid = useId().replace(/:/g, '');
   const { h_c, t_f, hsc, dhead, dsc, dsb, dst, sfb, sft } = r;
   if (![h_c, t_f, hsc, dhead, sfb].every(Number.isFinite)) return <div ref={box} />;
-  const n = 4, pitch = sfb, lenMm = n * pitch;
+  const hpe = r.hpe > 0 ? r.hpe : 0, across = hpe > 0 && r.ctr >= 1 && r.er > 0; // transverse ribs are cut by this section
+  const n = 4, pitch = across ? r.er : sfb, lenMm = n * pitch;
   const ink = C.ink, teal = '#0F766E', slabLine = '#B3BCC1', slabW = 0.35;
   const dStud = Number.isFinite(dsc) ? dsc : 19;
   const k = Math.min((W - 80) / lenMm, 300 / (hsc + h_c + t_f));
@@ -509,13 +594,15 @@ export function LongSection({ r }: { r: Record<string, number> }) {
   const yOf = (Y: number) => top + (h_c - Y) * k; // Y in mm above the slab soffit
   const X = (x: number) => x0 + x * k;
   const H = yOf(-t_f) + 96;
-  const bottomBar = 30, topBar = h_c - 30;
-  const studX = Array.from({ length: n }, (_, i) => i * pitch + pitch / 2);
+  const bottomBar = hpe + 30, topBar = h_c - 30;
+  const every = across ? Math.max(1, Math.round(r.sA / r.er)) : 1; // studs in every rib, or every second …
+  const studX = Array.from({ length: n }, (_, i) => i).filter((i) => i % every === 0).map((i) => i * pitch + pitch / 2);
+  const botBars = across ? Array.from({ length: Math.floor(lenMm / sfb) + 1 }, (_, j) => j * sfb) : Array.from({ length: n + 1 }, (_, j) => j * pitch);
   const dimY = yOf(-t_f) + 22; // stud spacing dimension sits under the flange
   const hasTop = Number.isFinite(sft) && sft > 0 && Number.isFinite(dst);
   const hasBot = Number.isFinite(dsb);
   const topX = hasTop ? X(sft) : 0;
-  const botX = X(3 * pitch); // a bar between studs clear of the stud-spacing dimension
+  const botX = X(across ? botBars[Math.min(botBars.length - 1, Math.round((0.72 * lenMm) / sfb))] : 3 * pitch); // a bar clear of the stud-spacing dimension
   const belowY = yOf(-t_f) + 62;
   return (
     <div ref={box}>
@@ -523,12 +610,20 @@ export function LongSection({ r }: { r: Record<string, number> }) {
         {/* slab, steel top flange and studs cut on the section line */}
         <rect x={X(0)} y={yOf(h_c)} width={lenMm * k} height={h_c * k} fill="#F6F8F7" stroke={slabLine} strokeWidth={slabW} />
         {/* shear surface: a-a along the whole slab depth, b-b over the stud height */}
-        <rect x={X(0)} y={yOf(h_c)} width={lenMm * k} height={h_c * k} fill={C.red} fillOpacity={0.1} />
-        <rect x={X(0)} y={yOf(hsc)} width={lenMm * k} height={hsc * k} fill={teal} fillOpacity={0.16} stroke={teal} strokeWidth={1} />
+        <rect x={X(0)} y={yOf(h_c)} width={lenMm * k} height={(h_c - hpe) * k} fill={C.red} fillOpacity={0.1} />
+        {!across && <rect x={X(0)} y={yOf(hsc)} width={lenMm * k} height={(hsc - hpe) * k} fill={teal} fillOpacity={0.16} stroke={teal} strokeWidth={1} />}
+        {/* deck: transverse ribs cut by the section (voids under the crests); parallel ribs show as the crest line beyond */}
+        <defs><clipPath id={`${uid}k`}><rect x={X(0)} y={yOf(h_c)} width={lenMm * k} height={h_c * k + 1} /></clipPath></defs>
+        {across && (
+          <g clipPath={`url(#${uid}k)`}>
+            {deckVoids(0, lenMm, pitch / 2, hpe, r.br, r.er).map((q, i) => <polygon key={i} points={q.map(([x, y]) => `${X(x)},${yOf(y)}`).join(' ')} fill={C.sheet} stroke={ink} strokeWidth={0.9} strokeLinejoin="round" />)}
+          </g>
+        )}
+        {hpe > 0 && !across && <line x1={X(0)} x2={X(lenMm)} y1={yOf(hpe)} y2={yOf(hpe)} stroke={ink} strokeWidth={0.9} strokeDasharray="6 3" />}
         <rect x={X(0)} y={yOf(0)} width={lenMm * k} height={t_f * k} fill="#C8CBC3" stroke={ink} strokeWidth={CAD.geo} />
         {/* transverse bars cut by the section: dots at both bar levels, between the studs */}
-        {Array.from({ length: n + 1 }, (_, j) => (
-          <circle key={`b${j}`} cx={X(j * pitch)} cy={yOf(bottomBar)} r={3.2} fill={ink} />
+        {botBars.map((x, j) => (
+          <circle key={`b${j}`} cx={X(x)} cy={yOf(bottomBar)} r={3.2} fill={ink} />
         ))}
         {hasTop && Array.from({ length: Math.floor(lenMm / sft) + 1 }, (_, j) => (
           <circle key={`t${j}`} cx={X(j * sft)} cy={yOf(topBar)} r={3.2} fill={ink} />
@@ -542,14 +637,16 @@ export function LongSection({ r }: { r: Record<string, number> }) {
         ))}
         {/* dimensions: stud spacing and slab depth */}
         <g stroke={C.muted} strokeWidth={CAD.dim}>
+          {studX.length > 1 && <>
           <line x1={X(studX[0])} x2={X(studX[1])} y1={dimY} y2={dimY} />
           <line x1={X(studX[0])} x2={X(studX[0])} y1={dimY - 4} y2={dimY + 4} />
           <line x1={X(studX[1])} x2={X(studX[1])} y1={dimY - 4} y2={dimY + 4} />
+          </>}
           <line x1={X(0) - 14} x2={X(0) - 14} y1={yOf(h_c)} y2={yOf(0)} />
           <line x1={X(0) - 18} x2={X(0) - 10} y1={yOf(h_c)} y2={yOf(h_c)} />
           <line x1={X(0) - 18} x2={X(0) - 10} y1={yOf(0)} y2={yOf(0)} />
         </g>
-        <text x={(X(studX[0]) + X(studX[1])) / 2} y={dimY + 13} textAnchor="middle" fill={C.muted} fontSize={CAD.font - 1}><SvgRich text="s_{f.b}" size={CAD.font - 1} /></text>
+        {studX.length > 1 && <text x={(X(studX[0]) + X(studX[1])) / 2} y={dimY + 13} textAnchor="middle" fill={C.muted} fontSize={CAD.font - 1}><SvgRich text={across ? `s_A = ${fmt(r.sA, 0)} mm` : 's_{f.b}'} size={CAD.font - 1} /></text>}
         <text x={X(0) - 18} y={(yOf(h_c) + yOf(0)) / 2} textAnchor="end" dominantBaseline="middle" fill={C.muted} fontSize={CAD.font - 1}><SvgRich text="h_c" size={CAD.font - 1} /></text>
         {/* rebar callouts: leader from the bar, text kept outside the concrete */}
         {hasTop && (

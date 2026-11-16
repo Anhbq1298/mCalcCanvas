@@ -50,6 +50,9 @@ const SCALARS: Probe[] = [
   ['fsd', 'f_{sd}', 'MPa'], ['vf', 'v_f', 'kN/m'], ['vLEd', 'v_{L.Ed}', 'MPa'], ['asfReq', 'a_{sf.req}', 'mm^2/m'], ['asf', 'a_{sf}', 'mm^2/m'], ['vLRd', 'v_{L.Rd}', 'MPa'], ['vmax', 'v_{max}', 'MPa'], ['cta', 'c_{\\theta.a}', null], ['ctb', 'c_{\\theta.b}', null], ['vbRd', 'v_{b.Rd}', 'MPa'], ['dst', 'd_{s.t}', 'mm'], ['sft', 's_{f.t}', 'mm'], ['dsb', 'd_{s.b}', 'mm'], ['sfb', 's_{f.b}', 'mm'],
   ['at', 'a_t', 'mm^2/m'], ['ab', 'a_b', 'mm^2/m'], ['lb', 'l_b', 'mm'], ['vbEd', 'v_{b.Ed}', 'MPa'], ['asbReq', 'a_{sf.b.req}', 'mm^2/m'], ['asb', 'a_{sf.b}', 'mm^2/m'],
   ['dhead', 'd_{head}', 'mm'], ['hsc', 'h_{sc}', 'mm'], ['dsc', 'd_{sc}', 'mm'], ['b0', 'b_0', 'mm'],
+  // profiled steel deck (all neutral for a solid slab: h_pe = 0, k_d = 1, n_re = 1)
+  ['cdeck', 'c_{deck}', null], ['ctr', 'c_{tr}', null], ['hpe', 'h_{pe}', 'mm'], ['ht', 'h_t', 'mm'], ['br', 'b_r', 'mm'], ['er', 'e_r', 'mm'], ['kd', 'k_d', null], ['kt', 'k_t', null], ['kl', 'k_l', null], ['ktmax', 'k_{t.max}', null],
+  ['nre', 'n_{re}', null], ['sA', 's_A', 'mm'], ['sB', 's_B', 'mm'], ['ape', 'a_{pe}', 'mm^2/m'], ['cbb', 'c_{bb}', null], ['Idyn', 'I_{dyn}', 'cm^4'], ['NcRd', 'N_{c.Rd}', 'kN'], ['LLT', 'L_{LT}', 'm'], ['smax', 's_{max}', 'mm'], ['c16', 'c_{16}', null],
   // deflection
   ['dmax', '\\delta_{max}', 'mm'], ['wc', 'w_c', 'mm'], ['ccam', 'c_{cam}', null], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['f1', 'f_1', 'Hz'], ['f1nc', 'f_{1.nc}', 'Hz'], ['flim', 'f_{lim}', 'Hz'], ['Ecdyn', 'E_{c.dyn}', 'GPa'], ['ddyn', '\\delta_{dyn}', 'mm'], ['ddynnc', '\\delta_{dyn.nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
 ];
@@ -94,7 +97,7 @@ export interface Targets { strength: number; deflection: number }
 export interface Governing { ur: number; key: string; label: string }
 export interface OptimizeResult {
   family: string; maxDepth: number | null; targets: Targets; tried: number; total: number;
-  best: { id: number; name: string; mass: number; h: number; sc: number; bar: number; sf?: number; composite: boolean; strength: Governing; deflection: Governing } | null;
+  best: { id: number; name: string; mass: number; h: number; sc: number; bar: number; sf?: number; nr?: number; composite: boolean; strength: Governing; deflection: Governing } | null;
 }
 
 /** Detail choices the optimiser tries for every section: uniform stud spacing and both transverse bar diameters. */
@@ -103,18 +106,23 @@ export const BAR_DIAMETERS = [10, 12, 13]; // mm, smallest first
 export const DETAIL_INPUTS = { scA: 's_{sc.A}', scB: 's_{sc.B}', barT: 'd_{s.t}', barB: 'd_{s.b}' } as const;
 
 /** bare: the bare-steel fallback (current stud and bar details, composite action not required). */
-export interface Candidate { id: number; name: string; mass: number; h: number; sc: number; scB: number; bar: number; bare: boolean; sf?: number }
+export interface Candidate { id: number; name: string; mass: number; h: number; sc: number; scB: number; bar: number; bare: boolean; sf?: number; nr?: number }
+
+/** Stud layouts tried, cheapest first. Transverse deck (pitch given): studs sit in the ribs, so alternate ribs, every rib, then two per rib. */
+export function studLayouts(pitch?: number): { sc: number; nr?: number }[] {
+  return pitch ? [{ sc: 2 * pitch, nr: 1 }, { sc: pitch, nr: 1 }, { sc: pitch, nr: 2 }] : STUD_SPACINGS.map((sc) => ({ sc }));
+}
 
 /**
  * Composite designs first: every section × bar × spacing, lightest section first, cheapest detail first within a
  * section, each one required to reach composite action. Only when none passes, the sections again as bare steel
  * with the details as they are now (stud spacing and bars then have no effect).
  */
-export function candidatesFor(secs: { id: number; name: string; values: { mass: number; h: number } }[], current: { sc: number; scB: number; bar: number }): Candidate[] {
+export function candidatesFor(secs: { id: number; name: string; values: { mass: number; h: number } }[], current: { sc: number; scB: number; bar: number; nr?: number }, pitch?: number): Candidate[] {
   const c = (s: (typeof secs)[number], sc: number, scB: number, bar: number, bare: boolean): Candidate => ({ id: s.id, name: s.name, mass: s.values.mass, h: s.values.h, sc, scB, bar, bare });
   return [
-    ...secs.flatMap((s) => BAR_DIAMETERS.flatMap((bar) => STUD_SPACINGS.map((sc) => c(s, sc, sc, bar, false)))),
-    ...secs.map((s) => c(s, current.sc, current.scB, current.bar, true)),
+    ...secs.flatMap((s) => BAR_DIAMETERS.flatMap((bar) => studLayouts(pitch).map((l) => ({ ...c(s, l.sc, l.sc, bar, false), ...(l.nr ? { nr: l.nr } : {}) })))),
+    ...secs.map((s) => ({ ...c(s, current.sc, current.scB, current.bar, true), ...(pitch && current.nr ? { nr: current.nr } : {}) })),
   ];
 }
 
@@ -230,13 +238,14 @@ export class CompositeModel {
   }
 
   /** Write one detail candidate into the worksheet: uniform stud spacing and both bar diameters. */
-  setDetail(c: { sc: number; bar: number; scB?: number; sf?: number }): void {
+  setDetail(c: { sc: number; bar: number; scB?: number; sf?: number; nr?: number }): void {
     const id = (name: string) => this.inputs.find((f) => f.name === name)!.id;
     this.setInput(id(DETAIL_INPUTS.scA), c.sc);
     this.setInput(id(DETAIL_INPUTS.scB), c.scB ?? c.sc);
     this.setInput(id(DETAIL_INPUTS.barT), c.bar);
     this.setInput(id(DETAIL_INPUTS.barB), c.bar);
     if (c.sf !== undefined) { this.setInput(id('s_{f.t}'), c.sf); this.setInput(id('s_{f.b}'), c.sf); }
+    if (c.nr !== undefined) this.setInput(id('n_r'), c.nr);
   }
 
   detail(): { sc: number; scB: number; bar: number } {

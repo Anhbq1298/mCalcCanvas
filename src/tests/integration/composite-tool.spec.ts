@@ -69,3 +69,17 @@ test('mCompositeBeamDesign optimizes the section in a dialog with strength and d
   await expect(page.getByTestId('section-select').locator('option:checked')).toHaveText(chosen, { timeout: 30_000 });
   await expect(page.locator('.status')).toHaveText('Up to date', { timeout: 30_000 });
 });
+
+test('slab type: filled steel deck with transverse ribs reduces the studs and drops surface b-b', async ({ page }) => {
+  await page.goto('/composite/');
+  await expect(page.getByTestId('ur-max')).toHaveText(/\d\.\d{3}/, { timeout: 60_000 });
+  await expect(page.getByTestId('deck-open')).toHaveCount(0); // solid slab by default
+  await page.getByTestId('slab-type').selectOption('deck');
+  await expect(page.getByTestId('bb-note')).toContainText('not required', { timeout: 30_000 });
+  await page.getByTestId('deck-open').click();
+  await expect(page.locator('dialog[open]')).toContainText('(6.23)');
+  await page.locator('dialog[open] .btn.primary').click();
+  await page.getByTestId('deck-dir').selectOption('par');
+  await expect(page.getByTestId('bb-note')).toHaveCount(0, { timeout: 30_000 });
+});
+

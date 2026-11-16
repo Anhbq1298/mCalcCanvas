@@ -8,9 +8,9 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { sections } from '../../engineering/steel/sections';
-import { BAR_DIAMETERS, CHECKS, candidatesFor, governingCheck, type InputField, type LoadTable, type Results } from './model';
+import { BAR_DIAMETERS, CHECKS, candidatesFor, governingCheck, studLayouts, type InputField, type LoadTable, type Results } from './model';
 import type { OptimizeResult, ToWorker } from './worker';
-import { Legend, LineChart, LongSection, PointDrawing, SectionDrawing, ShearSurface3D, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
+import { DeckProfile, Legend, LineChart, LongSection, PointDrawing, SectionDrawing, ShearSurface3D, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
 import { headerParts } from '../../canvas/inputTable';
 import { C, fmt } from './format';
 import { optimizeParallel, warmOptimizer } from './optimizer';
@@ -103,6 +103,7 @@ export function App() {
   const loadRef = useRef<HTMLDialogElement>(null);
   const [detailMsg, setDetailMsg] = useState<Record<string, { running: boolean; text: string }>>({});
   const factorRef = useRef<HTMLDialogElement>(null);
+  const deckRef = useRef<HTMLDialogElement>(null);
   const [opt, setOpt] = useState<{ running: boolean; i?: number; n?: number; name?: string; result?: OptimizeResult; seconds?: number } | null>(null);
   const reportReq = useRef(0);
   const reportCb = useRef<((doc: unknown) => void) | null>(null);
@@ -167,7 +168,13 @@ export function App() {
   const gammaOf = (q: boolean) => { const f = inputs.find((x) => x.name === (q ? '\\gamma_Q' : '\\gamma_G')); return f ? value(f) : q ? 1.5 : 1.35; };
   const factorCol = (t: LoadTable) => t.headers.findIndex((h) => /gamma_\{?F/.test(h));
   const isFactors = (g: string) => /^Partial and combination factors/.test(g);
-  const groups = [...inputs.reduce((g, f) => g.set(f.group, [...(g.get(f.group) ?? []), f]), new Map<string, InputField[]>()).entries()];
+  const isDeck = (g: string) => /^Slab type and profiled steel deck/.test(g);
+  const byName = (name: string) => inputs.find((f) => f.name === name)!;
+  const deck = value(byName('c_{deck}')) >= 1, parallel = deck && value(byName('c_{par}')) >= 1, transverse = deck && !parallel;
+  const pitch = transverse ? value(byName('e_r')) : undefined;
+  const allGroups = [...inputs.reduce((g, f) => g.set(f.group, [...(g.get(f.group) ?? []), f]), new Map<string, InputField[]>()).entries()];
+  // the slab type comes right after the geometry, wherever its inputs sit in the worksheet
+  const groups = [...allGroups.filter(([g]) => /^Geometry/.test(g)), ...allGroups.filter(([g]) => /^Slab type and profiled steel deck/.test(g)), ...allGroups.filter(([g]) => !/^Geometry/.test(g) && !/^Slab type and profiled steel deck/.test(g))];
   const sb = value(inputs.find((f) => f.name === 's_b')!);
   const [areaT, pointT] = tables;
   const filled = (r: string[]) => r.slice(1).some((x) => x.trim());
@@ -266,35 +273,35 @@ export function App() {
     const base = { id: sec.id, name: sec.name, mass: sec.values.mass, h: sec.values.h };
     const spacings = [200, 175, 150, 125, 100];
     const cands = kind === 'studs'
-      ? spacings.map((sc) => ({ ...base, sc, scB: sc, bar: cur.bar, bare: false }))
+      ? studLayouts(pitch).map((l) => ({ ...base, sc: l.sc, scB: l.sc, bar: cur.bar, bare: false, ...(l.nr ? { nr: l.nr } : {}) }))
       : BAR_DIAMETERS.filter((d) => d >= cur.bar).flatMap((bar) => spacings.map((sf) => ({ ...base, sc: cur.sc, scB: cur.scB, bar, sf, bare: true })));
     setDetailMsg((m) => ({ ...m, [kind]: { running: true, text: 'Checking…' } }));
     const r = await optimizeParallel(sec.family, cands, null, { strength: 1, deflection: 1 }, { values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) }, () => undefined, true);
     const b = r.best;
-    if (!b) { setDetailMsg((m) => ({ ...m, [kind]: { running: false, text: kind === 'studs' ? 'No uniform spacing from 200 to 100 mm satisfies every check with composite action.' : 'No rebar spacing from 200 to 100 mm (Ø up to 13) satisfies every check.' } })); return; }
+    if (!b) { setDetailMsg((m) => ({ ...m, [kind]: { running: false, text: kind === 'studs' ? (pitch ? 'No layout (alternate ribs, every rib, two per rib) satisfies every check with composite action.' : 'No uniform spacing from 200 to 100 mm satisfies every check with composite action.') : 'No rebar spacing from 200 to 100 mm (Ø up to 13) satisfies every check.' } })); return; }
     const set = (name: string, v: number) => { const f = inputs.find((x) => x.name === name); if (f && value(f) !== v) setInput(f, v); };
-    if (kind === 'studs') { set('s_{sc.A}', b.sc); set('s_{sc.B}', b.sc); }
+    if (kind === 'studs') { set('s_{sc.A}', b.sc); set('s_{sc.B}', b.sc); if (b.nr) set('n_r', b.nr); }
     else { set('d_{s.t}', b.bar); set('d_{s.b}', b.bar); set('s_{f.t}', b.sf!); set('s_{f.b}', b.sf!); }
     const ur = Math.max(b.strength.ur, b.deflection.ur);
-    setDetailMsg((m) => ({ ...m, [kind]: { running: false, text: kind === 'studs' ? `Set to ${b.sc} mm (widest spacing that passes); permanent-stage governing UR ${fmt(ur, 3)}.` : `Set to Ø${b.bar} @ ${b.sf} mm (top and bottom); permanent-stage governing UR ${fmt(ur, 3)}.` } }));
+    setDetailMsg((m) => ({ ...m, [kind]: { running: false, text: kind === 'studs' ? `Set to ${b.sc} mm${b.nr ? `, ${b.nr} per rib` : ''} (fewest studs that pass); permanent-stage governing UR ${fmt(ur, 3)}.` : `Set to Ø${b.bar} @ ${b.sf} mm (top and bottom); permanent-stage governing UR ${fmt(ur, 3)}.` } }));
   };
   const runOptimize = async () => {
     const maxDepth = hMax.trim() ? Number(hMax) : null;
     const targets = { strength: Number(tStrength), deflection: Number(tDefl) };
     const dv = (name: string) => value(inputs.find((x) => x.name === name)!);
-    const current = { sc: dv('s_{sc.A}'), scB: dv('s_{sc.B}'), bar: dv('d_{s.t}') };
+    const current = { sc: dv('s_{sc.A}'), scB: dv('s_{sc.B}'), bar: dv('d_{s.t}'), nr: dv('n_r') };
     const cands = candidatesFor(sections
       .filter((x) => x.family === optFamily && Number.isFinite(x.values.mass) && (maxDepth === null || x.values.h <= maxDepth + 1e-9))
-      .sort((a, b) => a.values.mass - b.values.mass), current);
+      .sort((a, b) => a.values.mass - b.values.mass), current, pitch);
     setOpt({ running: true });
     const t0 = performance.now();
     const result = await optimizeParallel(optFamily, cands, maxDepth, targets, { values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) }, (i, n, name) => setOpt({ running: true, i, n, name }));
     setOpt({ running: false, result, seconds: (performance.now() - t0) / 1000 });
   };
   const renderField = (f: InputField) =>
-    f.name === 'c_{prop}' ? (
+    ['c_{prop}', 'c_{LT.d}', 'c_{pe}'].includes(f.name) ? (
       <label key={f.id} className={`f check ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
-        <span><Sym latex={f.name} /> <em><Rich text={f.label} /></em></span>
+        <span><Sym latex={f.name} /> <em><Rich text={f.label.replace(/:\s*1 = yes.*$/, '')} /></em></span>
         <input id={`in-${f.id}`} type="checkbox" checked={value(f) >= 1} onChange={(e) => setInput(f, e.target.checked ? 1 : 0)} />
       </label>
     ) : (
@@ -362,7 +369,7 @@ export function App() {
       <a href="#verdict" className="skip">Skip to results</a>
       <header className="titlebar">
         <h1>mComposite <span>BeamDesign</span></h1>
-        <span className="hint">Simply supported composite beam · EN 1994-1-1 · solid slab · mCalcCanvas engine</span>
+        <span className="hint">Simply supported composite beam · EN 1994-1-1 · {deck ? `steel deck, ribs ${parallel ? 'parallel' : 'transverse'}` : 'solid slab'} · mCalcCanvas engine</span>
         <span className={`status ${busy ? 'busy' : ''}`} aria-hidden="true">{busy ? 'Calculating…' : 'Up to date'}</span>
         <div className="exports" role="group" aria-label="Report">
           <button type="button" onClick={undo} disabled={hist.past === 0} className="btn export" title="Undo (Ctrl+Z)">Undo</button>
@@ -398,12 +405,42 @@ export function App() {
             </section>
             {groups.map(([g, fields], gi) => (
               <section key={g} aria-labelledby={`h-group-${gi}`}>
-                <h2 id={`h-group-${gi}`}>{g.replace(/\s*\(.*$/, '')}</h2>
+                <h2 id={`h-group-${gi}`}>{isDeck(g) ? 'Slab type' : g.replace(/\s*\(.*$/, '')}</h2>
                 {isFactors(g) ? (
                   <div className="define-row">
                     <button type="button" className="btn" data-testid="factors-open" onClick={() => factorRef.current?.showModal()}>Define…</button>
                     <span className="hint">{fields.map((f) => <span key={f.id} className="chip"><Sym latex={f.name} /> {fmt(value(f), 2)}</span>)}</span>
                   </div>
+                ) : isDeck(g) ? (
+                  <>
+                    <div className="fields">
+                      <label className="f"><span>Slab type</span>
+                        <select data-testid="slab-type" value={deck ? 'deck' : 'solid'} onChange={(e) => setInput(byName('c_{deck}'), e.target.value === 'deck' ? 1 : 0)}>
+                          <option value="solid">Solid slab</option>
+                          <option value="deck">Filled steel deck</option>
+                        </select>
+                      </label>
+                      {deck && (
+                        <label className="f"><span>Deck ribs</span>
+                          <select data-testid="deck-dir" value={parallel ? 'par' : 'tr'} onChange={(e) => setInput(byName('c_{par}'), e.target.value === 'par' ? 1 : 0)}>
+                            <option value="tr">Transverse to the beam</option>
+                            <option value="par">Parallel to the beam</option>
+                          </select>
+                        </label>
+                      )}
+                    </div>
+                    {deck && (
+                      <div className="define-row">
+                        <button type="button" className="btn" data-testid="deck-open" onClick={() => deckRef.current?.showModal()}>Define deck…</button>
+                        <span className="hint">
+                          {['h_p', 'b_r', 'e_r', 't_p'].map((n) => <span key={n} className="chip"><Sym latex={n} /> {fmt(value(byName(n)), n === 't_p' ? 2 : 0)}</span>)}
+                          {transverse && <span className="chip"><Sym latex="n_r" /> {fmt(value(byName('n_r')), 0)}</span>}
+                          <span className="chip"><Sym latex="k_d" /> {fmt(res.kd, 2)}</span>
+                        </span>
+                      </div>
+                    )}
+                    {deck && <p className="hint">h<sub>c</sub> = {fmt(res.h_c, 0)} mm is the overall depth: {fmt(res.ht, 0)} mm of concrete above a {fmt(res.hpe, 0)} mm deck. P<sub>Rd</sub> = k<sub>d</sub> × solid-slab value = {fmt(res.PRd, 1)} kN ({parallel ? <>k<sub>l</sub>, (6.22)</> : <>k<sub>t</sub>, (6.23), limit {fmt(res.ktmax, 2)}</>}).{transverse && <> Studs sit in the ribs: spacing in effect {fmt(res.sA, 0)} / {fmt(res.sB, 0)} mm, {fmt(res.nre, 0)} per rib.</>}</p>}
+                  </>
                 ) : (
                   <div className="fields">{fields.map(renderField)}</div>
                 )}
@@ -485,22 +522,28 @@ export function App() {
               <SectionDrawing r={res} showPna />
             </section>
             <section className="sheet-sec" aria-labelledby="h-shear3d">
-              <div className="sec-head"><h2 id="h-shear3d">Longitudinal shear surfaces a-a and b-b</h2><span className="hint">EN 1994-1-1 §6.6.6.1, Figure 6.15; both surfaces run the whole length of the beam</span></div>
+              <div className="sec-head"><h2 id="h-shear3d">Longitudinal shear surfaces a-a and b-b</h2><span className="hint">EN 1994-1-1 §6.6.6.1, Figure 6.15{deck ? ', §6.6.6.4, Figure 6.16' : ''}; the surfaces run the whole length of the beam</span></div>
               <div className="surfaces">
                 <figure>
                   <ShearSurface3D r={res} which="a" />
-                  <figcaption><b className="c-a">a-a</b>: two vertical planes through h<sub>c</sub> = {fmt(res.h_c, 0)} mm at the flange edges; v<sub>f</sub>/2 on each; crossed by top and bottom bars, A<sub>t</sub> + A<sub>b</sub> = {fmt(res.asf, 0)} mm²/m; v<sub>Ed</sub> = {fmt(res.vLEd, 2)} MPa.</figcaption>
+                  <figcaption><b className="c-a">a-a</b>: two vertical planes through {deck ? <>the concrete above the deck, h<sub>t</sub> = {fmt(res.ht, 0)} mm,</> : <>h<sub>c</sub> = {fmt(res.h_c, 0)} mm</>} at the flange edges; v<sub>f</sub>/2 on each; crossed by top and bottom bars, A<sub>t</sub> + A<sub>b</sub> = {fmt(res.asf, 0)} mm²/m{res.ape > 0 ? <>, plus the deck A<sub>pe</sub> = {fmt(res.ape, 0)} mm²/m (6.25)</> : null}; v<sub>Ed</sub> = {fmt(res.vLEd, 2)} MPa.</figcaption>
                 </figure>
-                <figure>
-                  <ShearSurface3D r={res} which="b" />
-                  <figcaption><b className="c-b">b-b</b>: around the studs, l<sub>b</sub> = 2h<sub>sc</sub> + d<sub>head</sub> + b<sub>0</sub> = {fmt(res.lb, 0)} mm; the whole v<sub>f</sub>; crossed by the bottom bars twice, 2A<sub>b</sub> = {fmt(res.asb, 0)} mm²/m; v<sub>Ed</sub> = {fmt(res.vbEd, 2)} MPa.</figcaption>
-                </figure>
+                {res.cbb >= 1 ? (
+                  <figure>
+                    <ShearSurface3D r={res} which="b" />
+                    <figcaption><b className="c-b">b-b</b>: around the studs, l<sub>b</sub> = 2{deck ? <>(h<sub>sc</sub> − h<sub>p</sub>)</> : <>h<sub>sc</sub></>} + d<sub>head</sub> + b<sub>0</sub> = {fmt(res.lb, 0)} mm; the whole v<sub>f</sub>; crossed by the bottom bars twice, 2A<sub>b</sub> = {fmt(res.asb, 0)} mm²/m; v<sub>Ed</sub> = {fmt(res.vbEd, 2)} MPa.</figcaption>
+                  </figure>
+                ) : (
+                  <figure>
+                    <figcaption data-testid="bb-note"><b className="c-b">b-b</b>: not required. With the ribs transverse to the beam and the stud resistance reduced by k<sub>t</sub> = {fmt(res.kd, 2)}, surfaces around the studs need not be checked (EN 1994-1-1 §6.6.6.4(2)).</figcaption>
+                  </figure>
+                )}
                 <figure className="wide">
                   <LongSection r={res} />
-                  <figcaption>Longitudinal section along the span through the studs: stud spacing s<sub>f.b</sub> = {fmt(res.sfb, 0)} mm, slab depth h<sub>c</sub> = {fmt(res.h_c, 0)} mm, drawn to scale. Red band = a-a over the slab depth; teal band = b-b over the stud height.</figcaption>
+                  <figcaption>Longitudinal section along the span through the studs{transverse ? <>: ribs at e<sub>r</sub> = {fmt(res.er, 0)} mm, studs at {fmt(res.sA, 0)} mm ({fmt(res.nre, 0)} per rib)</> : <>: stud spacing s<sub>f.b</sub> = {fmt(res.sfb, 0)} mm</>}, slab depth h<sub>c</sub> = {fmt(res.h_c, 0)} mm, drawn to scale. Red band = a-a over the {deck ? 'concrete above the deck' : 'slab depth'}{res.cbb >= 1 ? '; teal band = b-b over the stud height' : ''}.{parallel ? ' Dashed line = deck crest beside the rib.' : ''}</figcaption>
                 </figure>
               </div>
-              <p className="hint">Front face = cross-section to scale; the length along the span is not. Bars counted must be anchored past each surface (EC2 §8.4). v<sub>f</sub> = P<sub>Rd</sub>/s<sub>min</sub> = {fmt(res.vf, 0)} kN/m pulls the slab outstand along the beam.</p>
+              <p className="hint">Front face = cross-section to scale; the length along the span is not. Bars counted must be anchored past each surface (EC2 §8.4). v<sub>f</sub> = {res.nre > 1 ? `${fmt(res.nre, 0)} ` : ''}P<sub>Rd</sub>/s<sub>min</sub> = {fmt(res.vf, 0)} kN/m pulls the slab outstand along the beam.</p>
             </section>
             <section className="sheet-sec" aria-labelledby="h-defl1">
               <div className="sec-head"><h2 id="h-defl1">Deflection, construction stage (steel alone)</h2><span className="hint">w<sub>1,k</sub> = g<sub>0</sub> + (g<sub>form</sub> + q<sub>con</sub>)·s<sub>b</sub> = {fmt(res.w1k, 2)} kN/m over L<sub>1</sub> = {fmt(res.L1, 2)} m</span></div>
@@ -629,19 +672,19 @@ export function App() {
                 <tr><th scope="col"></th><th scope="col">a-a</th><th scope="col">b-b</th><th scope="col"></th></tr>
               </thead>
               <tbody>
-                <tr><td>Surface length</td><td>2 × {fmt(res.h_c, 0)}</td><td>{fmt(res.lb, 0)}</td><td>mm</td></tr>
+                <tr><td>Surface length</td><td>2 × {fmt(res.ht, 0)}</td><td>{fmt(res.lb, 0)}</td><td>mm</td></tr>
                 <tr><td>Flow on the surface</td><td>v<sub>f</sub>/2 each</td><td>v<sub>f</sub></td><td></td></tr>
                 <tr><td>Shear stress v<sub>Ed</sub></td><td>{fmt(res.vLEd, 3)}</td><td>{fmt(res.vbEd, 3)}</td><td>MPa</td></tr>
                 <tr><td>Strut angle cot θ<sub>f</sub> (auto)</td><td>{fmt(res.cta, 3)}</td><td>{fmt(res.ctb, 3)}</td><td></td></tr>
                 <tr><td>Required a<sub>sf</sub>, (6.21)</td><td>{fmt(res.asfReq, 0)}</td><td>{fmt(res.asbReq, 0)}</td><td>mm²/m</td></tr>
-                <tr><td>Bars counted</td><td>A<sub>t</sub> + A<sub>b</sub></td><td>2A<sub>b</sub></td><td></td></tr>
+                <tr><td>Bars counted</td><td>A<sub>t</sub> + A<sub>b</sub>{res.ape > 0 ? ' (+ deck)' : ''}</td><td>2A<sub>b</sub></td><td></td></tr>
                 <tr><td>Provided a<sub>sf</sub></td><td>{fmt(res.asf, 0)}</td><td>{fmt(res.asb, 0)}</td><td>mm²/m</td></tr>
                 <tr><td>Transverse bars UR</td><td className={tone(res['UR.sf'])}>{fmt(res['UR.sf'], 3)}</td><td className={tone(res['UR.sf.b'])}>{fmt(res['UR.sf.b'], 3)}</td><td></td></tr>
                 <tr><td>Strut resistance v<sub>Rd</sub>, (6.22)</td><td>{fmt(res.vLRd, 2)}</td><td>{fmt(res.vbRd, 2)}</td><td>MPa</td></tr>
                 <tr><td>Strut UR v<sub>Ed</sub>/v<sub>Rd</sub></td><td className={tone(res['UR.L'])}>{fmt(res['UR.L'], 3)}</td><td className={tone(res['UR.L.b'])}>{fmt(res['UR.L.b'], 3)}</td><td></td></tr>
               </tbody>
             </table>
-            <p className="hint">Bars: top A<sub>t</sub> Ø{fmt(res.dst, 0)} at {fmt(res.sft, 0)} = {fmt(res.at, 0)} mm²/m, bottom A<sub>b</sub> Ø{fmt(res.dsb, 0)} at {fmt(res.sfb, 0)} = {fmt(res.ab, 0)} mm²/m, anchored past each surface (EC2 §8.4). Not checked: c-c/d-d, splitting at edge beams (§6.6.5.3), minimum reinforcement.</p>
+            <p className="hint">Bars: top A<sub>t</sub> Ø{fmt(res.dst, 0)} at {fmt(res.sft, 0)} = {fmt(res.at, 0)} mm²/m, bottom A<sub>b</sub> Ø{fmt(res.dsb, 0)} at {fmt(res.sfb, 0)} = {fmt(res.ab, 0)} mm²/m, anchored past each surface (EC2 §8.4). {res.cbb < 1 && <> b-b is not required with transverse ribs (§6.6.6.4(2)); its URs are shown as 0.</>}{deck && res.ape > 0 && <> Required a<sub>sf</sub> on a-a is net of the deck, A<sub>pe</sub> f<sub>yp,d</sub> (6.25).</>} Not checked: c-c/d-d, splitting at edge beams (§6.6.5.3), minimum reinforcement.</p>
           </section>
 
         </div>
@@ -656,6 +699,25 @@ export function App() {
           <div className="fields">{groups.filter(([g]) => isFactors(g)).flatMap(([, fields]) => fields.map(renderField))}</div>
           <div className="opt-actions">
             <button type="button" className="btn primary" onClick={() => factorRef.current?.close()}>Done</button>
+          </div>
+        </div>
+      </dialog>
+      <dialog ref={deckRef} className="opt-dialog" aria-labelledby="deck-title">
+        <div className="opt-form">
+          <header className="opt-head">
+            <h2 id="deck-title">Profiled steel deck</h2>
+            <button type="button" className="rowbtn" aria-label="Close" onClick={() => deckRef.current?.close()}>×</button>
+          </header>
+          <p className="hint">Ribs {parallel ? 'parallel' : 'transverse'} to the beam. b<sub>r</sub> is b<sub>0</sub> of EN 1994-1-1 Figure 6.13: the mean width of an open rib, the minimum width of a re-entrant one. Concrete in the ribs carries weight but no force.</p>
+          <DeckProfile hc={res.h_c} hp={value(byName('h_p'))} br={value(byName('b_r'))} er={value(byName('e_r'))} hsc={res.hsc} dsc={res.dsc} nr={transverse ? value(byName('n_r')) : 1} />
+          <div className="fields">
+            {groups.filter(([g]) => isDeck(g)).flatMap(([, fields]) => fields)
+              .filter((f) => !['c_{deck}', 'c_{par}'].includes(f.name) && (transverse || !['n_r', 'c_{LT.d}', 'c_{pe}', 'A_{pe}', 'f_{yp}'].includes(f.name)))
+              .map(renderField)}
+          </div>
+          <p className="hint">k<sub>d</sub> = {fmt(res.kd, 3)} on the stud resistance ({parallel ? <>k<sub>l</sub>, (6.22)</> : <>k<sub>t</sub>, (6.23), limit {fmt(res.ktmax, 2)} from Table 6.2 for studs welded through the sheet</>}); P<sub>Rd</sub> = {fmt(res.PRd, 1)} kN.{transverse && <> Minimum degree of connection {fmt(res.etaMin, 2)} ({res.c16 >= 1 ? '(6.16), one stud in every rib' : '(6.12)'}).</>}</p>
+          <div className="opt-actions">
+            <button type="button" className="btn primary" onClick={() => deckRef.current?.close()}>Done</button>
           </div>
         </div>
       </dialog>
@@ -679,7 +741,7 @@ export function App() {
             <h2 id="opt-title">Optimize section</h2>
             <button type="button" className="rowbtn" aria-label="Close" onClick={() => dialogRef.current?.close()}>×</button>
           </header>
-          <p className="hint">Tries every section of the family from the lightest up, and for each one stud spacing 200 → 100 mm (uniform) and transverse bars Ø10, Ø12, Ø13. Keeps the first combination that reaches composite action and meets both targets, with every check including longitudinal shear, construction stage included. Only if none does, the sections are tried as bare steel. Loads and other inputs stay as entered.</p>
+          <p className="hint">Tries every section of the family from the lightest up, and for each one {pitch ? 'the stud layout (alternate ribs, every rib, two per rib)' : 'stud spacing 200 → 100 mm (uniform)'} and transverse bars Ø10, Ø12, Ø13. Keeps the first combination that reaches composite action and meets both targets, with every check including longitudinal shear, construction stage included. Only if none does, the sections are tried as bare steel. Loads and other inputs stay as entered.</p>
           <div className="fields">
             <label className="f"><span>Family</span>
               <select data-testid="opt-family" value={optFamily} onChange={(e) => setOptFamily(e.target.value)}>

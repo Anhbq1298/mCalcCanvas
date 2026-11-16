@@ -46,7 +46,7 @@ export function optimizeParallel(
       const b = Number.isFinite(bestIdx) ? candidates[bestIdx] : null;
       const tried = Number.isFinite(bestIdx) ? bestIdx + 1 : total; // lightest-first count, as in the serial search
       const o = Number.isFinite(bestIdx) ? res.get(bestIdx)! : null;
-      resolve({ family, maxDepth, targets, tried, total, best: b && o ? { id: b.id, name: b.name, mass: b.mass, h: b.h, sc: b.sc, bar: b.bar, sf: b.sf, composite: !!o.composite, strength: o.strength!, deflection: o.deflection! } : null });
+      resolve({ family, maxDepth, targets, tried, total, best: b && o ? { id: b.id, name: b.name, mass: b.mass, h: b.h, sc: b.sc, bar: b.bar, sf: b.sf, nr: b.nr, composite: !!o.composite, strength: o.strength!, deflection: o.deflection! } : null });
     };
     // all lighter candidates are back: the answer cannot change any more
     const settled = () => (Number.isFinite(bestIdx) ? [...Array(bestIdx).keys()].every((i) => res.has(i)) : done === total);
@@ -54,7 +54,7 @@ export function optimizeParallel(
       if (next >= total || next > bestIdx) return false;
       const i = next++;
       const c = candidates[i];
-      w.postMessage({ kind: 'evaluate', id: c.id, sc: c.sc, scB: c.scB, bar: c.bar, sf: c.sf, bare: c.bare, detail, token: run * 100000 + i, targets } satisfies ToWorker);
+      w.postMessage({ kind: 'evaluate', id: c.id, sc: c.sc, scB: c.scB, bar: c.bar, sf: c.sf, nr: c.nr, bare: c.bare, detail, token: run * 100000 + i, targets } satisfies ToWorker);
       return true;
     };
     if (!total) return finish();

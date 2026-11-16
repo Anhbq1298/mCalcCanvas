@@ -32,7 +32,7 @@ describe('mCompositeBeamDesign headless model', () => {
     const dense = m.results();
     expect(dense.ctb).toBeGreaterThan(1);
     expect(dense.ctb).toBeLessThan(2);
-    expect(dense['UR.L.b']).toBeCloseTo(1, 9); // the strut is used exactly at the chosen angle
+    expect(dense['UR.L.b']).toBeCloseTo(0.999, 9); // the strut is used to its limit, less the 0.1 % rounding margin
     expect(dense.asbReq).toBeCloseTo((dense.vf * 1000) / (dense.fsd * dense.ctb), 3); // (6.21), mm²/m
     m.setInput(sA, 125);
     expect(m.inputs.some((f) => f.name.includes('G.sw'))).toBe(false); // not a user input
@@ -190,5 +190,38 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(r.f1 / c.f1_Hz).toBeCloseTo(1, 2);
     expect(r.f1nc / c.f1_nc_Hz).toBeCloseTo(1, 2);
     expect(r.ddyn / c.delta_dyn_mm).toBeCloseTo(1, 2);
+  }, 120_000);
+
+  // Profiled steel deck (EN 1994-1-1 §6.6.4, §6.6.6.4) against tools/templates/reference_deck.py (hand calculation).
+  it('steel deck mode matches the independent reference; the solid slab is unchanged by the deck inputs', () => {
+    const ref = JSON.parse(readFileSync('docs/composite-design/reference_deck.json', 'utf8'));
+    const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+    const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
+    const solid = m.results();
+    expect([solid.cdeck, solid.hpe, solid.kd, solid.nre, solid.cbb]).toEqual([0, 0, 1, 1, 1]);
+    set('h_p', 80); set('n_r', 2); set('c_{par}', 1); // deck inputs do nothing while c_deck = 0
+    expect(m.results()['UR.des']).toBeCloseTo(solid['UR.des'], 12);
+    set('h_p', 60); set('c_{par}', 0);
+    m.setSection(sections.find((x) => x.name === 'UB 406x140x46')!.id);
+    set('c_{deck}', 1); set('h_c', 130); set('c_{pe}', 1);
+    const cmp = (r: Record<string, number>, c: Record<string, number>) => {
+      const pairs: [number, number][] = [[r.kd, c.k_d], [r.PRd, c.P_Rd_kN], [r.g0, c.g_0_kN_m], [r.xM, c.x_M_m], [r.M2, c.M_Ed_kNm], [r.nh, c.n_h], [r.NcRd, c.N_cRd_kN], [r.Ncf, c.N_cf_kN],
+        [r.eta, c.eta], [r.MplRd, c.M_plRd_kNm], [r.MaRd, c.M_aRd_kNm], [r.MRd, c.M_Rd_kNm], [r.I_0, c.I_0_cm4], [r.Idyn, c.I_dyn_cm4], [r.vf, c.v_f_kN_m], [r.vLEd, c.v_LEd_MPa], [r.lb, c.l_b_mm]];
+      for (const [a, b] of pairs) expect(a / b).toBeCloseTo(1, 3);
+    };
+    let r = m.results();
+    expect(r.errors).toEqual([]);
+    cmp(r, ref.transverse_2_per_rib);
+    expect([r.sA, r.sB, r.cbb, r.comp]).toEqual([300, 300, 0, 1]); // studs at the rib pitch; b-b not required (§6.6.6.4(2))
+    expect(r['UR.sf.b']).toBe(0);
+    expect(r.LLT).toBeCloseTo(0.3, 9); // transverse deck restrains the beam in construction
+    set('n_r', 1); // one stud in every rib: (6.16) applies, eta_min 0.4 at L = 8 m
+    r = m.results();
+    expect([r.c16, r.etaMin]).toEqual([1, 0.4]);
+    set('c_{par}', 1);
+    r = m.results();
+    expect(r.errors).toEqual([]);
+    cmp(r, ref.parallel);
+    expect([r.sA, r.sB, r.cbb, r.ape, r.LLT]).toEqual([125, 200, 1, 0, 8]);
   }, 120_000);
 });
