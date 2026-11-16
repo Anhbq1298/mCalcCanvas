@@ -8,7 +8,7 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { sections } from '../../engineering/steel/sections';
-import { CHECKS, candidatesFor, governingCheck, type InputField, type LoadTable, type Results } from './model';
+import { BAR_DIAMETERS, CHECKS, candidatesFor, governingCheck, type InputField, type LoadTable, type Results } from './model';
 import type { OptimizeResult, ToWorker } from './worker';
 import { Legend, LineChart, LongSection, PointDrawing, SectionDrawing, ShearSurface3D, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
 import { headerParts } from '../../canvas/inputTable';
@@ -101,6 +101,8 @@ export function App() {
   const [tDefl, setTDefl] = useState('1.00');
   const dialogRef = useRef<HTMLDialogElement>(null);
   const loadRef = useRef<HTMLDialogElement>(null);
+  const [detailMsg, setDetailMsg] = useState<Record<string, { running: boolean; text: string }>>({});
+  const factorRef = useRef<HTMLDialogElement>(null);
   const [opt, setOpt] = useState<{ running: boolean; i?: number; n?: number; name?: string; result?: OptimizeResult; seconds?: number } | null>(null);
   const reportReq = useRef(0);
   const reportCb = useRef<((doc: unknown) => void) | null>(null);
@@ -164,6 +166,7 @@ export function App() {
   const value = (f: InputField) => values[f.id] ?? f.value;
   const gammaOf = (q: boolean) => { const f = inputs.find((x) => x.name === (q ? '\\gamma_Q' : '\\gamma_G')); return f ? value(f) : q ? 1.5 : 1.35; };
   const factorCol = (t: LoadTable) => t.headers.findIndex((h) => /gamma_\{?F/.test(h));
+  const isFactors = (g: string) => /^Partial and combination factors/.test(g);
   const groups = [...inputs.reduce((g, f) => g.set(f.group, [...(g.get(f.group) ?? []), f]), new Map<string, InputField[]>()).entries()];
   const sb = value(inputs.find((f) => f.name === 's_b')!);
   const [areaT, pointT] = tables;
@@ -255,6 +258,26 @@ export function App() {
   ];
   const okNum = (t: string, blankOk = false) => (blankOk && !t.trim()) || (NUMBER.test(t) && Number(t) > 0);
   const camberField = inputs.find((f) => f.name === 'c_{cam}');
+  // Optimise one detail with the section fixed: stud spacing, or rebar spacing (with the bar diameter as fallback).
+  const runDetail = async (kind: 'studs' | 'rebar') => {
+    const dv = (name: string) => value(inputs.find((x) => x.name === name)!);
+    const cur = { sc: dv('s_{sc.A}'), scB: dv('s_{sc.B}'), bar: dv('d_{s.t}'), sf: dv('s_{f.t}') };
+    const sec = sections.find((x) => x.id === state.sectionId)!;
+    const base = { id: sec.id, name: sec.name, mass: sec.values.mass, h: sec.values.h };
+    const spacings = [200, 175, 150, 125, 100];
+    const cands = kind === 'studs'
+      ? spacings.map((sc) => ({ ...base, sc, scB: sc, bar: cur.bar, bare: false }))
+      : BAR_DIAMETERS.filter((d) => d >= cur.bar).flatMap((bar) => spacings.map((sf) => ({ ...base, sc: cur.sc, scB: cur.scB, bar, sf, bare: true })));
+    setDetailMsg((m) => ({ ...m, [kind]: { running: true, text: 'Checking…' } }));
+    const r = await optimizeParallel(sec.family, cands, null, { strength: 1, deflection: 1 }, { values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) }, () => undefined, true);
+    const b = r.best;
+    if (!b) { setDetailMsg((m) => ({ ...m, [kind]: { running: false, text: kind === 'studs' ? 'No uniform spacing from 200 to 100 mm satisfies every check with composite action.' : 'No rebar spacing from 200 to 100 mm (Ø up to 13) satisfies every check.' } })); return; }
+    const set = (name: string, v: number) => { const f = inputs.find((x) => x.name === name); if (f && value(f) !== v) setInput(f, v); };
+    if (kind === 'studs') { set('s_{sc.A}', b.sc); set('s_{sc.B}', b.sc); }
+    else { set('d_{s.t}', b.bar); set('d_{s.b}', b.bar); set('s_{f.t}', b.sf!); set('s_{f.b}', b.sf!); }
+    const ur = Math.max(b.strength.ur, b.deflection.ur);
+    setDetailMsg((m) => ({ ...m, [kind]: { running: false, text: kind === 'studs' ? `Set to ${b.sc} mm (widest spacing that passes); permanent-stage governing UR ${fmt(ur, 3)}.` : `Set to Ø${b.bar} @ ${b.sf} mm (top and bottom); permanent-stage governing UR ${fmt(ur, 3)}.` } }));
+  };
   const runOptimize = async () => {
     const maxDepth = hMax.trim() ? Number(hMax) : null;
     const targets = { strength: Number(tStrength), deflection: Number(tDefl) };
@@ -268,6 +291,18 @@ export function App() {
     const result = await optimizeParallel(optFamily, cands, maxDepth, targets, { values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) }, (i, n, name) => setOpt({ running: true, i, n, name }));
     setOpt({ running: false, result, seconds: (performance.now() - t0) / 1000 });
   };
+  const renderField = (f: InputField) =>
+    f.name === 'c_{prop}' ? (
+      <label key={f.id} className={`f check ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
+        <span><Sym latex={f.name} /> <em><Rich text={f.label} /></em></span>
+        <input id={`in-${f.id}`} type="checkbox" checked={value(f) >= 1} onChange={(e) => setInput(f, e.target.checked ? 1 : 0)} />
+      </label>
+    ) : (
+      <label key={f.id} className={`f ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
+        <span><Sym latex={f.name} />{f.unit ? ` (${unit(f.unit)})` : ''} <em><Rich text={f.label} /></em></span>
+        <NumberField id={`in-${f.id}`} label={f.name} value={String(value(f))} onCommit={(nv) => setInput(f, nv)} />
+      </label>
+    );
   const loadTable = (t: LoadTable, ti: number) => (
     <section aria-labelledby={`h-table-${ti}`} key={t.id}>
       <h2 id={`h-table-${ti}`}>{ti === 0 ? 'Distributed loads' : 'Point loads'}</h2>
@@ -363,22 +398,25 @@ export function App() {
             </section>
             {groups.map(([g, fields], gi) => (
               <section key={g} aria-labelledby={`h-group-${gi}`}>
-                <h2 id={`h-group-${gi}`}>{g}</h2>
-                <div className="fields">
-                  {fields.map((f) => (
-                    f.name === 'c_{prop}' ? (
-                      <label key={f.id} className={`f check ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
-                        <span><Sym latex={f.name} /> <em><Rich text={f.label} /></em></span>
-                        <input id={`in-${f.id}`} type="checkbox" checked={value(f) >= 1} onChange={(e) => setInput(f, e.target.checked ? 1 : 0)} />
-                      </label>
-                    ) : (
-                    <label key={f.id} className={`f ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
-                      <span><Sym latex={f.name} />{f.unit ? ` (${unit(f.unit)})` : ''} <em><Rich text={f.label} /></em></span>
-                      <NumberField id={`in-${f.id}`} label={f.name} value={String(value(f))} onCommit={(nv) => setInput(f, nv)} />
-                    </label>
-                    )
-                  ))}
-                </div>
+                <h2 id={`h-group-${gi}`}>{g.replace(/\s*\(.*$/, '')}</h2>
+                {isFactors(g) ? (
+                  <div className="define-row">
+                    <button type="button" className="btn" data-testid="factors-open" onClick={() => factorRef.current?.showModal()}>Define…</button>
+                    <span className="hint">{fields.map((f) => <span key={f.id} className="chip"><Sym latex={f.name} /> {fmt(value(f), 2)}</span>)}</span>
+                  </div>
+                ) : (
+                  <div className="fields">{fields.map(renderField)}</div>
+                )}
+                {(/^Shear connection/.test(g) || /^Slab transverse/.test(g)) && (() => {
+                  const kind = /^Shear/.test(g) ? 'studs' : 'rebar';
+                  const m = detailMsg[kind];
+                  return (
+                    <div className="define-row">
+                      <button type="button" className="btn" data-testid={`opt-${kind}`} disabled={m?.running} onClick={() => runDetail(kind)}>{kind === 'studs' ? 'Optimize shear studs' : 'Optimize rebar spacing'}</button>
+                      {m && <span className="hint" data-testid={`opt-${kind}-msg`} role="status">{m.text}</span>}
+                    </div>
+                  );
+                })()}
               </section>
             ))}
           </form>
@@ -415,22 +453,28 @@ export function App() {
             <h3>Moment M<sub>Ed</sub> and resistance M<sub>Rd</sub>(x) from the studs</h3>
             <LineChart series={[{ x: v.x, y: v.M, color: C.red, label: 'M_Ed', fill: true }, ...(composite ? [{ x: v.x, y: v.MRdx, color: C.blue, label: 'M_Rd' }] : [])]} height={160} invertY yUnit="kNm" labels={[{ x: res.xM, y: res.M2, text: fmt(res.M2, 1), color: C.red }]} label={`Bending moment diagram, maximum ${fmt(res.M2, 1)} kNm at ${fmt(res.xM, 2)} m`} />
             <Legend items={[{ color: C.red, label: 'M_Ed(x)' }, ...(composite ? [{ color: C.blue, label: 'M_Rd(x), studs provided' }] : [])]} />
-            {composite && (() => {
-              // moment-driven need at each x: (M_Ed(x) − M_a.Rd)/(M_pl.Rd − M_a.Rd) of N_c.f, over P_Rd
+            {(() => {
+              // moment-driven stud need at each x: (M_Ed(x) − M_a.Rd)/(M_pl.Rd − M_a.Rd) of N_c.f, over P_Rd
               const nM = v.x.map((_, i) => {
                 const M = v.M[i];
                 return M > res.MaRd ? Math.ceil(((M - res.MaRd) / (res.MplRd - res.MaRd)) * res.Ncf / res.PRd - 1e-9) : 0;
               });
-              const floor = Math.ceil(res.etaMin * res.Ncf / res.PRd - 1e-9);
               return (
                 <>
                   <h3>Studs needed along the span</h3>
+                  {!composite && (
+                    <p className="basis-note" data-testid="stud-warning" role="alert">
+                      {res.nreq > res.nh
+                        ? <>Studs do not satisfy the requirement at the critical section (needed {res.nreq}, provided {res.nh} per shear span).</>
+                        : <>The studs provided do not give M<sub>Rd</sub>(x) ≥ M<sub>Ed</sub>(x) along the span (see where the needed curve exceeds the provided one).</>}
+                      {' '}The section is checked as bare steel.
+                    </p>
+                  )}
                   <LineChart series={[
-                    { x: v.x, y: nM, color: C.red, label: 'n from M_Ed(x)' },
-                    { x: v.x, y: v.x.map(() => floor), color: C.muted, label: 'η_min floor', dash: true },
+                    { x: v.x, y: nM, color: C.red, label: 'n needed' },
                     { x: v.x, y: v.nx, color: C.blue, label: 'n_x provided' },
-                  ]} height={150} yMin={0} digits={0} yUnit="studs" label={`Studs needed from M_Ed(x), η_min floor ${floor}, provided along the span`} />
-                  <Legend items={[{ color: C.red, label: 'n from M_Ed(x)' }, { color: C.muted, label: `η_min floor (${floor} studs)`, dash: true }, { color: C.blue, label: 'n_x provided (support to x)' }]} />
+                  ]} height={150} yMin={0} digits={0} yUnit="studs" label="Studs needed from M_Ed(x) and provided along the span" />
+                  <Legend items={[{ color: C.red, label: 'n needed from M_Ed(x)' }, { color: C.blue, label: 'n_x provided (support to x)' }]} />
                 </>
               );
             })()}
@@ -486,6 +530,9 @@ export function App() {
               label={`Deflection, maximum ${fmt(dMax, 1)} mm against a limit of ${fmt(res.dlim, 1)} mm`}
             />
             <Legend items={[{ color: C.blue, label: `1.0 DL + 1.0 LL, max ${fmt(dMax, 1)} mm` }, { color: C.green, label: `LL, max ${fmt(Math.max(...v.dq), 1)} mm` }, { color: C.red, label: `limit L/r = ${fmt(res.dlim, 1)} mm`, dash: true }]} />
+            <p className="hint" data-testid="frequency">
+              Natural frequency f<sub>1</sub> = {fmt(composite ? res.f1 : res.f1nc, 2)} Hz{composite ? '' : ' (steel alone)'} against the limit f<sub>lim</sub> = {fmt(res.flim, 2)} Hz: UR = {fmt(composite ? res['UR.fn'] : res['UR.fn.nc'], 3)}. f<sub>1</sub> = 18/√δ, δ = {fmt(composite ? res.ddyn : res.ddynnc, 1)} mm under g<sub>0</sub> + G + ψ<sub>vib</sub>Q on the dynamic section (SCI P354 approximation).
+            </p>
             </section>
           </section>
 
@@ -599,6 +646,19 @@ export function App() {
 
         </div>
       </main>
+      <dialog ref={factorRef} className="opt-dialog" aria-labelledby="factor-title">
+        <div className="opt-form">
+          <header className="opt-head">
+            <h2 id="factor-title">Partial and combination factors</h2>
+            <button type="button" className="rowbtn" aria-label="Close" onClick={() => factorRef.current?.close()}>×</button>
+          </header>
+          <p className="hint">EN recommended values; confirm against the National Annex. They apply to the whole calculation.</p>
+          <div className="fields">{groups.filter(([g]) => isFactors(g)).flatMap(([, fields]) => fields.map(renderField))}</div>
+          <div className="opt-actions">
+            <button type="button" className="btn primary" onClick={() => factorRef.current?.close()}>Done</button>
+          </div>
+        </div>
+      </dialog>
       <dialog ref={loadRef} className="opt-dialog load-dialog" aria-labelledby="load-title">
         <div className="opt-form">
           <header className="opt-head">

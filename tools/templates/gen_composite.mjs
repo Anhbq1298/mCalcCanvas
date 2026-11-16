@@ -36,11 +36,12 @@ H(1, 'COMPOSITE BEAM CALCULATION (EC4)');
 T('REVIEW DRAFT. Singapore NA verification is outstanding. SS EN 1994-1-1 / EN 1994-1-1:2004.');
 T('Simply supported, solid slab, symmetric rolled I-section, ductile studs, sagging, no axial force.');
 H(2, '1. INPUTS');
-H(3, '1.1 Geometry and materials');
+H(3, '1.1 Geometry');
 input('Span', 'L', 8, 'm');
 input('Beam spacing (load width)', 's_b', 3, 'm');
 input('Slab thickness', 'h_c', 150, 'mm');
 input('Stud-row separation (single row)', 'b_0', 0, 'mm');
+H(3, '1.2 Materials');
 input('Steel yield strength, t_f < 16 mm', 'f_y', 355, 'MPa');
 input('Steel elastic modulus', 'E_a', 210, 'GPa');
 input('Steel shear modulus', 'G_a', 81, 'GPa');
@@ -48,9 +49,9 @@ input('Concrete C30/37, EC2 Table 3.1', 'f_{ck}', 30, 'MPa');
 input('Concrete secant modulus', 'E_{cm}', 33, 'GPa');
 input('Wet RC density', '\\rho_c', 25, 'kN/m^3');
 input('Reinforcement B500', 'f_{sk}', 500, 'MPa');
-H(3, '1.2 Partial and combination factors (EN recommended; NA to confirm)');
+H(3, '1.3 Partial and combination factors (EN recommended; NA to confirm)');
 for (const [sym,val,lab] of [['\\gamma_C',1.5,'Concrete'],['\\gamma_S',1.15,'Reinforcement'],['\\gamma_V',1.25,'Shear connectors'],['\\gamma_{M0}',1,'Steel, cross-section'],['\\gamma_{M1}',1,'Steel, member buckling'],['\\gamma_G',1.35,'Permanent actions'],['\\gamma_Q',1.5,'Variable actions'],['\\psi_2',0.3,'Quasi-permanent, imposed']]) input(lab,sym,val);
-H(3, '1.3 Steel section (Browse the section library)');
+H(3, '1.4 Steel section (Browse the section library)');
 P('Steel section (Browse to change)', R`\mathrm{Section}\coloneq3148`);
 T('Library: BS 4-1 dimensions, properties from the geometry. Check against project tables.');
 // t_f, t_w, r, I_z, I_t, I_w use the steel library's own definitions so Browse leaves them unchanged.
@@ -59,12 +60,12 @@ const props = [['h_a',0,'mm',1],['b_a',1,'mm',1],['t_f',3,'mm',1],['t_w',2,'mm',
   ['W_{pl}',10,'cm^3',0],['I_t',12,'cm^4',2],['I_w',13,'cm^6',0],['m_a',16,'kg/m',2]];
 for (let i = 0; i < props.length; i += 3)
   l.ROW(props.slice(i, i + 3).map(([n, k, u, p], j) => [[96, 316, 516][j], SP(n, k), { displayMode: 'result', displayUnit: u, precision: p }]), 0.75);
-H(3, '1.4 Construction stage');
+H(3, '1.5 Construction stage');
 input('Propping: 0 = unpropped (default), 1 = propped', 'c_{prop}', 0);
 input('If propped: L_LT = k_LT L (prop spacing / span)', 'k_{LT}', 0.5);
 input('Construction imposed load', 'q_{con}', 0.75, 'kPa');
 input('Formwork load (removable)', 'g_{form}', 0.5, 'kPa');
-H(3, '1.5 Load tables: one row per load; pattern G = permanent, Q = imposed');
+H(3, '1.6 Load tables: one row per load; pattern G = permanent, Q = imposed');
 const TBL = (x, cols, rows, widths) => ({ id: l.id(), type: 'table', x, y: l.ln(l.st.page, l.st.row) - 8, props: {
   w: widths.reduce((a, b) => a + b, 0), h: (rows.length + 2) * 32, rows: rows.length + 2, columns: cols.length, columnWidths: widths, headerRow: true, input: true,
   cells: [cols.map(([n]) => ({ value: n })), cols.map(([, u]) => ({ value: u })), ...rows.map(r => r.map(v => ({ value: v === '' ? '' : String(v) })))] } });
@@ -79,28 +80,30 @@ l.gap(3.5);
 T('Area loads p_k in kPa: the line load p_k s_b and its ULS value γ_F p_k s_b are calculated (annex A.1).');
 T('Case G/Q sets the SLS combination; γ_F is the ULS factor of the row (default 1.35 G, 1.5 Q).');
 T('Self-weight g_0 (steel + wet slab) is added automatically with the fixed ULS factor γ_G.sw = 1.35.');
-H(3, '1.6 Shear connection');
+H(3, '1.7 Shear connection');
 input('Stud diameter', 'd_{sc}', 19, 'mm');
 input('Stud height after welding', 'h_{sc}', 100, 'mm');
 input('Stud ultimate strength', 'f_u', 450, 'MPa');
 input('Stud spacing, support A to max moment', 's_{sc.A}', 125, 'mm');
 input('Stud spacing, max moment to support B', 's_{sc.B}', 200, 'mm');
-H(3, '1.7 Slab transverse reinforcement (longitudinal shear, EC4 §6.6.6)');
+H(3, '1.8 Slab transverse reinforcement (longitudinal shear, EC4 §6.6.6)');
 input('Top transverse bar diameter (A_t)', 'd_{s.t}', 10, 'mm');
 input('Top transverse bar spacing', 's_{f.t}', 150, 'mm');
 input('Bottom transverse bar diameter (A_b)', 'd_{s.b}', 10, 'mm');
 input('Bottom transverse bar spacing', 's_{f.b}', 150, 'mm');
 input('Stud head diameter', 'd_{head}', 32, 'mm');
-H(3, '1.8 Point loads and supports on the web (EN 1993-1-5 §6)');
+H(3, '1.9 Point loads and supports on the web (EN 1993-1-5 §6)');
 input('Point loads on top flange (1) or framed in (0)', 'c_{F.P}', 1);
 input('Stiff bearing length under a point load', 's_{s.P}', 100, 'mm');
 input('Beam bears on supports (1) or end connection (0)', 'c_{F.S}', 1);
 input('Stiff bearing length at a support', 's_{s.S}', 100, 'mm');
-H(3, '1.9 Serviceability');
+H(3, '1.10 Serviceability');
 input('Creep coefficient', '\\varphi', 2);
 input('Free shrinkage strain', '\\varepsilon_{cs}', 0.0003);
 input('Deflection limit L / r_lim', 'r_{lim}', 250);
 input('Precamber w_c, % of the self-weight (g_0) deflection; 0 = none', 'c_{cam}', 0);
+input('Natural frequency limit (project; office floors 3 to 5 Hz)', 'f_{lim}', 4, 'Hz');
+input('Share of the imposed load in the vibration mass', '\\psi_{vib}', 0.1);
 
 H(2, '2. LOADING');
 l.out[l.out.length - 1].props.pageBreak = true; // loading starts on its own page
@@ -406,6 +409,19 @@ DIAGRAM(170, { title: 'Deflection δ(x), permanent stage: composite if c_comp = 
 ur('Maximum deflection along the span','d.x','\\delta_{max}','\\delta_{lim}');
 T('c_comp = 0: the chart shows the bare steel; UR_d,x above is for information, chapter 6 checks UR_d,nc.');
 Object.assign(l.out[l.out.length - 1].props, { showWhen: R`c_{comp}<1`, color: '#b91c1c' });
+H(3, '4.10 Natural frequency (SLS, SCI P354 approximation)');
+T('Walking vibration: f1 = 18 / sqrt(δ), δ in mm, the midspan deflection under the mass loads (G + ψ_vib Q, self-weight included).');
+T('Dynamic section: uncracked, full interaction, concrete dynamic modulus 38 GPa for normal weight (SCI P354, AD 433; not enhanced by 10%).');
+P('Dynamic modulus of normal-weight concrete (SCI P354, AD 433; fixed, not an input)', R`E_{c.dyn}\coloneq38\,\mathrm{GPa}`, M(units('GPa')));
+calc('Dynamic modular ratio', 'n_{dyn}', R`\frac{E_a}{E_{c.dyn}}`, '', false);
+calc('Transformed slab area', 'A_{c.dyn}', R`\frac{b_{eff}h_c}{n_{dyn}}`, 'mm^2', false);
+calc('Elastic NA below slab top', 'y_{dyn}', R`\frac{A_a\left(h_c+h_a/2\right)+A_{c.dyn}h_c/2}{A_a+A_{c.dyn}}`, 'mm', false);
+calc('Second moment, dynamic', 'I_{dyn}', R`I_a+A_a\left(h_c+\frac{h_a}{2}-y_{dyn}\right)^2+\frac{b_{eff}h_c^3}{12n_{dyn}}+A_{c.dyn}\left(y_{dyn}-\frac{h_c}{2}\right)^2`, 'mm^4', false);
+calc('Characteristic moment, g0 + G + ψ_vib Q (vibration mass)', 'M_{dyn.v}', R`g_0\frac{x_v\left(L-x_v\right)}{2}+\mathrm{map}\left(M_s,x_v,1,\psi_{vib}\right)`, 'kN m', 'fo');
+calc('Midspan deflection under the mass loads, dynamic section', '\\delta_{dyn}', R`\frac{\Delta x\,\mathrm{sum}\left(M_{dyn.v}m_v\right)}{E_a I_{dyn}}`, 'mm', false);
+calc('Natural frequency', 'f_1', R`\frac{18\,\mathrm{Hz}}{\sqrt{\frac{\delta_{dyn}}{1\,\mathrm{mm}}}}`, 'Hz', false);
+ur('Natural frequency (f_lim ≤ f_1)', 'fn', 'f_{lim}', 'f_1');
+Object.assign(l.out[l.out.length - 1].props, {});
 H(2, '5. SLAB LONGITUDINAL SHEAR (EC4 §6.6.6, EC2 §6.2.4)');
 fig('F4', 'Shear surfaces a-a and b-b along the beam (EC4 Figure 6.15)', 'shear3d', 6.5);
 T('Surface lengths and bars counted per EC4 §6.6.6.1(3) and §6.6.6.2(3) (b_0 = 0 for a single stud row); bars anchored past each surface to EN 1992-1-1 §8.4.');
@@ -470,6 +486,10 @@ LINK('noncomp', 'Non-composite alternative: steel section alone', () => {
  T('Deflection, steel section alone (characteristic loads)');
  calc('g0 and the load tables on the steel alone, maximum along the span (4.9), less the precamber', '\\delta_{nc}', R`\max\left(\delta_{x.s}-w_{c.v}\right)`, 'mm', false);
  calc('Deflection, steel alone', R`\mathrm{UR}_{d.nc}`, R`\frac{\delta_{nc}}{\delta_{lim}}`);
+ T('Natural frequency, steel section alone (same mass loads as 4.10)');
+ calc('Midspan deflection under the mass loads, steel alone', '\\delta_{dyn.nc}', R`\frac{\Delta x\,\mathrm{sum}\left(M_{dyn.v}m_v\right)}{E_a I_a}`, 'mm', false);
+ calc('Natural frequency, steel alone', 'f_{1.nc}', R`\frac{18\,\mathrm{Hz}}{\sqrt{\frac{\delta_{dyn.nc}}{1\,\mathrm{mm}}}}`, 'Hz', false);
+ calc('Natural frequency', R`\mathrm{UR}_{fn.nc}`, R`\frac{f_{lim}}{f_{1.nc}}`);
 });
 T('Key results (calculated in the annex):');
 l.ROW([[96, R`L_{LT.nc}=`, units('mm')], [316, R`\chi_{LT.nc}=`, M({ precision: 3 })], [496, R`\delta_{nc}=`, units('mm')]], 1);
@@ -484,8 +504,8 @@ WHEN_OK(R`c_{comp}\ge1`, 'Design basis: COMPOSITE (chapter 4). Chapter 6 is for 
 WHEN(R`c_{comp}<1`, 'NOT DESIGNED AS COMPOSITE: designed as a bare steel beam (chapter 6); see the note below.');
 P('Web checks, both bases (4.7)', R`\mathrm{UR}_{F}\coloneq\max\left(\mathrm{UR}_{F.P},\mathrm{UR}_{F.S}\right)`, M({ precision: 3 }));
 P('Slab longitudinal shear, a-a and b-b (chapter 5)', R`\mathrm{UR}_{slab}\coloneq\max\left(\mathrm{UR}_{sf},\mathrm{UR}_{L},\mathrm{UR}_{sf.b},\mathrm{UR}_{L.b}\right)`, M({ precision: 3 }));
-P('Governing utilisation, composite (chapters 4 and 5)', R`\mathrm{UR}_{c}\coloneq\max\left(\mathrm{UR}_{M.2},\mathrm{UR}_{M.x},\mathrm{UR}_{MV},\mathrm{UR}_{V.2},\mathrm{UR}_{F},\mathrm{UR}_{FM},\mathrm{UR}_{d.x},\mathrm{UR}_{slab}\right)`, M({ precision: 3 }));
-P('Governing utilisation, non-composite (chapter 6)', R`\mathrm{UR}_{nc}\coloneq\max\left(\mathrm{UR}_{M.nc},\mathrm{UR}_{MV.nc},\mathrm{UR}_{V.nc},\mathrm{UR}_{LT.nc},\mathrm{UR}_{F},\mathrm{UR}_{FM.nc},\mathrm{UR}_{d.nc}\right)`, M({ precision: 3 }));
+P('Governing utilisation, composite (chapters 4 and 5)', R`\mathrm{UR}_{c}\coloneq\max\left(\mathrm{UR}_{M.2},\mathrm{UR}_{M.x},\mathrm{UR}_{MV},\mathrm{UR}_{V.2},\mathrm{UR}_{F},\mathrm{UR}_{FM},\mathrm{UR}_{d.x},\mathrm{UR}_{fn},\mathrm{UR}_{slab}\right)`, M({ precision: 3 }));
+P('Governing utilisation, non-composite (chapter 6)', R`\mathrm{UR}_{nc}\coloneq\max\left(\mathrm{UR}_{M.nc},\mathrm{UR}_{MV.nc},\mathrm{UR}_{V.nc},\mathrm{UR}_{LT.nc},\mathrm{UR}_{F},\mathrm{UR}_{FM.nc},\mathrm{UR}_{d.nc},\mathrm{UR}_{fn.nc}\right)`, M({ precision: 3 }));
 P('Governing utilisation of the design basis used', R`\mathrm{UR}_{des}\coloneq${IF([R`c_{comp}\ge1`, R`\mathrm{UR}_{c}`], [null, R`\mathrm{UR}_{nc}`])}`, M({ precision: 3 }));
 check('Acceptance, permanent stage', '\\mathrm{UR}_{des}', '1');
 

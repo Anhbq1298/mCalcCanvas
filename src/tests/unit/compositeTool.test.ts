@@ -161,5 +161,34 @@ describe('mCompositeBeamDesign headless model', () => {
       expect(g.strength.ur > 0.8 || g.deflection.ur > 0.5).toBe(true);
     }
   }, 600_000);
-});
 
+  // 4.10 natural frequency against tools/templates/reference_vibration.py: the same method (SCI P354, E_dyn 38 GPa,
+  // f = 18/sqrt(delta)) with section properties integrated from the geometry; the script itself reproduces the
+  // published SCI P354 worked example (I 81 745 cm4, delta 3.629 mm, f 9.282 Hz).
+  it('natural frequency matches the independent reference calculation', () => {
+    const ref = JSON.parse(readFileSync('docs/composite-design/reference_vibration.json', 'utf8'));
+    expect(ref.published_P354_example.I_cm4 / ref.published_P354_example.I_published_cm4).toBeCloseTo(1, 3);
+    expect(ref.published_P354_example.delta_mm).toBeCloseTo(ref.published_P354_example.delta_published_mm, 2);
+    expect(ref.published_P354_example.f_Hz).toBeCloseTo(ref.published_P354_example.f_published_Hz, 2);
+    const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+    const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
+    // default case: UB 406x178x60, L 8 m, s_b 3 m, h_c 150 mm, loads as in the template
+    let r = m.results();
+    const d = ref.default_UB406x178x60_L8;
+    expect(r.f1 / d.f1_Hz).toBeCloseTo(1, 2);
+    expect(r.f1nc / d.f1_nc_Hz).toBeCloseTo(1, 2);
+    expect(r.ddyn / d.delta_dyn_mm).toBeCloseTo(1, 2);
+    expect(r['UR.fn']).toBeCloseTo(r.flim / r.f1, 9);
+    // second case: UB 406x140x46, L 5 m, s_b 2.5 m, h_c 200 mm, 5 kPa G + 3 kPa Q, 30 kN at 0.8 m
+    set('L', 5); set('s_b', 2.5); set('h_c', 200);
+    m.setSection(sections.find((x) => x.name === 'UB 406x140x46')!.id);
+    m.setTableRows(m.tables[0].id, [['G', '0', '5', '5', ''], ['Q', '0', '5', '3', '']]);
+    m.setTableRows(m.tables[1].id, [['G', '0.8', '30', '']]);
+    r = m.results();
+    const c = ref.UB406x140x46_L5_P30;
+    expect(r.errors).toEqual([]);
+    expect(r.f1 / c.f1_Hz).toBeCloseTo(1, 2);
+    expect(r.f1nc / c.f1_nc_Hz).toBeCloseTo(1, 2);
+    expect(r.ddyn / c.delta_dyn_mm).toBeCloseTo(1, 2);
+  }, 120_000);
+});

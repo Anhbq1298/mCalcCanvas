@@ -4,7 +4,7 @@
  * scrolling stay responsive while it recalculates (no long task on the main thread).
  */
 import raw from '../../../templates/Composite_Beam_EC4.mCCV?raw';
-import { CompositeModel, governingSplit, screenPasses, type Targets } from './model';
+import { CONSTRUCTION_CHECKS, CompositeModel, governingSplit, screenPasses, type Targets } from './model';
 
 export type ToWorker =
   | { kind: 'input'; id: string; value: number }
@@ -13,7 +13,7 @@ export type ToWorker =
   | { kind: 'report'; request: number } | { kind: 'hello' }
   // optimizer pool: copy the page's inputs, then check one section at a time
   | { kind: 'state'; values: Record<string, number>; tables: { id: string; rows: string[][] }[] }
-  | { kind: 'evaluate'; id: number; sc: number; scB: number; bar: number; bare: boolean; token: number; targets: Targets };
+  | { kind: 'evaluate'; id: number; sc: number; scB: number; bar: number; sf?: number; bare: boolean; detail?: boolean; token: number; targets: Targets };
 
 export type { OptimizeResult } from './model';
 
@@ -39,14 +39,14 @@ self.onmessage = (ev: MessageEvent<ToWorker>) => {
       screen.setSection(m.id);
       screen.setDetail(m);
       const q = screen.results();
-      if (!q.errors.length && (!screenPasses(q, m.targets) || (!m.bare && q.comp < 1))) return post({ kind: 'evaluated', token: m.token, id: m.id, pass: false });
+      if (!q.errors.length && (!screenPasses(q, m.targets, m.detail ? CONSTRUCTION_CHECKS : []) || (!m.bare && q.comp < 1))) return post({ kind: 'evaluated', token: m.token, id: m.id, pass: false });
     }
     // 2. full worksheet
     model.setSection(m.id);
     model.setDetail(m);
     const r = model.results();
     if (r.errors.length) return post({ kind: 'evaluated', token: m.token, id: m.id, pass: false });
-    const g = governingSplit(r);
+    const g = governingSplit(r, m.detail ? CONSTRUCTION_CHECKS : []);
     return post({ kind: 'evaluated', token: m.token, id: m.id, pass: g.strength.ur <= m.targets.strength && g.deflection.ur <= m.targets.deflection && (m.bare || r.comp >= 1), composite: r.comp >= 1, ...g });
   }
   if (m.kind === 'input') model.setInput(m.id, m.value);

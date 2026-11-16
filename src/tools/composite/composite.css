@@ -194,3 +194,7 @@ td.pass, b.pass { color: var(--pass); } td.warn, b.warn { color: var(--warn); } 
   .rowbtn { width: 2.75rem; height: 2.75rem; }
 }
 @media (prefers-reduced-motion: reduce) { .status.busy::before, .dot { animation: none; } .results { transition: none; } }
+
+.define-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.define-row .chip { display: inline-block; margin-right: 0.5rem; white-space: nowrap; }
+.opt-form .fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 0.5rem 0.75rem; padding: 0 1rem; }

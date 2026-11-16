@@ -51,7 +51,7 @@ const SCALARS: Probe[] = [
   ['at', 'a_t', 'mm^2/m'], ['ab', 'a_b', 'mm^2/m'], ['lb', 'l_b', 'mm'], ['vbEd', 'v_{b.Ed}', 'MPa'], ['asbReq', 'a_{sf.b.req}', 'mm^2/m'], ['asb', 'a_{sf.b}', 'mm^2/m'],
   ['dhead', 'd_{head}', 'mm'], ['hsc', 'h_{sc}', 'mm'], ['dsc', 'd_{sc}', 'mm'], ['b0', 'b_0', 'mm'],
   // deflection
-  ['dmax', '\\delta_{max}', 'mm'], ['wc', 'w_c', 'mm'], ['ccam', 'c_{cam}', null], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
+  ['dmax', '\\delta_{max}', 'mm'], ['wc', 'w_c', 'mm'], ['ccam', 'c_{cam}', null], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['f1', 'f_1', 'Hz'], ['f1nc', 'f_{1.nc}', 'Hz'], ['flim', 'f_{lim}', 'Hz'], ['ddyn', '\\delta_{dyn}', 'mm'], ['ddynnc', '\\delta_{dyn.nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
 ];
 
 /** Utilisations by code, in report order: [key, label, clause, basis]. basis: c = composite only, n = non-composite only. */
@@ -72,10 +72,12 @@ export const CHECKS: [string, string, string, '' | 'c' | 'n'][] = [
   ['L', 'Slab concrete strut, surface a-a', 'EN 1992-1-1 §6.2.4', 'c'],
   ['sf.b', 'Slab transverse bars, surface b-b', 'EN 1994-1-1 §6.6.6', 'c'],
   ['L.b', 'Slab concrete strut, surface b-b', 'EN 1992-1-1 §6.2.4', 'c'],
+  ['fn', 'Natural frequency', 'SCI P354 / project limit', 'c'],
   ['MV.nc', 'Bending with shear, bare steel', 'EN 1993-1-1 §6.2.8', 'n'],
   ['LT.nc', 'LTB, bare steel (L = stud spacing)', 'EN 1994-1-1 §6.4.1', 'n'],
   ['FM.nc', 'Web interaction, bare steel', 'EN 1993-1-5 §7.2', 'n'],
   ['d.nc', 'Deflection, bare steel', 'SLS', 'n'],
+  ['fn.nc', 'Natural frequency, bare steel', 'SCI P354 / project limit', 'n'],
   ['des', 'Permanent stage, design basis used', 'Summary', ''],
 ];
 
@@ -84,13 +86,15 @@ export const CHECKS: [string, string, string, '' | 'c' | 'n'][] = [
  * steel), construction stage included. The section optimiser uses the same rule.
  */
 /** Serviceability (deflection) checks; every other check of the basis in use counts as strength. */
-export const SLS_CHECKS = ['d.1', 'd.x', 'd.nc'];
+export const SLS_CHECKS = ['d.1', 'd.x', 'd.nc', 'fn', 'fn.nc'];
+/** Construction-stage checks of the steel beam alone: they do not depend on the studs or the slab bars. */
+export const CONSTRUCTION_CHECKS = ['M.1', 'V.1', 'LT', 'd.1'];
 
 export interface Targets { strength: number; deflection: number }
 export interface Governing { ur: number; key: string; label: string }
 export interface OptimizeResult {
   family: string; maxDepth: number | null; targets: Targets; tried: number; total: number;
-  best: { id: number; name: string; mass: number; h: number; sc: number; bar: number; composite: boolean; strength: Governing; deflection: Governing } | null;
+  best: { id: number; name: string; mass: number; h: number; sc: number; bar: number; sf?: number; composite: boolean; strength: Governing; deflection: Governing } | null;
 }
 
 /** Detail choices the optimiser tries for every section: uniform stud spacing and both transverse bar diameters. */
@@ -99,7 +103,7 @@ export const BAR_DIAMETERS = [10, 12, 13]; // mm, smallest first
 export const DETAIL_INPUTS = { scA: 's_{sc.A}', scB: 's_{sc.B}', barT: 'd_{s.t}', barB: 'd_{s.b}' } as const;
 
 /** bare: the bare-steel fallback (current stud and bar details, composite action not required). */
-export interface Candidate { id: number; name: string; mass: number; h: number; sc: number; scB: number; bar: number; bare: boolean }
+export interface Candidate { id: number; name: string; mass: number; h: number; sc: number; scB: number; bar: number; bare: boolean; sf?: number }
 
 /**
  * Composite designs first: every section × bar × spacing, lightest section first, cheapest detail first within a
@@ -121,8 +125,8 @@ export function governingSplit(res: Results, skip: readonly string[] = []): { st
 }
 
 /** Screening model: can the section still pass? (strength complete; of deflection only the construction check) */
-export function screenPasses(res: Results, t: Targets): boolean {
-  const g = governingSplit(res, DEFLECTION_CHECKS);
+export function screenPasses(res: Results, t: Targets, skip: readonly string[] = []): boolean {
+  const g = governingSplit(res, [...DEFLECTION_CHECKS, ...skip]);
   return g.strength.ur <= t.strength && g.deflection.ur <= t.deflection;
 }
 
@@ -226,12 +230,13 @@ export class CompositeModel {
   }
 
   /** Write one detail candidate into the worksheet: uniform stud spacing and both bar diameters. */
-  setDetail(c: { sc: number; bar: number; scB?: number }): void {
+  setDetail(c: { sc: number; bar: number; scB?: number; sf?: number }): void {
     const id = (name: string) => this.inputs.find((f) => f.name === name)!.id;
     this.setInput(id(DETAIL_INPUTS.scA), c.sc);
     this.setInput(id(DETAIL_INPUTS.scB), c.scB ?? c.sc);
     this.setInput(id(DETAIL_INPUTS.barT), c.bar);
     this.setInput(id(DETAIL_INPUTS.barB), c.bar);
+    if (c.sf !== undefined) { this.setInput(id('s_{f.t}'), c.sf); this.setInput(id('s_{f.b}'), c.sf); }
   }
 
   detail(): { sc: number; scB: number; bar: number } {
