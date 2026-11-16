@@ -93,11 +93,12 @@ export const SLS_CHECKS = ['d.1', 'd.x', 'd.nc', 'fn', 'fn.nc'];
 /** Construction-stage checks of the steel beam alone: they do not depend on the studs or the slab bars. */
 export const CONSTRUCTION_CHECKS = ['M.1', 'V.1', 'LT', 'd.1'];
 
-export interface Targets { strength: number; deflection: number }
+/** etaMin: project minimum degree of shear connection (0…1) for a composite result, on top of the code minimum. */
+export interface Targets { strength: number; deflection: number; etaMin?: number }
 export interface Governing { ur: number; key: string; label: string }
 export interface OptimizeResult {
   family: string; maxDepth: number | null; targets: Targets; tried: number; total: number;
-  best: { id: number; name: string; mass: number; h: number; sc: number; bar: number; sf?: number; nr?: number; composite: boolean; strength: Governing; deflection: Governing } | null;
+  best: { id: number; name: string; mass: number; h: number; sc: number; bar: number; sf?: number; nr?: number; eta?: number; composite: boolean; strength: Governing; deflection: Governing } | null;
 }
 
 /** Detail choices the optimiser tries for every section: uniform stud spacing and both transverse bar diameters. */
@@ -316,15 +317,15 @@ export class CompositeModel {
         screen.setSection(c.id);
         screen.setDetail(c);
         const q = screen.results();
-        if (!q.errors.length && (!screenPasses(q, targets) || (!c.bare && q.comp < 1))) continue;
+        if (!q.errors.length && (!screenPasses(q, targets) || (!c.bare && (q.comp < 1 || q.eta < (targets.etaMin ?? 0) - 1e-9)))) continue;
       }
       this.setSection(c.id);
       this.setDetail(c);
       const r = this.results();
       if (r.errors.length) continue;
       const g = governingSplit(r);
-      if (g.strength.ur <= targets.strength && g.deflection.ur <= targets.deflection && (c.bare || r.comp >= 1))
-        return { family, maxDepth, targets, tried, total: cands.length, best: { id: c.id, name: c.name, mass: c.mass, h: c.h, sc: c.sc, bar: c.bar, composite: r.comp >= 1, ...g } };
+      if (g.strength.ur <= targets.strength && g.deflection.ur <= targets.deflection && (c.bare || (r.comp >= 1 && r.eta >= (targets.etaMin ?? 0) - 1e-9)))
+        return { family, maxDepth, targets, tried, total: cands.length, best: { id: c.id, name: c.name, mass: c.mass, h: c.h, sc: c.sc, bar: c.bar, eta: r.eta, composite: r.comp >= 1, ...g } };
     }
     this.setSection(start);
     this.setDetail(keep);

@@ -110,6 +110,7 @@ export function App() {
   const [optFamily, setOptFamily] = useState('UB');
   const [tStrength, setTStrength] = useState('1.00');
   const [tDefl, setTDefl] = useState('1.00');
+  const [etaReq, setEtaReq] = useState(''); // optimiser: project minimum degree of shear connection, %; blank = code minimum only
   const dialogRef = useRef<HTMLDialogElement>(null);
   const loadRef = useRef<HTMLDialogElement>(null);
   const [detailMsg, setDetailMsg] = useState<Record<string, { running: boolean; text: string }>>({});
@@ -279,6 +280,8 @@ export function App() {
   ];
   const okNum = (t: string, blankOk = false) => (blankOk && !t.trim()) || (NUMBER.test(t) && Number(t) > 0);
   const camberField = inputs.find((f) => f.name === 'c_{cam}');
+  const camber0Field = inputs.find((f) => f.name === 'w_{c.0}');
+  const okEta = !etaReq.trim() || (NUMBER.test(etaReq) && Number(etaReq) >= 0 && Number(etaReq) <= 100);
   // Optimise one detail with the section fixed: stud spacing, or rebar spacing (with the bar diameter as fallback).
   const runDetail = async (kind: 'studs' | 'rebar') => {
     const dv = (name: string) => value(inputs.find((x) => x.name === name)!);
@@ -301,7 +304,7 @@ export function App() {
   };
   const runOptimize = async () => {
     const maxDepth = hMax.trim() ? Number(hMax) : null;
-    const targets = { strength: Number(tStrength), deflection: Number(tDefl) };
+    const targets = { strength: Number(tStrength), deflection: Number(tDefl), etaMin: etaReq.trim() ? Number(etaReq) / 100 : 0 };
     const dv = (name: string) => value(inputs.find((x) => x.name === name)!);
     const current = { sc: dv('s_{sc.A}'), scB: dv('s_{sc.B}'), bar: dv('d_{s.t}'), nr: dv('n_r') };
     const cands = candidatesFor(sections
@@ -787,16 +790,32 @@ export function App() {
                 aria-invalid={!okNum(tDefl)} aria-describedby={!okNum(tDefl) ? 'td-error' : undefined} />
               {!okNum(tDefl) && <span id="td-error" className="field-error">Error: a ratio, e.g. 0.80</span>}
             </label>
+            <label className="f wide"><span>Minimum degree of shear connection η (%), partial composite not below this; blank = code minimum only</span>
+              <input data-testid="t-eta" className="num-input" type="text" inputMode="decimal" autoComplete="off" placeholder={`code minimum ${fmt(res.etaMin * 100, 0)}`} value={etaReq} onChange={(e) => setEtaReq(e.target.value)}
+                aria-invalid={!okEta} aria-describedby={!okEta ? 'te-error' : undefined} />
+              {!okEta && <span id="te-error" className="field-error">Error: a percentage from 0 to 100, e.g. 60</span>}
+              <span className="hint">Now η = {fmt(res.eta * 100, 0)} %; EN 1994-1-1 minimum {fmt(res.etaMin * 100, 0)} %. 100 = full shear connection only.</span>
+            </label>
             {camberField && (
-              <label className="f wide" htmlFor={`opt-${camberField.id}`}>
-                <span>Precamber w<sub>c</sub>, % of the self-weight deflection (g<sub>0</sub>); also used in the design and the report</span>
+              <label className="f" htmlFor={`opt-${camberField.id}`}>
+                <span>Precamber, % of the self-weight (g<sub>0</sub>) deflection</span>
                 <NumberField id={`opt-${camberField.id}`} label="c_cam" value={String(value(camberField))} onCommit={(nv) => setInput(camberField, nv)} />
-                <span className="hint">Now w<sub>c</sub> = {fmt(res.wc, 1)} mm at mid-span; deflection checks use w<sub>tot</sub> − w<sub>c</sub> (EN 1990 A1.4.3); construction and LL deflections are not cambered.</span>
+              </label>
+            )}
+            {camber0Field && (
+              <label className="f" htmlFor={`opt-${camber0Field.id}`}>
+                <span>Precamber, fixed value at mid-span (mm)</span>
+                <NumberField id={`opt-${camber0Field.id}`} label="w_c.0" value={String(value(camber0Field))} onCommit={(nv) => setInput(camber0Field, nv)} />
+              </label>
+            )}
+            {camberField && (
+              <label className="f wide">
+                <span className="hint">The two add up and are also used in the design and the report. Now w<sub>c</sub> = {fmt(res.wc, 1)} mm at mid-span; deflection checks use w<sub>tot</sub> − w<sub>c</sub> (EN 1990 A1.4.3); construction and LL deflections are not cambered.</span>
               </label>
             )}
           </div>
           <div className="opt-actions">
-            <button type="button" className="btn primary" data-testid="optimize" disabled={opt?.running || !okNum(hMax, true) || !okNum(tStrength) || !okNum(tDefl)} onClick={runOptimize}>
+            <button type="button" className="btn primary" data-testid="optimize" disabled={opt?.running || !okNum(hMax, true) || !okNum(tStrength) || !okNum(tDefl) || !okEta} onClick={runOptimize}>
               {opt?.running ? 'Optimizing…' : `Find the lightest ${optFamily}`}
             </button>
             <p className="hint" role="status" data-testid="optimize-status">
@@ -815,8 +834,9 @@ export function App() {
                 <tbody>
                   <tr><td>Section</td><td>{opt.result.best.name}</td></tr>
                   <tr><td>Mass / depth h</td><td>{fmt(opt.result.best.mass, 1)} kg/m / {fmt(opt.result.best.h, 1)} mm</td></tr>
-                  <tr><td>Design basis</td><td>{opt.result.best.composite ? 'Composite' : 'Bare steel: no stud and bar arrangement reaches composite action'}</td></tr>
-                  {opt.result.best.composite && <tr><td>Stud spacing s<sub>sc</sub> (both)</td><td>{opt.result.best.sc} mm</td></tr>}
+                  <tr><td>Design basis</td><td>{opt.result.best.composite ? 'Composite' : `Bare steel: no stud and bar arrangement reaches composite action${opt.result.targets.etaMin ? ` with η ≥ ${fmt(opt.result.targets.etaMin * 100, 0)} %` : ''}`}</td></tr>
+                  {opt.result.best.composite && <tr><td>Stud spacing s<sub>sc</sub> (both)</td><td>{opt.result.best.sc} mm{opt.result.best.nr ? `, ${opt.result.best.nr} per rib` : ''}</td></tr>}
+                  {opt.result.best.composite && opt.result.best.eta !== undefined && <tr><td>Degree of shear connection η{opt.result.targets.etaMin ? ` (minimum ${fmt(opt.result.targets.etaMin * 100, 0)} %)` : ''}</td><td>{fmt(opt.result.best.eta * 100, 0)} %</td></tr>}
                   {opt.result.best.composite && <tr><td>Transverse bars Ø (both)</td><td>{opt.result.best.bar} mm</td></tr>}
                   <tr><td>Strength UR (target {fmt(opt.result.targets.strength, 2)})</td><td className={tone(opt.result.best.strength.ur)}>{fmt(opt.result.best.strength.ur, 3)} · <Rich text={opt.result.best.strength.label} /></td></tr>
                   <tr><td>Deflection UR (target {fmt(opt.result.targets.deflection, 2)})</td><td className={tone(opt.result.best.deflection.ur)}>{fmt(opt.result.best.deflection.ur, 3)} · <Rich text={opt.result.best.deflection.label} /></td></tr>
@@ -833,6 +853,7 @@ export function App() {
                     const f = inputs.find((x) => x.name === name);
                     if (f) setInput(f, v);
                   }
+                  if (b.nr) setInput(byName('n_r'), b.nr);
                   dialogRef.current?.close();
                 }}>
                   Use {opt.result.best.name}

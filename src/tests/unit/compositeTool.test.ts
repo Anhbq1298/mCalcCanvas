@@ -255,5 +255,21 @@ describe('mCompositeBeamDesign headless model', () => {
     expect((r.MRdpl - (r.Nc * (62 / 2 - r.xc / 2)) / 1000) / 301.7).toBeCloseTo(1, 2); // 302.4, +0.2 %
     expect(r.MRd).toBeLessThan(301.7); // design value: linear interaction (6.3), conservative
   }, 120_000);
+
+  it('fixed precamber adds to the % share, in the shape of the self-weight deflection', () => {
+    const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+    const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
+    const r0 = m.results();
+    expect(r0.wc).toBe(0);
+    set('w_{c.0}', 10);
+    const r1 = m.results();
+    expect(r1.wc).toBeCloseTo(10, 9);
+    expect(r0.dmax - r1.dmax).toBeGreaterThan(9.5); // the peak is near mid-span, where the full 10 mm applies
+    expect(r0.dmax - r1.dmax).toBeLessThanOrEqual(10 + 1e-9);
+    set('c_{cam}', 50);
+    const r2 = m.results();
+    expect(r2.wc).toBeGreaterThan(10);
+    expect(r2['UR.d.1']).toBeCloseTo(r0['UR.d.1'], 12); // construction deflection is not cambered
+  }, 120_000);
 });
 
