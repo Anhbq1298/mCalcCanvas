@@ -531,7 +531,7 @@ export function App() {
             />
             <Legend items={[{ color: C.blue, label: `1.0 DL + 1.0 LL, max ${fmt(dMax, 1)} mm` }, { color: C.green, label: `LL, max ${fmt(Math.max(...v.dq), 1)} mm` }, { color: C.red, label: `limit L/r = ${fmt(res.dlim, 1)} mm`, dash: true }]} />
             <p className="hint" data-testid="frequency">
-              Natural frequency f<sub>1</sub> = {fmt(composite ? res.f1 : res.f1nc, 2)} Hz{composite ? '' : ' (steel alone)'} against the limit f<sub>lim</sub> = {fmt(res.flim, 2)} Hz: UR = {fmt(composite ? res['UR.fn'] : res['UR.fn.nc'], 3)}. f<sub>1</sub> = 18/√δ, δ = {fmt(composite ? res.ddyn : res.ddynnc, 1)} mm under g<sub>0</sub> + G + ψ<sub>vib</sub>Q on the dynamic section (SCI P354 approximation).
+              Natural frequency f<sub>1</sub> = {fmt(composite ? res.f1 : res.f1nc, 2)} Hz{composite ? '' : ' (steel alone)'} against the limit f<sub>lim</sub> = {fmt(res.flim, 2)} Hz: UR = {fmt(composite ? res['UR.fn'] : res['UR.fn.nc'], 3)}. f<sub>1</sub> = 18/√δ, δ = {fmt(composite ? res.ddyn : res.ddynnc, 1)} mm under g<sub>0</sub> + G + ψ<sub>vib</sub>Q on the dynamic section (SCI P354 approximation, E<sub>c.dyn</sub> = {fmt(res.Ecdyn ?? 38, 1)} GPa; SCI P354 / AD 433 give 38 GPa, AISC DG11 uses 1.35 E<sub>cm</sub>; change E<sub>c.dyn</sub> under Serviceability).
             </p>
             </section>
           </section>

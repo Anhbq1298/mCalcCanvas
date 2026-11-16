@@ -104,6 +104,7 @@ input('Deflection limit L / r_lim', 'r_{lim}', 250);
 input('Precamber w_c, % of the self-weight (g_0) deflection; 0 = none', 'c_{cam}', 0);
 input('Natural frequency limit (project; office floors 3 to 5 Hz)', 'f_{lim}', 4, 'Hz');
 input('Share of the imposed load in the vibration mass', '\\psi_{vib}', 0.1);
+input('Dynamic modulus of the concrete (38 GPa: SCI P354 / AD 433, normal weight; see 4.10)', 'E_{c.dyn}', 38, 'GPa');
 
 H(2, '2. LOADING');
 l.out[l.out.length - 1].props.pageBreak = true; // loading starts on its own page
@@ -411,8 +412,7 @@ T('c_comp = 0: the chart shows the bare steel; UR_d,x above is for information, 
 Object.assign(l.out[l.out.length - 1].props, { showWhen: R`c_{comp}<1`, color: '#b91c1c' });
 H(3, '4.10 Natural frequency (SLS, SCI P354 approximation)');
 T('Walking vibration: f1 = 18 / sqrt(δ), δ in mm, the midspan deflection under the mass loads (G + ψ_vib Q, self-weight included).');
-T('Dynamic section: uncracked, full interaction, concrete dynamic modulus 38 GPa for normal weight (SCI P354, AD 433; not enhanced by 10%).');
-P('Dynamic modulus of normal-weight concrete (SCI P354, AD 433; fixed, not an input)', R`E_{c.dyn}\coloneq38\,\mathrm{GPa}`, M(units('GPa')));
+T('Dynamic section: uncracked, full interaction. Default E_c.dyn = 38 GPa for normal-weight concrete: SCI P354 (Design of floors for vibration, 2009) and SCI AD 433; the 10% enhancement is not applied. Other practice: AISC DG11 uses 1.35 E_cm (about 44.6 GPa for C30/37); 1.0 E_cm gives the lower bound. Light-weight concrete: use the project or supplier value. Edit E_c.dyn in 1.10 to follow another standard.');
 calc('Dynamic modular ratio', 'n_{dyn}', R`\frac{E_a}{E_{c.dyn}}`, '', false);
 calc('Transformed slab area', 'A_{c.dyn}', R`\frac{b_{eff}h_c}{n_{dyn}}`, 'mm^2', false);
 calc('Elastic NA below slab top', 'y_{dyn}', R`\frac{A_a\left(h_c+h_a/2\right)+A_{c.dyn}h_c/2}{A_a+A_{c.dyn}}`, 'mm', false);
