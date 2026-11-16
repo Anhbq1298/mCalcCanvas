@@ -8,12 +8,12 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { sections } from '../../engineering/steel/sections';
-import { BAR_DIAMETERS, CHECKS, candidatesFor, governingCheck, studLayouts, type InputField, type LoadTable, type Results } from './model';
+import { BAR_DIAMETERS, CHECKS, governingCheck, type DesignCriteria, type InputField, type LoadTable, type Results } from './model';
 import type { OptimizeResult, ToWorker } from './worker';
 import { DeckProfile, Legend, LineChart, LongSection, PointDrawing, SectionDrawing, ShearSurface3D, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
 import { headerParts } from '../../canvas/inputTable';
 import { C, fmt } from './format';
-import { optimizeParallel, warmOptimizer } from './optimizer';
+import { optimizeDesign, optimizeParallel, warmOptimizer } from './optimizer';
 
 /** One state of the inputs: input values, load-table rows and section, for undo/redo. */
 type Snap = { values: Record<string, number>; rows: Record<string, string[][]>; sectionId: number };
@@ -107,7 +107,14 @@ export function App() {
   const [values, setValues] = useState<Record<string, number>>({});
   const [family, setFamily] = useState('UB');
   const [hMax, setHMax] = useState('');
-  const [optFamily, setOptFamily] = useState('UB');
+  const [optFamilies, setOptFamilies] = useState<string[]>(['UB']);
+  const [hMin, setHMin] = useState('');
+  const [bMin, setBMin] = useState('');
+  const [studMode, setStudMode] = useState<'uniform' | 'segmented'>('uniform');
+  const [camAuto, setCamAuto] = useState(false);
+  const [cam, setCam] = useState({ pct: '80', min: '20', max: '100', step: '5', minSpan: '7.5' });
+  const [costStud, setCostStud] = useState('0');
+  const [costCamber, setCostCamber] = useState('0');
   const [tStrength, setTStrength] = useState('1.00');
   const [tDefl, setTDefl] = useState('1.00');
   const [etaReq, setEtaReq] = useState(''); // optimiser: project minimum degree of shear connection, %; blank = code minimum only
@@ -291,30 +298,40 @@ export function App() {
     const sec = sections.find((x) => x.id === state.sectionId)!;
     const base = { id: sec.id, name: sec.name, mass: sec.values.mass, h: sec.values.h };
     const spacings = [200, 175, 150, 125, 100];
-    const cands = kind === 'studs'
-      ? studLayouts(pitch).map((l) => ({ ...base, sc: l.sc, scB: l.sc, bar: cur.bar, bare: false, ...(l.nr ? { nr: l.nr } : {}) }))
-      : BAR_DIAMETERS.filter((d) => d >= cur.bar).flatMap((bar) => spacings.map((sf) => ({ ...base, sc: cur.sc, scB: cur.scB, bar, sf, bare: true })));
     setDetailMsg((m) => ({ ...m, [kind]: { running: true, text: 'Checking…' } }));
-    const r = await optimizeParallel(sec.family, cands, null, { strength: 1, deflection: 1 }, { values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) }, () => undefined, true);
+    const st = { values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) };
+    const r = kind === 'studs'
+      ? await optimizeDesign(sec.family, [base], dv('L'), { strength: 1, deflection: 1, etaMin: 0, etaMax: 1, studs: studMode, bars: [cur.bar], camber: null, costStud: 0, costCamber: 0, detail: true }, st, () => undefined)
+      : await optimizeParallel(sec.family, BAR_DIAMETERS.filter((d) => d >= cur.bar).flatMap((bar) => spacings.map((sf) => ({ ...base, sc: cur.sc, scB: cur.scB, bar, sf, bare: true }))), null, { strength: 1, deflection: 1 }, st, () => undefined, true);
+    if (kind === 'studs' && r.best && !r.best.composite) r.best = null; // the bare-steel fallback is no stud layout
     const b = r.best;
-    if (!b) { setDetailMsg((m) => ({ ...m, [kind]: { running: false, text: kind === 'studs' ? (pitch ? 'No layout (alternate ribs, every rib, two per rib) satisfies every check with composite action.' : 'No uniform spacing from 200 to 100 mm satisfies every check with composite action.') : 'No rebar spacing from 200 to 100 mm (Ø up to 13) satisfies every check.' } })); return; }
+    if (!b) { setDetailMsg((m) => ({ ...m, [kind]: { running: false, text: kind === 'studs' ? (pitch ? 'No layout (every n-th rib, every rib, two per rib) satisfies every check with composite action.' : 'No single-row stud layout satisfies every check with composite action.') : 'No rebar spacing from 200 to 100 mm (Ø up to 13) satisfies every check.' } })); return; }
     const set = (name: string, v: number) => { const f = inputs.find((x) => x.name === name); if (f && value(f) !== v) setInput(f, v); };
-    if (kind === 'studs') { set('s_{sc.A}', b.sc); set('s_{sc.B}', b.sc); if (b.nr) set('n_r', b.nr); }
+    if (kind === 'studs') { set('s_{sc.A}', b.sc); set('s_{sc.B}', b.scB ?? b.sc); if (b.nr) set('n_r', b.nr); }
     else { set('d_{s.t}', b.bar); set('d_{s.b}', b.bar); set('s_{f.t}', b.sf!); set('s_{f.b}', b.sf!); }
     const ur = Math.max(b.strength.ur, b.deflection.ur);
-    setDetailMsg((m) => ({ ...m, [kind]: { running: false, text: kind === 'studs' ? `Set to ${b.sc} mm${b.nr ? `, ${b.nr} per rib` : ''} (fewest studs that pass); permanent-stage governing UR ${fmt(ur, 3)}.` : `Set to Ø${b.bar} @ ${b.sf} mm (top and bottom); permanent-stage governing UR ${fmt(ur, 3)}.` } }));
+    setDetailMsg((m) => ({ ...m, [kind]: { running: false, text: kind === 'studs' ? `Set to ${b.sc}${(b.scB ?? b.sc) !== b.sc ? ` / ${b.scB}` : ''} mm${b.nr ? `, ${b.nr} per rib` : ''}: ${fmt(b.studs ?? NaN, 0)} studs, η ${fmt((b.eta ?? NaN) * 100, 0)} % (fewest that pass); permanent-stage governing UR ${fmt(ur, 3)}.` : `Set to Ø${b.bar} @ ${b.sf} mm (top and bottom); permanent-stage governing UR ${fmt(ur, 3)}.` } }));
   };
+  const okZero = (t: string) => NUMBER.test(t) && Number(t) >= 0;
+  const lim = (t: string) => (t.trim() ? Number(t) : null);
+  const optSections = sections
+    .filter((x) => optFamilies.includes(x.family) && Number.isFinite(x.values.mass)
+      && (lim(hMin) === null || x.values.h >= lim(hMin)! - 1e-9) && (lim(hMax) === null || x.values.h <= lim(hMax)! + 1e-9) && (lim(bMin) === null || x.values.b >= lim(bMin)! - 1e-9))
+    .sort((a, b) => a.values.mass - b.values.mass);
+  const optLabel = FAMILIES.filter((f) => optFamilies.includes(f)).join(' / ') || 'section';
+  const optOk = okNum(hMin, true) && okNum(hMax, true) && okNum(bMin, true) && okNum(tStrength) && okNum(tDefl) && okEta && okZero(costStud) && okZero(costCamber)
+    && (!camAuto || Object.values(cam).every(okZero)) && optSections.length > 0;
   const runOptimize = async () => {
-    const maxDepth = hMax.trim() ? Number(hMax) : null;
-    const targets = { strength: Number(tStrength), deflection: Number(tDefl), etaMin: etaReq.trim() ? Number(etaReq) / 100 : 0, etaMax: etaCap.trim() ? Number(etaCap) / 100 : 1 };
-    const dv = (name: string) => value(inputs.find((x) => x.name === name)!);
-    const current = { sc: dv('s_{sc.A}'), scB: dv('s_{sc.B}'), bar: dv('d_{s.t}'), nr: dv('n_r') };
-    const cands = candidatesFor(sections
-      .filter((x) => x.family === optFamily && Number.isFinite(x.values.mass) && (maxDepth === null || x.values.h <= maxDepth + 1e-9))
-      .sort((a, b) => a.values.mass - b.values.mass), current, pitch);
+    const criteria: DesignCriteria = {
+      strength: Number(tStrength), deflection: Number(tDefl), etaMin: etaReq.trim() ? Number(etaReq) / 100 : 0, etaMax: etaCap.trim() ? Number(etaCap) / 100 : 1,
+      studs: studMode, bars: BAR_DIAMETERS,
+      camber: camAuto ? { pct: Number(cam.pct), min: Number(cam.min), max: Number(cam.max), step: Number(cam.step), minSpan: Number(cam.minSpan) } : null,
+      costStud: Number(costStud), costCamber: Number(costCamber),
+    };
     setOpt({ running: true });
     const t0 = performance.now();
-    const result = await optimizeParallel(optFamily, cands, maxDepth, targets, { values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) }, (i, n, name) => setOpt({ running: true, i, n, name }));
+    const result = await optimizeDesign(optLabel, optSections.map((x) => ({ id: x.id, name: x.name, mass: x.values.mass, h: x.values.h })), value(byName('L')), criteria,
+      { values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) }, (i, n, name) => setOpt({ running: true, i, n, name }));
     setOpt({ running: false, result, seconds: (performance.now() - t0) / 1000 });
   };
   const renderField = (f: InputField) =>
@@ -605,7 +622,7 @@ export function App() {
             <div className="pin panel">
             <div className="check-head">
               <h2 id="h-verdict">Check</h2>
-              <button type="button" className="btn" data-testid="optimize-open" onClick={() => { setOptFamily(family); dialogRef.current?.showModal(); }}>
+              <button type="button" className="btn" data-testid="optimize-open" onClick={() => { setOptFamilies((v) => (v.includes(family) ? v : [...v, family])); dialogRef.current?.showModal(); }}>
                 Optimize section…
               </button>
             </div>
@@ -764,88 +781,141 @@ export function App() {
           </div>
         </div>
       </dialog>
-      <dialog ref={dialogRef} className="opt-dialog" aria-labelledby="opt-title" onClose={() => undefined}>
+      <dialog ref={dialogRef} className="opt-dialog wide" aria-labelledby="opt-title" onClose={() => undefined}>
         <form method="dialog" className="opt-form" onSubmit={(e) => e.preventDefault()} noValidate>
           <header className="opt-head">
             <h2 id="opt-title">Optimize section</h2>
             <button type="button" className="rowbtn" aria-label="Close" onClick={() => dialogRef.current?.close()}>×</button>
           </header>
-          <p className="hint">Tries every section of the family from the lightest up, and for each one {pitch ? 'the stud layout (alternate ribs, every rib, two per rib)' : 'stud spacing 200 → 100 mm (uniform)'} and transverse bars Ø10, Ø12, Ø13. Keeps the first combination that reaches composite action and meets both targets, with every check including longitudinal shear, construction stage included. Only if none does, the sections are tried as bare steel. Loads and other inputs stay as entered.</p>
-          <div className="fields">
-            <label className="f"><span>Family</span>
-              <select data-testid="opt-family" value={optFamily} onChange={(e) => setOptFamily(e.target.value)}>
-                {FAMILIES.map((f) => <option key={f}>{f}</option>)}
-              </select>
-            </label>
-            <label className="f"><span>Max depth h<sub>max</sub> (mm)</span>
-              <input data-testid="hmax" className="num-input" type="text" inputMode="decimal" autoComplete="off" placeholder="no limit" value={hMax} onChange={(e) => setHMax(e.target.value)}
-                aria-invalid={!okNum(hMax, true)} aria-describedby={!okNum(hMax, true) ? 'hmax-error' : undefined} />
-              {!okNum(hMax, true) && <span id="hmax-error" className="field-error">Error: a depth in mm, e.g. 350, or blank</span>}
-            </label>
-            <label className="f"><span>Target max UR, strength (ULS)</span>
-              <input data-testid="t-strength" className="num-input" type="text" inputMode="decimal" autoComplete="off" value={tStrength} onChange={(e) => setTStrength(e.target.value)}
-                aria-invalid={!okNum(tStrength)} aria-describedby={!okNum(tStrength) ? 'ts-error' : undefined} />
-              {!okNum(tStrength) && <span id="ts-error" className="field-error">Error: a ratio, e.g. 0.90</span>}
-            </label>
-            <label className="f"><span>Target max UR, deflection (SLS)</span>
-              <input data-testid="t-defl" className="num-input" type="text" inputMode="decimal" autoComplete="off" value={tDefl} onChange={(e) => setTDefl(e.target.value)}
-                aria-invalid={!okNum(tDefl)} aria-describedby={!okNum(tDefl) ? 'td-error' : undefined} />
-              {!okNum(tDefl) && <span id="td-error" className="field-error">Error: a ratio, e.g. 0.80</span>}
-            </label>
-            <label className="f"><span>Minimum % of full composite, η<sub>min</sub></span>
-              <input data-testid="t-eta" className="num-input" type="text" inputMode="decimal" autoComplete="off" placeholder={`code minimum ${fmt(res.etaMin * 100, 0)}`} value={etaReq} onChange={(e) => setEtaReq(e.target.value)}
-                aria-invalid={!okEta} aria-describedby={!okEta ? 'te-error' : undefined} />
-            </label>
-            <label className="f"><span>Maximum % of full composite, η<sub>max</sub></span>
-              <input data-testid="t-eta-max" className="num-input" type="text" inputMode="decimal" autoComplete="off" placeholder="100" value={etaCap} onChange={(e) => setEtaCap(e.target.value)}
-                aria-invalid={!okEta} aria-describedby={!okEta ? 'te-error' : undefined} />
-            </label>
-            <label className="f wide">
-              {!okEta && <span id="te-error" className="field-error">Error: percentages from 0 to 100, minimum not above maximum</span>}
-              <span className="hint">Now η = {fmt(res.eta * 100, 0)} %; EN 1994-1-1 minimum {fmt(res.etaMin * 100, 0)} %. A section that needs more studs than η<sub>max</sub> is passed over for the next heavier one; the fewest studs that work are kept.</span>
-            </label>
-            {camberField && (
-              <label className="f" htmlFor={`opt-${camberField.id}`}>
-                <span>Precamber, % of the self-weight (g<sub>0</sub>) deflection</span>
-                <NumberField id={`opt-${camberField.id}`} label="c_cam" value={String(value(camberField))} onCommit={(nv) => setInput(camberField, nv)} />
+          <p className="hint">Designs every allowed section, lightest first: camber from the rules, then the fewest studs and the smallest transverse bar (Ø10, Ø12, Ø13) that pass every check, construction stage and longitudinal shear included. The cheapest design wins (steel + studs + camber). Only if no section works as composite are the sections tried as bare steel. Loads and other inputs stay as entered.</p>
+          <fieldset className="crit">
+            <legend>Sections</legend>
+            <div className="fams" role="group" aria-label="Families">
+              {FAMILIES.map((f) => (
+                <label key={f} className="fam"><input type="checkbox" data-testid={`opt-fam-${f}`} checked={optFamilies.includes(f)} onChange={(e) => setOptFamilies((v) => (e.target.checked ? [...v, f] : v.filter((x) => x !== f)))} /> {f}</label>
+              ))}
+            </div>
+            <div className="fields three">
+              <label className="f"><span>Min depth h (mm)</span>
+                <input data-testid="hmin" className="num-input" type="text" inputMode="decimal" autoComplete="off" placeholder="no limit" value={hMin} onChange={(e) => setHMin(e.target.value)} aria-invalid={!okNum(hMin, true)} />
               </label>
-            )}
-            {camber0Field && (
-              <label className="f" htmlFor={`opt-${camber0Field.id}`}>
-                <span>Precamber, fixed value at mid-span (mm)</span>
-                <NumberField id={`opt-${camber0Field.id}`} label="w_c.0" value={String(value(camber0Field))} onCommit={(nv) => setInput(camber0Field, nv)} />
+              <label className="f"><span>Max depth h (mm)</span>
+                <input data-testid="hmax" className="num-input" type="text" inputMode="decimal" autoComplete="off" placeholder="no limit" value={hMax} onChange={(e) => setHMax(e.target.value)}
+                  aria-invalid={!okNum(hMax, true)} aria-describedby={!okNum(hMax, true) ? 'hmax-error' : undefined} />
+                {!okNum(hMax, true) && <span id="hmax-error" className="field-error">Error: a depth in mm, e.g. 350, or blank</span>}
               </label>
-            )}
-            {camberField && (
-              <label className="f wide">
-                <span className="hint">The two add up and are also used in the design and the report. Now w<sub>c</sub> = {fmt(res.wc, 1)} mm at mid-span; deflection checks use w<sub>tot</sub> − w<sub>c</sub> (EN 1990 A1.4.3); construction and LL deflections are not cambered.</span>
+              <label className="f"><span>Min flange width b (mm)</span>
+                <input data-testid="bmin" className="num-input" type="text" inputMode="decimal" autoComplete="off" placeholder="no limit" value={bMin} onChange={(e) => setBMin(e.target.value)} aria-invalid={!okNum(bMin, true)} />
               </label>
+            </div>
+            <p className="hint" data-testid="opt-count">{optSections.length} sections allowed.</p>
+          </fieldset>
+          <fieldset className="crit">
+            <legend>Shear studs</legend>
+            <div className="fields three">
+              <label className="f"><span>Min % of full composite</span>
+                <input data-testid="t-eta" className="num-input" type="text" inputMode="decimal" autoComplete="off" placeholder={`code, now ${fmt(res.etaMin * 100, 0)}`} value={etaReq} onChange={(e) => setEtaReq(e.target.value)} aria-invalid={!okEta} aria-describedby={!okEta ? 'te-error' : undefined} />
+              </label>
+              <label className="f"><span>Max % of full composite</span>
+                <input data-testid="t-eta-max" className="num-input" type="text" inputMode="decimal" autoComplete="off" placeholder="100" value={etaCap} onChange={(e) => setEtaCap(e.target.value)} aria-invalid={!okEta} aria-describedby={!okEta ? 'te-error' : undefined} />
+              </label>
+              <label className="f"><span>Distribution</span>
+                <select data-testid="stud-mode" value={studMode} onChange={(e) => setStudMode(e.target.value as 'uniform' | 'segmented')} disabled={transverse}>
+                  <option value="uniform">Uniform over the span</option>
+                  <option value="segmented">Segmented (same count each side of M max)</option>
+                </select>
+              </label>
+            </div>
+            {!okEta && <span id="te-error" className="field-error">Error: percentages from 0 to 100, minimum not above maximum</span>}
+            <p className="hint">{transverse ? 'Ribs perpendicular: studs sit in the ribs, so the layouts are every n-th rib, then two per rib.' : 'The stud count comes from the bending demand and the minimum degree; spacing is rounded down to 5 mm within the code limits.'} A section that needs more than the maximum is passed over for a heavier one.</p>
+          </fieldset>
+          <fieldset className="crit">
+            <legend>Camber</legend>
+            <label className="fam"><input type="checkbox" data-testid="camber-auto" checked={camAuto} onChange={(e) => setCamAuto(e.target.checked)} /> Choose the camber by rule (unpropped beams only)</label>
+            {camAuto ? (
+              <div className="fields three">
+                {([['cam-pct', '% of the self-weight (g₀) deflection', 'pct'], ['cam-min', 'Minimum camber (mm); less = none', 'min'], ['cam-max', 'Maximum camber (mm)', 'max'], ['cam-step', 'Increment (mm)', 'step'], ['cam-span', 'No camber for spans below (m)', 'minSpan']] as const).map(([id, label, key]) => (
+                  <label key={id} className="f"><span>{label}</span>
+                    <input data-testid={id} className="num-input" type="text" inputMode="decimal" autoComplete="off" value={cam[key]} onChange={(e) => setCam((v) => ({ ...v, [key]: e.target.value }))} aria-invalid={!okZero(cam[key])} />
+                  </label>
+                ))}
+              </div>
+            ) : (
+              <div className="fields three">
+                {camberField && (
+                  <label className="f" htmlFor={`opt-${camberField.id}`}><span>Precamber, % of the g<sub>0</sub> deflection</span>
+                    <NumberField id={`opt-${camberField.id}`} label="c_cam" value={String(value(camberField))} onCommit={(nv) => setInput(camberField, nv)} />
+                  </label>
+                )}
+                {camber0Field && (
+                  <label className="f" htmlFor={`opt-${camber0Field.id}`}><span>Precamber, fixed value (mm)</span>
+                    <NumberField id={`opt-${camber0Field.id}`} label="w_c.0" value={String(value(camber0Field))} onCommit={(nv) => setInput(camber0Field, nv)} />
+                  </label>
+                )}
+              </div>
             )}
-          </div>
+            <p className="hint">{camAuto ? 'Each section gets its own camber: the share of its self-weight deflection, rounded down to the increment.' : <>As entered, the same for every section; now w<sub>c</sub> = {fmt(res.wc, 1)} mm.</>} Camber reduces the total deflection only (EN 1990 A1.4.3); construction and live-load deflections are not cambered.</p>
+          </fieldset>
+          <fieldset className="crit">
+            <legend>Deflection limits and targets</legend>
+            <div className="fields three">
+              {([['r_{lim.1}', 'Construction, L /'], ['r_{lim.q}', 'Live load, L /'], ['r_{lim}', 'Total less camber, L /']] as const).map(([n, label]) => (
+                <label key={n} className="f" htmlFor={`opt-${byName(n).id}`}><span>{label}</span>
+                  <NumberField id={`opt-${byName(n).id}`} label={n} value={String(value(byName(n)))} onCommit={(nv) => setInput(byName(n), nv)} />
+                </label>
+              ))}
+              <label className="f"><span>Target max UR, strength (ULS)</span>
+                <input data-testid="t-strength" className="num-input" type="text" inputMode="decimal" autoComplete="off" value={tStrength} onChange={(e) => setTStrength(e.target.value)}
+                  aria-invalid={!okNum(tStrength)} aria-describedby={!okNum(tStrength) ? 'ts-error' : undefined} />
+                {!okNum(tStrength) && <span id="ts-error" className="field-error">Error: a ratio, e.g. 0.90</span>}
+              </label>
+              <label className="f"><span>Target max UR, serviceability (SLS)</span>
+                <input data-testid="t-defl" className="num-input" type="text" inputMode="decimal" autoComplete="off" value={tDefl} onChange={(e) => setTDefl(e.target.value)}
+                  aria-invalid={!okNum(tDefl)} aria-describedby={!okNum(tDefl) ? 'td-error' : undefined} />
+                {!okNum(tDefl) && <span id="td-error" className="field-error">Error: a ratio, e.g. 0.80</span>}
+              </label>
+            </div>
+            <p className="hint">The three limits are worksheet inputs: they also apply to the design on the page and in the report.</p>
+          </fieldset>
+          <fieldset className="crit">
+            <legend>Cost</legend>
+            <div className="fields three">
+              <label className="f"><span>One stud, kg of steel</span>
+                <input data-testid="cost-stud" className="num-input" type="text" inputMode="decimal" autoComplete="off" value={costStud} onChange={(e) => setCostStud(e.target.value)} aria-invalid={!okZero(costStud)} />
+              </label>
+              <label className="f"><span>Cambering one beam, kg of steel</span>
+                <input data-testid="cost-camber" className="num-input" type="text" inputMode="decimal" autoComplete="off" value={costCamber} onChange={(e) => setCostCamber(e.target.value)} aria-invalid={!okZero(costCamber)} />
+              </label>
+            </div>
+            <p className="hint">Cost = mass × span + studs × stud cost + camber cost. With 0 and 0 the lightest section wins.</p>
+          </fieldset>
           <div className="opt-actions">
-            <button type="button" className="btn primary" data-testid="optimize" disabled={opt?.running || !okNum(hMax, true) || !okNum(tStrength) || !okNum(tDefl) || !okEta} onClick={runOptimize}>
-              {opt?.running ? 'Optimizing…' : `Find the lightest ${optFamily}`}
+            <button type="button" className="btn primary" data-testid="optimize" disabled={opt?.running || !optOk} onClick={runOptimize}>
+              {opt?.running ? 'Optimizing…' : `Find the best ${optLabel}`}
             </button>
             <p className="hint" role="status" data-testid="optimize-status">
-              {opt?.running && opt.n ? <>Checked {opt.i} of {opt.n}: {opt.name}</> : null}
+              {opt?.running && opt.n ? <>Designed {opt.i} of {opt.n}: {opt.name}</> : null}
               {!opt?.running && opt?.result ? (
                 opt.result.best ? (
-                  <>Lightest {opt.result.family}{opt.result.maxDepth !== null ? <> with h ≤ {fmt(opt.result.maxDepth, 0)} mm</> : null} meeting UR ≤ {fmt(opt.result.targets.strength, 2)} strength and ≤ {fmt(opt.result.targets.deflection, 2)} deflection: <b>{opt.result.best.name}</b>. Checked {opt.result.tried} of {opt.result.total}{opt.seconds !== undefined ? `, ${fmt(opt.seconds, 1)} s` : ''}.</>
+                  <>{Number(costStud) > 0 || Number(costCamber) > 0 ? 'Cheapest' : 'Lightest'} {opt.result.family} meeting UR ≤ {fmt(opt.result.targets.strength, 2)} strength and ≤ {fmt(opt.result.targets.deflection, 2)} serviceability: <b>{opt.result.best.name}</b>.{opt.seconds !== undefined ? ` ${fmt(opt.seconds, 1)} s.` : ''}</>
                 ) : (
-                  <span className="error">No {opt.result.family} section{opt.result.maxDepth !== null ? <> with h ≤ {fmt(opt.result.maxDepth, 0)} mm</> : null} meets the targets ({opt.result.total} tried).</span>
+                  <span className="error">No {opt.result.family} section meets the criteria ({opt.result.total / 2} sections).</span>
                 )
               ) : null}
             </p>
             {!opt?.running && opt?.result?.best && (
               <table className="opt-result" data-testid="optimize-result">
-                <caption className="sr-only">Optimised section</caption>
+                <caption className="sr-only">Optimised design</caption>
                 <tbody>
                   <tr><td>Section</td><td>{opt.result.best.name}</td></tr>
                   <tr><td>Mass / depth h</td><td>{fmt(opt.result.best.mass, 1)} kg/m / {fmt(opt.result.best.h, 1)} mm</td></tr>
-                  <tr><td>Design basis</td><td>{opt.result.best.composite ? 'Composite' : `Bare steel: no stud and bar arrangement reaches composite action${opt.result.targets.etaMin || (opt.result.targets.etaMax ?? 1) < 1 ? ` with η in ${fmt((opt.result.targets.etaMin ?? 0) * 100, 0)}–${fmt((opt.result.targets.etaMax ?? 1) * 100, 0)} %` : ''}`}</td></tr>
-                  {opt.result.best.composite && <tr><td>Stud spacing s<sub>sc</sub> (both)</td><td>{opt.result.best.sc} mm{opt.result.best.nr ? `, ${opt.result.best.nr} per rib` : ''}</td></tr>}
-                  {opt.result.best.composite && opt.result.best.eta !== undefined && <tr><td>Degree of shear connection η{opt.result.targets.etaMin || (opt.result.targets.etaMax ?? 1) < 1 ? ` (range ${fmt((opt.result.targets.etaMin ?? 0) * 100, 0)}–${fmt((opt.result.targets.etaMax ?? 1) * 100, 0)} %)` : ''}</td><td>{fmt(opt.result.best.eta * 100, 0)} %</td></tr>}
+                  <tr><td>Design basis</td><td>{opt.result.best.composite ? 'Composite' : 'Bare steel: no section reaches composite action within the criteria'}</td></tr>
+                  {opt.result.best.composite && <tr><td>Stud spacing s<sub>sc</sub> (A / B)</td><td>{opt.result.best.sc} / {opt.result.best.scB ?? opt.result.best.sc} mm{opt.result.best.nr ? `, ${opt.result.best.nr} per rib` : ''}</td></tr>}
+                  {opt.result.best.composite && <tr><td>Studs on the beam</td><td>{fmt(opt.result.best.studs ?? NaN, 0)}</td></tr>}
+                  {opt.result.best.composite && opt.result.best.eta !== undefined && <tr><td>Degree of shear connection η</td><td>{fmt(opt.result.best.eta * 100, 0)} %</td></tr>}
                   {opt.result.best.composite && <tr><td>Transverse bars Ø (both)</td><td>{opt.result.best.bar} mm</td></tr>}
+                  <tr><td>Camber</td><td>{(opt.result.best.camber ?? 0) > 0 ? `${fmt(opt.result.best.camber!, 0)} mm` : 'none'}</td></tr>
+                  <tr><td>Cost, kg of steel</td><td>{fmt(opt.result.best.cost ?? NaN, 0)}</td></tr>
                   <tr><td>Strength UR (target {fmt(opt.result.targets.strength, 2)})</td><td className={tone(opt.result.best.strength.ur)}>{fmt(opt.result.best.strength.ur, 3)} · <Rich text={opt.result.best.strength.label} /></td></tr>
                   <tr><td>Deflection UR (target {fmt(opt.result.targets.deflection, 2)})</td><td className={tone(opt.result.best.deflection.ur)}>{fmt(opt.result.best.deflection.ur, 3)} · <Rich text={opt.result.best.deflection.label} /></td></tr>
                 </tbody>
@@ -856,12 +926,10 @@ export function App() {
                 <button type="button" className="btn primary" data-testid="optimize-apply" onClick={() => {
                   const b = opt.result!.best!;
                   send({ kind: 'section', id: b.id });
-                  setFamily(opt.result!.family);
-                  for (const [name, v] of [['s_{sc.A}', b.sc], ['s_{sc.B}', b.sc], ['d_{s.t}', b.bar], ['d_{s.b}', b.bar]] as const) {
-                    const f = inputs.find((x) => x.name === name);
-                    if (f) setInput(f, v);
-                  }
-                  if (b.nr) setInput(byName('n_r'), b.nr);
+                  setFamily(sections.find((x) => x.id === b.id)!.family);
+                  const put = (name: string, v: number) => { const f = inputs.find((x) => x.name === name); if (f && value(f) !== v) setInput(f, v); };
+                  if (b.composite) { put('s_{sc.A}', b.sc); put('s_{sc.B}', b.scB ?? b.sc); put('d_{s.t}', b.bar); put('d_{s.b}', b.bar); if (b.nr) put('n_r', b.nr); }
+                  if (camAuto) { put('c_{cam}', 0); put('w_{c.0}', b.camber ?? 0); }
                   dialogRef.current?.close();
                 }}>
                   Use {opt.result.best.name}

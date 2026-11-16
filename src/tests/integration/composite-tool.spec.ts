@@ -61,13 +61,37 @@ test('mCompositeBeamDesign optimizes the section in a dialog with strength and d
   expect(defl).toBeLessThanOrEqual(0.8);
   // composite action is required, and the stud spacing and bar diameter come from the candidate lists
   expect(await cell('Design basis')).toBe('Composite');
-  expect([100, 125, 150, 175, 200]).toContain(Number((await cell('Stud spacing')).split(' ')[0]));
+  // the stud spacing is derived from the demand (a multiple of 5 mm), uniform by default; bars from the list
+  const [sa, sb] = (await cell('Stud spacing')).split(' mm')[0].split(' / ').map(Number);
+  expect(sa % 5).toBe(0);
+  expect(sb).toBe(sa);
+  expect(Number(await cell('Studs on the beam'))).toBeGreaterThan(10);
   expect([10, 12, 13]).toContain(Number((await cell('Transverse bars')).split(' ')[0]));
+  expect(await cell('Camber')).toBe('none');
   const chosen = await cell('Section');
+  // a stud cost, a cap on the degree of connection and a camber rule change the answer's details, not its validity
+  await page.getByTestId('t-eta-max').fill('60');
+  await page.getByTestId('stud-mode').selectOption('segmented');
+  await page.getByTestId('camber-auto').check();
+  await page.getByTestId('cam-pct').fill('100');
+  await page.getByTestId('cam-step').fill('1');
+  await page.getByTestId('cam-min').fill('1');
+  await page.getByTestId('cam-span').fill('6');
+  await page.getByTestId('optimize').click();
+  await expect(page.getByTestId('optimize-status')).toContainText('Optimizing', { timeout: 5_000 }).catch(() => undefined);
+  await expect(page.getByTestId('optimize-status')).toContainText('Lightest UB', { timeout: 200_000 });
+  expect(Number((await cell('Degree of shear connection')).split(' ')[0])).toBeLessThanOrEqual(60);
+  expect(await cell('Camber')).toMatch(/^\d+ mm$/);
+  const chosen2 = await cell('Section');
+  expect(chosen2.length).toBeGreaterThan(0);
+  void chosen;
   await page.getByTestId('optimize-apply').click();
   await expect(page.getByRole('dialog')).toBeHidden();
-  await expect(page.getByTestId('section-select').locator('option:checked')).toHaveText(chosen, { timeout: 30_000 });
+  await expect(page.getByTestId('section-select').locator('option:checked')).toHaveText(chosen2, { timeout: 30_000 });
   await expect(page.locator('.status')).toHaveText('Up to date', { timeout: 30_000 });
+  // the applied design passes on the page with the camber set as a fixed value
+  await expect(page.getByTestId('verdict')).toContainText('Composite');
+  expect(Number(await page.getByTestId('ur-des').textContent())).toBeLessThanOrEqual(0.9);
 });
 
 test('slab type: filled steel deck with transverse ribs reduces the studs and drops surface b-b', async ({ page }) => {

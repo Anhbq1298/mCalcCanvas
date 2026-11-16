@@ -4,7 +4,7 @@
  * scrolling stay responsive while it recalculates (no long task on the main thread).
  */
 import raw from '../../../templates/Composite_Beam_EC4.mCCV?raw';
-import { CONSTRUCTION_CHECKS, CompositeModel, etaInRange, governingSplit, screenPasses, type Targets } from './model';
+import { CONSTRUCTION_CHECKS, CompositeModel, designSection, etaInRange, governingSplit, screenPasses, type DesignCriteria, type Targets } from './model';
 
 export type ToWorker =
   | { kind: 'input'; id: string; value: number }
@@ -13,6 +13,8 @@ export type ToWorker =
   | { kind: 'report'; request: number } | { kind: 'hello' }
   // optimizer pool: copy the page's inputs, then check one section at a time
   | { kind: 'state'; values: Record<string, number>; tables: { id: string; rows: string[][] }[] }
+  // design engine: one section per message (camber, fewest studs, smallest bar)
+  | { kind: 'design'; id: number; mode: 'composite' | 'bare'; token: number; criteria: DesignCriteria }
   | { kind: 'evaluate'; id: number; sc: number; scB: number; bar: number; sf?: number; nr?: number; bare: boolean; detail?: boolean; token: number; targets: Targets };
 
 export type { OptimizeResult } from './model';
@@ -33,6 +35,7 @@ self.onmessage = (ev: MessageEvent<ToWorker>) => {
     }
     return;
   }
+  if (m.kind === 'design') return post({ kind: 'designed', token: m.token, id: m.id, design: designSection(model, screen, m.id, m.criteria, m.mode) });
   if (m.kind === 'evaluate') {
     // 1. screening model (no deflection curves): a failing strength or construction-deflection check is final
     if (screen) {

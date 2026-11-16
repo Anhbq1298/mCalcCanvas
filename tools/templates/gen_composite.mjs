@@ -100,7 +100,9 @@ input('Stiff bearing length at a support', 's_{s.S}', 100, 'mm');
 H(3, '1.10 Serviceability');
 input('Creep coefficient', '\\varphi', 2);
 input('Free shrinkage strain', '\\varepsilon_{cs}', 0.0003);
-input('Deflection limit L / r_lim', 'r_{lim}', 250);
+input('Deflection limit L / r_lim, total less precamber', 'r_{lim}', 250);
+input('Deflection limit L / r_lim.1, construction stage', 'r_{lim.1}', 250);
+input('Deflection limit L / r_lim.q, live load alone', 'r_{lim.q}', 360);
 input('Precamber w_c, % of the self-weight (g_0) deflection; 0 = none', 'c_{cam}', 0);
 input('Precamber, fixed value at mid-span, added to the % share; 0 = none', 'w_{c.0}', 0, 'mm');
 input('Natural frequency limit (project; office floors 3 to 5 Hz)', 'f_{lim}', 4, 'Hz');
@@ -224,8 +226,10 @@ ur('Construction LTB','LT','M_{1.Ed}','M_{b.Rd}');
 H(3, '3.4 Construction deflection (project limit)');
 calc('Characteristic construction load', 'w_{1.k}', R`g_0+\left(g_{form}+q_{con}\right)s_b`, 'kN/m', false);
 calc('Steel-only deflection', '\\delta_1', R`\frac{5w_{1.k}L_1^4}{384E_a I_a}`, 'mm', false);
-calc('Limit', '\\delta_{lim}', R`\frac{L}{r_{lim}}`, 'mm', false);
-ur('Construction deflection','d.1','\\delta_1','\\delta_{lim}');
+calc('Limit, total less precamber', '\\delta_{lim}', R`\frac{L}{r_{lim}}`, 'mm', false);
+calc('Limit, construction stage', '\\delta_{lim.1}', R`\frac{L}{r_{lim.1}}`, 'mm', false);
+calc('Limit, live load alone', '\\delta_{lim.q}', R`\frac{L}{r_{lim.q}}`, 'mm', false);
+ur('Construction deflection','d.1','\\delta_1','\\delta_{lim.1}');
 calc('Points along the construction span, 100 intervals', 'x_{1.v}', R`\mathrm{seq}\left(0\,\mathrm{m},L_1,\frac{L_1}{100}\right)`, 'm', 'fo');
 calc('Construction deflection along the span, w_1,k on the steel alone', '\\delta_{1.v}', R`\overrightarrow{\frac{w_{1.k}x_{1.v}\left(L_1^3-2L_1x_{1.v}^2+x_{1.v}^3\right)}{24E_a I_a}}`, 'mm', 'fo');
 DIAGRAM(120, { title: 'Construction-stage deflection (steel alone, 1.0 × characteristic load)', xUnit: 'm', yUnit: 'mm', invertY: true, series: [S('d1', 'construction δ_1(x)', ['x_{1.v}', '\\delta_{1.v}'], 'line', '#1d4ed8', 1.5), S('d1l', 'limit L / r_lim', [R`\mathrm{stack}\left(0\,\mathrm{m},L_1\right)`, R`\mathrm{stack}\left(\delta_{lim},\delta_{lim}\right)`], 'line', '#b91c1c', 1.2, { dash: true })] });
@@ -448,7 +452,8 @@ calc('Bare steel, 1.0 DL + 1.0 LL', '\\delta_{x.s}', R`\mathrm{map}\left(d_{st},
 calc('Bare steel, LL alone', '\\delta_{x.qs}', R`\mathrm{map}\left(d_{qs},x_v\right)`, 'mm', 'fo');
 T('Precamber (EN 1990 A1.4.3): w_max = w_tot − w_c. w_c = share c_cam of the self-weight (g_0) deflection plus the fixed value w_c.0, both in the shape of that deflection.');
 calc('Self-weight deflection along the span, g_0 on the section of κ_g', '\\delta_{g.v}', IF([R`c_{prop}\ge1`, R`\overrightarrow{\frac{g_0 x_v\left(L^3-2Lx_v^2+x_v^3\right)}{24E_a I_L}}`], [null, R`\overrightarrow{\frac{g_0 x_v\left(L^3-2Lx_v^2+x_v^3\right)}{24E_a I_a}}`]), 'mm', 'fo');
-calc('Precamber along the span', 'w_{c.v}', R`\left(\frac{c_{cam}}{100}+\frac{w_{c.0}}{\max\left(\delta_{g.v}\right)}\right)\delta_{g.v}`, 'mm', 'fo');
+calc('Self-weight deflection, maximum', '\\delta_{g.max}', R`\max\left(\delta_{g.v}\right)`, 'mm', false);
+calc('Precamber along the span', 'w_{c.v}', R`\left(\frac{c_{cam}}{100}+\frac{w_{c.0}}{\delta_{g.max}}\right)\delta_{g.v}`, 'mm', 'fo');
 calc('Precamber at mid-span', 'w_c', R`\max\left(w_{c.v}\right)`, 'mm', false);
 P('Plotted: composite if c_comp = 1, bare steel if 0, less the precamber', R`\delta_{x.d}\coloneq${IF([R`c_{comp}\ge1`, R`\delta_x-w_{c.v}`], [null, R`\delta_{x.s}-w_{c.v}`])}`, M({ ...units('mm'), ...fo }));
 P('Plotted LL, same basis', R`\delta_{q.d}\coloneq${IF([R`c_{comp}\ge1`, R`\delta_{x.q}`], [null, R`\delta_{x.qs}`])}`, M({ ...units('mm'), ...fo }));
@@ -459,6 +464,7 @@ DIAGRAM(170, { title: 'Deflection δ(x), permanent stage: composite if c_comp = 
   S('dq', 'LL', ['x_v', '\\delta_{q.d}'], 'line', '#059669', 1.5),
   S('dl', 'limit L / r_lim', [R`\mathrm{stack}\left(0\,\mathrm{m},L\right)`, R`\mathrm{stack}\left(\delta_{lim},\delta_{lim}\right)`], 'line', '#b91c1c', 1.5, { dash: true })] });
 ur('Maximum deflection along the span','d.x','\\delta_{max}','\\delta_{lim}');
+ur('Live-load deflection (not cambered)','d.q','\\delta_{q.max}','\\delta_{lim.q}');
 T('c_comp = 0: the chart shows the bare steel; UR_d,x above is for information, chapter 6 checks UR_d,nc.');
 Object.assign(l.out[l.out.length - 1].props, { showWhen: R`c_{comp}<1`, color: '#b91c1c' });
 H(3, '4.10 Natural frequency (SLS, SCI P354 approximation)');
@@ -541,6 +547,7 @@ LINK('noncomp', 'Non-composite alternative: steel section alone', () => {
  T('Deflection, steel section alone (characteristic loads)');
  calc('g0 and the load tables on the steel alone, maximum along the span (4.9), less the precamber', '\\delta_{nc}', R`\max\left(\delta_{x.s}-w_{c.v}\right)`, 'mm', false);
  calc('Deflection, steel alone', R`\mathrm{UR}_{d.nc}`, R`\frac{\delta_{nc}}{\delta_{lim}}`);
+ calc('Live-load deflection, steel alone', R`\mathrm{UR}_{d.q.nc}`, R`\frac{\max\left(\delta_{x.qs}\right)}{\delta_{lim.q}}`);
  T('Natural frequency, steel section alone (same mass loads as 4.10)');
  calc('Midspan deflection under the mass loads, steel alone', '\\delta_{dyn.nc}', R`\frac{\Delta x\,\mathrm{sum}\left(M_{dyn.v}m_v\right)}{E_a I_a}`, 'mm', false);
  calc('Natural frequency, steel alone', 'f_{1.nc}', R`\frac{18\,\mathrm{Hz}}{\sqrt{\frac{\delta_{dyn.nc}}{1\,\mathrm{mm}}}}`, 'Hz', false);
@@ -548,7 +555,7 @@ LINK('noncomp', 'Non-composite alternative: steel section alone', () => {
 });
 T('Key results (calculated in the annex):');
 l.ROW([[96, R`L_{LT.nc}=`, units('mm')], [316, R`\chi_{LT.nc}=`, M({ precision: 3 })], [496, R`\delta_{nc}=`, units('mm')]], 1);
-for (const n of ['MV.nc','LT.nc','FM.nc','d.nc']) P(`Utilisation ${n}`, R`\mathrm{UR}_{${n}}=`, M({ precision: 3 }));
+for (const n of ['MV.nc','LT.nc','FM.nc','d.nc','d.q.nc']) P(`Utilisation ${n}`, R`\mathrm{UR}_{${n}}=`, M({ precision: 3 }));
 
 H(2, '7. SUMMARY BY CODE');
 H(3, 'Design basis — composite (chapter 4) or non-composite (chapter 6)');
@@ -559,15 +566,17 @@ WHEN_OK(R`c_{comp}\ge1`, 'Design basis: COMPOSITE (chapter 4). Chapter 6 is for 
 WHEN(R`c_{comp}<1`, 'NOT DESIGNED AS COMPOSITE: designed as a bare steel beam (chapter 6); see the note below.');
 P('Web checks, both bases (4.7)', R`\mathrm{UR}_{F}\coloneq\max\left(\mathrm{UR}_{F.P},\mathrm{UR}_{F.S}\right)`, M({ precision: 3 }));
 P('Slab longitudinal shear, a-a and b-b (chapter 5)', R`\mathrm{UR}_{slab}\coloneq\max\left(\mathrm{UR}_{sf},\mathrm{UR}_{L},\mathrm{UR}_{sf.b},\mathrm{UR}_{L.b}\right)`, M({ precision: 3 }));
-P('Governing utilisation, composite (chapters 4 and 5)', R`\mathrm{UR}_{c}\coloneq\max\left(\mathrm{UR}_{M.2},\mathrm{UR}_{M.x},\mathrm{UR}_{MV},\mathrm{UR}_{V.2},\mathrm{UR}_{F},\mathrm{UR}_{FM},\mathrm{UR}_{d.x},\mathrm{UR}_{fn},\mathrm{UR}_{slab}\right)`, M({ precision: 3 }));
-P('Governing utilisation, non-composite (chapter 6)', R`\mathrm{UR}_{nc}\coloneq\max\left(\mathrm{UR}_{M.nc},\mathrm{UR}_{MV.nc},\mathrm{UR}_{V.nc},\mathrm{UR}_{LT.nc},\mathrm{UR}_{F},\mathrm{UR}_{FM.nc},\mathrm{UR}_{d.nc},\mathrm{UR}_{fn.nc}\right)`, M({ precision: 3 }));
+P('Serviceability, composite: deflection, live-load deflection, frequency', R`\mathrm{UR}_{sls}\coloneq\max\left(\mathrm{UR}_{d.x},\mathrm{UR}_{d.q},\mathrm{UR}_{fn}\right)`, M({ precision: 3 }));
+P('Serviceability, bare steel', R`\mathrm{UR}_{sls.nc}\coloneq\max\left(\mathrm{UR}_{d.nc},\mathrm{UR}_{d.q.nc},\mathrm{UR}_{fn.nc}\right)`, M({ precision: 3 }));
+P('Governing utilisation, composite (chapters 4 and 5)', R`\mathrm{UR}_{c}\coloneq\max\left(\mathrm{UR}_{M.2},\mathrm{UR}_{M.x},\mathrm{UR}_{MV},\mathrm{UR}_{V.2},\mathrm{UR}_{F},\mathrm{UR}_{FM},\mathrm{UR}_{sls},\mathrm{UR}_{slab}\right)`, M({ precision: 3 }));
+P('Governing utilisation, non-composite (chapter 6)', R`\mathrm{UR}_{nc}\coloneq\max\left(\mathrm{UR}_{M.nc},\mathrm{UR}_{MV.nc},\mathrm{UR}_{V.nc},\mathrm{UR}_{LT.nc},\mathrm{UR}_{F},\mathrm{UR}_{FM.nc},\mathrm{UR}_{sls.nc}\right)`, M({ precision: 3 }));
 P('Governing utilisation of the design basis used', R`\mathrm{UR}_{des}\coloneq${IF([R`c_{comp}\ge1`, R`\mathrm{UR}_{c}`], [null, R`\mathrm{UR}_{nc}`])}`, M({ precision: 3 }));
 check('Acceptance, permanent stage', '\\mathrm{UR}_{des}', '1');
 
 H(3, 'EN 1993-1-1 — construction stage');
 for (const n of ['M.1','V.1','LT','d.1']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
 H(3, 'EN 1994-1-1 — composite beam');
-for (const n of ['M.2','M.x','MV','V.2','F.P','F.S','FM','d.2','d.x']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
+for (const n of ['M.2','M.x','MV','V.2','F.P','F.S','FM','d.2','d.x','d.q']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
 H(3, 'EN 1994-1-1 §6.6.6 / EN 1992-1-1 — slab longitudinal shear (a-a, b-b)');
 for (const n of ['sf','L','sf.b','L.b']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
 

@@ -52,7 +52,7 @@ const SCALARS: Probe[] = [
   ['dhead', 'd_{head}', 'mm'], ['hsc', 'h_{sc}', 'mm'], ['dsc', 'd_{sc}', 'mm'], ['b0', 'b_0', 'mm'],
   // profiled steel deck (all neutral for a solid slab: h_pe = 0, k_d = 1, n_re = 1)
   ['cdeck', 'c_{deck}', null], ['ctr', 'c_{tr}', null], ['hpe', 'h_{pe}', 'mm'], ['ht', 'h_t', 'mm'], ['br', 'b_r', 'mm'], ['er', 'e_r', 'mm'], ['kd', 'k_d', null], ['kt', 'k_t', null], ['kl', 'k_l', null], ['ktmax', 'k_{t.max}', null],
-  ['nre', 'n_{re}', null], ['sA', 's_A', 'mm'], ['sB', 's_B', 'mm'], ['ape', 'a_{pe}', 'mm^2/m'], ['cbb', 'c_{bb}', null], ['Idyn', 'I_{dyn}', 'cm^4'], ['NcRd', 'N_{c.Rd}', 'kN'], ['LLT', 'L_{LT}', 'm'], ['smax', 's_{max}', 'mm'], ['c16', 'c_{16}', null], ['cre', 'c_{re}', null],
+  ['nre', 'n_{re}', null], ['sA', 's_A', 'mm'], ['sB', 's_B', 'mm'], ['ape', 'a_{pe}', 'mm^2/m'], ['cbb', 'c_{bb}', null], ['Idyn', 'I_{dyn}', 'cm^4'], ['NcRd', 'N_{c.Rd}', 'kN'], ['LLT', 'L_{LT}', 'm'], ['smax', 's_{max}', 'mm'], ['smin', 's_{min}', 'mm'], ['dgmax', '\\delta_{g.max}', 'mm'], ['cprop', 'c_{prop}', null], ['rlim', 'r_{lim}', null], ['rlim1', 'r_{lim.1}', null], ['rlimq', 'r_{lim.q}', null], ['c16', 'c_{16}', null], ['cre', 'c_{re}', null],
   // deflection
   ['dmax', '\\delta_{max}', 'mm'], ['wc', 'w_c', 'mm'], ['ccam', 'c_{cam}', null], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['f1', 'f_1', 'Hz'], ['f1nc', 'f_{1.nc}', 'Hz'], ['flim', 'f_{lim}', 'Hz'], ['Ecdyn', 'E_{c.dyn}', 'GPa'], ['ddyn', '\\delta_{dyn}', 'mm'], ['ddynnc', '\\delta_{dyn.nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
 ];
@@ -71,6 +71,7 @@ export const CHECKS: [string, string, string, '' | 'c' | 'n'][] = [
   ['F.S', 'Web at supports', 'EN 1993-1-5 §6', ''],
   ['FM', 'Web interaction', 'EN 1993-1-5 §7.2', 'c'],
   ['d.x', 'Deflection, composite', 'EN 1994-1-1 §7.3.1', 'c'],
+  ['d.q', 'Live-load deflection, composite', 'SLS, L / r_lim.q', 'c'],
   ['sf', 'Slab transverse bars, surface a-a', 'EN 1994-1-1 §6.6.6', 'c'],
   ['L', 'Slab concrete strut, surface a-a', 'EN 1992-1-1 §6.2.4', 'c'],
   ['sf.b', 'Slab transverse bars, surface b-b', 'EN 1994-1-1 §6.6.6', 'c'],
@@ -80,6 +81,7 @@ export const CHECKS: [string, string, string, '' | 'c' | 'n'][] = [
   ['LT.nc', 'LTB, bare steel (L = stud spacing)', 'EN 1994-1-1 §6.4.1', 'n'],
   ['FM.nc', 'Web interaction, bare steel', 'EN 1993-1-5 §7.2', 'n'],
   ['d.nc', 'Deflection, bare steel', 'SLS', 'n'],
+  ['d.q.nc', 'Live-load deflection, bare steel', 'SLS, L / r_lim.q', 'n'],
   ['fn.nc', 'Natural frequency, bare steel', 'SCI P354 / project limit', 'n'],
   ['des', 'Permanent stage, design basis used', 'Summary', ''],
 ];
@@ -89,7 +91,7 @@ export const CHECKS: [string, string, string, '' | 'c' | 'n'][] = [
  * steel), construction stage included. The section optimiser uses the same rule.
  */
 /** Serviceability (deflection) checks; every other check of the basis in use counts as strength. */
-export const SLS_CHECKS = ['d.1', 'd.x', 'd.nc', 'fn', 'fn.nc'];
+export const SLS_CHECKS = ['d.1', 'd.x', 'd.q', 'd.nc', 'd.q.nc', 'fn', 'fn.nc'];
 /** Construction-stage checks of the steel beam alone: they do not depend on the studs or the slab bars. */
 export const CONSTRUCTION_CHECKS = ['M.1', 'V.1', 'LT', 'd.1'];
 
@@ -100,8 +102,146 @@ export const etaInRange = (eta: number, t: Targets): boolean => eta >= (t.etaMin
 export interface Governing { ur: number; key: string; label: string }
 export interface OptimizeResult {
   family: string; maxDepth: number | null; targets: Targets; tried: number; total: number;
-  best: { id: number; name: string; mass: number; h: number; sc: number; bar: number; sf?: number; nr?: number; eta?: number; composite: boolean; strength: Governing; deflection: Governing } | null;
+  best: { id: number; name: string; mass: number; h: number; sc: number; scB?: number; bar: number; sf?: number; nr?: number; eta?: number; studs?: number; camber?: number; cost?: number; composite: boolean; strength: Governing; deflection: Governing } | null;
 }
+
+/**
+ * Design criteria of the section optimiser (the approach of RAM Steel Beam: for each section the fewest studs
+ * that work, a camber from rules, separate deflection limits in the worksheet, least cost wins).
+ */
+export interface DesignCriteria extends Targets {
+  /** uniform: one spacing over the span; segmented: each shear span (support to x_M) gets the same number of studs. */
+  studs: 'uniform' | 'segmented';
+  /** Transverse bar diameters to try, smallest first. */
+  bars: number[];
+  /** Camber rules; null keeps the precamber inputs as entered. Lengths in mm, minSpan in m. */
+  camber: { pct: number; min: number; max: number; step: number; minSpan: number } | null;
+  /** Cost of one stud and of cambering one beam, in kg of steel; 0 = lightest section wins. */
+  costStud: number; costCamber: number;
+  /** Section fixed (stud button): construction-stage checks are left out. */
+  detail?: boolean;
+}
+export interface Design {
+  pass: boolean; composite: boolean; sc: number; scB: number; nr?: number; bar: number; eta: number;
+  studs: number; camber: number; strength: Governing; deflection: Governing; evals: number;
+}
+const SLAB_BAR_CHECKS = ['sf', 'sf.b']; // the only checks a larger transverse bar can cure
+const SLAB_CHECKS = ['sf', 'L', 'sf.b', 'L.b']; // get worse with more studs: no reason to reject a section at its densest layout
+
+/** Camber from the rules: a share of the self-weight deflection, rounded down to the increment, dropped if small. */
+export function camberFor(c: DesignCriteria['camber'], spanM: number, dgMax: number, propped: boolean): number {
+  if (!c || propped || spanM < c.minSpan - 1e-9 || !(dgMax > 0)) return 0;
+  let w = (c.pct / 100) * dgMax;
+  if (c.step > 0) w = Math.floor(w / c.step + 1e-9) * c.step;
+  if (w < c.min - 1e-9) return 0;
+  return Math.min(w, c.max > 0 ? c.max : w);
+}
+
+/**
+ * Stud layouts for one section, fewest studs first. A stud count per shear span is turned into a spacing
+ * (rounded down to 5 mm, within s_min … s_max); counts run from the one bending needs (linear interaction,
+ * minimum degree) to the allowed maximum in steps of about 5 % of full connection. Transverse deck: studs sit
+ * in the ribs, so the layouts are multiples of the pitch, then two per rib.
+ */
+export function studPlans(p: Results, c: DesignCriteria): { sc: number; scB: number; nr?: number }[] {
+  const xa = p.xM * 1000, xb = (p.L - p.xM) * 1000, sMax = Math.floor(p.smax / 5 + 1e-9) * 5;
+  if (p.ctr >= 1 && p.er > 0) {
+    const out: { sc: number; scB: number; nr?: number }[] = [];
+    for (let k = Math.max(1, Math.floor(sMax / p.er)); k >= 1; k--) out.push({ sc: k * p.er, scB: k * p.er, nr: 1 });
+    out.push({ sc: p.er, scB: p.er, nr: 2 });
+    return out;
+  }
+  const full = p.Ncf / p.PRd; // studs per shear span for full connection
+  const etaM = p.MplRd > p.MaRd ? (p.M2 - p.MaRd) / (p.MplRd - p.MaRd) : p.M2 <= p.MaRd ? 0 : Infinity;
+  const etaTop = Math.min(1, c.etaMax ?? 1);
+  const etaNeed = Math.max(c.etaMin ?? 0, p.etaMin, etaM, 0);
+  if (etaM > etaTop + 1e-9) return []; // bending needs more studs than allowed
+  const nTop = Math.max(1, etaTop >= 1 ? Math.ceil(full - 1e-9) : Math.floor(etaTop * full + 1e-9));
+  const n0 = Math.min(nTop, Math.max(1, Math.ceil(etaNeed * full - 1e-9)));
+  const step = Math.max(1, Math.round(0.05 * full));
+  const counts: number[] = [];
+  for (let n = n0; n < nTop; n += step) counts.push(n);
+  counts.push(nTop);
+  const fit = (x: number, n: number) => Math.min(sMax, Math.floor(x / n / 5 + 1e-9) * 5);
+  const out: { sc: number; scB: number }[] = [];
+  for (const n of counts) {
+    const sc = c.studs === 'segmented' ? fit(xa, n) : fit(Math.min(xa, xb), n);
+    const scB = c.studs === 'segmented' ? fit(xb, n) : sc;
+    if (sc < p.smin - 1e-9 || scB < p.smin - 1e-9) break; // a single row cannot hold more
+    if (!out.some((o) => o.sc === sc && o.scB === scB)) out.push({ sc, scB });
+  }
+  return out;
+}
+
+/**
+ * Design one section: camber from the rules, then the fewest studs and the smallest transverse bar that pass
+ * every check within the targets. mode 'bare': the stud and bar details stay as they are and composite action
+ * is not required. screen (optional): the fast model without deflection curves, used to reject early.
+ */
+export function designSection(model: CompositeModel, screen: CompositeModel | null, id: number, c: DesignCriteria, mode: 'composite' | 'bare'): Design {
+  const models = screen ? [screen, model] : [model];
+  const set = (m: CompositeModel, name: string, v: number) => { const f = m.inputs.find((x) => x.name === name); if (f) m.setInput(f.id, v); };
+  const skip = c.detail ? CONSTRUCTION_CHECKS : [];
+  let evals = 0;
+  const fail = (): Design => ({ pass: false, composite: false, sc: 0, scB: 0, bar: 0, eta: 0, studs: 0, camber: 0, strength: { ur: Infinity, key: '', label: '' }, deflection: { ur: Infinity, key: '', label: '' }, evals });
+  for (const m of models) { m.setSection(id); if (c.camber) { set(m, 'c_{cam}', 0); set(m, 'w_{c.0}', 0); } }
+  const p = models[0].results(); evals++;
+  if (p.errors.length) return fail();
+  let camber = p.wc;
+  if (c.camber) { camber = camberFor(c.camber, p.L, p.dgmax, p.cprop >= 1); for (const m of models) set(m, 'w_{c.0}', camber); }
+  const over = (r: Results, keys: string[]) => keys.some((k) => !(r[`UR.${k}`] <= c.strength));
+  const done = (r: Results, d: { sc: number; scB: number; nr?: number; bar: number }): Design => ({ pass: true, composite: r.comp >= 1, ...d, eta: r.eta, studs: r.nA + r.nB, camber, ...governingSplit(r, skip), evals });
+  const passes = (r: Results, composite: boolean) => {
+    if (r.errors.length || (composite && (r.comp < 1 || !etaInRange(r.eta, c)))) return false;
+    const g = governingSplit(r, skip);
+    return g.strength.ur <= c.strength && g.deflection.ur <= c.deflection;
+  };
+  if (mode === 'bare') {
+    const d = model.detail();
+    if (screen) { const q = screen.results(); evals++; if (!q.errors.length && !screenPasses(q, c, skip)) return fail(); }
+    const r = model.results(); evals++;
+    return passes(r, false) ? done(r, { ...d }) : fail();
+  }
+  const plans = studPlans(p, c);
+  if (!plans.length) return fail();
+  /** One layout: bars from the smallest up; 'next' = a denser layout may still work, 'stop' = it cannot. */
+  const tryPlan = (plan: (typeof plans)[number]): Design | 'next' | 'hopeless' => {
+    for (const bar of c.bars) {
+      if (screen) {
+        screen.setDetail({ ...plan, bar });
+        const q = screen.results(); evals++;
+        if (q.errors.length) return 'next';
+        if (q.comp < 1 || !etaInRange(q.eta, c) || !screenPasses(q, c, skip)) {
+          if (over(q, SLAB_BAR_CHECKS) && bar !== c.bars[c.bars.length - 1]) continue;
+          // hopeless: something other than the slab fails although this is the densest layout
+          const g = governingSplit(q, [...DEFLECTION_CHECKS, ...skip, ...SLAB_CHECKS]);
+          return g.strength.ur > c.strength || g.deflection.ur > c.deflection || q.eta < Math.max(c.etaMin ?? 0, q.etaMin) - 1e-9 ? 'hopeless' : 'next';
+        }
+      }
+      model.setDetail({ ...plan, bar });
+      const r = model.results(); evals++;
+      if (passes(r, true)) return done(r, { ...plan, bar });
+      if (over(r, SLAB_BAR_CHECKS) && bar !== c.bars[c.bars.length - 1]) continue;
+      const g = governingSplit(r, [...skip, ...SLAB_CHECKS]);
+      return !r.errors.length && (g.strength.ur > c.strength || g.deflection.ur > c.deflection) ? 'hopeless' : 'next';
+    }
+    return 'next';
+  };
+  // The densest layout first: if it fails on anything but the slab, no layout of this section works.
+  const last = plans[plans.length - 1];
+  const top = tryPlan(last);
+  if (top === 'hopeless') return fail();
+  if (plans.length === 1) return typeof top === 'object' ? top : fail();
+  for (const plan of plans.slice(0, -1)) {
+    const r = tryPlan(plan);
+    if (typeof r === 'object') return r;
+  }
+  return typeof top === 'object' ? top : fail();
+}
+
+/** Cost of a design in kg of steel: the beam, its studs and the camber. */
+export const designCost = (massPerM: number, spanM: number, d: { studs: number; camber: number; composite: boolean }, c: { costStud: number; costCamber: number }): number =>
+  massPerM * spanM + (d.composite ? d.studs * c.costStud : 0) + (d.camber > 0 ? c.costCamber : 0);
 
 /** Detail choices the optimiser tries for every section: uniform stud spacing and both transverse bar diameters. */
 export const STUD_SPACINGS = [200, 175, 150, 125, 100]; // mm, widest (cheapest) first
@@ -142,7 +282,7 @@ export function screenPasses(res: Results, t: Targets, skip: readonly string[] =
 }
 
 /** Checks that need the deflection curves: unknown in a screening model. */
-export const DEFLECTION_CHECKS = ['d.x', 'd.nc'];
+export const DEFLECTION_CHECKS = ['d.x', 'd.q', 'd.nc', 'd.q.nc'];
 
 export function governingCheck(res: Results, skip: readonly string[] = []): { ur: number; key: string; label: string } {
   const composite = res.comp >= 1;

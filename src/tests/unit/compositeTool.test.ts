@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { BAR_DIAMETERS, CHECKS, CompositeModel, DEFLECTION_CHECKS, governingCheck, governingSplit, STUD_SPACINGS } from '../../tools/composite/model';
+import { BAR_DIAMETERS, CHECKS, camberFor, CompositeModel, designCost, designSection, type DesignCriteria, DEFLECTION_CHECKS, governingCheck, governingSplit, STUD_SPACINGS } from '../../tools/composite/model';
 import { sections } from '../../engineering/steel/sections';
 import { parseDocument } from '../../documents/DocumentSerializer';
 
@@ -271,5 +271,44 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(r2.wc).toBeGreaterThan(10);
     expect(r2['UR.d.1']).toBeCloseTo(r0['UR.d.1'], 12); // construction deflection is not cambered
   }, 120_000);
+
+  // Design engine (RAM-style): fewest studs from the demand, camber by rule, per section.
+  it('designs a section with the fewest studs, a rule camber and the degree of connection within its range', () => {
+    const raw = readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8');
+    const m = new CompositeModel(raw), screen = new CompositeModel(raw, { screening: true });
+    const id = (name: string) => sections.find((x) => x.name === name)!.id;
+    const base: DesignCriteria = { strength: 1, deflection: 1, etaMin: 0, etaMax: 1, studs: 'segmented', bars: [10, 12, 13], camber: null, costStud: 0, costCamber: 0 };
+    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 8, 33, false)).toBe(25); // 26.4 → 25
+    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 8, 20, false)).toBe(0); // 16 → 15 < minimum
+    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 7, 33, false)).toBe(0); // short span
+    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 8, 33, true)).toBe(0); // propped
+    expect(camberFor({ pct: 80, min: 20, max: 30, step: 5, minSpan: 7.5 }, 12, 90, false)).toBe(30); // capped
+    expect(designSection(m, screen, id('UB 406x178x60'), base, 'composite').pass).toBe(false); // construction LTB
+    const seg = designSection(m, screen, id('UB 457x191x89'), base, 'composite');
+    expect(seg.pass && seg.composite).toBe(true);
+    // the result is what the worksheet gives for these details, and it passes there
+    m.setDetail(seg);
+    let r = m.results();
+    expect(r['UR.des']).toBeLessThanOrEqual(1);
+    expect([r.nA + r.nB, r.eta]).toEqual([seg.studs, seg.eta]);
+    expect(r.nA).toBe(r.nB); // segmented: the same count on each side of the maximum moment
+    expect(seg.eta).toBeGreaterThanOrEqual(r.etaMin);
+    // one stud position fewer on each side no longer passes (fewest studs)
+    m.setDetail({ ...seg, sc: Math.ceil((r.xM * 1000) / (r.nA - 1) / 5) * 5, scB: Math.ceil(((r.L - r.xM) * 1000) / (r.nB - 1) / 5) * 5 });
+    r = m.results();
+    expect(r.nA + r.nB).toBeLessThan(seg.studs);
+    expect(r.comp < 1 || r['UR.des'] > 1).toBe(true);
+    const uni = designSection(m, screen, id('UB 457x191x89'), { ...base, studs: 'uniform' }, 'composite');
+    expect(uni.pass).toBe(true);
+    expect(uni.scB).toBe(uni.sc);
+    expect(uni.studs).toBeGreaterThan(seg.studs); // uniform spacing over-provides the longer shear span
+    expect(designCost(89.3, 8, uni, { costStud: 2, costCamber: 0 }) - designCost(89.3, 8, seg, { costStud: 2, costCamber: 0 })).toBeCloseTo(2 * (uni.studs - seg.studs), 9);
+    // a cap below what the section needs rejects it; a rule camber is applied per section
+    expect(designSection(m, screen, id('UB 457x191x89'), { ...base, etaMax: 0.45 }, 'composite').pass).toBe(false);
+    const cam = designSection(m, screen, id('UB 457x191x89'), { ...base, camber: { pct: 100, min: 1, max: 100, step: 1, minSpan: 6 } }, 'composite');
+    expect(cam.pass).toBe(true);
+    expect(cam.camber).toBe(7); // self-weight deflection 7.5 mm on the steel alone
+    expect(cam.deflection.ur).toBeLessThanOrEqual(seg.deflection.ur);
+  }, 300_000);
 });
 

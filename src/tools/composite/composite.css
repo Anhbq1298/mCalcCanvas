@@ -198,3 +198,14 @@ td.pass, b.pass { color: var(--pass); } td.warn, b.warn { color: var(--warn); } 
 .define-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
 .define-row .chip { display: inline-block; margin-right: 0.5rem; white-space: nowrap; }
 .opt-form .fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 0.5rem 0.75rem; padding: 0 1rem; }
+
+/* optimizer criteria */
+.opt-dialog.wide { width: min(46rem, calc(100vw - 2rem)); }
+.opt-form fieldset.crit { border: 0; border-top: 1px solid var(--hair, #C9D0D3); margin: 0.6rem 1rem 0; padding: 0.4rem 0 0; }
+.opt-form fieldset.crit legend { font-weight: 600; font-size: 0.82rem; padding: 0 0.4rem 0 0; }
+.opt-form fieldset.crit .fields { padding: 0; }
+.opt-form fieldset.crit .fields.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.opt-form fieldset.crit .hint, .opt-form fieldset.crit .field-error { margin: 0.3rem 0 0; padding: 0; display: block; }
+.opt-form .fams { display: flex; flex-wrap: wrap; gap: 0.2rem 0.9rem; margin: 0.1rem 0 0.4rem; }
+.opt-form .fam { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.82rem; min-height: 1.6rem; }
+@media (max-width: 560px) { .opt-form fieldset.crit .fields.three { grid-template-columns: 1fr 1fr; } }
