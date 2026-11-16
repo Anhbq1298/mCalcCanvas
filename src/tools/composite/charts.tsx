@@ -316,8 +316,17 @@ export function PointDrawing({ L, points }: { L: number; points: PointLoad[] }) 
  * Open trapezoidal deck, schematic: concrete ribs of mean width br at pitch er sit on the flange, one centred on c.
  * Returns the voids under the crests between the ribs as quads [x, y], y up from the flange, covering xa … xb.
  */
-function deckVoids(xa: number, xb: number, c: number, hp: number, br: number, er: number): [number, number][][] {
+function deckVoids(xa: number, xb: number, c: number, hp: number, br: number, er: number, reentrant = false): [number, number][][] {
   if (!(hp > 0 && er > 0 && br > 0 && br < er)) return [];
+  if (reentrant) {
+    // dovetail rib between the flat pans: wide at the top (e_r − b_r), narrow neck on the flange
+    const bt = er - br, neck = 0.45 * bt, q: [number, number][][] = [];
+    for (let k = Math.floor((xa - c) / er) - 1; c + k * er < xb + er; k++) {
+      const x = c + (k + 0.5) * er;
+      q.push([[x - neck / 2, 0], [x - bt / 2, hp], [x + bt / 2, hp], [x + neck / 2, 0]]);
+    }
+    return q;
+  }
   const t = Math.min(0.15 * hp, ((er - br) / 2) * 0.6);
   const out: [number, number][][] = [];
   for (let k = Math.floor((xa - c) / er) - 1; c + k * er < xb + er; k++) {
@@ -328,13 +337,13 @@ function deckVoids(xa: number, xb: number, c: number, hp: number, br: number, er
 }
 
 /** Deck profile with its dimensions (two pitches, a stud in the first rib), for the Define deck dialog. */
-export function DeckProfile({ hc, hp, br, er, hsc, dsc, nr }: { hc: number; hp: number; br: number; er: number; hsc: number; dsc: number; nr: number }) {
+export function DeckProfile({ hc, hp, br, er, hsc, dsc, nr, reentrant = false }: { hc: number; hp: number; br: number; er: number; hsc: number; dsc: number; nr: number; reentrant?: boolean }) {
   const [box, W] = useWidth(420);
   const uid = useId().replace(/:/g, '');
   if (![hc, hp, br, er, hsc].every((v) => Number.isFinite(v) && v > 0) || hp >= hc) return <div ref={box} />;
   const len = 2 * er, k = Math.min((W - 110) / len, 120 / hc), x0 = 64, top = 26;
   const X = (x: number) => x0 + x * k, Y = (y: number) => top + (hc - y) * k; // y up from the flange
-  const voids = deckVoids(0, len, er / 2, hp, br, er);
+  const voids = deckVoids(0, len, er / 2, hp, br, er, reentrant);
   const H = Y(0) + 46, ink = C.ink;
   const d = Math.max(3, (Number.isFinite(dsc) ? dsc : 19) * k);
   const studs = nr >= 2 ? [er / 2 - br / 4, er / 2 + br / 4] : [er / 2];
@@ -362,7 +371,7 @@ export function DeckProfile({ hc, hp, br, er, hsc, dsc, nr }: { hc: number; hp: 
           {txt(X(er), Y(0) + 26, `e_r ${fmt(er, 0)}`)}
           {/* rib width */}
           <line x1={X(er / 2 - br / 2)} x2={X(er / 2 + br / 2)} y1={Y(0) + 13} y2={Y(0) + 13} />
-          {[er / 2 - br / 2, er / 2 + br / 2].map((x) => <g key={x}>{tick(X(x), Y(0) + 13)}</g>)}
+          {[er / 2 - br / 2, er / 2 + br / 2].map((x) => <g key={x}><line x1={X(x)} x2={X(x)} y1={reentrant ? Y(hp) : Y(0) + 4} y2={Y(0) + 17} strokeDasharray={reentrant ? '2 2' : undefined} />{tick(X(x), Y(0) + 13)}</g>)}
           {txt(X(er / 2 + br / 2) + 8, Y(0) + 17, `b_r ${fmt(br, 0)}`, 'start')}
           {/* depths */}
           <line x1={x0 - 14} x2={x0 - 14} y1={Y(hc)} y2={Y(0)} />
@@ -438,7 +447,7 @@ export function SectionDrawing({ r }: { r: Record<string, number>; showPna?: boo
         {/* deck: ribs parallel to the beam are cut by this section; transverse ribs show as the crest line beyond */}
         {ribsAlong && (
           <g clipPath={`url(#${uid}k)`}>
-            {deckVoids(-slabW / 2 / sc, slabW / 2 / sc, 0, hpe, r.br, r.er).map((q, i) => <polygon key={i} points={q.map(([x, y]) => `${cx + x * sc},${Y(h_c - y)}`).join(' ')} fill={C.sheet} stroke={C.ink} strokeWidth={CAD.geo} strokeLinejoin="round" />)}
+            {deckVoids(-slabW / 2 / sc, slabW / 2 / sc, 0, hpe, r.br, r.er, r.cre >= 1).map((q, i) => <polygon key={i} points={q.map(([x, y]) => `${cx + x * sc},${Y(h_c - y)}`).join(' ')} fill={C.sheet} stroke={C.ink} strokeWidth={CAD.geo} strokeLinejoin="round" />)}
           </g>
         )}
         {ribsAcross && <line x1={sL} x2={sR} y1={Y(h_c - hpe)} y2={Y(h_c - hpe)} stroke={C.ink} strokeWidth={CAD.dim} strokeDasharray="6 3" />}
@@ -548,7 +557,7 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
         {/* deck on the cut face: profile if the ribs run along the beam, crest line if they run across */}
         {ribsAlong && (
           <g clipPath={`url(#${uid}k)`}>
-            {deckVoids(-halfW, halfW, 0, hpe, r.br, r.er).map((q, i) => <polygon key={i} points={q.map(([x, y]) => P(x, y, 0).join(',')).join(' ')} fill={C.sheet} stroke={ink} strokeWidth={0.9} strokeLinejoin="round" />)}
+            {deckVoids(-halfW, halfW, 0, hpe, r.br, r.er, r.cre >= 1).map((q, i) => <polygon key={i} points={q.map(([x, y]) => P(x, y, 0).join(',')).join(' ')} fill={C.sheet} stroke={ink} strokeWidth={0.9} strokeLinejoin="round" />)}
           </g>
         )}
         {ribsAcross && <line x1={P(-halfW, 0, 0)[0]} x2={P(halfW, 0, 0)[0]} y1={yBot - hpe * k} y2={yBot - hpe * k} stroke={ink} strokeWidth={0.9} strokeDasharray="6 3" />}
@@ -616,7 +625,7 @@ export function LongSection({ r }: { r: Record<string, number> }) {
         <defs><clipPath id={`${uid}k`}><rect x={X(0)} y={yOf(h_c)} width={lenMm * k} height={h_c * k + 1} /></clipPath></defs>
         {across && (
           <g clipPath={`url(#${uid}k)`}>
-            {deckVoids(0, lenMm, pitch / 2, hpe, r.br, r.er).map((q, i) => <polygon key={i} points={q.map(([x, y]) => `${X(x)},${yOf(y)}`).join(' ')} fill={C.sheet} stroke={ink} strokeWidth={0.9} strokeLinejoin="round" />)}
+            {deckVoids(0, lenMm, pitch / 2, hpe, r.br, r.er, r.cre >= 1).map((q, i) => <polygon key={i} points={q.map(([x, y]) => `${X(x)},${yOf(y)}`).join(' ')} fill={C.sheet} stroke={ink} strokeWidth={0.9} strokeLinejoin="round" />)}
           </g>
         )}
         {hpe > 0 && !across && <line x1={X(0)} x2={X(lenMm)} y1={yOf(hpe)} y2={yOf(hpe)} stroke={ink} strokeWidth={0.9} strokeDasharray="6 3" />}

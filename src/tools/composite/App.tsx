@@ -23,6 +23,17 @@ const HANDOFF_KEY = 'calccanvas.handoff'; // read once by mCalcCanvas (?open=han
 const GREEK: Record<string, string> = { gamma: 'γ', psi: 'ψ', varphi: 'φ', varepsilon: 'ε', alpha: 'α', rho: 'ρ', eta: 'η', delta: 'δ', theta: 'θ', kappa: 'κ', chi: 'χ', lambda: 'λ' };
 const NUMBER = /^\s*-?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?\s*$/;
 const FAMILIES = ['UB', 'UC', 'IPE', 'HEA', 'HEB', 'HEM', 'W'];
+/**
+ * Deck presets (worksheet inputs of 1.11). RF55: Fielders KingFlor / M Metal data sheet (h_p 55 mm, ribs at 200 mm,
+ * area, mass and grade per BMT); b_r assumes a 32 mm dovetail. The generic deck is an open 60 mm trapezoid.
+ */
+const rf55 = (t: number, A: number, kg: number, fy: number) => ({ 'c_{re}': 1, h_p: 55, b_r: 168, e_r: 200, t_p: t, g_p: Math.round(kg * 9.81) / 1000, 'A_{pe}': A, 'f_{yp}': fy });
+const DECKS: { name: string; values: Record<string, number> }[] = [
+  { name: 'RF55, 0.75 mm', values: rf55(0.75, 1248, 10.32, 550) },
+  { name: 'RF55, 1.00 mm', values: rf55(1, 1664, 13.56, 550) },
+  { name: 'RF55, 1.20 mm', values: rf55(1.2, 1997, 16.32, 500) },
+  { name: 'Trapezoidal 60, 1.00 mm (generic)', values: { 'c_{re}': 0, h_p: 60, b_r: 150, e_r: 300, t_p: 1, g_p: 0.13, 'A_{pe}': 1400, 'f_{yp}': 350 } },
+];
 const unit = (u: string) => u.replace('^2', '²').replace('^3', '³').replace('^4', '⁴').replace('^-1', '⁻¹');
 
 /** s_{sc.A} → s<sub>sc.A</sub>; \gamma_{M0} → γ<sub>M0</sub>. */
@@ -172,6 +183,9 @@ export function App() {
   const byName = (name: string) => inputs.find((f) => f.name === name)!;
   const deck = value(byName('c_{deck}')) >= 1, parallel = deck && value(byName('c_{par}')) >= 1, transverse = deck && !parallel;
   const pitch = transverse ? value(byName('e_r')) : undefined;
+  const deckPreset = DECKS.find((d) => Object.entries(d.values).every(([n, x]) => Math.abs(value(byName(n)) - x) < 1e-9));
+  const deckName = deckPreset?.name ?? 'Custom deck';
+  const applyDeck = (name: string) => { const d = DECKS.find((x) => x.name === name); if (d) for (const [n, x] of Object.entries(d.values)) if (value(byName(n)) !== x) setInput(byName(n), x); };
   const allGroups = [...inputs.reduce((g, f) => g.set(f.group, [...(g.get(f.group) ?? []), f]), new Map<string, InputField[]>()).entries()];
   // the slab type comes right after the geometry, wherever its inputs sit in the worksheet
   const groups = [...allGroups.filter(([g]) => /^Geometry/.test(g)), ...allGroups.filter(([g]) => /^Slab type and profiled steel deck/.test(g)), ...allGroups.filter(([g]) => !/^Geometry/.test(g) && !/^Slab type and profiled steel deck/.test(g))];
@@ -369,7 +383,7 @@ export function App() {
       <a href="#verdict" className="skip">Skip to results</a>
       <header className="titlebar">
         <h1>mComposite <span>BeamDesign</span></h1>
-        <span className="hint">Simply supported composite beam · EN 1994-1-1 · {deck ? `steel deck, ribs ${parallel ? 'parallel' : 'transverse'}` : 'solid slab'} · mCalcCanvas engine</span>
+        <span className="hint">Simply supported composite beam · EN 1994-1-1 · {deck ? `steel deck, ribs ${parallel ? 'parallel' : 'perpendicular'}` : 'solid slab'} · mCalcCanvas engine</span>
         <span className={`status ${busy ? 'busy' : ''}`} aria-hidden="true">{busy ? 'Calculating…' : 'Up to date'}</span>
         <div className="exports" role="group" aria-label="Report">
           <button type="button" onClick={undo} disabled={hist.past === 0} className="btn export" title="Undo (Ctrl+Z)">Undo</button>
@@ -421,9 +435,9 @@ export function App() {
                         </select>
                       </label>
                       {deck && (
-                        <label className="f"><span>Deck ribs</span>
+                        <label className="f"><span>Deck direction (ribs)</span>
                           <select data-testid="deck-dir" value={parallel ? 'par' : 'tr'} onChange={(e) => setInput(byName('c_{par}'), e.target.value === 'par' ? 1 : 0)}>
-                            <option value="tr">Transverse to the beam</option>
+                            <option value="tr">Perpendicular to the beam</option>
                             <option value="par">Parallel to the beam</option>
                           </select>
                         </label>
@@ -433,6 +447,7 @@ export function App() {
                       <div className="define-row">
                         <button type="button" className="btn" data-testid="deck-open" onClick={() => deckRef.current?.showModal()}>Define deck…</button>
                         <span className="hint">
+                          <span className="chip">{deckName}</span>
                           {['h_p', 'b_r', 'e_r', 't_p'].map((n) => <span key={n} className="chip"><Sym latex={n} /> {fmt(value(byName(n)), n === 't_p' ? 2 : 0)}</span>)}
                           {transverse && <span className="chip"><Sym latex="n_r" /> {fmt(value(byName('n_r')), 0)}</span>}
                           <span className="chip"><Sym latex="k_d" /> {fmt(res.kd, 2)}</span>
@@ -535,7 +550,7 @@ export function App() {
                   </figure>
                 ) : (
                   <figure>
-                    <figcaption data-testid="bb-note"><b className="c-b">b-b</b>: not required. With the ribs transverse to the beam and the stud resistance reduced by k<sub>t</sub> = {fmt(res.kd, 2)}, surfaces around the studs need not be checked (EN 1994-1-1 §6.6.6.4(2)).</figcaption>
+                    <figcaption data-testid="bb-note"><b className="c-b">b-b</b>: not required. With the ribs perpendicular to the beam and the stud resistance reduced by k<sub>t</sub> = {fmt(res.kd, 2)}, surfaces around the studs need not be checked (EN 1994-1-1 §6.6.6.4(2)).</figcaption>
                   </figure>
                 )}
                 <figure className="wide">
@@ -708,11 +723,19 @@ export function App() {
             <h2 id="deck-title">Profiled steel deck</h2>
             <button type="button" className="rowbtn" aria-label="Close" onClick={() => deckRef.current?.close()}>×</button>
           </header>
-          <p className="hint">Ribs {parallel ? 'parallel' : 'transverse'} to the beam. b<sub>r</sub> is b<sub>0</sub> of EN 1994-1-1 Figure 6.13: the mean width of an open rib, the minimum width of a re-entrant one. Concrete in the ribs carries weight but no force.</p>
-          <DeckProfile hc={res.h_c} hp={value(byName('h_p'))} br={value(byName('b_r'))} er={value(byName('e_r'))} hsc={res.hsc} dsc={res.dsc} nr={transverse ? value(byName('n_r')) : 1} />
+          <div className="fields">
+            <label className="f wide"><span>Deck profile</span>
+              <select data-testid="deck-preset" value={deckPreset?.name ?? ''} onChange={(e) => applyDeck(e.target.value)}>
+                {!deckPreset && <option value="">Custom (values below)</option>}
+                {DECKS.map((d) => <option key={d.name}>{d.name}</option>)}
+              </select>
+            </label>
+          </div>
+          <p className="hint">Ribs {parallel ? 'parallel' : 'perpendicular'} to the beam. b<sub>r</sub> is b<sub>0</sub> of EN 1994-1-1 Figure 6.13: the mean width of an open rib, the minimum width of a re-entrant one. Concrete in the ribs carries weight but no force. RF55 values are from the manufacturer data sheet, except b<sub>r</sub> (32 mm dovetail assumed): confirm with the supplier.</p>
+          <DeckProfile hc={res.h_c} hp={value(byName('h_p'))} br={value(byName('b_r'))} er={value(byName('e_r'))} hsc={res.hsc} dsc={res.dsc} nr={transverse ? value(byName('n_r')) : 1} reentrant={value(byName('c_{re}')) >= 1} />
           <div className="fields">
             {groups.filter(([g]) => isDeck(g)).flatMap(([, fields]) => fields)
-              .filter((f) => !['c_{deck}', 'c_{par}'].includes(f.name) && (transverse || !['n_r', 'c_{LT.d}', 'c_{pe}', 'A_{pe}', 'f_{yp}'].includes(f.name)))
+              .filter((f) => !['c_{deck}', 'c_{par}', 'c_{re}'].includes(f.name) && (transverse || !['n_r', 'c_{LT.d}', 'c_{pe}', 'A_{pe}', 'f_{yp}'].includes(f.name)))
               .map(renderField)}
           </div>
           <p className="hint">k<sub>d</sub> = {fmt(res.kd, 3)} on the stud resistance ({parallel ? <>k<sub>l</sub>, (6.22)</> : <>k<sub>t</sub>, (6.23), limit {fmt(res.ktmax, 2)} from Table 6.2 for studs welded through the sheet</>}); P<sub>Rd</sub> = {fmt(res.PRd, 1)} kN.{transverse && <> Minimum degree of connection {fmt(res.etaMin, 2)} ({res.c16 >= 1 ? '(6.16), one stud in every rib' : '(6.12)'}).</>}</p>

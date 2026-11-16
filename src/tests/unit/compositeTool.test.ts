@@ -201,7 +201,8 @@ describe('mCompositeBeamDesign headless model', () => {
     expect([solid.cdeck, solid.hpe, solid.kd, solid.nre, solid.cbb]).toEqual([0, 0, 1, 1, 1]);
     set('h_p', 80); set('n_r', 2); set('c_{par}', 1); // deck inputs do nothing while c_deck = 0
     expect(m.results()['UR.des']).toBeCloseTo(solid['UR.des'], 12);
-    set('h_p', 60); set('c_{par}', 0);
+    set('h_p', 60); set('c_{par}', 0); set('n_r', 2);
+    set('c_{re}', 0); set('b_r', 150); set('e_r', 300); set('g_p', 0.13); // open trapezoidal 60 mm deck of the reference (defaults are RF55)
     m.setSection(sections.find((x) => x.name === 'UB 406x140x46')!.id);
     set('c_{deck}', 1); set('h_c', 130); set('c_{pe}', 1);
     const cmp = (r: Record<string, number>, c: Record<string, number>) => {
@@ -231,7 +232,7 @@ describe('mCompositeBeamDesign headless model', () => {
     const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
     const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
     m.setSection(sections.find((x) => x.name === 'IPE 270')!.id);
-    set('L', 7.5); set('s_b', 3); set('h_c', 120); set('c_{deck}', 1); set('h_p', 58); set('b_r', 82); set('e_r', 207); set('n_r', 1);
+    set('L', 7.5); set('s_b', 3); set('h_c', 120); set('c_{deck}', 1); set('c_{re}', 0); set('h_p', 58); set('b_r', 82); set('e_r', 207); set('n_r', 1);
     set('f_{ck}', 25); set('E_{cm}', 31); set('g_p', 0); set('\\rho_c', 7.2 / (3 * (0.12 - 0.058 * (1 - 82 / 207))));
     set('s_{sc.A}', 207); set('s_{sc.B}', 207); // 36 studs on the beam, 18 per shear span
     m.setTableRows(m.tables[0].id, [['G', '0', '7.5', '0.75', ''], ['Q', '0', '7.5', '2.5', '']]);

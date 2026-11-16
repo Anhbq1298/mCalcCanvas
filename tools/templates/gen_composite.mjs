@@ -108,16 +108,20 @@ input('Dynamic modulus of the concrete (38 GPa: SCI P354 / AD 433, normal weight
 H(3, '1.11 Slab type and profiled steel deck (EN 1994-1-1 §6.6.4, §6.6.6.4)');
 input('Slab: 0 = solid slab, 1 = composite slab on profiled steel deck', 'c_{deck}', 0);
 input('Deck ribs: 0 = transverse to the beam, 1 = parallel to the beam', 'c_{par}', 0);
-input('Deck depth, overall, without embossments', 'h_p', 60, 'mm');
-input('Concrete rib width b_0 of EC4 Figure 6.13 (mean width of an open rib; minimum width if re-entrant)', 'b_r', 150, 'mm');
-input('Rib pitch', 'e_r', 300, 'mm');
+T('Default deck: RF55 (Fielders KingFlor; M Metal, Singapore), 1.00 mm BMT, re-entrant, ribs at 200 mm:');
+T('h_p 55 mm, 1664 mm²/m, 13.56 kg/m², G550 (manufacturer data sheet).');
+T('b_r = 168 mm assumes a 32 mm dovetail; confirm with the supplier (k_t is at its Table 6.2 limit either way).');
+input('Profile: 0 = open trapezoidal, 1 = re-entrant (dovetail)', 'c_{re}', 1);
+input('Deck depth, overall, without embossments', 'h_p', 55, 'mm');
+input('Concrete rib width b_0 of EC4 Figure 6.13 (mean width of an open rib; minimum width if re-entrant)', 'b_r', 168, 'mm');
+input('Rib pitch', 'e_r', 200, 'mm');
 input('Sheet thickness', 't_p', 1, 'mm');
 input('Studs per rib, ribs transverse (1 or 2)', 'n_r', 1);
-input('Deck self-weight', 'g_p', 0.13, 'kPa');
+input('Deck self-weight', 'g_p', 0.133, 'kPa');
 input('Transverse deck fixed to the top flange restrains the beam in construction: 1 = yes, 0 = no', 'c_{LT.d}', 1);
 input('Transverse deck continuous across the beam, counted as transverse reinforcement (6.25): 1 = yes, 0 = no', 'c_{pe}', 0);
-input('Sheet cross-section per metre of beam (manufacturer)', 'A_{pe}', 1400, 'mm^2/m');
-input('Deck yield strength', 'f_{yp}', 350, 'MPa');
+input('Sheet cross-section per metre of beam (manufacturer)', 'A_{pe}', 1664, 'mm^2/m');
+input('Deck yield strength', 'f_{yp}', 550, 'MPa');
 
 H(2, '2. LOADING');
 l.out[l.out.length - 1].props.pageBreak = true; // loading starts on its own page
@@ -129,7 +133,8 @@ P('Deck ribs transverse to the beam: 1 = yes, 0 = no (solid or parallel)', R`c_{
 P('Deck self-weight on the beam', R`g_d\coloneq${IF([R`c_{deck}\ge1`, R`g_p s_b`], [null, R`0\,\mathrm{kN/m}`])}`, M(units('kN/m')));
 T('Self weight of the steel g_a, wet slab g_c (concrete in the ribs and the deck included) and their sum g_0 (carried in every stage):');
 calc('Steel beam', 'g_a', R`m_a\cdot9.81\,\mathrm{m/s^2}`, 'kN/m', false);
-calc('Wet slab: topping, ribs b_r / e_r of h_pe, deck', 'g_c', R`\rho_c s_b\left(h_c-h_{pe}\left(1-\frac{b_r}{e_r}\right)\right)+g_d`, 'kN/m', false);
+P('Concrete share of the rib zone: b_r / e_r for an open profile; 1 for a re-entrant one (dovetail voids ignored, on the heavy side)', R`k_c\coloneq${IF([R`c_{re}\ge1`, '1'], [null, R`\frac{b_r}{e_r}`])}`, M({ precision: 3 }));
+calc('Wet slab: topping, share k_c of the rib zone, deck', 'g_c', R`\rho_c s_b\left(h_c-h_{pe}\left(1-k_c\right)\right)+g_d`, 'kN/m', false);
 calc('Self-weight', 'g_0', R`g_a+g_c`, 'kN/m', false);
 P('ULS factor on self-weight g_0, fixed (EN 1990 Table A1.2(B), not a user input)', R`\gamma_{G.sw}\coloneq1.35`, M(units('')));
 P('Construction span (ends or props)', R`L_1\coloneq${IF([R`c_{prop}\ge1`, R`k_{LT}L`], [null, 'L'])}`, M(units('m')));
@@ -281,7 +286,8 @@ calc('Degree of connection (not a utilisation)', '\\eta', R`\min\left(1,\frac{N_
 calc('(6.12), equal flanges, L_e ≤ 25 m', '\\eta_{12}', R`\max\left(0.4,1-\frac{355\,\mathrm{MPa}}{f_y}\left(0.75-0.03\frac{L_e}{1\,\mathrm{m}}\right)\right)`, '', false);
 calc('(6.16), transverse deck, one stud in every rib', '\\eta_{16}', R`\max\left(0.4,1-\frac{355\,\mathrm{MPa}}{f_y}\left(1-0.04\frac{L_e}{1\,\mathrm{m}}\right)\right)`, '', false);
 T('(6.16) needs §6.6.1.2(3): transverse ribs, one 19 mm stud ≥ 76 mm in every rib, b_0/h_p ≥ 2, h_p ≤ 60 mm, linear interaction (6.3).');
-P('§6.6.1.2(3) met: 1 = yes, 0 = no', R`c_{16}\coloneq${IF([R`c_{tr}\ge1\land n_r\le1\land s_A\le e_r\land s_B\le e_r\land\left|d_{sc}-19\,\mathrm{mm}\right|\le0.5\,\mathrm{mm}\land h_{sc}\ge76\,\mathrm{mm}\land b_r\ge2h_p\land h_p\le60\,\mathrm{mm}`, '1'], [null, '0'])}`, M({ precision: 0 }));
+P('Stud and deck geometry of §6.6.1.2(3): 1 = met', R`c_{16.g}\coloneq${IF([R`\left|d_{sc}-19\,\mathrm{mm}\right|\le0.5\,\mathrm{mm}\land h_{sc}\ge76\,\mathrm{mm}\land b_r\ge2h_p\land h_p\le60\,\mathrm{mm}`, '1'], [null, '0'])}`, M({ precision: 0 }));
+P('§6.6.1.2(3) met: 1 = yes, 0 = no', R`c_{16}\coloneq${IF([R`c_{tr}\ge1\land n_r\le1\land s_A\le e_r\land s_B\le e_r\land c_{16.g}\ge1`, '1'], [null, '0'])}`, M({ precision: 0 }));
 P('Minimum degree of connection', R`\eta_{min}\coloneq${IF([R`c_{16}\ge1`, R`\eta_{16}`], [null, R`\eta_{12}`])}`, M({ precision: 3 }));
 check('Minimum degree of connection', '\\eta_{min}', '\\eta');
 check('Rule (6.12) applies', 'L_e', '25\\,\\mathrm{m}');

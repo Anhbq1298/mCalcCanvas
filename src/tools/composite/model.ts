@@ -52,7 +52,7 @@ const SCALARS: Probe[] = [
   ['dhead', 'd_{head}', 'mm'], ['hsc', 'h_{sc}', 'mm'], ['dsc', 'd_{sc}', 'mm'], ['b0', 'b_0', 'mm'],
   // profiled steel deck (all neutral for a solid slab: h_pe = 0, k_d = 1, n_re = 1)
   ['cdeck', 'c_{deck}', null], ['ctr', 'c_{tr}', null], ['hpe', 'h_{pe}', 'mm'], ['ht', 'h_t', 'mm'], ['br', 'b_r', 'mm'], ['er', 'e_r', 'mm'], ['kd', 'k_d', null], ['kt', 'k_t', null], ['kl', 'k_l', null], ['ktmax', 'k_{t.max}', null],
-  ['nre', 'n_{re}', null], ['sA', 's_A', 'mm'], ['sB', 's_B', 'mm'], ['ape', 'a_{pe}', 'mm^2/m'], ['cbb', 'c_{bb}', null], ['Idyn', 'I_{dyn}', 'cm^4'], ['NcRd', 'N_{c.Rd}', 'kN'], ['LLT', 'L_{LT}', 'm'], ['smax', 's_{max}', 'mm'], ['c16', 'c_{16}', null],
+  ['nre', 'n_{re}', null], ['sA', 's_A', 'mm'], ['sB', 's_B', 'mm'], ['ape', 'a_{pe}', 'mm^2/m'], ['cbb', 'c_{bb}', null], ['Idyn', 'I_{dyn}', 'cm^4'], ['NcRd', 'N_{c.Rd}', 'kN'], ['LLT', 'L_{LT}', 'm'], ['smax', 's_{max}', 'mm'], ['c16', 'c_{16}', null], ['cre', 'c_{re}', null],
   // deflection
   ['dmax', '\\delta_{max}', 'mm'], ['wc', 'w_c', 'mm'], ['ccam', 'c_{cam}', null], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['f1', 'f_1', 'Hz'], ['f1nc', 'f_{1.nc}', 'Hz'], ['flim', 'f_{lim}', 'Hz'], ['Ecdyn', 'E_{c.dyn}', 'GPa'], ['ddyn', '\\delta_{dyn}', 'mm'], ['ddynnc', '\\delta_{dyn.nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
 ];
