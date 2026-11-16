@@ -419,7 +419,7 @@ export function App() {
             </section>
             {groups.map(([g, fields], gi) => (
               <section key={g} aria-labelledby={`h-group-${gi}`}>
-                <h2 id={`h-group-${gi}`}>{isDeck(g) ? 'Slab type' : g.replace(/\s*\(.*$/, '')}</h2>
+                <h2 id={`h-group-${gi}`}>{isDeck(g) ? 'Slab' : g.replace(/\s*\(.*$/, '')}</h2>
                 {isFactors(g) ? (
                   <div className="define-row">
                     <button type="button" className="btn" data-testid="factors-open" onClick={() => factorRef.current?.showModal()}>Define…</button>
@@ -442,6 +442,7 @@ export function App() {
                           </select>
                         </label>
                       )}
+                      {renderField(byName('h_c'))}
                     </div>
                     {deck && (
                       <div className="define-row">
@@ -457,7 +458,7 @@ export function App() {
                     {deck && <p className="hint">h<sub>c</sub> = {fmt(res.h_c, 0)} mm is the overall depth: {fmt(res.ht, 0)} mm of concrete above a {fmt(res.hpe, 0)} mm deck. P<sub>Rd</sub> = k<sub>d</sub> × solid-slab value = {fmt(res.PRd, 1)} kN ({parallel ? <>k<sub>l</sub>, (6.22)</> : <>k<sub>t</sub>, (6.23), limit {fmt(res.ktmax, 2)}</>}).{transverse && <> Studs sit in the ribs: spacing in effect {fmt(res.sA, 0)} / {fmt(res.sB, 0)} mm, {fmt(res.nre, 0)} per rib.</>}</p>}
                   </>
                 ) : (
-                  <div className="fields">{fields.map(renderField)}</div>
+                  <div className="fields">{fields.filter((f) => f.name !== 'h_c').map(renderField)}</div>
                 )}
                 {(/^Shear connection/.test(g) || /^Slab transverse/.test(g)) && (() => {
                   const kind = /^Shear/.test(g) ? 'studs' : 'rebar';
