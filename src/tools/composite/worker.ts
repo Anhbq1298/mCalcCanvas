@@ -4,7 +4,7 @@
  * scrolling stay responsive while it recalculates (no long task on the main thread).
  */
 import raw from '../../../templates/Composite_Beam_EC4.mCCV?raw';
-import { CONSTRUCTION_CHECKS, CompositeModel, designSection, etaInRange, governingSplit, screenPasses, type DesignCriteria, type Targets } from './model';
+import { CompositeModel, designSection, type DesignCriteria } from './model';
 
 export type ToWorker =
   | { kind: 'input'; id: string; value: number }
@@ -15,7 +15,6 @@ export type ToWorker =
   | { kind: 'state'; values: Record<string, number>; tables: { id: string; rows: string[][] }[] }
   // design engine: one section per message (camber, fewest studs, smallest bar)
   | { kind: 'design'; id: number; mode: 'composite' | 'bare'; token: number; criteria: DesignCriteria }
-  | { kind: 'evaluate'; id: number; sc: number; scB: number; bar: number; sf?: number; nr?: number; bare: boolean; detail?: boolean; token: number; targets: Targets };
 
 export type { OptimizeResult } from './model';
 
@@ -36,22 +35,6 @@ self.onmessage = (ev: MessageEvent<ToWorker>) => {
     return;
   }
   if (m.kind === 'design') return post({ kind: 'designed', token: m.token, id: m.id, design: designSection(model, screen, m.id, m.criteria, m.mode) });
-  if (m.kind === 'evaluate') {
-    // 1. screening model (no deflection curves): a failing strength or construction-deflection check is final
-    if (screen) {
-      screen.setSection(m.id);
-      screen.setDetail(m);
-      const q = screen.results();
-      if (!q.errors.length && (!screenPasses(q, m.targets, m.detail ? CONSTRUCTION_CHECKS : []) || (!m.bare && (q.comp < 1 || !etaInRange(q.eta, m.targets))))) return post({ kind: 'evaluated', token: m.token, id: m.id, pass: false });
-    }
-    // 2. full worksheet
-    model.setSection(m.id);
-    model.setDetail(m);
-    const r = model.results();
-    if (r.errors.length) return post({ kind: 'evaluated', token: m.token, id: m.id, pass: false });
-    const g = governingSplit(r, m.detail ? CONSTRUCTION_CHECKS : []);
-    return post({ kind: 'evaluated', token: m.token, id: m.id, pass: g.strength.ur <= m.targets.strength && g.deflection.ur <= m.targets.deflection && (m.bare || (r.comp >= 1 && etaInRange(r.eta, m.targets))), composite: r.comp >= 1, eta: r.eta, ...g });
-  }
   if (m.kind === 'input') model.setInput(m.id, m.value);
   else if (m.kind === 'section') model.setSection(m.id);
   else if (m.kind === 'table') model.setTableRows(m.id, m.rows);

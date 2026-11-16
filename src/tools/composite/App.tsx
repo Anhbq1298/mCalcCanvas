@@ -13,7 +13,7 @@ import type { OptimizeResult, ToWorker } from './worker';
 import { DeckProfile, Legend, LineChart, LongSection, PointDrawing, SectionDrawing, ShearSurface3D, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
 import { headerParts } from '../../canvas/inputTable';
 import { C, fmt } from './format';
-import { optimizeDesign, optimizeParallel, warmOptimizer } from './optimizer';
+import { optimizeDesign, warmOptimizer } from './optimizer';
 
 /** One state of the inputs: input values, load-table rows and section, for undo/redo. */
 type Snap = { values: Record<string, number>; rows: Record<string, string[][]>; sectionId: number };
@@ -110,18 +110,15 @@ export function App() {
   const [optFamilies, setOptFamilies] = useState<string[]>(['UB']);
   const [hMin, setHMin] = useState('');
   const [bMin, setBMin] = useState('');
-  const [studMode, setStudMode] = useState<'uniform' | 'segmented'>('uniform');
+  const [studMode, setStudMode] = useState<DesignCriteria['studs']>('prefer-uniform');
   const [camAuto, setCamAuto] = useState(false);
   const [cam, setCam] = useState({ pct: '80', min: '20', max: '100', step: '5', minSpan: '7.5' });
-  const [costStud, setCostStud] = useState('0');
-  const [costCamber, setCostCamber] = useState('0');
   const [tStrength, setTStrength] = useState('1.00');
   const [tDefl, setTDefl] = useState('1.00');
   const [etaReq, setEtaReq] = useState(''); // optimiser: project minimum degree of shear connection, %; blank = code minimum only
   const [etaCap, setEtaCap] = useState(''); // optimiser: maximum degree of shear connection, %; blank = up to full connection
   const dialogRef = useRef<HTMLDialogElement>(null);
   const loadRef = useRef<HTMLDialogElement>(null);
-  const [detailMsg, setDetailMsg] = useState<Record<string, { running: boolean; text: string }>>({});
   const factorRef = useRef<HTMLDialogElement>(null);
   const deckRef = useRef<HTMLDialogElement>(null);
   const [opt, setOpt] = useState<{ running: boolean; i?: number; n?: number; name?: string; result?: OptimizeResult; seconds?: number } | null>(null);
@@ -191,7 +188,6 @@ export function App() {
   const isDeck = (g: string) => /^Slab type and profiled steel deck/.test(g);
   const byName = (name: string) => inputs.find((f) => f.name === name)!;
   const deck = value(byName('c_{deck}')) >= 1, parallel = deck && value(byName('c_{par}')) >= 1, transverse = deck && !parallel;
-  const pitch = transverse ? value(byName('e_r')) : undefined;
   const deckPreset = DECKS.find((d) => Object.entries(d.values).every(([n, x]) => Math.abs(value(byName(n)) - x) < 1e-9));
   const deckName = deckPreset?.name ?? 'Custom deck';
   const applyDeck = (name: string) => { const d = DECKS.find((x) => x.name === name); if (d) for (const [n, x] of Object.entries(d.values)) if (value(byName(n)) !== x) setInput(byName(n), x); };
@@ -292,26 +288,6 @@ export function App() {
   const okPct = (t: string) => !t.trim() || (NUMBER.test(t) && Number(t) >= 0 && Number(t) <= 100);
   const okEta = okPct(etaReq) && okPct(etaCap) && !(etaReq.trim() && etaCap.trim() && Number(etaReq) > Number(etaCap));
   // Optimise one detail with the section fixed: stud spacing, or rebar spacing (with the bar diameter as fallback).
-  const runDetail = async (kind: 'studs' | 'rebar') => {
-    const dv = (name: string) => value(inputs.find((x) => x.name === name)!);
-    const cur = { sc: dv('s_{sc.A}'), scB: dv('s_{sc.B}'), bar: dv('d_{s.t}'), sf: dv('s_{f.t}') };
-    const sec = sections.find((x) => x.id === state.sectionId)!;
-    const base = { id: sec.id, name: sec.name, mass: sec.values.mass, h: sec.values.h };
-    const spacings = [200, 175, 150, 125, 100];
-    setDetailMsg((m) => ({ ...m, [kind]: { running: true, text: 'Checking…' } }));
-    const st = { values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) };
-    const r = kind === 'studs'
-      ? await optimizeDesign(sec.family, [base], dv('L'), { strength: 1, deflection: 1, etaMin: 0, etaMax: 1, studs: studMode, bars: [cur.bar], camber: null, costStud: 0, costCamber: 0, detail: true }, st, () => undefined)
-      : await optimizeParallel(sec.family, BAR_DIAMETERS.filter((d) => d >= cur.bar).flatMap((bar) => spacings.map((sf) => ({ ...base, sc: cur.sc, scB: cur.scB, bar, sf, bare: true }))), null, { strength: 1, deflection: 1 }, st, () => undefined, true);
-    if (kind === 'studs' && r.best && !r.best.composite) r.best = null; // the bare-steel fallback is no stud layout
-    const b = r.best;
-    if (!b) { setDetailMsg((m) => ({ ...m, [kind]: { running: false, text: kind === 'studs' ? (pitch ? 'No layout (every n-th rib, every rib, two per rib) satisfies every check with composite action.' : 'No single-row stud layout satisfies every check with composite action.') : 'No rebar spacing from 200 to 100 mm (Ø up to 13) satisfies every check.' } })); return; }
-    const set = (name: string, v: number) => { const f = inputs.find((x) => x.name === name); if (f && value(f) !== v) setInput(f, v); };
-    if (kind === 'studs') { set('s_{sc.A}', b.sc); set('s_{sc.B}', b.scB ?? b.sc); if (b.nr) set('n_r', b.nr); }
-    else { set('d_{s.t}', b.bar); set('d_{s.b}', b.bar); set('s_{f.t}', b.sf!); set('s_{f.b}', b.sf!); }
-    const ur = Math.max(b.strength.ur, b.deflection.ur);
-    setDetailMsg((m) => ({ ...m, [kind]: { running: false, text: kind === 'studs' ? `Set to ${b.sc}${(b.scB ?? b.sc) !== b.sc ? ` / ${b.scB}` : ''} mm${b.nr ? `, ${b.nr} per rib` : ''}: ${fmt(b.studs ?? NaN, 0)} studs, η ${fmt((b.eta ?? NaN) * 100, 0)} % (fewest that pass); permanent-stage governing UR ${fmt(ur, 3)}.` : `Set to Ø${b.bar} @ ${b.sf} mm (top and bottom); permanent-stage governing UR ${fmt(ur, 3)}.` } }));
-  };
   const okZero = (t: string) => NUMBER.test(t) && Number(t) >= 0;
   const lim = (t: string) => (t.trim() ? Number(t) : null);
   const optSections = sections
@@ -319,14 +295,13 @@ export function App() {
       && (lim(hMin) === null || x.values.h >= lim(hMin)! - 1e-9) && (lim(hMax) === null || x.values.h <= lim(hMax)! + 1e-9) && (lim(bMin) === null || x.values.b >= lim(bMin)! - 1e-9))
     .sort((a, b) => a.values.mass - b.values.mass);
   const optLabel = FAMILIES.filter((f) => optFamilies.includes(f)).join(' / ') || 'section';
-  const optOk = okNum(hMin, true) && okNum(hMax, true) && okNum(bMin, true) && okNum(tStrength) && okNum(tDefl) && okEta && okZero(costStud) && okZero(costCamber)
+  const optOk = okNum(hMin, true) && okNum(hMax, true) && okNum(bMin, true) && okNum(tStrength) && okNum(tDefl) && okEta
     && (!camAuto || Object.values(cam).every(okZero)) && optSections.length > 0;
   const runOptimize = async () => {
     const criteria: DesignCriteria = {
       strength: Number(tStrength), deflection: Number(tDefl), etaMin: etaReq.trim() ? Number(etaReq) / 100 : 0, etaMax: etaCap.trim() ? Number(etaCap) / 100 : 1,
       studs: studMode, bars: BAR_DIAMETERS,
       camber: camAuto ? { pct: Number(cam.pct), min: Number(cam.min), max: Number(cam.max), step: Number(cam.step), minSpan: Number(cam.minSpan) } : null,
-      costStud: Number(costStud), costCamber: Number(costCamber),
     };
     setOpt({ running: true });
     const t0 = performance.now();
@@ -482,16 +457,6 @@ export function App() {
                 ) : (
                   <div className="fields">{fields.filter((f) => f.name !== 'h_c').map(renderField)}</div>
                 )}
-                {(/^Shear connection/.test(g) || /^Slab transverse/.test(g)) && (() => {
-                  const kind = /^Shear/.test(g) ? 'studs' : 'rebar';
-                  const m = detailMsg[kind];
-                  return (
-                    <div className="define-row">
-                      <button type="button" className="btn" data-testid={`opt-${kind}`} disabled={m?.running} onClick={() => runDetail(kind)}>{kind === 'studs' ? 'Optimize shear studs' : 'Optimize rebar spacing'}</button>
-                      {m && <span className="hint" data-testid={`opt-${kind}-msg`} role="status">{m.text}</span>}
-                    </div>
-                  );
-                })()}
               </section>
             ))}
           </form>
@@ -787,7 +752,7 @@ export function App() {
             <h2 id="opt-title">Optimize section</h2>
             <button type="button" className="rowbtn" aria-label="Close" onClick={() => dialogRef.current?.close()}>×</button>
           </header>
-          <p className="hint">Designs every allowed section, lightest first: camber from the rules, then the fewest studs and the smallest transverse bar (Ø10, Ø12, Ø13) that pass every check, construction stage and longitudinal shear included. The cheapest design wins (steel + studs + camber). Only if no section works as composite are the sections tried as bare steel. Loads and other inputs stay as entered.</p>
+          <p className="hint">Designs every allowed section, lightest first: camber from the rules, then the fewest studs and the smallest transverse bar (Ø10, Ø12, Ø13) that pass every check, construction stage and longitudinal shear included. The lightest section wins. Only if no section works as composite are the sections tried as bare steel. Loads and other inputs stay as entered.</p>
           <fieldset className="crit">
             <legend>Sections</legend>
             <div className="fams" role="group" aria-label="Families">
@@ -820,8 +785,9 @@ export function App() {
                 <input data-testid="t-eta-max" className="num-input" type="text" inputMode="decimal" autoComplete="off" placeholder="100" value={etaCap} onChange={(e) => setEtaCap(e.target.value)} aria-invalid={!okEta} aria-describedby={!okEta ? 'te-error' : undefined} />
               </label>
               <label className="f"><span>Distribution</span>
-                <select data-testid="stud-mode" value={studMode} onChange={(e) => setStudMode(e.target.value as 'uniform' | 'segmented')} disabled={transverse}>
-                  <option value="uniform">Uniform over the span</option>
+                <select data-testid="stud-mode" value={studMode} onChange={(e) => setStudMode(e.target.value as DesignCriteria['studs'])} disabled={transverse}>
+                  <option value="prefer-uniform">Prefer uniform (segmented only if needed)</option>
+                  <option value="uniform">Uniform only</option>
                   <option value="segmented">Segmented (same count each side of M max)</option>
                 </select>
               </label>
@@ -877,18 +843,6 @@ export function App() {
             </div>
             <p className="hint">The three limits are worksheet inputs: they also apply to the design on the page and in the report.</p>
           </fieldset>
-          <fieldset className="crit">
-            <legend>Cost</legend>
-            <div className="fields three">
-              <label className="f"><span>One stud, kg of steel</span>
-                <input data-testid="cost-stud" className="num-input" type="text" inputMode="decimal" autoComplete="off" value={costStud} onChange={(e) => setCostStud(e.target.value)} aria-invalid={!okZero(costStud)} />
-              </label>
-              <label className="f"><span>Cambering one beam, kg of steel</span>
-                <input data-testid="cost-camber" className="num-input" type="text" inputMode="decimal" autoComplete="off" value={costCamber} onChange={(e) => setCostCamber(e.target.value)} aria-invalid={!okZero(costCamber)} />
-              </label>
-            </div>
-            <p className="hint">Cost = mass × span + studs × stud cost + camber cost. With 0 and 0 the lightest section wins.</p>
-          </fieldset>
           <div className="opt-actions">
             <button type="button" className="btn primary" data-testid="optimize" disabled={opt?.running || !optOk} onClick={runOptimize}>
               {opt?.running ? 'Optimizing…' : `Find the best ${optLabel}`}
@@ -897,7 +851,7 @@ export function App() {
               {opt?.running && opt.n ? <>Designed {opt.i} of {opt.n}: {opt.name}</> : null}
               {!opt?.running && opt?.result ? (
                 opt.result.best ? (
-                  <>{Number(costStud) > 0 || Number(costCamber) > 0 ? 'Cheapest' : 'Lightest'} {opt.result.family} meeting UR ≤ {fmt(opt.result.targets.strength, 2)} strength and ≤ {fmt(opt.result.targets.deflection, 2)} serviceability: <b>{opt.result.best.name}</b>.{opt.seconds !== undefined ? ` ${fmt(opt.seconds, 1)} s.` : ''}</>
+                  <>Lightest {opt.result.family} meeting UR ≤ {fmt(opt.result.targets.strength, 2)} strength and ≤ {fmt(opt.result.targets.deflection, 2)} serviceability: <b>{opt.result.best.name}</b>.{opt.seconds !== undefined ? ` ${fmt(opt.seconds, 1)} s.` : ''}</>
                 ) : (
                   <span className="error">No {opt.result.family} section meets the criteria ({opt.result.total / 2} sections).</span>
                 )
@@ -910,12 +864,11 @@ export function App() {
                   <tr><td>Section</td><td>{opt.result.best.name}</td></tr>
                   <tr><td>Mass / depth h</td><td>{fmt(opt.result.best.mass, 1)} kg/m / {fmt(opt.result.best.h, 1)} mm</td></tr>
                   <tr><td>Design basis</td><td>{opt.result.best.composite ? 'Composite' : 'Bare steel: no section reaches composite action within the criteria'}</td></tr>
-                  {opt.result.best.composite && <tr><td>Stud spacing s<sub>sc</sub> (A / B)</td><td>{opt.result.best.sc} / {opt.result.best.scB ?? opt.result.best.sc} mm{opt.result.best.nr ? `, ${opt.result.best.nr} per rib` : ''}</td></tr>}
+                  {opt.result.best.composite && <tr><td>Stud spacing s<sub>sc</sub> (A / B)</td><td>{opt.result.best.sc} / {opt.result.best.scB ?? opt.result.best.sc} mm{opt.result.best.nr ? `, ${opt.result.best.nr} per rib` : opt.result.best.layout ? `, ${opt.result.best.layout}` : ''}</td></tr>}
                   {opt.result.best.composite && <tr><td>Studs on the beam</td><td>{fmt(opt.result.best.studs ?? NaN, 0)}</td></tr>}
                   {opt.result.best.composite && opt.result.best.eta !== undefined && <tr><td>Degree of shear connection η</td><td>{fmt(opt.result.best.eta * 100, 0)} %</td></tr>}
                   {opt.result.best.composite && <tr><td>Transverse bars Ø (both)</td><td>{opt.result.best.bar} mm</td></tr>}
                   <tr><td>Camber</td><td>{(opt.result.best.camber ?? 0) > 0 ? `${fmt(opt.result.best.camber!, 0)} mm` : 'none'}</td></tr>
-                  <tr><td>Cost, kg of steel</td><td>{fmt(opt.result.best.cost ?? NaN, 0)}</td></tr>
                   <tr><td>Strength UR (target {fmt(opt.result.targets.strength, 2)})</td><td className={tone(opt.result.best.strength.ur)}>{fmt(opt.result.best.strength.ur, 3)} · <Rich text={opt.result.best.strength.label} /></td></tr>
                   <tr><td>Deflection UR (target {fmt(opt.result.targets.deflection, 2)})</td><td className={tone(opt.result.best.deflection.ur)}>{fmt(opt.result.best.deflection.ur, 3)} · <Rich text={opt.result.best.deflection.label} /></td></tr>
                 </tbody>

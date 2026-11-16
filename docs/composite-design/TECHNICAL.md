@@ -236,10 +236,10 @@ Modelled on the way RAM Steel Beam works: criteria in groups, each section desig
   and rises in steps of about 5 % of full connection to η_max; spacing = shear span / count, rounded down to 5 mm, within s_min … s_max.
   Uniform: one spacing from the shorter shear span. Segmented: the same count on each side of x_M. Transverse deck: every n-th rib, then two per rib.
 - The densest layout is checked first: if it fails on anything but the slab checks, the section is dropped after one or two evaluations.
-- `optimizeDesign` (optimizer.ts): workers design the sections lightest first; cost = mass × L + studs × stud cost + camber cost (kg of steel);
-  sections whose steel alone costs more than the best design are not tried. Composite first, bare steel only if no section works.
+- `optimizeDesign` (optimizer.ts): workers design the sections lightest first; the lightest passing section wins (no cost model).
+  Composite first, bare steel only if no section works. Stud distribution: prefer uniform (segmented only where uniform fails), uniform only, or segmented.
 - Section criteria: families (several), depth range, minimum flange width.
 - Worksheet: deflection limits are separate inputs (r_lim total less camber, r_lim.1 construction, r_lim.q live load) with their own URs (d.x, d.1, d.q);
   fixed precamber w_c.0 beside the % value.
-- The stud button uses the same engine with the section and bar fixed; the rebar button still tries the spacing list.
+- The page has one Optimize button (at the governing UR); the separate stud and rebar buttons were removed.
 

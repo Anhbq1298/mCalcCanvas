@@ -61,7 +61,7 @@ test('mCompositeBeamDesign optimizes the section in a dialog with strength and d
   expect(defl).toBeLessThanOrEqual(0.8);
   // composite action is required, and the stud spacing and bar diameter come from the candidate lists
   expect(await cell('Design basis')).toBe('Composite');
-  // the stud spacing is derived from the demand (a multiple of 5 mm), uniform by default; bars from the list
+  // the stud spacing is derived from the demand (a multiple of 5 mm), uniform preferred; bars from the list
   const [sa, sb] = (await cell('Stud spacing')).split(' mm')[0].split(' / ').map(Number);
   expect(sa % 5).toBe(0);
   expect(sb).toBe(sa);
@@ -69,7 +69,7 @@ test('mCompositeBeamDesign optimizes the section in a dialog with strength and d
   expect([10, 12, 13]).toContain(Number((await cell('Transverse bars')).split(' ')[0]));
   expect(await cell('Camber')).toBe('none');
   const chosen = await cell('Section');
-  // a stud cost, a cap on the degree of connection and a camber rule change the answer's details, not its validity
+  // a cap on the degree of connection, segmented studs and a camber rule change the answer's details, not its validity
   await page.getByTestId('t-eta-max').fill('60');
   await page.getByTestId('stud-mode').selectOption('segmented');
   await page.getByTestId('camber-auto').check();

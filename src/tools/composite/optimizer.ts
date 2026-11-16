@@ -1,10 +1,8 @@
 /**
- * Parallel section optimiser for mCompositeBeamDesign. Every candidate needs a full worksheet recalculation
- * (about 0.2 s), so candidates are checked by a pool of workers, one per spare CPU core. Sections are handed
- * out lightest first; when one passes, only the lighter ones still running are awaited, and the lightest
- * passing section wins — the same answer as checking them one by one (CompositeModel.optimizeSection).
+ * Worker pool of the section optimiser for mCompositeBeamDesign: each worker holds the worksheet and designs
+ * one section at a time (designSection in model.ts), so several sections are designed in parallel.
  */
-import { designCost, type Candidate, type Design, type DesignCriteria, type Governing, type OptimizeResult, type Targets } from './model';
+import type { Design, DesignCriteria, OptimizeResult } from './model';
 import type { ToWorker } from './worker';
 
 let pool: Worker[] = [];
@@ -26,62 +24,9 @@ export function warmOptimizer(state: { values: Record<string, number>; tables: {
 
 let token = 0;
 
-export function optimizeParallel(
-  family: string,
-  candidates: Candidate[],
-  maxDepth: number | null,
-  targets: Targets,
-  state: { values: Record<string, number>; tables: { id: string; rows: string[][] }[] },
-  progress: (done: number, total: number, name: string) => void,
-  detail = false, // stud / bar optimisation with the section fixed: construction-stage checks are left out
-): Promise<OptimizeResult> {
-  const workers = ensurePool();
-  const run = ++token;
-  const total = candidates.length;
-  const res = new Map<number, { pass: boolean; composite?: boolean; eta?: number; strength?: Governing; deflection?: Governing }>(); // candidate index → outcome
-  let next = 0, done = 0, bestIdx = Infinity;
-  return new Promise((resolve) => {
-    const finish = () => {
-      workers.forEach((w) => (w.onmessage = null));
-      const b = Number.isFinite(bestIdx) ? candidates[bestIdx] : null;
-      const tried = Number.isFinite(bestIdx) ? bestIdx + 1 : total; // lightest-first count, as in the serial search
-      const o = Number.isFinite(bestIdx) ? res.get(bestIdx)! : null;
-      resolve({ family, maxDepth, targets, tried, total, best: b && o ? { id: b.id, name: b.name, mass: b.mass, h: b.h, sc: b.sc, bar: b.bar, sf: b.sf, nr: b.nr, eta: o.eta, composite: !!o.composite, strength: o.strength!, deflection: o.deflection! } : null });
-    };
-    // all lighter candidates are back: the answer cannot change any more
-    const settled = () => (Number.isFinite(bestIdx) ? [...Array(bestIdx).keys()].every((i) => res.has(i)) : done === total);
-    const feed = (w: Worker) => {
-      if (next >= total || next > bestIdx) return false;
-      const i = next++;
-      const c = candidates[i];
-      w.postMessage({ kind: 'evaluate', id: c.id, sc: c.sc, scB: c.scB, bar: c.bar, sf: c.sf, nr: c.nr, bare: c.bare, detail, token: run * 100000 + i, targets } satisfies ToWorker);
-      return true;
-    };
-    if (!total) return finish();
-    let busy = 0;
-    for (const w of workers) {
-      w.postMessage({ kind: 'state', ...state } satisfies ToWorker);
-      w.onmessage = (ev) => {
-        const m = ev.data;
-        if (m.kind !== 'evaluated' || Math.floor(m.token / 100000) !== run) return;
-        const i = m.token % 100000;
-        busy--; done++;
-        res.set(i, { pass: m.pass, composite: m.composite, eta: m.eta, strength: m.strength, deflection: m.deflection });
-        if (m.pass && i < bestIdx) bestIdx = i;
-        progress(done, total, candidates[i].name);
-        if (settled()) return finish();
-        if (feed(w)) busy++;
-        else if (!busy) finish();
-      };
-      if (feed(w)) busy++;
-    }
-  });
-}
-
 /**
  * Design engine: every section is designed by a worker (camber, fewest studs, smallest bar: designSection),
- * lightest first. The cheapest passing design wins (steel + studs + camber, in kg of steel); a section whose
- * steel alone already costs more than the best design is not tried. Composite designs first; only when no
+ * lightest first. The lightest passing section wins; heavier ones are not tried once one passes. Composite designs first; only when no
  * section works as composite are the sections tried as bare steel.
  */
 export function optimizeDesign(
@@ -113,7 +58,7 @@ export function optimizeDesign(
         const i = m.token % 100000;
         running--; done++;
         if (m.design.pass) {
-          const cost = designCost(secs[i].mass, spanM, m.design, criteria);
+          const cost = secs[i].mass * spanM; // lightest passing section wins
           if (!best || cost < best.cost - 1e-9 || (Math.abs(cost - best.cost) <= 1e-9 && i < best.i)) best = { i, d: m.design, cost };
         }
         progress(offset + done, total, secs[i].name);
@@ -129,7 +74,7 @@ export function optimizeDesign(
     const s = b ? secs[b.i] : null;
     return {
       family: label, maxDepth: null, targets: criteria, tried, total,
-      best: b && s ? { id: s.id, name: s.name, mass: s.mass, h: s.h, sc: b.d.sc, scB: b.d.scB, bar: b.d.bar, nr: b.d.nr, eta: b.d.eta, studs: b.d.studs, camber: b.d.camber, cost: b.cost, composite: b.d.composite, strength: b.d.strength, deflection: b.d.deflection } : null,
+      best: b && s ? { id: s.id, name: s.name, mass: s.mass, h: s.h, sc: b.d.sc, scB: b.d.scB, bar: b.d.bar, nr: b.d.nr, eta: b.d.eta, studs: b.d.studs, camber: b.d.camber, layout: b.d.layout, composite: b.d.composite, strength: b.d.strength, deflection: b.d.deflection } : null,
     };
   })();
 }

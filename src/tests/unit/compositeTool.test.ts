@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { BAR_DIAMETERS, CHECKS, camberFor, CompositeModel, designCost, designSection, type DesignCriteria, DEFLECTION_CHECKS, governingCheck, governingSplit, STUD_SPACINGS } from '../../tools/composite/model';
+import { BAR_DIAMETERS, CHECKS, camberFor, CompositeModel, designSection, type DesignCriteria, DEFLECTION_CHECKS, governingCheck, governingSplit, STUD_SPACINGS } from '../../tools/composite/model';
 import { sections } from '../../engineering/steel/sections';
 import { parseDocument } from '../../documents/DocumentSerializer';
 
@@ -277,7 +277,7 @@ describe('mCompositeBeamDesign headless model', () => {
     const raw = readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8');
     const m = new CompositeModel(raw), screen = new CompositeModel(raw, { screening: true });
     const id = (name: string) => sections.find((x) => x.name === name)!.id;
-    const base: DesignCriteria = { strength: 1, deflection: 1, etaMin: 0, etaMax: 1, studs: 'segmented', bars: [10, 12, 13], camber: null, costStud: 0, costCamber: 0 };
+    const base: DesignCriteria = { strength: 1, deflection: 1, etaMin: 0, etaMax: 1, studs: 'segmented', bars: [10, 12, 13], camber: null };
     expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 8, 33, false)).toBe(25); // 26.4 → 25
     expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 8, 20, false)).toBe(0); // 16 → 15 < minimum
     expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 7, 33, false)).toBe(0); // short span
@@ -302,7 +302,10 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(uni.pass).toBe(true);
     expect(uni.scB).toBe(uni.sc);
     expect(uni.studs).toBeGreaterThan(seg.studs); // uniform spacing over-provides the longer shear span
-    expect(designCost(89.3, 8, uni, { costStud: 2, costCamber: 0 }) - designCost(89.3, 8, seg, { costStud: 2, costCamber: 0 })).toBeCloseTo(2 * (uni.studs - seg.studs), 9);
+    // prefer-uniform: the uniform layout when one passes; segmented only where uniform cannot work
+    const pref = designSection(m, screen, id('UB 457x191x89'), { ...base, studs: 'prefer-uniform' }, 'composite');
+    expect([pref.layout, pref.sc, pref.studs]).toEqual(['uniform', uni.sc, uni.studs]);
+    expect(seg.layout).toBe('segmented');
     // a cap below what the section needs rejects it; a rule camber is applied per section
     expect(designSection(m, screen, id('UB 457x191x89'), { ...base, etaMax: 0.45 }, 'composite').pass).toBe(false);
     const cam = designSection(m, screen, id('UB 457x191x89'), { ...base, camber: { pct: 100, min: 1, max: 100, step: 1, minSpan: 6 } }, 'composite');

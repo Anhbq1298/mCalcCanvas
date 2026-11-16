@@ -102,28 +102,33 @@ export const etaInRange = (eta: number, t: Targets): boolean => eta >= (t.etaMin
 export interface Governing { ur: number; key: string; label: string }
 export interface OptimizeResult {
   family: string; maxDepth: number | null; targets: Targets; tried: number; total: number;
-  best: { id: number; name: string; mass: number; h: number; sc: number; scB?: number; bar: number; sf?: number; nr?: number; eta?: number; studs?: number; camber?: number; cost?: number; composite: boolean; strength: Governing; deflection: Governing } | null;
+  best: { id: number; name: string; mass: number; h: number; sc: number; scB?: number; bar: number; sf?: number; nr?: number; eta?: number; studs?: number; camber?: number; layout?: 'uniform' | 'segmented'; composite: boolean; strength: Governing; deflection: Governing } | null;
 }
 
 /**
  * Design criteria of the section optimiser (the approach of RAM Steel Beam: for each section the fewest studs
- * that work, a camber from rules, separate deflection limits in the worksheet, least cost wins).
+ * that work, a camber from rules, separate deflection limits in the worksheet, lightest section wins).
  */
 export interface DesignCriteria extends Targets {
-  /** uniform: one spacing over the span; segmented: each shear span (support to x_M) gets the same number of studs. */
-  studs: 'uniform' | 'segmented';
+  /**
+   * uniform: one spacing over the span; segmented: each shear span (support to x_M) gets the same number of studs;
+   * prefer-uniform: uniform, and segmented only for a section where no uniform layout passes.
+   */
+  studs: 'uniform' | 'segmented' | 'prefer-uniform';
   /** Transverse bar diameters to try, smallest first. */
   bars: number[];
   /** Camber rules; null keeps the precamber inputs as entered. Lengths in mm, minSpan in m. */
   camber: { pct: number; min: number; max: number; step: number; minSpan: number } | null;
-  /** Cost of one stud and of cambering one beam, in kg of steel; 0 = lightest section wins. */
-  costStud: number; costCamber: number;
   /** Section fixed (stud button): construction-stage checks are left out. */
   detail?: boolean;
 }
 export interface Design {
   pass: boolean; composite: boolean; sc: number; scB: number; nr?: number; bar: number; eta: number;
   studs: number; camber: number; strength: Governing; deflection: Governing; evals: number;
+  /** Stud distribution of the result (prefer-uniform resolves to one of the two). */
+  layout?: 'uniform' | 'segmented';
+  /** Failed on something no stud layout changes: the other distribution need not be tried. */
+  hopeless?: boolean;
 }
 const SLAB_BAR_CHECKS = ['sf', 'sf.b']; // the only checks a larger transverse bar can cure
 const SLAB_CHECKS = ['sf', 'L', 'sf.b', 'L.b']; // get worse with more studs: no reason to reject a section at its densest layout
@@ -179,18 +184,24 @@ export function studPlans(p: Results, c: DesignCriteria): { sc: number; scB: num
  * is not required. screen (optional): the fast model without deflection curves, used to reject early.
  */
 export function designSection(model: CompositeModel, screen: CompositeModel | null, id: number, c: DesignCriteria, mode: 'composite' | 'bare'): Design {
+  if (c.studs === 'prefer-uniform') {
+    const u = designSection(model, screen, id, { ...c, studs: 'uniform' }, mode);
+    if (u.pass || u.hopeless || mode === 'bare') return u;
+    const g = designSection(model, screen, id, { ...c, studs: 'segmented' }, mode);
+    return { ...g, evals: g.evals + u.evals };
+  }
   const models = screen ? [screen, model] : [model];
   const set = (m: CompositeModel, name: string, v: number) => { const f = m.inputs.find((x) => x.name === name); if (f) m.setInput(f.id, v); };
   const skip = c.detail ? CONSTRUCTION_CHECKS : [];
   let evals = 0;
-  const fail = (): Design => ({ pass: false, composite: false, sc: 0, scB: 0, bar: 0, eta: 0, studs: 0, camber: 0, strength: { ur: Infinity, key: '', label: '' }, deflection: { ur: Infinity, key: '', label: '' }, evals });
+  const fail = (hopeless = false): Design => ({ hopeless, pass: false, composite: false, sc: 0, scB: 0, bar: 0, eta: 0, studs: 0, camber: 0, strength: { ur: Infinity, key: '', label: '' }, deflection: { ur: Infinity, key: '', label: '' }, evals });
   for (const m of models) { m.setSection(id); if (c.camber) { set(m, 'c_{cam}', 0); set(m, 'w_{c.0}', 0); } }
   const p = models[0].results(); evals++;
-  if (p.errors.length) return fail();
+  if (p.errors.length) return fail(true);
   let camber = p.wc;
   if (c.camber) { camber = camberFor(c.camber, p.L, p.dgmax, p.cprop >= 1); for (const m of models) set(m, 'w_{c.0}', camber); }
   const over = (r: Results, keys: string[]) => keys.some((k) => !(r[`UR.${k}`] <= c.strength));
-  const done = (r: Results, d: { sc: number; scB: number; nr?: number; bar: number }): Design => ({ pass: true, composite: r.comp >= 1, ...d, eta: r.eta, studs: r.nA + r.nB, camber, ...governingSplit(r, skip), evals });
+  const done = (r: Results, d: { sc: number; scB: number; nr?: number; bar: number }): Design => ({ layout: d.sc === d.scB ? 'uniform' : 'segmented', pass: true, composite: r.comp >= 1, ...d, eta: r.eta, studs: r.nA + r.nB, camber, ...governingSplit(r, skip), evals });
   const passes = (r: Results, composite: boolean) => {
     if (r.errors.length || (composite && (r.comp < 1 || !etaInRange(r.eta, c)))) return false;
     const g = governingSplit(r, skip);
@@ -203,7 +214,7 @@ export function designSection(model: CompositeModel, screen: CompositeModel | nu
     return passes(r, false) ? done(r, { ...d }) : fail();
   }
   const plans = studPlans(p, c);
-  if (!plans.length) return fail();
+  if (!plans.length) return fail(true);
   /** One layout: bars from the smallest up; 'next' = a denser layout may still work, 'stop' = it cannot. */
   const tryPlan = (plan: (typeof plans)[number]): Design | 'next' | 'hopeless' => {
     for (const bar of c.bars) {
@@ -230,7 +241,7 @@ export function designSection(model: CompositeModel, screen: CompositeModel | nu
   // The densest layout first: if it fails on anything but the slab, no layout of this section works.
   const last = plans[plans.length - 1];
   const top = tryPlan(last);
-  if (top === 'hopeless') return fail();
+  if (top === 'hopeless') return fail(true);
   if (plans.length === 1) return typeof top === 'object' ? top : fail();
   for (const plan of plans.slice(0, -1)) {
     const r = tryPlan(plan);
@@ -238,10 +249,6 @@ export function designSection(model: CompositeModel, screen: CompositeModel | nu
   }
   return typeof top === 'object' ? top : fail();
 }
-
-/** Cost of a design in kg of steel: the beam, its studs and the camber. */
-export const designCost = (massPerM: number, spanM: number, d: { studs: number; camber: number; composite: boolean }, c: { costStud: number; costCamber: number }): number =>
-  massPerM * spanM + (d.composite ? d.studs * c.costStud : 0) + (d.camber > 0 ? c.costCamber : 0);
 
 /** Detail choices the optimiser tries for every section: uniform stud spacing and both transverse bar diameters. */
 export const STUD_SPACINGS = [200, 175, 150, 125, 100]; // mm, widest (cheapest) first
