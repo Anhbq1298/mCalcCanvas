@@ -432,8 +432,11 @@ describe('mCompositeBeamDesign headless model', () => {
     // the finite-element LTB reproduces the sheet's SN003b formula for a (nearly) uniform beam (same curve)
     const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
     set('c_{weld}', 0);
+    const rolledSG = m.results()['UR.LT']; // Singapore NA (default): §6.3.2.3, curve c (h/b 2.4), β 0.75, f
+    set('c_{NA}', 0);
     const rolled = m.results();
-    expect(rolled['UR.LT']).toBeCloseTo(0.848, 3); // rolled curve b
+    expect(rolled['UR.LT']).toBeCloseTo(0.848, 3); // recommended values: §6.3.2.2 curve b
+    expect(rolledSG).toBeCloseTo(0.731, 3);
     set('h_{A.in}', 402.2);
     const near = m.results();
     set('c_{tap}', 0);
@@ -465,6 +468,7 @@ describe('mCompositeBeamDesign headless model', () => {
   it('LTB by finite elements for a uniform beam: FE internal forces = the sheet; M_cr used directly, close to SN003b', () => {
     const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
     const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
+    set('c_{NA}', 0); // recommended values: the pinned (6.56) chain
     let r = m.results();
     step('construction, UDL on the top flange: FE M_cr within 1 % of SN003b (C1 1.127, C2 0.454)', () => {
       expect(r['Mcr.LT'] / r.McrSN).toBeGreaterThan(0.99);

@@ -348,3 +348,15 @@ props, 518d74e, was reverted: the input is bracing, not a change of the structur
 **c_brace (formerly c_prop) is LTB bracing only** (2026-11-18): the beam is never propped. Bracing adds fork
 restraints at k_LT L in construction; moments, shear, the construction deflection, g₀ on the steel alone and the
 slip factor C_s = 0.3 are unchanged. The camber rule no longer depends on it.
+
+## National Annex for LTB (c_NA, default Singapore)
+
+`c_NA = 1` (default): NA to SS EN 1993-1-1 (Singapore; the same LTB values as the UK NA). Rolled I: §6.3.2.3,
+λ_LT,0 = 0.4, β = 0.75, curves h/b ≤ 2 b, ≤ 3.1 c, else d; f (6.58) with k_c = 1/√C1 (the page takes C1 from the FE:
+M_cr of the moment diagram at the shear centre / M_cr of uniform moment, same restraints; the sheet uses 1.127 or
+the page's C_1.FE). Welded I (tapered, c_weld = 1): λ_LT,0 = 0.2, β = 1, h/b ≤ 2 c, else d, no f — the same as
+§6.3.2.2. `c_NA = 0`: EN recommended values, §6.3.2.2 with Table 6.4. γ_M0 = γ_M1 = 1.0 in both. Sources: STAAD.Pro
+documentation of the Singapore NA (λ_LT,0 / β, the NA curve table, k_c = 1/√C1). Checks: SX001a (§6.3.2.3,
+M_b,Rd 92.24 kNm), the STAAD Singapore NA verification (Φ_LT 0.705), (6.56) for recommended values.
+Page default case: unchanged (tapered welded, UR_LT 1.028); rolled uniform beams get the NA benefit
+(worksheet default 1.869 → 1.585; page tapered as rolled 0.848 → 0.731).

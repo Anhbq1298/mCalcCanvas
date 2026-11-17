@@ -5,7 +5,7 @@
  * No formula is duplicated here.
  */
 import { sections } from '../../engineering/steel/sections';
-import { chiLT, ltbCriticalFactor, solveBeam, type DistLoad } from '../../engineering/fem';
+import { chiLTMod, ltbCriticalFactor, solveBeam, type DistLoad } from '../../engineering/fem';
 import { CalculationEngine } from '../../engine';
 import { calcKey } from '../../canvas/calcOrder';
 import { inputTableColumns, inputTableRegionId } from '../../canvas/inputTable';
@@ -58,7 +58,7 @@ const SCALARS: Probe[] = [
   ['dmax', '\\delta_{max}', 'mm'], ['wc', 'w_c', 'mm'], ['ccam', 'c_{cam}', null], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['f1', 'f_1', 'Hz'], ['f1nc', 'f_{1.nc}', 'Hz'], ['flim', 'f_{lim}', 'Hz'], ['Ecdyn', 'E_{c.dyn}', 'GPa'], ['ddyn', '\\delta_{dyn}', 'mm'], ['ddynnc', '\\delta_{dyn.nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
   // tapered beam
   ['McrSN', 'M_{cr.SN}', 'kN m'], ['McrSheet', 'M_{cr}', 'kN m'], ['McrncSN', 'M_{cr.nc.SN}', 'kN m'], ['ctap', 'c_{tap}', null], ['hA', 'h_A', 'mm'], ['hB', 'h_B', 'mm'],
-  ['Ea', 'E_a', 'MPa'], ['Ga', 'G_a', 'MPa'], ['gM1', '\\gamma_{M1}', null], ['aLT', '\\alpha_{LT}', null], ['cweld', 'c_{weld}', null], ['czg', 'c_{zg}', null], ['Lbr', 'L_{br}', 'm'], ['kLT', 'k_{LT}', null],
+  ['Ea', 'E_a', 'MPa'], ['Ga', 'G_a', 'MPa'], ['gM1', '\\gamma_{M1}', null], ['aLT', '\\alpha_{LT}', null], ['cweld', 'c_{weld}', null], ['czg', 'c_{zg}', null], ['cNA', 'c_{NA}', null], ['Lbr', 'L_{br}', 'm'], ['kLT', 'k_{LT}', null],
   ['cFP', 'c_{F.P}', null], ['FRda', 'F_{Rd.a}', 'kN'], ['MelRd', 'M_{el.Rd}', 'kN m'],
 ];
 /** Utilisations the summary uses but the check table does not list (bare-steel bending and shear at x_M). */
@@ -86,7 +86,8 @@ const UR_BARE = ['M.nc', 'MV.nc', 'V.nc', 'LT.nc', 'F.P', 'F.S', 'FM.nc', 'd.nc'
  * tapered beams alike, simply supported with fork supports:
  * - internal forces by the in-plane beam FE (beam.ts), the LTB eigenvalue α_cr with the real moment diagram and
  *   the load height (ltb.ts); M_cr = α_cr M_Ed,max is used directly (no C1 / C2);
- * - EN 1993-1-1 §6.3.2.2 / §6.3.4: α_ult,k = min_x W_pl(x) f_y / M_Ed(x), λ̄ = √(α_ult,k / α_cr), χ_LT (6.56),
+ * - EN 1993-1-1 §6.3.2 / §6.3.4: α_ult,k = min_x W_pl(x) f_y / M_Ed(x), λ̄ = √(α_ult,k / α_cr), χ_LT by the NA
+ *   (c_NA = 1 Singapore: §6.3.2.3 (6.57)–(6.58) for rolled sections, k_c = 1/√C1 with C1 from the FE; else (6.56)),
  *   UR = γ_M1 / (χ_LT α_ult,k). For a uniform beam this is §6.3.2 with M_cr from the FE (λ̄ = √(W_pl f_y / M_cr)).
  *   Curve (Table 6.4) by h/b at the critical section: rolled I a / b; a tapered beam welded (c_weld = 1) c / d.
  * - Construction (LT): w_1,Ed on the simple span L; bracing (c_brace, k_LT) = fork restraints at k_LT L, the moment
@@ -95,7 +96,7 @@ const UR_BARE = ['M.nc', 'MV.nc', 'V.nc', 'LT.nc', 'F.P', 'F.S', 'FM.nc', 'd.nc'
  *   flange is unrestrained (L_LT,nc = L); with the studs restraining it the sheet's value stays.
  * - Load position c_zg: 1 top flange (z_g = h(x)/2), 0 shear centre, −1 bottom flange, for every load.
  */
-type LtbOut = { ur: number; x: number; acr: number; aul: number; lam: number; chi: number; alpha: number; Mcr: number };
+type LtbOut = { ur: number; x: number; acr: number; aul: number; lam: number; chi: number; alpha: number; Mcr: number; C1: number };
 /** ULS loads of the composite stage on the steel beam, N/mm, N and mm: self-weight γ_G,sw g_0 and the load tables. */
 export interface FeLoads { dist: DistLoad[]; point: { x: number; P: number }[] }
 function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: FeLoads | null): { LT?: LtbOut; nc?: LtbOut } {
@@ -112,7 +113,11 @@ function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: F
   const props = (x: number) => { const h = hAt(x); return { EIz: E * Iz(h), GIt: G * It(h), EIw: E * Iw(h) }; };
   const gM1 = Number.isFinite(rM.gM1) ? rM.gM1 : 1;
   const welded = rM.ctap >= 1 && !(rM.cweld < 1); // as the sheet's α_LT
-  const alphaAt = (h: number) => (welded ? (h / b <= 2 ? 0.49 : 0.76) : h / b <= 2 ? 0.21 : 0.34);
+  // National Annex (c_NA = 1 Singapore, = UK NA values): rolled §6.3.2.3 with λ0 0.4, β 0.75, curves b / c / d by
+  // h/b ≤ 2 / ≤ 3.1, k_c = 1/√C1; welded λ0 0.2, β 1, c / d. Recommended values: §6.3.2.2, Table 6.4.
+  const na = !(rM.cNA < 1);
+  const alphaAt = (h: number) => (welded ? (h / b <= 2 ? 0.49 : 0.76) : na ? (h / b <= 2 ? 0.34 : h / b <= 3.1 ? 0.49 : 0.76) : h / b <= 2 ? 0.21 : 0.34);
+  const rolled632 = na && !welded, lam0 = rolled632 ? 0.4 : 0.2, beta = rolled632 ? 0.75 : 1;
   const zf = Number.isFinite(rM.czg) ? Math.max(-1, Math.min(1, rM.czg)) : 1; // load height, fraction of h/2
   const L = rM.L * 1000;
   // one simply supported, fork-ended span [x0, x0 + l] (mm) under its loads: FE internal forces, then the eigenvalue
@@ -131,8 +136,15 @@ function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: F
       if (m > 1e-9) { const a = (Wpl(hAt(x0 + x)) * fy) / m; if (a < au) { au = a; xu = x0 + x; } }
     }
     if (!Number.isFinite(au) || !(acr > 0)) return null;
-    const alpha = alphaAt(hAt(xu)), lam = Math.sqrt(au / acr), chi = chiLT(lam, alpha);
-    return { ur: gM1 / (chi * au), x: xu / 1000, acr, aul: au, lam, chi, alpha, Mcr: (acr * Mmax) / 1e6 };
+    // k_c = 1/√C1 (Singapore NA, rolled): C1 = M_cr of this moment diagram at the shear centre / M_cr of a uniform
+    // moment, both by the FE with the same restraints
+    let C1 = 1;
+    if (rolled632) {
+      const base = { L: l, props: (x: number) => props(x0 + x), restraints: braces, elements: 24 + 8 * braces.length };
+      C1 = Math.max(1, (ltbCriticalFactor({ ...base, M: beam.M }) * Mmax) / ltbCriticalFactor({ ...base, M: () => 1 }));
+    }
+    const alpha = alphaAt(hAt(xu)), lam = Math.sqrt(au / acr), { chi } = chiLTMod(lam, alpha, lam0, beta, rolled632 ? 1 / Math.sqrt(C1) : 1);
+    return { ur: gM1 / (chi * au), x: xu / 1000, acr, aul: au, lam, chi, alpha, Mcr: (acr * Mmax) / 1e6, C1 };
   };
   const out: ReturnType<typeof feLtb> = {};
   const w1 = rM.w1; // kN/m = N/mm
@@ -156,7 +168,7 @@ function applyFeLtb(out: Results, lt: ReturnType<typeof feLtb>, at: (k: string, 
   for (const [k, v] of [['LT', lt.LT], ['LT.nc', lt.nc]] as const) {
     if (!v) continue;
     out[`UR.${k}`] = v.ur; at(k, v.x);
-    out[`acr.${k}`] = v.acr; out[`aul.${k}`] = v.aul; out[`lam.${k}`] = v.lam; out[`chi.${k}`] = v.chi; out[`alpha.${k}`] = v.alpha; out[`Mcr.${k}`] = v.Mcr;
+    out[`acr.${k}`] = v.acr; out[`aul.${k}`] = v.aul; out[`lam.${k}`] = v.lam; out[`chi.${k}`] = v.chi; out[`alpha.${k}`] = v.alpha; out[`Mcr.${k}`] = v.Mcr; out[`C1.${k}`] = v.C1;
   }
 }
 
@@ -824,8 +836,10 @@ export class CompositeModel {
   reportDocument(): Record<string, unknown> {
     // uniform beam: the finite-element M_cr the page used, written into the sheet (0 = its SN003b value)
     const fe = this.lastLtb, feCr: [string, number][] = [['M_{cr.FE}', fe?.['Mcr.LT'] ?? NaN], ['M_{cr.nc.FE}', fe?.['Mcr.LT.nc'] ?? NaN]];
+    const feC1 = fe?.['C1.LT'] ?? NaN;
     const shapes = this.doc.shapes.map((s) => {
       const fcr = s.type === 'math' ? feCr.find(([n]) => (s as MathShape).props.latex.startsWith(`${n}\\coloneq`)) : undefined;
+      if (s.type === 'math' && Number.isFinite(feC1) && (s as MathShape).props.latex.startsWith('C_{1.FE}\\coloneq')) return { ...s, props: { ...(s as MathShape).props, latex: `C_{1.FE}\\coloneq${feC1.toFixed(4)}` } };
       if (fcr && Number.isFinite(fcr[1])) return { ...s, props: { ...(s as MathShape).props, latex: `${fcr[0]}\\coloneq ${fcr[1].toFixed(3)}\\,\\mathrm{kN}\\cdot\\mathrm{m}` } };
       if (s.id === this.sectionRegion) return { ...s, props: { ...(s as MathShape).props, latex: `\\mathrm{Section}\\coloneq${this.sectionId}` } };
       const v = this.values.get(s.id);

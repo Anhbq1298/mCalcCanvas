@@ -143,3 +143,16 @@ export function chiLT(lambda: number, alpha: number): number {
   const phi = 0.5 * (1 + alpha * (lambda - 0.2) + lambda ** 2);
   return Math.min(1, 1 / (phi + Math.sqrt(Math.max(phi ** 2 - lambda ** 2, 0))));
 }
+
+/**
+ * χ_LT of EN 1993-1-1 §6.3.2.3 (6.57) with the modification (6.58): λ_LT,0, β and k_c from the National Annex
+ * (Singapore / UK NA: rolled λ_LT,0 = 0.4, β = 0.75, k_c = 1/√C1; welded 0.2, 1.0). With λ_LT,0 = 0.2, β = 1 and
+ * k_c = 1 it is the general case (6.56).
+ */
+export function chiLTMod(lambda: number, alpha: number, lam0: number, beta: number, kc: number): { chi: number; chi0: number; f: number } {
+  const phi = 0.5 * (1 + alpha * (lambda - lam0) + beta * lambda ** 2);
+  const cap = lambda > 0 ? 1 / lambda ** 2 : Infinity;
+  const chi0 = Math.min(1, cap, 1 / (phi + Math.sqrt(Math.max(phi ** 2 - beta * lambda ** 2, 0))));
+  const f = Math.min(1, 1 - 0.5 * (1 - kc) * (1 - 2 * (lambda - 0.8) ** 2));
+  return { chi: Math.min(1, cap, chi0 / f), chi0, f };
+}

@@ -87,6 +87,7 @@ input('If braced: LTB restraint at k_LT L (brace spacing / span); the moments st
 input('Construction imposed load', 'q_{con}', 0.75, 'kPa');
 input('Formwork load (removable)', 'g_{form}', 0.5, 'kPa');
 input('Load position for LTB: 1 = top flange (default), 0 = shear centre, −1 = bottom flange', 'c_{zg}', 1);
+input('National Annex for EN 1993-1-1 LTB: 1 = Singapore (NA to SS EN 1993-1-1, default; same values as the UK NA), 0 = EN recommended values', 'c_{NA}', 1);
 H(3, '1.6 Load tables: one row per load; pattern G = permanent, Q = imposed');
 const TBL = (x, cols, rows, widths) => ({ id: l.id(), type: 'table', x, y: l.ln(l.st.page, l.st.row) - 8, props: {
   w: widths.reduce((a, b) => a + b, 0), h: (rows.length + 2) * 32, rows: rows.length + 2, columns: cols.length, columnWidths: widths, headerRow: true, input: true,
@@ -234,12 +235,16 @@ calc('Plastic shear resistance', 'V_{pl.Rd}', R`\frac{A_v f_{yd}}{\sqrt{3}}`, 'k
 ur('Construction bending', 'M.1','M_{1.Ed}','M_{a.Rd}');
 ur('Construction shear','V.1','V_{1.Ed}','V_{pl.Rd}');
 check('Low shear: no M-V reduction', 'V_{1.Ed}', '0.5V_{pl.Rd}');
-H(3, '3.3 Lateral-torsional buckling (§6.3.2.2; Mcr from SCI SN003b)');
+H(3, '3.3 Lateral-torsional buckling (§6.3.2.3 with the Singapore NA, or §6.3.2.2 with recommended values; Mcr from SCI SN003b or the page FE)');
 T('No restraint credit from wet slab or formwork. Unbraced: fork ends over L; braced: fork at each brace, L_LT = k_LT L, moments of the span L.');
 T('Deck transverse and fixed to the top flange at every rib (c_LT.d = 1; SCI P300 practice): the flange is restrained at the rib pitch, L_LT = e_r. Deck parallel: no restraint.');
 P('LTB: C1 for a UDL, fork ends (SN003b), a fixed value, not an input', R`C_1\coloneq1.127`, M({ precision: 3 }));
 P('LTB: C2 for the load on the top flange (SN003b), fixed', R`C_2\coloneq0.454`, M({ precision: 3 }));
-P('Imperfection, EC3 §6.3.2.2 Table 6.4: rolled I, h/b ≤ 2 curve a, else b; welded I (tapered, c_weld = 1), h/b ≤ 2 curve c, else d', R`\alpha_{LT}\coloneq${IF([R`c_{tap}\ge1\land c_{weld}\ge1\land\frac{h_a}{b_a}\le2`, '0.49'], [R`c_{tap}\ge1\land c_{weld}\ge1`, '0.76'], [R`\frac{h_a}{b_a}\le2`, '0.21'], [null, '0.34'])}`, M({ precision: 2 }));
+T('Singapore NA (and UK NA) §6.3.2.3: rolled I, λ_LT,0 = 0.4, β = 0.75, curves h/b ≤ 2 b, ≤ 3.1 c, else d; welded I, λ_LT,0 = 0.2, β = 1, h/b ≤ 2 c, else d; f with k_c = 1/√C1. Recommended values: §6.3.2.2, Table 6.4 (rolled a / b, welded c / d), λ_LT,0 = 0.2, β = 1, no f. A tapered beam is welded when c_weld = 1.');
+P('Welded section (tapered, c_weld = 1)', R`c_{wI}\coloneq${IF([R`c_{tap}\ge1\land c_{weld}\ge1`, '1'], [null, '0'])}`, M({ precision: 0 }));
+P('Imperfection factor α_LT', R`\alpha_{LT}\coloneq${IF([R`c_{wI}\ge1\land\frac{h_a}{b_a}\le2`, '0.49'], [R`c_{wI}\ge1`, '0.76'], [R`c_{NA}\ge1\land\frac{h_a}{b_a}\le2`, '0.34'], [R`c_{NA}\ge1\land\frac{h_a}{b_a}\le3.1`, '0.49'], [R`c_{NA}\ge1`, '0.76'], [R`\frac{h_a}{b_a}\le2`, '0.21'], [null, '0.34'])}`, M({ precision: 2 }));
+P('Plateau length λ_LT,0', R`\lambda_{LT.0}\coloneq${IF([R`c_{NA}\ge1\land c_{wI}<1`, '0.4'], [null, '0.2'])}`, M({ precision: 2 }));
+P('Factor β', R`\beta_{LT}\coloneq${IF([R`c_{NA}\ge1\land c_{wI}<1`, '0.75'], [null, '1'])}`, M({ precision: 2 }));
 P('Unrestrained length', R`L_{LT}\coloneq${IF([R`c_{tr}\ge1\land c_{LT.d}\ge1`, 'e_r'], [null, 'L_{br}'])}`, M(units('m')));
 calc('Load height above the shear centre (c_zg: top flange +, bottom flange −)', 'z_g', R`c_{zg}\frac{h_a}{2}`, 'mm', false);
 calc('Euler force, minor axis', 'N_{cr}', R`\frac{\pi^2 E_a I_z}{L_{LT}^2}`, 'kN', false);
@@ -248,8 +253,12 @@ T('mCompositeBeamDesign computes M_cr by finite elements (LTB eigenvalue, load h
 P('M_cr from the design page (finite elements)', R`M_{cr.FE}\coloneq 0\,\mathrm{kN}\cdot\mathrm{m}`, M(units('kN m')));
 calc('Elastic critical moment used', 'M_{cr}', IF([R`M_{cr.FE}>0\,\mathrm{kN}\cdot\mathrm{m}`, R`M_{cr.FE}`], [null, R`M_{cr.SN}`]), 'kN m', false);
 calc('Slenderness', '\\lambda_{LT}', R`\sqrt{\frac{W_{pl}f_y}{M_{cr}}}`, '', false);
-calc('(6.56)', '\\Phi_{LT}', R`0.5\left(1+\alpha_{LT}\left(\lambda_{LT}-0.2\right)+\lambda_{LT}^2\right)`, '', false);
-calc('Reduction factor', '\\chi_{LT}', R`\min\left(1,\frac{1}{\Phi_{LT}+\sqrt{\Phi_{LT}^2-\lambda_{LT}^2}}\right)`, '', false);
+calc('(6.57) / (6.56)', '\\Phi_{LT}', R`0.5\left(1+\alpha_{LT}\left(\lambda_{LT}-\lambda_{LT.0}\right)+\beta_{LT}\lambda_{LT}^2\right)`, '', false);
+calc('Reduction factor', '\\chi_{LT.0}', R`\min\left(1,\frac{1}{\lambda_{LT}^2},\frac{1}{\Phi_{LT}+\sqrt{\Phi_{LT}^2-\beta_{LT}\lambda_{LT}^2}}\right)`, '', false);
+P('C1 of the page FE (0 = C1 above)', R`C_{1.FE}\coloneq0`, M({ precision: 3 }));
+calc('Correction factor k_c = 1/√C1 (Singapore NA, rolled; else 1)', 'k_c', IF([R`c_{NA}\ge1\land c_{wI}<1\land C_{1.FE}>0`, R`\frac{1}{\sqrt{C_{1.FE}}}`], [R`c_{NA}\ge1\land c_{wI}<1`, R`\frac{1}{\sqrt{C_1}}`], [null, '1']), '', false);
+calc('(6.58)', 'f_{LT}', R`\min\left(1,1-0.5\left(1-k_c\right)\left(1-2\left(\lambda_{LT}-0.8\right)^2\right)\right)`, '', false);
+calc('Modified reduction factor', '\\chi_{LT}', R`\min\left(1,\frac{1}{\lambda_{LT}^2},\frac{\chi_{LT.0}}{f_{LT}}\right)`, '', false);
 calc('(6.55)', 'M_{b.Rd}', R`\frac{\chi_{LT}W_{pl}f_y}{\gamma_{M1}}`, 'kN m', false);
 ur('Construction LTB','LT','M_{1.Ed}','M_{b.Rd}');
 H(3, '3.4 Construction deflection (project limit)');
@@ -584,8 +593,8 @@ LINK('noncomp', 'Non-composite alternative: steel section alone', () => {
  P('M_cr from the design page (finite elements, unrestrained span only; 0 = the value above)', R`M_{cr.nc.FE}\coloneq 0\,\mathrm{kN}\cdot\mathrm{m}`, M(units('kN m')));
  calc('Elastic critical moment used', 'M_{cr.nc}', IF([R`M_{cr.nc.FE}>0\,\mathrm{kN}\cdot\mathrm{m}`, R`M_{cr.nc.FE}`], [null, R`M_{cr.nc.SN}`]), 'kN m', false);
  calc('Slenderness', '\\lambda_{LT.nc}', R`\sqrt{\frac{W_{pl}f_y}{M_{cr.nc}}}`, '', false);
- calc('(6.56)', '\\Phi_{LT.nc}', R`0.5\left(1+\alpha_{LT}\left(\lambda_{LT.nc}-0.2\right)+\lambda_{LT.nc}^2\right)`, '', false);
- calc('Reduction factor', '\\chi_{LT.nc}', R`\min\left(1,\frac{1}{\Phi_{LT.nc}+\sqrt{\Phi_{LT.nc}^2-\lambda_{LT.nc}^2}}\right)`, '', false);
+ calc('(6.57) / (6.56), C1 = 1 so k_c = f = 1', '\\Phi_{LT.nc}', R`0.5\left(1+\alpha_{LT}\left(\lambda_{LT.nc}-\lambda_{LT.0}\right)+\beta_{LT}\lambda_{LT.nc}^2\right)`, '', false);
+ calc('Reduction factor', '\\chi_{LT.nc}', R`\min\left(1,\frac{1}{\lambda_{LT.nc}^2},\frac{1}{\Phi_{LT.nc}+\sqrt{\Phi_{LT.nc}^2-\beta_{LT}\lambda_{LT.nc}^2}}\right)`, '', false);
  calc('(6.55)', 'M_{b.Rd.nc}', R`\frac{\chi_{LT.nc}W_{pl}f_y}{\gamma_{M1}}`, 'kN m', false);
  calc('LTB', R`\mathrm{UR}_{LT.nc}`, R`\frac{M_{2.Ed}}{M_{b.Rd.nc}}`);
  T('Web under point loads, steel alone (EN 1993-1-5 §6, §7.2)');

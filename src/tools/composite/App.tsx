@@ -355,7 +355,15 @@ export function App() {
     setOpt({ running: false, result, seconds: (performance.now() - t0) / 1000 });
   };
   const renderField = (f: InputField) =>
-    ['c_{brace}', 'c_{LT.d}', 'c_{pe}'].includes(f.name) ? (
+    f.name === 'c_{NA}' ? (
+      <label key={f.id} className={`f wide ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
+        <span>National Annex <em className="input-description">EN 1993-1-1 lateral-torsional buckling (§6.3.2)</em></span>
+        <select id={`in-${f.id}`} data-testid="na" value={value(f) >= 1 ? '1' : '0'} onChange={(e) => setInput(f, Number(e.target.value))}>
+          <option value="1">Singapore (NA to SS EN 1993-1-1; same LTB values as the UK NA): §6.3.2.3</option>
+          <option value="0">EN recommended values: §6.3.2.2</option>
+        </select>
+      </label>
+    ) : ['c_{brace}', 'c_{LT.d}', 'c_{pe}'].includes(f.name) ? (
       <label key={f.id} className={`f check ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
         <span><Sym latex={f.name} /> <em className="input-description"><Rich text={f.label.replace(/:\s*1 = yes.*$/, '')} /></em></span>
         <input id={`in-${f.id}`} type="checkbox" checked={value(f) >= 1} onChange={(e) => setInput(f, e.target.checked ? 1 : 0)} />

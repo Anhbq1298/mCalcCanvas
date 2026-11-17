@@ -94,10 +94,19 @@ describe('EC4 phase-one composite worksheet', () => {
       e.setDefinitionOverride(studs, null);
       expect(value('y_a','mm')).toBeCloseTo(5.980819814498238,7);
     });
-    step('construction stability failure remains visible', () => {
+    step('construction stability failure remains visible: Singapore NA (§6.3.2.3) and recommended values (§6.3.2.2)', () => {
       expect(value('M_{cr}','kN m')).toBeCloseTo(109.43069617269316,6);
+      // Singapore NA, rolled h/b = 2.29: curve c, λ0 0.4, β 0.75, k_c = 1/√1.127, f (6.58) — by hand
+      const W = value('W_{pl}','mm^3'), fy = value('f_y','MPa'), lam = Math.sqrt(W * fy / (109.43069617269316e6));
+      const phi = 0.5 * (1 + 0.49 * (lam - 0.4) + 0.75 * lam ** 2), chi0 = Math.min(1, 1 / lam ** 2, 1 / (phi + Math.sqrt(phi ** 2 - 0.75 * lam ** 2)));
+      const f = Math.min(1, 1 - 0.5 * (1 - 1 / Math.sqrt(1.127)) * (1 - 2 * (lam - 0.8) ** 2));
+      expect(value('\\alpha_{LT}')).toBe(0.49);
+      expect(value('M_{b.Rd}','kN m')).toBeCloseTo((Math.min(1, 1 / lam ** 2, chi0 / f) * W * fy) / 1e6, 6);
+      const na = region('c_{NA}\\coloneq');
+      e.setDefinitionOverride(na, { value: 0 });
       expect(value('M_{b.Rd}','kN m')).toBeCloseTo(91.39834274475413,6);
       expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(1.8715996613080623,7);
+      e.setDefinitionOverride(na, null);
       expect(value('\\delta_1','mm')).toBeCloseTo(18.3427102904894,6);
       // the construction deflection curve peaks at mid-span with the closed-form 5wL⁴/384EI
       expect(value('\\max\\left(\\delta_{1.v}\\right)','mm')).toBeCloseTo(18.3427102904894,6);
@@ -258,7 +267,7 @@ describe('EC4 phase-one composite worksheet', () => {
       expect([value('\\delta_g','mm'), value('C_s'), value('\\delta_{tot}','mm')]).toEqual([dg, Cs, dtot]); // the beam is not propped
       expect(Cs).toBe(0.3);
       e.setDefinitionOverride(prop, null);
-      expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(1.8715996613080623,7);
+      expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(171.06110732520005 / value('M_{b.Rd}','kN m'),7);
     });
     step('SCI P364 Example 8 (533×165×75 UKB S275, L = 12 m, C25/30): same equations, same results', () => {
       const set: [string, number, string | null][] = [['L\\coloneq',12,'m'],['s_b\\coloneq',3.5,'m'],['h_c\\coloneq',130,'mm'],['f_y\\coloneq',275,'MPa'],
