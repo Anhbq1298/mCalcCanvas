@@ -421,10 +421,17 @@ describe('mCompositeBeamDesign headless model', () => {
     expect([r.taper, r.hA, r.L, r.h_c, r.comp]).toEqual([1, 300, 5.2, 200, 1]);
     expect(r['UR.des']).toBeCloseTo(0.717, 3);
     expect(governingCheck(r)).toMatchObject({ key: 'LT' });
-    expect(governingCheck(r).ur).toBeCloseTo(0.848, 3); // §6.3.4 with α_cr of the tapered beam
+    // §6.3.4, α_cr of the tapered beam, welded curve d (Table 6.4, h/b > 2 at the critical section)
+    expect(governingCheck(r).ur).toBeCloseTo(1.028, 3);
+    expect([r['alpha.LT'], r['at.LT']]).toEqual([0.76, expect.any(Number)]);
     expect(r['at.LT']).toBeCloseTo(2.34, 2); // the shallow side of mid-span: least W_pl f_y / M_Ed
-    // the finite-element LTB reproduces the sheet's SN003b formula for a (nearly) uniform beam
+    // hand check: λ̄ = √(α_ult,k / α_cr), χ (6.56), UR = 1 / (χ α_ult,k)
+    const lam = Math.sqrt(r['aul.LT'] / r['acr.LT']), phi = 0.5 * (1 + 0.76 * (lam - 0.2) + lam ** 2);
+    expect(r['UR.LT']).toBeCloseTo(1 / ((1 / (phi + Math.sqrt(phi ** 2 - lam ** 2))) * r['aul.LT']), 9);
+    // the finite-element LTB reproduces the sheet's SN003b formula for a (nearly) uniform beam (same curve)
     const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
+    set('c_{weld}', 0);
+    expect(m.results()['UR.LT']).toBeCloseTo(0.848, 3); // rolled curve b
     set('h_{A.in}', 402.2);
     const near = m.results();
     set('c_{tap}', 0);
@@ -432,9 +439,6 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(near.taper).toBe(1);
     expect(uni.taper).toBeUndefined();
     expect(near['UR.LT'] / uni['UR.LT']).toBeCloseTo(1, 2);
-    // the worst-depth bound it replaces is higher
-    expect(r['UR.LT']).toBeLessThan(0.912);
-    expect(r['UR.LT']).toBeGreaterThan(uni['UR.LT']);
   }, 120_000);
 });
 

@@ -284,7 +284,7 @@ at h(x_M), h_A and h_B and combines (`combineTaper`, model.ts):
 | M.1, M.2, M.nc, slab surfaces, η, PNA | at x_M, depth h(x_M) |
 | V.1, V.2, V.nc, F.S | each support at its depth, scaled by its reaction / the larger reaction |
 | M.x | M_Ed(x) against M_Rd,x interpolated to the local depth h(x) |
-| LT; LT.nc when unrestrained over the span | EN 1993-1-1 §6.3.4: α_cr of the tapered beam by finite elements, α_ult,k = min W_pl(x) f_y / M_Ed(x), χ_LT (6.56), UR = γ_M1 / (χ α_ult,k) |
+| LT; LT.nc when unrestrained over the span | EN 1993-1-1 §6.3.4: α_cr of the tapered beam by finite elements, α_ult,k = min W_pl(x) f_y / M_Ed(x), χ_LT (6.56), UR = γ_M1 / (χ α_ult,k); curve by Table 6.4 at the critical section: welded I c / d (c_weld = 1, default) or rolled a / b |
 | MV, MV.nc, F.P, FM, FM.nc; LT with deck restraint, LT.nc restrained at the studs | worst of the three depths (conservative) |
 | d.1, d.x, d.q, d.nc, d.q.nc | ∫ w(x) UR(h(x)) dx / ∫ w dx, w = x(L − x)·min(x, L − x) (M·m of a UDL at mid-span; δ ∝ 1/I) |
 | fn, fn.nc | same weighting on UR², since f_lim / f_1 ∝ √δ |
@@ -298,9 +298,12 @@ q z_g φ² (construction load on the top flange, z_g = h(x)/2), smallest positiv
 constant moment = exact closed form (1e-4); UDL at the shear centre C₁ = 1.13; top-flange UDL within 3 %
 of SN003b (C₁ 1.127, C₂ 0.454); a mid-span restraint = the half-span closed form; the 300 → 403 mm taper
 = an independent Rayleigh–Ritz sine series to 0.5 %; a near-uniform taper reproduces the sheet's UR_LT to
-1 % (compositeTool.test.ts). Page default: UR_LT = 0.848 at x = 2.34 m (worst-depth bound was 0.912).
+1 % (compositeTool.test.ts). Page default: UR_LT = 1.028 at x = 2.34 m with the welded curve d (0.848 with
+rolled curve b). A tapered beam is fabricated (plates, or a rolled section cut and re-welded), so §6.3.2.2 with
+the welded curves of Table 6.4 is the default; §6.3.2.3 (β = 0.75, f) is not used for a non-uniform member as it
+depends on the National Annex and on k_c of uniform beams.
 Limit: point loads take the worst depth, not the depth at the load.
 
 **Page default case** (`PAGE_DEFAULTS`, model.ts; the worksheet template keeps the SCI reference example):
 UB 406x140x46 tapered to 300 mm at A, L = 5.2 m, beams at 2 m, 200 mm solid slab, SDL 3 kPa, LL 1.5 kPa,
-SDL point load 60 kN at 1 m from A. UR.des = 0.717 (slab bars b-b); governing 0.848 (LTB in construction, unpropped, §6.3.4).
+SDL point load 60 kN at 1 m from A. UR.des = 0.717 (slab bars b-b); governing 1.028 (LTB in construction, unpropped, §6.3.4, welded curve d): needs a prop or flange restraint.

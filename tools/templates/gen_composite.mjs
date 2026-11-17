@@ -64,6 +64,7 @@ T('Tapered beam: the same section with the web depth varying linearly from h_A a
 input('Tapered: 0 = no, 1 = yes', 'c_{tap}', 0);
 input('Depth at support A (0 = library depth)', 'h_{A.in}', 0, 'mm');
 input('Depth at support B (0 = library depth)', 'h_{B.in}', 0, 'mm');
+input('Tapered beam fabricated by welding (plates, or a cut and re-welded web): 1 = yes, LTB curves of welded I-sections; 0 = rolled curves', 'c_{weld}', 1);
 P('Depth at A', R`h_A\coloneq${IF([R`c_{tap}\ge1\land h_{A.in}>0\,\mathrm{mm}`, R`\min\left(h_{A.in},h_{a.lib}\right)`], [null, R`h_{a.lib}`])}`, M(units('mm')));
 P('Depth at B', R`h_B\coloneq${IF([R`c_{tap}\ge1\land h_{B.in}>0\,\mathrm{mm}`, R`\min\left(h_{B.in},h_{a.lib}\right)`], [null, R`h_{a.lib}`])}`, M(units('mm')));
 T('This sheet is evaluated at one depth: the mid-span depth (h_A + h_B)/2, or the depth d_use (mm) set by the page for each critical section. The page combines the critical sections; see its check table.');
@@ -236,7 +237,7 @@ T('No restraint credit from wet slab or formwork. Unpropped: fork ends over L; p
 T('Deck transverse and fixed to the top flange at every rib (c_LT.d = 1; SCI P300 practice): the flange is restrained at the rib pitch, L_LT = e_r. Deck parallel: no restraint.');
 P('LTB: C1 for a UDL, fork ends (SN003b), a fixed value, not an input', R`C_1\coloneq1.127`, M({ precision: 3 }));
 P('LTB: C2 for the load on the top flange (SN003b), fixed', R`C_2\coloneq0.454`, M({ precision: 3 }));
-P('Imperfection, EC3 Table 6.4: rolled I, h/b ≤ 2 curve a, else b', R`\alpha_{LT}\coloneq${IF([R`\frac{h_a}{b_a}\le2`, '0.21'], [null, '0.34'])}`, M({ precision: 2 }));
+P('Imperfection, EC3 §6.3.2.2 Table 6.4: rolled I, h/b ≤ 2 curve a, else b; welded I (tapered, c_weld = 1), h/b ≤ 2 curve c, else d', R`\alpha_{LT}\coloneq${IF([R`c_{tap}\ge1\land c_{weld}\ge1\land\frac{h_a}{b_a}\le2`, '0.49'], [R`c_{tap}\ge1\land c_{weld}\ge1`, '0.76'], [R`\frac{h_a}{b_a}\le2`, '0.21'], [null, '0.34'])}`, M({ precision: 2 }));
 P('Unrestrained length', R`L_{LT}\coloneq${IF([R`c_{tr}\ge1\land c_{LT.d}\ge1`, 'e_r'], [null, 'L_1'])}`, M(units('m')));
 calc('Load height above shear centre (top flange)', 'z_g', R`\frac{h_a}{2}`, 'mm', false);
 calc('Euler force, minor axis', 'N_{cr}', R`\frac{\pi^2 E_a I_z}{L_{LT}^2}`, 'kN', false);

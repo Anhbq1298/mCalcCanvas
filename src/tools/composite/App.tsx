@@ -457,7 +457,15 @@ export function App() {
                     </label>
                   );
                 })}
-                {tapered && <p className="hint wide" data-testid="taper-note">h<sub>A</sub> = {fmt(res.hA, 1)} → h<sub>B</sub> = {fmt(res.hB, 1)} mm, flanges and web thickness of {section?.name ?? 'the section'}. {res.taper ? <>Checked at the critical sections: x<sub>M</sub> = {fmt(res.xM, 2)} m (h = {fmt(res.hA + ((res.hB - res.hA) * res.xM) / res.L, 1)} mm), both supports, LTB of the tapered beam (EN 1993-1-1 §6.3.4, α<sub>cr</sub> = {fmt(res['acr.LT'], 2)} by finite elements), the worst depth for the web checks, the span for deflection. Governing: <Rich text={governing[1]} />, {where(gov.key) || 'see the table'}.</> : 'Same depth at both ends: uniform section.'}</p>}
+                {tapered && (
+                  <label className="f wide"><span>Fabrication <em>LTB curve, EN 1993-1-1 Table 6.4</em></span>
+                    <select data-testid="taper-fab" value={value(byName('c_{weld}')) >= 1 ? 'w' : 'r'} onChange={(e) => setInput(byName('c_{weld}'), e.target.value === 'w' ? 1 : 0)}>
+                      <option value="w">Welded (plates, or cut and re-welded web): curve c / d</option>
+                      <option value="r">Rolled curves a / b (justify)</option>
+                    </select>
+                  </label>
+                )}
+                {tapered && <p className="hint wide" data-testid="taper-note">h<sub>A</sub> = {fmt(res.hA, 1)} → h<sub>B</sub> = {fmt(res.hB, 1)} mm, flanges and web thickness of {section?.name ?? 'the section'}. {res.taper ? <>Checked at the critical sections: x<sub>M</sub> = {fmt(res.xM, 2)} m (h = {fmt(res.hA + ((res.hB - res.hA) * res.xM) / res.L, 1)} mm), both supports, LTB of the tapered beam (EN 1993-1-1 §6.3.4, α<sub>cr</sub> = {fmt(res['acr.LT'], 2)} by finite elements, λ̄ = {fmt(res['lam.LT'], 2)}, α<sub>LT</sub> = {fmt(res['alpha.LT'], 2)}), the worst depth for the web checks, the span for deflection. Governing: <Rich text={governing[1]} />, {where(gov.key) || 'see the table'}.</> : 'Same depth at both ends: uniform section.'}</p>}
               </div>
             </section>
             {groups.map(([g, fields], gi) => (

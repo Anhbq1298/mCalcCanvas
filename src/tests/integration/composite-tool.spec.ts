@@ -117,9 +117,11 @@ test('slab type: filled steel deck with transverse ribs reduces the studs and dr
 
 test('tapered beam: the default case is tapered; unticking gives the uniform section', async ({ page }) => {
   await page.goto('/composite/');
-  await expect(page.getByTestId('ur-max')).toHaveText('0.848', { timeout: 30_000 }); // LTB in construction, tapered beam (§6.3.4)
+  await expect(page.getByTestId('ur-max')).toHaveText('1.028', { timeout: 30_000 }); // LTB in construction, tapered welded beam (§6.3.4, curve d)
   await expect(page.getByTestId('taper-note')).toContainText('Checked at the critical sections');
   await expect(page.getByTestId('ur-table')).toContainText('x = 0.00 m, h = 300.0 mm');
+  await page.getByTestId('taper-fab').selectOption('r');
+  await expect(page.getByTestId('ur-max')).toHaveText('0.848', { timeout: 30_000 }); // rolled curve b
   await page.getByTestId('taper').uncheck();
   await expect(page.getByTestId('ur-max')).toHaveText('0.790', { timeout: 30_000 });
   await page.getByTestId('taper').check();
