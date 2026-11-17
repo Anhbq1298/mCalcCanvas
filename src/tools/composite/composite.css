@@ -211,5 +211,5 @@ td.pass, b.pass { color: var(--pass); } td.warn, b.warn { color: var(--warn); } 
 @media (max-width: 560px) { .opt-form fieldset.crit .fields.three { grid-template-columns: 1fr 1fr; } }
 
 /* loading sheet: beam and load drawings share one column (aligned spans), the cross-section sits beside them */
-.sheet.cad-grid { display: grid; grid-template-columns: minmax(0, 1fr) 210px; gap: 0 1.2rem; align-items: start; }
-@media (max-width: 760px) { .sheet.cad-grid { grid-template-columns: 1fr; } }
+.sheet.cad-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(400px, 38%); gap: 0 1.2rem; align-items: start; }
+@media (max-width: 900px) { .sheet.cad-grid { grid-template-columns: 1fr; } }

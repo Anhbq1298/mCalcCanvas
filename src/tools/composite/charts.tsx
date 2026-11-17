@@ -306,13 +306,6 @@ export function PointDrawing({ L, points }: { L: number; points: PointLoad[] }) 
 }
 
 /**
- * Plastic stress block at x_M, drawn as a CAD section: hatched concrete (AR-CONC) and steel (ANSI31),
- * break lines on a wide slab, chained level dimensions, a centre-line PNA, and the rectangular
- * stress diagram (compression left of the zero axis, tension right) with its values.
- * Partial interaction gives two neutral axes: the concrete is stressed to x_c, the steel PNA is y_a
- * below the steel top (worksheet §EC4 6.2.1.3, k_M = 0 slab, 1 flange, 2 fillet, 3 web).
- */
-/**
  * Open trapezoidal deck, schematic: concrete ribs of mean width br at pitch er sit on the flange, one centred on c.
  * Returns the voids under the crests between the ribs as quads [x, y], y up from the flange, covering xa … xb.
  */
@@ -379,114 +372,6 @@ export function DeckProfile({ hc, hp, br, er, hsc, dsc, nr, reentrant = false }:
           {txt(x0 - 22, (Y(hc) + Y(hp)) / 2 + 4, `h_t ${fmt(hc - hp, 0)}`, 'end')}
           {txt(x0 - 22, (Y(hp) + Y(0)) / 2 + 4, `h_p ${fmt(hp, 0)}`, 'end')}
         </g>
-      </svg>
-    </div>
-  );
-}
-
-export function SectionDrawing({ r }: { r: Record<string, number>; showPna?: boolean }) {
-  const [box, W] = useWidth(520);
-  const uid = useId().replace(/:/g, '');
-  const { h_a, b_a, t_f, t_w, h_c, b_eff } = r;
-  if (![h_a, b_a, t_f, t_w, h_c, b_eff].every(Number.isFinite)) return <div ref={box} />;
-  const kM = r.kM, xc = Math.min(r.xc, h_c), ya = kM >= 1 ? r.ya : 0;
-  const hpe = r.hpe > 0 ? r.hpe : 0, ribsAcross = hpe > 0 && r.ctr >= 1, ribsAlong = hpe > 0 && !ribsAcross;
-  const H = 292, top = 36, depth = 220;
-  const total = h_c + h_a;
-  const room = Math.min(200, W * 0.36);
-  const sc = Math.min(depth / total, (room * 0.6) / b_a);
-  const dimX = 34, cx = dimX + 26 + room / 2;
-  const broken = b_eff * sc > room;
-  const slabW = Math.min(b_eff * sc, room), sL = cx - slabW / 2, sR = cx + slabW / 2;
-  const Y = (mm: number) => top + mm * sc;
-  const xa = cx - (b_a * sc) / 2, bf = b_a * sc, tw2 = (t_w * sc) / 2;
-  const bw = 44, axis = Math.max(sR + 40 + bw, cx + room / 2 + 40 + bw), lx = axis + bw + 12;
-  const yPna = kM >= 1 ? Y(h_c + ya) : Y(xc);
-  const steel = `M${xa},${Y(h_c)} h${bf} v${t_f * sc} H${cx + tw2} V${Y(total - t_f)} H${xa + bf} v${t_f * sc} h${-bf} v${-t_f * sc} H${cx - tw2} V${Y(h_c + t_f)} H${xa} z`;
-  const brk = (x: number, dir: number) => {
-    const y0 = Y(0) - 5, y1 = Y(h_c) + 5, m = (y0 + y1) / 2;
-    return `M${x},${y0} V${m - 6} l${3 * dir},3 l${-6 * dir},6 l${3 * dir},3 V${y1}`;
-  };
-  // labels on the right of the stress diagram, pushed apart so they never overlap
-  const labels: { y: number; lines: [string, string, string][]; color: string }[] = [
-    { y: (Y(0) + Y(xc)) / 2, lines: [['0.85 f', 'cd', ''], ['N', 'c', ` = ${fmt(r.Nc, 0)} kN`], ['x', 'c', ` = ${fmt(xc, 1)} mm`]], color: C.blue },
-    ...(kM >= 1 ? [{ y: (Y(h_c) + yPna) / 2, lines: [['f', 'yd', ''], ['compression', '', '']] as [string, string, string][], color: C.blue }] : []),
-    { y: (yPna + Y(total)) / 2, lines: [['f', 'yd', ''], ['tension', '', '']], color: C.red },
-  ];
-  let last = -Infinity;
-  for (const l of labels) { l.y = Math.max(l.y - 6, last + 16); last = l.y + 13 * (l.lines.length - 1); }
-  const vdim = (x: number, a: number, b: number, text: string, side = -1) => (
-    <g key={`${x}${a}`} stroke={C.muted} strokeWidth={CAD.dim}>
-      <line x1={x} x2={x} y1={a} y2={b} />
-      {[a, b].map((y) => <line key={y} x1={x - 4} x2={x + 4} y1={y + 4} y2={y - 4} stroke={C.ink} strokeWidth={1.2} />)}
-      <text x={x + side * 5} y={(a + b) / 2} transform={`rotate(-90 ${x + side * 5} ${(a + b) / 2})`} textAnchor="middle" fill={C.ink} stroke="none" fontSize={CAD.font - 1} className="num"><SvgRich text={text} size={CAD.font - 1} /></text>
-    </g>
-  );
-  return (
-    <div ref={box}>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={`Plastic stress block at x_M: concrete stressed to ${fmt(xc, 1)} mm, ${kM >= 1 ? `steel PNA ${fmt(ya, 1)} mm below the steel top` : 'PNA in the slab'}`}>
-        <defs>
-          <pattern id={`${uid}c`} width="14" height="14" patternUnits="userSpaceOnUse">
-            <circle cx="3" cy="4" r="0.7" fill={C.muted} /><circle cx="10" cy="10" r="0.6" fill={C.muted} /><path d="M9,2 l2.2,3.4 h-4.4 z M2,9.5 l1.8,2.8 h-3.6 z" fill="none" stroke={C.muted} strokeWidth="0.5" />
-          </pattern>
-          <clipPath id={`${uid}k`}><rect x={sL} y={Y(0) - 1} width={slabW} height={h_c * sc + 2} /></clipPath>
-          <pattern id={`${uid}s`} width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke={C.ink} strokeWidth="0.45" /></pattern>
-          <pattern id={`${uid}b`} width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke={C.blue} strokeWidth="0.8" /></pattern>
-          <pattern id={`${uid}r`} width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="5" stroke={C.red} strokeWidth="0.8" /></pattern>
-        </defs>
-
-        {/* b_eff */}
-        <g stroke={C.muted} strokeWidth={CAD.dim}>
-          <line x1={sL} x2={sR} y1={top - 14} y2={top - 14} />
-          {[sL, sR].map((x) => <g key={x}><line x1={x} x2={x} y1={top - 20} y2={top - 3} /><line x1={x - 4} x2={x + 4} y1={top - 10} y2={top - 18} stroke={C.ink} strokeWidth={1.2} /></g>)}
-          <text x={cx} y={top - 18} textAnchor="middle" fill={C.ink} stroke="none" fontSize={CAD.font - 1} className="num"><SvgRich text={`b_eff = ${fmt(b_eff, 0)}${broken ? ' (broken)' : ''}`} size={CAD.font - 1} /></text>
-        </g>
-
-        {/* section */}
-        <rect x={sL} y={Y(0)} width={slabW} height={h_c * sc} fill={`url(#${uid}c)`} stroke={C.ink} strokeWidth={CAD.geo} />
-        {/* deck: ribs parallel to the beam are cut by this section; transverse ribs show as the crest line beyond */}
-        {ribsAlong && (
-          <g clipPath={`url(#${uid}k)`}>
-            {deckVoids(-slabW / 2 / sc, slabW / 2 / sc, 0, hpe, r.br, r.er, r.cre >= 1).map((q, i) => <polygon key={i} points={q.map(([x, y]) => `${cx + x * sc},${Y(h_c - y)}`).join(' ')} fill={C.sheet} stroke={C.ink} strokeWidth={CAD.geo} strokeLinejoin="round" />)}
-          </g>
-        )}
-        {ribsAcross && <line x1={sL} x2={sR} y1={Y(h_c - hpe)} y2={Y(h_c - hpe)} stroke={C.ink} strokeWidth={CAD.dim} strokeDasharray="6 3" />}
-        {hpe > 0 && <text x={sR} y={Y(h_c) + 26} textAnchor="end" fill={C.muted} fontSize={CAD.font - 1.5} className="num"><SvgRich text={`deck h_p ${fmt(hpe, 0)}, ribs ${ribsAcross ? 'transverse' : 'parallel'}`} size={CAD.font - 1.5} /></text>}
-        {broken && <><path d={brk(sL, -1)} fill={C.sheet} stroke={C.ink} strokeWidth={CAD.dim} /><path d={brk(sR, 1)} fill={C.sheet} stroke={C.ink} strokeWidth={CAD.dim} /></>}
-        <path d={steel} fill={`url(#${uid}s)`} stroke={C.ink} strokeWidth={CAD.geo} />
-
-        {/* level dimensions */}
-        {[Y(0), Y(h_c), Y(total)].map((y) => <line key={y} x1={dimX - 6} x2={sL - 4} y1={y} y2={y} stroke={C.muted} strokeWidth={CAD.dim} />)}
-        {vdim(dimX, Y(0), Y(h_c), `h_c ${fmt(h_c, 0)}`)}
-        {vdim(dimX, Y(h_c), Y(total), `h_a ${fmt(h_a, 1)}`)}
-
-        {/* extension lines to the stress diagram */}
-        {[Y(0), Y(h_c), Y(total)].map((y) => <line key={`e${y}`} x1={Math.max(sR, xa + bf) + 4} x2={axis + bw} y1={y} y2={y} stroke={C.rule} strokeWidth={CAD.dim} strokeDasharray="3 2" />)}
-
-        {/* stress diagram */}
-        <rect x={axis - bw} y={Y(0)} width={bw} height={Y(xc) - Y(0)} fill={`url(#${uid}b)`} stroke={C.blue} strokeWidth={1} />
-        {kM >= 1 && <rect x={axis - bw} y={Y(h_c)} width={bw} height={Math.max(0.8, yPna - Y(h_c))} fill={`url(#${uid}b)`} stroke={C.blue} strokeWidth={1} />}
-        <rect x={axis} y={Math.max(yPna, Y(h_c))} width={bw} height={Y(total) - Math.max(yPna, Y(h_c))} fill={`url(#${uid}r)`} stroke={C.red} strokeWidth={1} />
-        <line x1={axis} x2={axis} y1={Y(0) - 8} y2={Y(total) + 8} stroke={C.ink} strokeWidth={CAD.geo} />
-        <text x={axis - bw / 2} y={Y(total) + 18} textAnchor="middle" fill={C.blue} fontSize={CAD.font - 1.5}>C</text>
-        <text x={axis + bw / 2} y={Y(total) + 18} textAnchor="middle" fill={C.red} fontSize={CAD.font - 1.5}>T</text>
-        {xc < h_c - 0.5 && vdim(axis - bw - 10, Y(0), Y(xc), '', -1)}
-
-        {/* PNA, centre line */}
-        <line x1={dimX - 10} x2={axis + bw + 6} y1={yPna} y2={yPna} stroke={C.red} strokeWidth={0.9} strokeDasharray="10 3 2 3" />
-        <text x={dimX + 8} y={yPna - 4} fill={C.red} fontSize={CAD.font - 0.5} fontWeight="700">PNA</text>
-        {kM >= 1 && <text x={dimX + 8} y={yPna + 13} fill={C.red} fontSize={CAD.font - 1.5} className="num">y<tspan fontSize={CAD.font - 4} dy="3">a</tspan><tspan dy="-3">{` ${fmt(ya, 1)}`}</tspan></text>}
-
-        {/* values */}
-        {labels.map((l, i) => (
-          <g key={i} fill={l.color} fontSize={CAD.font}>
-            {l.lines.map(([t, sub, tail], j) => (
-              <text key={j} x={lx} y={l.y + 13 * j} fontWeight={j ? 400 : 700} className={j ? 'num' : ''}>
-                {t}{sub && <tspan fontSize={CAD.font - 3} dy="3">{sub}</tspan>}{tail && <tspan dy={sub ? -3 : 0}>{tail}</tspan>}
-              </text>
-            ))}
-          </g>
-        ))}
       </svg>
     </div>
   );
@@ -682,7 +567,7 @@ export function LongSection({ r }: { r: Record<string, number> }) {
  * scale; depths are drawn larger when the beam would otherwise be too thin to read.
  */
 export function BeamCad({ r, name, part }: { r: Record<string, number>; name: string; part: 'elevation' | 'section' }) {
-  const [box, W] = useWidth(part === 'section' ? 200 : 720);
+  const [box, W] = useWidth(part === 'section' ? 400 : 720);
   const uid = useId().replace(/:/g, '');
   const { L, h_c, h_a, b_a, t_f, t_w, hsc, dsc, dhead } = r;
   if (![L, h_c, h_a, b_a, t_f, t_w, hsc].every((v) => Number.isFinite(v) && v > 0)) return <div ref={box} />;
@@ -712,12 +597,18 @@ export function BeamCad({ r, name, part }: { r: Record<string, number>; name: st
   const dimY = yB + 46, H1 = dimY + 30;
   const cutX = X(xM > Lmm * 0.85 ? Lmm * 0.06 : Lmm * 0.94); // clear of the stud notes
   // ── cross-section 1–1 ──
-  const sx0 = 0, sw = Math.min(W, 230), sTop = 30;
-  const slabMm = Math.max(2.4 * b_a, 420);
-  const ks = Math.min((sw - 46) / slabMm, 150 / D);
-  const cx = sx0 + 40 + (slabMm * ks) / 2, SY = (mm: number) => sTop + mm * ks; // mm below the slab top
+  // section with the plastic stress block at x_M: PNA label and depth dimensions on the left, stress diagram on the right
+  const sTop = 58, bw = 38, labW = 104, left = 66;
+  const slabMm = Math.max(1.45 * b_a, 240);
+  const ks = Math.max(0.12, Math.min((W - left - 30 - 2 * bw - labW) / slabMm, 270 / D));
+  const cx = left + (slabMm * ks) / 2, SY = (mm: number) => sTop + mm * ks; // mm below the slab top
+  const kM = r.kM, xc = Math.min(r.xc > 0 ? r.xc : 0, h_c), ya = kM >= 1 && r.ya > 0 ? r.ya : 0;
+  const yPna = kM >= 1 ? SY(h_c + ya) : SY(xc);
+  const where = ['in the slab', 'in the top flange', 'in the fillet', 'in the web'][kM] ?? '';
+  const full = r.eta >= 1 - 1e-9;
   const sL = cx - (slabMm * ks) / 2, sR = cx + (slabMm * ks) / 2;
-  const H = part === 'section' ? SY(D) + 46 : H1;
+  const axis = sR + 30 + bw, lx = axis + bw + 8;
+  const H = part === 'section' ? SY(D) + 62 : H1;
   const nre = r.nre >= 2 ? 2 : 1, studXs = nre === 2 ? [-Math.min(b_a / 4, 50), Math.min(b_a / 4, 50)] : [0];
   const zig = (x: number, y0: number, y1: number) => `M${x},${y0 - 5} L${x},${y0 + (y1 - y0) * 0.35} l-4,${(y1 - y0) * 0.1} l8,${(y1 - y0) * 0.1} l-4,${(y1 - y0) * 0.1} L${x},${y1 + 5}`;
   return (
@@ -815,6 +706,38 @@ export function BeamCad({ r, name, part }: { r: Record<string, number>; name: st
         <text transform={`translate(${sL - 20},${SY(h_c + h_a / 2)}) rotate(-90)`} textAnchor="middle" fill={ink} fontSize={CAD.font - 1} className="num">{fmt(h_a, 0)}</text>
         {txt(cx, SY(D) + 11, `b_a ${fmt(b_a, 0)}`)}
         {txt(cx, SY(D) + 36, `Section 1–1${Number.isFinite(r.b_eff) ? `, b_eff ${fmt(r.b_eff, 0)}` : ''}`, 'middle', dimC)}
+        {/* degree of shear connection */}
+        {Number.isFinite(r.eta) && (
+          <text x={4} y={16} fill={ink} fontSize={CAD.font + 1.5} fontWeight="700" className="num">
+            η = {fmt(r.eta * 100, 0)} %<tspan fontWeight="400" fontSize={CAD.font}>{`  ${r.comp >= 1 ? (full ? 'full shear connection' : 'partial shear connection') : 'not composite (below the minimum)'}`}</tspan>
+          </text>
+        )}
+        {Number.isFinite(r.etaMin) && txt(4, 32, `minimum ${fmt(r.etaMin * 100, 0)} %; studs per shear span: ${fmt(r.nh, 0)} provided, ${fmt(r.nreq, 0)} needed`, 'start', dimC)}
+        {/* plastic stress block at x_M */}
+        <defs>
+          <pattern id={`${uid}b`} width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke={C.blue} strokeWidth="0.8" /></pattern>
+          <pattern id={`${uid}r`} width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="5" stroke={C.red} strokeWidth="0.8" /></pattern>
+        </defs>
+        {[SY(0), SY(h_c), SY(D)].map((y) => <line key={`e${y}`} x1={sR + 6} x2={axis + bw} y1={y} y2={y} stroke={C.rule} strokeWidth={CAD.dim} strokeDasharray="3 2" />)}
+        <rect x={axis - bw} y={SY(0)} width={bw} height={Math.max(0.8, xc * ks)} fill={`url(#${uid}b)`} stroke={C.blue} strokeWidth={1} />
+        {kM >= 1 && <rect x={axis - bw} y={SY(h_c)} width={bw} height={Math.max(0.8, yPna - SY(h_c))} fill={`url(#${uid}b)`} stroke={C.blue} strokeWidth={1} />}
+        <rect x={axis} y={Math.max(yPna, SY(h_c))} width={bw} height={SY(D) - Math.max(yPna, SY(h_c))} fill={`url(#${uid}r)`} stroke={C.red} strokeWidth={1} />
+        <line x1={axis} x2={axis} y1={SY(0) - 8} y2={SY(D) + 8} stroke={ink} strokeWidth={CAD.geo} />
+        {txt(axis - bw / 2, SY(D) + 20, 'C', 'middle', C.blue)}{txt(axis + bw / 2, SY(D) + 20, 'T', 'middle', C.red)}
+        {/* concrete stressed down to x_c (its own neutral axis when the connection is partial) */}
+        {kM >= 1 && xc < h_c - 0.5 && <line x1={sL} x2={axis} y1={SY(xc)} y2={SY(xc)} stroke={C.blue} strokeWidth={0.9} strokeDasharray="5 3" />}
+        <text x={lx} y={Math.max(SY(0) + 10, SY(xc / 2) - 10)} fill={C.blue} fontSize={CAD.font} className="num">
+          <tspan fontWeight="700">0.85 f</tspan><tspan fontSize={CAD.font - 3} dy="3">cd</tspan>
+          <tspan x={lx} dy="11">{`N`}</tspan><tspan fontSize={CAD.font - 3} dy="3">c</tspan><tspan dy="-3">{` ${fmt(r.Nc, 0)} kN`}</tspan>
+          <tspan x={lx} dy="14">{`x`}</tspan><tspan fontSize={CAD.font - 3} dy="3">c</tspan><tspan dy="-3">{` ${fmt(xc, 1)} mm`}</tspan>
+        </text>
+        {kM >= 1 && yPna - SY(h_c) > 14 && <text x={lx} y={(SY(h_c) + yPna) / 2 + 4} fill={C.blue} fontSize={CAD.font - 0.5}><tspan fontWeight="700">f</tspan><tspan fontSize={CAD.font - 3} dy="3">yd</tspan><tspan dy="-3"> comp.</tspan></text>}
+        <text x={lx} y={(Math.max(yPna, SY(h_c)) + SY(D)) / 2 + 4} fill={C.red} fontSize={CAD.font - 0.5}><tspan fontWeight="700">f</tspan><tspan fontSize={CAD.font - 3} dy="3">yd</tspan><tspan dy="-3"> tension</tspan></text>
+        {/* PNA: centre line through the section and the diagram, labelled in the left margin */}
+        <line x1={2} x2={axis + bw + 4} y1={yPna} y2={yPna} stroke={C.red} strokeWidth={1.1} strokeDasharray="12 3 2 3" />
+        <text x={2} y={yPna - 5} fill={C.red} fontSize={CAD.font + 2.5} fontWeight="700">PNA</text>
+        <text x={2} y={yPna + 14} fill={C.red} fontSize={CAD.font - 0.5} className="num">{kM >= 1 ? <>y<tspan fontSize={CAD.font - 3.5} dy="3">a</tspan><tspan dy="-3">{` ${fmt(ya, 1)}`}</tspan></> : <>x<tspan fontSize={CAD.font - 3.5} dy="3">c</tspan><tspan dy="-3">{` ${fmt(xc, 1)}`}</tspan></>}</text>
+        {txt(4, SY(D) + 56, `PNA ${where}${kM >= 1 ? `, ${fmt(ya, 1)} mm below the steel top` : `, ${fmt(xc, 1)} mm below the slab top`}`, 'start', C.red)}
         </>}
       </svg>
     </div>

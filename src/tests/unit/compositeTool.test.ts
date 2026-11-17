@@ -28,13 +28,15 @@ describe('mCompositeBeamDesign headless model', () => {
     // automatic strut angle: cot θ_f = 2 while the strut has room; dense studs push b-b to the largest angle the strut allows
     expect([r.cta, r.ctb]).toEqual([2, 2]);
     const sA = m.inputs.find((f) => f.name === 's_{sc.A}')!.id;
-    m.setInput(sA, 80);
+    const hsc = m.inputs.find((f) => f.name === 'h_{sc}')!.id;
+    m.setInput(sA, 80); m.setInput(hsc, 75); // dense, short studs: full connection (flow capped at N_c,f / x_M) on a short surface b-b
     const dense = m.results();
+    expect(dense.vf).toBeCloseTo(dense.Ncf / dense.xM, 6);
     expect(dense.ctb).toBeGreaterThan(1);
     expect(dense.ctb).toBeLessThan(2);
     expect(dense['UR.L.b']).toBeCloseTo(0.999, 9); // the strut is used to its limit, less the 0.1 % rounding margin
     expect(dense.asbReq).toBeCloseTo((dense.vf * 1000) / (dense.fsd * dense.ctb), 3); // (6.21), mm²/m
-    m.setInput(sA, 125);
+    m.setInput(sA, 125); m.setInput(hsc, 100);
     expect(m.inputs.some((f) => f.name.includes('G.sw'))).toBe(false); // not a user input
     m.setInput(m.inputs.find((f) => f.name === '\\gamma_G')!.id, 1.5); // γ_G no longer moves the self-weight
     expect(m.results().M2).toBeCloseTo(469.182, 2);
@@ -335,5 +337,30 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(cam.camber).toBe(7); // self-weight deflection 7.5 mm on the steel alone
     expect(cam.deflection.ur).toBeLessThanOrEqual(seg.deflection.ur);
   }, 300_000);
+
+  // Longitudinal shear on a-a and b-b, deck ribs parallel (EC4 §6.6.6.4, EC2 §6.2.4), against a hand calculation.
+  it('parallel deck: surfaces a-a and b-b match the hand calculation; the flow is capped at full connection', () => {
+    const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+    const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
+    set('c_{deck}', 1); set('c_{par}', 1);
+    m.setSection(sections.find((x) => x.name === 'UB 457x152x52')!.id);
+    let r = m.results();
+    // RF55, one layer Ø10 @ 150 on the deck, studs 19 x 100 at 125 / 200 mm, C30/37
+    const PRd = Math.min((0.8 * 450 * Math.PI * 19 ** 2) / 4 / 1.25, (0.29 * 19 ** 2 * Math.sqrt(30 * 33000)) / 1.25) / 1000; // k_l = 1
+    const vf = PRd / 0.125, ht = 95, lb = 2 * (100 - 55) + 32, fsd = 500 / 1.15, nuf = 0.6 * (1 - 30 / 250) * 20, ab = (Math.PI * 100) / 4 / 0.15;
+    const surf = (v: number) => { const rho = (0.999 * nuf) / v, cot = Math.min(2, Math.max(1, (rho + Math.sqrt(Math.max(rho * rho - 4, 0))) / 2)); return { cot, vRd: (nuf * cot) / (1 + cot * cot) }; };
+    const va = vf / (2 * ht), a = surf(va), vb = vf / lb, b = surf(vb);
+    expect(r.vf).toBeCloseTo(vf, 6);
+    expect(r['UR.L']).toBeCloseTo(va / a.vRd, 6); // 0.814
+    expect(r['UR.sf']).toBeCloseTo(((va * ht) / a.cot / fsd) * 1000 / ab, 6); // 0.717: one layer, A_b only
+    expect(r['UR.L.b']).toBeCloseTo(vb / b.vRd, 6); // 1.014
+    expect(r['UR.sf.b']).toBeCloseTo(((vb * lb) / b.cot / fsd) * 1000 / (2 * ab), 6); // 1.435: the layer crossed twice
+    // studs beyond full connection add no shear: the flow stops at N_c,f over the shorter shear span
+    set('s_{sc.A}', 95); set('s_{sc.B}', 95);
+    r = m.results();
+    expect(r.eta).toBe(1);
+    expect(r.vf).toBeCloseTo(r.Ncf / r.xM, 6);
+    expect(r.vf).toBeLessThan(PRd / 0.095);
+  }, 120_000);
 });
 

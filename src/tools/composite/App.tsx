@@ -10,7 +10,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { sections } from '../../engineering/steel/sections';
 import { BAR_DIAMETERS, BAR_SPACINGS, CHECKS, governingCheck, type DesignCriteria, type InputField, type LoadTable, type Results } from './model';
 import type { OptimizeResult, ToWorker } from './worker';
-import { BeamCad, DeckProfile, Legend, LineChart, LongSection, PointDrawing, SectionDrawing, ShearSurface3D, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
+import { BeamCad, DeckProfile, Legend, LineChart, LongSection, PointDrawing, ShearSurface3D, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
 import { headerParts } from '../../canvas/inputTable';
 import { C, fmt } from './format';
 import { optimizeDesign, warmOptimizer } from './optimizer';
@@ -487,7 +487,7 @@ export function App() {
                 <PointDrawing L={res.L} points={points} />
               </div>
               <div>
-                <h3>Cross-section</h3>
+                <h3>Cross-section and plastic stress block at x<sub>M</sub></h3>
                 <BeamCad part="section" r={res} name="" />
               </div>
             </div>
@@ -536,10 +536,6 @@ export function App() {
             })()}
           </section>
 
-            <section className="sheet-sec" aria-labelledby="h-pna-d">
-              <div className="sec-head"><h2 id="h-pna-d">Plastic stress block at x<sub>M</sub></h2><span className="hint">PNA {['in the slab', 'in the top flange', 'in the fillet', 'in the web'][res.kM] ?? '–'}</span></div>
-              <SectionDrawing r={res} showPna />
-            </section>
             <section className="sheet-sec" aria-labelledby="h-shear3d">
               <div className="sec-head"><h2 id="h-shear3d">Longitudinal shear surfaces a-a and b-b</h2><span className="hint">EN 1994-1-1 §6.6.6.1, Figure 6.15{deck ? ', §6.6.6.4, Figure 6.16' : ''}; the surfaces run the whole length of the beam</span></div>
               <div className="surfaces">

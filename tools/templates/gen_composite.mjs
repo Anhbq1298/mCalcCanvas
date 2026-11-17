@@ -485,7 +485,8 @@ fig('F4', 'Shear surfaces a-a and b-b along the beam (EC4 Figure 6.15)', 'shear3
 T('Surface lengths and bars counted per EC4 §6.6.6.1(3) and §6.6.6.2(3) (b_0 = 0 for a single stud row); bars anchored past each surface to EN 1992-1-1 §8.4.');
 calc('Reinforcement design strength', 'f_{sd}', R`\frac{f_{sk}}{\gamma_S}`, 'MPa', false);
 T('Deck (§6.6.6.4): h_f on a-a is the concrete above the deck; with transverse ribs and k_t, surface b-b need not be checked; a transverse deck continuous across the beam may count as reinforcement on a-a, (6.25).');
-calc('Connector flow at the closest spacing','v_f',R`\frac{n_{re}P_{Rd}}{\min\left(s_A,s_B\right)}`,'kN/m', false);
+T('The flow follows the studs provided (§6.6.6.2(1)), but the slab cannot take more than N_c,f over the shorter shear span: studs beyond full connection add no shear.');
+calc('Connector flow at the closest spacing, capped at full connection','v_f',R`\min\left(\frac{n_{re}P_{Rd}}{\min\left(s_A,s_B\right)},\frac{N_{c.f}}{\min\left(x_M,L-x_M\right)}\right)`,'kN/m', false);
 calc('Deck design strength', 'f_{yp.d}', R`\frac{f_{yp}}{\gamma_{M0}}`, 'MPa', false);
 P('Deck counted on a-a, (6.25)', R`a_{pe}\coloneq${IF([R`c_{tr}\ge1\land c_{pe}\ge1`, 'A_{pe}'], [null, R`0\,\mathrm{mm^2/m}`])}`, M(units('mm^2/m')));
 P('Surface b-b to be checked: 1 = yes, 0 = no (transverse deck, §6.6.6.4(2))', R`c_{bb}\coloneq${IF([R`c_{tr}\ge1`, '0'], [null, '1'])}`, M({ precision: 0 }));
