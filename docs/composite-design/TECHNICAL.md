@@ -249,7 +249,8 @@ Read against the clause text and the figure supplied by the user:
 - a-a (plane through the slab): h_f = concrete above the deck, (1). Ribs transverse: continuous deck may be added, (4).
 - b-b (around the studs, from the flange): 2 h_sc + d_head + b_0 in every case; not required with transverse ribs and k_t, (2).
   Earlier the deck depth was deducted from b-b for parallel ribs; that deduction belongs to c-c, (3).
-- c-c (around the rib, ribs parallel): l_c = 2 (h_sc − h_p) + max(b_r, d_head + b_0), crossed by 2 A_b; new checks sf.c and L.c.
-  The width taken for c-c (b_r) is an interpretation of the figure, on the safe side for an open rib.
+- c-c (ribs parallel): from each rib edge at the deck crest inclined to the stud head, then across the head:
+  l_c = 2 sqrt((h_sc − h_p)² + ((b_r − d_head − b_0)/2)²) + d_head + b_0, crossed by 2 A_b; checks sf.c and L.c.
+  The rib width at the crest is taken as b_r (short side for an open rib). Shape read from Figure 6.16 (user's copy).
 - Not modelled: d-d as a separate surface (the a-a check with A_t + A_b plays that part for parallel ribs), haunches.
 

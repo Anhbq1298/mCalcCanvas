@@ -61,7 +61,7 @@ def case(par, nr):
     vf = n_pos * PRd / min(sA, sB) * 1e3                          # kN/m
     return {'k_d': k, 'P_Rd_kN': PRd, 'g_0_kN_m': g0, 'x_M_m': xM / 1e3, 'M_Ed_kNm': MEd, 'n_h': nh, 'N_cRd_kN': NcRd, 'N_cf_kN': Ncf,
             'eta': eta, 'M_plRd_kNm': Mpl, 'M_aRd_kNm': Ma, 'M_Rd_kNm': Ma + eta * (Mpl - Ma), 'I_0_cm4': I(Ea / Ecm), 'I_dyn_cm4': I(Ea / 38e3),
-            'v_f_kN_m': vf, 'v_LEd_MPa': vf / (2 * ht), 'l_b_mm': 2 * hsc + 32, 'l_c_mm': 2 * (hsc - hp) + max(br, 32)}
+            'v_f_kN_m': vf, 'v_LEd_MPa': vf / (2 * ht), 'l_b_mm': 2 * hsc + 32, 'l_c_mm': 2 * math.hypot(hsc - hp, max(0.0, (br - 32) / 2)) + 32}
 
 out = {'transverse_2_per_rib': case(False, 2), 'parallel': case(True, 1)}
 json.dump(out, open('docs/composite-design/reference_deck.json', 'w'), indent=2)
