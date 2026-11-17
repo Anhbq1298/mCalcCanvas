@@ -81,6 +81,20 @@ describe('FEM: lateral-torsional buckling eigenvalues', () => {
       expect(fe).toBeGreaterThan(at(hA));
       expect(fe).toBeLessThan(at(h));
     });
+    step('published examples: SX001a / SBE Part 4 A.1 (IPE 330, top-flange UDL) M_cr 113.9; SCI P387 Ex. 02 (457×191×98) M_cr 534.0', () => {
+      const run = (Lb: number, Izb: number, Itb: number, Iwb: number, Gb: number, q: number, z: number) => {
+        const b = solveBeam({ L: Lb, EI: () => 1, supports: [{ x: 0, w: true }, { x: Lb, w: true }], loads: { dist: [{ x1: 0, x2: Lb, q1: q }] } });
+        return (ltbCriticalFactor({ L: Lb, props: () => ({ EIz: E * Izb, GIt: Gb * Itb, EIw: E * Iwb }), M: b.M, qzg: () => q * z, elements: 48 }) * q * Lb * Lb) / 8 / 1e6;
+      };
+      const sx = run(5700, 788.1e4, 28.15e4, 199100e6, 80770, 22.28, 165);
+      expect(rel(sx, 113.9)).toBeLessThan(0.005); // FE 114.0
+      // §6.3.2.3 chain as the source (curve c, f with k_c 0.94): M_b,Rd 92.24 kNm
+      const lam = Math.sqrt((804.3e3 * 235) / (sx * 1e6)), phi = 0.5 * (1 + 0.49 * (lam - 0.4) + 0.75 * lam ** 2);
+      const chi = 1 / (phi + Math.sqrt(phi ** 2 - 0.75 * lam ** 2)), f = 1 - 0.5 * (1 - 0.94) * (1 - 2 * (lam - 0.8) ** 2);
+      expect(lam).toBeCloseTo(1.288, 2);
+      expect(rel((chi / f) * 804.3e3 * 235, 92.24e6)).toBeLessThan(0.005);
+      expect(rel(run(6000, 2350e4, 121e4, 1180000e6, 81000, 60.8, 0), 534.0)).toBeLessThan(0.005); // FE 536.0
+    });
     step('χ_LT (6.56)', () => {
       expect(chiLT(0.2, 0.34)).toBe(1);
       expect(chiLT(1, 0.34)).toBeCloseTo(0.597, 3); // Φ = 1.136

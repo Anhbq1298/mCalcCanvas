@@ -207,3 +207,16 @@ top flange (construction) or the shear centre (LT.nc), never below it.
 Still open: absolute M_cr of a published simply supported web-tapered beam (Yang & Yau's doubly-tapered beam,
 L = 6.096 m, h = 609.6 mm at mid-span, b = 152.4, t_f = 12.7, t_w = 9.5 mm, mid-span point load at the shear centre,
 tabulated by Andrade & Camotim 2005), and an LTBeamN run of the page default case.
+
+## LTB finite elements against published examples (2026-11-18)
+
+| Source | Case | Published | FE (this tool) |
+|---|---|---|---|
+| Access Steel SX001a = SBE Part 4 A.1 | IPE 330 S235, L 5.7 m, UDL 22.28 kN/m on the top flange, fork ends | M_cr 113.9 kNm (SN003b); §6.3.2.3 curve c: λ̄ 1.288, χ_mod 0.488, M_b,Rd 92.24, UR 0.981 | M_cr 114.0; same chain: λ̄ 1.288, χ_mod 0.488, M_b,Rd 92.29, UR 0.980 |
+| SCI P387 Ex. 02 | 457×191×98 UKB, L 6 m, UDL at the shear centre | M_cr 534.0 kNm, M_b,Rd 365 | M_cr 536.0, M_b,Rd 362 (f_y 275 in λ̄ as the source) |
+| SBE Part 4 A.4 (primary composite beam, construction) | IPE 400 S355, L 9 m, 86.78 kN at third points braced there | simplified λ̄ (SN002) 0.853, UR 0.795 (upper bound, no M_cr) | M_cr 921 kNm, λ̄ 0.710, UR 0.708 (§6.3.2.3) — below the simplified bound as expected |
+
+The tool itself uses §6.3.2.2 (Table 6.4: rolled h/b > 2 curve b; welded c / d), so for SX001a it reports UR 1.11
+(curve b) where the source's §6.3.2.3 route gives 0.98. JRC/Simões 2014 Ex. 2 (LTBeam 175.6 / 1967.7 kNm) was not
+used: its full moment diagram and restraint conditions are not given, and a reconstruction from the end moments
+does not reproduce it.
