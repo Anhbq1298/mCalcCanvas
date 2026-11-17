@@ -31,7 +31,7 @@ test('mCompositeBeamDesign calculates, follows a large point load and hands the 
   await expect(page.getByTestId('verdict')).toContainText('Bare steel');
   await expect(page.getByTestId('basis-note')).toBeVisible();
   await page.getByTestId('section-select').selectOption({ label: 'UB 533x210x92' });
-  await expect(page.getByTestId('ur-des')).toHaveText('0.925');
+  await expect(page.getByTestId('ur-des')).toHaveText('0.925', { timeout: 30_000 });
   const [report] = await Promise.all([context.waitForEvent('page'), page.getByTestId('open-report').click()]);
   await report.waitForLoadState();
   await report.waitForFunction(() => !!(window as unknown as { __calccanvas?: unknown }).__calccanvas);
@@ -102,8 +102,14 @@ test('slab type: filled steel deck with transverse ribs reduces the studs and dr
   await expect(page.getByTestId('bb-note')).toContainText('not required', { timeout: 30_000 });
   await page.getByTestId('deck-open').click();
   await expect(page.locator('dialog[open]')).toContainText('(6.23)');
+  // catalogue: search, pick, and the source of the numbers is shown
+  await page.getByTestId('deck-search').fill('comflor 60');
+  await page.getByTestId('deck-preset').selectOption('ComFlor 60, 1.00 mm');
+  await expect(page.getByTestId('deck-source')).toContainText('SCI P387');
+  await expect(page.locator('dialog[open] [data-input="b_r"]')).toHaveValue('145', { timeout: 30_000 });
   await page.locator('dialog[open] .btn.primary').click();
   await page.getByTestId('deck-dir').selectOption('par');
   await expect(page.getByTestId('bb-note')).toHaveCount(0, { timeout: 30_000 });
+  await expect(page.getByTestId('cc-caption')).toContainText('c-c');
 });
 

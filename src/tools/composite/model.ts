@@ -48,7 +48,7 @@ const SCALARS: Probe[] = [
   ['ya', 'y_a', 'mm'], ['kM', 'k_M', null], ['MRd', 'M_{Rd}', 'kN m'], ['MRdpl', 'M_{Rd.pl}', 'kN m'], ['comp', 'c_{comp}', null],
   // longitudinal shear in the slab (EC4 6.6.6, EC2 6.2.4)
   ['fsd', 'f_{sd}', 'MPa'], ['vf', 'v_f', 'kN/m'], ['vLEd', 'v_{L.Ed}', 'MPa'], ['asfReq', 'a_{sf.req}', 'mm^2/m'], ['asf', 'a_{sf}', 'mm^2/m'], ['vLRd', 'v_{L.Rd}', 'MPa'], ['vmax', 'v_{max}', 'MPa'], ['cta', 'c_{\\theta.a}', null], ['ctb', 'c_{\\theta.b}', null], ['vbRd', 'v_{b.Rd}', 'MPa'], ['dst', 'd_{s.t}', 'mm'], ['sft', 's_{f.t}', 'mm'], ['dsb', 'd_{s.b}', 'mm'], ['sfb', 's_{f.b}', 'mm'],
-  ['at', 'a_t', 'mm^2/m'], ['ctop', 'c_{top}', null], ['ab', 'a_b', 'mm^2/m'], ['lb', 'l_b', 'mm'], ['lc', 'l_c', 'mm'], ['ccc', 'c_{cc}', null], ['vcEd', 'v_{c.Ed}', 'MPa'], ['ascReq', 'a_{sf.c.req}', 'mm^2/m'], ['vbEd', 'v_{b.Ed}', 'MPa'], ['asbReq', 'a_{sf.b.req}', 'mm^2/m'], ['asb', 'a_{sf.b}', 'mm^2/m'],
+  ['at', 'a_t', 'mm^2/m'], ['ctop', 'c_{top}', null], ['ab', 'a_b', 'mm^2/m'], ['lb', 'l_b', 'mm'], ['chd', 'c_{hd}', 'mm'], ['cb', 'c_b', 'mm'], ['thead', 't_{head}', 'mm'], ['lc', 'l_c', 'mm'], ['ccc', 'c_{cc}', null], ['vcEd', 'v_{c.Ed}', 'MPa'], ['ascReq', 'a_{sf.c.req}', 'mm^2/m'], ['vbEd', 'v_{b.Ed}', 'MPa'], ['asbReq', 'a_{sf.b.req}', 'mm^2/m'], ['asb', 'a_{sf.b}', 'mm^2/m'],
   ['dhead', 'd_{head}', 'mm'], ['hsc', 'h_{sc}', 'mm'], ['dsc', 'd_{sc}', 'mm'], ['b0', 'b_0', 'mm'],
   // profiled steel deck (all neutral for a solid slab: h_pe = 0, k_d = 1, n_re = 1)
   ['cdeck', 'c_{deck}', null], ['ctr', 'c_{tr}', null], ['hpe', 'h_{pe}', 'mm'], ['ht', 'h_t', 'mm'], ['br', 'b_r', 'mm'], ['er', 'e_r', 'mm'], ['kd', 'k_d', null], ['kt', 'k_t', null], ['kl', 'k_l', null], ['ktmax', 'k_{t.max}', null],

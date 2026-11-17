@@ -329,6 +329,16 @@ function deckVoids(xa: number, xb: number, c: number, hp: number, br: number, er
   return out;
 }
 
+/** x of the side of a concrete rib (centred on 0) at the flange and at the crest, as deckVoids draws it. */
+function ribSide(hp: number, br: number, er: number, reentrant: boolean): [number, number] {
+  if (reentrant) return [er / 2 - (0.45 * (er - br)) / 2, br / 2];
+  const t = Math.min(0.15 * hp, ((er - br) / 2) * 0.6);
+  return [br / 2 - t, br / 2 + t];
+}
+
+/** Centre level of the bottom transverse bars above the flange: on the deck crest (or the soffit) plus the cover. */
+const bottomBarLevel = (r: Record<string, number>) => (r.hpe > 0 ? r.hpe : 0) + (Number.isFinite(r.cb) ? r.cb : 20) + (Number.isFinite(r.dsb) ? r.dsb : 10) / 2;
+
 /** Deck profile with its dimensions (two pitches, a stud in the first rib), for the Define deck dialog. */
 export function DeckProfile({ hc, hp, br, er, hsc, dsc, nr, reentrant = false }: { hc: number; hp: number; br: number; er: number; hsc: number; dsc: number; nr: number; reentrant?: boolean }) {
   const [box, W] = useWidth(420);
@@ -384,7 +394,7 @@ export function DeckProfile({ hc, hp, br, er, hsc, dsc, nr, reentrant = false }:
  * 2h_sc + d_head + b_0 (crossed by the bottom bars twice). Surfaces are shaded and run the whole span.
  * The cross-section (front face) is to scale; the length is not. Bar levels are schematic.
  */
-export function ShearSurface3D({ r, which }: { r: Record<string, number>; which: 'a' | 'b' }) {
+export function ShearSurface3D({ r, which }: { r: Record<string, number>; which: 'a' | 'b' | 'c' }) {
   const [box, W] = useWidth(330);
   const uid = useId().replace(/:/g, '');
   const { h_c, b_a, t_f, t_w, hsc, dhead, b0, dsc } = r;
@@ -399,7 +409,7 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
   const yTop = 22 + depth * zy, yBot = yTop + h_c * k, cx = 14 + segPx / 2;
   const P = (X: number, Y: number, Z: number) => [cx + X * k + Z * zx, yBot - Y * k - Z * zy] as const;
   const pts = (...q: (readonly number[])[]) => q.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
-  const ink = C.ink, teal = '#0F766E', col = which === 'a' ? C.red : teal;
+  const ink = C.ink, teal = '#0F766E', violet = '#6D5BD0', col = which === 'a' ? C.red : which === 'b' ? teal : violet;
   const slabLine = '#B3BCC1', slabW = 0.35; // slab outline: light and fine, so the rebar reads first
   const rebar = { stroke: ink, strokeWidth: 2 }; // all rebar: one weight, one colour
   const stud = { fill: '#C8CBC3', stroke: ink, strokeWidth: 0.8 }; // stud: cut section, solid, finer than the rebar
@@ -410,8 +420,10 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
     const segs = [[xL, xR]];
     return segs.map(([a, b], i) => <line key={`${key}${i}`} x1={a} x2={b} y1={yS} y2={yS} {...rebar} />);
   };
-  const yTopBar = h_c - 30, yBotBar = hpe + 30;
+  const yTopBar = h_c - 30, yBotBar = bottomBarLevel(r);
   const aX = b_a / 2, bX = dhead / 2 + (b0 || 0) / 2;
+  // c-c (Figure 6.16): from the rib side at the crest, inclined to the stud head; below the crest it follows the rib side (not counted)
+  const [sideBot, sideTop] = ribSide(hpe, r.br, r.er, r.cre >= 1), cX = Math.max(bX, r.br / 2);
   const d = Math.max(3, (Number.isFinite(dsc) ? dsc : 19) * k), hd = dhead * k;
   const H = yBot + t_f * k + 30;
   // faces of the slab (top, right) as filled polygons drawn first, cut face last
@@ -419,13 +431,15 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
   const side = pts(P(halfW, 0, 0), P(halfW, 0, depth), P(halfW, h_c, depth), P(halfW, h_c, 0));
   const surfaces = which === 'a'
     ? [-aX, aX].map((X) => pts(P(X, hpe, 0), P(X, h_c, 0), P(X, h_c, depth), P(X, hpe, depth)))
+    : which === 'c'
+    ? [...[-1, 1].map((sg) => pts(P(sg * cX, hpe, 0), P(sg * bX, hsc, 0), P(sg * bX, hsc, depth), P(sg * cX, hpe, depth))), pts(P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(-bX, hsc, depth))]
     : [pts(P(-bX, 0, 0), P(-bX, hsc, 0), P(-bX, hsc, depth), P(-bX, 0, depth)), pts(P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(-bX, hsc, depth)), pts(P(bX, 0, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(bX, 0, depth))];
   const barsZ = [0.2, 0.4, 0.6, 0.8, 1].map((f) => f * depth); // five more bars back along the span
   const arrowA = P(-halfW * 0.7, h_c, depth * 0.15), arrowB = P(-halfW * 0.7, h_c, depth * 0.8);
   const ang = (Math.atan2(arrowB[1] - arrowA[1], arrowB[0] - arrowA[0]) * 180) / Math.PI;
   return (
     <div ref={box}>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={which === 'a' ? `Surface a-a: two vertical planes through the concrete depth ${fmt(h_c - hpe, 0)} mm at the flange edges, along the span, crossed by top and bottom bars` : `Surface b-b: trough around the studs, length ${fmt(r.lb, 0)} mm, along the span, crossed by the bottom bars twice`}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={which === 'a' ? `Surface a-a: two vertical planes through the concrete depth ${fmt(h_c - hpe, 0)} mm at the flange edges, along the span, crossed by top and bottom bars` : which === 'b' ? `Surface b-b: trough around the studs from the flange, length ${fmt(r.lb, 0)} mm, along the span, crossed by the bottom bars twice` : `Surface c-c: from the rib sides at the deck crest, inclined to the stud head, length ${fmt(r.lc, 0)} mm, along the span, crossed by the bottom bars twice`}>
         <polygon points={top} fill="#EEF1EF" stroke={slabLine} strokeWidth={slabW} strokeLinejoin="round" />
         <polygon points={side} fill="#DCE1DE" stroke={slabLine} strokeWidth={slabW} strokeLinejoin="round" />
         {/* transverse bars repeated along the span (spacing indicative), seen through the concrete */}
@@ -456,10 +470,15 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
           <rect x={cx - hd / 2} y={yBot - hsc * k} width={hd} height={10 * k} />
         </g>
         {/* the surface trace on the cut face, and where the bars cross it */}
+        {which === 'c' && <>
+          {/* below the crest the surface follows the rib side: drawn dotted, not counted (§6.6.6.4(3)) */}
+          {[-1, 1].map((s) => <line key={s} x1={P(s * sideBot, 0, 0)[0]} y1={P(0, 0, 0)[1]} x2={P(s * sideTop, hpe, 0)[0]} y2={P(0, hpe, 0)[1]} stroke={col} strokeWidth={1.2} strokeDasharray="2 3" />)}
+          <polyline points={pts(P(-cX, hpe, 0), P(-bX, hsc, 0), P(bX, hsc, 0), P(cX, hpe, 0))} fill="none" stroke={col} strokeWidth={2} strokeDasharray="6 4" />
+        </>}
         {which === 'a'
           ? [-aX, aX].map((X) => <line key={X} x1={P(X, 0, 0)[0]} x2={P(X, 0, 0)[0]} y1={yBot - hpe * k} y2={yTop} stroke={col} strokeWidth={2} strokeDasharray="6 4" />)
-          : <polyline points={pts(P(-bX, 0, 0), P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, 0, 0))} fill="none" stroke={col} strokeWidth={2} strokeDasharray="6 4" />}
-        <text x={W - 4} y={yBot + 14} textAnchor="end" fill={C.muted} fontSize={CAD.font - 1}>{`bars @ ${fmt(which === 'b' || r.ctop === 0 ? r.sfb : Math.min(r.sft, r.sfb), 0)} mm, indicative`}</text>
+          : which === 'c' ? null : <polyline points={pts(P(-bX, 0, 0), P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, 0, 0))} fill="none" stroke={col} strokeWidth={2} strokeDasharray="6 4" />}
+        <text x={W - 4} y={yBot + 14} textAnchor="end" fill={C.muted} fontSize={CAD.font - 1}>{`bars @ ${fmt(which !== 'a' || r.ctop === 0 ? r.sfb : Math.min(r.sft, r.sfb), 0)} mm, indicative`}</text>
         {/* longitudinal shear on the outstand, along the span */}
         <line x1={arrowA[0]} y1={arrowA[1]} x2={arrowB[0]} y2={arrowB[1]} stroke={C.blue} strokeWidth={1.6} />
         <path d="M0,0 l-9,-3.5 l0,7 z" fill={C.blue} transform={`translate(${arrowB[0]} ${arrowB[1]}) rotate(${ang})`} />
@@ -467,7 +486,7 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
         {/* label on the far end of the surface */}
         {which === 'a'
           ? [-aX, aX].map((X) => <text key={X} x={P(X, h_c, depth)[0]} y={P(X, h_c, depth)[1] - 5} textAnchor="middle" fill={col} fontSize={CAD.font + 1} fontWeight="700">a</text>)
-          : <text x={P(0, hsc, depth)[0]} y={P(0, h_c, depth)[1] - 5} textAnchor="middle" fill={col} fontSize={CAD.font + 1} fontWeight="700">b</text>}
+          : <text x={P(0, hsc, depth)[0]} y={P(0, h_c, depth)[1] - 5} textAnchor="middle" fill={col} fontSize={CAD.font + 1} fontWeight="700">{which}</text>}
       </svg>
     </div>
   );
@@ -488,7 +507,7 @@ export function LongSection({ r }: { r: Record<string, number> }) {
   const yOf = (Y: number) => top + (h_c - Y) * k; // Y in mm above the slab soffit
   const X = (x: number) => x0 + x * k;
   const H = yOf(-t_f) + 96;
-  const bottomBar = hpe + 30, topBar = h_c - 30;
+  const bottomBar = bottomBarLevel(r), topBar = h_c - 30;
   const every = across ? Math.max(1, Math.round(r.sA / r.er)) : 1; // studs in every rib, or every second …
   const studX = Array.from({ length: n }, (_, i) => i).filter((i) => i % every === 0).map((i) => i * pitch + pitch / 2);
   const botBars = across ? Array.from({ length: Math.floor(lenMm / sfb) + 1 }, (_, j) => j * sfb) : Array.from({ length: n + 1 }, (_, j) => j * pitch);
@@ -682,7 +701,7 @@ export function BeamCad({ r, name, part }: { r: Record<string, number>; name: st
         <path d={`${zig(sL, SY(0), SY(h_c))} ${zig(sR, SY(0), SY(h_c))}`} fill="none" stroke={ink} strokeWidth={CAD.dim} />
         {/* transverse bars, top and bottom */}
         {r.ctop !== 0 && <line x1={sL + 4} x2={sR - 4} y1={SY(30)} y2={SY(30)} stroke={ink} strokeWidth={1.8} />}
-        <line x1={sL + 4} x2={sR - 4} y1={SY(h_c - hpe - 30)} y2={SY(h_c - hpe - 30)} stroke={ink} strokeWidth={1.8} />
+        <line x1={sL + 4} x2={sR - 4} y1={SY(h_c - bottomBarLevel(r))} y2={SY(h_c - bottomBarLevel(r))} stroke={ink} strokeWidth={1.8} />
         {/* steel section */}
         <g fill={C.sheet} stroke={ink} strokeWidth={CAD.geo} strokeLinejoin="round">
           <path d={`M${cx - (b_a / 2) * ks},${SY(h_c)} h${b_a * ks} v${t_f * ks} h${-((b_a - t_w) / 2) * ks} v${(h_a - 2 * t_f) * ks} h${((b_a - t_w) / 2) * ks} v${t_f * ks} h${-b_a * ks} v${-t_f * ks} h${((b_a - t_w) / 2) * ks} v${-(h_a - 2 * t_f) * ks} h${-((b_a - t_w) / 2) * ks} z`} />

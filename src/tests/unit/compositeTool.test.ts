@@ -202,12 +202,15 @@ describe('mCompositeBeamDesign headless model', () => {
     const solid = m.results();
     expect([solid.cdeck, solid.hpe, solid.kd, solid.nre, solid.cbb, solid.ccc, solid['UR.sf.c'], solid['UR.L.c']]).toEqual([0, 0, 1, 1, 1, 0, 0, 0]);
     expect(solid.ctop).toBe(1); // a solid slab always has top and bottom bars
+    // §6.6.5.1(1): bottom bars 30 mm clear below the stud head; 100 − 10 − (0 + 20 + 10) = 60 mm in the solid slab
+    expect(solid.chd).toBeCloseTo(60, 9);
     { // a deck slab has one bar layer by default (on the deck, counted as A_b); two layers on request
       const d = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
       const put = (n: string, v: number) => d.setInput(d.inputs.find((f) => f.name === n)!.id, v);
       put('c_{deck}', 1);
       let q = d.results();
       expect([q.ctop, q.at]).toEqual([0, 0]);
+      expect(q.chd).toBeCloseTo(100 - 10 - (55 + 20 + 10), 9); // RF55 with 100 mm studs: 5 mm, not met
       expect(q.asf).toBeCloseTo(q.ab, 9);
       put('n_{lay}', 2);
       q = d.results();

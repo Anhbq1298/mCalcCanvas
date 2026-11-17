@@ -24,15 +24,28 @@ const GREEK: Record<string, string> = { gamma: 'γ', psi: 'ψ', varphi: 'φ', va
 const NUMBER = /^\s*-?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?\s*$/;
 const FAMILIES = ['UB', 'UC', 'IPE', 'HEA', 'HEB', 'HEM', 'W'];
 /**
- * Deck presets (worksheet inputs of 1.11). RF55: Fielders KingFlor / M Metal data sheet (h_p 55 mm, ribs at 200 mm,
- * area, mass and grade per BMT); b_r assumes a 32 mm dovetail. The generic deck is an open 60 mm trapezoid.
+ * Deck catalogue: worksheet inputs of 1.11 for common profiles, from the manufacturers' data (area, mass, grade per
+ * thickness) and, for the rib width b_0 (EN 1994-1-1 Figure 6.13), a published drawing or worked example. Each entry
+ * says where its numbers come from; a value that is an assumption is marked so. t_p is the nominal thickness.
  */
-const rf55 = (t: number, A: number, kg: number, fy: number) => ({ 'c_{re}': 1, h_p: 55, b_r: 168, e_r: 200, t_p: t, g_p: Math.round(kg * 9.81) / 1000, 'A_{pe}': A, 'f_{yp}': fy });
-const DECKS: { name: string; values: Record<string, number> }[] = [
-  { name: 'RF55, 0.75 mm', values: rf55(0.75, 1248, 10.32, 550) },
-  { name: 'RF55, 1.00 mm', values: rf55(1, 1664, 13.56, 550) },
-  { name: 'RF55, 1.20 mm', values: rf55(1.2, 1997, 16.32, 500) },
-  { name: 'Trapezoidal 60, 1.00 mm (generic)', values: { 'c_{re}': 0, h_p: 60, b_r: 150, e_r: 300, t_p: 1, g_p: 0.13, 'A_{pe}': 1400, 'f_{yp}': 350 } },
+interface DeckEntry { name: string; maker: string; values: Record<string, number>; src: string }
+const kN = (kg: number) => Math.round(kg * 9.81) / 1000; // kg/m² → kPa
+const deck = (maker: string, family: string, base: Record<string, number>, src: string, rows: [number, number, number, number?][]): DeckEntry[] =>
+  rows.map(([t, A, g, fy]) => ({ name: `${family}, ${t.toFixed(2)} mm`, maker, src, values: { ...base, t_p: t, 'A_{pe}': A, g_p: g, ...(fy ? { 'f_{yp}': fy } : {}) } }));
+const DECKS: DeckEntry[] = [
+  ...deck('Fielders / M Metal', 'RF55', { 'c_{re}': 1, h_p: 55, b_r: 168, e_r: 200 },
+    'M Metal RF55 data sheet (Table 1: area, mass, grade). b_0 = 200 − 32 assumes a 32 mm dovetail, as Bondek: not on the data sheet.',
+    [[0.75, 1248, kN(10.32), 550], [1, 1664, kN(13.56), 550], [1.2, 1997, kN(16.32), 500]]),
+  ...deck('Lysaght', 'Bondek', { 'c_{re}': 1, h_p: 54, b_r: 168, e_r: 200, 'f_{yp}': 550 },
+    'Lysaght Bondek design manual (Table 1.2 area; profile figure: rib 54 high, 32 wide at the top, at 200; G550). Mass from the Bondek brochure.',
+    [[0.6, 1007, kN(8.52)], [0.75, 1259, kN(10.5)], [1, 1678, kN(13.79)]]),
+  ...deck('Tata Steel', 'ComFlor 60', { 'c_{re}': 0, h_p: 60, b_r: 145, e_r: 300, 'f_{yp}': 350 },
+    'ComFlor manual (S350: area, weight). b_0 = (120 + 170)/2 and h_p = 60 (trapezoid; 75 overall with the top stiffener) as in SCI P387 Example 03.',
+    [[0.9, 1276, 0.10], [1, 1424, 0.11], [1.2, 1721, 0.14]]),
+  ...deck('Tata Steel', 'ComFlor 80', { 'c_{re}': 0, h_p: 80, b_r: 135, e_r: 300, 'f_{yp}': 350 },
+    'ComFlor 80 data sheet (S350: area, weight; valley 120, crown 150, pitch 300) → b_0 = (120 + 300 − 150)/2. h_p = 80 (95 overall); use studs of 125 mm or more.',
+    [[0.9, 1382, 0.11], [1, 1542, 0.12], [1.2, 1864, 0.15]]),
+  { name: 'Trapezoidal 60, 1.00 mm (generic)', maker: 'generic', src: 'Generic open trapezoid for checking only: not a product.', values: { 'c_{re}': 0, h_p: 60, b_r: 150, e_r: 300, t_p: 1, g_p: 0.13, 'A_{pe}': 1400, 'f_{yp}': 350 } },
 ];
 const unit = (u: string) => u.replace('^2', '²').replace('^3', '³').replace('^4', '⁴').replace('^-1', '⁻¹');
 
@@ -121,6 +134,7 @@ export function App() {
   const loadRef = useRef<HTMLDialogElement>(null);
   const factorRef = useRef<HTMLDialogElement>(null);
   const deckRef = useRef<HTMLDialogElement>(null);
+  const [deckQuery, setDeckQuery] = useState('');
   const [opt, setOpt] = useState<{ running: boolean; i?: number; n?: number; name?: string; result?: OptimizeResult; seconds?: number } | null>(null);
   const reportReq = useRef(0);
   const reportCb = useRef<((doc: unknown) => void) | null>(null);
@@ -190,6 +204,8 @@ export function App() {
   const deck = value(byName('c_{deck}')) >= 1, parallel = deck && value(byName('c_{par}')) >= 1, transverse = deck && !parallel;
   const deckPreset = DECKS.find((d) => Object.entries(d.values).every(([n, x]) => Math.abs(value(byName(n)) - x) < 1e-9));
   const deckName = deckPreset?.name ?? 'Custom deck';
+  const words = deckQuery.toLowerCase().split(/\s+/).filter(Boolean);
+  const deckList = DECKS.filter((d) => words.every((w) => `${d.maker} ${d.name} ${d.values['c_{re}'] ? 're-entrant dovetail' : 'open trapezoidal'}`.toLowerCase().includes(w)));
   const applyDeck = (name: string) => { const d = DECKS.find((x) => x.name === name); if (d) for (const [n, x] of Object.entries(d.values)) if (value(byName(n)) !== x) setInput(byName(n), x); };
   const allGroups = [...inputs.reduce((g, f) => g.set(f.group, [...(g.get(f.group) ?? []), f]), new Map<string, InputField[]>()).entries()];
   // the slab type comes right after the geometry, wherever its inputs sit in the worksheet
@@ -537,7 +553,7 @@ export function App() {
           </section>
 
             <section className="sheet-sec" aria-labelledby="h-shear3d">
-              <div className="sec-head"><h2 id="h-shear3d">Longitudinal shear surfaces a-a and b-b</h2><span className="hint">EN 1994-1-1 §6.6.6.1, Figure 6.15{deck ? ', §6.6.6.4, Figure 6.16' : ''}; the surfaces run the whole length of the beam</span></div>
+              <div className="sec-head"><h2 id="h-shear3d">Longitudinal shear surfaces a-a, b-b{res.ccc >= 1 ? ' and c-c' : ''}</h2><span className="hint">EN 1994-1-1 §6.6.6.1, Figure 6.15{deck ? ', §6.6.6.4, Figure 6.16' : ''}; the surfaces run the whole length of the beam</span></div>
               <div className="surfaces">
                 <figure>
                   <ShearSurface3D r={res} which="a" />
@@ -553,9 +569,18 @@ export function App() {
                     <figcaption data-testid="bb-note"><b className="c-b">b-b</b>: not required. With the ribs perpendicular to the beam and the stud resistance reduced by k<sub>t</sub> = {fmt(res.kd, 2)}, surfaces around the studs need not be checked (EN 1994-1-1 §6.6.6.4(2)).</figcaption>
                   </figure>
                 )}
+                {res.ccc >= 1 && (
+                  <figure>
+                    <ShearSurface3D r={res} which="c" />
+                    <figcaption data-testid="cc-caption"><b className="c-c">c-c</b> (Figure 6.16): from each side of the rib at the deck crest, inclined to the stud head and across it, l<sub>c</sub> = {fmt(res.lc, 0)} mm; below the crest it follows the rib side and is not counted (§6.6.6.4(3)); the whole v<sub>f</sub>; crossed by the bottom bars twice, 2A<sub>b</sub> = {fmt(res.asb, 0)} mm²/m; v<sub>Ed</sub> = {fmt(res.vcEd, 2)} MPa.</figcaption>
+                  </figure>
+                )}
+                <figure className={res.ccc >= 1 ? '' : 'wide'}>
+                  <p className={`hint ${res.chd < 30 ? 'fail' : ''}`} data-testid="head-clearance">Bottom bars: top of bar {fmt(res.chd, 0)} mm below the underside of the stud heads (≥ 30 mm, §6.6.5.1(1)){res.chd < 30 ? ': not met. Use taller studs or lower the bars.' : '.'} Bars at {fmt(res.cb, 0)} mm cover above the {deck ? 'deck crest' : 'slab soffit'}; head {fmt(res.thead, 0)} mm high.</p>
+                </figure>
                 <figure className="wide">
                   <LongSection r={res} />
-                  <figcaption>Longitudinal section along the span through the studs{transverse ? <>: ribs at e<sub>r</sub> = {fmt(res.er, 0)} mm, studs at {fmt(res.sA, 0)} mm ({fmt(res.nre, 0)} per rib)</> : <>: stud spacing s<sub>f.b</sub> = {fmt(res.sfb, 0)} mm</>}, slab depth h<sub>c</sub> = {fmt(res.h_c, 0)} mm, drawn to scale. Red band = a-a over the {deck ? 'concrete above the deck' : 'slab depth'}{res.cbb >= 1 ? '; teal band = b-b over the stud height' : ''}.{parallel ? ' Dashed line = deck crest beside the rib.' : ''}</figcaption>
+                  <figcaption>Longitudinal section along the span through the studs{transverse ? <>: ribs at e<sub>r</sub> = {fmt(res.er, 0)} mm, studs at {fmt(res.sA, 0)} mm ({fmt(res.nre, 0)} per rib)</> : <>: stud spacing s<sub>f.b</sub> = {fmt(res.sfb, 0)} mm</>}, slab depth h<sub>c</sub> = {fmt(res.h_c, 0)} mm, drawn to scale. Red band = a-a over the {deck ? 'concrete above the deck' : 'slab depth'}{res.cbb >= 1 ? '; teal band = b-b over the stud height, from the flange' : ''}.{parallel ? ' Dashed line = deck crest beside the rib.' : ''}</figcaption>
                 </figure>
               </div>
               <p className="hint">Front face = cross-section to scale; the length along the span is not. Bars counted must be anchored past each surface (EC2 §8.4). v<sub>f</sub> = {res.nre > 1 ? `${fmt(res.nre, 0)} ` : ''}P<sub>Rd</sub>/s<sub>min</sub> = {fmt(res.vf, 0)} kN/m pulls the slab outstand along the beam.</p>
@@ -699,7 +724,7 @@ export function App() {
                 <tr><td>Strut UR v<sub>Ed</sub>/v<sub>Rd</sub></td><td className={tone(res['UR.L'])}>{fmt(res['UR.L'], 3)}</td><td className={tone(res['UR.L.b'])}>{fmt(res['UR.L.b'], 3)}</td><td></td></tr>
               </tbody>
             </table>
-            <p className="hint">Bars: top A<sub>t</sub> Ø{fmt(res.dst, 0)} at {fmt(res.sft, 0)} = {fmt(res.at, 0)} mm²/m, bottom A<sub>b</sub> Ø{fmt(res.dsb, 0)} at {fmt(res.sfb, 0)} = {fmt(res.ab, 0)} mm²/m, anchored past each surface (EC2 §8.4). {res.cbb < 1 && <> b-b is not required with transverse ribs (§6.6.6.4(2)); its URs are shown as 0.</>}{deck && res.ape > 0 && <> Required a<sub>sf</sub> on a-a is net of the deck, A<sub>pe</sub> f<sub>yp,d</sub> (6.25).</>} {res.ccc >= 1 && <> Ribs parallel: a third surface c-c runs from each rib edge at the deck crest, inclined up to the stud head and across it, l<sub>c</sub> = {fmt(res.lc, 0)} mm (deck depth not counted, §6.6.6.4(3), Figure 6.16), v<sub>Ed</sub> = {fmt(res.vcEd, 2)} MPa, crossed by 2A<sub>b</sub>; its two URs are in the check table.</>} Not checked: d-d and haunches, splitting at edge beams (§6.6.5.3), minimum reinforcement.</p>
+            <p className="hint">Bars: top A<sub>t</sub> Ø{fmt(res.dst, 0)} at {fmt(res.sft, 0)} = {fmt(res.at, 0)} mm²/m, bottom A<sub>b</sub> Ø{fmt(res.dsb, 0)} at {fmt(res.sfb, 0)} = {fmt(res.ab, 0)} mm²/m, anchored past each surface (EC2 §8.4). {res.cbb < 1 && <> b-b is not required with transverse ribs (§6.6.6.4(2)); its URs are shown as 0.</>}{deck && res.ape > 0 && <> Required a<sub>sf</sub> on a-a is net of the deck, A<sub>pe</sub> f<sub>yp,d</sub> (6.25).</>} {res.ccc >= 1 && <> Ribs parallel: surface c-c is checked as well (figure above); its two URs are in the check table.</>} Not checked: d-d and haunches, splitting at edge beams (§6.6.5.3), minimum reinforcement.</p>
           </section>
 
         </div>
@@ -724,14 +749,21 @@ export function App() {
             <button type="button" className="rowbtn" aria-label="Close" onClick={() => deckRef.current?.close()}>×</button>
           </header>
           <div className="fields">
-            <label className="f wide"><span>Deck profile</span>
+            <label className="f"><span>Search the catalogue</span>
+              <input data-testid="deck-search" className="num-input" type="search" autoComplete="off" placeholder="e.g. ComFlor, 1.00, re-entrant" value={deckQuery} onChange={(e) => setDeckQuery(e.target.value)} />
+            </label>
+            <label className="f"><span>Deck profile ({deckList.length} of {DECKS.length})</span>
               <select data-testid="deck-preset" value={deckPreset?.name ?? ''} onChange={(e) => applyDeck(e.target.value)}>
                 {!deckPreset && <option value="">Custom (values below)</option>}
-                {DECKS.map((d) => <option key={d.name}>{d.name}</option>)}
+                {deckPreset && !deckList.includes(deckPreset) && <option>{deckPreset.name}</option>}{/* the current profile, outside the search */}
+                {[...new Set(deckList.map((d) => d.maker))].map((m) => (
+                  <optgroup key={m} label={m}>{deckList.filter((d) => d.maker === m).map((d) => <option key={d.name}>{d.name}</option>)}</optgroup>
+                ))}
               </select>
             </label>
           </div>
-          <p className="hint">Ribs {parallel ? 'parallel' : 'perpendicular'} to the beam. b<sub>r</sub> is b<sub>0</sub> of EN 1994-1-1 Figure 6.13: the mean width of an open rib, the minimum width of a re-entrant one. Concrete in the ribs carries weight but no force. RF55 values are from the manufacturer data sheet, except b<sub>r</sub> (32 mm dovetail assumed): confirm with the supplier.</p>
+          <p className="hint" data-testid="deck-source">{deckPreset ? <><b>{deckPreset.maker} {deckPreset.name}</b>: <Rich text={deckPreset.src} /></> : 'Custom deck: values as entered below.'}</p>
+          <p className="hint">Ribs {parallel ? 'parallel' : 'perpendicular'} to the beam. b<sub>r</sub> is b<sub>0</sub> of EN 1994-1-1 Figure 6.13: the mean width of an open rib, the minimum width of a re-entrant one. Concrete in the ribs carries weight but no force. Catalogue values are as published; check the current data sheet of the deck actually supplied.</p>
           <DeckProfile hc={res.h_c} hp={value(byName('h_p'))} br={value(byName('b_r'))} er={value(byName('e_r'))} hsc={res.hsc} dsc={res.dsc} nr={transverse ? value(byName('n_r')) : 1} reentrant={value(byName('c_{re}')) >= 1} />
           <div className="fields">
             {groups.filter(([g]) => isDeck(g)).flatMap(([, fields]) => fields)

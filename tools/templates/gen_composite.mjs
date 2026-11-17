@@ -92,6 +92,8 @@ input('Top transverse bar spacing', 's_{f.t}', 150, 'mm');
 input('Bottom transverse bar diameter (A_b)', 'd_{s.b}', 10, 'mm');
 input('Bottom transverse bar spacing', 's_{f.b}', 150, 'mm');
 input('Stud head diameter', 'd_{head}', 32, 'mm');
+input('Stud head height (ISO 13918, d 19: 10 mm)', 't_{head}', 10, 'mm');
+input('Bottom bars: clear cover above the slab soffit, or above the deck crest', 'c_b', 20, 'mm');
 H(3, '1.9 Point loads and supports on the web (EN 1993-1-5 §6)');
 input('Point loads on top flange (1) or framed in (0)', 'c_{F.P}', 1);
 input('Stiff bearing length under a point load', 's_{s.P}', 100, 'mm');
@@ -506,6 +508,9 @@ calc('Required bars, (6.21) / (6.25), less the deck','a_{sf.req}',R`\max\left(0\
 calc('Provided, A_t + A_b','a_{sf}',R`a_t+a_b`,'mm^2/m', false);
 ur('Transverse reinforcement, a-a','sf','a_{sf.req}','a_{sf}');
 ur('Concrete strut, a-a','L','v_{L.Ed}','v_{L.Rd}');
+T('The bottom bars counted on b-b and c-c must lie at least 30 mm clear below the underside of the stud heads (§6.6.5.1(1), Figure 6.14).');
+calc('Clear distance, top of the bottom bars to the underside of the stud head', 'c_{hd}', R`h_{sc}-t_{head}-\left(h_{pe}+c_b+d_{s.b}\right)`, 'mm', false);
+check('Bottom bars 30 mm below the stud head, §6.6.5.1(1)', '30\\,\\mathrm{mm}', 'c_{hd}');
 H(3, '5.2 Surface b-b around the studs');
 calc('Length of surface b-b, around the studs from the flange (Figures 6.15, 6.16)','l_b',R`2h_{sc}+d_{head}+b_0`,'mm', false);
 calc('Shear stress on b-b','v_{b.Ed}',R`\frac{v_f}{l_b}`,'MPa', false);

@@ -254,3 +254,13 @@ Read against the clause text and the figure supplied by the user:
   The rib width at the crest is taken as b_r (short side for an open rib). Shape read from Figure 6.16 (user's copy).
 - Not modelled: d-d as a separate surface (the a-a check with A_t + A_b plays that part for parallel ribs), haunches.
 
+## Deck catalogue and stud-head clearance (2026-11-17)
+
+- Define deck has a searchable catalogue (App.tsx DECKS). Each entry carries its source:
+  RF55 (M Metal data sheet; b_0 assumes a 32 mm dovetail), Bondek (Lysaght manual and brochure), ComFlor 60
+  (ComFlor manual; b_0 = 145 and h_p = 60 as SCI P387 Example 03), ComFlor 80 (data sheet: valley 120, crown 150,
+  pitch 300 → b_0 135; h_p 80, 95 overall), a generic trapezoid. t_p is the nominal thickness.
+- Worksheet §5: c_hd = h_sc − t_head − (h_pe + c_b + d_s.b) ≥ 30 mm, §6.6.5.1(1). Inputs t_head (10 mm, ISO 13918 d 19)
+  and c_b (20 mm cover above the soffit or the deck crest). RF55 or Bondek with 100 mm studs: 5 mm, not met; 125 mm studs: 30 mm.
+- Drawings: bottom bars at h_pe + c_b + d/2; surface c-c drawn in 3D (inclined part counted, rib side dotted).
+

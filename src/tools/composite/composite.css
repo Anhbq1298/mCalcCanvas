@@ -149,7 +149,8 @@ td { padding: 2px 4px; border-bottom: 1px solid color-mix(in srgb, var(--rule) 5
 .f.check input[type="checkbox"] { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--steel); }
 .surfaces figure.wide { grid-column: 1 / -1; }
 .surfaces figcaption { font-size: 0.78125rem; color: var(--ink-2); line-height: 1.35; margin-top: 2px; }
-.surfaces .c-a { color: var(--fail); } .surfaces .c-b { color: #0F766E; }
+.surfaces .c-a { color: var(--fail); } .surfaces .c-b { color: #0F766E; } .surfaces .c-c { color: #6D5BD0; }
+.surfaces .hint.fail { color: var(--fail); }
 .stage-table { margin: 0.25rem 1rem 1rem; width: calc(100% - 2rem); font-size: 0.8125rem; }
 
 /* ── Verdict ── */
