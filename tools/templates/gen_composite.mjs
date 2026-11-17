@@ -484,7 +484,8 @@ H(2, '5. SLAB LONGITUDINAL SHEAR (EC4 §6.6.6, EC2 §6.2.4)');
 fig('F4', 'Shear surfaces a-a and b-b along the beam (EC4 Figure 6.15)', 'shear3d', 6.5);
 T('Surface lengths and bars counted per EC4 §6.6.6.1(3) and §6.6.6.2(3) (b_0 = 0 for a single stud row); bars anchored past each surface to EN 1992-1-1 §8.4.');
 calc('Reinforcement design strength', 'f_{sd}', R`\frac{f_{sk}}{\gamma_S}`, 'MPa', false);
-T('Deck (§6.6.6.4): h_f on a-a is the concrete above the deck; with transverse ribs and k_t, surface b-b need not be checked; a transverse deck continuous across the beam may count as reinforcement on a-a, (6.25).');
+T('Deck (§6.6.6.4, Figure 6.16): h_f on a-a is the concrete above the deck; with transverse ribs and k_t, surface b-b need not be checked; a transverse deck continuous across the beam may count as reinforcement on a-a, (6.25).');
+T('Ribs parallel: b-b runs around the studs down to the flange, as in a solid slab; a wider surface c-c runs around the rib, and there the depth of the deck is not counted (§6.6.6.4(3)).');
 T('The flow follows the studs provided (§6.6.6.2(1)), but the slab cannot take more than N_c,f over the shorter shear span: studs beyond full connection add no shear.');
 calc('Connector flow at the closest spacing, capped at full connection','v_f',R`\min\left(\frac{n_{re}P_{Rd}}{\min\left(s_A,s_B\right)},\frac{N_{c.f}}{\min\left(x_M,L-x_M\right)}\right)`,'kN/m', false);
 calc('Deck design strength', 'f_{yp.d}', R`\frac{f_{yp}}{\gamma_{M0}}`, 'MPa', false);
@@ -506,7 +507,7 @@ calc('Provided, A_t + A_b','a_{sf}',R`a_t+a_b`,'mm^2/m', false);
 ur('Transverse reinforcement, a-a','sf','a_{sf.req}','a_{sf}');
 ur('Concrete strut, a-a','L','v_{L.Ed}','v_{L.Rd}');
 H(3, '5.2 Surface b-b around the studs');
-calc('Length of surface b-b (deck depth not counted, §6.6.6.4(3))','l_b',R`2\left(h_{sc}-h_{pe}\right)+d_{head}+b_0`,'mm', false);
+calc('Length of surface b-b, around the studs from the flange (Figures 6.15, 6.16)','l_b',R`2h_{sc}+d_{head}+b_0`,'mm', false);
 calc('Shear stress on b-b','v_{b.Ed}',R`\frac{v_f}{l_b}`,'MPa', false);
 calc('Strut angle on b-b, cot θ_f','c_{\\theta.b}',R`c_\theta\left(v_{b.Ed}\right)`,'', false);
 calc('Strut resistance on b-b, (6.22)','v_{b.Rd}',R`\frac{v_{max}}{c_{\theta.b}+1/c_{\theta.b}}`,'MPa', false);
@@ -514,7 +515,17 @@ calc('Required steel, (6.21) with h_f = l_b','a_{sf.b.req}',R`\frac{v_{b.Ed} l_b
 calc('Provided, 2A_b','a_{sf.b}',R`2a_b`,'mm^2/m', false);
 ur('Transverse reinforcement, b-b (0 if not required)','sf.b','c_{bb}a_{sf.b.req}','a_{sf.b}');
 ur('Concrete strut, b-b (0 if not required)','L.b','c_{bb}v_{b.Ed}','v_{b.Rd}');
-T('Deck: bottom bars A_b lie on the deck, at least 30 mm below the stud head (§6.6.5.1). Not checked: discontinuous deck anchored by the studs (6.26), surfaces c-c / d-d (haunches), splitting at edge beams (§6.6.5.3), anchorage lengths, minimum reinforcement (EC2 §9.2.2(5)), transverse slab bending.');
+H(3, '5.3 Surface c-c around the rib (deck ribs parallel, Figure 6.16)');
+T('From the deck crest up each side of the rib and across at the stud head: l_c = 2 (h_sc − h_p) + rib width. The rib width is b_r (mean width of an open rib, minimum of a re-entrant one), not less than the stud group. Crossed by the bars below the stud head twice, 2A_b.');
+P('Surface c-c to be checked: 1 = yes (deck ribs parallel), 0 = no', R`c_{cc}\coloneq${IF([R`c_{deck}\ge1\land c_{par}\ge1`, '1'], [null, '0'])}`, M({ precision: 0 }));
+calc('Length of surface c-c, deck depth not counted (§6.6.6.4(3))','l_c',R`2\left(h_{sc}-h_{pe}\right)+\max\left(b_r,d_{head}+b_0\right)`,'mm', false);
+calc('Shear stress on c-c','v_{c.Ed}',R`\frac{v_f}{l_c}`,'MPa', false);
+calc('Strut angle on c-c, cot θ_f','c_{\\theta.c}',R`c_\theta\left(v_{c.Ed}\right)`,'', false);
+calc('Strut resistance on c-c, (6.22)','v_{c.Rd}',R`\frac{v_{max}}{c_{\theta.c}+1/c_{\theta.c}}`,'MPa', false);
+calc('Required steel, (6.21) with h_f = l_c','a_{sf.c.req}',R`\frac{v_{c.Ed} l_c}{f_{sd}c_{\theta.c}}`,'mm^2/m', false);
+ur('Transverse reinforcement, c-c (0 if not required)','sf.c','c_{cc}a_{sf.c.req}','a_{sf.b}');
+ur('Concrete strut, c-c (0 if not required)','L.c','c_{cc}v_{c.Ed}','v_{c.Rd}');
+T('Deck: bottom bars A_b lie on the deck, at least 30 mm below the stud head (§6.6.5.1). Not checked: discontinuous deck anchored by the studs (6.26), surface d-d and haunches, splitting at edge beams (§6.6.5.3), anchorage lengths, minimum reinforcement (EC2 §9.2.2(5)), transverse slab bending.');
 
 H(2, '6. NON-COMPOSITE ALTERNATIVE (EN 1993-1-1, EN 1993-1-5)');
 l.out[l.out.length - 1].props.pageBreak = true;
@@ -568,7 +579,7 @@ const WHEN_OK = (cond, ...lines) => { for (const t of lines) { T(t); l.out[l.out
 WHEN_OK(R`c_{comp}\ge1`, 'Design basis: COMPOSITE (chapter 4). Chapter 6 is for information only.');
 WHEN(R`c_{comp}<1`, 'NOT DESIGNED AS COMPOSITE: designed as a bare steel beam (chapter 6); see the note below.');
 P('Web checks, both bases (4.7)', R`\mathrm{UR}_{F}\coloneq\max\left(\mathrm{UR}_{F.P},\mathrm{UR}_{F.S}\right)`, M({ precision: 3 }));
-P('Slab longitudinal shear, a-a and b-b (chapter 5)', R`\mathrm{UR}_{slab}\coloneq\max\left(\mathrm{UR}_{sf},\mathrm{UR}_{L},\mathrm{UR}_{sf.b},\mathrm{UR}_{L.b}\right)`, M({ precision: 3 }));
+P('Slab longitudinal shear, a-a, b-b and c-c (chapter 5)', R`\mathrm{UR}_{slab}\coloneq\max\left(\mathrm{UR}_{sf},\mathrm{UR}_{L},\mathrm{UR}_{sf.b},\mathrm{UR}_{L.b},\mathrm{UR}_{sf.c},\mathrm{UR}_{L.c}\right)`, M({ precision: 3 }));
 P('Serviceability, composite: deflection, live-load deflection, frequency', R`\mathrm{UR}_{sls}\coloneq\max\left(\mathrm{UR}_{d.x},\mathrm{UR}_{d.q},\mathrm{UR}_{fn}\right)`, M({ precision: 3 }));
 P('Serviceability, bare steel', R`\mathrm{UR}_{sls.nc}\coloneq\max\left(\mathrm{UR}_{d.nc},\mathrm{UR}_{d.q.nc},\mathrm{UR}_{fn.nc}\right)`, M({ precision: 3 }));
 P('Governing utilisation, composite (chapters 4 and 5)', R`\mathrm{UR}_{c}\coloneq\max\left(\mathrm{UR}_{M.2},\mathrm{UR}_{M.x},\mathrm{UR}_{MV},\mathrm{UR}_{V.2},\mathrm{UR}_{F},\mathrm{UR}_{FM},\mathrm{UR}_{sls},\mathrm{UR}_{slab}\right)`, M({ precision: 3 }));
@@ -581,7 +592,7 @@ for (const n of ['M.1','V.1','LT','d.1']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${
 H(3, 'EN 1994-1-1 — composite beam');
 for (const n of ['M.2','M.x','MV','V.2','F.P','F.S','FM','d.2','d.x','d.q']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
 H(3, 'EN 1994-1-1 §6.6.6 / EN 1992-1-1 — slab longitudinal shear (a-a, b-b)');
-for (const n of ['sf','L','sf.b','L.b']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
+for (const n of ['sf','L','sf.b','L.b','sf.c','L.c']) P(`Utilisation ${n}`,R`\mathrm{UR}_{${n}}=`,M({precision:3}));
 
 WHEN(R`c_{comp}<1`,
   'NOT DESIGNED AS COMPOSITE: the studs that fit cannot give composite action (η < η_min,',

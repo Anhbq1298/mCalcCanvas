@@ -419,7 +419,7 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
   const side = pts(P(halfW, 0, 0), P(halfW, 0, depth), P(halfW, h_c, depth), P(halfW, h_c, 0));
   const surfaces = which === 'a'
     ? [-aX, aX].map((X) => pts(P(X, hpe, 0), P(X, h_c, 0), P(X, h_c, depth), P(X, hpe, depth)))
-    : [pts(P(-bX, hpe, 0), P(-bX, hsc, 0), P(-bX, hsc, depth), P(-bX, hpe, depth)), pts(P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(-bX, hsc, depth)), pts(P(bX, hpe, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(bX, hpe, depth))];
+    : [pts(P(-bX, 0, 0), P(-bX, hsc, 0), P(-bX, hsc, depth), P(-bX, 0, depth)), pts(P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(-bX, hsc, depth)), pts(P(bX, 0, 0), P(bX, hsc, 0), P(bX, hsc, depth), P(bX, 0, depth))];
   const barsZ = [0.2, 0.4, 0.6, 0.8, 1].map((f) => f * depth); // five more bars back along the span
   const arrowA = P(-halfW * 0.7, h_c, depth * 0.15), arrowB = P(-halfW * 0.7, h_c, depth * 0.8);
   const ang = (Math.atan2(arrowB[1] - arrowA[1], arrowB[0] - arrowA[0]) * 180) / Math.PI;
@@ -458,7 +458,7 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
         {/* the surface trace on the cut face, and where the bars cross it */}
         {which === 'a'
           ? [-aX, aX].map((X) => <line key={X} x1={P(X, 0, 0)[0]} x2={P(X, 0, 0)[0]} y1={yBot - hpe * k} y2={yTop} stroke={col} strokeWidth={2} strokeDasharray="6 4" />)
-          : <polyline points={pts(P(-bX, hpe, 0), P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, hpe, 0))} fill="none" stroke={col} strokeWidth={2} strokeDasharray="6 4" />}
+          : <polyline points={pts(P(-bX, 0, 0), P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, 0, 0))} fill="none" stroke={col} strokeWidth={2} strokeDasharray="6 4" />}
         <text x={W - 4} y={yBot + 14} textAnchor="end" fill={C.muted} fontSize={CAD.font - 1}>{`bars @ ${fmt(which === 'b' || r.ctop === 0 ? r.sfb : Math.min(r.sft, r.sfb), 0)} mm, indicative`}</text>
         {/* longitudinal shear on the outstand, along the span */}
         <line x1={arrowA[0]} y1={arrowA[1]} x2={arrowB[0]} y2={arrowB[1]} stroke={C.blue} strokeWidth={1.6} />
@@ -505,7 +505,7 @@ export function LongSection({ r }: { r: Record<string, number> }) {
         <rect x={X(0)} y={yOf(h_c)} width={lenMm * k} height={h_c * k} fill="#F6F8F7" stroke={slabLine} strokeWidth={slabW} />
         {/* shear surface: a-a along the whole slab depth, b-b over the stud height */}
         <rect x={X(0)} y={yOf(h_c)} width={lenMm * k} height={(h_c - hpe) * k} fill={C.red} fillOpacity={0.1} />
-        {!across && <rect x={X(0)} y={yOf(hsc)} width={lenMm * k} height={(hsc - hpe) * k} fill={teal} fillOpacity={0.16} stroke={teal} strokeWidth={1} />}
+        {!across && <rect x={X(0)} y={yOf(hsc)} width={lenMm * k} height={hsc * k} fill={teal} fillOpacity={0.16} stroke={teal} strokeWidth={1} />}
         {/* deck: transverse ribs cut by the section (voids under the crests); parallel ribs show as the crest line beyond */}
         <defs><clipPath id={`${uid}k`}><rect x={X(0)} y={yOf(h_c)} width={lenMm * k} height={h_c * k + 1} /></clipPath></defs>
         {across && (

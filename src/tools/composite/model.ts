@@ -48,7 +48,7 @@ const SCALARS: Probe[] = [
   ['ya', 'y_a', 'mm'], ['kM', 'k_M', null], ['MRd', 'M_{Rd}', 'kN m'], ['MRdpl', 'M_{Rd.pl}', 'kN m'], ['comp', 'c_{comp}', null],
   // longitudinal shear in the slab (EC4 6.6.6, EC2 6.2.4)
   ['fsd', 'f_{sd}', 'MPa'], ['vf', 'v_f', 'kN/m'], ['vLEd', 'v_{L.Ed}', 'MPa'], ['asfReq', 'a_{sf.req}', 'mm^2/m'], ['asf', 'a_{sf}', 'mm^2/m'], ['vLRd', 'v_{L.Rd}', 'MPa'], ['vmax', 'v_{max}', 'MPa'], ['cta', 'c_{\\theta.a}', null], ['ctb', 'c_{\\theta.b}', null], ['vbRd', 'v_{b.Rd}', 'MPa'], ['dst', 'd_{s.t}', 'mm'], ['sft', 's_{f.t}', 'mm'], ['dsb', 'd_{s.b}', 'mm'], ['sfb', 's_{f.b}', 'mm'],
-  ['at', 'a_t', 'mm^2/m'], ['ctop', 'c_{top}', null], ['ab', 'a_b', 'mm^2/m'], ['lb', 'l_b', 'mm'], ['vbEd', 'v_{b.Ed}', 'MPa'], ['asbReq', 'a_{sf.b.req}', 'mm^2/m'], ['asb', 'a_{sf.b}', 'mm^2/m'],
+  ['at', 'a_t', 'mm^2/m'], ['ctop', 'c_{top}', null], ['ab', 'a_b', 'mm^2/m'], ['lb', 'l_b', 'mm'], ['lc', 'l_c', 'mm'], ['ccc', 'c_{cc}', null], ['vcEd', 'v_{c.Ed}', 'MPa'], ['ascReq', 'a_{sf.c.req}', 'mm^2/m'], ['vbEd', 'v_{b.Ed}', 'MPa'], ['asbReq', 'a_{sf.b.req}', 'mm^2/m'], ['asb', 'a_{sf.b}', 'mm^2/m'],
   ['dhead', 'd_{head}', 'mm'], ['hsc', 'h_{sc}', 'mm'], ['dsc', 'd_{sc}', 'mm'], ['b0', 'b_0', 'mm'],
   // profiled steel deck (all neutral for a solid slab: h_pe = 0, k_d = 1, n_re = 1)
   ['cdeck', 'c_{deck}', null], ['ctr', 'c_{tr}', null], ['hpe', 'h_{pe}', 'mm'], ['ht', 'h_t', 'mm'], ['br', 'b_r', 'mm'], ['er', 'e_r', 'mm'], ['kd', 'k_d', null], ['kt', 'k_t', null], ['kl', 'k_l', null], ['ktmax', 'k_{t.max}', null],
@@ -76,6 +76,8 @@ export const CHECKS: [string, string, string, '' | 'c' | 'n'][] = [
   ['L', 'Slab concrete strut, surface a-a', 'EN 1992-1-1 §6.2.4', 'c'],
   ['sf.b', 'Slab transverse bars, surface b-b', 'EN 1994-1-1 §6.6.6', 'c'],
   ['L.b', 'Slab concrete strut, surface b-b', 'EN 1992-1-1 §6.2.4', 'c'],
+  ['sf.c', 'Slab transverse bars, surface c-c', 'EN 1994-1-1 §6.6.6.4', 'c'],
+  ['L.c', 'Slab concrete strut, surface c-c', 'EN 1992-1-1 §6.2.4', 'c'],
   ['fn', 'Natural frequency', 'SCI P354 / project limit', 'c'],
   ['MV.nc', 'Bending with shear, bare steel', 'EN 1993-1-1 §6.2.8', 'n'],
   ['LT.nc', 'LTB, bare steel (L = stud spacing)', 'EN 1994-1-1 §6.4.1', 'n'],
@@ -132,8 +134,8 @@ export interface Design {
   /** Failed on something no stud layout changes: the other distribution need not be tried. */
   hopeless?: boolean;
 }
-const SLAB_BAR_CHECKS = ['sf', 'sf.b']; // the only checks a larger transverse bar can cure
-const SLAB_CHECKS = ['sf', 'L', 'sf.b', 'L.b']; // get worse with more studs: no reason to reject a section at its densest layout
+const SLAB_BAR_CHECKS = ['sf', 'sf.b', 'sf.c']; // the only checks a larger transverse bar can cure
+const SLAB_CHECKS = ['sf', 'L', 'sf.b', 'L.b', 'sf.c', 'L.c']; // get worse with more studs: no reason to reject a section at its densest layout
 
 /** Camber from the rules: a share of the self-weight deflection, rounded down to the increment, dropped if small. */
 export function camberFor(c: DesignCriteria['camber'], spanM: number, dgMax: number, propped: boolean): number {

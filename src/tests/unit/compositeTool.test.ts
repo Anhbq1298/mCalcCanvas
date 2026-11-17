@@ -200,7 +200,7 @@ describe('mCompositeBeamDesign headless model', () => {
     const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
     const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
     const solid = m.results();
-    expect([solid.cdeck, solid.hpe, solid.kd, solid.nre, solid.cbb]).toEqual([0, 0, 1, 1, 1]);
+    expect([solid.cdeck, solid.hpe, solid.kd, solid.nre, solid.cbb, solid.ccc, solid['UR.sf.c'], solid['UR.L.c']]).toEqual([0, 0, 1, 1, 1, 0, 0, 0]);
     expect(solid.ctop).toBe(1); // a solid slab always has top and bottom bars
     { // a deck slab has one bar layer by default (on the deck, counted as A_b); two layers on request
       const d = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
@@ -338,8 +338,9 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(cam.deflection.ur).toBeLessThanOrEqual(seg.deflection.ur);
   }, 300_000);
 
-  // Longitudinal shear on a-a and b-b, deck ribs parallel (EC4 §6.6.6.4, EC2 §6.2.4), against a hand calculation.
-  it('parallel deck: surfaces a-a and b-b match the hand calculation; the flow is capped at full connection', () => {
+  // Longitudinal shear, deck ribs parallel (EC4 §6.6.6.4 and Figure 6.16, EC2 §6.2.4), against a hand calculation:
+  // a-a through the concrete above the deck, b-b around the studs from the flange, c-c around the rib without the deck depth.
+  it('parallel deck: surfaces a-a, b-b and c-c match the hand calculation; the flow is capped at full connection', () => {
     const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
     const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
     set('c_{deck}', 1); set('c_{par}', 1);
@@ -347,14 +348,18 @@ describe('mCompositeBeamDesign headless model', () => {
     let r = m.results();
     // RF55, one layer Ø10 @ 150 on the deck, studs 19 x 100 at 125 / 200 mm, C30/37
     const PRd = Math.min((0.8 * 450 * Math.PI * 19 ** 2) / 4 / 1.25, (0.29 * 19 ** 2 * Math.sqrt(30 * 33000)) / 1.25) / 1000; // k_l = 1
-    const vf = PRd / 0.125, ht = 95, lb = 2 * (100 - 55) + 32, fsd = 500 / 1.15, nuf = 0.6 * (1 - 30 / 250) * 20, ab = (Math.PI * 100) / 4 / 0.15;
+    const vf = PRd / 0.125, ht = 95, lb = 2 * 100 + 32, lc = 2 * (100 - 55) + 168, fsd = 500 / 1.15, nuf = 0.6 * (1 - 30 / 250) * 20, ab = (Math.PI * 100) / 4 / 0.15;
     const surf = (v: number) => { const rho = (0.999 * nuf) / v, cot = Math.min(2, Math.max(1, (rho + Math.sqrt(Math.max(rho * rho - 4, 0))) / 2)); return { cot, vRd: (nuf * cot) / (1 + cot * cot) }; };
-    const va = vf / (2 * ht), a = surf(va), vb = vf / lb, b = surf(vb);
+    const va = vf / (2 * ht), a = surf(va), vb = vf / lb, b = surf(vb), vc = vf / lc, c = surf(vc);
+    expect([r.lb, r.lc, r.ccc]).toEqual([232, 258, 1]);
     expect(r.vf).toBeCloseTo(vf, 6);
     expect(r['UR.L']).toBeCloseTo(va / a.vRd, 6); // 0.814
     expect(r['UR.sf']).toBeCloseTo(((va * ht) / a.cot / fsd) * 1000 / ab, 6); // 0.717: one layer, A_b only
-    expect(r['UR.L.b']).toBeCloseTo(vb / b.vRd, 6); // 1.014
-    expect(r['UR.sf.b']).toBeCloseTo(((vb * lb) / b.cot / fsd) * 1000 / (2 * ab), 6); // 1.435: the layer crossed twice
+    expect(r['UR.L.b']).toBeCloseTo(vb / b.vRd, 6); // 0.667
+    expect(r['UR.sf.b']).toBeCloseTo(((vb * lb) / b.cot / fsd) * 1000 / (2 * ab), 6); // 0.717: the layer crossed twice
+    expect(r['UR.L.c']).toBeCloseTo(vc / c.vRd, 6); // 0.599
+    expect(r['UR.sf.c']).toBeCloseTo(((vc * lc) / c.cot / fsd) * 1000 / (2 * ab), 6); // 0.717
+    expect(r['UR.des']).toBeLessThan(1); // passes with one layer Ø10 @ 150
     // studs beyond full connection add no shear: the flow stops at N_c,f over the shorter shear span
     set('s_{sc.A}', 95); set('s_{sc.B}', 95);
     r = m.results();

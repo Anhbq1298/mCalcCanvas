@@ -546,7 +546,7 @@ export function App() {
                 {res.cbb >= 1 ? (
                   <figure>
                     <ShearSurface3D r={res} which="b" />
-                    <figcaption><b className="c-b">b-b</b>: around the studs, l<sub>b</sub> = 2{deck ? <>(h<sub>sc</sub> − h<sub>p</sub>)</> : <>h<sub>sc</sub></>} + d<sub>head</sub> + b<sub>0</sub> = {fmt(res.lb, 0)} mm; the whole v<sub>f</sub>; crossed by the bottom bars twice, 2A<sub>b</sub> = {fmt(res.asb, 0)} mm²/m; v<sub>Ed</sub> = {fmt(res.vbEd, 2)} MPa.</figcaption>
+                    <figcaption><b className="c-b">b-b</b>: around the studs, l<sub>b</sub> = 2h<sub>sc</sub> + d<sub>head</sub> + b<sub>0</sub> = {fmt(res.lb, 0)} mm{res.ccc >= 1 ? ', down to the flange inside the rib (Figure 6.16)' : ''}; the whole v<sub>f</sub>; crossed by the bottom bars twice, 2A<sub>b</sub> = {fmt(res.asb, 0)} mm²/m; v<sub>Ed</sub> = {fmt(res.vbEd, 2)} MPa.</figcaption>
                   </figure>
                 ) : (
                   <figure>
@@ -699,7 +699,7 @@ export function App() {
                 <tr><td>Strut UR v<sub>Ed</sub>/v<sub>Rd</sub></td><td className={tone(res['UR.L'])}>{fmt(res['UR.L'], 3)}</td><td className={tone(res['UR.L.b'])}>{fmt(res['UR.L.b'], 3)}</td><td></td></tr>
               </tbody>
             </table>
-            <p className="hint">Bars: top A<sub>t</sub> Ø{fmt(res.dst, 0)} at {fmt(res.sft, 0)} = {fmt(res.at, 0)} mm²/m, bottom A<sub>b</sub> Ø{fmt(res.dsb, 0)} at {fmt(res.sfb, 0)} = {fmt(res.ab, 0)} mm²/m, anchored past each surface (EC2 §8.4). {res.cbb < 1 && <> b-b is not required with transverse ribs (§6.6.6.4(2)); its URs are shown as 0.</>}{deck && res.ape > 0 && <> Required a<sub>sf</sub> on a-a is net of the deck, A<sub>pe</sub> f<sub>yp,d</sub> (6.25).</>} Not checked: c-c/d-d, splitting at edge beams (§6.6.5.3), minimum reinforcement.</p>
+            <p className="hint">Bars: top A<sub>t</sub> Ø{fmt(res.dst, 0)} at {fmt(res.sft, 0)} = {fmt(res.at, 0)} mm²/m, bottom A<sub>b</sub> Ø{fmt(res.dsb, 0)} at {fmt(res.sfb, 0)} = {fmt(res.ab, 0)} mm²/m, anchored past each surface (EC2 §8.4). {res.cbb < 1 && <> b-b is not required with transverse ribs (§6.6.6.4(2)); its URs are shown as 0.</>}{deck && res.ape > 0 && <> Required a<sub>sf</sub> on a-a is net of the deck, A<sub>pe</sub> f<sub>yp,d</sub> (6.25).</>} {res.ccc >= 1 && <> Ribs parallel: a third surface c-c runs around the rib from the deck crest, l<sub>c</sub> = 2(h<sub>sc</sub> − h<sub>p</sub>) + b<sub>r</sub> = {fmt(res.lc, 0)} mm (deck depth not counted, §6.6.6.4(3)), v<sub>Ed</sub> = {fmt(res.vcEd, 2)} MPa, crossed by 2A<sub>b</sub>; its two URs are in the check table.</>} Not checked: d-d and haunches, splitting at edge beams (§6.6.5.3), minimum reinforcement.</p>
           </section>
 
         </div>
