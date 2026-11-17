@@ -478,7 +478,15 @@ export function App() {
                     </label>
                   );
                 })}
-                {tapered && <div className="wide taper-summary"><span className="hint">h<sub>A</sub> {fmt(res.hA, 0)} to h<sub>B</sub> {fmt(res.hB, 0)} mm</span><InputHelp title="Tapered beam"><p className="hint wide" data-testid="taper-note">h<sub>A</sub> = {fmt(res.hA, 1)} → h<sub>B</sub> = {fmt(res.hB, 1)} mm, flanges and web thickness of {section?.name ?? 'the section'}. {res.taper ? <>Checked at the critical sections: x<sub>M</sub> = {fmt(res.xM, 2)} m (h = {fmt(res.hA + ((res.hB - res.hA) * res.xM) / res.L, 1)} mm), both supports, LTB of the tapered beam (EN 1993-1-1 §6.3.4, α<sub>cr</sub> = {fmt(res['acr.LT'], 2)} by finite elements), the web under each point load at its depth, the worst depth for bending with shear, the span for deflection. Governing: <Rich text={governing[1]} />, {where(gov.key) || 'see the table'}.</> : 'Same depth at both ends: uniform section.'}</p></InputHelp></div>}
+                {tapered && (
+                  <label className="f wide"><span>Fabrication <em className="input-description">LTB curve, EN 1993-1-1 Table 6.4</em></span>
+                    <select data-testid="taper-fab" value={value(byName('c_{weld}')) >= 1 ? 'w' : 'r'} onChange={(e) => setInput(byName('c_{weld}'), e.target.value === 'w' ? 1 : 0)}>
+                      <option value="w">Welded (plates, or cut and re-welded web): curve c / d</option>
+                      <option value="r">Rolled curves a / b (justify)</option>
+                    </select>
+                  </label>
+                )}
+                {tapered && <div className="wide taper-summary"><span className="hint">h<sub>A</sub> {fmt(res.hA, 0)} to h<sub>B</sub> {fmt(res.hB, 0)} mm</span><InputHelp title="Tapered beam"><p className="hint wide" data-testid="taper-note">h<sub>A</sub> = {fmt(res.hA, 1)} → h<sub>B</sub> = {fmt(res.hB, 1)} mm, flanges and web thickness of {section?.name ?? 'the section'}. {res.taper ? <>Checked at the critical sections: x<sub>M</sub> = {fmt(res.xM, 2)} m (h = {fmt(res.hA + ((res.hB - res.hA) * res.xM) / res.L, 1)} mm), both supports, LTB of the tapered beam (EN 1993-1-1 §6.3.4, α<sub>cr</sub> = {fmt(res['acr.LT'], 2)} by finite elements, ?? = {fmt(res['lam.LT'], 2)}, ?<sub>LT</sub> = {fmt(res['alpha.LT'], 2)}), the web under each point load at its depth, the worst depth for bending with shear, the span for deflection. Governing: <Rich text={governing[1]} />, {where(gov.key) || 'see the table'}.</> : 'Same depth at both ends: uniform section.'}</p></InputHelp></div>}
               </div>
             </section>
             {groups.map(([g, fields], gi) => (
@@ -534,7 +542,7 @@ export function App() {
 
                   </>
                 ) : (
-                  <div className="fields">{fields.filter((f) => f.name !== 'h_c' && !(res.ctop === 0 && ['d_{s.t}', 's_{f.t}'].includes(f.name))).map(renderField)}</div>
+                  <div className="fields">{fields.filter((f) => f.name !== 'h_c' && f.name !== 'c_{zg}' && !(res.ctop === 0 && ['d_{s.t}', 's_{f.t}'].includes(f.name))).map(renderField)}</div>
                 )}
               </section>
             ))}
@@ -841,6 +849,19 @@ export function App() {
           <p className="hint">Area and point loads act on the beam and update the diagrams and checks as you change them. Other inputs are in the panel on the left.</p>
           {loadTable(areaT, 0)}
           {loadTable(pointT, 1)}
+          <section aria-labelledby="h-zg">
+            <h2 id="h-zg">Load position (lateral-torsional buckling)</h2>
+            <div className="fields">
+              <label className="f wide"><span>All loads act at <em>z<sub>g</sub> above the shear centre; used for M<sub>cr</sub> by finite elements</em></span>
+                <select data-testid="load-zg" value={String(Math.round(value(byName('c_{zg}'))))} onChange={(e) => setInput(byName('c_{zg}'), Number(e.target.value))}>
+                  <option value="1">Top flange, +h/2 above the shear centre (destabilising)</option>
+                  <option value="0">Shear centre</option>
+                  <option value="-1">Bottom flange, h/2 below the shear centre (stabilising)</option>
+                </select>
+              </label>
+            </div>
+            <p className="hint">Construction stage: M<sub>cr</sub> = {fmt(res['Mcr.LT'], 1)} kNm (α<sub>cr</sub> {fmt(res['acr.LT'], 2)}){Number.isFinite(res['Mcr.LT.nc']) ? <>; bare steel, unrestrained: M<sub>cr</sub> = {fmt(res['Mcr.LT.nc'], 1)} kNm</> : null}.</p>
+          </section>
           <div className="opt-actions">
             <button type="button" className="btn primary" onClick={() => loadRef.current?.close()}>Done</button>
           </div>

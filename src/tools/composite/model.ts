@@ -5,7 +5,7 @@
  * No formula is duplicated here.
  */
 import { sections } from '../../engineering/steel/sections';
-import { chiLT, ltbCriticalFactor } from './ltb';
+import { chiLT, ltbCriticalFactor, solveBeam, type DistLoad } from '../../engineering/fem';
 import { CalculationEngine } from '../../engine';
 import { calcKey } from '../../canvas/calcOrder';
 import { inputTableColumns, inputTableRegionId } from '../../canvas/inputTable';
@@ -57,9 +57,9 @@ const SCALARS: Probe[] = [
   // deflection
   ['dmax', '\\delta_{max}', 'mm'], ['wc', 'w_c', 'mm'], ['ccam', 'c_{cam}', null], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['f1', 'f_1', 'Hz'], ['f1nc', 'f_{1.nc}', 'Hz'], ['flim', 'f_{lim}', 'Hz'], ['Ecdyn', 'E_{c.dyn}', 'GPa'], ['ddyn', '\\delta_{dyn}', 'mm'], ['ddynnc', '\\delta_{dyn.nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
   // tapered beam
-  ['ctap', 'c_{tap}', null], ['hA', 'h_A', 'mm'], ['hB', 'h_B', 'mm'],
+  ['McrSN', 'M_{cr.SN}', 'kN m'], ['McrSheet', 'M_{cr}', 'kN m'], ['McrncSN', 'M_{cr.nc.SN}', 'kN m'], ['ctap', 'c_{tap}', null], ['hA', 'h_A', 'mm'], ['hB', 'h_B', 'mm'],
+  ['Ea', 'E_a', 'MPa'], ['Ga', 'G_a', 'MPa'], ['gM1', '\\gamma_{M1}', null], ['aLT', '\\alpha_{LT}', null], ['cweld', 'c_{weld}', null], ['czg', 'c_{zg}', null],
   ['cFP', 'c_{F.P}', null], ['FRda', 'F_{Rd.a}', 'kN'], ['MelRd', 'M_{el.Rd}', 'kN m'],
-  ['Ea', 'E_a', 'MPa'], ['Ga', 'G_a', 'MPa'], ['gM1', '\\gamma_{M1}', null], ['aLT', '\\alpha_{LT}', null],
 ];
 /** Utilisations the summary uses but the check table does not list (bare-steel bending and shear at x_M). */
 const EXTRA_UR = ['M.nc', 'V.nc'];
@@ -82,53 +82,87 @@ const UR_COMPOSITE = ['M.2', 'M.x', 'MV', 'V.2', 'F.P', 'F.S', 'FM', 'd.x', 'd.q
 const UR_BARE = ['M.nc', 'MV.nc', 'V.nc', 'LT.nc', 'F.P', 'F.S', 'FM.nc', 'd.nc', 'd.q.nc', 'fn.nc'];
 
 /**
- * Lateral-torsional buckling of the tapered steel beam alone, by the general method of EN 1993-1-1 §6.3.4:
- * α_cr from finite elements over the varying section (ltb.ts), α_ult,k = min_x W_pl(x) f_y / M_Ed(x),
- * λ̄ = √(α_ult,k / α_cr), χ_LT by (6.56) with the sheet's α_LT, UR = γ_M1 / (χ_LT α_ult,k).
- * Construction (LT): the construction load w_1,Ed on each span between supports or props (L_1), on the
- * top flange (z_g = h(x)/2), as the sheet; not used when the deck restrains the flange (L_LT < L_1).
- * Bare steel (LT.nc): only when unrestrained over the span (L_LT,nc = L), the design moment diagram
- * M_v at the shear centre, as the sheet. Otherwise the worst-depth value stays.
+ * Lateral-torsional buckling of the steel beam alone by finite elements (src/engineering/fem), for uniform and
+ * tapered beams alike, simply supported with fork supports:
+ * - internal forces by the in-plane beam FE (beam.ts), the LTB eigenvalue α_cr with the real moment diagram and
+ *   the load height (ltb.ts); M_cr = α_cr M_Ed,max is used directly (no C1 / C2);
+ * - EN 1993-1-1 §6.3.2.2 / §6.3.4: α_ult,k = min_x W_pl(x) f_y / M_Ed(x), λ̄ = √(α_ult,k / α_cr), χ_LT (6.56),
+ *   UR = γ_M1 / (χ_LT α_ult,k). For a uniform beam this is §6.3.2 with M_cr from the FE (λ̄ = √(W_pl f_y / M_cr)).
+ *   Curve (Table 6.4) by h/b at the critical section: rolled I a / b; a tapered beam welded (c_weld = 1) c / d.
+ * - Construction (LT): w_1,Ed on each span between supports or props (L_1, fork at the props), as the sheet; not
+ *   used when the deck restrains the flange (L_LT < L_1, the sheet's value stays).
+ * - Bare steel (LT.nc): the ULS design loads (self-weight and the load tables) on the whole span, only when the
+ *   flange is unrestrained (L_LT,nc = L); with the studs restraining it the sheet's value stays.
+ * - Load position c_zg: 1 top flange (z_g = h(x)/2), 0 shear centre, −1 bottom flange, for every load.
  */
-function taperLtb(rM: Results, rA: Results, hAtM: (x: number) => number): { LT?: { ur: number; x: number; acr: number }; nc?: { ur: number; x: number; acr: number } } {
+type LtbOut = { ur: number; x: number; acr: number; aul: number; lam: number; chi: number; alpha: number; Mcr: number };
+/** ULS loads of the composite stage on the steel beam, N/mm, N and mm: self-weight γ_G,sw g_0 and the load tables. */
+export interface FeLoads { dist: DistLoad[]; point: { x: number; P: number }[] }
+function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: FeLoads | null): { LT?: LtbOut; nc?: LtbOut } {
   const hAt = (xmm: number) => hAtM(xmm / 1000); // depth at x in mm
-  const hA = rA.hA, tf = rA.t_f, tw = rA.t_w, b = rA.b_a, r = rA.r, fy = rA.f_y, E = rA.Ea, G = rA.Ga;
-  if (![hA, tf, tw, b, r, fy, E, G, rA.I_z, rA.I_t, rA.I_w, rA.W_pl].every(Number.isFinite)) return {};
+  const hR = rRef.h_a, tf = rRef.t_f, tw = rRef.t_w, b = rRef.b_a, r = rRef.r, fy = rRef.f_y, E = rRef.Ea, G = rRef.Ga;
+  if (![hR, tf, tw, b, r, fy, E, G, rRef.I_z, rRef.I_t, rRef.I_w, rRef.W_pl].every(Number.isFinite)) return {};
   const Af = (1 - Math.PI / 4) * r * r;
   const Wnom = (h: number) => b * tf * (h - tf) + (tw * (h - 2 * tf) ** 2) / 4 + 4 * Af * (h / 2 - tf - 0.2234 * r);
-  // properties at depth h from the run at h_A, the sheet's own rules (section 1.4), mm
-  const Iz = (h: number) => rA.I_z * 1e4 + (tw ** 3 * (h - hA)) / 12;
-  const It = (h: number) => rA.I_t * 1e4 + (tw ** 3 * (h - hA)) / 3;
-  const Iw = (h: number) => rA.I_w * 1e6 * ((h - tf) / (hA - tf)) ** 2;
-  const Wpl = (h: number) => rA.W_pl * 1e3 + Wnom(h) - Wnom(hA);
+  // properties at depth h from the run at h_ref, the sheet's own rules (section 1.4), mm
+  const Iz = (h: number) => rRef.I_z * 1e4 + (tw ** 3 * (h - hR)) / 12;
+  const It = (h: number) => rRef.I_t * 1e4 + (tw ** 3 * (h - hR)) / 3;
+  const Iw = (h: number) => rRef.I_w * 1e6 * ((h - tf) / (hR - tf)) ** 2;
+  const Wpl = (h: number) => rRef.W_pl * 1e3 + Wnom(h) - Wnom(hR);
   const props = (x: number) => { const h = hAt(x); return { EIz: E * Iz(h), GIt: G * It(h), EIw: E * Iw(h) }; };
-  const gM1 = Number.isFinite(rM.gM1) ? rM.gM1 : 1, alpha = Number.isFinite(rM.aLT) ? rM.aLT : 0.34;
+  const gM1 = Number.isFinite(rM.gM1) ? rM.gM1 : 1;
+  const welded = rM.ctap >= 1 && !(rM.cweld < 1); // as the sheet's α_LT
+  const alphaAt = (h: number) => (welded ? (h / b <= 2 ? 0.49 : 0.76) : h / b <= 2 ? 0.21 : 0.34);
+  const zf = Number.isFinite(rM.czg) ? Math.max(-1, Math.min(1, rM.czg)) : 1; // load height, fraction of h/2
   const L = rM.L * 1000;
-  // one buckling segment [x0, x0 + l] (mm), moment M(x) (N mm), load height term qzg (N)
-  const segment = (x0: number, l: number, M: (x: number) => number, qzg?: (x: number) => number) => {
-    const acr = ltbCriticalFactor({ L: l, props: (x) => props(x0 + x), M, qzg });
-    let au = Infinity, xu = x0 + l / 2;
-    for (let i = 0; i <= 100; i++) { const x = (l * i) / 100, m = Math.abs(M(x)); if (m > 1e-9) { const a = (Wpl(hAt(x0 + x)) * fy) / m; if (a < au) { au = a; xu = x0 + x; } } }
+  // one simply supported, fork-ended span [x0, x0 + l] (mm) under its loads: FE internal forces, then the eigenvalue
+  const segment = (x0: number, l: number, sl: FeLoads) => {
+    const beam = solveBeam({ L: l, EI: () => E * rRef.I_a * 1e4, supports: [{ x: 0, w: true }, { x: l, w: true }], loads: sl });
+    const qAt = (x: number) => sl.dist.reduce((s, d) => s + (x >= d.x1 - 1e-9 && x <= d.x2 + 1e-9 ? d.q1 : 0), 0);
+    const acr = ltbCriticalFactor({
+      L: l, props: (x) => props(x0 + x), M: beam.M,
+      qzg: (x) => (qAt(x) * zf * hAt(x0 + x)) / 2,
+      pointLoads: sl.point.map((p) => ({ x: p.x, Pzg: (p.P * zf * hAt(x0 + p.x)) / 2 })),
+    });
+    let au = Infinity, xu = x0 + l / 2, Mmax = 0;
+    for (let i = 0; i <= 200; i++) {
+      const x = (l * i) / 200, m = Math.abs(beam.M(x));
+      Mmax = Math.max(Mmax, m);
+      if (m > 1e-9) { const a = (Wpl(hAt(x0 + x)) * fy) / m; if (a < au) { au = a; xu = x0 + x; } }
+    }
     if (!Number.isFinite(au) || !(acr > 0)) return null;
-    const chi = chiLT(Math.sqrt(au / acr), alpha);
-    return { ur: gM1 / (chi * au), x: xu / 1000, acr };
+    const alpha = alphaAt(hAt(xu)), lam = Math.sqrt(au / acr), chi = chiLT(lam, alpha);
+    return { ur: gM1 / (chi * au), x: xu / 1000, acr, aul: au, lam, chi, alpha, Mcr: (acr * Mmax) / 1e6 };
   };
-  const out: ReturnType<typeof taperLtb> = {};
+  const out: ReturnType<typeof feLtb> = {};
   const L1 = rM.L1 * 1000, w1 = rM.w1; // kN/m = N/mm
   if (Number.isFinite(L1) && L1 > 0 && Number.isFinite(w1) && !(rM.LLT * 1000 < L1 - 1)) {
     const n = Math.max(1, Math.round(L / L1)), l = L / n;
     for (let k = 0; k < n; k++) {
-      const s = segment(k * l, l, (x) => (w1 * x * (l - x)) / 2, (x) => (w1 * hAt(k * l + x)) / 2);
+      const s = segment(k * l, l, { dist: [{ x1: 0, x2: l, q1: w1 }], point: [] });
       if (s && (!out.LT || s.ur > out.LT.ur)) out.LT = s;
     }
   }
-  const xs = rM.vectors.x ?? [], Ms = rM.vectors.M ?? [];
-  if (rM.LLTnc >= L - 1 && xs.length > 2) {
-    const M = (x: number) => interp(xs, Ms, x / 1000) * 1e6;
-    const s = segment(0, L, M);
+  if (loads && rM.LLTnc >= L - 1) {
+    const s = segment(0, L, loads);
     if (s) out.nc = s;
   }
   return out;
+}
+
+/** Write the finite-element LTB into a result: UR, location, α_cr, M_cr; then the design summary again. */
+function applyFeLtb(out: Results, lt: ReturnType<typeof feLtb>, at: (k: string, x: number) => void): void {
+  for (const [k, v] of [['LT', lt.LT], ['LT.nc', lt.nc]] as const) {
+    if (!v) continue;
+    out[`UR.${k}`] = v.ur; at(k, v.x);
+    out[`acr.${k}`] = v.acr; out[`aul.${k}`] = v.aul; out[`lam.${k}`] = v.lam; out[`chi.${k}`] = v.chi; out[`alpha.${k}`] = v.alpha; out[`Mcr.${k}`] = v.Mcr;
+  }
+}
+
+/** Permanent-stage summary, as the sheet: the composite or the bare-steel set. */
+function urDes(r: Results): number {
+  const max = (keys: string[]) => Math.max(...keys.map((k) => r[`UR.${k}`]).filter(Number.isFinite));
+  return r.comp >= 1 ? max(UR_COMPOSITE) : max(UR_BARE);
 }
 
 /** Linear interpolation of y over x (x ascending, clamped at the ends). */
@@ -145,7 +179,7 @@ function interp(xs: number[], ys: number[], x: number): number {
  * section values of x_M, the checks combined as above, plus at.<check> = x (m) of the governing section
  * (NaN for span-wide checks and the worst-depth checks) and hat.<check> = the depth used (mm; NaN span-wide).
  */
-export function combineTaper(rM: Results, rA: Results, rB: Results, rP: Results[] = []): Results {
+export function combineTaper(rM: Results, rA: Results, rB: Results, rP: Results[] = [], loads: FeLoads | null = null): Results {
   const L = rM.L, hA = rM.hA, hB = rM.hB, xM = rM.xM;
   const hAt = (x: number) => hA + ((hB - hA) * x) / L;
   const out = { ...rM, vectors: { ...rM.vectors }, errors: [rM, rA, rB, ...rP].flatMap((r) => r.errors) } as Results;
@@ -167,9 +201,8 @@ export function combineTaper(rM: Results, rA: Results, rB: Results, rP: Results[
     at(k, NaN, hAt(c[0][1])); // the worst of the depths, not one location
   }
   // LTB over the real (varying) section: EN 1993-1-1 §6.3.4 with α_cr from finite elements (ltb.ts)
-  const lt = taperLtb(rM, rA, hAt);
-  if (lt.LT) { out['UR.LT'] = lt.LT.ur; at('LT', lt.LT.x); out['acr.LT'] = lt.LT.acr; }
-  if (lt.nc) { out['UR.LT.nc'] = lt.nc.ur; at('LT.nc', lt.nc.x); out['acr.LT.nc'] = lt.nc.acr; }
+  out.taper = 1;
+  applyFeLtb(out, feLtb(out, rA, hAt, loads), at);
   // the three runs as nodes over depth, for values at the local depth h(x)
   const nodes = [[hA, rA], [hAt(xM), rM], [hB, rB], ...rP.map((r) => [r.h_a, r])] as [number, Results][];
   nodes.sort((p, q) => p[0] - q[0]);
@@ -225,8 +258,7 @@ export function combineTaper(rM: Results, rA: Results, rB: Results, rP: Results[
   out.f1nc = rM.f1nc * (out['UR.fn.nc'] > 0 ? rM['UR.fn.nc'] / out['UR.fn.nc'] : 1);
   // composite action needs M_Ed ≤ M_Rd,x everywhere, as in the sheet
   out.comp = rM.comp >= 1 && out['UR.M.x'] <= 1 ? 1 : 0;
-  const max = (keys: string[]) => Math.max(...keys.map((k) => out[`UR.${k}`]).filter(Number.isFinite));
-  out['UR.des'] = out.comp >= 1 ? max(UR_COMPOSITE) : max(UR_BARE);
+  out['UR.des'] = urDes(out);
   out.taper = 1;
   return out;
 }
@@ -709,7 +741,15 @@ export class CompositeModel {
    */
   results(): Results {
     const r = this.run();
-    if (!(r.ctap >= 1) || !(Math.abs(r.hA - r.hB) > 0.5)) return r;
+    const loads = this.feLoads(r);
+    if (!(r.ctap >= 1) || !(Math.abs(r.hA - r.hB) > 0.5)) {
+      // uniform beam: LTB by finite elements too (M_cr directly), then the summary again
+      const lt = feLtb(r, r, () => r.h_a, loads);
+      applyFeLtb(r, lt, (k, x) => { r[`at.${k}`] = x; r[`hat.${k}`] = r.h_a; });
+      if (lt.nc) r['UR.des'] = urDes(r);
+      this.lastLtb = r;
+      return r;
+    }
     const use = this.inputs.find((f) => f.name === 'd_{use}');
     if (!use) return r;
     const at = (h: number) => { this.e.setDefinitionOverride(use.id, { value: h, unit: null } as never); return this.run(); };
@@ -727,7 +767,34 @@ export class CompositeModel {
       rP.push(at(h));
     }
     this.e.setDefinitionOverride(use.id, { value: 0, unit: null } as never);
-    return combineTaper(rM, rA, rB, rP);
+    this.lastLtb = null; // the report runs the sheet at one depth: its LTB is the sheet's own
+    return combineTaper(rM, rA, rB, rP, loads);
+  }
+
+  /** Last uniform-beam result with finite-element LTB, written into the report (M_cr.FE). */
+  private lastLtb: Results | null = null;
+
+  /**
+   * ULS loads of the composite stage on the steel beam alone for the in-plane FE, N/mm, N, mm: γ_G,sw g_0 over the
+   * span and the rows of the load tables (p_k s_b γ_F over x_1…x_2; F_k γ_F at a).
+   */
+  feLoads(r: Results): FeLoads | null {
+    const L = r.L * 1000, sbField = this.inputs.find((f) => f.name === 's_b');
+    if (!(L > 0) || !sbField || !Number.isFinite(r.g0)) return null;
+    const sb = this.inputValue(sbField.id);
+    const dist: DistLoad[] = [{ x1: 0, x2: L, q1: r.g0 * (Number.isFinite(r.gsw) ? r.gsw : 1.35) }];
+    const point: { x: number; P: number }[] = [];
+    const num = (v: string | undefined) => { const n = Number(v); return Number.isFinite(n) ? n : NaN; };
+    const [area, pt] = this.tables;
+    for (const row of area?.rows ?? []) {
+      const x1 = num(row[1]) * 1000, x2 = num(row[2]) * 1000, p = num(row[3]), g = num(row[4]);
+      if ([x1, x2, p, g].every(Number.isFinite) && x2 > x1 && p !== 0) dist.push({ x1: Math.max(0, x1), x2: Math.min(L, x2), q1: p * sb * g });
+    }
+    for (const row of pt?.rows ?? []) {
+      const a = num(row[1]) * 1000, F = num(row[2]), g = num(row[3]);
+      if ([a, F, g].every(Number.isFinite) && a >= 0 && a <= L && F !== 0) point.push({ x: a, P: F * g * 1000 });
+    }
+    return { dist, point };
   }
 
   private run(): Results {
@@ -754,7 +821,11 @@ export class CompositeModel {
 
   /** The worksheet with the current inputs written in: a complete .mCCV document for the report. */
   reportDocument(): Record<string, unknown> {
+    // uniform beam: the finite-element M_cr the page used, written into the sheet (0 = its SN003b value)
+    const fe = this.lastLtb, feCr: [string, number][] = [['M_{cr.FE}', fe?.['Mcr.LT'] ?? NaN], ['M_{cr.nc.FE}', fe?.['Mcr.LT.nc'] ?? NaN]];
     const shapes = this.doc.shapes.map((s) => {
+      const fcr = s.type === 'math' ? feCr.find(([n]) => (s as MathShape).props.latex.startsWith(`${n}\\coloneq`)) : undefined;
+      if (fcr && Number.isFinite(fcr[1])) return { ...s, props: { ...(s as MathShape).props, latex: `${fcr[0]}\\coloneq ${fcr[1].toFixed(3)}\\,\\mathrm{kN}\\cdot\\mathrm{m}` } };
       if (s.id === this.sectionRegion) return { ...s, props: { ...(s as MathShape).props, latex: `\\mathrm{Section}\\coloneq${this.sectionId}` } };
       const v = this.values.get(s.id);
       if (v) {

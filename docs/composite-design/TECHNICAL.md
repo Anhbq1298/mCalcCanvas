@@ -286,7 +286,7 @@ at h(x_M), h_A and h_B and combines (`combineTaper`, model.ts):
 | M.1, M.2, M.nc, slab surfaces, η, PNA | at x_M, depth h(x_M) |
 | V.1, V.2, V.nc, F.S | each support at its depth, scaled by its reaction / the larger reaction |
 | M.x | M_Ed(x) against M_Rd,x interpolated to the local depth h(x) |
-| LT; LT.nc when unrestrained over the span | EN 1993-1-1 §6.3.4: α_cr of the tapered beam by finite elements, α_ult,k = min W_pl(x) f_y / M_Ed(x), χ_LT (6.56), UR = γ_M1 / (χ α_ult,k) |
+| LT; LT.nc when unrestrained over the span | EN 1993-1-1 §6.3.4: α_cr of the tapered beam by finite elements, α_ult,k = min W_pl(x) f_y / M_Ed(x), χ_LT (6.56), UR = γ_M1 / (χ α_ult,k); curve by Table 6.4 at the critical section: welded I c / d (c_weld = 1, default) or rolled a / b |
 | F.P, FM, FM.nc | under each point load at its depth h(a_i): an extra sheet run at each distinct load position; F_loc and M_P from the run at x_M (EN 1993-1-5 (6.14), (7.2)) |
 | MV, MV.nc; LT with deck restraint, LT.nc restrained at the studs | worst of the three depths (conservative) |
 | d.1, d.x, d.q, d.nc, d.q.nc | ∫ w(x) UR(h(x)) dx / ∫ w dx, w = x(L − x)·min(x, L − x) (M·m of a UDL at mid-span; δ ∝ 1/I) |
@@ -300,15 +300,40 @@ q z_g φ² (construction load on the top flange, z_g = h(x)/2), smallest positiv
 (Cholesky + Jacobi), and point loads with their own load-height term F z_g φ(a)². Taper-slope terms neglected (mild tapers,
 as LTBeamN): ignoring the flange inclination overestimates M_cr for steep or doubly-tapered webs (Kucukler & Gardner 2019,
 Andrade & Camotim 2005); the page default slope is 0.57° per flange. SN003b Tables 3.1, 3.2: C1 for all ψ and the four
-transverse cases, C2 on the top flange (VALIDATION.md). Verified (ltb.test.ts):
+transverse cases, C2 on the top flange (VALIDATION.md). Verified (src/tests/unit/fem/ltb.test.ts):
 constant moment = exact closed form (1e-4); UDL at the shear centre C₁ = 1.13; top-flange UDL within 3 %
 of SN003b (C₁ 1.127, C₂ 0.454); a mid-span restraint = the half-span closed form; the 300 → 403 mm taper
 = an independent Rayleigh–Ritz sine series to 0.5 %; the published taper effect of Raftoyiannis & Adamakos (2010)
 (IPE 300, taper 1 → 3, end moments: 3.9 % vs 4 % at ψ = 1, 12.7 % vs 12 % at ψ = −0.5, VALIDATION.md); a near-uniform taper reproduces the sheet's UR_LT to
-1 % (compositeTool.test.ts). Page default: UR_LT = 0.848 at x = 2.34 m (worst-depth bound was 0.912).
+1 % (compositeTool.test.ts). Page default: UR_LT = 1.028 at x = 2.34 m with the welded curve d (0.848 with
+rolled curve b). A tapered beam is fabricated (plates, or a rolled section cut and re-welded), so §6.3.2.2 with
+the welded curves of Table 6.4 is the default; §6.3.2.3 (β = 0.75, f) is not used for a non-uniform member as it
+depends on the National Annex and on k_c of uniform beams.
 Web under point loads (F.P, FM): at the depth of each load; unit test against an independent EN 1993-1-5 §6
 F_Rd,a (page default: h(1 m) = 319.8 mm, F_Rd,a = 429.5 kN, UR_F.P = 0.189; the worst depth gave h_B).
 
 **Page default case** (`PAGE_DEFAULTS`, model.ts; the worksheet template keeps the SCI reference example):
 UB 406x140x46 tapered to 300 mm at A, L = 5.2 m, beams at 2 m, 200 mm solid slab, SDL 3 kPa, LL 1.5 kPa,
-SDL point load 60 kN at 1 m from A. UR.des = 0.717 (slab bars b-b); governing 0.848 (LTB in construction, unpropped, §6.3.4).
+SDL point load 60 kN at 1 m from A. UR.des = 0.717 (slab bars b-b); governing 1.028 (LTB in construction, unpropped, §6.3.4, welded curve d): needs a prop or flange restraint.
+
+## Finite elements for LTB, uniform and tapered (src/engineering/fem)
+
+- `beam.ts`: in-plane Euler–Bernoulli FE for the internal forces: EI(x), supports by DOF (fixed or spring), piecewise
+  linear distributed loads, point loads, point moments; M(x), V(x), deflection, reactions. Tests
+  (`src/tests/unit/fem/beam.test.ts`): simply supported, cantilever, fixed–fixed, propped, two-span continuous, partial
+  and triangular loads, end moment, tapered EI (determinate and indeterminate), elastic support, mechanism.
+- `ltb.ts`: LTB eigenvalue (Vlasov, DOF v, v′, φ, φ′), supports by DOF (fork, k = 0.5, k_w = 0.5, interior), load
+  height for distributed and point loads, buckled shape. Tests (`src/tests/unit/fem/ltb.test.ts`): closed forms
+  (uniform moment, k = k_w = 0.5, half span), mesh convergence, mode shape, mechanism, an independent Rayleigh–Ritz
+  solution (`ritz.ts`) for every SN003b case, taper.
+- **SN003b C1 / C2 cases** (k = 1, fork; FE = Ritz to 0.5 % in all): Table 3.1 end moments ψ = 1 … −1: FE C1 =
+  1.00, 1.14, 1.32, 1.55, 1.84, 2.20, 2.58, 2.84, 2.73 — SN003b within 3 % for ψ ≥ 0.25 and conservative by up to
+  12 % for ψ ≤ 0 (a rounded fit). Table 3.2: UDL (simple, fixed ends) within 1.5 % at the shear centre, top and bottom
+  flange; point load at mid-span (simple) 1 % at the shear centre, SN003b 5–6 % low on the top flange and 5 % high on
+  the bottom flange; fixed ends 3 % / 14 % / 10 %. The three-factor formula is the approximation, not the FE.
+- **Design page**: every beam (uniform or tapered) is simply supported with fork supports. Internal forces by `beam.ts`
+  (construction: w₁,Ed per span between props; bare steel: γ g₀ + the load tables), M_cr = α_cr M_Ed,max by `ltb.ts`
+  used directly (no C1 / C2). UR = γ_M1 / (χ_LT α_ult,k), α_ult,k = min W_pl(x) f_y / M_Ed(x): for a uniform beam this
+  is §6.3.2 with λ̄ = √(W_pl f_y / M_cr). Deck-restrained construction (L_LT = e_r) and stud-restrained bare steel keep
+  the sheet's value. Load position (Modify load): top flange (default), shear centre, bottom flange (worksheet c_zg).
+- The report: the sheet's M_cr = M_cr.FE when the page writes it (uniform beams), else the SN003b value (M_cr.SN).
