@@ -63,6 +63,17 @@ describe('lateral-torsional buckling, varying section (finite elements)', () => 
     expect(fe).toBeLessThan(at(hB));
   });
 
+  it('point load at mid-span on the top flange: matches a Rayleigh–Ritz solution; SN003b (C1 1.348, C2 0.630) is a few % low', () => {
+    const P = 1, zg = 201.6, L3 = 3000, M = (x: number) => (P / 2) * Math.min(x, L3 - x);
+    const fe = (ltbCriticalFactor({ L: L3, props: uniform, M, pointLoads: [{ x: L3 / 2, Pzg: P * zg }] }) * P * L3) / 4;
+    expect(fe / 1e6).toBeCloseTo(235.2, 0); // independent sine-series Ritz, 9–21 terms: 235.2 kNm
+    const Ncr = (Math.PI ** 2 * E * Iz) / L3 ** 2, sn = 1.348 * Ncr * (Math.sqrt(Iw / Iz + (G * It) / Ncr + (0.63 * zg) ** 2) - 0.63 * zg);
+    expect(fe / sn).toBeGreaterThan(1.03);
+    expect(fe / sn).toBeLessThan(1.1);
+    // at the shear centre: C1 = 1.35
+    expect((ltbCriticalFactor({ L: L3, props: uniform, M }) * P * L3) / 4 / Mcr0(L3)).toBeCloseTo(1.36, 1);
+  });
+
   it('χ_LT, (6.56)', () => {
     expect(chiLT(0.2, 0.34)).toBe(1);
     expect(chiLT(1, 0.34)).toBeCloseTo(0.5970, 4); // Φ = 1.136

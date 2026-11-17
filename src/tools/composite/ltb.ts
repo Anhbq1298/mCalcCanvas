@@ -21,6 +21,8 @@ export interface LtbInput {
   M: (x: number) => number;
   /** distributed load times its height above the shear centre, at x (N); 0 = load at the shear centre */
   qzg?: (x: number) => number;
+  /** concentrated loads times their height above the shear centre (N mm), at x (mm): the term P z_g φ(x)² */
+  pointLoads?: { x: number; Pzg: number }[];
   /** interior lateral and torsional restraints (fork), x in mm */
   restraints?: number[];
   elements?: number;
@@ -41,7 +43,9 @@ export function ltbCriticalFactor(inp: LtbInput): number {
   const { L } = inp;
   const qzg = inp.qzg ?? (() => 0);
   // mesh: element boundaries at the restraints, ~elements in total
-  const cuts = [0, ...(inp.restraints ?? []).filter((x) => x > 1e-6 && x < L - 1e-6), L].sort((a, b) => a - b);
+  const rest = (inp.restraints ?? []).filter((x) => x > 1e-6 && x < L - 1e-6);
+  // point loads become element boundaries too, so their load-height term sits on a node (φ at a node is a DOF)
+  const cuts = [...new Set([0, ...rest, ...(inp.pointLoads ?? []).map((p) => p.x).filter((x) => x > 1e-6 && x < L - 1e-6), L])].sort((a, b) => a - b);
   const ne = inp.elements ?? 24;
   const xs: number[] = [0];
   for (let s = 1; s < cuts.length; s++) {
@@ -69,9 +73,14 @@ export function ltbCriticalFactor(inp: LtbInput): number {
       }
     }
   }
+  for (const p of inp.pointLoads ?? []) {
+    const i = xs.findIndex((x) => Math.abs(x - p.x) < 1e-6);
+    if (i >= 0) B[4 * i + 2][4 * i + 2] += p.Pzg;
+  }
   // fork supports at the ends and at the restraints: v = φ = 0
   const fixed = new Set<number>();
-  xs.forEach((x, i) => { if (cuts.some((c) => Math.abs(c - x) < 1e-6)) { fixed.add(4 * i); fixed.add(4 * i + 2); } });
+  const forks = [0, ...rest, L];
+  xs.forEach((x, i) => { if (forks.some((c) => Math.abs(c - x) < 1e-6)) { fixed.add(4 * i); fixed.add(4 * i + 2); } });
   const free = [...Array(n).keys()].filter((i) => !fixed.has(i));
   const m = free.length;
   const k = free.map((i) => free.map((j) => K[i][j]));
