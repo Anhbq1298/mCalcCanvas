@@ -5,6 +5,7 @@
  * No formula is duplicated here.
  */
 import { sections } from '../../engineering/steel/sections';
+import { chiLT, ltbCriticalFactor } from './ltb';
 import { CalculationEngine } from '../../engine';
 import { calcKey } from '../../canvas/calcOrder';
 import { inputTableColumns, inputTableRegionId } from '../../canvas/inputTable';
@@ -57,6 +58,7 @@ const SCALARS: Probe[] = [
   ['dmax', '\\delta_{max}', 'mm'], ['wc', 'w_c', 'mm'], ['ccam', 'c_{cam}', null], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['f1', 'f_1', 'Hz'], ['f1nc', 'f_{1.nc}', 'Hz'], ['flim', 'f_{lim}', 'Hz'], ['Ecdyn', 'E_{c.dyn}', 'GPa'], ['ddyn', '\\delta_{dyn}', 'mm'], ['ddynnc', '\\delta_{dyn.nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
   // tapered beam
   ['ctap', 'c_{tap}', null], ['hA', 'h_A', 'mm'], ['hB', 'h_B', 'mm'],
+  ['Ea', 'E_a', 'MPa'], ['Ga', 'G_a', 'MPa'], ['gM1', '\\gamma_{M1}', null], ['aLT', '\\alpha_{LT}', null],
 ];
 /** Utilisations the summary uses but the check table does not list (bare-steel bending and shear at x_M). */
 const EXTRA_UR = ['M.nc', 'V.nc'];
@@ -74,6 +76,56 @@ const TAPER_SPAN = ['d.1', 'd.x', 'd.q', 'd.nc', 'd.q.nc'];
 const TAPER_FREQ = ['fn', 'fn.nc'];
 const UR_COMPOSITE = ['M.2', 'M.x', 'MV', 'V.2', 'F.P', 'F.S', 'FM', 'd.x', 'd.q', 'fn', 'sf', 'L', 'sf.b', 'L.b', 'sf.c', 'L.c'];
 const UR_BARE = ['M.nc', 'MV.nc', 'V.nc', 'LT.nc', 'F.P', 'F.S', 'FM.nc', 'd.nc', 'd.q.nc', 'fn.nc'];
+
+/**
+ * Lateral-torsional buckling of the tapered steel beam alone, by the general method of EN 1993-1-1 §6.3.4:
+ * α_cr from finite elements over the varying section (ltb.ts), α_ult,k = min_x W_pl(x) f_y / M_Ed(x),
+ * λ̄ = √(α_ult,k / α_cr), χ_LT by (6.56) with the sheet's α_LT, UR = γ_M1 / (χ_LT α_ult,k).
+ * Construction (LT): the construction load w_1,Ed on each span between supports or props (L_1), on the
+ * top flange (z_g = h(x)/2), as the sheet; not used when the deck restrains the flange (L_LT < L_1).
+ * Bare steel (LT.nc): only when unrestrained over the span (L_LT,nc = L), the design moment diagram
+ * M_v at the shear centre, as the sheet. Otherwise the worst-depth value stays.
+ */
+function taperLtb(rM: Results, rA: Results, hAtM: (x: number) => number): { LT?: { ur: number; x: number; acr: number }; nc?: { ur: number; x: number; acr: number } } {
+  const hAt = (xmm: number) => hAtM(xmm / 1000); // depth at x in mm
+  const hA = rA.hA, tf = rA.t_f, tw = rA.t_w, b = rA.b_a, r = rA.r, fy = rA.f_y, E = rA.Ea, G = rA.Ga;
+  if (![hA, tf, tw, b, r, fy, E, G, rA.I_z, rA.I_t, rA.I_w, rA.W_pl].every(Number.isFinite)) return {};
+  const Af = (1 - Math.PI / 4) * r * r;
+  const Wnom = (h: number) => b * tf * (h - tf) + (tw * (h - 2 * tf) ** 2) / 4 + 4 * Af * (h / 2 - tf - 0.2234 * r);
+  // properties at depth h from the run at h_A, the sheet's own rules (section 1.4), mm
+  const Iz = (h: number) => rA.I_z * 1e4 + (tw ** 3 * (h - hA)) / 12;
+  const It = (h: number) => rA.I_t * 1e4 + (tw ** 3 * (h - hA)) / 3;
+  const Iw = (h: number) => rA.I_w * 1e6 * ((h - tf) / (hA - tf)) ** 2;
+  const Wpl = (h: number) => rA.W_pl * 1e3 + Wnom(h) - Wnom(hA);
+  const props = (x: number) => { const h = hAt(x); return { EIz: E * Iz(h), GIt: G * It(h), EIw: E * Iw(h) }; };
+  const gM1 = Number.isFinite(rM.gM1) ? rM.gM1 : 1, alpha = Number.isFinite(rM.aLT) ? rM.aLT : 0.34;
+  const L = rM.L * 1000;
+  // one buckling segment [x0, x0 + l] (mm), moment M(x) (N mm), load height term qzg (N)
+  const segment = (x0: number, l: number, M: (x: number) => number, qzg?: (x: number) => number) => {
+    const acr = ltbCriticalFactor({ L: l, props: (x) => props(x0 + x), M, qzg });
+    let au = Infinity, xu = x0 + l / 2;
+    for (let i = 0; i <= 100; i++) { const x = (l * i) / 100, m = Math.abs(M(x)); if (m > 1e-9) { const a = (Wpl(hAt(x0 + x)) * fy) / m; if (a < au) { au = a; xu = x0 + x; } } }
+    if (!Number.isFinite(au) || !(acr > 0)) return null;
+    const chi = chiLT(Math.sqrt(au / acr), alpha);
+    return { ur: gM1 / (chi * au), x: xu / 1000, acr };
+  };
+  const out: ReturnType<typeof taperLtb> = {};
+  const L1 = rM.L1 * 1000, w1 = rM.w1; // kN/m = N/mm
+  if (Number.isFinite(L1) && L1 > 0 && Number.isFinite(w1) && !(rM.LLT * 1000 < L1 - 1)) {
+    const n = Math.max(1, Math.round(L / L1)), l = L / n;
+    for (let k = 0; k < n; k++) {
+      const s = segment(k * l, l, (x) => (w1 * x * (l - x)) / 2, (x) => (w1 * hAt(k * l + x)) / 2);
+      if (s && (!out.LT || s.ur > out.LT.ur)) out.LT = s;
+    }
+  }
+  const xs = rM.vectors.x ?? [], Ms = rM.vectors.M ?? [];
+  if (rM.LLTnc >= L - 1 && xs.length > 2) {
+    const M = (x: number) => interp(xs, Ms, x / 1000) * 1e6;
+    const s = segment(0, L, M);
+    if (s) out.nc = s;
+  }
+  return out;
+}
 
 /** Linear interpolation of y over x (x ascending, clamped at the ends). */
 function interp(xs: number[], ys: number[], x: number): number {
@@ -109,6 +161,10 @@ export function combineTaper(rM: Results, rA: Results, rB: Results): Results {
     out[`UR.${k}`] = c[0][0];
     at(k, NaN, hAt(c[0][1])); // the worst of the depths, not one location
   }
+  // LTB over the real (varying) section: EN 1993-1-1 §6.3.4 with α_cr from finite elements (ltb.ts)
+  const lt = taperLtb(rM, rA, hAt);
+  if (lt.LT) { out['UR.LT'] = lt.LT.ur; at('LT', lt.LT.x); out['acr.LT'] = lt.LT.acr; }
+  if (lt.nc) { out['UR.LT.nc'] = lt.nc.ur; at('LT.nc', lt.nc.x); out['acr.LT.nc'] = lt.nc.acr; }
   // the three runs as nodes over depth, for values at the local depth h(x)
   const nodes = [[hA, rA], [hAt(xM), rM], [hB, rB]] as [number, Results][];
   nodes.sort((p, q) => p[0] - q[0]);

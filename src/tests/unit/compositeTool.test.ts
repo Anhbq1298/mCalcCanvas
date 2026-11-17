@@ -421,7 +421,20 @@ describe('mCompositeBeamDesign headless model', () => {
     expect([r.taper, r.hA, r.L, r.h_c, r.comp]).toEqual([1, 300, 5.2, 200, 1]);
     expect(r['UR.des']).toBeCloseTo(0.717, 3);
     expect(governingCheck(r)).toMatchObject({ key: 'LT' });
-    expect(governingCheck(r).ur).toBeCloseTo(0.912, 3);
+    expect(governingCheck(r).ur).toBeCloseTo(0.848, 3); // §6.3.4 with α_cr of the tapered beam
+    expect(r['at.LT']).toBeCloseTo(2.34, 2); // the shallow side of mid-span: least W_pl f_y / M_Ed
+    // the finite-element LTB reproduces the sheet's SN003b formula for a (nearly) uniform beam
+    const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
+    set('h_{A.in}', 402.2);
+    const near = m.results();
+    set('c_{tap}', 0);
+    const uni = m.results();
+    expect(near.taper).toBe(1);
+    expect(uni.taper).toBeUndefined();
+    expect(near['UR.LT'] / uni['UR.LT']).toBeCloseTo(1, 2);
+    // the worst-depth bound it replaces is higher
+    expect(r['UR.LT']).toBeLessThan(0.912);
+    expect(r['UR.LT']).toBeGreaterThan(uni['UR.LT']);
   }, 120_000);
 });
 

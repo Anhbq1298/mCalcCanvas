@@ -457,7 +457,7 @@ export function App() {
                     </label>
                   );
                 })}
-                {tapered && <p className="hint wide" data-testid="taper-note">h<sub>A</sub> = {fmt(res.hA, 1)} → h<sub>B</sub> = {fmt(res.hB, 1)} mm, flanges and web thickness of {section?.name ?? 'the section'}. {res.taper ? <>Checked at the critical sections: x<sub>M</sub> = {fmt(res.xM, 2)} m (h = {fmt(res.hA + ((res.hB - res.hA) * res.xM) / res.L, 1)} mm), both supports, the worst depth for stability and webs, the span for deflection. Governing: <Rich text={governing[1]} />, {where(gov.key) || 'see the table'}.</> : 'Same depth at both ends: uniform section.'}</p>}
+                {tapered && <p className="hint wide" data-testid="taper-note">h<sub>A</sub> = {fmt(res.hA, 1)} → h<sub>B</sub> = {fmt(res.hB, 1)} mm, flanges and web thickness of {section?.name ?? 'the section'}. {res.taper ? <>Checked at the critical sections: x<sub>M</sub> = {fmt(res.xM, 2)} m (h = {fmt(res.hA + ((res.hB - res.hA) * res.xM) / res.L, 1)} mm), both supports, LTB of the tapered beam (EN 1993-1-1 §6.3.4, α<sub>cr</sub> = {fmt(res['acr.LT'], 2)} by finite elements), the worst depth for the web checks, the span for deflection. Governing: <Rich text={governing[1]} />, {where(gov.key) || 'see the table'}.</> : 'Same depth at both ends: uniform section.'}</p>}
               </div>
             </section>
             {groups.map(([g, fields], gi) => (
