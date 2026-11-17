@@ -82,8 +82,8 @@ calc('Torsion constant', 'I_t', R`I_{t.lib}+\frac{t_w^3\left(h_a-h_{a.lib}\right
 calc('Warping constant', 'I_w', R`I_{w.lib}\left(\frac{h_a-t_f}{h_{a.lib}-t_f}\right)^2`, 'cm^6', false);
 calc('Mass', 'm_a', R`m_{a.lib}\frac{A_a}{A_{a.lib}}`, 'kg/m', false);
 H(3, '1.5 Construction stage');
-input('Propping: 0 = unpropped (default), 1 = propped', 'c_{prop}', 0);
-input('If propped: LTB restraint (bracing) at k_LT L (brace spacing / span); the moments stay those of the span L', 'k_{LT}', 0.5);
+input('LTB bracing during construction: 0 = none (default), 1 = braced at k_LT L (the beam is not propped)', 'c_{brace}', 0);
+input('If braced: LTB restraint at k_LT L (brace spacing / span); the moments stay those of the span L', 'k_{LT}', 0.5);
 input('Construction imposed load', 'q_{con}', 0.75, 'kPa');
 input('Formwork load (removable)', 'g_{form}', 0.5, 'kPa');
 input('Load position for LTB: 1 = top flange (default), 0 = shear centre, −1 = bottom flange', 'c_{zg}', 1);
@@ -166,7 +166,7 @@ calc('Wet slab: topping, share k_c of the rib zone, deck', 'g_c', R`\rho_c s_b\l
 calc('Self-weight', 'g_0', R`g_a+g_c`, 'kN/m', false);
 P('ULS factor on self-weight g_0, fixed (EN 1990 Table A1.2(B), not a user input)', R`\gamma_{G.sw}\coloneq1.35`, M(units('')));
 P('Construction span: simple span L (bracing restrains LTB only, it does not change the moments)', R`L_1\coloneq L`, M(units('m')));
-P('LTB restraint spacing during construction (bracing)', R`L_{br}\coloneq${IF([R`c_{prop}\ge1`, R`k_{LT}L`], [null, 'L'])}`, M(units('m')));
+P('LTB restraint spacing during construction (bracing)', R`L_{br}\coloneq${IF([R`c_{brace}\ge1`, R`k_{LT}L`], [null, 'L'])}`, M(units('m')));
 calc('ULS construction load', 'w_{1.Ed}', R`\gamma_{G.sw}g_0+\gamma_G g_{form}s_b+\gamma_Q q_{con}s_b`, 'kN/m', false);
 calc('Construction shear', 'V_{1.Ed}', R`\frac{w_{1.Ed}L_1}{2}`, 'kN', false);
 calc('Construction moment', 'M_{1.Ed}', R`\frac{w_{1.Ed}L_1^2}{8}`, 'kN m', false);
@@ -436,14 +436,14 @@ T('Interaction (7.2): η2 + 0.8 η1 ≤ 1.4 under each point load; η1 = M_Ed / 
 calc('(7.2) as a utilisation', '\\mathrm{UR}_{FM}', R`c_{F.P}\max\left(\overrightarrow{\frac{\frac{F_{loc}}{F_{Rd.a}}+0.8\frac{M_P}{M_{Rd.P}}}{1.4}}\right)`, '', false);
 for (const n of ['F.P','F.S','FM']) check(`Acceptance ${n}`, R`\mathrm{UR}_{${n}}`, '1');
 H(3, '4.8 Serviceability (§5.4.2.2, §7.3.1)');
-T('Unpropped: g0 on the steel alone (locked in). Propped: g0 on the long-term composite section.');
+T('Unpropped construction: g0 on the steel alone (locked in).');
 for (const [suffix,psi] of [['0','0'],['L','1.1'],['s','0.55']]) {
  calc('Modular ratio',R`n_${suffix}`,suffix==='0'?R`\frac{E_a}{E_{cm}}`:R`n_0\left(1+${psi}\varphi\right)`, '', false);
  calc('Transformed slab area (concrete above the deck)',R`A_{c.${suffix}}`,R`\frac{b_{eff}h_t}{n_${suffix}}`,'mm^2', false);
  calc('Elastic NA below slab top',R`y_${suffix}`,R`\frac{A_a\left(h_c+h_a/2\right)+A_{c.${suffix}}h_t/2}{A_a+A_{c.${suffix}}}`,'mm', false);
  calc('Second moment',R`I_${suffix}`,R`I_a+A_a\left(h_c+\frac{h_a}{2}-y_${suffix}\right)^2+\frac{b_{eff}h_t^3}{12n_${suffix}}+A_{c.${suffix}}\left(y_${suffix}-\frac{h_t}{2}\right)^2`,'mm^4',false);
 }
-P('Deflection from g0',R`\delta_g\coloneq${IF([R`c_{prop}\ge1`, R`\frac{5g_0 L^4}{384E_a I_L}`], [null, R`\frac{5g_0 L^4}{384E_a I_a}`])}`,M(units('mm')));
+P('Deflection from g0, steel alone',R`\delta_g\coloneq\frac{5g_0 L^4}{384E_a I_a}`,M(units('mm')));
 calc('Unit-load moment at midspan (virtual work)','m_v',IF([R`x_v\le\frac{L}{2}`, R`\frac{x_v}{2}`], [null, R`\frac{L-x_v}{2}`]),'m','fo');
 calc('Long-term: g, G + ψ2 q, ψ2 Q on I_L','\\delta_{LT}',R`\frac{\Delta x\,\mathrm{sum}\left(M_{s.qp}m_v\right)}{E_a I_L}`,'mm',false);
 calc('Short-term: (1 − ψ2) q, Q on I_0','\\delta_{tr}',R`\frac{\Delta x\,\mathrm{sum}\left(M_{s.tr}m_v\right)}{E_a I_0}`,'mm',false);
@@ -451,7 +451,7 @@ calc('Shrinkage force','N_{sh}',R`\frac{E_a}{n_s}b_{eff}h_t\varepsilon_{cs}`,'kN
 calc('Shrinkage curvature','\\kappa_{sh}',R`\frac{N_{sh}\left(y_s-h_t/2\right)}{E_a I_s}`,'m^-1', false);
 calc('Shrinkage deflection','\\delta_{sh}',R`\frac{\kappa_{sh}L^2}{8}`,'mm', false);
 calc('Table loads on the steel alone (slip allowance)','\\delta_{a.post}',R`\frac{\Delta x\,\mathrm{sum}\left(M_{s.k}m_v\right)}{E_a I_a}`,'mm',false);
-P('Slip factor C_s, unpropped / propped',R`C_s\coloneq${IF([R`c_{prop}\ge1`, '0.5'], [null, '0.3'])}`,M({ precision: 2 }));
+P('Slip factor C_s, unpropped construction',R`C_s\coloneq0.3`,M({ precision: 2 }));
 calc('Partial-connection slip allowance','\\delta_{slip}',R`C_s\left(1-\eta\right)\left(\delta_{a.post}-\delta_{LT}-\delta_{tr}\right)`,'mm', false);
 calc('Total deflection, no camber','\\delta_{tot}',R`\delta_g+\delta_{LT}+\delta_{tr}+\delta_{slip}+\delta_{sh}`,'mm', false);
 ur('Total deflection','d.2','\\delta_{tot}','\\delta_{lim}');
@@ -463,7 +463,7 @@ T('1.0 (g0 + G) + 1.0 Q, split as in 4.8 (ψ2 Q on I_L, the rest on I_0), plus s
 T('Slip as in 4.8, at every x: δ = δ_c + C_s (1 − η)(δ_a − δ_c).');
 T('Fewer studs (larger spacing) lower η and add deflection; closer studs reduce it.');
 P('Unit-load moment at x for a unit load at u: x(L − u)/L, less (x − u) beyond u', R`m_w(u,x)\coloneq\frac{x\left(L-u\right)}{L}-\overrightarrow{\left(x>u\right)\left(x-u\right)}`, M(units('')));
-calc('Curvature of g0 (steel alone if unpropped)', '\\kappa_g', IF([R`c_{prop}\ge1`, R`\frac{g_0 x_v\left(L-x_v\right)}{2E_a I_L}`], [null, R`\frac{g_0 x_v\left(L-x_v\right)}{2E_a I_a}`]), 'm^-1', 'fo');
+calc('Curvature of g0 (steel alone)', '\\kappa_g', R`\frac{g_0 x_v\left(L-x_v\right)}{2E_a I_a}`, 'm^-1', 'fo');
 calc('Curvature of the table loads, composite (full interaction)', '\\kappa_c', R`\frac{M_{s.qp}}{E_a I_L}+\frac{M_{s.tr}}{E_a I_0}`, 'm^-1', 'fo');
 calc('Curvature of the table loads on the steel alone', '\\kappa_a', R`\frac{M_{s.k}}{E_a I_a}`, 'm^-1', 'fo');
 calc('Curvature, partial interaction, plus shrinkage', '\\kappa_p', R`\kappa_g+\kappa_c+C_s\left(1-\eta\right)\left(\kappa_a-\kappa_c\right)+\kappa_{sh}`, 'm^-1', 'fo');
@@ -480,7 +480,7 @@ P('Deflection at u, LL on bare steel', R`d_{qs}(u)\coloneq d_w\left(u,\frac{M_{q
 calc('Bare steel, 1.0 DL + 1.0 LL', '\\delta_{x.s}', R`\mathrm{map}\left(d_{st},x_v\right)`, 'mm', 'fo');
 calc('Bare steel, LL alone', '\\delta_{x.qs}', R`\mathrm{map}\left(d_{qs},x_v\right)`, 'mm', 'fo');
 T('Precamber (EN 1990 A1.4.3): w_max = w_tot − w_c. w_c = share c_cam of the self-weight (g_0) deflection plus the fixed value w_c.0, both in the shape of that deflection.');
-calc('Self-weight deflection along the span, g_0 on the section of κ_g', '\\delta_{g.v}', IF([R`c_{prop}\ge1`, R`\overrightarrow{\frac{g_0 x_v\left(L^3-2Lx_v^2+x_v^3\right)}{24E_a I_L}}`], [null, R`\overrightarrow{\frac{g_0 x_v\left(L^3-2Lx_v^2+x_v^3\right)}{24E_a I_a}}`]), 'mm', 'fo');
+calc('Self-weight deflection along the span, g_0 on the steel alone', '\\delta_{g.v}', R`\overrightarrow{\frac{g_0 x_v\left(L^3-2Lx_v^2+x_v^3\right)}{24E_a I_a}}`, 'mm', 'fo');
 calc('Self-weight deflection, maximum', '\\delta_{g.max}', R`\max\left(\delta_{g.v}\right)`, 'mm', false);
 calc('Precamber along the span', 'w_{c.v}', R`\left(\frac{c_{cam}}{100}+\frac{w_{c.0}}{\delta_{g.max}}\right)\delta_{g.v}`, 'mm', 'fo');
 calc('Precamber at mid-span', 'w_c', R`\max\left(w_{c.v}\right)`, 'mm', false);

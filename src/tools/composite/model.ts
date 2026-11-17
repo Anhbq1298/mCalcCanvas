@@ -53,7 +53,7 @@ const SCALARS: Probe[] = [
   ['dhead', 'd_{head}', 'mm'], ['hsc', 'h_{sc}', 'mm'], ['dsc', 'd_{sc}', 'mm'], ['b0', 'b_0', 'mm'],
   // profiled steel deck (all neutral for a solid slab: h_pe = 0, k_d = 1, n_re = 1)
   ['cdeck', 'c_{deck}', null], ['ctr', 'c_{tr}', null], ['hpe', 'h_{pe}', 'mm'], ['ht', 'h_t', 'mm'], ['br', 'b_r', 'mm'], ['er', 'e_r', 'mm'], ['kd', 'k_d', null], ['kt', 'k_t', null], ['kl', 'k_l', null], ['ktmax', 'k_{t.max}', null],
-  ['nre', 'n_{re}', null], ['sA', 's_A', 'mm'], ['sB', 's_B', 'mm'], ['ape', 'a_{pe}', 'mm^2/m'], ['cbb', 'c_{bb}', null], ['Idyn', 'I_{dyn}', 'cm^4'], ['NcRd', 'N_{c.Rd}', 'kN'], ['LLT', 'L_{LT}', 'm'], ['smax', 's_{max}', 'mm'], ['smin', 's_{min}', 'mm'], ['dgmax', '\\delta_{g.max}', 'mm'], ['cprop', 'c_{prop}', null], ['rlim', 'r_{lim}', null], ['rlim1', 'r_{lim.1}', null], ['rlimq', 'r_{lim.q}', null], ['c16', 'c_{16}', null], ['cre', 'c_{re}', null],
+  ['nre', 'n_{re}', null], ['sA', 's_A', 'mm'], ['sB', 's_B', 'mm'], ['ape', 'a_{pe}', 'mm^2/m'], ['cbb', 'c_{bb}', null], ['Idyn', 'I_{dyn}', 'cm^4'], ['NcRd', 'N_{c.Rd}', 'kN'], ['LLT', 'L_{LT}', 'm'], ['smax', 's_{max}', 'mm'], ['smin', 's_{min}', 'mm'], ['dgmax', '\\delta_{g.max}', 'mm'], ['cbrace', 'c_{brace}', null], ['rlim', 'r_{lim}', null], ['rlim1', 'r_{lim.1}', null], ['rlimq', 'r_{lim.q}', null], ['c16', 'c_{16}', null], ['cre', 'c_{re}', null],
   // deflection
   ['dmax', '\\delta_{max}', 'mm'], ['wc', 'w_c', 'mm'], ['ccam', 'c_{cam}', null], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['f1', 'f_1', 'Hz'], ['f1nc', 'f_{1.nc}', 'Hz'], ['flim', 'f_{lim}', 'Hz'], ['Ecdyn', 'E_{c.dyn}', 'GPa'], ['ddyn', '\\delta_{dyn}', 'mm'], ['ddynnc', '\\delta_{dyn.nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
   // tapered beam
@@ -89,7 +89,7 @@ const UR_BARE = ['M.nc', 'MV.nc', 'V.nc', 'LT.nc', 'F.P', 'F.S', 'FM.nc', 'd.nc'
  * - EN 1993-1-1 §6.3.2.2 / §6.3.4: α_ult,k = min_x W_pl(x) f_y / M_Ed(x), λ̄ = √(α_ult,k / α_cr), χ_LT (6.56),
  *   UR = γ_M1 / (χ_LT α_ult,k). For a uniform beam this is §6.3.2 with M_cr from the FE (λ̄ = √(W_pl f_y / M_cr)).
  *   Curve (Table 6.4) by h/b at the critical section: rolled I a / b; a tapered beam welded (c_weld = 1) c / d.
- * - Construction (LT): w_1,Ed on the simple span L; bracing (propped, k_LT) = fork restraints at k_LT L, the moment
+ * - Construction (LT): w_1,Ed on the simple span L; bracing (c_brace, k_LT) = fork restraints at k_LT L, the moment
  *   diagram unchanged. Not used when the deck restrains the flange (L_LT = e_r, the sheet's value stays).
  * - Bare steel (LT.nc): the ULS design loads (self-weight and the load tables) on the whole span, only when the
  *   flange is unrestrained (L_LT,nc = L); with the studs restraining it the sheet's value stays.
@@ -136,10 +136,10 @@ function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: F
   };
   const out: ReturnType<typeof feLtb> = {};
   const w1 = rM.w1; // kN/m = N/mm
-  // construction: the simple span L under w_1,Ed; bracing (propped, k_LT) adds fork restraints at k_LT L, the
+  // construction: the simple span L under w_1,Ed; bracing (c_brace, k_LT) adds fork restraints at k_LT L, the
   // moments stay those of the span. Not used when the deck restrains the flange (L_LT = e_r).
   if (Number.isFinite(w1) && !(rM.LLT * 1000 < rM.Lbr * 1000 - 1)) {
-    const n = rM.cprop >= 1 && rM.kLT > 0 ? Math.max(1, Math.round(1 / rM.kLT)) : 1;
+    const n = rM.cbrace >= 1 && rM.kLT > 0 ? Math.max(1, Math.round(1 / rM.kLT)) : 1;
     const braces = Array.from({ length: n - 1 }, (_, i) => ((i + 1) * L) / n);
     const s = segment(0, L, { dist: [{ x1: 0, x2: L, q1: w1 }], point: [] }, braces);
     if (s) out.LT = s;
@@ -345,8 +345,8 @@ const SLAB_BAR_CHECKS = ['sf', 'sf.b', 'sf.c']; // the only checks a larger tran
 const SLAB_CHECKS = ['sf', 'L', 'sf.b', 'L.b', 'sf.c', 'L.c']; // get worse with more studs: no reason to reject a section at its densest layout
 
 /** Camber from the rules: a share of the self-weight deflection, rounded down to the increment, dropped if small. */
-export function camberFor(c: DesignCriteria['camber'], spanM: number, dgMax: number, propped: boolean): number {
-  if (!c || propped || spanM < c.minSpan - 1e-9 || !(dgMax > 0)) return 0;
+export function camberFor(c: DesignCriteria['camber'], spanM: number, dgMax: number): number {
+  if (!c || spanM < c.minSpan - 1e-9 || !(dgMax > 0)) return 0;
   let w = (c.pct / 100) * dgMax;
   if (c.step > 0) w = Math.floor(w / c.step + 1e-9) * c.step;
   if (w < c.min - 1e-9) return 0;
@@ -410,7 +410,7 @@ export function designSection(model: CompositeModel, screen: CompositeModel | nu
   const p = models[0].results(); evals++;
   if (p.errors.length) return fail(true);
   let camber = p.wc;
-  if (c.camber) { camber = camberFor(c.camber, p.L, p.dgmax, p.cprop >= 1); for (const m of models) set(m, 'w_{c.0}', camber); }
+  if (c.camber) { camber = camberFor(c.camber, p.L, p.dgmax); for (const m of models) set(m, 'w_{c.0}', camber); }
   const over = (r: Results, keys: string[]) => keys.some((k) => !(r[`UR.${k}`] <= c.strength));
   const done = (r: Results, d: { sc: number; scB: number; nr?: number; bar: number; sf?: number }): Design => ({ layout: d.sc === d.scB ? 'uniform' : 'segmented', pass: true, composite: r.comp >= 1, ...d, eta: r.eta, studs: r.nA + r.nB, camber, ...governingSplit(r, skip), evals });
   const passes = (r: Results, composite: boolean) => {

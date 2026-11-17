@@ -242,9 +242,9 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('\\mathrm{UR}_{F.P}')).toBeCloseTo(0.19837,4); expect(value('\\mathrm{UR}_{F.S}')).toBeCloseTo(0.62909,4);
       expect(value('\\mathrm{UR}_{FM}')).toBeCloseTo(0.50778,4); expect(value('c_{rest}')).toBe(1);
     });
-    step('propped (braced) construction: LTB restraint at k_LT L, moments of the span L, g0 on the composite section, slip factor 0.5', () => {
-      const prop = region('c_{prop}\\coloneq');
-      const M1 = value('M_{1.Ed}','kN m'), d1 = value('\\delta_1','mm');
+    step('braced construction: LTB restraint at k_LT L only — moments, deflections and the slip factor unchanged', () => {
+      const prop = region('c_{brace}\\coloneq');
+      const M1 = value('M_{1.Ed}','kN m'), d1 = value('\\delta_1','mm'), dg = value('\\delta_g','mm'), Cs = value('C_s'), dtot = value('\\delta_{tot}','mm');
       e.setDefinitionOverride(prop, { value: 1 });
       expect(value('L_{LT}','m')).toBeCloseTo(4,9);
       expect(value('M_{1.Ed}','kN m')).toBeCloseTo(M1,9); // bracing does not change the moments: w L² / 8
@@ -255,10 +255,8 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(Ncr).toBeCloseTo(Math.PI ** 2 * 21000 * Iz / 400 ** 2, 6);
       expect(value('M_{cr}','kN m')).toBeCloseTo(Mcr, 3);
       expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(M1 / value('M_{b.Rd}','kN m'), 9);
-      expect(value('\\delta_g','mm')).toBeCloseTo(4.749074859401146,7);
-      expect(value('C_s')).toBeCloseTo(0.5,10);
-      expect(value('\\delta_{slip}','mm')).toBeCloseTo(3.084829292980651,3);
-      expect(value('\\delta_{tot}','mm')).toBeCloseTo(23.122062152720268,2);
+      expect([value('\\delta_g','mm'), value('C_s'), value('\\delta_{tot}','mm')]).toEqual([dg, Cs, dtot]); // the beam is not propped
+      expect(Cs).toBe(0.3);
       e.setDefinitionOverride(prop, null);
       expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(1.8715996613080623,7);
     });

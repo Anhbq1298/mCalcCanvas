@@ -67,7 +67,7 @@ Annex: the general force model and branch boundaries.
   SFD/BMD), 3 EN 1993-1-1 construction checks, 4 EN 1994-1-1 composite checks (incl. SLS),
   5 EN 1992-1-1 slab longitudinal shear, 6 summary by code, annex. Loading and section 3 start on a new
   page: app feature `pageBreak` on a text shape, honoured by the template / print layout planner.
-- Propping `c_prop` (0 = unpropped, default; 1 = propped) drives if-blocks: construction span and LTB
+- [Superseded 2026-11-18: `c_prop` is now `c_brace`, LTB bracing only — see the end of this file.] Propping `c_prop` (0 = unpropped, default; 1 = propped) drove if-blocks: construction span and LTB
   length L_1 = L_LT = k_LT·L (user input k_LT) when propped; g_0 deflects the long-term composite section
   instead of the steel alone; the slip factor C_s is 0.5 instead of 0.3. Prop reactions and the prop
   removal stage are not checked.
@@ -344,3 +344,7 @@ k_LT is LTB bracing only: fork restraints at k_LT L during construction. The mom
 those of the simple span L (w₁L²/8, w₁L/2, 5w₁L⁴/384EI). The sheet's L_LT = k_LT L (SN003b on the braced length);
 the page's FE takes the whole span with its moment diagram and forks at the braces. (A continuous-beam model of the
 props, 518d74e, was reverted: the input is bracing, not a change of the structural scheme.)
+
+**c_brace (formerly c_prop) is LTB bracing only** (2026-11-18): the beam is never propped. Bracing adds fork
+restraints at k_LT L in construction; moments, shear, the construction deflection, g₀ on the steel alone and the
+slip factor C_s = 0.3 are unchanged. The camber rule no longer depends on it.

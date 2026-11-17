@@ -298,11 +298,10 @@ describe('mCompositeBeamDesign headless model', () => {
     const m = new CompositeModel(raw), screen = new CompositeModel(raw, { screening: true });
     const id = (name: string) => sections.find((x) => x.name === name)!.id;
     const base: DesignCriteria = { strength: 1, deflection: 1, etaMin: 0, etaMax: 1, studs: 'segmented', bars: [10, 12, 13], camber: null };
-    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 8, 33, false)).toBe(25); // 26.4 → 25
-    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 8, 20, false)).toBe(0); // 16 → 15 < minimum
-    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 7, 33, false)).toBe(0); // short span
-    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 8, 33, true)).toBe(0); // propped
-    expect(camberFor({ pct: 80, min: 20, max: 30, step: 5, minSpan: 7.5 }, 12, 90, false)).toBe(30); // capped
+    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 8, 33)).toBe(25); // 26.4 → 25
+    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 8, 20)).toBe(0); // 16 → 15 < minimum
+    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 7, 33)).toBe(0); // short span
+    expect(camberFor({ pct: 80, min: 20, max: 30, step: 5, minSpan: 7.5 }, 12, 90)).toBe(30); // capped
     expect(designSection(m, screen, id('UB 406x178x60'), base, 'composite').pass).toBe(false); // construction LTB
     const seg = designSection(m, screen, id('UB 457x191x89'), base, 'composite');
     expect(seg.pass && seg.composite).toBe(true);
@@ -492,7 +491,7 @@ describe('mCompositeBeamDesign headless model', () => {
     });
     step('braced construction (propped, k_LT): fork restraints at k_LT L, the moment of the span L unchanged', () => {
       const unbraced = m.results();
-      set('c_{prop}', 1); set('k_{LT}', 0.5);
+      set('c_{brace}', 1); set('k_{LT}', 0.5);
       const q = m.results();
       expect(q.M1).toBeCloseTo(unbraced.M1, 9); // w L² / 8 either way
       expect(q.LLT).toBeCloseTo(q.L / 2, 9);
@@ -500,7 +499,7 @@ describe('mCompositeBeamDesign headless model', () => {
       expect(q['Mcr.LT']).toBeGreaterThan(2 * unbraced['Mcr.LT']);
       expect(q['UR.LT']).toBeLessThan(unbraced['UR.LT']);
       expect(q['Mcr.LT'] / q.McrSN).toBeGreaterThan(0.9); // SN003b on the braced segment (UDL C1, C2) is an approximation here
-      set('c_{prop}', 0);
+      set('c_{brace}', 0);
     });
     step('load position: shear centre and bottom flange raise M_cr, top flange is the default', () => {
       const top = r['Mcr.LT'];
