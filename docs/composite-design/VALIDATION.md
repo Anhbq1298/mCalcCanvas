@@ -175,5 +175,35 @@ three-term sine Rayleigh–Ritz (published results are diagrams; the text gives 
 | ψ = 1 | "only 4 %" | 3.9 % |
 | ψ = −0.5 (largest of ψ = 1 … −1) | "maximum value 12 %" | 12.7 %, also the largest |
 
-Not done: an LTBeamN run of the page default case, and a published table of absolute M_cr for a tapered beam
-(Trahair R939, Benyamina et al. 2013, the LTBWTB paper (Appl. Sci. 2025) could not be opened from here).
+## LTB solver against SN003b Tables 3.1 and 3.2 (2026-11-17)
+
+SN003b (NCCI, Elastic critical moment for LTB), k = k_w = 1, tables computed with μ = EI_w / (G I_t L²) = 0, so the
+test runs `ltb.ts` with I_w = 0 (ltb.test.ts).
+
+| Case | SN003b C1 | ltb.ts C1 |
+|---|---|---|
+| End moments ψ = 1, 0.75, 0.5, 0.25, 0 | 1.00, 1.14, 1.31, 1.52, 1.77 | 1.000, 1.139, 1.312, 1.522, 1.770 |
+| ψ = −0.25, −0.5, −0.75, −1 | 2.05, 2.33, 2.57, 2.55 | 2.047, 2.331, 2.574, 2.555 |
+| UDL, in-plane simply supported / fixed | 1.127 / 2.578 | 1.127 / 2.576 |
+| Mid-span point load, simply supported / fixed | 1.348 / 1.683 | 1.348 / 1.683 |
+
+Load height, z_g = 200 mm on the top flange (destabilising): M_cr by SN003b (2) with the tabulated C1, C2 within 2 %
+for all four transverse cases (UDL 0.1 %, fixed UDL 0.5 %, point load 1.9 %, fixed point load 1.1 %).
+Bottom flange (stabilising, z_g = −200 mm): (2) with the tabulated C2 overestimates M_cr (point load, real I_w: FE / (2)
+= 0.96; I_w = 0, fixed point load: 0.64). An independent Ritz sine series (20 + 20 terms) gives the FE value (point load
+within 1 %, UDL within 0.1 %), so the difference is the 3-factor formula, not the solver. The page applies loads at the
+top flange (construction) or the shear centre (LT.nc), never below it.
+
+## Sources searched for a tapered-beam benchmark (2026-11-17)
+
+| Source | Outcome |
+|---|---|
+| Raftoyiannis & Adamakos 2010 (open) | used above (taper effect, text values) |
+| Kucukler & Gardner, Eng. Struct. 190 (2019) 246–261 (Imperial Spiral, open) | no tabulated M_cr. Important finding, citing Andrade & Camotim (2005), Yang & Yau (1987): beam models that ignore the flange inclination (the second-order torsion T_w from warping stresses in inclined flanges) overestimate M_cr of tapered beams; large for doubly-tapered and short beams with steep tapers, accurate for singly-tapered beams under uniform bending. `ltb.ts` neglects this term: fine for mild tapers (page default 300 → 403 mm over 5.2 m: flange slope 0.57°). Kucukler & Gardner limit their method to web-tapering angles ≤ 15°. |
+| Papp & Szalai, Eurosteel 2011 (ConSteel, open) | tapered cantilever (Andrade) and beam-columns only; `ltb.ts` has no cantilever ends |
+| Andrade, Camotim & Dinis, Comput. Struct. 85 (2007) (Coimbra repository) | server refused the connection |
+| Yang & Yau 1987, Kitipornchai & Trahair 1972, Benyamina et al. 2013, LTBWTB (Appl. Sci. 2025), Trahair R939, UCSD thesis (Laiman 2014) | paywalled, HTTP 403 or connection reset from here |
+
+Still open: absolute M_cr of a published simply supported web-tapered beam (Yang & Yau's doubly-tapered beam,
+L = 6.096 m, h = 609.6 mm at mid-span, b = 152.4, t_f = 12.7, t_w = 9.5 mm, mid-span point load at the shear centre,
+tabulated by Andrade & Camotim 2005), and an LTBeamN run of the page default case.

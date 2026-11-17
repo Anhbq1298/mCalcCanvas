@@ -6,6 +6,27 @@ const E = 210000, G = 81000, Iz = 538e4, It = 19e4, Iw = 207e9, L = 5200;
 const uniform = () => ({ EIz: E * Iz, GIt: G * It, EIw: E * Iw });
 const Mcr0 = (Lc: number) => (Math.PI / Lc) * Math.sqrt(E * Iz * G * It * (1 + (Math.PI ** 2 * E * Iw) / (Lc ** 2 * G * It)));
 
+/** Independent Rayleigh–Ritz (sine series in v and φ, fork ends, uniform section): λ_cr by bisection on the inertia of K − λB. */
+function ritz(Lr: number, p: { EIz: number; GIt: number; EIw: number }, M: (x: number) => number, qzg: number, P?: { x: number; Fzg: number }): number {
+  const N = 20, n = 2 * N, k = (i: number) => (i * Math.PI) / Lr;
+  const K = Array.from({ length: n }, () => new Array<number>(n).fill(0)), B = Array.from({ length: n }, () => new Array<number>(n).fill(0));
+  for (let i = 1; i <= N; i++) { K[i - 1][i - 1] = (p.EIz * k(i) ** 4 * Lr) / 2; K[N + i - 1][N + i - 1] = ((p.GIt * k(i) ** 2 + p.EIw * k(i) ** 4) * Lr) / 2; }
+  for (let g = 0, ng = 2000; g < ng; g++) {
+    const x = ((g + 0.5) * Lr) / ng, w = Lr / ng, m = M(x);
+    for (let i = 1; i <= N; i++) for (let j = 1; j <= N; j++) {
+      const t = w * m * k(i) ** 2 * Math.sin(k(i) * x) * Math.sin(k(j) * x);
+      B[i - 1][N + j - 1] += t; B[N + j - 1][i - 1] += t;
+      B[N + i - 1][N + j - 1] += w * qzg * Math.sin(k(i) * x) * Math.sin(k(j) * x);
+    }
+  }
+  if (P) for (let i = 1; i <= N; i++) for (let j = 1; j <= N; j++) B[N + i - 1][N + j - 1] += P.Fzg * Math.sin(k(i) * P.x) * Math.sin(k(j) * P.x);
+  const neg = (lam: number) => { const A = K.map((r, i) => r.map((v, j) => v - lam * B[i][j])); let c = 0;
+    for (let q = 0; q < n; q++) { const d = A[q][q]; if (d < 0) c++; for (let r = q + 1; r < n; r++) { const f = A[r][q] / d; for (let t = q; t < n; t++) A[r][t] -= f * A[q][t]; } } return c; };
+  let lo = 0, hi = 1; while (neg(hi) === 0) hi *= 2;
+  for (let it = 0; it < 100; it++) { const mid = (lo + hi) / 2; if (neg(mid) === 0) lo = mid; else hi = mid; }
+  return lo;
+}
+
 describe('lateral-torsional buckling, varying section (finite elements)', () => {
   it('constant moment, fork ends: the exact solution', () => {
     expect(ltbCriticalFactor({ L, props: uniform, M: () => 1 }) / Mcr0(L)).toBeCloseTo(1, 4);
@@ -75,6 +96,37 @@ describe('lateral-torsional buckling, varying section (finite elements)', () => 
       expect(d[3]).toBeGreaterThan(0.115); expect(d[3]).toBeLessThan(0.13); // 0.127
       expect(Math.max(...d)).toBe(d[3]); // the largest drop at ψ = −0.5
     }
+  });
+
+  it('SN003b Tables 3.1 and 3.2 (μ = 0): C1 by moment diagram, C2 by load height; stabilising loads against Ritz', () => {
+    // SN003b (NCCI, Elastic critical moment for LTB), k = kw = 1, tabulated with μ = EI_w / (G I_t L²) = 0: I_w = 0 here
+    const p0 = () => ({ EIz: E * Iz, GIt: G * It, EIw: 0 });
+    const Ncr = (Math.PI ** 2 * E * Iz) / L ** 2, M00 = Math.sqrt((G * It) / Ncr) * Ncr; // M_cr for C1 = 1, z_g = 0
+    const C1 = (M: (x: number) => number, Mmax: number) => (ltbCriticalFactor({ L, props: p0, M }) * Mmax) / M00;
+    // Table 3.1: end moments M and ψ M
+    const t31: [number, number][] = [[1, 1], [0.75, 1.14], [0.5, 1.31], [0.25, 1.52], [0, 1.77], [-0.25, 2.05], [-0.5, 2.33], [-0.75, 2.57], [-1, 2.55]];
+    for (const [psi, c] of t31) expect(Math.abs(C1((x) => 1 + ((psi - 1) * x) / L, 1) - c)).toBeLessThan(0.006);
+    // Table 3.2: UDL and mid-span point load, in-plane simply supported and fixed; C1 for the largest moment
+    const cases: [string, (x: number) => number, number, number, number, 'q' | 'P'][] = [
+      ['UDL, simple', (x) => (x * (L - x)) / 2, (L * L) / 8, 1.127, 0.454, 'q'],
+      ['UDL, fixed', (x) => (6 * x * L - 6 * x * x - L * L) / 12, (L * L) / 12, 2.578, 1.554, 'q'],
+      ['P, simple', (x) => Math.min(x, L - x) / 2, L / 4, 1.348, 0.63, 'P'],
+      ['P, fixed', (x) => Math.min(x, L - x) / 2 - L / 8, L / 8, 1.683, 1.645, 'P'],
+    ];
+    for (const [, M, Mmax, c1, c2, kind] of cases) {
+      expect(Math.abs(C1(M, Mmax) - c1)).toBeLessThan(0.003);
+      // load on the top flange (destabilising), z_g = 200 mm: SN003b (2) within 2 %
+      const zg = 200, load = kind === 'q' ? { qzg: () => zg } : { points: [{ x: L / 2, Fzg: zg }] };
+      const fe = ltbCriticalFactor({ L, props: p0, M, ...load }) * Mmax;
+      expect(Math.abs(fe / (c1 * Ncr * (Math.sqrt((G * It) / Ncr + (c2 * zg) ** 2) - c2 * zg)) - 1)).toBeLessThan(0.02);
+    }
+    // stabilising load (bottom flange, z_g = −200 mm), real I_w: the FE equals an independent Ritz solution; (2) with the
+    // tabulated C2 overestimates M_cr here (P, simple: FE / (2) = 0.96), so (2) is not used for bottom-flange loads
+    const pw = uniform(), Mp = cases[2][1];
+    const fe = ltbCriticalFactor({ L, props: uniform, M: Mp, points: [{ x: L / 2, Fzg: -200 }] });
+    expect(fe / ritz(L, pw, Mp, 0, { x: L / 2, Fzg: -200 })).toBeCloseTo(1, 2);
+    const Mu = cases[0][1];
+    expect(ltbCriticalFactor({ L, props: uniform, M: Mu, qzg: () => -200 }) / ritz(L, pw, Mu, -200)).toBeCloseTo(1, 3);
   });
 
   it('χ_LT, (6.56)', () => {

@@ -4,7 +4,7 @@
  * rotate and warp) at the ends and at any interior restraint; the derivatives of the section along x
  * (taper slope effects) are neglected, which is the usual assumption for mild tapers (as LTBeamN).
  *
- *   Π = ½ ∫ (EI_z v''² + GI_t φ'² + EI_w φ''²) dx + λ ∫ M v'' φ dx − λ ½ ∫ q z_g φ² dx
+ *   Π = ½ ∫ (EI_z v''² + GI_t φ'² + EI_w φ''²) dx + λ ∫ M v'' φ dx − λ ½ ∫ q z_g φ² dx − λ ½ Σ F z_g φ(a)²
  *
  * Cubic Hermite elements in v and φ (4 DOF per node: v, v', φ, φ'), 4-point Gauss integration so the
  * properties may vary inside an element. λ_cr is the smallest positive root of det(K − λ B) = 0, from the
@@ -21,6 +21,8 @@ export interface LtbInput {
   M: (x: number) => number;
   /** distributed load times its height above the shear centre, at x (N); 0 = load at the shear centre */
   qzg?: (x: number) => number;
+  /** point loads: position x (mm) and load times its height above the shear centre (N mm), same convention as qzg */
+  points?: { x: number; Fzg: number }[];
   /** interior lateral and torsional restraints (fork), x in mm */
   restraints?: number[];
   elements?: number;
@@ -40,12 +42,14 @@ function hermite(xi: number, l: number) {
 export function ltbCriticalFactor(inp: LtbInput): number {
   const { L } = inp;
   const qzg = inp.qzg ?? (() => 0);
-  // mesh: element boundaries at the restraints, ~elements in total
-  const cuts = [0, ...(inp.restraints ?? []).filter((x) => x > 1e-6 && x < L - 1e-6), L].sort((a, b) => a - b);
+  // mesh: element boundaries at the restraints and point loads, ~elements in total
+  const inside = (x: number) => x > 1e-6 && x < L - 1e-6;
+  const cuts = [0, ...(inp.restraints ?? []).filter(inside), L].sort((a, b) => a - b);
+  const breaks = [...new Set([...cuts, ...(inp.points ?? []).map((p) => p.x).filter(inside)])].sort((a, b) => a - b);
   const ne = inp.elements ?? 24;
   const xs: number[] = [0];
-  for (let s = 1; s < cuts.length; s++) {
-    const a = cuts[s - 1], b = cuts[s], k = Math.max(4, Math.round((ne * (b - a)) / L));
+  for (let s = 1; s < breaks.length; s++) {
+    const a = breaks[s - 1], b = breaks[s], k = Math.max(4, Math.round((ne * (b - a)) / L));
     for (let i = 1; i <= k; i++) xs.push(a + ((b - a) * i) / k);
   }
   const nn = xs.length, n = 4 * nn;
@@ -68,6 +72,11 @@ export function ltbCriticalFactor(inp: LtbInput): number {
         B[pd[i]][pd[j]] += wl * qz * N[i] * N[j];
       }
     }
+  }
+  // point loads: the load-height term at the node under each load
+  for (const pt of inp.points ?? []) {
+    const i = xs.findIndex((x) => Math.abs(x - pt.x) < 1e-6);
+    if (i >= 0) B[4 * i + 2][4 * i + 2] += pt.Fzg;
   }
   // fork supports at the ends and at the restraints: v = φ = 0
   const fixed = new Set<number>();

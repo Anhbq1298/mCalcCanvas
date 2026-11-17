@@ -297,7 +297,10 @@ uniform run. The check table shows where each check governs (x and h, worst dept
 **LTB of the tapered beam** (`ltb.ts`): Vlasov beam, doubly symmetric, fork supports at the ends and props,
 cubic Hermite elements in v and φ with I_z(x), I_t(x), I_w(x) from the sheet's rules, the load-height term
 q z_g φ² (construction load on the top flange, z_g = h(x)/2), smallest positive root of det(K − λB) = 0
-(Cholesky + Jacobi). Taper-slope terms neglected (mild tapers, as LTBeamN). Verified (ltb.test.ts):
+(Cholesky + Jacobi), and point loads with their own load-height term F z_g φ(a)². Taper-slope terms neglected (mild tapers,
+as LTBeamN): ignoring the flange inclination overestimates M_cr for steep or doubly-tapered webs (Kucukler & Gardner 2019,
+Andrade & Camotim 2005); the page default slope is 0.57° per flange. SN003b Tables 3.1, 3.2: C1 for all ψ and the four
+transverse cases, C2 on the top flange (VALIDATION.md). Verified (ltb.test.ts):
 constant moment = exact closed form (1e-4); UDL at the shear centre C₁ = 1.13; top-flange UDL within 3 %
 of SN003b (C₁ 1.127, C₂ 0.454); a mid-span restraint = the half-span closed form; the 300 → 403 mm taper
 = an independent Rayleigh–Ritz sine series to 0.5 %; the published taper effect of Raftoyiannis & Adamakos (2010)
