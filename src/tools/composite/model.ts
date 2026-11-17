@@ -58,7 +58,7 @@ const SCALARS: Probe[] = [
   ['dmax', '\\delta_{max}', 'mm'], ['wc', 'w_c', 'mm'], ['ccam', 'c_{cam}', null], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['f1', 'f_1', 'Hz'], ['f1nc', 'f_{1.nc}', 'Hz'], ['flim', 'f_{lim}', 'Hz'], ['Ecdyn', 'E_{c.dyn}', 'GPa'], ['ddyn', '\\delta_{dyn}', 'mm'], ['ddynnc', '\\delta_{dyn.nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
   // tapered beam
   ['McrSN', 'M_{cr.SN}', 'kN m'], ['McrSheet', 'M_{cr}', 'kN m'], ['McrncSN', 'M_{cr.nc.SN}', 'kN m'], ['ctap', 'c_{tap}', null], ['hA', 'h_A', 'mm'], ['hB', 'h_B', 'mm'],
-  ['Ea', 'E_a', 'MPa'], ['Ga', 'G_a', 'MPa'], ['gM1', '\\gamma_{M1}', null], ['aLT', '\\alpha_{LT}', null], ['cweld', 'c_{weld}', null], ['czg', 'c_{zg}', null],
+  ['Ea', 'E_a', 'MPa'], ['Ga', 'G_a', 'MPa'], ['gM1', '\\gamma_{M1}', null], ['aLT', '\\alpha_{LT}', null], ['cweld', 'c_{weld}', null], ['czg', 'c_{zg}', null], ['nsp', 'n_{sp}', null], ['cpropLT', 'c_{prop.LT}', null],
   ['cFP', 'c_{F.P}', null], ['FRda', 'F_{Rd.a}', 'kN'], ['MelRd', 'M_{el.Rd}', 'kN m'],
 ];
 /** Utilisations the summary uses but the check table does not list (bare-steel bending and shear at x_M). */
@@ -89,8 +89,9 @@ const UR_BARE = ['M.nc', 'MV.nc', 'V.nc', 'LT.nc', 'F.P', 'F.S', 'FM.nc', 'd.nc'
  * - EN 1993-1-1 §6.3.2.2 / §6.3.4: α_ult,k = min_x W_pl(x) f_y / M_Ed(x), λ̄ = √(α_ult,k / α_cr), χ_LT (6.56),
  *   UR = γ_M1 / (χ_LT α_ult,k). For a uniform beam this is §6.3.2 with M_cr from the FE (λ̄ = √(W_pl f_y / M_cr)).
  *   Curve (Table 6.4) by h/b at the critical section: rolled I a / b; a tapered beam welded (c_weld = 1) c / d.
- * - Construction (LT): w_1,Ed on each span between supports or props (L_1, fork at the props), as the sheet; not
- *   used when the deck restrains the flange (L_LT < L_1, the sheet's value stays).
+ * - Construction (LT): w_1,Ed on the whole beam, continuous over the props (equal spans n_sp): hogging over a
+ *   prop compresses the bottom flange. A prop is a fork only when braced (c_prop.LT = 1), else a vertical support.
+ *   Not used when the deck restrains the flange (L_LT = e_r, the sheet's value stays).
  * - Bare steel (LT.nc): the ULS design loads (self-weight and the load tables) on the whole span, only when the
  *   flange is unrestrained (L_LT,nc = L); with the studs restraining it the sheet's value stays.
  * - Load position c_zg: 1 top flange (z_g = h(x)/2), 0 shear centre, −1 bottom flange, for every load.
@@ -116,11 +117,13 @@ function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: F
   const zf = Number.isFinite(rM.czg) ? Math.max(-1, Math.min(1, rM.czg)) : 1; // load height, fraction of h/2
   const L = rM.L * 1000;
   // one simply supported, fork-ended span [x0, x0 + l] (mm) under its loads: FE internal forces, then the eigenvalue
-  const segment = (x0: number, l: number, sl: FeLoads) => {
-    const beam = solveBeam({ L: l, EI: () => E * rRef.I_a * 1e4, supports: [{ x: 0, w: true }, { x: l, w: true }], loads: sl });
+  const Inom = (h: number) => (b * tf ** 3) / 6 + (b * tf * (h - tf) ** 2) / 2 + (tw * (h - 2 * tf) ** 3) / 12 + 4 * Af * (h / 2 - tf - 0.2234 * r) ** 2;
+  const Iy = (h: number) => rRef.I_a * 1e4 + Inom(h) - Inom(hR); // the sheet's rule for I_a(h)
+  const segment = (x0: number, l: number, sl: FeLoads, mids: number[] = [], braces: number[] = []) => {
+    const beam = solveBeam({ L: l, EI: (x) => E * Iy(hAt(x0 + x)), supports: [{ x: 0, w: true }, ...mids.map((x) => ({ x, w: true })), { x: l, w: true }], loads: sl, elements: 60 });
     const qAt = (x: number) => sl.dist.reduce((s, d) => s + (x >= d.x1 - 1e-9 && x <= d.x2 + 1e-9 ? d.q1 : 0), 0);
     const acr = ltbCriticalFactor({
-      L: l, props: (x) => props(x0 + x), M: beam.M,
+      L: l, props: (x) => props(x0 + x), M: beam.M, restraints: braces, elements: 24 + 8 * braces.length,
       qzg: (x) => (qAt(x) * zf * hAt(x0 + x)) / 2,
       pointLoads: sl.point.map((p) => ({ x: p.x, Pzg: (p.P * zf * hAt(x0 + p.x)) / 2 })),
     });
@@ -135,13 +138,13 @@ function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: F
     return { ur: gM1 / (chi * au), x: xu / 1000, acr, aul: au, lam, chi, alpha, Mcr: (acr * Mmax) / 1e6 };
   };
   const out: ReturnType<typeof feLtb> = {};
-  const L1 = rM.L1 * 1000, w1 = rM.w1; // kN/m = N/mm
-  if (Number.isFinite(L1) && L1 > 0 && Number.isFinite(w1) && !(rM.LLT * 1000 < L1 - 1)) {
-    const n = Math.max(1, Math.round(L / L1)), l = L / n;
-    for (let k = 0; k < n; k++) {
-      const s = segment(k * l, l, { dist: [{ x1: 0, x2: l, q1: w1 }], point: [] });
-      if (s && (!out.LT || s.ur > out.LT.ur)) out.LT = s;
-    }
+  const w1 = rM.w1; // kN/m = N/mm
+  // construction: the whole beam, continuous over the props (equal spans n_sp); the props are forks only when braced
+  if (Number.isFinite(w1) && !(rM.LLT * 1000 < rM.L1 * 1000 - 1)) {
+    const n = Math.max(1, Math.round(Number.isFinite(rM.nsp) ? rM.nsp : 1));
+    const props = Array.from({ length: n - 1 }, (_, i) => ((i + 1) * L) / n);
+    const s = segment(0, L, { dist: [{ x1: 0, x2: L, q1: w1 }], point: [] }, props, rM.cpropLT >= 1 ? props : []);
+    if (s) out.LT = s;
   }
   if (loads && rM.LLTnc >= L - 1) {
     const s = segment(0, L, loads);

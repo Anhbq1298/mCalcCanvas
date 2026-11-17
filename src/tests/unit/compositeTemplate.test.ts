@@ -242,13 +242,18 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('\\mathrm{UR}_{F.P}')).toBeCloseTo(0.19837,4); expect(value('\\mathrm{UR}_{F.S}')).toBeCloseTo(0.62909,4);
       expect(value('\\mathrm{UR}_{FM}')).toBeCloseTo(0.50778,4); expect(value('c_{rest}')).toBe(1);
     });
-    step('propped construction: span and LTB length k_LT L, g0 on the composite section, slip factor 0.5', () => {
-      const prop = region('c_{prop}\\coloneq');
+    step('propped construction: continuous over the prop (2 spans), LTB length L unless the props are braced, g0 on the composite section, slip factor 0.5', () => {
+      const prop = region('c_{prop}\\coloneq'), braced = region('c_{prop.LT}\\coloneq');
       e.setDefinitionOverride(prop, { value: 1 });
+      expect(value('n_{sp}')).toBe(2);
+      expect(value('L_{LT}','m')).toBeCloseTo(8,9); // a prop is a vertical support only by default
+      expect(value('M_{1.Ed}','kN m')).toBeCloseTo(42.76527683130001,6); // |M| over the prop = w L₁² / 8, two equal spans
+      expect(value('V_{1.Ed}','kN')).toBeCloseTo((0.625 * 8 * 42.76527683130001) / 4, 6); // 5 w L₁ / 8 at the prop (w L₁ = 8 M / L₁)
+      expect(value('\\delta_1','mm')).toBeCloseTo(1.1464193931555875 * 0.005416 / (5 / 384),7); // w L₁⁴ / 185 EI
+      e.setDefinitionOverride(braced, { value: 1 });
       expect(value('L_{LT}','m')).toBeCloseTo(4,9);
-      expect(value('M_{1.Ed}','kN m')).toBeCloseTo(42.76527683130001,6);
       expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(0.215929288170264,7);
-      expect(value('\\delta_1','mm')).toBeCloseTo(1.1464193931555875,7);
+      e.setDefinitionOverride(braced, null);
       expect(value('\\delta_g','mm')).toBeCloseTo(4.749074859401146,7);
       expect(value('C_s')).toBeCloseTo(0.5,10);
       expect(value('\\delta_{slip}','mm')).toBeCloseTo(3.084829292980651,3);
