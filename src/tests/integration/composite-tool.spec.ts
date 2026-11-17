@@ -4,7 +4,8 @@ import { expect, test } from '@playwright/test';
 test('mCompositeBeamDesign calculates, follows a large point load and hands the report to mCalcCanvas', async ({ page, context }) => {
   test.setTimeout(120_000);
   await page.goto('/composite/');
-  await expect(page.getByTestId('ur-des')).toHaveText('0.971');
+  // page default case: UB 406x140x46 tapered to 300 mm at A, L = 5.2 m at 2 m, 200 mm slab
+  await expect(page.getByTestId('ur-des')).toHaveText('0.717');
   await expect(page.getByTestId('verdict')).toContainText('Composite');
   // An invalid entry is flagged next to the field and not sent to the calculation.
   const span = page.locator('input[data-input="L"]');
@@ -12,15 +13,15 @@ test('mCompositeBeamDesign calculates, follows a large point load and hands the 
   await span.blur();
   await expect(span).toHaveAttribute('aria-invalid', 'true');
   await expect(page.getByText('Error: enter a number')).toBeVisible();
-  await expect(page.getByTestId('ur-des')).toHaveText('0.971');
-  await span.fill('8');
+  await expect(page.getByTestId('ur-des')).toHaveText('0.717');
+  await span.fill('5.2');
   await span.blur();
   await expect(span).toHaveAttribute('aria-invalid', 'false');
   // The loads are edited in the Modify load dialog on the loading diagram.
   await page.getByTestId('load-open').click();
   await expect(page.getByRole('dialog', { name: 'Modify load' })).toBeVisible();
   const rows = page.locator('dialog.load-dialog section:has(h2:text("Point loads")) tbody tr');
-  for (const [i, a, f] of [[0, '1.5', '100'], [1, '1.5', '150']] as const) {
+  for (const [i, a, f] of [[0, '1.5', '250']] as const) {
     await rows.nth(i).locator('input').nth(0).fill(a);
     await rows.nth(i).locator('input').nth(0).blur();
     await rows.nth(i).locator('input').nth(1).fill(f);
@@ -31,7 +32,7 @@ test('mCompositeBeamDesign calculates, follows a large point load and hands the 
   await expect(page.getByTestId('verdict')).toContainText('Bare steel');
   await expect(page.getByTestId('basis-note')).toBeVisible();
   await page.getByTestId('section-select').selectOption({ label: 'UB 533x210x92' });
-  await expect(page.getByTestId('ur-des')).toHaveText('0.925', { timeout: 30_000 });
+  await expect(page.getByTestId('ur-des')).toHaveText('1.085', { timeout: 30_000 });
   const [report] = await Promise.all([context.waitForEvent('page'), page.getByTestId('open-report').click()]);
   await report.waitForLoadState();
   await report.waitForFunction(() => !!(window as unknown as { __calccanvas?: unknown }).__calccanvas);
@@ -44,7 +45,7 @@ test('mCompositeBeamDesign calculates, follows a large point load and hands the 
 test('mCompositeBeamDesign optimizes the section in a dialog with strength and deflection targets', async ({ page }) => {
   test.setTimeout(240_000);
   await page.goto('/composite/');
-  await expect(page.getByTestId('ur-des')).toHaveText('0.971');
+  await expect(page.getByTestId('ur-des')).toHaveText('0.717');
   await page.getByTestId('optimize-open').click();
   await expect(page.getByRole('dialog', { name: 'Optimize section' })).toBeVisible();
   await page.getByTestId('t-strength').fill('abc');
@@ -76,7 +77,7 @@ test('mCompositeBeamDesign optimizes the section in a dialog with strength and d
   await page.getByTestId('cam-pct').fill('100');
   await page.getByTestId('cam-step').fill('1');
   await page.getByTestId('cam-min').fill('1');
-  await page.getByTestId('cam-span').fill('6');
+  await page.getByTestId('cam-span').fill('4');
   await page.getByTestId('optimize').click();
   await expect(page.getByTestId('optimize-status')).toContainText('Optimizing', { timeout: 5_000 }).catch(() => undefined);
   await expect(page.getByTestId('optimize-status')).toContainText('Lightest UB', { timeout: 200_000 });
@@ -114,17 +115,18 @@ test('slab type: filled steel deck with transverse ribs reduces the studs and dr
 });
 
 
-test('tapered beam: depths at both supports, checks at the critical sections, back to uniform', async ({ page }) => {
+test('tapered beam: the default case is tapered; unticking gives the uniform section', async ({ page }) => {
   await page.goto('/composite/');
-  await expect(page.getByTestId('ur-des')).toHaveText('0.971');
-  await page.getByTestId('taper').check();
-  await expect(page.getByTestId('taper-note')).toContainText('Same depth at both ends');
-  const hA = page.locator('label:has-text("Depth at start") input');
-  await hA.fill('300');
-  await hA.press('Enter');
-  await expect(page.getByTestId('taper-note')).toContainText('Checked at the critical sections', { timeout: 30_000 });
-  await expect(page.getByTestId('ur-des')).toHaveText('1.270', { timeout: 30_000 });
+  await expect(page.getByTestId('ur-max')).toHaveText('0.912', { timeout: 30_000 }); // LTB in construction at h = 300
+  await expect(page.getByTestId('taper-note')).toContainText('Checked at the critical sections');
   await expect(page.getByTestId('ur-table')).toContainText('x = 0.00 m, h = 300.0 mm');
   await page.getByTestId('taper').uncheck();
-  await expect(page.getByTestId('ur-des')).toHaveText('0.971', { timeout: 30_000 });
+  await expect(page.getByTestId('ur-max')).toHaveText('0.790', { timeout: 30_000 });
+  await page.getByTestId('taper').check();
+  const hA = page.locator('label:has-text("Depth at start") input');
+  await expect(hA).toHaveValue('300');
+  await hA.fill('403.2');
+  await hA.press('Enter');
+  await expect(page.getByTestId('taper-note')).toContainText('Same depth at both ends', { timeout: 30_000 });
+  await expect(page.getByTestId('ur-max')).toHaveText('0.790', { timeout: 30_000 });
 });

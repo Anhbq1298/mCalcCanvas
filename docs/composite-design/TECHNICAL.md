@@ -292,3 +292,7 @@ UR.des is then recomputed from the composite or bare-steel set. With h_A = h_B t
 uniform run. The check table shows where each check governs (x and h, worst depth, or along the span).
 Limits: the stability checks use the shallowest section over the whole length (no tapered LTB theory,
 e.g. EN 1993-1-1 §6.3.4); point loads take the worst depth, not the depth at the load.
+
+**Page default case** (`PAGE_DEFAULTS`, model.ts; the worksheet template keeps the SCI reference example):
+UB 406x140x46 tapered to 300 mm at A, L = 5.2 m, beams at 2 m, 200 mm solid slab, SDL 3 kPa, LL 1.5 kPa,
+SDL point load 60 kN at 1 m from A. UR.des = 0.717 (slab bars b-b); governing 0.912 (LTB in construction, unpropped).

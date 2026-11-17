@@ -421,6 +421,38 @@ const VECTORS: Probe[] = [
 const DEF = /^(.*?)\\coloneq\s*(-?\d+(?:\.\d+)?)(?:\\,\\mathrm\{([^}]*)\})?$/;
 const text = (html: string) => html.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim();
 
+/**
+ * The page's default case (mCompositeBeamDesign opens with it; the worksheet template keeps its own
+ * reference example): UB 406x140x46 tapered to 300 mm at A, L = 5.2 m at 2 m centres, 200 mm solid slab,
+ * SDL 3 kPa + LL 1.5 kPa and a 60 kN SDL point load 1 m from A.
+ */
+export const PAGE_DEFAULTS = {
+  section: 'UB 406x140x46',
+  inputs: { L: 5.2, s_b: 2, h_c: 200, 'c_{tap}': 1, 'h_{A.in}': 300, 'h_{B.in}': 0 } as Record<string, number>,
+  tables: [[['G', '0', '5.2', '3', '1.35'], ['Q', '0', '5.2', '1.5', '1.5']], [['G', '1', '60', '1.35']]],
+};
+
+/** The worksheet with the page defaults written in, as a .mCCV string. */
+export function withPageDefaults(raw: string, d = PAGE_DEFAULTS): string {
+  const doc = JSON.parse(raw) as { shapes: Shape[] };
+  const id = sections.find((x) => x.name === d.section)?.id;
+  let ti = 0;
+  for (const s of [...doc.shapes].sort((a, b) => a.y - b.y || a.x - b.x)) {
+    if (s.type === 'table' && (s as TableShape).props.input) {
+      const t = s as TableShape, rows = d.tables[ti++];
+      if (!rows) continue;
+      const cells = [t.props.cells[0], t.props.cells[1], ...rows.map((r) => r.map((value) => ({ value })))];
+      t.props = { ...t.props, cells, rows: cells.length };
+    }
+    if (s.type !== 'math') continue;
+    const m = s as MathShape, def = DEF.exec(m.props.latex.trim());
+    if (!def) continue;
+    if (def[1] === '\\mathrm{Section}' && id !== undefined) m.props = { ...m.props, latex: `\\mathrm{Section}\\coloneq${id}` };
+    else if (def[1] in d.inputs) m.props = { ...m.props, latex: `${def[1]}\\coloneq ${d.inputs[def[1]]}${def[3] ? `\\,\\mathrm{${def[3]}}` : ''}` };
+  }
+  return JSON.stringify(doc);
+}
+
 export class CompositeModel {
   readonly doc: { shapes: Shape[] } & Record<string, unknown>;
   readonly inputs: InputField[] = [];

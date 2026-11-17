@@ -3,8 +3,8 @@
  * mCompositeBeamDesign calculation worker: the worksheet runs here so typing and
  * scrolling stay responsive while it recalculates (no long task on the main thread).
  */
-import raw from '../../../templates/Composite_Beam_EC4.mCCV?raw';
-import { CompositeModel, designSection, type DesignCriteria } from './model';
+import template from '../../../templates/Composite_Beam_EC4.mCCV?raw';
+import { CompositeModel, designSection, withPageDefaults, type DesignCriteria } from './model';
 
 export type ToWorker =
   | { kind: 'input'; id: string; value: number }
@@ -18,6 +18,7 @@ export type ToWorker =
 
 export type { OptimizeResult } from './model';
 
+const raw = withPageDefaults(template); // the page opens with its own default case
 const model = new CompositeModel(raw);
 let screen: CompositeModel | null = null; // optimiser pool only: fast rejection without the deflection curves
 const post = (msg: unknown) => (self as unknown as DedicatedWorkerGlobalScope).postMessage(msg);

@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { BAR_DIAMETERS, CHECKS, camberFor, CompositeModel, designSection, type DesignCriteria, DEFLECTION_CHECKS, governingCheck, governingSplit, STUD_SPACINGS } from '../../tools/composite/model';
+import { withPageDefaults, BAR_DIAMETERS, CHECKS, camberFor, CompositeModel, designSection, type DesignCriteria, DEFLECTION_CHECKS, governingCheck, governingSplit, STUD_SPACINGS } from '../../tools/composite/model';
 import { sections } from '../../engineering/steel/sections';
 import { parseDocument } from '../../documents/DocumentSerializer';
 
@@ -411,5 +411,17 @@ describe('mCompositeBeamDesign headless model', () => {
     }
     expect(governingCheck(t).ur).toBeGreaterThanOrEqual(t['UR.des'] - 1e-9);
   }, 300_000);
+
+  it('page default case: UB 406x140x46 tapered to 300 mm, L = 5.2 m at 2 m, 200 mm slab, 60 kN SDL at 1 m', () => {
+    const m = new CompositeModel(withPageDefaults(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8')));
+    expect(sections.find((x) => x.id === m.sectionId)!.name).toBe('UB 406x140x46');
+    expect(m.tables.map((t) => t.rows)).toEqual([[['G', '0', '5.2', '3', '1.35'], ['Q', '0', '5.2', '1.5', '1.5']], [['G', '1', '60', '1.35']]]);
+    const r = m.results();
+    expect(r.errors).toEqual([]);
+    expect([r.taper, r.hA, r.L, r.h_c, r.comp]).toEqual([1, 300, 5.2, 200, 1]);
+    expect(r['UR.des']).toBeCloseTo(0.717, 3);
+    expect(governingCheck(r)).toMatchObject({ key: 'LT' });
+    expect(governingCheck(r).ur).toBeCloseTo(0.912, 3);
+  }, 120_000);
 });
 
