@@ -355,7 +355,7 @@ export function App() {
     setOpt({ running: false, result, seconds: (performance.now() - t0) / 1000 });
   };
   const renderField = (f: InputField) =>
-    ['c_{prop}', 'c_{LT.d}', 'c_{pe}', 'c_{prop.LT}'].includes(f.name) ? (
+    ['c_{prop}', 'c_{LT.d}', 'c_{pe}'].includes(f.name) ? (
       <label key={f.id} className={`f check ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
         <span><Sym latex={f.name} /> <em className="input-description"><Rich text={f.label.replace(/:\s*1 = yes.*$/, '')} /></em></span>
         <input id={`in-${f.id}`} type="checkbox" checked={value(f) >= 1} onChange={(e) => setInput(f, e.target.checked ? 1 : 0)} />
@@ -542,7 +542,7 @@ export function App() {
 
                   </>
                 ) : (
-                  <div className="fields">{fields.filter((f) => f.name !== 'h_c' && f.name !== 'c_{zg}' && !(['k_{LT}', 'c_{prop.LT}'].includes(f.name) && value(byName('c_{prop}')) < 1) && !(res.ctop === 0 && ['d_{s.t}', 's_{f.t}'].includes(f.name))).map(renderField)}</div>
+                  <div className="fields">{fields.filter((f) => f.name !== 'h_c' && f.name !== 'c_{zg}' && !(res.ctop === 0 && ['d_{s.t}', 's_{f.t}'].includes(f.name))).map(renderField)}</div>
                 )}
               </section>
             ))}

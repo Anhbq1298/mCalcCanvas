@@ -338,13 +338,9 @@ SDL point load 60 kN at 1 m from A. UR.des = 0.717 (slab bars b-b); governing 1.
   the sheet's value. Load position (Modify load): top flange (default), shear centre, bottom flange (worksheet c_zg).
 - The report: the sheet's M_cr = M_cr.FE when the page writes it (uniform beams), else the SN003b value (M_cr.SN).
 
-## Propped construction: continuous beam (corrected 2026-11-17)
+## Construction bracing (k_LT)
 
-A prop is a support: the beam is continuous over the props (equal spans n_sp = 1 / k_LT: 2, 3 or 4), not a set of
-simple spans. Worksheet: max |M| = c_M w L₁², max V = c_V w L₁, max deflection c_δ w L₁⁴ / EI with c_M = 0.125 /
-0.125 / 0.1 / 0.10714, c_V = 0.5 / 0.625 / 0.6 / 0.60714, c_δ = 5/384 / 0.005416 / 0.006884 / 0.006460 for 1–4 spans
-(the in-plane FE reproduces them, compositeTool.test.ts). LTB: hogging over a prop compresses the bottom flange; a
-prop is a fork restraint only when braced (c_prop.LT = 1, "Props brace the beam" on the page), otherwise L_LT = L
-and the page's FE takes the whole continuous beam with its real moment diagram (UB 406x140x46, L = 8 m, one prop:
-UR_LT 0.26 braced, 1.24 unbraced; the former simple-span model gave 0.34). Before: simple spans L₁ with
-L_LT = k_LT L — unconservative in shear (5wL₁/8 at the prop) and for unbraced props.
+k_LT is LTB bracing only: fork restraints at k_LT L during construction. The moments, shear and deflection stay
+those of the simple span L (w₁L²/8, w₁L/2, 5w₁L⁴/384EI). The sheet's L_LT = k_LT L (SN003b on the braced length);
+the page's FE takes the whole span with its moment diagram and forks at the braces. (A continuous-beam model of the
+props, 518d74e, was reverted: the input is bracing, not a change of the structural scheme.)

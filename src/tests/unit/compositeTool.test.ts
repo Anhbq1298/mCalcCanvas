@@ -490,26 +490,17 @@ describe('mCompositeBeamDesign headless model', () => {
       const rep = new CompositeModel(JSON.stringify(doc)).results();
       expect(rep.McrSheet).toBeCloseTo(r['Mcr.LT'], 2); // the sheet's own M_cr is now the FE value
     });
-    step('propped: continuous beam over the props (FE) = the sheet coefficients; unbraced props govern LTB', () => {
-      set('c_{zg}', 1); set('s_{sc.A}', 125); set('s_{sc.B}', 200);
-      set('c_{prop}', 1);
-      for (const k of [0.5, 1 / 3, 0.25]) {
-        set('k_{LT}', k);
-        const q = m.results(), L = q.L * 1000, n = Math.round(1 / k);
-        const sup = Array.from({ length: n + 1 }, (_, i) => ({ x: (i * L) / n, w: true }));
-        const b = solveBeam({ L, EI: () => q.Ea * q.I_a * 1e4, supports: sup, loads: { dist: [{ x1: 0, x2: L, q1: q.w1 }] }, elements: 120 });
-        const d = solveBeam({ L, EI: () => q.Ea * q.I_a * 1e4, supports: sup, loads: { dist: [{ x1: 0, x2: L, q1: q.w1k }] }, elements: 120 });
-        let M = 0, dm = 0; for (let i = 0; i <= 2400; i++) { const x = (L * i) / 2400; M = Math.max(M, Math.abs(b.M(x))); dm = Math.max(dm, d.deflection(x)); }
-        expect(q.nsp).toBe(n);
-        expect(q.M1 / (M / 1e6)).toBeCloseTo(1, 3);
-        expect(q.d1 / dm).toBeCloseTo(1, 3);
-        const unbraced = q['UR.LT'];
-        set('c_{prop.LT}', 1);
-        const braced = m.results()['UR.LT'];
-        set('c_{prop.LT}', 0);
-        expect(unbraced).toBeGreaterThan(braced);
-      }
-      set('c_{prop}', 0); set('k_{LT}', 0.5);
+    step('braced construction (propped, k_LT): fork restraints at k_LT L, the moment of the span L unchanged', () => {
+      const unbraced = m.results();
+      set('c_{prop}', 1); set('k_{LT}', 0.5);
+      const q = m.results();
+      expect(q.M1).toBeCloseTo(unbraced.M1, 9); // w L² / 8 either way
+      expect(q.LLT).toBeCloseTo(q.L / 2, 9);
+      // FE M_cr of the whole span with a fork at mid-span: the half-span value with the mid-span part of the diagram
+      expect(q['Mcr.LT']).toBeGreaterThan(2 * unbraced['Mcr.LT']);
+      expect(q['UR.LT']).toBeLessThan(unbraced['UR.LT']);
+      expect(q['Mcr.LT'] / q.McrSN).toBeGreaterThan(0.9); // SN003b on the braced segment (UDL C1, C2) is an approximation here
+      set('c_{prop}', 0);
     });
     step('load position: shear centre and bottom flange raise M_cr, top flange is the default', () => {
       const top = r['Mcr.LT'];
