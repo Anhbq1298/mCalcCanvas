@@ -546,7 +546,7 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
         {/* transverse bars repeated along the span (spacing indicative), seen through the concrete */}
         {barsZ.map((z) => (
           <g key={z}>
-            {rebarLines(yTopBar, z, 't')}
+            {r.ctop !== 0 && rebarLines(yTopBar, z, 't')}
             {rebarLines(yBotBar, z, 'b')}
           </g>
         ))}
@@ -565,7 +565,7 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
         <rect x={P(-b_a / 2, 0, 0)[0]} y={yBot} width={b_a * k} height={t_f * k} fill="#C8CBC3" stroke={ink} strokeWidth={CAD.geo} />
         <rect x={cx - Math.max(1.5, (t_w * k) / 2)} y={yBot + t_f * k} width={Math.max(3, t_w * k)} height={24} fill="#C8CBC3" stroke={ink} strokeWidth={CAD.geo} />
         {/* cut-face bars first, then the stud over them */}
-        {[yTopBar, yBotBar].map((y) => <g key={y}>{rebarLines(y, 0, 'f')}</g>)}
+        {(r.ctop === 0 ? [yBotBar] : [yTopBar, yBotBar]).map((y) => <g key={y}>{rebarLines(y, 0, 'f')}</g>)}
         <g {...stud}>
           <rect x={cx - d / 2} y={yBot - (hsc - 10) * k} width={d} height={(hsc - 10) * k} />
           <rect x={cx - hd / 2} y={yBot - hsc * k} width={hd} height={10 * k} />
@@ -574,7 +574,7 @@ export function ShearSurface3D({ r, which }: { r: Record<string, number>; which:
         {which === 'a'
           ? [-aX, aX].map((X) => <line key={X} x1={P(X, 0, 0)[0]} x2={P(X, 0, 0)[0]} y1={yBot - hpe * k} y2={yTop} stroke={col} strokeWidth={2} strokeDasharray="6 4" />)
           : <polyline points={pts(P(-bX, hpe, 0), P(-bX, hsc, 0), P(bX, hsc, 0), P(bX, hpe, 0))} fill="none" stroke={col} strokeWidth={2} strokeDasharray="6 4" />}
-        <text x={W - 4} y={yBot + 14} textAnchor="end" fill={C.muted} fontSize={CAD.font - 1}>{`bars @ ${fmt(which === 'b' ? r.sfb : Math.min(r.sft, r.sfb), 0)} mm, indicative`}</text>
+        <text x={W - 4} y={yBot + 14} textAnchor="end" fill={C.muted} fontSize={CAD.font - 1}>{`bars @ ${fmt(which === 'b' || r.ctop === 0 ? r.sfb : Math.min(r.sft, r.sfb), 0)} mm, indicative`}</text>
         {/* longitudinal shear on the outstand, along the span */}
         <line x1={arrowA[0]} y1={arrowA[1]} x2={arrowB[0]} y2={arrowB[1]} stroke={C.blue} strokeWidth={1.6} />
         <path d="M0,0 l-9,-3.5 l0,7 z" fill={C.blue} transform={`translate(${arrowB[0]} ${arrowB[1]}) rotate(${ang})`} />
@@ -608,7 +608,7 @@ export function LongSection({ r }: { r: Record<string, number> }) {
   const studX = Array.from({ length: n }, (_, i) => i).filter((i) => i % every === 0).map((i) => i * pitch + pitch / 2);
   const botBars = across ? Array.from({ length: Math.floor(lenMm / sfb) + 1 }, (_, j) => j * sfb) : Array.from({ length: n + 1 }, (_, j) => j * pitch);
   const dimY = yOf(-t_f) + 22; // stud spacing dimension sits under the flange
-  const hasTop = Number.isFinite(sft) && sft > 0 && Number.isFinite(dst);
+  const hasTop = Number.isFinite(sft) && sft > 0 && Number.isFinite(dst) && r.ctop !== 0;
   const hasBot = Number.isFinite(dsb);
   const topX = hasTop ? X(sft) : 0;
   const botX = X(across ? botBars[Math.min(botBars.length - 1, Math.round((0.72 * lenMm) / sfb))] : 3 * pitch); // a bar clear of the stud-spacing dimension
@@ -681,16 +681,15 @@ export function LongSection({ r }: { r: Record<string, number> }) {
  * beam, studs at their spacing each side of x_M) and the cross-section 1–1. Lengths along the span are to
  * scale; depths are drawn larger when the beam would otherwise be too thin to read.
  */
-export function BeamCad({ r, name }: { r: Record<string, number>; name: string }) {
-  const [box, W] = useWidth(720);
+export function BeamCad({ r, name, part }: { r: Record<string, number>; name: string; part: 'elevation' | 'section' }) {
+  const [box, W] = useWidth(part === 'section' ? 200 : 720);
   const uid = useId().replace(/:/g, '');
   const { L, h_c, h_a, b_a, t_f, t_w, hsc, dsc, dhead } = r;
   if (![L, h_c, h_a, b_a, t_f, t_w, hsc].every((v) => Number.isFinite(v) && v > 0)) return <div ref={box} />;
   const ink = C.ink, dimC = C.muted, slabFill = '#EEF1EF';
   const hpe = r.hpe > 0 ? r.hpe : 0, across = hpe > 0 && r.ctr >= 1, along = hpe > 0 && !across, re = r.cre >= 1;
   const Lmm = L * 1000, D = h_c + h_a;
-  const secW = W >= 560 ? 190 : 0; // cross-section beside the elevation when there is room, else below
-  const X0 = 62, X1 = W - secW - 34;
+  const X0 = 34, X1 = W - 34; // the same stations as the load drawings below, so the spans line up
   const kh = (X1 - X0) / Lmm, kv = Math.max(kh, 112 / D);
   const top = 46, yS = top + h_c * kv, yB = yS + h_a * kv; // slab top, steel top, steel bottom
   const X = (mm: number) => X0 + mm * kh, Yup = (mm: number) => yS - mm * kv; // mm above the steel top
@@ -713,12 +712,12 @@ export function BeamCad({ r, name }: { r: Record<string, number>; name: string }
   const dimY = yB + 46, H1 = dimY + 30;
   const cutX = X(xM > Lmm * 0.85 ? Lmm * 0.06 : Lmm * 0.94); // clear of the stud notes
   // ── cross-section 1–1 ──
-  const sx0 = secW ? W - secW + 6 : 30, sw = secW ? secW - 16 : W - 60, sTop = secW ? top : H1 + 34;
+  const sx0 = 0, sw = Math.min(W, 230), sTop = 30;
   const slabMm = Math.max(2.4 * b_a, 420);
   const ks = Math.min((sw - 46) / slabMm, 150 / D);
   const cx = sx0 + 40 + (slabMm * ks) / 2, SY = (mm: number) => sTop + mm * ks; // mm below the slab top
   const sL = cx - (slabMm * ks) / 2, sR = cx + (slabMm * ks) / 2;
-  const H = Math.max(H1, SY(D) + 44) + (secW ? 0 : 0);
+  const H = part === 'section' ? SY(D) + 46 : H1;
   const nre = r.nre >= 2 ? 2 : 1, studXs = nre === 2 ? [-Math.min(b_a / 4, 50), Math.min(b_a / 4, 50)] : [0];
   const zig = (x: number, y0: number, y1: number) => `M${x},${y0 - 5} L${x},${y0 + (y1 - y0) * 0.35} l-4,${(y1 - y0) * 0.1} l8,${(y1 - y0) * 0.1} l-4,${(y1 - y0) * 0.1} L${x},${y1 + 5}`;
   return (
@@ -728,6 +727,7 @@ export function BeamCad({ r, name }: { r: Record<string, number>; name: string }
           <clipPath id={`${uid}e`}><rect x={X0} y={top} width={X1 - X0} height={h_c * kv + 0.5} /></clipPath>
           <clipPath id={`${uid}s`}><rect x={sL} y={sTop - 1} width={sR - sL} height={h_c * ks + 2} /></clipPath>
         </defs>
+        {part === 'elevation' && <>
         {/* ── longitudinal section A–B ── */}
         <rect x={X0} y={top} width={X1 - X0} height={h_c * kv} fill={slabFill} stroke={ink} strokeWidth={CAD.geo} />
         {across && (
@@ -754,7 +754,7 @@ export function BeamCad({ r, name }: { r: Record<string, number>; name: string }
           <circle cx={X1 - 4} cy={yB + 15} r="2" strokeWidth={CAD.dim} /><circle cx={X1 + 4} cy={yB + 15} r="2" strokeWidth={CAD.dim} />
         </g>
         {hatch(X0, yB + 14.5)}{hatch(X1, yB + 18)}
-        {txt(X0 - 18, yB + 20, 'A', 'end')}{txt(X1 + 18, yB + 20, 'B', 'start')}
+        {txt(X0 - 6, yB - 4, 'A', 'end')}{txt(X1 + 6, yB - 4, 'B', 'start')}
         {/* stud zones each side of the maximum moment */}
         <line x1={X(xM)} x2={X(xM)} y1={top - 22} y2={yB + 6} stroke={dimC} strokeWidth={CAD.dim} strokeDasharray="10 3 2 3" />
         {txt(X(xM), top - 26, `x_M ${fmt(r.xM, 2)} m`, 'middle', dimC)}
@@ -767,14 +767,16 @@ export function BeamCad({ r, name }: { r: Record<string, number>; name: string }
         {txt(cutX + 5, top - 4, '1', 'start')}{txt(cutX + 5, yB + 14, '1', 'start')}
         {/* depth and span dimensions */}
         <g stroke={dimC} strokeWidth={CAD.dim}>
-          <line x1={X0 - 18} x2={X0 - 18} y1={top} y2={yB} />
-          {[top, yS, yB].map((y) => <g key={y}><line x1={X0 - 24} x2={X0 - 4} y1={y} y2={y} />{tick(X0 - 18, y)}</g>)}
+          <line x1={X0 - 16} x2={X0 - 16} y1={top} y2={yS} />
+          {[top, yS].map((y) => <g key={y}><line x1={X0 - 22} x2={X0 - 3} y1={y} y2={y} />{tick(X0 - 16, y)}</g>)}
         </g>
-        {txt(X0 - 27, (top + yS) / 2 + 4, `h_c ${fmt(h_c, 0)}`, 'end')}
-        {txt(X0 - 27, (yS + yB) / 2 + 4, `h_a ${fmt(h_a, 0)}`, 'end')}
+        <text transform={`translate(${X0 - 22},${(top + yS) / 2}) rotate(-90)`} textAnchor="middle" fill={ink} fontSize={CAD.font - 1.5} className="num">{fmt(h_c, 0)}</text>
+
         <DimChain stations={xM > 1 && Lmm - xM > 1 ? [0, r.xM, L] : [0, L]} X={(v) => X0 + (v / L) * (X1 - X0)} y={dimY} yTop={yB + 24} />
         {txt(X0, H1 - 4, `Longitudinal section A–B, ${name}${kv > kh * 1.01 ? `; depths drawn ×${fmt(kv / kh, 1)}` : ''}${hpe > 0 ? `; deck ribs ${across ? 'perpendicular' : 'parallel'}` : ''}`, 'start', dimC)}
 
+        </>}
+        {part === 'section' && <>
         {/* ── cross-section 1–1 ── */}
         <rect x={sL} y={SY(0)} width={sR - sL} height={h_c * ks} fill={slabFill} stroke="none" />
         <line x1={sL} x2={sR} y1={SY(0)} y2={SY(0)} stroke={ink} strokeWidth={CAD.geo} />
@@ -788,7 +790,7 @@ export function BeamCad({ r, name }: { r: Record<string, number>; name: string }
         {across && <line x1={sL} x2={sR} y1={SY(h_c - hpe)} y2={SY(h_c - hpe)} stroke={ink} strokeWidth={CAD.dim} strokeDasharray="6 3" />}
         <path d={`${zig(sL, SY(0), SY(h_c))} ${zig(sR, SY(0), SY(h_c))}`} fill="none" stroke={ink} strokeWidth={CAD.dim} />
         {/* transverse bars, top and bottom */}
-        <line x1={sL + 4} x2={sR - 4} y1={SY(30)} y2={SY(30)} stroke={ink} strokeWidth={1.8} />
+        {r.ctop !== 0 && <line x1={sL + 4} x2={sR - 4} y1={SY(30)} y2={SY(30)} stroke={ink} strokeWidth={1.8} />}
         <line x1={sL + 4} x2={sR - 4} y1={SY(h_c - hpe - 30)} y2={SY(h_c - hpe - 30)} stroke={ink} strokeWidth={1.8} />
         {/* steel section */}
         <g fill={C.sheet} stroke={ink} strokeWidth={CAD.geo} strokeLinejoin="round">
@@ -813,6 +815,7 @@ export function BeamCad({ r, name }: { r: Record<string, number>; name: string }
         <text transform={`translate(${sL - 20},${SY(h_c + h_a / 2)}) rotate(-90)`} textAnchor="middle" fill={ink} fontSize={CAD.font - 1} className="num">{fmt(h_a, 0)}</text>
         {txt(cx, SY(D) + 11, `b_a ${fmt(b_a, 0)}`)}
         {txt(cx, SY(D) + 36, `Section 1–1${Number.isFinite(r.b_eff) ? `, b_eff ${fmt(r.b_eff, 0)}` : ''}`, 'middle', dimC)}
+        </>}
       </svg>
     </div>
   );

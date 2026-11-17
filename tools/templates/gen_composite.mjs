@@ -125,6 +125,7 @@ input('Transverse deck fixed to the top flange restrains the beam in constructio
 input('Transverse deck continuous across the beam, counted as transverse reinforcement (6.25): 1 = yes, 0 = no', 'c_{pe}', 0);
 input('Sheet cross-section per metre of beam (manufacturer)', 'A_{pe}', 1664, 'mm^2/m');
 input('Deck yield strength', 'f_{yp}', 550, 'MPa');
+input('Transverse bar layers in a deck slab: 1 = one layer on the deck, below the stud heads (A_b only); 2 = top and bottom', 'n_{lay}', 1);
 
 H(2, '2. LOADING');
 l.out[l.out.length - 1].props.pageBreak = true; // loading starts on its own page
@@ -488,7 +489,8 @@ calc('Connector flow at the closest spacing','v_f',R`\frac{n_{re}P_{Rd}}{\min\le
 calc('Deck design strength', 'f_{yp.d}', R`\frac{f_{yp}}{\gamma_{M0}}`, 'MPa', false);
 P('Deck counted on a-a, (6.25)', R`a_{pe}\coloneq${IF([R`c_{tr}\ge1\land c_{pe}\ge1`, 'A_{pe}'], [null, R`0\,\mathrm{mm^2/m}`])}`, M(units('mm^2/m')));
 P('Surface b-b to be checked: 1 = yes, 0 = no (transverse deck, §6.6.6.4(2))', R`c_{bb}\coloneq${IF([R`c_{tr}\ge1`, '0'], [null, '1'])}`, M({ precision: 0 }));
-calc('Top bars per unit length','a_t',R`\frac{\pi d_{s.t}^2}{4s_{f.t}}`,'mm^2/m', false);
+P('Top layer present: 1 = yes, 0 = no (deck slab with one layer, 1.11)', R`c_{top}\coloneq${IF([R`c_{deck}\ge1\land n_{lay}\le1`, '0'], [null, '1'])}`, M({ precision: 0 }));
+calc('Top bars per unit length','a_t',R`c_{top}\frac{\pi d_{s.t}^2}{4s_{f.t}}`,'mm^2/m', false);
 calc('Bottom bars per unit length','a_b',R`\frac{\pi d_{s.b}^2}{4s_{f.b}}`,'mm^2/m', false);
 calc('Strut crushing limit ν f_cd, (6.22)','v_{max}',R`0.6\left(1-\frac{f_{ck}}{250\,\mathrm{MPa}}\right)f_{cd}`,'MPa', false);
 T('Strut angle chosen automatically on each surface: the largest cot θ_f in 1.0 … 2.0 (EC2 §6.2.4(4), flange in compression) with');

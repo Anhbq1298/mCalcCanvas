@@ -199,6 +199,19 @@ describe('mCompositeBeamDesign headless model', () => {
     const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
     const solid = m.results();
     expect([solid.cdeck, solid.hpe, solid.kd, solid.nre, solid.cbb]).toEqual([0, 0, 1, 1, 1]);
+    expect(solid.ctop).toBe(1); // a solid slab always has top and bottom bars
+    { // a deck slab has one bar layer by default (on the deck, counted as A_b); two layers on request
+      const d = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+      const put = (n: string, v: number) => d.setInput(d.inputs.find((f) => f.name === n)!.id, v);
+      put('c_{deck}', 1);
+      let q = d.results();
+      expect([q.ctop, q.at]).toEqual([0, 0]);
+      expect(q.asf).toBeCloseTo(q.ab, 9);
+      put('n_{lay}', 2);
+      q = d.results();
+      expect(q.ctop).toBe(1);
+      expect(q.asf).toBeCloseTo(q.at + q.ab, 9);
+    }
     set('h_p', 80); set('n_r', 2); set('c_{par}', 1); // deck inputs do nothing while c_deck = 0
     expect(m.results()['UR.des']).toBeCloseTo(solid['UR.des'], 12);
     set('h_p', 60); set('c_{par}', 0); set('n_r', 2);

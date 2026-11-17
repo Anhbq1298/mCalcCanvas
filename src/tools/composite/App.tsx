@@ -439,6 +439,14 @@ export function App() {
                           </select>
                         </label>
                       )}
+                      {deck && (
+                        <label className="f"><span>Transverse bars</span>
+                          <select data-testid="bar-layers" value={value(byName('n_{lay}')) <= 1 ? '1' : '2'} onChange={(e) => setInput(byName('n_{lay}'), Number(e.target.value))}>
+                            <option value="1">1 layer, on the deck</option>
+                            <option value="2">2 layers, top and bottom</option>
+                          </select>
+                        </label>
+                      )}
                       {renderField(byName('h_c'))}
                     </div>
                     {deck && (
@@ -455,7 +463,7 @@ export function App() {
                     {deck && <p className="hint">h<sub>c</sub> = {fmt(res.h_c, 0)} mm is the overall depth: {fmt(res.ht, 0)} mm of concrete above a {fmt(res.hpe, 0)} mm deck. P<sub>Rd</sub> = k<sub>d</sub> × solid-slab value = {fmt(res.PRd, 1)} kN ({parallel ? <>k<sub>l</sub>, (6.22)</> : <>k<sub>t</sub>, (6.23), limit {fmt(res.ktmax, 2)}</>}).{transverse && <> Studs sit in the ribs: spacing in effect {fmt(res.sA, 0)} / {fmt(res.sB, 0)} mm, {fmt(res.nre, 0)} per rib.</>}</p>}
                   </>
                 ) : (
-                  <div className="fields">{fields.filter((f) => f.name !== 'h_c').map(renderField)}</div>
+                  <div className="fields">{fields.filter((f) => f.name !== 'h_c' && !(res.ctop === 0 && ['d_{s.t}', 's_{f.t}'].includes(f.name))).map(renderField)}</div>
                 )}
               </section>
             ))}
@@ -469,13 +477,19 @@ export function App() {
               <span className="layers"><i className="lg" /> G permanent <i className="lq" /> Q variable</span>
               <button type="button" className="btn" data-testid="load-open" onClick={() => loadRef.current?.showModal()}>Modify load</button>
             </div>
-            <div className="sheet">
-              <h3>Beam: longitudinal section and cross-section</h3>
-              <BeamCad r={res} name={sections.find((x) => x.id === state.sectionId)?.name ?? ''} />
-              <h3>Uniformly distributed loads</h3>
-              <UdlDrawing L={res.L} area={area} sb={sb} sw={{ ga: res.ga, gc: res.gc, gF: res.gsw }} />
-              <h3>Point loads</h3>
-              <PointDrawing L={res.L} points={points} />
+            <div className="sheet cad-grid">
+              <div>
+                <h3>Beam: longitudinal section</h3>
+                <BeamCad part="elevation" r={res} name={sections.find((x) => x.id === state.sectionId)?.name ?? ''} />
+                <h3>Uniformly distributed loads</h3>
+                <UdlDrawing L={res.L} area={area} sb={sb} sw={{ ga: res.ga, gc: res.gc, gF: res.gsw }} />
+                <h3>Point loads</h3>
+                <PointDrawing L={res.L} points={points} />
+              </div>
+              <div>
+                <h3>Cross-section</h3>
+                <BeamCad part="section" r={res} name="" />
+              </div>
             </div>
             <table className="stage-table">
               <caption className="sr-only">Load effects</caption>
@@ -531,7 +545,7 @@ export function App() {
               <div className="surfaces">
                 <figure>
                   <ShearSurface3D r={res} which="a" />
-                  <figcaption><b className="c-a">a-a</b>: two vertical planes through {deck ? <>the concrete above the deck, h<sub>t</sub> = {fmt(res.ht, 0)} mm,</> : <>h<sub>c</sub> = {fmt(res.h_c, 0)} mm</>} at the flange edges; v<sub>f</sub>/2 on each; crossed by top and bottom bars, A<sub>t</sub> + A<sub>b</sub> = {fmt(res.asf, 0)} mm²/m{res.ape > 0 ? <>, plus the deck A<sub>pe</sub> = {fmt(res.ape, 0)} mm²/m (6.25)</> : null}; v<sub>Ed</sub> = {fmt(res.vLEd, 2)} MPa.</figcaption>
+                  <figcaption><b className="c-a">a-a</b>: two vertical planes through {deck ? <>the concrete above the deck, h<sub>t</sub> = {fmt(res.ht, 0)} mm,</> : <>h<sub>c</sub> = {fmt(res.h_c, 0)} mm</>} at the flange edges; v<sub>f</sub>/2 on each; crossed by {res.ctop === 0 ? <>the single layer on the deck, A<sub>b</sub></> : <>top and bottom bars, A<sub>t</sub> + A<sub>b</sub></>} = {fmt(res.asf, 0)} mm²/m{res.ape > 0 ? <>, plus the deck A<sub>pe</sub> = {fmt(res.ape, 0)} mm²/m (6.25)</> : null}; v<sub>Ed</sub> = {fmt(res.vLEd, 2)} MPa.</figcaption>
                 </figure>
                 {res.cbb >= 1 ? (
                   <figure>
@@ -682,7 +696,7 @@ export function App() {
                 <tr><td>Shear stress v<sub>Ed</sub></td><td>{fmt(res.vLEd, 3)}</td><td>{fmt(res.vbEd, 3)}</td><td>MPa</td></tr>
                 <tr><td>Strut angle cot θ<sub>f</sub> (auto)</td><td>{fmt(res.cta, 3)}</td><td>{fmt(res.ctb, 3)}</td><td></td></tr>
                 <tr><td>Required a<sub>sf</sub>, (6.21)</td><td>{fmt(res.asfReq, 0)}</td><td>{fmt(res.asbReq, 0)}</td><td>mm²/m</td></tr>
-                <tr><td>Bars counted</td><td>A<sub>t</sub> + A<sub>b</sub>{res.ape > 0 ? ' (+ deck)' : ''}</td><td>2A<sub>b</sub></td><td></td></tr>
+                <tr><td>Bars counted</td><td>{res.ctop === 0 ? null : <>A<sub>t</sub> + </>}A<sub>b</sub>{res.ape > 0 ? ' (+ deck)' : ''}</td><td>2A<sub>b</sub></td><td></td></tr>
                 <tr><td>Provided a<sub>sf</sub></td><td>{fmt(res.asf, 0)}</td><td>{fmt(res.asb, 0)}</td><td>mm²/m</td></tr>
                 <tr><td>Transverse bars UR</td><td className={tone(res['UR.sf'])}>{fmt(res['UR.sf'], 3)}</td><td className={tone(res['UR.sf.b'])}>{fmt(res['UR.sf.b'], 3)}</td><td></td></tr>
                 <tr><td>Strut resistance v<sub>Rd</sub>, (6.22)</td><td>{fmt(res.vLRd, 2)}</td><td>{fmt(res.vbRd, 2)}</td><td>MPa</td></tr>
@@ -725,7 +739,7 @@ export function App() {
           <DeckProfile hc={res.h_c} hp={value(byName('h_p'))} br={value(byName('b_r'))} er={value(byName('e_r'))} hsc={res.hsc} dsc={res.dsc} nr={transverse ? value(byName('n_r')) : 1} reentrant={value(byName('c_{re}')) >= 1} />
           <div className="fields">
             {groups.filter(([g]) => isDeck(g)).flatMap(([, fields]) => fields)
-              .filter((f) => !['c_{deck}', 'c_{par}', 'c_{re}'].includes(f.name) && (transverse || !['n_r', 'c_{LT.d}', 'c_{pe}', 'A_{pe}', 'f_{yp}'].includes(f.name)))
+              .filter((f) => !['c_{deck}', 'c_{par}', 'c_{re}', 'n_{lay}'].includes(f.name) && (transverse || !['n_r', 'c_{LT.d}', 'c_{pe}', 'A_{pe}', 'f_{yp}'].includes(f.name)))
               .map(renderField)}
           </div>
           <p className="hint">k<sub>d</sub> = {fmt(res.kd, 3)} on the stud resistance ({parallel ? <>k<sub>l</sub>, (6.22)</> : <>k<sub>t</sub>, (6.23), limit {fmt(res.ktmax, 2)} from Table 6.2 for studs welded through the sheet</>}); P<sub>Rd</sub> = {fmt(res.PRd, 1)} kN.{transverse && <> Minimum degree of connection {fmt(res.etaMin, 2)} ({res.c16 >= 1 ? '(6.16), one stud in every rib' : '(6.12)'}).</>}</p>
