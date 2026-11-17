@@ -58,6 +58,7 @@ const SCALARS: Probe[] = [
   ['dmax', '\\delta_{max}', 'mm'], ['wc', 'w_c', 'mm'], ['ccam', 'c_{cam}', null], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['f1', 'f_1', 'Hz'], ['f1nc', 'f_{1.nc}', 'Hz'], ['flim', 'f_{lim}', 'Hz'], ['Ecdyn', 'E_{c.dyn}', 'GPa'], ['ddyn', '\\delta_{dyn}', 'mm'], ['ddynnc', '\\delta_{dyn.nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
   // tapered beam
   ['ctap', 'c_{tap}', null], ['hA', 'h_A', 'mm'], ['hB', 'h_B', 'mm'],
+  ['cFP', 'c_{F.P}', null], ['FRda', 'F_{Rd.a}', 'kN'], ['MelRd', 'M_{el.Rd}', 'kN m'],
   ['Ea', 'E_a', 'MPa'], ['Ga', 'G_a', 'MPa'], ['gM1', '\\gamma_{M1}', null], ['aLT', '\\alpha_{LT}', null],
 ];
 /** Utilisations the summary uses but the check table does not list (bare-steel bending and shear at x_M). */
@@ -67,11 +68,14 @@ const EXTRA_UR = ['M.nc', 'V.nc'];
  * Tapered beam: how each check is combined from the sheet run at the depths of the critical sections.
  * support: shear-type checks at A and B, scaled by each end's reaction; max: the worst depth (stability,
  * interaction, local web checks); span: deflections, weighted by the curvature–virtual-moment product
- * along the span; x: bending along the span against the resistance at the local depth. Every other check
+ * along the span; x: bending along the span against the resistance at the local depth; load: the web under
+ * each point load (F.P, FM, FM.nc) at the depth h(a_i) of that load. Every other check
  * is taken at the section of the maximum moment, x_M.
  */
 const TAPER_SUPPORT = ['V.1', 'V.2', 'F.S', 'V.nc'];
 const TAPER_MAX = ['LT', 'LT.nc', 'MV', 'MV.nc', 'F.P', 'FM', 'FM.nc'];
+/** Web checks under the point loads, recomputed at the depth h(a_i) of each load (replacing the worst-depth bound). */
+const TAPER_LOAD = ['F.P', 'FM', 'FM.nc'];
 const TAPER_SPAN = ['d.1', 'd.x', 'd.q', 'd.nc', 'd.q.nc'];
 const TAPER_FREQ = ['fn', 'fn.nc'];
 const UR_COMPOSITE = ['M.2', 'M.x', 'MV', 'V.2', 'F.P', 'F.S', 'FM', 'd.x', 'd.q', 'fn', 'sf', 'L', 'sf.b', 'L.b', 'sf.c', 'L.c'];
@@ -136,14 +140,15 @@ function interp(xs: number[], ys: number[], x: number): number {
 
 /**
  * Combine sheet runs at the depths of the critical sections of a tapered beam (depth h_A at x = 0 to h_B at
- * x = L). runs: the results at depth h(x_M), h_A and h_B. The result reads like a single run: same keys, the
+ * x = L). runs: the results at depth h(x_M), h_A and h_B, plus rP at the depths of the point-load positions
+ * (nodes for values at a local depth). The result reads like a single run: same keys, the
  * section values of x_M, the checks combined as above, plus at.<check> = x (m) of the governing section
  * (NaN for span-wide checks and the worst-depth checks) and hat.<check> = the depth used (mm; NaN span-wide).
  */
-export function combineTaper(rM: Results, rA: Results, rB: Results): Results {
+export function combineTaper(rM: Results, rA: Results, rB: Results, rP: Results[] = []): Results {
   const L = rM.L, hA = rM.hA, hB = rM.hB, xM = rM.xM;
   const hAt = (x: number) => hA + ((hB - hA) * x) / L;
-  const out = { ...rM, vectors: { ...rM.vectors }, errors: [...rM.errors, ...rA.errors, ...rB.errors] } as Results;
+  const out = { ...rM, vectors: { ...rM.vectors }, errors: [rM, rA, rB, ...rP].flatMap((r) => r.errors) } as Results;
   const at = (k: string, x: number, h = Number.isFinite(x) ? hAt(x) : NaN) => { out[`at.${k}`] = x; out[`hat.${k}`] = h; };
   for (const [k] of CHECKS) at(k, xM);
   for (const k of EXTRA_UR) at(k, xM);
@@ -166,10 +171,28 @@ export function combineTaper(rM: Results, rA: Results, rB: Results): Results {
   if (lt.LT) { out['UR.LT'] = lt.LT.ur; at('LT', lt.LT.x); out['acr.LT'] = lt.LT.acr; }
   if (lt.nc) { out['UR.LT.nc'] = lt.nc.ur; at('LT.nc', lt.nc.x); out['acr.LT.nc'] = lt.nc.acr; }
   // the three runs as nodes over depth, for values at the local depth h(x)
-  const nodes = [[hA, rA], [hAt(xM), rM], [hB, rB]] as [number, Results][];
+  const nodes = [[hA, rA], [hAt(xM), rM], [hB, rB], ...rP.map((r) => [r.h_a, r])] as [number, Results][];
   nodes.sort((p, q) => p[0] - q[0]);
   const hs = nodes.map(([h]) => h);
   const local = (get: (r: Results) => number, h: number) => interp(hs, nodes.map(([, r]) => get(r)), h);
+  // web under the point loads (EN 1993-1-5 §6 (6.14), §7.2 (7.2)) at the depth h(a_i) of each load:
+  // F_Rd,a, M_Rd,P and M_el,Rd at the local depth; F_loc and M_P (load effects) from the run at x_M
+  const aP = rM.vectors.aP ?? [], Floc = rM.vectors.Floc ?? [], MP = rM.vectors.MP ?? [];
+  const n0 = aP.length;
+  if (n0 && Floc.length === n0 && MP.length === n0 && nodes.every(([, r]) => r.vectors.MRdP?.length === n0)) {
+    const c = rM.cFP, best: Record<string, [number, number]> = {};
+    aP.forEach((a, i) => {
+      const h = hAt(a), FRd = local((r) => r.FRda, h);
+      const eta2 = Math.abs(Floc[i]) / FRd;
+      const u: Record<string, number> = {
+        'F.P': c * eta2,
+        FM: (c * (eta2 + (0.8 * Math.abs(MP[i])) / local((r) => r.vectors.MRdP[i], h))) / 1.4,
+        'FM.nc': (c * (eta2 + (0.8 * Math.abs(MP[i])) / local((r) => r.MelRd, h))) / 1.4,
+      };
+      for (const k of TAPER_LOAD) if (Number.isFinite(u[k]) && (!best[k] || u[k] > best[k][0])) best[k] = [u[k], a];
+    });
+    for (const k of TAPER_LOAD) if (best[k] && Number.isFinite(rM[`UR.${k}`])) { out[`UR.${k}`] = best[k][0]; at(k, best[k][1]); }
+  }
   // bending along the span: M(x) against M_Rd,x at the local depth
   const xs = rM.vectors.x ?? [], Ms = rM.vectors.M ?? [];
   if (xs.length && rA.vectors.MRdx?.length === xs.length && rB.vectors.MRdx?.length === xs.length) {
@@ -472,6 +495,7 @@ export function governingCheck(res: Results, skip: readonly string[] = []): { ur
 
 const VECTORS: Probe[] = [
   ['x', 'x_v', 'm'], ['V', 'V_v', 'kN'], ['M', 'M_v', 'kN m'], ['MRdx', 'M_{Rd.x}', 'kN m'], ['d', '\\delta_{x.d}', 'mm'], ['dq', '\\delta_{q.d}', 'mm'], ['x1v', 'x_{1.v}', 'm'], ['d1v', '\\delta_{1.v}', 'mm'], ['nx', 'n_{x}', null],
+  ['aP', 'a_P', 'm'], ['Floc', 'F_{loc}', 'kN'], ['MP', 'M_P', 'kN m'], ['MRdP', 'M_{Rd.P}', 'kN m'],
 ];
 
 const DEF = /^(.*?)\\coloneq\s*(-?\d+(?:\.\d+)?)(?:\\,\\mathrm\{([^}]*)\})?$/;
@@ -693,8 +717,17 @@ export class CompositeModel {
     const mid = (r.hA + r.hB) / 2;
     const rM = Math.abs(hM - mid) < 0.05 ? r : at(hM);
     const rA = at(r.hA), rB = at(r.hB);
+    // a run at the depth of each point-load position (web checks F.P, FM there), unless a run is already at it
+    const done = [r.hA, hM, r.hB];
+    const rP: Results[] = [];
+    for (const a of rM.vectors.aP ?? []) {
+      const h = r.hA + ((r.hB - r.hA) * a) / r.L;
+      if (!Number.isFinite(h) || done.some((d) => Math.abs(d - h) < 0.05)) continue;
+      done.push(h);
+      rP.push(at(h));
+    }
     this.e.setDefinitionOverride(use.id, { value: 0, unit: null } as never);
-    return combineTaper(rM, rA, rB);
+    return combineTaper(rM, rA, rB, rP);
   }
 
   private run(): Results {

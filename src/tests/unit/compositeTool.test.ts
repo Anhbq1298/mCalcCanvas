@@ -435,6 +435,22 @@ describe('mCompositeBeamDesign headless model', () => {
     // the worst-depth bound it replaces is higher
     expect(r['UR.LT']).toBeLessThan(0.912);
     expect(r['UR.LT']).toBeGreaterThan(uni['UR.LT']);
+    // web under the 60 kN point load at the depth there, h(1 m) = 300 + 103.2 / 5.2 = 319.8 mm (not the worst depth):
+    // EN 1993-1-5 (6.5), (6.10), (6.4), (6.3), independent of the sheet; F_Ed = 1.35 × 60 = 81 kN
+    const ha = 300 + 103.2 / 5.2, bf = 142.2, tf = 11.2, tw = 6.8, fy = 355, Es = 210000, ss = 100;
+    const hw = ha - 2 * tf, Fcr = (0.9 * 6 * Es * tw ** 3) / hw;
+    let ly = ss + 2 * tf * (1 + Math.sqrt(bf / tw + 0.02 * (hw / tf) ** 2));
+    if (Math.sqrt((ly * tw * fy) / Fcr) <= 0.5) ly = ss + 2 * tf * (1 + Math.sqrt(bf / tw));
+    const FRd = (Math.min(1, 0.5 / Math.sqrt((ly * tw * fy) / Fcr)) * fy * ly * tw) / 1000; // 429.5 kN
+    expect(r['UR.F.P']).toBeCloseTo(81 / FRd, 6); // 0.189
+    expect([r['at.F.P'], r['at.FM'], r['at.FM.nc']]).toEqual([1, 1, 1]);
+    expect(r['hat.F.P']).toBeCloseTo(ha, 9);
+    // (7.2) with M_Rd,P and M_el,Rd of a run at that depth, M_P of the beam
+    set('c_{tap}', 1); set('h_{A.in}', ha); set('h_{B.in}', ha);
+    const atP = m.results();
+    expect(atP.FRda).toBeCloseTo(FRd, 6);
+    expect(r['UR.FM']).toBeCloseTo((81 / FRd + (0.8 * r.vectors.MP[0]) / atP.vectors.MRdP[0]) / 1.4, 9); // 0.328
+    expect(r['UR.FM.nc']).toBeCloseTo((81 / FRd + (0.8 * r.vectors.MP[0]) / atP.MelRd) / 1.4, 9); // 0.472
   }, 120_000);
 });
 

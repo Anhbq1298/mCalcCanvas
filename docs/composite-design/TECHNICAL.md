@@ -285,7 +285,8 @@ at h(x_M), h_A and h_B and combines (`combineTaper`, model.ts):
 | V.1, V.2, V.nc, F.S | each support at its depth, scaled by its reaction / the larger reaction |
 | M.x | M_Ed(x) against M_Rd,x interpolated to the local depth h(x) |
 | LT; LT.nc when unrestrained over the span | EN 1993-1-1 §6.3.4: α_cr of the tapered beam by finite elements, α_ult,k = min W_pl(x) f_y / M_Ed(x), χ_LT (6.56), UR = γ_M1 / (χ α_ult,k) |
-| MV, MV.nc, F.P, FM, FM.nc; LT with deck restraint, LT.nc restrained at the studs | worst of the three depths (conservative) |
+| F.P, FM, FM.nc | under each point load at its depth h(a_i): an extra sheet run at each distinct load position; F_loc and M_P from the run at x_M (EN 1993-1-5 (6.14), (7.2)) |
+| MV, MV.nc; LT with deck restraint, LT.nc restrained at the studs | worst of the three depths (conservative) |
 | d.1, d.x, d.q, d.nc, d.q.nc | ∫ w(x) UR(h(x)) dx / ∫ w dx, w = x(L − x)·min(x, L − x) (M·m of a UDL at mid-span; δ ∝ 1/I) |
 | fn, fn.nc | same weighting on UR², since f_lim / f_1 ∝ √δ |
 
@@ -299,7 +300,8 @@ constant moment = exact closed form (1e-4); UDL at the shear centre C₁ = 1.13;
 of SN003b (C₁ 1.127, C₂ 0.454); a mid-span restraint = the half-span closed form; the 300 → 403 mm taper
 = an independent Rayleigh–Ritz sine series to 0.5 %; a near-uniform taper reproduces the sheet's UR_LT to
 1 % (compositeTool.test.ts). Page default: UR_LT = 0.848 at x = 2.34 m (worst-depth bound was 0.912).
-Limit: point loads take the worst depth, not the depth at the load.
+Web under point loads (F.P, FM): at the depth of each load; unit test against an independent EN 1993-1-5 §6
+F_Rd,a (page default: h(1 m) = 319.8 mm, F_Rd,a = 429.5 kN, UR_F.P = 0.189; the worst depth gave h_B).
 
 **Page default case** (`PAGE_DEFAULTS`, model.ts; the worksheet template keeps the SCI reference example):
 UB 406x140x46 tapered to 300 mm at A, L = 5.2 m, beams at 2 m, 200 mm solid slab, SDL 3 kPa, LL 1.5 kPa,
