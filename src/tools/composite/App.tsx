@@ -457,7 +457,7 @@ export function App() {
                     </label>
                   );
                 })}
-                {tapered && <p className="hint wide" data-testid="taper-note">h<sub>A</sub> = {fmt(res.hA, 1)} → h<sub>B</sub> = {fmt(res.hB, 1)} mm, flanges and web thickness of {section?.name ?? 'the section'}. {res.taper ? <>Checked at the critical sections: x<sub>M</sub> = {fmt(res.xM, 2)} m (h = {fmt(res.hA + ((res.hB - res.hA) * res.xM) / res.L, 1)} mm), both supports, LTB of the tapered beam (EN 1993-1-1 §6.3.4, α<sub>cr</sub> = {fmt(res['acr.LT'], 2)} by finite elements), the worst depth for the web checks, the span for deflection. Governing: <Rich text={governing[1]} />, {where(gov.key) || 'see the table'}.</> : 'Same depth at both ends: uniform section.'}</p>}
+                {tapered && <p className="hint wide" data-testid="taper-note">h<sub>A</sub> = {fmt(res.hA, 1)} → h<sub>B</sub> = {fmt(res.hB, 1)} mm, flanges and web thickness of {section?.name ?? 'the section'}. {res.taper ? <>Checked at the critical sections: x<sub>M</sub> = {fmt(res.xM, 2)} m (h = {fmt(res.hA + ((res.hB - res.hA) * res.xM) / res.L, 1)} mm), both supports, LTB of the tapered beam (EN 1993-1-1 §6.3.4, α<sub>cr</sub> = {fmt(res['acr.LT'], 2)} by finite elements), the web under each point load at its depth, the worst depth for bending with shear, the span for deflection. Governing: <Rich text={governing[1]} />, {where(gov.key) || 'see the table'}.</> : 'Same depth at both ends: uniform section.'}</p>}
               </div>
             </section>
             {groups.map(([g, fields], gi) => (
@@ -654,10 +654,11 @@ export function App() {
             <div className="pin panel">
             <div className="check-head">
               <h2 id="h-verdict">Check</h2>
-              <button type="button" className="btn" data-testid="optimize-open" onClick={() => { setOptFamilies((v) => (v.includes(family) ? v : [...v, family])); dialogRef.current?.showModal(); }}>
+              <button type="button" className="btn" data-testid="optimize-open" disabled={tapered} title={tapered ? 'Not available for a tapered beam' : undefined} onClick={() => { setOptFamilies((v) => (v.includes(family) ? v : [...v, family])); dialogRef.current?.showModal(); }}>
                 Optimize section…
               </button>
             </div>
+            {tapered && <p className="hint" data-testid="optimize-taper">The optimizer is for uniform sections: untick Tapered to use it.</p>}
             {opt?.result?.best && !opt.running && <p className="hint">Last optimisation: {opt.result.best.name}, {fmt(opt.result.best.mass, 1)} kg/m.</p>}
             <div data-testid="verdict" aria-live="polite" aria-atomic="true">
               <div className="verdict">

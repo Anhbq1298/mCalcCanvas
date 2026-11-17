@@ -46,6 +46,10 @@ test('mCompositeBeamDesign optimizes the section in a dialog with strength and d
   test.setTimeout(240_000);
   await page.goto('/composite/');
   await expect(page.getByTestId('ur-des')).toHaveText('0.717');
+  // the optimizer is for uniform sections only
+  await expect(page.getByTestId('optimize-open')).toBeDisabled();
+  await page.getByTestId('taper').uncheck();
+  await expect(page.getByTestId('ur-max')).toHaveText('0.790', { timeout: 30_000 });
   await page.getByTestId('optimize-open').click();
   await expect(page.getByRole('dialog', { name: 'Optimize section' })).toBeVisible();
   await page.getByTestId('t-strength').fill('abc');
@@ -120,8 +124,10 @@ test('tapered beam: the default case is tapered; unticking gives the uniform sec
   await expect(page.getByTestId('ur-max')).toHaveText('0.848', { timeout: 30_000 }); // LTB in construction, tapered beam (§6.3.4)
   await expect(page.getByTestId('taper-note')).toContainText('Checked at the critical sections');
   await expect(page.getByTestId('ur-table')).toContainText('x = 0.00 m, h = 300.0 mm');
+  await expect(page.getByTestId('optimize-taper')).toBeVisible();
   await page.getByTestId('taper').uncheck();
   await expect(page.getByTestId('ur-max')).toHaveText('0.790', { timeout: 30_000 });
+  await expect(page.getByTestId('optimize-open')).toBeEnabled();
   await page.getByTestId('taper').check();
   const hA = page.locator('label:has-text("Depth at start") input');
   await expect(hA).toHaveValue('300');

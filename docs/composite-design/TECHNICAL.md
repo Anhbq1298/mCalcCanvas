@@ -242,6 +242,8 @@ Modelled on the way RAM Steel Beam works: criteria in groups, each section desig
 - Worksheet: deflection limits are separate inputs (r_lim total less camber, r_lim.1 construction, r_lim.q live load) with their own URs (d.x, d.1, d.q);
   fixed precamber w_c.0 beside the % value.
 - The page has one Optimize button (at the governing UR); the separate stud and rebar buttons were removed.
+- Uniform sections only (owner, 2026-11-17): with Tapered ticked the Optimize button is disabled, since h_A, h_B are
+  absolute depths and do not carry over to other sections.
 
 ## Shear surfaces with a deck (EN 1994-1-1 §6.6.6.4, Figure 6.16), corrected 2026-11-17
 
