@@ -1,7 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { solveBeam } from '../../engineering/fem';
 import { withPageDefaults, BAR_DIAMETERS, CHECKS, camberFor, CompositeModel, designSection, type DesignCriteria, DEFLECTION_CHECKS, governingCheck, governingSplit, STUD_SPACINGS } from '../../tools/composite/model';
 import { sections } from '../../engineering/steel/sections';
+import { step } from '../step';
 import { parseDocument } from '../../documents/DocumentSerializer';
 
 // mCompositeBeamDesign runs the worksheet itself: its results are the worksheet's (compositeTemplate.test.ts).
@@ -439,6 +441,42 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(near.taper).toBe(1);
     expect(uni.taper).toBeUndefined();
     expect(near['UR.LT'] / uni['UR.LT']).toBeCloseTo(1, 2);
+  }, 120_000);
+
+  it('LTB by finite elements for a uniform beam: FE internal forces = the sheet; M_cr used directly, close to SN003b', () => {
+    const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+    const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
+    let r = m.results();
+    step('construction, UDL on the top flange: FE M_cr within 1 % of SN003b (C1 1.127, C2 0.454)', () => {
+      expect(r['Mcr.LT'] / r.McrSN).toBeGreaterThan(0.99);
+      expect(r['Mcr.LT'] / r.McrSN).toBeLessThan(1.01);
+      expect(r['UR.LT']).toBeCloseTo(1.872, 1);
+    });
+    step('FE internal forces of the design loads = the moment diagram of the sheet', () => {
+      const L = r.L * 1000, b = solveBeam({ L, EI: () => 1, supports: [{ x: 0, w: true }, { x: L, w: true }], loads: m.feLoads(r)! });
+      r.vectors.x.forEach((x, i) => expect(b.M(x * 1000) / 1e6).toBeCloseTo(r.vectors.M[i], 6));
+    });
+    step('bare steel unrestrained (studs too far apart): LT.nc by FE with the real moment diagram and point loads', () => {
+      set('s_{sc.A}', 1200); set('s_{sc.B}', 1200);
+      r = m.results();
+      expect(r.LLTnc).toBeCloseTo(r.L * 1000, 6);
+      expect(r['Mcr.LT.nc']).toBeGreaterThan(0);
+      expect(r['UR.LT.nc']).toBeCloseTo(1 / (r['chi.LT.nc'] * r['aul.LT.nc']), 9);
+    });
+    step('the report carries the FE M_cr and reproduces the page UR', () => {
+      const doc = m.reportDocument() as { shapes: { type: string; props: { latex?: string } }[] };
+      const lat = doc.shapes.find((x) => x.type === 'math' && x.props.latex?.startsWith('M_{cr.FE}\\coloneq'))!.props.latex!;
+      expect(Number(/coloneq ([\d.]+)/.exec(lat)![1])).toBeCloseTo(r['Mcr.LT'], 2);
+      const rep = new CompositeModel(JSON.stringify(doc)).results();
+      expect(rep.McrSheet).toBeCloseTo(r['Mcr.LT'], 2); // the sheet's own M_cr is now the FE value
+    });
+    step('load position: shear centre and bottom flange raise M_cr, top flange is the default', () => {
+      const top = r['Mcr.LT'];
+      set('c_{zg}', 0); const sc = m.results()['Mcr.LT'];
+      set('c_{zg}', -1); const bot = m.results()['Mcr.LT'];
+      expect(top).toBeLessThan(sc);
+      expect(sc).toBeLessThan(bot);
+    });
   }, 120_000);
 });
 

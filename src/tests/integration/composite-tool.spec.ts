@@ -120,15 +120,23 @@ test('tapered beam: the default case is tapered; unticking gives the uniform sec
   await expect(page.getByTestId('ur-max')).toHaveText('1.028', { timeout: 30_000 }); // LTB in construction, tapered welded beam (§6.3.4, curve d)
   await expect(page.getByTestId('taper-note')).toContainText('Checked at the critical sections');
   await expect(page.getByTestId('ur-table')).toContainText('x = 0.00 m, h = 300.0 mm');
+  // load position for LTB (Modify load): the shear centre is less onerous than the top flange
+  await page.getByTestId('load-open').click();
+  await page.getByTestId('load-zg').selectOption('0');
+  await expect(page.getByTestId('ur-max')).not.toHaveText('1.028', { timeout: 30_000 });
+  expect(Number(await page.getByTestId('ur-max').textContent())).toBeLessThan(1.028);
+  await page.getByTestId('load-zg').selectOption('1');
+  await expect(page.getByTestId('ur-max')).toHaveText('1.028', { timeout: 30_000 });
+  await page.getByRole('button', { name: 'Done' }).click();
   await page.getByTestId('taper-fab').selectOption('r');
   await expect(page.getByTestId('ur-max')).toHaveText('0.848', { timeout: 30_000 }); // rolled curve b
   await page.getByTestId('taper').uncheck();
-  await expect(page.getByTestId('ur-max')).toHaveText('0.790', { timeout: 30_000 });
+  await expect(page.getByTestId('ur-max')).toHaveText('0.789', { timeout: 30_000 });
   await page.getByTestId('taper').check();
   const hA = page.locator('label:has-text("Depth at start") input');
   await expect(hA).toHaveValue('300');
   await hA.fill('403.2');
   await hA.press('Enter');
   await expect(page.getByTestId('taper-note')).toContainText('Same depth at both ends', { timeout: 30_000 });
-  await expect(page.getByTestId('ur-max')).toHaveText('0.790', { timeout: 30_000 });
+  await expect(page.getByTestId('ur-max')).toHaveText('0.789', { timeout: 30_000 });
 });

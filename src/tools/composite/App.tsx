@@ -517,7 +517,7 @@ export function App() {
                     {deck && <p className="hint">h<sub>c</sub> = {fmt(res.h_c, 0)} mm is the overall depth: {fmt(res.ht, 0)} mm of concrete above a {fmt(res.hpe, 0)} mm deck. P<sub>Rd</sub> = k<sub>d</sub> × solid-slab value = {fmt(res.PRd, 1)} kN ({parallel ? <>k<sub>l</sub>, (6.22)</> : <>k<sub>t</sub>, (6.23), limit {fmt(res.ktmax, 2)}</>}).{transverse && <> Studs sit in the ribs: spacing in effect {fmt(res.sA, 0)} / {fmt(res.sB, 0)} mm, {fmt(res.nre, 0)} per rib.</>}</p>}
                   </>
                 ) : (
-                  <div className="fields">{fields.filter((f) => f.name !== 'h_c' && !(res.ctop === 0 && ['d_{s.t}', 's_{f.t}'].includes(f.name))).map(renderField)}</div>
+                  <div className="fields">{fields.filter((f) => f.name !== 'h_c' && f.name !== 'c_{zg}' && !(res.ctop === 0 && ['d_{s.t}', 's_{f.t}'].includes(f.name))).map(renderField)}</div>
                 )}
               </section>
             ))}
@@ -823,6 +823,19 @@ export function App() {
           <p className="hint">Area and point loads act on the beam and update the diagrams and checks as you change them. Other inputs are in the panel on the left.</p>
           {loadTable(areaT, 0)}
           {loadTable(pointT, 1)}
+          <section aria-labelledby="h-zg">
+            <h2 id="h-zg">Load position (lateral-torsional buckling)</h2>
+            <div className="fields">
+              <label className="f wide"><span>All loads act at <em>z<sub>g</sub> above the shear centre; used for M<sub>cr</sub> by finite elements</em></span>
+                <select data-testid="load-zg" value={String(Math.round(value(byName('c_{zg}'))))} onChange={(e) => setInput(byName('c_{zg}'), Number(e.target.value))}>
+                  <option value="1">Top flange, +h/2 above the shear centre (destabilising)</option>
+                  <option value="0">Shear centre</option>
+                  <option value="-1">Bottom flange, h/2 below the shear centre (stabilising)</option>
+                </select>
+              </label>
+            </div>
+            <p className="hint">Construction stage: M<sub>cr</sub> = {fmt(res['Mcr.LT'], 1)} kNm (α<sub>cr</sub> {fmt(res['acr.LT'], 2)}){Number.isFinite(res['Mcr.LT.nc']) ? <>; bare steel, unrestrained: M<sub>cr</sub> = {fmt(res['Mcr.LT.nc'], 1)} kNm</> : null}.</p>
+          </section>
           <div className="opt-actions">
             <button type="button" className="btn primary" onClick={() => loadRef.current?.close()}>Done</button>
           </div>

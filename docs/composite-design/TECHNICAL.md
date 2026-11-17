@@ -307,3 +307,25 @@ Limit: point loads take the worst depth, not the depth at the load.
 **Page default case** (`PAGE_DEFAULTS`, model.ts; the worksheet template keeps the SCI reference example):
 UB 406x140x46 tapered to 300 mm at A, L = 5.2 m, beams at 2 m, 200 mm solid slab, SDL 3 kPa, LL 1.5 kPa,
 SDL point load 60 kN at 1 m from A. UR.des = 0.717 (slab bars b-b); governing 1.028 (LTB in construction, unpropped, §6.3.4, welded curve d): needs a prop or flange restraint.
+
+## Finite elements for LTB, uniform and tapered (src/engineering/fem)
+
+- `beam.ts`: in-plane Euler–Bernoulli FE for the internal forces: EI(x), supports by DOF (fixed or spring), piecewise
+  linear distributed loads, point loads, point moments; M(x), V(x), deflection, reactions. Tests
+  (`src/tests/unit/fem/beam.test.ts`): simply supported, cantilever, fixed–fixed, propped, two-span continuous, partial
+  and triangular loads, end moment, tapered EI (determinate and indeterminate), elastic support, mechanism.
+- `ltb.ts`: LTB eigenvalue (Vlasov, DOF v, v′, φ, φ′), supports by DOF (fork, k = 0.5, k_w = 0.5, interior), load
+  height for distributed and point loads, buckled shape. Tests (`src/tests/unit/fem/ltb.test.ts`): closed forms
+  (uniform moment, k = k_w = 0.5, half span), mesh convergence, mode shape, mechanism, an independent Rayleigh–Ritz
+  solution (`ritz.ts`) for every SN003b case, taper.
+- **SN003b C1 / C2 cases** (k = 1, fork; FE = Ritz to 0.5 % in all): Table 3.1 end moments ψ = 1 … −1: FE C1 =
+  1.00, 1.14, 1.32, 1.55, 1.84, 2.20, 2.58, 2.84, 2.73 — SN003b within 3 % for ψ ≥ 0.25 and conservative by up to
+  12 % for ψ ≤ 0 (a rounded fit). Table 3.2: UDL (simple, fixed ends) within 1.5 % at the shear centre, top and bottom
+  flange; point load at mid-span (simple) 1 % at the shear centre, SN003b 5–6 % low on the top flange and 5 % high on
+  the bottom flange; fixed ends 3 % / 14 % / 10 %. The three-factor formula is the approximation, not the FE.
+- **Design page**: every beam (uniform or tapered) is simply supported with fork supports. Internal forces by `beam.ts`
+  (construction: w₁,Ed per span between props; bare steel: γ g₀ + the load tables), M_cr = α_cr M_Ed,max by `ltb.ts`
+  used directly (no C1 / C2). UR = γ_M1 / (χ_LT α_ult,k), α_ult,k = min W_pl(x) f_y / M_Ed(x): for a uniform beam this
+  is §6.3.2 with λ̄ = √(W_pl f_y / M_cr). Deck-restrained construction (L_LT = e_r) and stud-restrained bare steel keep
+  the sheet's value. Load position (Modify load): top flange (default), shear centre, bottom flange (worksheet c_zg).
+- The report: the sheet's M_cr = M_cr.FE when the page writes it (uniform beams), else the SN003b value (M_cr.SN).

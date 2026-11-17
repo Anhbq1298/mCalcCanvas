@@ -86,6 +86,7 @@ input('Propping: 0 = unpropped (default), 1 = propped', 'c_{prop}', 0);
 input('If propped: L_LT = k_LT L (prop spacing / span)', 'k_{LT}', 0.5);
 input('Construction imposed load', 'q_{con}', 0.75, 'kPa');
 input('Formwork load (removable)', 'g_{form}', 0.5, 'kPa');
+input('Load position for LTB: 1 = top flange (default), 0 = shear centre, −1 = bottom flange', 'c_{zg}', 1);
 H(3, '1.6 Load tables: one row per load; pattern G = permanent, Q = imposed');
 const TBL = (x, cols, rows, widths) => ({ id: l.id(), type: 'table', x, y: l.ln(l.st.page, l.st.row) - 8, props: {
   w: widths.reduce((a, b) => a + b, 0), h: (rows.length + 2) * 32, rows: rows.length + 2, columns: cols.length, columnWidths: widths, headerRow: true, input: true,
@@ -239,9 +240,12 @@ P('LTB: C1 for a UDL, fork ends (SN003b), a fixed value, not an input', R`C_1\co
 P('LTB: C2 for the load on the top flange (SN003b), fixed', R`C_2\coloneq0.454`, M({ precision: 3 }));
 P('Imperfection, EC3 §6.3.2.2 Table 6.4: rolled I, h/b ≤ 2 curve a, else b; welded I (tapered, c_weld = 1), h/b ≤ 2 curve c, else d', R`\alpha_{LT}\coloneq${IF([R`c_{tap}\ge1\land c_{weld}\ge1\land\frac{h_a}{b_a}\le2`, '0.49'], [R`c_{tap}\ge1\land c_{weld}\ge1`, '0.76'], [R`\frac{h_a}{b_a}\le2`, '0.21'], [null, '0.34'])}`, M({ precision: 2 }));
 P('Unrestrained length', R`L_{LT}\coloneq${IF([R`c_{tr}\ge1\land c_{LT.d}\ge1`, 'e_r'], [null, 'L_1'])}`, M(units('m')));
-calc('Load height above shear centre (top flange)', 'z_g', R`\frac{h_a}{2}`, 'mm', false);
+calc('Load height above the shear centre (c_zg: top flange +, bottom flange −)', 'z_g', R`c_{zg}\frac{h_a}{2}`, 'mm', false);
 calc('Euler force, minor axis', 'N_{cr}', R`\frac{\pi^2 E_a I_z}{L_{LT}^2}`, 'kN', false);
-calc('Elastic critical moment, SN003b (1)', 'M_{cr}', R`C_1 N_{cr}\left(\sqrt{\frac{I_w}{I_z}+\frac{G_a I_t}{N_{cr}}+\left(C_2 z_g\right)^2}-C_2 z_g\right)`, 'kN m', false);
+calc('Elastic critical moment, SN003b (1)', 'M_{cr.SN}', R`C_1 N_{cr}\left(\sqrt{\frac{I_w}{I_z}+\frac{G_a I_t}{N_{cr}}+\left(C_2 z_g\right)^2}-C_2 z_g\right)`, 'kN m', false);
+T('mCompositeBeamDesign computes M_cr by finite elements (LTB eigenvalue, load height and real moment diagram) and writes it here; 0 = the SN003b value above.');
+P('M_cr from the design page (finite elements)', R`M_{cr.FE}\coloneq 0\,\mathrm{kN}\cdot\mathrm{m}`, M(units('kN m')));
+calc('Elastic critical moment used', 'M_{cr}', IF([R`M_{cr.FE}>0\,\mathrm{kN}\cdot\mathrm{m}`, R`M_{cr.FE}`], [null, R`M_{cr.SN}`]), 'kN m', false);
 calc('Slenderness', '\\lambda_{LT}', R`\sqrt{\frac{W_{pl}f_y}{M_{cr}}}`, '', false);
 calc('(6.56)', '\\Phi_{LT}', R`0.5\left(1+\alpha_{LT}\left(\lambda_{LT}-0.2\right)+\lambda_{LT}^2\right)`, '', false);
 calc('Reduction factor', '\\chi_{LT}', R`\min\left(1,\frac{1}{\Phi_{LT}+\sqrt{\Phi_{LT}^2-\lambda_{LT}^2}}\right)`, '', false);
@@ -575,7 +579,9 @@ LINK('noncomp', 'Non-composite alternative: steel section alone', () => {
  P('Top flange restrained by the studs (1) or not (0)', R`c_{rest}\coloneq${IF([R`s_A\le s_{max}\land s_B\le s_{max}`, '1'], [null, '0'])}`, M({ precision: 0 }));
  P('LTB length', R`L_{LT.nc}\coloneq${IF([R`c_{rest}\ge1`, R`\max\left(s_A,s_B\right)`], [null, 'L'])}`, M(units('mm')));
  calc('Euler force (C1 = 1, z_g = 0)', 'N_{cr.nc}', R`\frac{\pi^2 E_a I_z}{L_{LT.nc}^2}`, 'kN', false);
- calc('Elastic critical moment', 'M_{cr.nc}', R`N_{cr.nc}\sqrt{\frac{I_w}{I_z}+\frac{G_a I_t}{N_{cr.nc}}}`, 'kN m', false);
+ calc('Elastic critical moment, C1 = 1 (conservative)', 'M_{cr.nc.SN}', R`N_{cr.nc}\sqrt{\frac{I_w}{I_z}+\frac{G_a I_t}{N_{cr.nc}}}`, 'kN m', false);
+ P('M_cr from the design page (finite elements, unrestrained span only; 0 = the value above)', R`M_{cr.nc.FE}\coloneq 0\,\mathrm{kN}\cdot\mathrm{m}`, M(units('kN m')));
+ calc('Elastic critical moment used', 'M_{cr.nc}', IF([R`M_{cr.nc.FE}>0\,\mathrm{kN}\cdot\mathrm{m}`, R`M_{cr.nc.FE}`], [null, R`M_{cr.nc.SN}`]), 'kN m', false);
  calc('Slenderness', '\\lambda_{LT.nc}', R`\sqrt{\frac{W_{pl}f_y}{M_{cr.nc}}}`, '', false);
  calc('(6.56)', '\\Phi_{LT.nc}', R`0.5\left(1+\alpha_{LT}\left(\lambda_{LT.nc}-0.2\right)+\lambda_{LT.nc}^2\right)`, '', false);
  calc('Reduction factor', '\\chi_{LT.nc}', R`\min\left(1,\frac{1}{\Phi_{LT.nc}+\sqrt{\Phi_{LT.nc}^2-\lambda_{LT.nc}^2}}\right)`, '', false);
