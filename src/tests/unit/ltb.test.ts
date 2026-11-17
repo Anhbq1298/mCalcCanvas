@@ -61,6 +61,20 @@ describe('lateral-torsional buckling, varying section (finite elements)', () => 
     const at = (hh: number) => ltbCriticalFactor({ L, props: () => props(((hh - hA) / (hB - hA)) * L), M, qzg: () => (q * hh) / 2 });
     expect(fe).toBeGreaterThan(at(hA));
     expect(fe).toBeLessThan(at(hB));
+    // published: Raftoyiannis & Adamakos, Open Constr. Build. Technol. J. 4 (2010) 105–112, Fig. 18: IPE 300 tapered
+    // h1 → h2 = 3 h1 (mean 300 mm), L = 10 h0, fork ends, end moments M1 (at h1) and ψ M1, their J (11), C_w (12):
+    // "as the taper ratio increases from 1.0 to 3.0 … a significant drop of M_cr with maximum value 12 % for ψ = −0.5,
+    // while for ψ = 1 the drop is only 4 %" (three-term sine Rayleigh–Ritz)
+    {
+      const b = 150, tf = 10.7, tw = 7.1, Es = 210000, Gs = 80770, l = 3000;
+      const pr = (h: number) => ({ EIz: Es * ((2 * tf * b ** 3) / 12 + (h * tw ** 3) / 12), GIt: (Gs * (2 * b * tf ** 3 + h * tw ** 3)) / 3, EIw: (Es * b ** 3 * h ** 2 * tf) / 24 });
+      const mcr = (h1: number, h2: number, psi: number) => ltbCriticalFactor({ L: l, props: (x) => pr(h1 + ((h2 - h1) * x) / l), M: (x) => 1 + ((psi - 1) * x) / l });
+      const drop = (psi: number) => 1 - mcr(150, 450, psi) / mcr(300, 300, psi);
+      const d = [1, 0.5, 0, -0.5, -1].map(drop);
+      expect(d[0]).toBeGreaterThan(0.035); expect(d[0]).toBeLessThan(0.045); // 0.039
+      expect(d[3]).toBeGreaterThan(0.115); expect(d[3]).toBeLessThan(0.13); // 0.127
+      expect(Math.max(...d)).toBe(d[3]); // the largest drop at ψ = −0.5
+    }
   });
 
   it('χ_LT, (6.56)', () => {

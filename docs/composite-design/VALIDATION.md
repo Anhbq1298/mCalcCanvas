@@ -161,3 +161,19 @@ Run through the worksheet in deck mode (compositeTool.test.ts).
 
 Clause wording checked against published text: k_t / Table 6.2 limits (0.85, 1.0, 0.70 through-deck), h_p ≤ 85 mm, b_0 ≥ h_p, and the §6.6.1.2(3) conditions for (6.16).
 
+
+## Tapered beam LTB: published taper effect (2026-11-17)
+
+Raftoyiannis & Adamakos, "Critical lateral-torsional buckling moments of steel web-tapered I-beams", Open Constr.
+Build. Technol. J. 4 (2010) 105–112, Fig. 18 and text: IPE 300 flanges and web, depth h1 → h2 = 3 h1 (mean 300 mm),
+L = 10 h0, fork ends, end moments M1 at the shallow end and ψ M1; J and C_w by their (11), (12). Their method is a
+three-term sine Rayleigh–Ritz (published results are diagrams; the text gives the end points). Run through `ltb.ts`
+(ltb.test.ts):
+
+| Drop of M_cr, taper ratio 1 → 3 | Published | ltb.ts |
+|---|---|---|
+| ψ = 1 | "only 4 %" | 3.9 % |
+| ψ = −0.5 (largest of ψ = 1 … −1) | "maximum value 12 %" | 12.7 %, also the largest |
+
+Not done: an LTBeamN run of the page default case, and a published table of absolute M_cr for a tapered beam
+(Trahair R939, Benyamina et al. 2013, the LTBWTB paper (Appl. Sci. 2025) could not be opened from here).

@@ -300,7 +300,8 @@ q z_g φ² (construction load on the top flange, z_g = h(x)/2), smallest positiv
 (Cholesky + Jacobi). Taper-slope terms neglected (mild tapers, as LTBeamN). Verified (ltb.test.ts):
 constant moment = exact closed form (1e-4); UDL at the shear centre C₁ = 1.13; top-flange UDL within 3 %
 of SN003b (C₁ 1.127, C₂ 0.454); a mid-span restraint = the half-span closed form; the 300 → 403 mm taper
-= an independent Rayleigh–Ritz sine series to 0.5 %; a near-uniform taper reproduces the sheet's UR_LT to
+= an independent Rayleigh–Ritz sine series to 0.5 %; the published taper effect of Raftoyiannis & Adamakos (2010)
+(IPE 300, taper 1 → 3, end moments: 3.9 % vs 4 % at ψ = 1, 12.7 % vs 12 % at ψ = −0.5, VALIDATION.md); a near-uniform taper reproduces the sheet's UR_LT to
 1 % (compositeTool.test.ts). Page default: UR_LT = 0.848 at x = 2.34 m (worst-depth bound was 0.912).
 Web under point loads (F.P, FM): at the depth of each load; unit test against an independent EN 1993-1-5 §6
 F_Rd,a (page default: h(1 m) = 319.8 mm, F_Rd,a = 429.5 kN, UR_F.P = 0.189; the worst depth gave h_B).
