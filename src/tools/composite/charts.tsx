@@ -43,10 +43,10 @@ function yAt(s: Series, x: number): number {
  * Line chart over x; invertY draws positive values downwards (moments, deflections).
  * Pointer or arrow keys move a crosshair that reads every series at that x.
  */
-export function LineChart({ series, height = 170, invertY = false, xUnit = 'm', yUnit = '', labels = [], label = 'Chart', digits = 1, xName = 'x', xDigits = 2, yMin }: { series: Series[]; height?: number; invertY?: boolean; xUnit?: string; yUnit?: string; labels?: { x: number; y: number; text: string; color: string }[]; label?: string; digits?: number; xName?: string; xDigits?: number; yMin?: number }) {
+export function LineChart({ alignBeam = false, series, height = 170, invertY = false, xUnit = 'm', yUnit = '', labels = [], label = 'Chart', digits = 1, xName = 'x', xDigits = 2, yMin }: { alignBeam?: boolean; series: Series[]; height?: number; invertY?: boolean; xUnit?: string; yUnit?: string; labels?: { x: number; y: number; text: string; color: string }[]; label?: string; digits?: number; xName?: string; xDigits?: number; yMin?: number }) {
   const [hx, setHx] = useState<number | null>(null);
   const [box, W] = useWidth(640);
-  const H = height, m = { l: 48, r: 14, t: 12, b: 26 };
+  const H = height, m = { l: alignBeam ? 34 : 48, r: alignBeam ? 34 : 14, t: 12, b: 26 };
   const xs = series.flatMap((s) => s.x), ys = series.flatMap((s) => s.y).filter(Number.isFinite).concat(0);
   if (!xs.length) return <div ref={box} className="h-24 text-sm text-slate-500">No data</div>;
   const x0 = Math.min(...xs), x1 = Math.max(...xs);

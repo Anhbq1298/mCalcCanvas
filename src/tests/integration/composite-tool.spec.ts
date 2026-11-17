@@ -7,6 +7,23 @@ test('mCompositeBeamDesign calculates, follows a large point load and hands the 
   // page default case: UB 406x140x46 tapered to 300 mm at A, L = 5.2 m at 2 m, 200 mm slab
   await expect(page.getByTestId('ur-des')).toHaveText('0.717');
   await expect(page.getByTestId('verdict')).toContainText('Composite');
+  // Force plots use the same span and support stations as the CAD elevation.
+  for (const width of [1366, 1440, 1920, 800]) {
+    await page.setViewportSize({ width, height: 900 });
+    await expect(async () => {
+      const beam = await page.locator('.cad-grid > div').first().boundingBox();
+      const chart = await page.locator('[data-testid="forces-panel"] .chart').first().boundingBox();
+      expect(beam).not.toBeNull();
+      expect(chart).not.toBeNull();
+      expect(Math.abs(beam!.x - chart!.x)).toBeLessThan(1);
+      expect(Math.abs(beam!.width - chart!.width)).toBeLessThan(1);
+    }).toPass();
+  }
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.getByRole('button', { name: 'Geometry input guide', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Geometry input guide', exact: true })).toContainText('Span');
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button', { name: 'Geometry input guide', exact: true })).toBeFocused();
   // An invalid entry is flagged next to the field and not sent to the calculation.
   const span = page.locator('input[data-input="L"]');
   await span.fill('8,o');
@@ -122,7 +139,9 @@ test('slab type: filled steel deck with transverse ribs reduces the studs and dr
 test('tapered beam: the default case is tapered; unticking gives the uniform section', async ({ page }) => {
   await page.goto('/composite/');
   await expect(page.getByTestId('ur-max')).toHaveText('0.848', { timeout: 30_000 }); // LTB in construction, tapered beam (§6.3.4)
+  await page.getByRole('button', { name: 'Tapered beam input guide', exact: true }).click();
   await expect(page.getByTestId('taper-note')).toContainText('Checked at the critical sections');
+  await page.keyboard.press('Escape');
   await expect(page.getByTestId('ur-table')).toContainText('x = 0.00 m, h = 300.0 mm');
   await expect(page.getByTestId('optimize-taper')).toBeVisible();
   await page.getByTestId('taper').uncheck();
@@ -133,6 +152,8 @@ test('tapered beam: the default case is tapered; unticking gives the uniform sec
   await expect(hA).toHaveValue('300');
   await hA.fill('403.2');
   await hA.press('Enter');
+  await page.getByRole('button', { name: 'Tapered beam input guide', exact: true }).click();
   await expect(page.getByTestId('taper-note')).toContainText('Same depth at both ends', { timeout: 30_000 });
+  await page.keyboard.press('Escape');
   await expect(page.getByTestId('ur-max')).toHaveText('0.790', { timeout: 30_000 });
 });

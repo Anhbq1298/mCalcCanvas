@@ -63,6 +63,20 @@ function Sym({ latex }: { latex: string }) {
 }
 
 
+function InputHelp({ title, children }: { title: string; children: React.ReactNode }) {
+  const ref = useRef<HTMLDialogElement>(null);
+  return <>
+    <button type="button" className="info-button" aria-haspopup="dialog" aria-label={`${title} input guide`} onClick={() => ref.current?.showModal()}>i</button>
+    <dialog ref={ref} className="opt-dialog input-guide" aria-label={`${title} input guide`}>
+      <div className="opt-form">
+        <div className="opt-head"><h2>{title} input guide</h2><button type="button" className="btn" onClick={() => ref.current?.close()}>Close</button></div>
+        {children}
+      </div>
+    </dialog>
+  </>;
+}
+
+
 const tone = (v: number) => (!Number.isFinite(v) ? '' : v > 1 ? 'fail' : v > 0.9 ? 'warn' : 'pass');
 
 /** A number field, validated after interaction; its error text is linked only while shown. */
@@ -277,9 +291,13 @@ export function App() {
     apply(nxt);
     setHist({ past: h.past.length, future: h.future.length });
   };
+
+  // Keep global keyboard handlers and snapshot recording in sync with this render.
+  /* oxlint-disable react/refs -- callbacks are invoked only by user events, never during render. */
   recordRef.current = record;
   undoRef.current = undo;
   redoRef.current = redo;
+  /* oxlint-enable react/refs */
   const download = () =>
     withReport((doc) => {
       const a = document.createElement('a');
@@ -339,12 +357,12 @@ export function App() {
   const renderField = (f: InputField) =>
     ['c_{prop}', 'c_{LT.d}', 'c_{pe}'].includes(f.name) ? (
       <label key={f.id} className={`f check ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
-        <span><Sym latex={f.name} /> <em><Rich text={f.label.replace(/:\s*1 = yes.*$/, '')} /></em></span>
+        <span><Sym latex={f.name} /> <em className="input-description"><Rich text={f.label.replace(/:\s*1 = yes.*$/, '')} /></em></span>
         <input id={`in-${f.id}`} type="checkbox" checked={value(f) >= 1} onChange={(e) => setInput(f, e.target.checked ? 1 : 0)} />
       </label>
     ) : (
       <label key={f.id} className={`f ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
-        <span><Sym latex={f.name} />{f.unit ? ` (${unit(f.unit)})` : ''} <em><Rich text={f.label} /></em></span>
+        <span><Sym latex={f.name} />{f.unit ? ` (${unit(f.unit)})` : ''} <em className="input-description"><Rich text={f.label} /></em></span>
         <NumberField id={`in-${f.id}`} label={f.name} value={String(value(f))} onCommit={(nv) => setInput(f, nv)} />
       </label>
     );
@@ -425,7 +443,10 @@ export function App() {
           {/* ── Inputs ── */}
           <form className="panel inputs" aria-label="Design inputs" onSubmit={(e) => e.preventDefault()} noValidate>
             <section aria-labelledby="h-section">
-              <h2 id="h-section">Steel section</h2>
+              <div className="input-heading"><h2 id="h-section">Steel section</h2><InputHelp title="Steel section">
+                <p>Select a section family and size. Tapered beams retain the library flange and web thicknesses; web depth varies linearly between supports A and B.</p>
+                <p>h<sub>A</sub>, h<sub>B</sub> (mm): overall steel depths at supports A and B, limited to the library depth of {fmt(hLib, 1)} mm. Enter 0 to use the library depth.</p>
+              </InputHelp></div>
               <div className="fields">
                 <label className="f"><span>Family</span>
                   <select id="family" value={family} onChange={(e) => setFamily(e.target.value)}>
@@ -440,7 +461,7 @@ export function App() {
                 </label>
                 <p className="hint wide">{section ? `${section.name} · ${section.standard} · ${fmt(section.values.mass, 1)} kg/m` : ''}</p>
                 <label className="f check wide" htmlFor="in-taper">
-                  <span>Tapered <em>web depth varies linearly from support A to support B</em></span>
+                  <span>Tapered</span>
                   <input id="in-taper" data-testid="taper" type="checkbox" checked={tapered} onChange={(e) => {
                     const on = e.target.checked;
                     if (on) for (const n of ['h_{A.in}', 'h_{B.in}']) if (!(value(byName(n)) > 0)) setInput(byName(n), hLib);
@@ -451,18 +472,22 @@ export function App() {
                   const f = byName(n), over = value(f) > hLib + 1e-9;
                   return (
                     <label key={n} className={`f ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
-                      <span><Sym latex={n === 'h_{A.in}' ? 'h_A' : 'h_B'} /> (mm) <em>{label}, ≤ {fmt(hLib, 1)}</em></span>
+                      <span><Sym latex={n === 'h_{A.in}' ? 'h_A' : 'h_B'} /> (mm) <em className="sr-only">{label}, ≤ {fmt(hLib, 1)}</em></span>
                       <NumberField id={`in-${f.id}`} label={n} value={String(value(f))} onCommit={(nv) => setInput(f, nv)} />
                       {over && <small className="fail" role="alert">More than the library depth: {fmt(hLib, 1)} mm is used.</small>}
                     </label>
                   );
                 })}
-                {tapered && <p className="hint wide" data-testid="taper-note">h<sub>A</sub> = {fmt(res.hA, 1)} → h<sub>B</sub> = {fmt(res.hB, 1)} mm, flanges and web thickness of {section?.name ?? 'the section'}. {res.taper ? <>Checked at the critical sections: x<sub>M</sub> = {fmt(res.xM, 2)} m (h = {fmt(res.hA + ((res.hB - res.hA) * res.xM) / res.L, 1)} mm), both supports, LTB of the tapered beam (EN 1993-1-1 §6.3.4, α<sub>cr</sub> = {fmt(res['acr.LT'], 2)} by finite elements), the web under each point load at its depth, the worst depth for bending with shear, the span for deflection. Governing: <Rich text={governing[1]} />, {where(gov.key) || 'see the table'}.</> : 'Same depth at both ends: uniform section.'}</p>}
+                {tapered && <div className="wide taper-summary"><span className="hint">h<sub>A</sub> {fmt(res.hA, 0)} to h<sub>B</sub> {fmt(res.hB, 0)} mm</span><InputHelp title="Tapered beam"><p className="hint wide" data-testid="taper-note">h<sub>A</sub> = {fmt(res.hA, 1)} → h<sub>B</sub> = {fmt(res.hB, 1)} mm, flanges and web thickness of {section?.name ?? 'the section'}. {res.taper ? <>Checked at the critical sections: x<sub>M</sub> = {fmt(res.xM, 2)} m (h = {fmt(res.hA + ((res.hB - res.hA) * res.xM) / res.L, 1)} mm), both supports, LTB of the tapered beam (EN 1993-1-1 §6.3.4, α<sub>cr</sub> = {fmt(res['acr.LT'], 2)} by finite elements), the web under each point load at its depth, the worst depth for bending with shear, the span for deflection. Governing: <Rich text={governing[1]} />, {where(gov.key) || 'see the table'}.</> : 'Same depth at both ends: uniform section.'}</p></InputHelp></div>}
               </div>
             </section>
             {groups.map(([g, fields], gi) => (
               <section key={g} aria-labelledby={`h-group-${gi}`}>
-                <h2 id={`h-group-${gi}`}>{isDeck(g) ? 'Slab' : g.replace(/\s*\(.*$/, '')}</h2>
+                <div className="input-heading"><h2 id={`h-group-${gi}`}>{isDeck(g) ? 'Slab' : g.replace(/\s*\(.*$/, '')}</h2><InputHelp title={isDeck(g) ? 'Slab' : g.replace(/\s*\(.*$/, '')}>
+                  <dl>{fields.map((f) => <div key={f.id}><dt><Sym latex={f.name} />{f.unit ? ` (${unit(f.unit)})` : ''}</dt><dd><Rich text={f.label} /></dd></div>)}</dl>
+                  {isDeck(g) && <p>Slab type selects a solid slab or filled steel deck. Deck direction is relative to the beam; transverse bars can have one or two layers. Use Define deck to select a profile and inspect its source.</p>}
+                  {isDeck(g) && deck && <p className="hint">h<sub>c</sub> = {fmt(res.h_c, 0)} mm is the overall depth: {fmt(res.ht, 0)} mm of concrete above a {fmt(res.hpe, 0)} mm deck. P<sub>Rd</sub> = k<sub>d</sub> × solid-slab value = {fmt(res.PRd, 1)} kN ({parallel ? <>k<sub>l</sub>, (6.22)</> : <>k<sub>t</sub>, (6.23), limit {fmt(res.ktmax, 2)}</>}).{transverse && <> Studs sit in the ribs: spacing in effect {fmt(res.sA, 0)} / {fmt(res.sB, 0)} mm, {fmt(res.nre, 0)} per rib.</>}</p>}
+                </InputHelp></div>
                 {isFactors(g) ? (
                   <div className="define-row">
                     <button type="button" className="btn" data-testid="factors-open" onClick={() => factorRef.current?.showModal()}>Define…</button>
@@ -506,7 +531,7 @@ export function App() {
                         </span>
                       </div>
                     )}
-                    {deck && <p className="hint">h<sub>c</sub> = {fmt(res.h_c, 0)} mm is the overall depth: {fmt(res.ht, 0)} mm of concrete above a {fmt(res.hpe, 0)} mm deck. P<sub>Rd</sub> = k<sub>d</sub> × solid-slab value = {fmt(res.PRd, 1)} kN ({parallel ? <>k<sub>l</sub>, (6.22)</> : <>k<sub>t</sub>, (6.23), limit {fmt(res.ktmax, 2)}</>}).{transverse && <> Studs sit in the ribs: spacing in effect {fmt(res.sA, 0)} / {fmt(res.sB, 0)} mm, {fmt(res.nre, 0)} per rib.</>}</p>}
+
                   </>
                 ) : (
                   <div className="fields">{fields.filter((f) => f.name !== 'h_c' && !(res.ctop === 0 && ['d_{s.t}', 's_{f.t}'].includes(f.name))).map(renderField)}</div>
@@ -548,12 +573,12 @@ export function App() {
                 <tr><td>Line load w<sub>Ed</sub> (kN/m)</td><td>–</td><td>{fmt(res.w1, 2)} over {fmt(res.L1, 2)} m</td></tr>
               </tbody>
             </table>
-            <section className="sheet-sec" aria-labelledby="h-forces">
+            <section className="sheet-sec forces-panel" aria-labelledby="h-forces" data-testid="forces-panel">
               <div className="sec-head"><h2 id="h-forces">Internal forces, ULS</h2><span className="hint">hover or ← → on a chart to read values</span></div>
                         <h3>Shear V<sub>Ed</sub>, max {fmt(res.V2, 1)} kN</h3>
-            <LineChart series={[{ x: v.x, y: v.V, color: C.blue, label: 'V', fill: true }]} height={130} yUnit="kN" label={`Shear force diagram, ${fmt(res.V2, 1)} kN at the support`} />
+            <LineChart alignBeam series={[{ x: v.x, y: v.V, color: C.blue, label: 'V', fill: true }]} height={130} yUnit="kN" label={`Shear force diagram, ${fmt(res.V2, 1)} kN at the support`} />
             <h3>Moment M<sub>Ed</sub> and resistance M<sub>Rd</sub>(x) from the studs</h3>
-            <LineChart series={[{ x: v.x, y: v.M, color: C.red, label: 'M_Ed', fill: true }, ...(composite ? [{ x: v.x, y: v.MRdx, color: C.blue, label: 'M_Rd' }] : [])]} height={160} invertY yUnit="kNm" labels={[{ x: res.xM, y: res.M2, text: fmt(res.M2, 1), color: C.red }]} label={`Bending moment diagram, maximum ${fmt(res.M2, 1)} kNm at ${fmt(res.xM, 2)} m`} />
+            <LineChart alignBeam series={[{ x: v.x, y: v.M, color: C.red, label: 'M_Ed', fill: true }, ...(composite ? [{ x: v.x, y: v.MRdx, color: C.blue, label: 'M_Rd' }] : [])]} height={160} invertY yUnit="kNm" labels={[{ x: res.xM, y: res.M2, text: fmt(res.M2, 1), color: C.red }]} label={`Bending moment diagram, maximum ${fmt(res.M2, 1)} kNm at ${fmt(res.xM, 2)} m`} />
             <Legend items={[{ color: C.red, label: 'M_Ed(x)' }, ...(composite ? [{ color: C.blue, label: 'M_Rd(x), studs provided' }] : [])]} />
             {(() => {
               // moment-driven stud need at each x: (M_Ed(x) − M_a.Rd)/(M_pl.Rd − M_a.Rd) of N_c.f, over P_Rd
@@ -572,7 +597,7 @@ export function App() {
                       {' '}The section is checked as bare steel.
                     </p>
                   )}
-                  <LineChart series={[
+                  <LineChart alignBeam series={[
                     { x: v.x, y: nM, color: C.red, label: 'n needed' },
                     { x: v.x, y: v.nx, color: C.blue, label: 'n_x provided' },
                   ]} height={150} yMin={0} digits={0} yUnit="studs" label="Studs needed from M_Ed(x) and provided along the span" />
