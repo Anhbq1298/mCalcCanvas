@@ -207,7 +207,8 @@ export function App() {
   const words = deckQuery.toLowerCase().split(/\s+/).filter(Boolean);
   const deckList = DECKS.filter((d) => words.every((w) => `${d.maker} ${d.name} ${d.values['c_{re}'] ? 're-entrant dovetail' : 'open trapezoidal'}`.toLowerCase().includes(w)));
   const applyDeck = (name: string) => { const d = DECKS.find((x) => x.name === name); if (d) for (const [n, x] of Object.entries(d.values)) if (value(byName(n)) !== x) setInput(byName(n), x); };
-  const allGroups = [...inputs.reduce((g, f) => g.set(f.group, [...(g.get(f.group) ?? []), f]), new Map<string, InputField[]>()).entries()];
+  const isSteel = (g: string) => /^Steel section/.test(g);
+  const allGroups = [...inputs.filter((f) => !isSteel(f.group)).reduce((g, f) => g.set(f.group, [...(g.get(f.group) ?? []), f]), new Map<string, InputField[]>()).entries()];
   // the slab type comes right after the geometry, wherever its inputs sit in the worksheet
   const groups = [...allGroups.filter(([g]) => /^Geometry/.test(g)), ...allGroups.filter(([g]) => /^Slab type and profiled steel deck/.test(g)), ...allGroups.filter(([g]) => !/^Geometry/.test(g) && !/^Slab type and profiled steel deck/.test(g))];
   const sb = value(inputs.find((f) => f.name === 's_b')!);
@@ -223,6 +224,16 @@ export function App() {
   const governing = shown.find(([key]) => key === gov.key) ?? shown[0];
   const section = sections.find((s) => s.id === state.sectionId);
   const pass = overall <= 1;
+  const hLib = section?.values.h ?? res.h_a;
+  const tapered = value(byName('c_{tap}')) >= 1;
+  // tapered beam: where (and at which depth) each check governs
+  const where = (k: string): string => {
+    if (!res.taper) return '';
+    const x = res[`at.${k}`], h = res[`hat.${k}`];
+    if (Number.isFinite(x)) return `x = ${fmt(x, 2)} m, h = ${fmt(h, 1)} mm`;
+    if (Number.isFinite(h)) return `worst depth h = ${fmt(h, 1)} mm`;
+    return 'along the span';
+  };
 
   const setInput = (f: InputField, n: number) => {
     setValues((vs) => ({ ...vs, [f.id]: n }));
@@ -428,6 +439,25 @@ export function App() {
                   </select>
                 </label>
                 <p className="hint wide">{section ? `${section.name} · ${section.standard} · ${fmt(section.values.mass, 1)} kg/m` : ''}</p>
+                <label className="f check wide" htmlFor="in-taper">
+                  <span>Tapered <em>web depth varies linearly from support A to support B</em></span>
+                  <input id="in-taper" data-testid="taper" type="checkbox" checked={tapered} onChange={(e) => {
+                    const on = e.target.checked;
+                    if (on) for (const n of ['h_{A.in}', 'h_{B.in}']) if (!(value(byName(n)) > 0)) setInput(byName(n), hLib);
+                    setInput(byName('c_{tap}'), on ? 1 : 0);
+                  }} />
+                </label>
+                {tapered && ([['h_{A.in}', 'Depth at start, support A'], ['h_{B.in}', 'Depth at end, support B']] as const).map(([n, label]) => {
+                  const f = byName(n), over = value(f) > hLib + 1e-9;
+                  return (
+                    <label key={n} className={`f ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
+                      <span><Sym latex={n === 'h_{A.in}' ? 'h_A' : 'h_B'} /> (mm) <em>{label}, ≤ {fmt(hLib, 1)}</em></span>
+                      <NumberField id={`in-${f.id}`} label={n} value={String(value(f))} onCommit={(nv) => setInput(f, nv)} />
+                      {over && <small className="fail" role="alert">More than the library depth: {fmt(hLib, 1)} mm is used.</small>}
+                    </label>
+                  );
+                })}
+                {tapered && <p className="hint wide" data-testid="taper-note">h<sub>A</sub> = {fmt(res.hA, 1)} → h<sub>B</sub> = {fmt(res.hB, 1)} mm, flanges and web thickness of {section?.name ?? 'the section'}. {res.taper ? <>Checked at the critical sections: x<sub>M</sub> = {fmt(res.xM, 2)} m (h = {fmt(res.hA + ((res.hB - res.hA) * res.xM) / res.L, 1)} mm), both supports, the worst depth for stability and webs, the span for deflection. Governing: <Rich text={governing[1]} />, {where(gov.key) || 'see the table'}.</> : 'Same depth at both ends: uniform section.'}</p>}
               </div>
             </section>
             {groups.map(([g, fields], gi) => (
@@ -656,7 +686,7 @@ export function App() {
                   const u = res[`UR.${key}`];
                   return (
                     <tr key={key} className={key === governing[0] ? 'gov' : ''}>
-                      <td><Rich text={label} /><span className="clause">{clause}</span></td>
+                      <td><Rich text={label} /><span className="clause">{clause}{res.taper ? ` · ${where(key)}` : ''}</span></td>
                       <td className={tone(u)}>
                         {fmt(u, 3)}
                         {u > 1 && <span className="sr-only"> (fails)</span>}

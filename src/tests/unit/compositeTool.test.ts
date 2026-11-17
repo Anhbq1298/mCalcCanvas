@@ -371,5 +371,45 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(r.vf).toBeCloseTo(r.Ncf / r.xM, 6);
     expect(r.vf).toBeLessThan(PRd / 0.095);
   }, 120_000);
+
+  it('tapered beam: section properties at a reduced depth match the geometry; checks combine at the critical sections', () => {
+    const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+    const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
+    const base = m.results();
+    const hl = base.h_a, b = base.b_a, tf = base.t_f, tw = base.t_w, rr = base.r;
+    // independent I-section with four root fillets (fillet: area (1 − π/4) r², own I about its centroid 0.2234 r from the corner)
+    const Af = (1 - Math.PI / 4) * rr ** 2, Iown = 0.0075 * rr ** 4;
+    const Igeo = (h: number) => 2 * ((b * tf ** 3) / 12 + b * tf * ((h - tf) / 2) ** 2) + (tw * (h - 2 * tf) ** 3) / 12 + 4 * (Iown + Af * (h / 2 - tf - 0.2234 * rr) ** 2);
+    const Wgeo = (h: number) => b * tf * (h - tf) + (tw * (h - 2 * tf) ** 2) / 4 + 4 * Af * (h / 2 - tf - 0.2234 * rr);
+    expect(Igeo(hl) / 1e4 / base.I_a).toBeCloseTo(1, 2); // the library values come from the same geometry
+    const h1 = 350;
+    set('c_{tap}', 1); set('h_{A.in}', h1); set('h_{B.in}', h1); // uniform at the reduced depth
+    const u1 = m.results();
+    expect(u1.taper).toBeUndefined();
+    expect(u1.h_a).toBeCloseTo(h1, 9);
+    expect(u1.A_a).toBeCloseTo(base.A_a - (tw * (hl - h1)) / 100, 6);
+    expect(u1.I_a / (base.I_a + (Igeo(h1) - Igeo(hl)) / 1e4)).toBeCloseTo(1, 3);
+    expect(u1.W_pl / (base.W_pl + (Wgeo(h1) - Wgeo(hl)) / 1e3)).toBeCloseTo(1, 3);
+    expect(u1.I_a).toBeLessThan(base.I_a);
+    expect(u1['UR.des']).toBeGreaterThan(base['UR.des']);
+    // tapered from h1 at A to the library depth at B
+    set('h_{B.in}', 0);
+    const t = m.results();
+    expect(t.errors).toEqual([]);
+    expect([t.taper, t.hA, t.hB]).toEqual([1, h1, hl]);
+    // bending at x_M is the uniform result at the depth of x_M
+    set('h_{A.in}', t['hat.M.2']); set('h_{B.in}', t['hat.M.2']);
+    const uM = m.results();
+    expect(t['UR.M.2']).toBeCloseTo(uM['UR.M.2'], 9);
+    expect(t['at.M.2']).toBeCloseTo(t.xM, 9);
+    // shear governs at the shallow end; the tapered beam sits between the uniform shallow and deep beams
+    expect(t['at.V.2']).toBe(0);
+    expect(t['UR.V.2']).toBeCloseTo(u1['UR.V.2'] * Math.abs(t.vectors.V[0]) / Math.max(Math.abs(t.vectors.V[0]), Math.abs(t.vectors.V.at(-1)!)), 9);
+    for (const k of ['M.2', 'V.2', 'd.x', 'fn', 'UR.des'].map((k) => (k.startsWith('UR') ? k : `UR.${k}`))) {
+      expect(t[k]).toBeLessThanOrEqual(u1[k] + 1e-9);
+      expect(t[k]).toBeGreaterThanOrEqual(base[k] - 1e-9);
+    }
+    expect(governingCheck(t).ur).toBeGreaterThanOrEqual(t['UR.des'] - 1e-9);
+  }, 300_000);
 });
 

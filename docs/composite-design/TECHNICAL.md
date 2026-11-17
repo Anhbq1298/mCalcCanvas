@@ -264,3 +264,31 @@ Read against the clause text and the figure supplied by the user:
   and c_b (20 mm cover above the soffit or the deck crest). RF55 or Bondek with 100 mm studs: 5 mm, not met; 125 mm studs: 30 mm.
 - Drawings: bottom bars at h_pe + c_b + d/2; surface c-c drawn in 3D (inclined part counted, rib side dotted).
 
+
+## Tapered beam (worksheet 1.4, page "Tapered")
+
+The section is the library section with only the web depth varying linearly, h_A at support A to h_B at
+support B (each ≤ the library depth h; 0 = library depth). Flanges, t_w and r are unchanged.
+
+**Properties at depth h** (worksheet 1.4): the library value plus the change of the nominal I-section with
+four root fillets (each (1 − π/4) r², centroid 0.2234 r from the flange):
+A = A_lib + t_w Δh; I_y and W_pl from I_nom(h) − I_nom(h_lib) and W_nom(h) − W_nom(h_lib);
+I_z += t_w³ Δh / 12; I_t += t_w³ Δh / 3; I_w × ((h − t_f)/(h_lib − t_f))²; mass ∝ A.
+Unit test: an independent fillet-section calculation agrees to 0.1 %.
+
+**Critical sections.** The sheet is run at one depth at a time (d_use, set by the page). The page runs it
+at h(x_M), h_A and h_B and combines (`combineTaper`, model.ts):
+
+| Checks | Combined as |
+|---|---|
+| M.1, M.2, M.nc, slab surfaces, η, PNA | at x_M, depth h(x_M) |
+| V.1, V.2, V.nc, F.S | each support at its depth, scaled by its reaction / the larger reaction |
+| M.x | M_Ed(x) against M_Rd,x interpolated to the local depth h(x) |
+| LT, LT.nc, MV, MV.nc, F.P, FM, FM.nc | worst of the three depths (conservative) |
+| d.1, d.x, d.q, d.nc, d.q.nc | ∫ w(x) UR(h(x)) dx / ∫ w dx, w = x(L − x)·min(x, L − x) (M·m of a UDL at mid-span; δ ∝ 1/I) |
+| fn, fn.nc | same weighting on UR², since f_lim / f_1 ∝ √δ |
+
+UR.des is then recomputed from the composite or bare-steel set. With h_A = h_B the page uses the single
+uniform run. The check table shows where each check governs (x and h, worst depth, or along the span).
+Limits: the stability checks use the shallowest section over the whole length (no tapered LTB theory,
+e.g. EN 1993-1-1 §6.3.4); point loads take the worst depth, not the depth at the load.

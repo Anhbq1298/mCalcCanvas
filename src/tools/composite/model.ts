@@ -55,7 +55,102 @@ const SCALARS: Probe[] = [
   ['nre', 'n_{re}', null], ['sA', 's_A', 'mm'], ['sB', 's_B', 'mm'], ['ape', 'a_{pe}', 'mm^2/m'], ['cbb', 'c_{bb}', null], ['Idyn', 'I_{dyn}', 'cm^4'], ['NcRd', 'N_{c.Rd}', 'kN'], ['LLT', 'L_{LT}', 'm'], ['smax', 's_{max}', 'mm'], ['smin', 's_{min}', 'mm'], ['dgmax', '\\delta_{g.max}', 'mm'], ['cprop', 'c_{prop}', null], ['rlim', 'r_{lim}', null], ['rlim1', 'r_{lim.1}', null], ['rlimq', 'r_{lim.q}', null], ['c16', 'c_{16}', null], ['cre', 'c_{re}', null],
   // deflection
   ['dmax', '\\delta_{max}', 'mm'], ['wc', 'w_c', 'mm'], ['ccam', 'c_{cam}', null], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['f1', 'f_1', 'Hz'], ['f1nc', 'f_{1.nc}', 'Hz'], ['flim', 'f_{lim}', 'Hz'], ['Ecdyn', 'E_{c.dyn}', 'GPa'], ['ddyn', '\\delta_{dyn}', 'mm'], ['ddynnc', '\\delta_{dyn.nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
+  // tapered beam
+  ['ctap', 'c_{tap}', null], ['hA', 'h_A', 'mm'], ['hB', 'h_B', 'mm'],
 ];
+/** Utilisations the summary uses but the check table does not list (bare-steel bending and shear at x_M). */
+const EXTRA_UR = ['M.nc', 'V.nc'];
+
+/**
+ * Tapered beam: how each check is combined from the sheet run at the depths of the critical sections.
+ * support: shear-type checks at A and B, scaled by each end's reaction; max: the worst depth (stability,
+ * interaction, local web checks); span: deflections, weighted by the curvature–virtual-moment product
+ * along the span; x: bending along the span against the resistance at the local depth. Every other check
+ * is taken at the section of the maximum moment, x_M.
+ */
+const TAPER_SUPPORT = ['V.1', 'V.2', 'F.S', 'V.nc'];
+const TAPER_MAX = ['LT', 'LT.nc', 'MV', 'MV.nc', 'F.P', 'FM', 'FM.nc'];
+const TAPER_SPAN = ['d.1', 'd.x', 'd.q', 'd.nc', 'd.q.nc'];
+const TAPER_FREQ = ['fn', 'fn.nc'];
+const UR_COMPOSITE = ['M.2', 'M.x', 'MV', 'V.2', 'F.P', 'F.S', 'FM', 'd.x', 'd.q', 'fn', 'sf', 'L', 'sf.b', 'L.b', 'sf.c', 'L.c'];
+const UR_BARE = ['M.nc', 'MV.nc', 'V.nc', 'LT.nc', 'F.P', 'F.S', 'FM.nc', 'd.nc', 'd.q.nc', 'fn.nc'];
+
+/** Linear interpolation of y over x (x ascending, clamped at the ends). */
+function interp(xs: number[], ys: number[], x: number): number {
+  if (x <= xs[0]) return ys[0];
+  for (let i = 1; i < xs.length; i++) if (x <= xs[i]) return xs[i] - xs[i - 1] < 1e-12 ? ys[i] : ys[i - 1] + ((ys[i] - ys[i - 1]) * (x - xs[i - 1])) / (xs[i] - xs[i - 1]);
+  return ys[ys.length - 1];
+}
+
+/**
+ * Combine sheet runs at the depths of the critical sections of a tapered beam (depth h_A at x = 0 to h_B at
+ * x = L). runs: the results at depth h(x_M), h_A and h_B. The result reads like a single run: same keys, the
+ * section values of x_M, the checks combined as above, plus at.<check> = x (m) of the governing section
+ * (NaN for span-wide checks and the worst-depth checks) and hat.<check> = the depth used (mm; NaN span-wide).
+ */
+export function combineTaper(rM: Results, rA: Results, rB: Results): Results {
+  const L = rM.L, hA = rM.hA, hB = rM.hB, xM = rM.xM;
+  const hAt = (x: number) => hA + ((hB - hA) * x) / L;
+  const out = { ...rM, vectors: { ...rM.vectors }, errors: [...rM.errors, ...rA.errors, ...rB.errors] } as Results;
+  const at = (k: string, x: number, h = Number.isFinite(x) ? hAt(x) : NaN) => { out[`at.${k}`] = x; out[`hat.${k}`] = h; };
+  for (const [k] of CHECKS) at(k, xM);
+  for (const k of EXTRA_UR) at(k, xM);
+  const V = rM.vectors.V ?? [];
+  const RA = Math.abs(V[0] ?? 1), RB = Math.abs(V[V.length - 1] ?? 1), R = Math.max(RA, RB, 1e-9);
+  for (const k of TAPER_SUPPORT) {
+    // V.1 (construction, uniform load) has equal reactions; the composite-stage reactions scale the others
+    const a = rA[`UR.${k}`] * (k === 'V.1' ? 1 : RA / R), b = rB[`UR.${k}`] * (k === 'V.1' ? 1 : RB / R);
+    out[`UR.${k}`] = Math.max(a, b);
+    at(k, a >= b ? 0 : L);
+  }
+  for (const k of TAPER_MAX) {
+    const c = [[rM[`UR.${k}`], xM], [rA[`UR.${k}`], 0], [rB[`UR.${k}`], L]].filter(([u]) => Number.isFinite(u)).sort((p, q) => q[0] - p[0]);
+    if (!c.length) continue;
+    out[`UR.${k}`] = c[0][0];
+    at(k, NaN, hAt(c[0][1])); // the worst of the depths, not one location
+  }
+  // the three runs as nodes over depth, for values at the local depth h(x)
+  const nodes = [[hA, rA], [hAt(xM), rM], [hB, rB]] as [number, Results][];
+  nodes.sort((p, q) => p[0] - q[0]);
+  const hs = nodes.map(([h]) => h);
+  const local = (get: (r: Results) => number, h: number) => interp(hs, nodes.map(([, r]) => get(r)), h);
+  // bending along the span: M(x) against M_Rd,x at the local depth
+  const xs = rM.vectors.x ?? [], Ms = rM.vectors.M ?? [];
+  if (xs.length && rA.vectors.MRdx?.length === xs.length && rB.vectors.MRdx?.length === xs.length) {
+    let worst = 0, xw = xM;
+    const mrd = xs.map((x, i) => local((r) => r.vectors.MRdx[i], hAt(x)));
+    xs.forEach((x, i) => { const u = mrd[i] > 0 ? Math.abs(Ms[i]) / mrd[i] : 0; if (u > worst) { worst = u; xw = x; } });
+    out[`UR.M.x`] = worst;
+    out.vectors.MRdx = mrd;
+    at('M.x', xw);
+  }
+  // deflections: δ = ∫ M m / EI dx, M ∝ x(L − x) and m ∝ min(x, L − x); a run at depth h gives δ(h) ∝ 1 / I(h)
+  const n = 60, w: number[] = [], hx: number[] = [];
+  for (let i = 0; i < n; i++) { const x = ((i + 0.5) * L) / n; w.push(x * (L - x) * Math.min(x, L - x)); hx.push(hAt(x)); }
+  const W = w.reduce((a, b) => a + b, 0);
+  const span = (get: (r: Results) => number) => w.reduce((a, wi, i) => a + wi * local(get, hx[i]), 0) / W;
+  const scale = (key: string, vec: string, k: string) => {
+    const f = rM[`UR.${k}`] > 0 ? out[`UR.${k}`] / rM[`UR.${k}`] : 1;
+    out[key] = rM[key] * f;
+    if (out.vectors[vec]) out.vectors[vec] = out.vectors[vec].map((d) => d * f);
+  };
+  for (const k of TAPER_SPAN) { if (Number.isFinite(rM[`UR.${k}`])) { out[`UR.${k}`] = span((r) => r[`UR.${k}`]); at(k, NaN); } }
+  // UR_fn = f_lim / f_1 ∝ √δ
+  for (const k of TAPER_FREQ) { if (Number.isFinite(rM[`UR.${k}`])) { out[`UR.${k}`] = Math.sqrt(span((r) => r[`UR.${k}`] ** 2)); at(k, NaN); } }
+  scale('d1', 'd1v', 'd.1'); scale('dq', 'dq', 'd.q');
+  const fx = rM['UR.d.x'] > 0 ? out['UR.d.x'] / rM['UR.d.x'] : 1;
+  out.dmax = rM.dmax * fx;
+  out.vectors.d = (rM.vectors.d ?? []).map((d) => d * fx);
+  out.dnc = rM.dnc * (rM['UR.d.nc'] > 0 ? out['UR.d.nc'] / rM['UR.d.nc'] : 1);
+  out.f1 = rM.f1 * (out['UR.fn'] > 0 ? rM['UR.fn'] / out['UR.fn'] : 1);
+  out.f1nc = rM.f1nc * (out['UR.fn.nc'] > 0 ? rM['UR.fn.nc'] / out['UR.fn.nc'] : 1);
+  // composite action needs M_Ed ≤ M_Rd,x everywhere, as in the sheet
+  out.comp = rM.comp >= 1 && out['UR.M.x'] <= 1 ? 1 : 0;
+  const max = (keys: string[]) => Math.max(...keys.map((k) => out[`UR.${k}`]).filter(Number.isFinite));
+  out['UR.des'] = out.comp >= 1 ? max(UR_COMPOSITE) : max(UR_BARE);
+  out.taper = 1;
+  return out;
+}
 
 /** Utilisations by code, in report order: [key, label, clause, basis]. basis: c = composite only, n = non-composite only. */
 export const CHECKS: [string, string, string, '' | 'c' | 'n'][] = [
@@ -394,7 +489,7 @@ export class CompositeModel {
       SCALARS.forEach(([key, latex, unit], i) => e.setRegion(`probe:${key}`, { latex: `${latex}=`, order: [1e9, i] as never, displayUnit: unit, precision: null }));
       // vectors probe under their own prefix, so a scalar and a vector may share a key (dq)
       VECTORS.forEach(([key, latex, unit], i) => e.setRegion(`probe:v.${key}`, { latex: `${latex}=`, order: [1e9, 300 + i] as never, displayUnit: unit, precision: null }));
-      CHECKS.forEach(([key], i) => e.setRegion(`probe:UR.${key}`, { latex: `\\mathrm{UR}_{${key}}=`, order: [1e9, 500 + i] as never, displayUnit: null, precision: null }));
+      [...CHECKS.map(([k]) => [k]), ...EXTRA_UR.map((k) => [k])].forEach(([key], i) => e.setRegion(`probe:UR.${key}`, { latex: `\\mathrm{UR}_{${key}}=`, order: [1e9, 500 + i] as never, displayUnit: null, precision: null }));
     });
   }
 
@@ -496,13 +591,31 @@ export class CompositeModel {
     return { family, maxDepth, targets, tried, total: cands.length, best: null };
   }
 
+  /**
+   * The results of the current inputs. A tapered beam (c_tap = 1, h_A ≠ h_B) runs the sheet at the depth of
+   * each critical section (d_use) and combines the checks by location (combineTaper).
+   */
   results(): Results {
+    const r = this.run();
+    if (!(r.ctap >= 1) || !(Math.abs(r.hA - r.hB) > 0.5)) return r;
+    const use = this.inputs.find((f) => f.name === 'd_{use}');
+    if (!use) return r;
+    const at = (h: number) => { this.e.setDefinitionOverride(use.id, { value: h, unit: null } as never); return this.run(); };
+    const hM = r.hA + ((r.hB - r.hA) * r.xM) / r.L;
+    const mid = (r.hA + r.hB) / 2;
+    const rM = Math.abs(hM - mid) < 0.05 ? r : at(hM);
+    const rA = at(r.hA), rB = at(r.hB);
+    this.e.setDefinitionOverride(use.id, { value: 0, unit: null } as never);
+    return combineTaper(rM, rA, rB);
+  }
+
+  private run(): Results {
     const out = { vectors: {}, errors: [] as string[] } as unknown as Results;
     for (const [key] of SCALARS) {
       const r = this.e.getResult(`probe:${key}`);
       out[key] = r?.status === 'valid' ? r.value!.number : NaN;
     }
-    for (const [key] of CHECKS) {
+    for (const key of [...CHECKS.map(([k]) => k), ...EXTRA_UR]) {
       const r = this.e.getResult(`probe:UR.${key}`);
       out[`UR.${key}`] = r?.status === 'valid' ? r.value!.number : NaN;
     }

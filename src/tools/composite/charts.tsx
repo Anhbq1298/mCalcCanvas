@@ -595,7 +595,11 @@ export function BeamCad({ r, name, part }: { r: Record<string, number>; name: st
   const Lmm = L * 1000, D = h_c + h_a;
   const X0 = 34, X1 = W - 34; // the same stations as the load drawings below, so the spans line up
   const kh = (X1 - X0) / Lmm, kv = Math.max(kh, 112 / D);
-  const top = 46, yS = top + h_c * kv, yB = yS + h_a * kv; // slab top, steel top, steel bottom
+  // a tapered beam (r.taper) is drawn from h_A at A to h_B at B; the layout below uses the deeper end
+  const tap = part === 'elevation' && r.taper >= 1 && r.hA > 0 && r.hB > 0;
+  const hA = tap ? r.hA : h_a, hB = tap ? r.hB : h_a;
+  const top = 46, yS = top + h_c * kv, yB = yS + Math.max(hA, hB) * kv; // slab top, steel top, steel bottom (deepest)
+  const yBA = yS + hA * kv, yBB = yS + hB * kv;
   const X = (mm: number) => X0 + mm * kh, Yup = (mm: number) => yS - mm * kv; // mm above the steel top
   const xM = Math.min(Math.max(r.xM * 1000, 0), Lmm);
   const sA = r.sA > 0 ? r.sA : NaN, sB = r.sB > 0 ? r.sB : NaN;
@@ -654,17 +658,18 @@ export function BeamCad({ r, name, part }: { r: Record<string, number>; name: st
             </g>
           ))}
         </g>
-        <rect x={X0} y={yS} width={X1 - X0} height={h_a * kv} fill={C.sheet} stroke={ink} strokeWidth={CAD.geo} />
+        <polygon points={`${X0},${yS} ${X1},${yS} ${X1},${yBB} ${X0},${yBA}`} fill={C.sheet} stroke={ink} strokeWidth={CAD.geo} strokeLinejoin="round" />
         <line x1={X0} x2={X1} y1={yS + t_f * kv} y2={yS + t_f * kv} stroke={ink} strokeWidth={CAD.dim} />
-        <line x1={X0} x2={X1} y1={yB - t_f * kv} y2={yB - t_f * kv} stroke={ink} strokeWidth={CAD.dim} />
+        <line x1={X0} x2={X1} y1={yBA - t_f * kv} y2={yBB - t_f * kv} stroke={ink} strokeWidth={CAD.dim} />
         {/* supports */}
         <g fill={C.sheet} stroke={ink} strokeWidth={CAD.geo}>
-          <path d={`M${X0},${yB + 1} l-8,13 h16 z`} />
-          <path d={`M${X1},${yB + 1} l-8,11 h16 z`} />
-          <circle cx={X1 - 4} cy={yB + 15} r="2" strokeWidth={CAD.dim} /><circle cx={X1 + 4} cy={yB + 15} r="2" strokeWidth={CAD.dim} />
+          <path d={`M${X0},${yBA + 1} l-8,13 h16 z`} />
+          <path d={`M${X1},${yBB + 1} l-8,11 h16 z`} />
+          <circle cx={X1 - 4} cy={yBB + 15} r="2" strokeWidth={CAD.dim} /><circle cx={X1 + 4} cy={yBB + 15} r="2" strokeWidth={CAD.dim} />
         </g>
-        {hatch(X0, yB + 14.5)}{hatch(X1, yB + 18)}
-        {txt(X0 - 6, yB - 4, 'A', 'end')}{txt(X1 + 6, yB - 4, 'B', 'start')}
+        {hatch(X0, yBA + 14.5)}{hatch(X1, yBB + 18)}
+        {txt(X0 - 6, yBA - 4, 'A', 'end')}{txt(X1 + 6, yBB - 4, 'B', 'start')}
+        {tap && <>{txt(X0 + 6, (yS + yBA) / 2 + 4, `h_A ${fmt(hA, 0)}`, 'start')}{txt(X1 - 6, (yS + yBB) / 2 + 4, `h_B ${fmt(hB, 0)}`, 'end')}</>}
         {/* stud zones each side of the maximum moment */}
         <line x1={X(xM)} x2={X(xM)} y1={top - 22} y2={yB + 6} stroke={dimC} strokeWidth={CAD.dim} strokeDasharray="10 3 2 3" />
         {txt(X(xM), top - 26, `x_M ${fmt(r.xM, 2)} m`, 'middle', dimC)}

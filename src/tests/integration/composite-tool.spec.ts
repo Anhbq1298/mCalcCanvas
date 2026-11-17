@@ -113,3 +113,18 @@ test('slab type: filled steel deck with transverse ribs reduces the studs and dr
   await expect(page.getByTestId('cc-caption')).toContainText('c-c');
 });
 
+
+test('tapered beam: depths at both supports, checks at the critical sections, back to uniform', async ({ page }) => {
+  await page.goto('/composite/');
+  await expect(page.getByTestId('ur-des')).toHaveText('0.971');
+  await page.getByTestId('taper').check();
+  await expect(page.getByTestId('taper-note')).toContainText('Same depth at both ends');
+  const hA = page.locator('label:has-text("Depth at start") input');
+  await hA.fill('300');
+  await hA.press('Enter');
+  await expect(page.getByTestId('taper-note')).toContainText('Checked at the critical sections', { timeout: 30_000 });
+  await expect(page.getByTestId('ur-des')).toHaveText('1.270', { timeout: 30_000 });
+  await expect(page.getByTestId('ur-table')).toContainText('x = 0.00 m, h = 300.0 mm');
+  await page.getByTestId('taper').uncheck();
+  await expect(page.getByTestId('ur-des')).toHaveText('0.971', { timeout: 30_000 });
+});

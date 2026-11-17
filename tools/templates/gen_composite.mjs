@@ -56,10 +56,30 @@ P('Steel section (Browse to change)', R`\mathrm{Section}\coloneq3148`);
 T('Library: BS 4-1 dimensions, properties from the geometry. Check against project tables.');
 // t_f, t_w, r, I_z, I_t, I_w use the steel library's own definitions so Browse leaves them unchanged.
 const SP = (name, i) => R`${name}\coloneq\operatorname{sectionProp}(\mathrm{Section},${i})`;
-const props = [['h_a',0,'mm',1],['b_a',1,'mm',1],['t_f',3,'mm',1],['t_w',2,'mm',1],['r',4,'mm',1],['A_a',5,'cm^2',2],['I_a',6,'cm^4',0],['I_z',7,'cm^4',0],
-  ['W_{pl}',10,'cm^3',0],['I_t',12,'cm^4',2],['I_w',13,'cm^6',0],['m_a',16,'kg/m',2]];
+const props = [['h_{a.lib}',0,'mm',1],['b_a',1,'mm',1],['t_f',3,'mm',1],['t_w',2,'mm',1],['r',4,'mm',1],['A_{a.lib}',5,'cm^2',2],['I_{a.lib}',6,'cm^4',0],['I_{z.lib}',7,'cm^4',0],
+  ['W_{pl.lib}',10,'cm^3',0],['I_{t.lib}',12,'cm^4',2],['I_{w.lib}',13,'cm^6',0],['m_{a.lib}',16,'kg/m',2]];
 for (let i = 0; i < props.length; i += 3)
   l.ROW(props.slice(i, i + 3).map(([n, k, u, p], j) => [[96, 316, 516][j], SP(n, k), { displayMode: 'result', displayUnit: u, precision: p }]), 0.75);
+T('Tapered beam: the same section with the web depth varying linearly from h_A at support A to h_B at support B, both not more than the library depth. Flanges, web thickness and root radius stay as in the library.');
+input('Tapered: 0 = no, 1 = yes', 'c_{tap}', 0);
+input('Depth at support A (0 = library depth)', 'h_{A.in}', 0, 'mm');
+input('Depth at support B (0 = library depth)', 'h_{B.in}', 0, 'mm');
+P('Depth at A', R`h_A\coloneq${IF([R`c_{tap}\ge1\land h_{A.in}>0\,\mathrm{mm}`, R`\min\left(h_{A.in},h_{a.lib}\right)`], [null, R`h_{a.lib}`])}`, M(units('mm')));
+P('Depth at B', R`h_B\coloneq${IF([R`c_{tap}\ge1\land h_{B.in}>0\,\mathrm{mm}`, R`\min\left(h_{B.in},h_{a.lib}\right)`], [null, R`h_{a.lib}`])}`, M(units('mm')));
+T('This sheet is evaluated at one depth: the mid-span depth (h_A + h_B)/2, or the depth d_use (mm) set by the page for each critical section. The page combines the critical sections; see its check table.');
+P('Depth of this evaluation, mm (0 = mid-span)', R`d_{use}\coloneq0`, M({ precision: 1 }));
+P('Steel depth', R`h_a\coloneq${IF([R`d_{use}>0`, R`d_{use}\,\mathrm{mm}`], [null, R`\frac{h_A+h_B}{2}`])}`, M(units('mm')));
+T('Section properties at h_a: the library values plus the change of an I-section with root fillets (area (1 − π/4) r² each, centroid 0.2234 r from the flange) when only the web depth changes.');
+P('Root fillet area, each', R`A_{fil}\coloneq\left(1-\frac{\pi}{4}\right)r^2`, M(units('mm^2')));
+P('Second moment of the nominal shape', R`I_{nom}(h)\coloneq\frac{b_a t_f^3}{6}+\frac{b_a t_f\left(h-t_f\right)^2}{2}+\frac{t_w\left(h-2t_f\right)^3}{12}+4A_{fil}\left(\frac{h}{2}-t_f-0.2234r\right)^2`, M(units('mm^4')));
+P('Plastic modulus of the nominal shape', R`W_{nom}(h)\coloneq b_a t_f\left(h-t_f\right)+\frac{t_w\left(h-2t_f\right)^2}{4}+4A_{fil}\left(\frac{h}{2}-t_f-0.2234r\right)`, M(units('mm^3')));
+calc('Area', 'A_a', R`A_{a.lib}+t_w\left(h_a-h_{a.lib}\right)`, 'cm^2', false);
+calc('Second moment, y', 'I_a', R`I_{a.lib}+I_{nom}\left(h_a\right)-I_{nom}\left(h_{a.lib}\right)`, 'cm^4', false);
+calc('Plastic modulus, y', 'W_{pl}', R`W_{pl.lib}+W_{nom}\left(h_a\right)-W_{nom}\left(h_{a.lib}\right)`, 'cm^3', false);
+calc('Second moment, z', 'I_z', R`I_{z.lib}+\frac{t_w^3\left(h_a-h_{a.lib}\right)}{12}`, 'cm^4', false);
+calc('Torsion constant', 'I_t', R`I_{t.lib}+\frac{t_w^3\left(h_a-h_{a.lib}\right)}{3}`, 'cm^4', false);
+calc('Warping constant', 'I_w', R`I_{w.lib}\left(\frac{h_a-t_f}{h_{a.lib}-t_f}\right)^2`, 'cm^6', false);
+calc('Mass', 'm_a', R`m_{a.lib}\frac{A_a}{A_{a.lib}}`, 'kg/m', false);
 H(3, '1.5 Construction stage');
 input('Propping: 0 = unpropped (default), 1 = propped', 'c_{prop}', 0);
 input('If propped: L_LT = k_LT L (prop spacing / span)', 'k_{LT}', 0.5);
