@@ -756,4 +756,4 @@ LINK('sources','References and SCI cross-check', () => {
  T('EC4 §§2.4.1.2, 5.4.1.2, 5.4.2.2, 6.2.1, 6.2.2, 6.6.1–6.6.6, 7.3.1; EC3 §§5.5, 6.2, 6.3.2.2; EC2 §6.2.4.');
  T('Slip factors 0.3 / 0.5 follow SCI guidance (PN002a, ENV 1994-1-1); not an SS EN NA rule.');
 });
-finish({ id:'tpl-composite-beam-ec4', title:'Composite Beam EC4 — Review Draft', reference:'CALC-EC4-01', file:'Composite_Beam_EC4.mCCV' });
+finish({ id:'tpl-composite-beam-ec4', title:'Composite Beam EC4 — Review Draft', reference:'CALC-EC4-01', file:'Composite_Beam_EC4.mCCV', page: { paper:'A3', pageOrientation:'landscape' } });

@@ -393,3 +393,10 @@ B d = μ K_p d with genvals / genvecs, takes α_cr = 1/max μ, the buckled shape
 
 Tests: the report's α_cr equals the page's for uniform, tapered and explicitly braced beams (to 1e-6; the penalty
 differs from the page's exact elimination by about 1e-8).
+
+## Paper: A3 landscape
+
+The worksheet is saved as A3 landscape with Optimize print layout on: the print plan packs it into two reading
+columns (22 printed pages instead of 42 on A4 portrait). The canvas keeps the single-column order, because the
+engine evaluates regions top to bottom; only the printed copy is reflowed. `finish({ page })` in
+`tools/templates/layout.mjs` sets the paper; the eigenvalue vector μ_FE prints at 10 px so it fits one column.

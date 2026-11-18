@@ -155,7 +155,7 @@ const batchConfig = (spec) => {
   const cols = (list) => list.map(([cid, label, latex]) => ({ id: cid, regionId: regionOf(latex), label }));
   return { title: spec.title, inputs: cols(spec.inputs), outputs: cols(spec.outputs), rows: spec.rows };
 };
-const finish = ({ id: docId, title, reference, file, batch }) => {
+const finish = ({ id: docId, title, reference, file, batch, page: pageSetup = {} }) => {
   newPage();
   textAt(page, row, 'ANNEX', { heading: 1, annex: { kind: 'start' } });
   row += 1.0;
@@ -179,7 +179,7 @@ const finish = ({ id: docId, title, reference, file, batch }) => {
   const doc = {
     format: 'calccanvas', id: docId, version: 3, title,
     metadata: { project: 'Project name', calculationReference: reference, preparedBy: 'Mark', checkedBy: '', revision: 'A' },
-    settings: { unitSystem: 'SI', precision: 2, canvasMode: 'page', pageOrientation: 'portrait', showHeaderFooter: true, textFont, baselineSnap: 'minor', snapToGrid: false, optimizePrintLayout: true, pages },
+    settings: { unitSystem: 'SI', precision: 2, canvasMode: 'page', pageOrientation: 'portrait', ...pageSetup, showHeaderFooter: true, textFont, baselineSnap: 'minor', snapToGrid: false, optimizePrintLayout: true, pages },
     inputResult: batchConfig(batch), shapes: layout.shapes, createdAt: date, updatedAt: date,
   };
   fs.writeFileSync(path.join(process.env.TEMPLATE_OUT ?? TPL, file), JSON.stringify(doc, null, 2));
