@@ -27,7 +27,8 @@ let screen: CompositeModel | null = null; // optimiser pool only: fast rejection
 const post = (msg: unknown) => (self as unknown as DedicatedWorkerGlobalScope).postMessage(msg);
 
 let pending = false;
-self.onmessage = (ev: MessageEvent<ToWorker>) => {
+let calculationRevision = 0;
+self.onmessage = (ev: MessageEvent<ToWorker & { calculationRevision?: number }>) => {
   const m = ev.data;
   if (m.kind === 'preview') { applyCompositeState(model, m); model.setSection(m.sectionId); return post({ kind: 'preview', request: m.request, results: model.results() }); }
   if (m.kind === 'hello') return post({ kind: 'init', bracing: model.bracing, inputs: model.inputs, tables: model.tables, sectionId: model.sectionId, results: model.results() });
@@ -45,11 +46,12 @@ self.onmessage = (ev: MessageEvent<ToWorker>) => {
   else if (m.kind === 'section') model.setSection(m.id);
   else if (m.kind === 'table') model.setTableRows(m.id, m.rows);
   else if (m.kind === 'report') return post({ kind: 'report', request: m.request, doc: model.reportDocument() });
+  calculationRevision = m.calculationRevision ?? calculationRevision;
   // Several edits in a row: calculate once, after the queue is empty.
   if (pending) return;
   pending = true;
   setTimeout(() => {
     pending = false;
-    post({ kind: 'results', results: model.results(), tables: model.tables, sectionId: model.sectionId });
+    post({ kind: 'results', calculationRevision, results: model.results(), tables: model.tables, sectionId: model.sectionId });
   }, 0);
 };

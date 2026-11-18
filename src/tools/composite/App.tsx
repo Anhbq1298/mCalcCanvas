@@ -153,6 +153,7 @@ export function App() {
   const deckRef = useRef<HTMLDialogElement>(null);
   const [deckQuery, setDeckQuery] = useState('');
   const [opt, setOpt] = useState<{ running: boolean; i?: number; n?: number; name?: string; result?: OptimizeResult; seconds?: number } | null>(null);
+  const calculationRevision = useRef(0);
   const reportReq = useRef(0);
   const reportCb = useRef<((doc: unknown) => void) | null>(null);
 
@@ -166,6 +167,8 @@ export function App() {
         setState({ inputs: m.inputs, tables: m.tables, sectionId: m.sectionId, results: m.results, defaults: { tables: m.tables, sectionId: m.sectionId } });
         setFamily(sections.find((s) => s.id === m.sectionId)?.family ?? 'UB');
       } else if (m.kind === 'results') {
+        // A previous calculation can finish after the user has edited the load table again.
+        if (m.calculationRevision !== calculationRevision.current) return;
         setState((s) => (s ? { ...s, results: m.results, tables: m.tables, sectionId: m.sectionId } : s));
         setBusy(false);
       } else if (m.kind === 'report' && m.request === reportReq.current) reportCb.current?.(m.doc);
@@ -195,9 +198,12 @@ export function App() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
   const send = (msg: ToWorker) => {
-    if (msg.kind !== 'report') setBusy(true);
+    if (msg.kind !== 'report') {
+      calculationRevision.current++;
+      setBusy(true);
+    }
     if (!replaying.current && (msg.kind === 'input' || msg.kind === 'table' || msg.kind === 'section')) recordRef.current();
-    worker.postMessage(msg);
+    worker.postMessage({ ...msg, calculationRevision: calculationRevision.current });
   };
   const withReport = (fn: (doc: unknown) => void) => {
     reportCb.current = fn;
