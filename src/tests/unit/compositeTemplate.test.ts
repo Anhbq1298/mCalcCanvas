@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, it, expect } from 'vitest';
 import { step } from '../step';
 import { CalculationEngine } from '../../engine';
+import { outlineOf } from '../../canvas/headings';
 import { calcKey } from '../../canvas/engineBridge';
 import { planSteelSection } from '../../canvas/steelSections';
 import { conditionHolds, textShowRegionId } from '../../canvas/textShow';
@@ -16,6 +17,20 @@ describe('EC4 phase-one composite worksheet', () => {
   it('evaluates existing operators and pins the independent N-mm-MPa reference', () => {
     const doc = JSON.parse(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8')) as { shapes: Shape[] };
     const rec = Object.fromEntries(doc.shapes.map(s => [s.id, s]));
+    step('the report has one annex with the construction-stage FEM under A.4', () => {
+      const outline = outlineOf(rec);
+      const annexHeadings = outline.filter(h => h.level === 1 && /^ANNEX/.test(h.title));
+      expect(annexHeadings.map(h => h.title)).toEqual(['ANNEX']);
+      const start = outline.findIndex(h => h.id === annexHeadings[0].id);
+      expect(outline.slice(start + 1).filter(h => h.level === 2).map(h => h.text)).toEqual([
+        'A.1 Internal forces along the span from the load tables',
+        'A.2 General plastic equilibrium and PNA branches',
+        'A.3 Non-composite alternative: steel section alone',
+        'A.4 Construction-stage elastic critical moment by finite elements',
+        'A.5 References and SCI cross-check',
+      ]);
+      expect(outline.filter(h => h.text.startsWith('A.4.')).map(h => h.level)).toEqual([3, 3, 3]);
+    });
     const e = new CalculationEngine({ unitSystem:'SI' });
     const math = doc.shapes.filter(s => s.type === 'math');
     const tables = doc.shapes.filter((s): s is TableShape => s.type === 'table' && !!s.props.input);
