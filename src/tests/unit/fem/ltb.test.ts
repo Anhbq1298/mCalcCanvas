@@ -81,6 +81,58 @@ describe('FEM: lateral-torsional buckling eigenvalues', () => {
       expect(fe).toBeGreaterThan(at(hA));
       expect(fe).toBeLessThan(at(h));
     });
+    step('top-flange constraints: exact stations, free twist, independent sine Ritz and convergence', () => {
+      const M = (x: number) => x * (L - x) / 2;
+      const input = { L, props: uniform, M, qzg: () => zg };
+      const unbraced = ltbCriticalFactor(input);
+      expect(unbraced * L ** 2 / 8e6).toBeCloseTo(76.6037243028, 3); // independent 45-term Ritz, kNm
+      // Two flange-force geometric energies independently fix the sign convention.
+      const vp = 0.3, pp = 0.002, moment = 1e6;
+      const flangeEnergy = 0.5 * (-moment / (2 * zg) * (vp + zg * pp) ** 2 + moment / (2 * zg) * (vp - zg * pp) ** 2);
+      expect(flangeEnergy).toBeCloseTo(-moment * vp * pp, 9);
+      expect(flangeEnergy).toBeLessThan(0);
+      expect(ltbCriticalFactor({ ...input, flangeRestraints: [] })).toBe(unbraced);
+      for (const positions of [[L / 2], [0.2 * L, 0.55 * L, 0.8 * L], [0.317 * L]]) {
+        const flangeRestraints = positions.map((x) => ({ x, z: zg }));
+        const fine = ltbAnalysis({ ...input, flangeRestraints, elements: 48 }, true);
+        const coarse = ltbCriticalFactor({ ...input, flangeRestraints, elements: 24 });
+        expect(rel(coarse, fine.lambda)).toBeLessThan(0.002);
+        expect(rel(fine.lambda, ritzMcrFactor({ ...input, flangeRestraints, terms: 35 }))).toBeLessThan(0.006);
+        if (positions.length === 3) expect(fine.lambda * L ** 2 / 8e6).toBeCloseTo(961.9002737252, 1);
+        const mode = fine.mode!;
+        const scale = Math.max(...mode.v.map(Math.abs), ...mode.phi.map((v) => Math.abs(v * zg)));
+        for (const x of positions) {
+          const j = mode.x.findIndex((v) => Math.abs(v - x) < 1e-6);
+          expect(j).toBeGreaterThanOrEqual(0);
+          expect(Math.abs(mode.v[j] + zg * mode.phi[j]) / scale).toBeLessThan(1e-12);
+        }
+        const twist = Math.max(...positions.map((x) => Math.abs(mode.phi[mode.x.indexOf(x)] * zg))) / scale;
+        // A symmetric midspan brace can coincide with a natural twist node.
+        // Unequal stations must retain twist; the symmetric mode need not.
+        if (positions.length === 1 && positions[0] === L / 2) expect(twist).toBeLessThan(1e-8);
+        else expect(twist).toBeGreaterThan(1e-4);
+        expect(fine.lambda).toBeGreaterThan(unbraced);
+        const fork = ltbCriticalFactor({ ...input, restraints: positions, elements: 48 });
+        if (positions.length === 1 && positions[0] === L / 2) expect(rel(fine.lambda, fork)).toBeLessThan(1e-8);
+        else expect(fine.lambda).toBeLessThan(fork);
+      }
+      const hx = (x: number) => 300 + (h - 300) * x / L, tf = 11.2, tw = 6.8;
+      const tapered = { ...input, props: (x: number) => ({ EIz: E * (Iz + tw ** 3 * (hx(x) - h) / 12), GIt: G * (It + tw ** 3 * (hx(x) - h) / 3), EIw: E * Iw * ((hx(x) - tf) / (h - tf)) ** 2 }),
+        qzg: (x: number) => hx(x) / 2, flangeRestraints: [0.2, 0.55, 0.8].map((t) => ({ x: t * L, z: hx(t * L) / 2 })) };
+      const taperedFine = ltbCriticalFactor({ ...tapered, elements: 48 });
+      expect(taperedFine * L ** 2 / 8e6).toBeCloseTo(826.4424827545, 1); // independent 45-term Ritz
+      expect(rel(taperedFine, ritzMcrFactor({ ...tapered, terms: 35 }))).toBeLessThan(0.006);
+      const at = (x: number) => ltbCriticalFactor({ ...input, flangeRestraints: [{ x, z: zg }], elements: 64 });
+      // Position sensitivity is small here: compare it with an independent
+      // sine-series calculation instead of assuming a fixed percentage gain.
+      const referenceAt = (x: number) => ritzMcrFactor({ ...input, flangeRestraints: [{ x, z: zg }], terms: 65 });
+      expect(at(L / 2) / at(0.1 * L)).toBeCloseTo(referenceAt(L / 2) / referenceAt(0.1 * L), 4);
+      expect(at(L / 2)).not.toBe(at(0.1 * L));
+      const mid = [{ x: L / 2, z: zg }];
+      expect(ltbCriticalFactor({ ...input, flangeRestraints: mid, qzg: () => -zg })).toBeGreaterThan(ltbCriticalFactor({ ...input, flangeRestraints: mid, qzg: () => 0 }));
+      expect(ltbCriticalFactor({ ...input, flangeRestraints: mid, qzg: () => 0 })).toBeGreaterThan(at(L / 2));
+      expect(ltbCriticalFactor({ ...input, flangeRestraints: [{ x: 0, z: zg }, ...mid], elements: 64 })).toBeCloseTo(at(L / 2), 9);
+    });
     step('χ_LT (6.56)', () => {
       expect(chiLT(0.2, 0.34)).toBe(1);
       expect(chiLT(1, 0.34)).toBeCloseTo(0.597, 3); // Φ = 1.136

@@ -49,7 +49,11 @@ type TextAlign = 'left' | 'center' | 'right' | 'justify';
 /** Text styles of the Text Formatting gallery besides Normal and the headings. */
 export type TextStyleId = 'title' | 'subtitle';
 
+/** Composite tool configuration carried by its visible report note. Stations are metres. */
+export interface ConstructionBracing { mode: 'legacy' | 'explicit'; enabled: boolean; positions: number[] }
+
 export interface TextProps {
+  constructionBracing?: ConstructionBracing;
   w: number;
   /** Measured height (kept in sync with the rendered text). */
   h: number;

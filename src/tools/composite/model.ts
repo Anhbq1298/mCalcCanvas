@@ -9,7 +9,20 @@ import { chiLT, ltbCriticalFactor, solveBeam, type DistLoad } from '../../engine
 import { CalculationEngine } from '../../engine';
 import { calcKey } from '../../canvas/calcOrder';
 import { inputTableColumns, inputTableRegionId } from '../../canvas/inputTable';
-import type { Shape, TableShape, TextShape, MathShape } from '../../canvas/model/types';
+import { DEFAULT_TEXT_PROPS } from '../../canvas/model/types';
+import { PAGE_GAP, pageSize } from '../../export/pageGeometry';
+import type { ConstructionBracing, Shape, TableShape, TextShape, MathShape } from '../../canvas/model/types';
+
+/** Absolute brace stations in metres. Missing data retains the legacy worksheet. */
+export type { ConstructionBracing } from '../../canvas/model/types';
+export const legacyBracing = (): ConstructionBracing => ({ mode: 'legacy', enabled: false, positions: [] });
+export function validateBracing(b: ConstructionBracing, L: number): string | null {
+  if (b.positions.length > 1000) return 'At most 1000 intermediate braces are supported.';
+  const xs = [...b.positions].sort((a, c) => a - c);
+  if (xs.some((x) => !Number.isFinite(x) || x <= 0 || x >= L)) return 'Brace positions must satisfy 0 < x < L.';
+  if (xs.some((x, i) => i > 0 && x - xs[i - 1] < 1e-6)) return 'Duplicate brace positions (within 0.001 mm).';
+  return null;
+}
 
 export interface InputField {
   id: string;
@@ -98,10 +111,20 @@ const UR_BARE = ['M.nc', 'MV.nc', 'V.nc', 'LT.nc', 'F.P', 'F.S', 'FM.nc', 'd.nc'
 type LtbOut = { ur: number; x: number; acr: number; aul: number; lam: number; chi: number; alpha: number; Mcr: number };
 /** ULS loads of the composite stage on the steel beam, N/mm, N and mm: self-weight γ_G,sw g_0 and the load tables. */
 export interface FeLoads { dist: DistLoad[]; point: { x: number; P: number }[] }
-function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: FeLoads | null): { LT?: LtbOut; nc?: LtbOut } {
+// Detail candidates often share the exact steel/loading/restraint problem. Cache
+// only those physical inputs, never the worksheet URs or the candidate section ID.
+// Each calculation worker owns its own bounded cache.
+const feLtbCache = new Map<string, { LT?: LtbOut; nc?: LtbOut }>();
+const FE_MEMBER_KEYS = ['L', 'L1', 'w1', 'LLT', 'LLTnc', 'gM1', 'ctap', 'cweld', 'czg'];
+const FE_SECTION_KEYS = ['h_a', 't_f', 't_w', 'b_a', 'r', 'f_y', 'Ea', 'Ga', 'I_a', 'I_z', 'I_t', 'I_w', 'W_pl'];
+function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: FeLoads | null, bracing = legacyBracing()): { LT?: LtbOut; nc?: LtbOut } {
   const hAt = (xmm: number) => hAtM(xmm / 1000); // depth at x in mm
   const hR = rRef.h_a, tf = rRef.t_f, tw = rRef.t_w, b = rRef.b_a, r = rRef.r, fy = rRef.f_y, E = rRef.Ea, G = rRef.Ga;
   if (![hR, tf, tw, b, r, fy, E, G, rRef.I_z, rRef.I_t, rRef.I_w, rRef.W_pl].every(Number.isFinite)) return {};
+  // hAtM is constant or linear in this model: its end values fully identify it.
+  const cacheKey = JSON.stringify([FE_MEMBER_KEYS.map((k) => rM[k]), FE_SECTION_KEYS.map((k) => rRef[k]), hAtM(0), hAtM(rM.L), loads, bracing]);
+  const cached = feLtbCache.get(cacheKey);
+  if (cached) return cached;
   const Af = (1 - Math.PI / 4) * r * r;
   const Wnom = (h: number) => b * tf * (h - tf) + (tw * (h - 2 * tf) ** 2) / 4 + 4 * Af * (h / 2 - tf - 0.2234 * r);
   // properties at depth h from the run at h_ref, the sheet's own rules (section 1.4), mm
@@ -116,10 +139,12 @@ function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: F
   const zf = Number.isFinite(rM.czg) ? Math.max(-1, Math.min(1, rM.czg)) : 1; // load height, fraction of h/2
   const L = rM.L * 1000;
   // one simply supported, fork-ended span [x0, x0 + l] (mm) under its loads: FE internal forces, then the eigenvalue
-  const segment = (x0: number, l: number, sl: FeLoads) => {
+  const segment = (x0: number, l: number, sl: FeLoads, construction = false) => {
     const beam = solveBeam({ L: l, EI: () => E * rRef.I_a * 1e4, supports: [{ x: 0, w: true }, { x: l, w: true }], loads: sl });
     const qAt = (x: number) => sl.dist.reduce((s, d) => s + (x >= d.x1 - 1e-9 && x <= d.x2 + 1e-9 ? d.q1 : 0), 0);
     const acr = ltbCriticalFactor({
+      flangeRestraints: construction && bracing.mode === 'explicit' && bracing.enabled
+        ? bracing.positions.map((x) => x * 1000).filter((x) => x > x0 && x < x0 + l).map((x) => ({ x: x - x0, z: hAt(x) / 2 })) : [],
       L: l, props: (x) => props(x0 + x), M: beam.M,
       qzg: (x) => (qAt(x) * zf * hAt(x0 + x)) / 2,
       pointLoads: sl.point.map((p) => ({ x: p.x, Pzg: (p.P * zf * hAt(x0 + p.x)) / 2 })),
@@ -139,7 +164,7 @@ function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: F
   if (Number.isFinite(L1) && L1 > 0 && Number.isFinite(w1) && !(rM.LLT * 1000 < L1 - 1)) {
     const n = Math.max(1, Math.round(L / L1)), l = L / n;
     for (let k = 0; k < n; k++) {
-      const s = segment(k * l, l, { dist: [{ x1: 0, x2: l, q1: w1 }], point: [] });
+      const s = segment(k * l, l, { dist: [{ x1: 0, x2: l, q1: w1 }], point: [] }, true);
       if (s && (!out.LT || s.ur > out.LT.ur)) out.LT = s;
     }
   }
@@ -147,6 +172,8 @@ function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: F
     const s = segment(0, L, loads);
     if (s) out.nc = s;
   }
+  if (feLtbCache.size >= 256) feLtbCache.delete(feLtbCache.keys().next().value!);
+  feLtbCache.set(cacheKey, out);
   return out;
 }
 
@@ -179,7 +206,7 @@ function interp(xs: number[], ys: number[], x: number): number {
  * section values of x_M, the checks combined as above, plus at.<check> = x (m) of the governing section
  * (NaN for span-wide checks and the worst-depth checks) and hat.<check> = the depth used (mm; NaN span-wide).
  */
-export function combineTaper(rM: Results, rA: Results, rB: Results, rP: Results[] = [], loads: FeLoads | null = null): Results {
+export function combineTaper(rM: Results, rA: Results, rB: Results, rP: Results[] = [], loads: FeLoads | null = null, bracing = legacyBracing()): Results {
   const L = rM.L, hA = rM.hA, hB = rM.hB, xM = rM.xM;
   const hAt = (x: number) => hA + ((hB - hA) * x) / L;
   const out = { ...rM, vectors: { ...rM.vectors }, errors: [rM, rA, rB, ...rP].flatMap((r) => r.errors) } as Results;
@@ -202,7 +229,7 @@ export function combineTaper(rM: Results, rA: Results, rB: Results, rP: Results[
   }
   // LTB over the real (varying) section: EN 1993-1-1 §6.3.4 with α_cr from finite elements (ltb.ts)
   out.taper = 1;
-  applyFeLtb(out, feLtb(out, rA, hAt, loads), at);
+  applyFeLtb(out, feLtb(out, rA, hAt, loads, bracing), at);
   // the three runs as nodes over depth, for values at the local depth h(x)
   const nodes = [[hA, rA], [hAt(xM), rM], [hB, rB], ...rP.map((r) => [r.h_a, r])] as [number, Results][];
   nodes.sort((p, q) => p[0] - q[0]);
@@ -394,6 +421,7 @@ export function studPlans(p: Results, c: DesignCriteria): { sc: number; scB: num
  * is not required. screen (optional): the fast model without deflection curves, used to reject early.
  */
 export function designSection(model: CompositeModel, screen: CompositeModel | null, id: number, c: DesignCriteria, mode: 'composite' | 'bare'): Design {
+  screen?.setBracing(model.bracing);
   if (c.studs === 'prefer-uniform') {
     const u = designSection(model, screen, id, { ...c, studs: 'uniform' }, mode);
     if (u.pass || u.hopeless || mode === 'bare') return u;
@@ -565,11 +593,21 @@ export function withPageDefaults(raw: string, d = PAGE_DEFAULTS): string {
   return JSON.stringify(doc);
 }
 
+interface CompositeState { values: Record<string, number>; tables: { id: string; rows: string[][] }[]; bracing?: ConstructionBracing }
+/** The same state transfer is used by every full and screening optimizer worker. */
+export function applyCompositeState(model: CompositeModel, state: CompositeState): void {
+  model.setBracing(state.bracing ?? legacyBracing());
+  for (const f of model.inputs) model.setInput(f.id, state.values[f.id] ?? f.value);
+  for (const t of state.tables) model.setTableRows(t.id, t.rows);
+}
+
 export class CompositeModel {
   readonly doc: { shapes: Shape[] } & Record<string, unknown>;
   readonly inputs: InputField[] = [];
   readonly tables: LoadTable[] = [];
   sectionId = 0;
+  bracing = legacyBracing();
+  private feSnapshots: { id: string; unit: string | null }[] = [];
   private readonly e = new CalculationEngine({ unitSystem: 'SI' });
   private readonly rec: Record<string, Shape>;
   private readonly sectionRegion: string;
@@ -583,6 +621,8 @@ export class CompositeModel {
    */
   constructor(raw: string, options: { screening?: boolean } = {}) {
     this.doc = JSON.parse(raw);
+    const braceNote = this.doc.shapes.find((s) => s.type === 'text' && (s as TextShape).props.constructionBracing) as TextShape | undefined;
+    if (braceNote?.props.constructionBracing) this.setBracing(braceNote.props.constructionBracing);
     if (options.screening) {
       for (const s of this.doc.shapes) {
         if (s.type === 'math' && /\\mathrm\{map\}\\left\(d_/.test((s as MathShape).props.latex)) {
@@ -621,6 +661,12 @@ export class CompositeModel {
     }
     this.sectionRegion = section;
     this.register();
+    this.feSnapshots = this.doc.shapes.flatMap((s) => {
+      if (s.type !== 'math') return [];
+      const latex = (s as MathShape).props.latex;
+      return /^(?:M_\{cr(?:\.nc)?\.FE\}|a_\{(?:ult|cr|LT)\.FE\})\\coloneq/.test(latex) && Number(/\\coloneq\s*([\d.eE+-]+)/.exec(latex)?.[1]) > 0
+        ? [{ id: s.id, unit: latex.startsWith('M_') ? 'kN m' : null }] : [];
+    });
   }
 
   private register(): void {
@@ -657,9 +703,17 @@ export class CompositeModel {
     return { sc: this.inputValue(id(DETAIL_INPUTS.scA)), scB: this.inputValue(id(DETAIL_INPUTS.scB)), bar: this.inputValue(id(DETAIL_INPUTS.barT)) };
   }
 
+  /** Exported FE literals are report snapshots. An edit must not keep a stale
+   * snapshot alive when the deck/legacy worksheet becomes authoritative. */
+  private invalidateFeSnapshots(): void {
+    for (const s of this.feSnapshots) this.e.setDefinitionOverride(s.id, { value: 0, unit: s.unit } as never);
+    this.feSnapshots = [];
+  }
+
   setInput(id: string, value: number): void {
     const f = this.inputs.find((x) => x.id === id);
     if (!f || !Number.isFinite(value)) return;
+    this.invalidateFeSnapshots();
     this.values.set(id, { value, unit: f.unit });
     this.e.setDefinitionOverride(id, { value, unit: f.unit || null } as never);
   }
@@ -668,7 +722,13 @@ export class CompositeModel {
     return this.values.get(id)?.value ?? this.inputs.find((x) => x.id === id)!.value;
   }
 
+  setBracing(b: ConstructionBracing): void {
+    this.invalidateFeSnapshots();
+    this.bracing = { ...b, positions: [...b.positions].sort((a, c) => a - c) };
+  }
+
   setSection(id: number): void {
+    this.invalidateFeSnapshots();
     this.sectionId = id;
     this.e.setDefinitionOverride(this.sectionRegion, { value: id } as never);
   }
@@ -685,6 +745,7 @@ export class CompositeModel {
       if (fi >= 0 && !row[fi].trim()) row[fi] = String(row[0].trim().toUpperCase() === 'Q' ? gamma('\\gamma_Q', 1.5) : gamma('\\gamma_G', 1.35));
       return row;
     });
+    this.invalidateFeSnapshots();
     table.rows = rows.map((r) => [...r]);
     // An input table needs at least one row to define its columns; with none, the engine (and the report)
     // get a single zero load (point loads at mid-span) instead of keeping the previous rows.
@@ -706,6 +767,7 @@ export class CompositeModel {
     opts: { maxDepth?: number | null; targets?: Targets; screen?: CompositeModel; progress?: (i: number, n: number, name: string) => void } = {},
   ): OptimizeResult {
     const maxDepth = opts.maxDepth ?? null, targets = opts.targets ?? { strength: 1, deflection: 1 }, screen = opts.screen;
+    screen?.setBracing(this.bracing);
     const start = this.sectionId;
     // optional depth limit h ≤ maxDepth (mm), e.g. from the ceiling void
     const keep = this.detail();
@@ -740,11 +802,14 @@ export class CompositeModel {
    * each critical section (d_use) and combines the checks by location (combineTaper).
    */
   results(): Results {
+    this.lastLtb = null;
     const r = this.run();
+    const invalid = validateBracing(this.bracing, r.L);
+    if (this.bracing.mode === 'explicit' && invalid) { r.errors.push(invalid); r['UR.LT'] = Infinity; return r; }
     const loads = this.feLoads(r);
     if (!(r.ctap >= 1) || !(Math.abs(r.hA - r.hB) > 0.5)) {
       // uniform beam: LTB by finite elements too (M_cr directly), then the summary again
-      const lt = feLtb(r, r, () => r.h_a, loads);
+      const lt = feLtb(r, r, () => r.h_a, loads, this.bracing);
       applyFeLtb(r, lt, (k, x) => { r[`at.${k}`] = x; r[`hat.${k}`] = r.h_a; });
       if (lt.nc) r['UR.des'] = urDes(r);
       this.lastLtb = r;
@@ -767,11 +832,12 @@ export class CompositeModel {
       rP.push(at(h));
     }
     this.e.setDefinitionOverride(use.id, { value: 0, unit: null } as never);
-    this.lastLtb = null; // the report runs the sheet at one depth: its LTB is the sheet's own
-    return combineTaper(rM, rA, rB, rP, loads);
+    const out = combineTaper(rM, rA, rB, rP, loads, this.bracing);
+    this.lastLtb = out;
+    return out;
   }
 
-  /** Last uniform-beam result with finite-element LTB, written into the report (M_cr.FE). */
+  /** Last member result with construction FEM factors for the report. */
   private lastLtb: Results | null = null;
 
   /**
@@ -821,11 +887,12 @@ export class CompositeModel {
 
   /** The worksheet with the current inputs written in: a complete .mCCV document for the report. */
   reportDocument(): Record<string, unknown> {
-    // uniform beam: the finite-element M_cr the page used, written into the sheet (0 = its SN003b value)
-    const fe = this.lastLtb, feCr: [string, number][] = [['M_{cr.FE}', fe?.['Mcr.LT'] ?? NaN], ['M_{cr.nc.FE}', fe?.['Mcr.LT.nc'] ?? NaN]];
+    // Construction FEM factors reproduce the page check, including tapered members.
+    this.results();
+    const fe = this.lastLtb, feCr: [string, number][] = [['M_{cr.FE}', fe?.['Mcr.LT'] ?? NaN], ['M_{cr.nc.FE}', fe?.['Mcr.LT.nc'] ?? NaN], ['a_{ult.FE}', fe?.['aul.LT'] ?? NaN], ['a_{cr.FE}', fe?.['acr.LT'] ?? NaN], ['a_{LT.FE}', fe?.['alpha.LT'] ?? NaN]];
     const shapes = this.doc.shapes.map((s) => {
       const fcr = s.type === 'math' ? feCr.find(([n]) => (s as MathShape).props.latex.startsWith(`${n}\\coloneq`)) : undefined;
-      if (fcr && Number.isFinite(fcr[1])) return { ...s, props: { ...(s as MathShape).props, latex: `${fcr[0]}\\coloneq ${fcr[1].toFixed(3)}\\,\\mathrm{kN}\\cdot\\mathrm{m}` } };
+      if (fcr) return { ...s, props: { ...(s as MathShape).props, latex: `${fcr[0]}\\coloneq ${Number.isFinite(fcr[1]) ? fcr[1] : 0}${fcr[0].startsWith('M_') ? '\\,\\mathrm{kN}\\cdot\\mathrm{m}' : ''}` } };
       if (s.id === this.sectionRegion) return { ...s, props: { ...(s as MathShape).props, latex: `\\mathrm{Section}\\coloneq${this.sectionId}` } };
       const v = this.values.get(s.id);
       if (v) {
@@ -835,6 +902,20 @@ export class CompositeModel {
       const t = this.tableShapes.get(s.id);
       return t ?? s;
     });
-    return { ...this.doc, shapes, title: 'Composite Beam EC4 — mCompositeBeamDesign', updatedAt: new Date().toISOString() };
+    const filtered = shapes.filter((s) => !s.id.startsWith('construction-bracing'));
+    if (this.bracing.mode === 'legacy' && !this.bracing.positions.length) return { ...this.doc, shapes: filtered, title: 'Composite Beam EC4 - mCompositeBeamDesign', updatedAt: new Date().toISOString() };
+    const stride = pageSize('portrait').h + PAGE_GAP;
+    const pageY = (Math.floor(Math.max(...filtered.map((s) => s.y)) / stride) + 1) * stride + 60;
+    const deck = !fe || !Number.isFinite(fe['Mcr.LT']);
+    const status = deck ? 'Worksheet / deck restraint approximation' : this.bracing.mode === 'explicit' && this.bracing.enabled ? 'Discrete top-flange Vlasov FEM' : 'Fork-ended Vlasov FEM';
+    const note = (id: string, y: number, html: string, extra: Partial<TextShape['props']> = {}) => filtered.push({ id, type: 'text', x: 76, y, props: { ...DEFAULT_TEXT_PROPS, fontFamily: 'Roboto', fontSize: 13, w: 640, h: 80, html, ...extra } });
+    note('construction-bracing', pageY, `<h2>Construction-stage restraint model</h2><p>${status}. Mode: ${this.bracing.mode}; temporary braces ${this.bracing.enabled ? 'enabled' : 'disabled'}.</p>`, { pageBreak: true, constructionBracing: structuredClone(this.bracing) });
+    note('construction-bracing-summary', pageY + 120, '<p>Top flange: v + z phi = 0; z = h(x)/2. Twist and warping are free.</p><p>kLT controls vertical propping only. Transverse deck restraint takes precedence.</p><p>SN003b and its scalar length are analytical comparisons, not the discrete FEM model.</p>');
+    this.bracing.positions.forEach((x, i) => {
+      const page = Math.floor(i / 15), row = i % 15;
+      note(`construction-bracing-station-${i}`, pageY + page * stride + 280 + row * 40,
+        `<p>B${i + 1}: x = ${Number(x.toPrecision(12))} m; x/L = ${fe && fe.L > 0 ? Number((x / fe.L).toPrecision(8)) : 'invalid span'}; top-flange lateral.</p>`, { h: 32 });
+    });
+    return { ...this.doc, shapes: filtered, title: 'Composite Beam EC4 — mCompositeBeamDesign', updatedAt: new Date().toISOString() };
   }
 }

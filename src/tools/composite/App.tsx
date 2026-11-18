@@ -8,15 +8,16 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { sections } from '../../engineering/steel/sections';
-import { BAR_DIAMETERS, BAR_SPACINGS, CHECKS, governingCheck, type DesignCriteria, type InputField, type LoadTable, type Results } from './model';
+import { legacyBracing, validateBracing, type ConstructionBracing, BAR_DIAMETERS, BAR_SPACINGS, CHECKS, governingCheck, type DesignCriteria, type InputField, type LoadTable, type Results } from './model';
 import type { OptimizeResult, ToWorker } from './worker';
 import { BeamCad, DeckProfile, Legend, LineChart, LongSection, PointDrawing, ShearSurface3D, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
 import { headerParts } from '../../canvas/inputTable';
 import { C, fmt } from './format';
+import { ConstructionStage } from './ConstructionStage';
 import { optimizeDesign, warmOptimizer } from './optimizer';
 
 /** One state of the inputs: input values, load-table rows and section, for undo/redo. */
-type Snap = { values: Record<string, number>; rows: Record<string, string[][]>; sectionId: number };
+type Snap = { bracing: ConstructionBracing; values: Record<string, number>; rows: Record<string, string[][]>; sectionId: number };
 import { Rich } from './rich';
 
 const HANDOFF_KEY = 'calccanvas.handoff'; // read once by mCalcCanvas (?open=handoff)
@@ -131,6 +132,8 @@ export function App() {
   const worker = useMemo(() => new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' }), []);
   const [state, setState] = useState<State | null>(null);
   const [busy, setBusy] = useState(false);
+  const [bracing, setBracing] = useState<ConstructionBracing>(legacyBracing);
+  const [constructionOpen, setConstructionOpen] = useState(false);
   const [values, setValues] = useState<Record<string, number>>({});
   const [family, setFamily] = useState('UB');
   const [hMax, setHMax] = useState('');
@@ -157,6 +160,7 @@ export function App() {
     const onMessage = (ev: MessageEvent) => {
       const m = ev.data;
       if (m.kind === 'init') {
+        setBracing(m.bracing ?? legacyBracing());
         // build the optimiser's worker models in the background, after the page is up
         setTimeout(() => warmOptimizer({ values: {}, tables: m.tables.map((t: LoadTable) => ({ id: t.id, rows: t.rows })) }), 2500);
         setState({ inputs: m.inputs, tables: m.tables, sectionId: m.sectionId, results: m.results, defaults: { tables: m.tables, sectionId: m.sectionId } });
@@ -236,6 +240,7 @@ export function App() {
   const gov = governingCheck(res);
   const overall = gov.ur;
   const governing = shown.find(([key]) => key === gov.key) ?? shown[0];
+  const invalidBracing = bracing.mode === 'explicit' && !!validateBracing(bracing, value(byName('L')));
   const section = sections.find((s) => s.id === state.sectionId);
   const pass = overall <= 1;
   const hLib = section?.values.h ?? res.h_a;
@@ -257,7 +262,7 @@ export function App() {
     setState((s) => s && { ...s, tables: s.tables.map((x) => (x.id === t.id ? { ...x, rows } : x)) });
     send({ kind: 'table', id: t.id, rows });
   };
-  const snap = (): Snap => ({ values: Object.fromEntries(inputs.map((f) => [f.id, value(f)])), rows: Object.fromEntries(tables.map((t) => [t.id, t.rows])), sectionId: state.sectionId });
+  const snap = (): Snap => ({ bracing, values: Object.fromEntries(inputs.map((f) => [f.id, value(f)])), rows: Object.fromEntries(tables.map((t) => [t.id, t.rows])), sectionId: state.sectionId });
   const record = () => {
     const h = history.current;
     h.past.push(snap());
@@ -268,6 +273,7 @@ export function App() {
   const apply = (t: Snap) => {
     replaying.current = true;
     try {
+      setBracing(t.bracing); send({ kind: 'bracing', bracing: t.bracing });
       inputs.forEach((f) => { const nv = t.values[f.id]; if (nv !== undefined && nv !== value(f)) setInput(f, nv); });
       tables.forEach((tb) => { const rows = t.rows[tb.id]; if (rows && JSON.stringify(rows) !== JSON.stringify(tb.rows)) setRows(tb, rows); });
       if (t.sectionId !== state.sectionId) { send({ kind: 'section', id: t.sectionId }); setFamily(sections.find((x) => x.id === t.sectionId)?.family ?? family); }
@@ -351,7 +357,7 @@ export function App() {
     setOpt({ running: true });
     const t0 = performance.now();
     const result = await optimizeDesign(optLabel, optSections.map((x) => ({ id: x.id, name: x.name, mass: x.values.mass, h: x.values.h })), value(byName('L')), criteria,
-      { values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) }, (i, n, name) => setOpt({ running: true, i, n, name }));
+      { bracing, values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) }, (i, n, name) => setOpt({ running: true, i, n, name }));
     setOpt({ running: false, result, seconds: (performance.now() - t0) / 1000 });
   };
   const renderField = (f: InputField) =>
@@ -430,11 +436,11 @@ export function App() {
         <div className="exports" role="group" aria-label="Report">
           <button type="button" onClick={undo} disabled={hist.past === 0} className="btn export" title="Undo (Ctrl+Z)">Undo</button>
           <button type="button" onClick={redo} disabled={hist.future === 0} className="btn export" title="Redo (Ctrl+Shift+Z)">Redo</button>
-          <button type="button" onClick={download} className="btn export" title="Download the worksheet with these inputs; it reopens in mCalcCanvas">
+          <button type="button" onClick={download} disabled={invalidBracing} className="btn export" title="Download the worksheet with these inputs; it reopens in mCalcCanvas">
             <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.5h5.5L13 5v9.5H4z" fill="none" strokeWidth="1.3" strokeLinejoin="round" /><path d="M9.5 1.5V5H13" fill="none" strokeWidth="1.3" strokeLinejoin="round" /><path d="M8.5 7.5v4.5M6.5 10l2 2 2-2" fill="none" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
             .mCCV
           </button>
-          <button type="button" onClick={report} data-testid="open-report" className="btn primary">Open full report</button>
+          <button type="button" onClick={report} disabled={invalidBracing} data-testid="open-report" className="btn primary">Open full report</button>
         </div>
       </header>
 
@@ -496,6 +502,7 @@ export function App() {
                   {isDeck(g) && <p>Slab type selects a solid slab or filled steel deck. Deck direction is relative to the beam; transverse bars can have one or two layers. Use Define deck to select a profile and inspect its source.</p>}
                   {isDeck(g) && deck && <p className="hint">h<sub>c</sub> = {fmt(res.h_c, 0)} mm is the overall depth: {fmt(res.ht, 0)} mm of concrete above a {fmt(res.hpe, 0)} mm deck. P<sub>Rd</sub> = k<sub>d</sub> × solid-slab value = {fmt(res.PRd, 1)} kN ({parallel ? <>k<sub>l</sub>, (6.22)</> : <>k<sub>t</sub>, (6.23), limit {fmt(res.ktmax, 2)}</>}).{transverse && <> Studs sit in the ribs: spacing in effect {fmt(res.sA, 0)} / {fmt(res.sB, 0)} mm, {fmt(res.nre, 0)} per rib.</>}</p>}
                 </InputHelp></div>
+                {/Construction stage/.test(g) && <button type="button" className="btn" onClick={() => setConstructionOpen(true)}>Define Construction Stage?</button>}
                 {isFactors(g) ? (
                   <div className="define-row">
                     <button type="button" className="btn" data-testid="factors-open" onClick={() => factorRef.current?.showModal()}>Define…</button>
@@ -793,6 +800,11 @@ export function App() {
 
         </div>
       </main>
+      {constructionOpen && <ConstructionStage initialResults={res} inputs={inputs} values={snap().values} tables={tables} sectionId={state.sectionId} bracing={bracing}
+        onClose={() => setConstructionOpen(false)} onSave={(draft, b) => {
+          record(); setValues(draft); setBracing(b);
+          send({ kind: 'construction', values: draft, bracing: b });
+        }} />}
       <dialog ref={factorRef} className="opt-dialog" aria-labelledby="factor-title">
         <div className="opt-form">
           <header className="opt-head">

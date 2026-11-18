@@ -167,3 +167,55 @@ test('tapered beam: the default case is tapered; unticking gives the uniform sec
   await page.keyboard.press('Escape');
   await expect(page.getByTestId('ur-max')).toHaveText('0.789', { timeout: 30_000 });
 });
+
+
+test('construction bracing drafts, validation, selection and undo are atomic', async ({ page }) => {
+  test.setTimeout(120_000);
+  await page.goto('/composite/');
+  await expect(page.getByTestId('ur-des')).toHaveText('0.717');
+  const open = () => page.getByRole('button', { name: 'Define Construction Stage' }).click();
+  await open();
+  const dialog = page.getByRole('dialog', { name: 'Define Construction Stage' });
+  await dialog.getByLabel('Restraint model').selectOption('explicit');
+  await dialog.getByRole('checkbox', { name: 'Enable temporary lateral bracing' }).check();
+  await dialog.getByRole('button', { name: 'Add brace', exact: true }).click();
+  await dialog.getByLabel('B1 position', { exact: true }).fill('1.04');
+  await expect(dialog.getByLabel('B1 normalized position')).toHaveValue('0.2');
+  await dialog.getByRole('button', { name: 'Select brace B1' }).click();
+  await expect(dialog.locator('tbody tr').first()).toHaveAttribute('style', /background/);
+  await dialog.getByLabel('q_{con}', { exact: true }).fill('1.2');
+  await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await open();
+  await expect(dialog.getByLabel('Restraint model')).toHaveValue('legacy');
+  await expect(dialog.getByLabel('q_{con}', { exact: true })).toHaveValue('0.75');
+  await dialog.getByLabel('Restraint model').selectOption('explicit');
+  await dialog.getByRole('checkbox', { name: 'Enable temporary lateral bracing' }).check();
+  await dialog.getByRole('button', { name: 'Add brace', exact: true }).click();
+  await dialog.getByLabel('B1 position', { exact: true }).fill('6');
+  await expect(dialog.getByRole('alert')).toContainText('0 < x < L');
+  await expect(dialog.getByRole('button', { name: 'Save', exact: true })).toBeDisabled();
+  await dialog.getByLabel('B1 normalized position').fill('0.55');
+  await dialog.getByLabel('q_{con}', { exact: true }).fill('1.2');
+  await expect(dialog.getByRole('status')).toContainText('Draft:', { timeout: 30_000 });
+  await dialog.getByRole('button', { name: 'Save', exact: true }).click();
+  await page.getByRole('button', { name: 'Undo', exact: true }).click();
+  await open();
+  await expect(dialog.getByLabel('Restraint model')).toHaveValue('legacy');
+  await expect(dialog.getByLabel('q_{con}', { exact: true })).toHaveValue('0.75');
+  await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await page.getByRole('button', { name: 'Redo', exact: true }).click();
+  await open();
+  await expect(dialog.getByLabel('Restraint model')).toHaveValue('explicit');
+  await expect(dialog.getByLabel('B1 position', { exact: true })).toHaveValue('2.86');
+  await expect(dialog.getByLabel('q_{con}', { exact: true })).toHaveValue('1.2');
+  await dialog.getByRole('button', { name: 'Reset', exact: true }).click();
+  await expect(dialog.getByLabel('Restraint model')).toHaveValue('legacy');
+  await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await page.locator('input[data-input="L"]').fill('2');
+  await page.locator('input[data-input="L"]').blur();
+  await expect(page.getByTestId('open-report')).toBeDisabled();
+  await open();
+  await expect(dialog.getByRole('alert')).toContainText('0 < x < L');
+  await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+
+});

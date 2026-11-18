@@ -36,6 +36,8 @@ export interface LtbInput {
   supports?: LtbSupport[];
   /** interior fork restraints (shorthand for supports at these x) */
   restraints?: number[];
+  /** Lateral restraint at height z above the shear centre: v + z phi = 0 (mm). */
+  flangeRestraints?: { x: number; z: number }[];
   elements?: number;
 }
 
@@ -73,7 +75,9 @@ export function ltbAnalysis(inp: LtbInput, withMode = false): LtbResult {
   const { L } = inp;
   const qzg = inp.qzg ?? (() => 0);
   const supports = [...(inp.supports ?? [FORK(0), FORK(L)]), ...(inp.restraints ?? []).map(FORK)];
-  const xs = meshStations(L, [...supports.map((s) => s.x), ...(inp.pointLoads ?? []).map((p) => p.x)], inp.elements ?? 24, 4);
+  const flange = inp.flangeRestraints ?? [];
+  if (flange.some(({ x, z }) => !Number.isFinite(x) || !Number.isFinite(z) || x < 0 || x > L)) throw new Error('Invalid flange restraint');
+  const xs = meshStations(L, [...supports.map((s) => s.x), ...flange.map((s) => s.x), ...(inp.pointLoads ?? []).map((p) => p.x)], inp.elements ?? 24, 4);
   const nn = xs.length, n = 4 * nn;
   const K = Array.from({ length: n }, () => new Float64Array(n));
   const B = Array.from({ length: n }, () => new Float64Array(n));
@@ -105,17 +109,43 @@ export function ltbAnalysis(inp: LtbInput, withMode = false): LtbResult {
     if (s.phi) fixed.add(4 * i + 2);
     if (s.phip) fixed.add(4 * i + 3);
   }
-  const free = [...Array(n).keys()].filter((i) => !fixed.has(i));
-  const m = free.length;
+  // Solver twist convention: u_top = v + z*phi (z positive above shear centre).
+  // Independent flange-force check for constant sagging M: top compression
+  // -M/(2z), bottom tension +M/(2z) give load energy -M*v'*phi'.
+  // Integration by parts gives +M*v''*phi, exactly the assembled convention.
+  const coupled = new Map<number, number>();
+  for (const f of flange) {
+    const v = 4 * nodeAt(f.x), phi = v + 2;
+    const old = coupled.get(v);
+    if (old !== undefined && old !== f.z) { fixed.add(v); fixed.add(phi); }
+    coupled.set(v, f.z);
+    if (f.z === 0 || fixed.has(phi)) fixed.add(v);
+    else if (fixed.has(v)) fixed.add(phi);
+  }
+  const free = [...Array(n).keys()].filter((i) => !fixed.has(i) && !coupled.has(i));
+  const m = free.length, index = new Map(free.map((d, i) => [d, i]));
+  // Sparse rows of d = T q. Full congruence preserves all cross contributions.
+  const T = Array.from({ length: n }, (_, i) => {
+    if (fixed.has(i)) return { j: -1, a: 0 };
+    const z = coupled.get(i);
+    return z === undefined ? { j: index.get(i) ?? -1, a: 1 } : { j: index.get(i + 2) ?? -1, a: -z };
+  });
+  const reduce = (A: Float64Array[]) => {
+    const R = Array.from({ length: m }, () => new Float64Array(m));
+    for (let i = 0; i < n; i++) if (T[i].j >= 0)
+      for (let j = 0; j < n; j++) if (T[j].j >= 0) R[T[i].j][T[j].j] += T[i].a * A[i][j] * T[j].a;
+    return R;
+  };
+  const Kr = reduce(K), Br = reduce(B);
   // Cholesky K = L Lᵀ: a non-positive pivot means a mechanism (rigid-body mode) left by the supports
   const Lc = Array.from({ length: m }, () => new Float64Array(m));
   for (let i = 0; i < m; i++) for (let j = 0; j <= i; j++) {
-    let s = K[free[i]][free[j]];
+    let s = Kr[i][j];
     for (let t = 0; t < j; t++) s -= Lc[i][t] * Lc[j][t];
-    if (i === j) { if (s <= 1e-8 * Math.abs(K[free[i]][free[i]])) return { lambda: NaN, mode: null }; Lc[i][i] = Math.sqrt(s); } else Lc[i][j] = s / Lc[j][j];
+    if (i === j) { if (s <= 1e-8 * Math.abs(Kr[i][i])) return { lambda: NaN, mode: null }; Lc[i][i] = Math.sqrt(s); } else Lc[i][j] = s / Lc[j][j];
   }
   const solveL = (col: number[]) => { const y = new Array<number>(m); for (let i = 0; i < m; i++) { let s = col[i]; for (let t = 0; t < i; t++) s -= Lc[i][t] * y[t]; y[i] = s / Lc[i][i]; } return y; };
-  const b = free.map((i) => free.map((j) => B[i][j]));
+  const b = Br.map((r) => Array.from(r));
   const Y = Array.from({ length: m }, (_, j) => solveL(b.map((r) => r[j])));
   const C = Array.from({ length: m }, (_, j) => solveL(Y.map((col) => col[j])));
   const eig = jacobiEigen(C.map((r, i) => r.map((v, j) => (v + C[j][i]) / 2)), withMode);
@@ -129,7 +159,7 @@ export function ltbAnalysis(inp: LtbInput, withMode = false): LtbResult {
     const y = eig.vectors.map((r) => r[k]), d = new Array<number>(m);
     for (let i = m - 1; i >= 0; i--) { let s = y[i]; for (let t = i + 1; t < m; t++) s -= Lc[t][i] * d[t]; d[i] = s / Lc[i][i]; }
     const full = new Array<number>(n).fill(0);
-    free.forEach((i, j) => (full[i] = d[j]));
+    T.forEach((t, i) => { if (t.j >= 0) full[i] = t.a * d[t.j]; });
     mode = { x: xs, v: xs.map((_, i) => full[4 * i]), phi: xs.map((_, i) => full[4 * i + 2]) };
   }
   return { lambda: 1 / eig.values[k], mode };

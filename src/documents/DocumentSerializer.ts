@@ -127,6 +127,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           ...([1, 2, 3].includes(p.heading as number) ? { heading: p.heading as 1 | 2 | 3 } : {}),
           ...(p.textStyle === 'title' || p.textStyle === 'subtitle' ? { textStyle: p.textStyle } : {}),
           ...annexRole(p.annex),
+          ...constructionBracing(p.constructionBracing),
           ...(p.pageBreak === true ? { pageBreak: true } : {}),
           ...(typeof p.showWhen === 'string' && p.showWhen.trim() ? { showWhen: p.showWhen.slice(0, 2000) } : {}),
         },
@@ -340,6 +341,15 @@ function sanitizeMetadata(m: unknown): CalculationDocument['metadata'] {
     if (typeof src[k] === 'string') out[k] = (src[k] as string).slice(0, 200);
   }
   return out;
+}
+
+/** Optional composite report configuration; never interpret it as an input load table. */
+function constructionBracing(value: unknown): { constructionBracing?: import('../canvas/model/types').ConstructionBracing } {
+  if (!value || typeof value !== 'object') return {};
+  const b = value as Record<string, unknown>;
+  if ((b.mode !== 'legacy' && b.mode !== 'explicit') || typeof b.enabled !== 'boolean' || !Array.isArray(b.positions)
+    || b.positions.length > 1000 || !b.positions.every((x: unknown) => typeof x === 'number' && Number.isFinite(x) && x > 0 && x <= 1e6)) return {};
+  return { constructionBracing: { mode: b.mode, enabled: b.enabled, positions: [...b.positions].sort((a: number, c: number) => a - c) } };
 }
 
 /** Annex role of a text region; anything malformed is dropped (the text stays). */

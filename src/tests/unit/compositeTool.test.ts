@@ -1,9 +1,12 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { solveBeam } from '../../engineering/fem';
-import { withPageDefaults, BAR_DIAMETERS, CHECKS, camberFor, CompositeModel, designSection, type DesignCriteria, DEFLECTION_CHECKS, governingCheck, governingSplit, STUD_SPACINGS } from '../../tools/composite/model';
+import { ltbCriticalFactor, solveBeam } from '../../engineering/fem';
+import { applyCompositeState, validateBracing, withPageDefaults, BAR_DIAMETERS, CHECKS, camberFor, CompositeModel, designSection, type DesignCriteria, DEFLECTION_CHECKS, governingCheck, governingSplit, STUD_SPACINGS } from '../../tools/composite/model';
 import { sections } from '../../engineering/steel/sections';
 import { step } from '../step';
+import { CalculationEngine } from '../../engine';
+import { calcKey } from '../../canvas/calcOrder';
+import { inputTableColumns, inputTableRegionId } from '../../canvas/inputTable';
 import { parseDocument } from '../../documents/DocumentSerializer';
 
 // mCompositeBeamDesign runs the worksheet itself: its results are the worksheet's (compositeTemplate.test.ts).
@@ -496,6 +499,76 @@ describe('mCompositeBeamDesign headless model', () => {
       set('c_{zg}', -1); const bot = m.results()['Mcr.LT'];
       expect(top).toBeLessThan(sc);
       expect(sc).toBeLessThan(bot);
+    });
+    step('explicit top-flange braces: uniform/tapered, disabling, validation, worker transfer and report round trip', () => {
+      const raw = readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8');
+      const main = new CompositeModel(raw);
+      const setMain = (name: string, value: number) => main.setInput(main.inputs.find((f) => f.name === name)!.id, value);
+      const original = main.results();
+      const bracing = { mode: 'explicit' as const, enabled: true, positions: [1.6, 4.4, 6.4] };
+      expect(validateBracing({ ...bracing, positions: [0] }, 8)).toBeTruthy();
+      expect(validateBracing({ ...bracing, positions: [2, 2 + 1e-8] }, 8)).toBeTruthy();
+      main.setBracing(bracing);
+      const uniform = main.results();
+      expect(uniform.M1).toBe(original.M1);
+      expect(uniform.M1).toBeCloseTo(uniform.w1 * uniform.L ** 2 / 8, 9);
+      expect(uniform['Mcr.LT']).toBeGreaterThan(original['Mcr.LT']);
+      main.setBracing({ ...bracing, positions: [2] });
+      expect(main.results()['acr.LT']).not.toBe(uniform['acr.LT']);
+      main.setBracing(bracing);
+      expect(main.results()['acr.LT']).toBe(uniform['acr.LT']);
+      main.setBracing({ ...bracing, enabled: false });
+      expect(main.results()['Mcr.LT']).toBe(original['Mcr.LT']);
+      main.setBracing(bracing);
+      setMain('c_{tap}', 1); setMain('h_{A.in}', 300); setMain('h_{B.in}', 380);
+      const tapered = main.results();
+      const hAt = (x: number) => 300 + 80 * x / 8000, hR = tapered.h_a;
+      const props = (x: number) => ({
+        EIz: tapered.Ea * (tapered.I_z * 1e4 + tapered.t_w ** 3 * (hAt(x) - hR) / 12),
+        GIt: tapered.Ga * (tapered.I_t * 1e4 + tapered.t_w ** 3 * (hAt(x) - hR) / 3),
+        EIw: tapered.Ea * tapered.I_w * 1e6 * ((hAt(x) - tapered.t_f) / (hR - tapered.t_f)) ** 2,
+      });
+      const direct = ltbCriticalFactor({ L: 8000, props, M: (x) => tapered.w1 * x * (8000 - x) / 2,
+        qzg: (x) => tapered.w1 * hAt(x) / 2, flangeRestraints: bracing.positions.map((x) => ({ x: x * 1000, z: hAt(x * 1000) / 2 })) });
+      expect(tapered['acr.LT']).toBeCloseTo(direct, 7);
+      const payload = structuredClone({ values: Object.fromEntries(main.inputs.map((f) => [f.id, main.inputValue(f.id)])), tables: main.tables, bracing: main.bracing });
+      const screen = new CompositeModel(raw, { screening: true });
+      applyCompositeState(screen, payload);
+      const screening = screen.results();
+      expect(screening['acr.LT']).toBeCloseTo(tapered['acr.LT'], 9);
+      expect(screening['UR.LT']).toBeCloseTo(tapered['UR.LT'], 9);
+      const doc = parseDocument(main.reportDocument());
+      const reopened = new CompositeModel(JSON.stringify(doc));
+      expect(reopened.bracing).toEqual(bracing);
+      const r = reopened.results();
+      expect(r['Mcr.LT']).toBeCloseTo(tapered['Mcr.LT'], 9);
+      expect(r['UR.LT']).toBeCloseTo(tapered['UR.LT'], 9);
+      expect(reopened.tables).toHaveLength(2);
+      const engine = new CalculationEngine({ unitSystem: 'SI' });
+      const rec = Object.fromEntries(doc.shapes.map((s) => [s.id, s]));
+      engine.batch(() => {
+        for (const shape of doc.shapes) {
+          if (shape.type === 'math') engine.setRegion(shape.id, { latex: shape.props.latex, order: calcKey(shape, rec), displayUnit: null, precision: null });
+          if (shape.type === 'table' && shape.props.input) for (const col of inputTableColumns(shape)) engine.setRegion(inputTableRegionId(shape.id, col.column), { latex: col.latex, order: [...calcKey(shape, rec), col.column] as never, displayUnit: null, precision: null });
+        }
+      });
+      const ur = doc.shapes.find((s) => s.type === 'math' && s.props.latex.startsWith('\\mathrm{UR}_{LT}\\coloneq'))!;
+      expect(engine.getResult(ur.id)?.value?.number).toBeCloseTo(tapered['UR.LT'], 9);
+      const bad = structuredClone(doc);
+      const note = bad.shapes.find((s) => s.type === 'text' && s.props.constructionBracing)!;
+      if (note.type === 'text') note.props.constructionBracing!.positions = [Infinity];
+      expect(parseDocument(bad).shapes.some((s) => s.type === 'text' && s.props.constructionBracing)).toBe(false);
+      reopened.setInput(reopened.inputs.find((f) => f.name === 'c_{deck}')!.id, 1);
+      reopened.setInput(reopened.inputs.find((f) => f.name === 'c_{par}')!.id, 0);
+      reopened.setInput(reopened.inputs.find((f) => f.name === 'c_{LT.d}')!.id, 1);
+      const deck = reopened.results();
+      expect(deck['Mcr.LT']).toBeUndefined();
+      reopened.setBracing({ ...bracing, enabled: false });
+      expect(reopened.results()['UR.LT']).toBe(deck['UR.LT']);
+      const deckDoc = parseDocument(reopened.reportDocument());
+      expect(deckDoc.shapes.some((s) => s.type === 'math' && s.props.latex.startsWith('M_{cr.FE}\\coloneq 0'))).toBe(true);
+      main.setBracing({ ...bracing, positions: [9] });
+      expect(main.results().errors).toContain('Brace positions must satisfy 0 < x < L.');
     });
   }, 120_000);
 });

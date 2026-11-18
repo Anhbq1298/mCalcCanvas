@@ -768,3 +768,22 @@ export function BeamCad({ r, name, part }: { r: Record<string, number>; name: st
   );
 }
 
+
+/** Top flange follows local depth; brace markers never sit on the centroid. */
+export function ConstructionBraceElevation({ L, hA, hB, positions, selected, onSelect }: {
+  L: number; hA: number; hB: number; positions: number[]; selected: number | null; onSelect: (i: number) => void;
+}) {
+  const X = (x: number) => 40 + 560 * x / (L || 1);
+  const top = (x: number) => 100 - 40 * (hA + (hB - hA) * x / (L || 1)) / Math.max(hA, hB, 1);
+  const stations = [0, ...positions.filter((x) => Number.isFinite(x) && x > 0 && x < L), L];
+  return <svg viewBox="0 0 640 190" className="chart" role="img" aria-label="Construction top-flange lateral bracing elevation">
+    <path d={`M40 ${top(0)} L600 ${top(L)} M40 ${200 - top(0)} L600 ${200 - top(L)}`} stroke={C.ink} strokeWidth="4" fill="none" />
+    <path d="M40 145 l-10 15 h20 Z M600 145 l-10 15 h20 Z" stroke={C.navy} fill="none" />
+    <text x="20" y="150" fontSize="12">A</text><text x="615" y="150" fontSize="12">B</text>
+    {positions.map((x, i) => Number.isFinite(x) && x > 0 && x < L && <g key={i} role="button" tabIndex={0} aria-label={`Select brace B${i + 1}`} onClick={() => onSelect(i)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(i); } }} style={{ cursor: 'pointer' }}>
+      <path d={`M${X(x)} ${top(x)} v-25 m-8 0 h16 m-12 -5 v10 m8 -10 v10`} fill="none" stroke={selected === i ? C.red : C.navy} strokeWidth="2" />
+      <text x={X(x)} y={top(x) - 35} textAnchor="middle" fontSize="12" fill={C.navy}>B{i + 1}</text>
+    </g>)}
+    {stations.slice(1).map((x, i) => <g key={i} stroke={C.grey} strokeWidth="0.6"><path d={`M${X(stations[i])} 166 v14 m0 -7 H${X(x)} m0 -7 v14`} fill="none" /><text x={(X(x) + X(stations[i])) / 2} y="188" fontSize="11" stroke="none" textAnchor="middle">{fmt(x - stations[i], 3)} m</text></g>)}
+  </svg>;
+}

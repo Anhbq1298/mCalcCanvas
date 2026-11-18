@@ -7,7 +7,7 @@ import { jacobiEigenvalues } from '../../../engineering/fem';
 
 export function ritzMcrFactor(o: {
   L: number; props: (x: number) => { EIz: number; GIt: number; EIw: number }; M: (x: number) => number;
-  qzg?: (x: number) => number; point?: { x: number; Pzg: number }[]; terms?: number;
+  flangeRestraints?: { x: number; z: number }[]; qzg?: (x: number) => number; point?: { x: number; Pzg: number }[]; terms?: number;
 }): number {
   const { L } = o, N = o.terms ?? 15, S = 2000, dx = L / S, n2 = 2 * N;
   const K = Array.from({ length: n2 }, () => new Array<number>(n2).fill(0)), B = K.map((r) => r.map(() => 0));
@@ -26,12 +26,27 @@ export function ritzMcrFactor(o: {
   for (const p of o.point ?? []) for (let i = 1; i <= N; i++) for (let j = 1; j <= N; j++) B[N + i - 1][N + j - 1] += p.Pzg * Math.sin(k(i) * p.x) * Math.sin(k(j) * p.x);
   // K is diagonal for a uniform member; for a varying one use its Cholesky-free symmetric scaling + full solve
   const d = K.map((r, i) => Math.sqrt(r[i]));
-  const Ks = K.map((r, i) => r.map((v, j) => v / (d[i] * d[j]))), Bs = B.map((r, i) => r.map((v, j) => v / (d[i] * d[j])));
+  let Ks = K.map((r, i) => r.map((v, j) => v / (d[i] * d[j]))), Bs = B.map((r, i) => r.map((v, j) => v / (d[i] * d[j])));
+  // Independently constrain the global sine-series coefficients, after scaling.
+  // Each brace couples ALL sine terms, rather than any local nodal DOFs.
+  let basis: number[][] = Array.from({ length: n2 }, (_, i) => Array.from({ length: n2 }, (_, j) => i === j ? 1 : 0));
+  for (const brace of o.flangeRestraints ?? []) {
+    const row = d.map((scale, i) => Math.sin(k(i % N + 1) * brace.x) * (i < N ? 1 : brace.z) / scale);
+    const c = basis.map((col) => col.reduce((sum, v, i) => sum + v * row[i], 0));
+    const pivot = c.reduce((best, v, i) => Math.abs(v) > Math.abs(c[best]) ? i : best, 0);
+    const q = basis[pivot];
+    basis = basis.filter((_, i) => i !== pivot).map((col, j) => {
+      const original = j >= pivot ? j + 1 : j;
+      return col.map((v, i) => v - q[i] * c[original] / c[pivot]);
+    });
+  }
+  const project = (A: number[][]) => basis.map((u) => basis.map((v) => u.reduce((sum, ui, i) => sum + ui * A[i].reduce((r, a, j) => r + a * v[j], 0), 0)));
+  Ks = project(Ks); const constrainedB = project(Bs);
   // generalized problem Ks y = λ Bs y with Ks ≈ I: reduce by Cholesky of Ks
-  const n = n2, Lc = Ks.map(() => new Array<number>(n).fill(0));
+  const n = Ks.length, Lc = Ks.map(() => new Array<number>(n).fill(0));
   for (let i = 0; i < n; i++) for (let j = 0; j <= i; j++) { let s = Ks[i][j]; for (let t = 0; t < j; t++) s -= Lc[i][t] * Lc[j][t]; Lc[i][j] = i === j ? Math.sqrt(s) : s / Lc[j][j]; }
   const solveL = (c: number[]) => { const y = new Array<number>(n); for (let i = 0; i < n; i++) { let s = c[i]; for (let t = 0; t < i; t++) s -= Lc[i][t] * y[t]; y[i] = s / Lc[i][i]; } return y; };
-  const Y = Array.from({ length: n }, (_, j) => solveL(Bs.map((r) => r[j])));
+  const Y = Array.from({ length: n }, (_, j) => solveL(constrainedB.map((r) => r[j])));
   const C = Array.from({ length: n }, (_, j) => solveL(Y.map((c) => c[j])));
   return 1 / Math.max(...jacobiEigenvalues(C.map((r, i) => r.map((v, j) => (v + C[j][i]) / 2))));
 }
