@@ -30,3 +30,8 @@ dist-single
 tools/templates/*.pdf
 output/templates/
 output/pdf/
+
+# Local scratch and review output
+tmp/
+tools/templates/review/
+tools/templates/published-review/
