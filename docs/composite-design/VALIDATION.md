@@ -207,3 +207,16 @@ top flange (construction) or the shear centre (LT.nc), never below it.
 Still open: absolute M_cr of a published simply supported web-tapered beam (Yang & Yau's doubly-tapered beam,
 L = 6.096 m, h = 609.6 mm at mid-span, b = 152.4, t_f = 12.7, t_w = 9.5 mm, mid-span point load at the shear centre,
 tabulated by Andrade & Camotim 2005), and an LTBeamN run of the page default case.
+
+
+## Published LTBeamN comparisons (2026-11-18)
+
+Sixteen published online LTBeamN results are now reproduced by the production
+solver and pinned in the existing LTB unit suite. See
+[LTBEAM_COMPARISON.md](LTBEAM_COMPARISON.md) for sources, inputs, mesh results,
+comparison bands and the distinction between published-property and nominal
+section reproductions. The references cover eight IPE300 cases, six intermediate
+fork/lateral-brace cases, and two constant-moment tapered members. No desktop
+LTBeamN execution is claimed. A direct LTBeamN run of the exact composite-page
+default case, and a matched-property tapered case with discrete top-flange braces,
+remain outside this verification.

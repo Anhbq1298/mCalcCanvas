@@ -2,6 +2,15 @@
 const server = await createServer({ server: { middlewareMode: true } });
 try {
   const { ltbCriticalFactor } = await server.ssrLoadModule('/src/engineering/fem/ltb.ts');
+  if (process.argv.includes('--ltbeam')) {
+    const { ltbeamReferences } = await server.ssrLoadModule('/src/tests/unit/fem/ltbeamReferences.ts');
+    const rows = ltbeamReferences().map((c) => {
+      const values = [24, 48, 100].map((elements) => ltbCriticalFactor({ ...c.input, elements }) * c.scale);
+      return { id: c.id, scope: c.scope, unit: c.scale === 1 ? 'load factor' : 'kNm', LTBeamN: c.reference,
+        FE24: values[0], FE48: values[1], FE100: values[2], differencePercent: 100 * (values[2] / c.reference - 1) };
+    });
+    console.table(rows);
+  } else {
   const { ritzMcrFactor } = await server.ssrLoadModule('/src/tests/unit/fem/ritz.ts');
   const E = 210000, G = 81000, Iz = 538e4, It = 19e4, Iw = 207e9, h = 403.2, L = 6000, tf = 11.2, tw = 6.8;
   const rows = [];
@@ -17,4 +26,5 @@ try {
     }
   }
   console.table(rows);
+  }
 } finally { await server.close(); }

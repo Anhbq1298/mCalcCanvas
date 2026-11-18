@@ -23,6 +23,9 @@ The independent reference uses global sine-series Ritz functions and Simpson
 integration. Its constraints eliminate global coefficients, independently of the
 local Hermite elements and Gaussian integration in the production solver.
 
+Published LTBeamN comparisons (16 online cases, with explicit matching limits)
+are recorded in [LTBEAM_COMPARISON.md](LTBEAM_COMPARISON.md).
+
 ## Numerical verification
 
 Reference: L = 6000 mm, E = 210000 MPa, G = 81000 MPa, Iz = 538e4 mm4,

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { chiLT, FORK, ltbAnalysis, ltbCriticalFactor, solveBeam } from '../../../engineering/fem';
 import { step } from '../../step';
 import { ritzMcrFactor } from './ritz';
+import { ltbeamReferences } from './ltbeamReferences';
 
 // LTB eigenvalue FE: closed forms, the SN003b (NCCI) C1 / C2 cases, supports by DOF, mesh, mode, taper.
 // UB 406x140x46-like section, N and mm.
@@ -136,6 +137,16 @@ describe('FEM: lateral-torsional buckling eigenvalues', () => {
     step('χ_LT (6.56)', () => {
       expect(chiLT(0.2, 0.34)).toBe(1);
       expect(chiLT(1, 0.34)).toBeCloseTo(0.597, 3); // Φ = 1.136
+    });
+    step('published LTBeamN benchmarks: matched IPE300 properties and qualified nominal bracing/taper cases', () => {
+      for (const c of ltbeamReferences()) {
+        const values = [24, 48, 100].map((elements) => ltbCriticalFactor({ ...c.input, elements }) * c.scale);
+        // Published-property cases: 0.2%; dimension-only cases: 1%. These are
+        // benchmark-specific numerical bands, not design resistance tolerances.
+        expect(rel(values[2], c.reference), c.id).toBeLessThan(c.scope === 'published-properties' ? 0.002 : 0.01);
+        expect(rel(values[0], values[2]), `${c.id}: mesh 24/100`).toBeLessThan(1e-4);
+        expect(rel(values[1], values[2]), `${c.id}: mesh 48/100`).toBeLessThan(1e-5);
+      }
     });
     step('published taper effect, Raftoyiannis and Adamakos (2010), IPE 300', () => {
       const b = 150, tf = 10.7, tw = 7.1, Es = 210000, Gs = 80770, l = 3000;
