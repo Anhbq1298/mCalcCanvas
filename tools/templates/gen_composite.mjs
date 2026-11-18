@@ -681,9 +681,9 @@ T('Forks fix v and φ; a top-flange brace imposes v + z φ = 0 (both by penalty,
 H(3, 'A.2 Model and pre-buckling moment (written by the design page; N and mm in the matrices)');
 T('12 elements, 13 nodes: every brace station is a node, the rest by halving the longest element (equal elements when unbraced).');
 T('Global DOF at node i: 4i (v), 4i + 1 (v′), 4i + 2 (φ), 4i + 3 (φ′).');
-P('Node positions', R`x_{FE}\coloneq\mathrm{stack}\left(0\,\mathrm{m},1\,\mathrm{m}\right)`, { ...M({ displayMode: 'result', displayUnit: 'm', precision: 3, constant: true }), wide: true });
-P('Pre-buckling moment at the nodes, M_Ed(x), FE', R`M_{FE}\coloneq\mathrm{stack}\left(0\,\mathrm{kN}\cdot\mathrm{m},0\,\mathrm{kN}\cdot\mathrm{m}\right)`, { ...M({ displayMode: 'result', displayUnit: 'kN m', precision: 2, constant: true }), wide: true });
-P('Steel depth at the nodes', R`h_{FE}\coloneq\mathrm{stack}\left(0\,\mathrm{mm},0\,\mathrm{mm}\right)`, { ...M({ displayMode: 'result', displayUnit: 'mm', precision: 1, constant: true }), wide: true });
+P('Node positions', R`x_{FE}\coloneq\mathrm{stack}\left(0\,\mathrm{m},1\,\mathrm{m},2\,\mathrm{m},3\,\mathrm{m},4\,\mathrm{m},5\,\mathrm{m},6\,\mathrm{m},7\,\mathrm{m},8\,\mathrm{m},9\,\mathrm{m},10\,\mathrm{m},11\,\mathrm{m},12\,\mathrm{m}\right)`, { ...M({ displayMode: 'result', displayUnit: 'm', precision: 3, constant: true }), wide: true });
+P('Pre-buckling moment at the nodes, M_Ed(x), FE', R`M_{FE}\coloneq\mathrm{stack}\left(0\,\mathrm{kN}\cdot\mathrm{m},0\,\mathrm{kN}\cdot\mathrm{m},0\,\mathrm{kN}\cdot\mathrm{m},0\,\mathrm{kN}\cdot\mathrm{m},0\,\mathrm{kN}\cdot\mathrm{m},0\,\mathrm{kN}\cdot\mathrm{m},0\,\mathrm{kN}\cdot\mathrm{m},0\,\mathrm{kN}\cdot\mathrm{m},0\,\mathrm{kN}\cdot\mathrm{m},0\,\mathrm{kN}\cdot\mathrm{m},0\,\mathrm{kN}\cdot\mathrm{m},0\,\mathrm{kN}\cdot\mathrm{m},0\,\mathrm{kN}\cdot\mathrm{m}\right)`, { ...M({ displayMode: 'result', displayUnit: 'kN m', precision: 2, constant: true }), wide: true });
+P('Steel depth at the nodes', R`h_{FE}\coloneq\mathrm{stack}\left(0\,\mathrm{mm},0\,\mathrm{mm},0\,\mathrm{mm},0\,\mathrm{mm},0\,\mathrm{mm},0\,\mathrm{mm},0\,\mathrm{mm},0\,\mathrm{mm},0\,\mathrm{mm},0\,\mathrm{mm},0\,\mathrm{mm},0\,\mathrm{mm},0\,\mathrm{mm}\right)`, { ...M({ displayMode: 'result', displayUnit: 'mm', precision: 1, constant: true }), wide: true });
 P('Braces between the supports (forks, or top-flange braces v + z φ = 0)', R`x_{br.FE}\coloneq0\,\mathrm{m}`, M({ displayMode: 'result', displayUnit: 'm', precision: 3, constant: true }));
 P('Load height, fraction of h/2 (c_zg)', R`c_{zg.FE}\coloneq1`, M({ displayMode: 'result', precision: 0, constant: true }));
 DIAGRAM(110, { title: 'Pre-buckling moment M_Ed(x) used in b_e (sagging below)', xUnit: 'm', yUnit: 'kN m', invertY: true, series: [S('mfe', '', ['x_{FE}', 'M_{FE}'], 'area', '#b91c1c', 1.5)] });
@@ -724,7 +724,8 @@ calc('Global geometric matrix, elements 3–5', 'B_{1}', R`P_e\left(3\right)^T\c
 calc('Global geometric matrix, elements 6–8', 'B_{2}', R`P_e\left(6\right)^T\cdot b_{e6}\cdot P_e\left(6\right)+P_e\left(7\right)^T\cdot b_{e7}\cdot P_e\left(7\right)+P_e\left(8\right)^T\cdot b_{e8}\cdot P_e\left(8\right)`, '', 'fo');
 calc('Global geometric matrix, elements 9–11', 'B_{3}', R`P_e\left(9\right)^T\cdot b_{e9}\cdot P_e\left(9\right)+P_e\left(10\right)^T\cdot b_{e10}\cdot P_e\left(10\right)+P_e\left(11\right)^T\cdot b_{e11}\cdot P_e\left(11\right)`, '', 'fo');
 calc('Global geometric matrix', 'B_{FE}', R`B_{0}+B_{1}+B_{2}+B_{3}`, '', 'fo');
-T('Constraints, one column each: a fixed DOF i (fork: v and φ at the supports and fork braces) is e_i; a top-flange brace at node i (v + z φ = 0, z = h/2 in mm) is e_4i + z e_4i+2. Each column is scaled by √K_jj of its first DOF j, so the penalty is 10⁸ times the local stiffness.');
+T('One column per constraint: fixed DOF i (forks: v, φ) e_i; top-flange brace at node i e_4i + z e_4i+2.');
+T('Brace: v + z φ = 0, z = h/2 (mm). Each column × √K_jj of its first DOF j: penalty 10⁸ × local stiffness.');
 P('Constraint matrix (52 rows, one column per constraint)', R`C_{FE}\coloneq\mathrm{zeros}\left(52,1\right)`, { ...M({ displayMode: 'result', precision: 3, fontSize: 10, constant: true }), wide: true });
 calc('Constraints by penalty: K + 10⁸ C Cᵀ', 'K_p', R`K_{FE}+10^8\left(C_{FE}\cdot C_{FE}^T\right)`, '', 'fo');
 P('Generalized eigenvalues, B d = μ K d (μ = 1/λ)', R`\mu_{FE}\coloneq \mathrm{genvals}\left(B_{FE},K_p\right)`, { ...M({ precision: 3, fontSize: 10 }, fr), wide: true });
