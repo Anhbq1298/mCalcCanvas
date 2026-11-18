@@ -585,7 +585,7 @@ export function LongSection({ r }: { r: Record<string, number> }) {
  * beam, studs at their spacing each side of x_M) and the cross-section 1–1. Lengths along the span are to
  * scale; depths are drawn larger when the beam would otherwise be too thin to read.
  */
-export function BeamCad({ r, name, part }: { r: Record<string, number>; name: string; part: 'elevation' | 'section' }) {
+export function BeamCad({ r, name, part }: { r: Record<string, number> & { vectors?: Record<string, number[]> }; name: string; part: 'elevation' | 'section' }) {
   const [box, W] = useWidth(part === 'section' ? 400 : 720);
   const uid = useId().replace(/:/g, '');
   const { L, h_c, h_a, b_a, t_f, t_w, hsc, dsc, dhead } = r;
@@ -598,7 +598,9 @@ export function BeamCad({ r, name, part }: { r: Record<string, number>; name: st
   // a tapered beam (r.taper) is drawn from h_A at A to h_B at B; the layout below uses the deeper end
   const tap = part === 'elevation' && r.taper >= 1 && r.hA > 0 && r.hB > 0;
   const hA = tap ? r.hA : h_a, hB = tap ? r.hB : h_a;
-  const top = 46, yS = top + h_c * kv, yB = yS + Math.max(hA, hB) * kv; // slab top, steel top, steel bottom (deepest)
+  // multi-segment profile (vertices x m, h mm), else the straight line A to B
+  const tv = tap ? r.vectors : undefined, tx = tv?.taperX && tv.taperX.length > 2 ? tv.taperX : [0, Lmm / 1000], th = tv?.taperH && tv.taperH.length > 2 ? tv.taperH : [hA, hB];
+  const top = 46, yS = top + h_c * kv, yB = yS + Math.max(...th) * kv; // slab top, steel top, steel bottom (deepest)
   const yBA = yS + hA * kv, yBB = yS + hB * kv;
   const X = (mm: number) => X0 + mm * kh, Yup = (mm: number) => yS - mm * kv; // mm above the steel top
   const xM = Math.min(Math.max(r.xM * 1000, 0), Lmm);
@@ -658,9 +660,10 @@ export function BeamCad({ r, name, part }: { r: Record<string, number>; name: st
             </g>
           ))}
         </g>
-        <polygon points={`${X0},${yS} ${X1},${yS} ${X1},${yBB} ${X0},${yBA}`} fill={C.sheet} stroke={ink} strokeWidth={CAD.geo} strokeLinejoin="round" />
+        <polygon points={[`${X0},${yS}`, `${X1},${yS}`, ...tx.map((x: number, i: number) => `${X(x * 1000)},${yS + th[i] * kv}`).reverse()].join(' ')} fill={C.sheet} stroke={ink} strokeWidth={CAD.geo} strokeLinejoin="round" />
         <line x1={X0} x2={X1} y1={yS + t_f * kv} y2={yS + t_f * kv} stroke={ink} strokeWidth={CAD.dim} />
-        <line x1={X0} x2={X1} y1={yBA - t_f * kv} y2={yBB - t_f * kv} stroke={ink} strokeWidth={CAD.dim} />
+        <polyline points={tx.map((x: number, i: number) => `${X(x * 1000)},${yS + (th[i] - t_f) * kv}`).join(' ')} fill="none" stroke={ink} strokeWidth={CAD.dim} />
+        {tx.length > 2 && tx.slice(1, -1).map((x: number, i: number) => <g key={`tv${i}`}><line x1={X(x * 1000)} x2={X(x * 1000)} y1={yS} y2={yS + th[i + 1] * kv} stroke={dimC} strokeWidth={CAD.dim} strokeDasharray="3 2" />{txt(X(x * 1000), yS + th[i + 1] * kv + 13, fmt(th[i + 1], 0), 'middle')}</g>)}
         {/* supports */}
         <g fill={C.sheet} stroke={ink} strokeWidth={CAD.geo}>
           <path d={`M${X0},${yBA + 1} l-8,13 h16 z`} />

@@ -52,8 +52,18 @@ export type TextStyleId = 'title' | 'subtitle';
 /** Composite tool configuration carried by its visible report note. Stations are metres. */
 export interface ConstructionBracing { mode: 'legacy' | 'explicit'; enabled: boolean; positions: number[] }
 
+/**
+ * Composite tool: depth profile of a tapered beam as segments from support A (ETABS-style nonprismatic):
+ * each segment runs from the previous depth (h_A for the first) to h (mm, its end depth) over its length;
+ * 'abs' lengths are metres, 'prop' lengths share what the absolute ones leave of the span. The last
+ * segment ends at h_B (the sheet input). No segments: linear from h_A to h_B.
+ */
+export interface TaperSegment { type: 'abs' | 'prop'; length: number; h: number }
+export interface TaperProfile { segments: TaperSegment[] }
+
 export interface TextProps {
   constructionBracing?: ConstructionBracing;
+  taperProfile?: TaperProfile;
   w: number;
   /** Measured height (kept in sync with the rendered text). */
   h: number;

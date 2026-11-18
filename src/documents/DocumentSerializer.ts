@@ -128,6 +128,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           ...(p.textStyle === 'title' || p.textStyle === 'subtitle' ? { textStyle: p.textStyle } : {}),
           ...annexRole(p.annex),
           ...constructionBracing(p.constructionBracing),
+          ...taperProfile(p.taperProfile),
           ...(p.pageBreak === true ? { pageBreak: true } : {}),
           ...(typeof p.showWhen === 'string' && p.showWhen.trim() ? { showWhen: p.showWhen.slice(0, 2000) } : {}),
         },
@@ -350,6 +351,20 @@ function constructionBracing(value: unknown): { constructionBracing?: import('..
   if ((b.mode !== 'legacy' && b.mode !== 'explicit') || typeof b.enabled !== 'boolean' || !Array.isArray(b.positions)
     || b.positions.length > 1000 || !b.positions.every((x: unknown) => typeof x === 'number' && Number.isFinite(x) && x > 0 && x <= 1e6)) return {};
   return { constructionBracing: { mode: b.mode, enabled: b.enabled, positions: [...b.positions].sort((a: number, c: number) => a - c) } };
+}
+
+/** Optional composite taper profile (segments from support A); anything malformed is dropped. */
+function taperProfile(value: unknown): { taperProfile?: import('../canvas/model/types').TaperProfile } {
+  if (!value || typeof value !== 'object' || !Array.isArray((value as { segments?: unknown }).segments)) return {};
+  const segs = (value as { segments: unknown[] }).segments;
+  if (segs.length > 50) return {};
+  const ok = segs.every((g) => {
+    const t = g as Record<string, unknown>;
+    return !!g && typeof g === 'object' && (t.type === 'abs' || t.type === 'prop') && typeof t.length === 'number' && Number.isFinite(t.length) && t.length > 0
+      && typeof t.h === 'number' && Number.isFinite(t.h) && t.h > 0 && t.h < 1e5;
+  });
+  if (!ok) return {};
+  return { taperProfile: { segments: segs.map((g) => { const t = g as { type: 'abs' | 'prop'; length: number; h: number }; return { type: t.type, length: t.length, h: t.h }; }) } };
 }
 
 /** Annex role of a text region; anything malformed is dropped (the text stays). */

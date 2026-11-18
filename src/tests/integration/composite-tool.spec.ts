@@ -226,3 +226,39 @@ test('construction bracing drafts, validation, selection and undo are atomic', a
   await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
 
 });
+
+test('tapered beam depth profile: ETABS-style segments in a dialog, haunched ends', async ({ page }) => {
+  await page.goto('/composite/');
+  await expect(page.getByTestId('ur-max')).toHaveText('1.028', { timeout: 30_000 });
+  await expect(page.getByTestId('taper-profile-summary')).toContainText('Linear');
+  await page.getByTestId('taper-edit').click();
+  const dlg = page.getByTestId('taper-dialog');
+  await expect(dlg).toBeVisible();
+  // three segments: 1 m haunch at A, proportional middle at the library depth, 1 m haunch at B down to 300
+  const row = (i: number) => dlg.locator('tbody tr').nth(i);
+  await page.getByTestId('taper-split').click();
+  await page.getByTestId('taper-split').click();
+  await expect(dlg.locator('tbody tr')).toHaveCount(3);
+  for (const [i, type, len, h] of [[0, 'abs', '1', '402.6'], [1, 'prop', '1', '402.6'], [2, 'abs', '1', '300']] as const) {
+    await row(i).getByLabel(`Segment ${i + 1} length type`).selectOption(type);
+    await row(i).getByLabel(`Segment ${i + 1} length`, { exact: true }).fill(len);
+    await row(i).getByLabel(`Segment ${i + 1} end depth`).fill(h);
+  }
+  await expect(row(1).locator('td').nth(5)).toHaveText('4.200');
+  await expect(page.getByTestId('taper-preview')).toBeVisible();
+  // a profile that does not fit the span blocks OK
+  await row(1).getByLabel('Segment 2 length type').selectOption('abs');
+  await expect(dlg.getByRole('alert')).toContainText('must equal the span');
+  await expect(page.getByTestId('taper-save')).toBeDisabled();
+  await row(1).getByLabel('Segment 2 length type').selectOption('prop');
+  await page.getByTestId('taper-save').click();
+  await expect(dlg).toBeHidden();
+  await expect(page.getByTestId('taper-profile-summary')).toContainText('3 segments: 300 → 403 → 403 → 300 mm');
+  // deeper over the middle than the old 300 → 403 taper: the construction LTB drops
+  await expect(page.getByTestId('ur-max')).not.toHaveText('1.028', { timeout: 30_000 });
+  expect(Number(await page.getByTestId('ur-max').textContent())).toBeLessThan(1.028);
+  // undo restores the linear profile
+  await page.keyboard.press('Control+z');
+  await expect(page.getByTestId('taper-profile-summary')).toContainText('Linear');
+  await expect(page.getByTestId('ur-max')).toHaveText('1.028', { timeout: 30_000 });
+});

@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { ltbCriticalFactor, solveBeam } from '../../engineering/fem';
-import { annexMesh, applyCompositeState, validateBracing, withPageDefaults, BAR_DIAMETERS, CHECKS, camberFor, CompositeModel, designSection, type DesignCriteria, DEFLECTION_CHECKS, governingCheck, governingSplit, STUD_SPACINGS } from '../../tools/composite/model';
+import { annexMesh, taperLengths, taperStations, applyCompositeState, validateBracing, withPageDefaults, BAR_DIAMETERS, CHECKS, camberFor, CompositeModel, designSection, type DesignCriteria, DEFLECTION_CHECKS, governingCheck, governingSplit, STUD_SPACINGS } from '../../tools/composite/model';
 import { sections } from '../../engineering/steel/sections';
 import { step } from '../step';
 import { CalculationEngine } from '../../engine';
@@ -418,6 +418,67 @@ describe('mCompositeBeamDesign headless model', () => {
       expect(t[k]).toBeGreaterThanOrEqual(base[k] - 1e-9);
     }
     expect(governingCheck(t).ur).toBeGreaterThanOrEqual(t['UR.des'] - 1e-9);
+  }, 300_000);
+
+  it('tapered beam with a depth profile (ETABS-style segments): lengths, vertex runs, FE LTB on h(x), report round trip', () => {
+    // segment lengths: absolute as given, proportional share the rest (ETABS nonprismatic)
+    const seg = (type: 'abs' | 'prop', length: number, h: number) => ({ type, length, h });
+    expect(taperLengths({ segments: [seg('abs', 1, 406), seg('prop', 1, 406), seg('abs', 1, 300)] }, 5.2)).toEqual([1, 3.2, 1]);
+    expect(taperLengths({ segments: [seg('prop', 1, 406), seg('prop', 3, 300)] }, 8)).toEqual([2, 6]);
+    expect(taperLengths({ segments: [seg('abs', 2, 406), seg('abs', 2, 300)] }, 5.2)).toMatch(/must equal the span/);
+    expect(taperLengths({ segments: [seg('abs', 6, 406), seg('prop', 1, 300)] }, 5.2)).toMatch(/leave nothing/);
+    expect(taperStations({ segments: [seg('abs', 1, 500), seg('prop', 1, 300)] }, 5.2, 300, 320, 402.6)).toEqual({ x: [0, 1, 5.2], h: [300, 402.6, 320] });
+
+    const m = new CompositeModel(withPageDefaults(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8')));
+    const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
+    const linear = m.results(); // page default: 300 mm at A to the library depth at B
+    // a vertex on the straight line changes nothing (same checks; the mesh gains a node)
+    const hl = linear.hB, hMid = (300 + hl) / 2;
+    m.setTaper({ segments: [seg('prop', 1, hMid), seg('prop', 1, hl)] });
+    const same = m.results();
+    expect(same.errors).toEqual([]);
+    expect(same.vectors.taperX).toEqual([0, 2.6, 5.2]);
+    for (const k of ['UR.M.2', 'UR.V.2', 'UR.F.P', 'UR.FM', 'UR.MV']) expect(same[k]).toBeCloseTo(linear[k], 9);
+    expect(same['acr.LT'] / linear['acr.LT']).toBeCloseTo(1, 3);
+    expect(same['UR.des'] / linear['UR.des']).toBeCloseTo(1, 3);
+
+    // haunched both ends: 300 at the supports, library depth over the middle (abs 1 m, proportional, abs 1 m)
+    set('h_{B.in}', 300);
+    m.setTaper({ segments: [seg('abs', 1, hl), seg('prop', 1, hl), seg('abs', 1, 300)] });
+    const t = m.results();
+    expect(t.errors).toEqual([]);
+    expect([t.taper, t.hA, t.hB]).toEqual([1, 300, 300]);
+    expect(t.vectors.taperX).toEqual([0, 1, 4.2, 5.2]);
+    expect(t.vectors.taperH).toEqual([300, hl, hl, 300]);
+    // bending at x_M (inside the deep middle) is the uniform result at the library depth
+    expect(t['hat.M.2']).toBeCloseTo(hl, 9);
+    // the 60 kN point load at 1 m sits on the vertex: the web check at the library depth
+    expect(t['hat.F.P']).toBeCloseTo(hl, 9);
+    // α_cr = the FE eigenvalue on h(x) of the profile, solved directly
+    const hAt = (x: number) => (x <= 1000 ? 300 + ((hl - 300) * x) / 1000 : x >= 4200 ? hl - ((hl - 300) * (x - 4200)) / 1000 : hl);
+    const r0 = t; // section constants of the library section (the sheet run at x_M is at h_lib)
+    const props = (x: number) => ({
+      EIz: r0.Ea * (r0.I_z * 1e4 + (r0.t_w ** 3 * (hAt(x) - hl)) / 12),
+      GIt: r0.Ga * (r0.I_t * 1e4 + (r0.t_w ** 3 * (hAt(x) - hl)) / 3),
+      EIw: r0.Ea * r0.I_w * 1e6 * ((hAt(x) - r0.t_f) / (hl - r0.t_f)) ** 2,
+    });
+    const direct = ltbCriticalFactor({ L: 5200, props, M: (x) => (t.w1 * x * (5200 - x)) / 2, qzg: (x) => (t.w1 * hAt(x)) / 2, nodes: annexMesh(5200, [1000, 4200]) });
+    expect(t['acr.LT']).toBeCloseTo(direct, 7);
+    // deeper over the middle than the linear 300 → 300 beam: stiffer, lower utilisation
+    m.setTaper({ segments: [] });
+    const flat = m.results();
+    expect(flat.taper).toBeUndefined(); // 300 at both ends, no profile: uniform
+    for (const k of ['UR.M.2', 'UR.LT', 'UR.d.x']) expect(t[k]).toBeLessThan(flat[k]);
+    // the report carries the profile and reopens with it
+    m.setTaper({ segments: [seg('abs', 1, hl), seg('prop', 1, hl), seg('abs', 1, 300)] });
+    m.results();
+    const doc = parseDocument(m.reportDocument());
+    const reopened = new CompositeModel(JSON.stringify(doc));
+    expect(reopened.taper).toEqual(m.taper);
+    expect(reopened.results()['UR.des']).toBeCloseTo(t['UR.des'], 9);
+    // an invalid profile is reported, not calculated
+    m.setTaper({ segments: [seg('abs', 2, hl), seg('abs', 2, 300)] });
+    expect(m.results().errors.join()).toMatch(/must equal the span/);
   }, 300_000);
 
   it('page default case: UB 406x140x46 tapered to 300 mm, L = 5.2 m at 2 m, 200 mm slab, 60 kN SDL at 1 m', () => {

@@ -11,10 +11,54 @@ import { calcKey } from '../../canvas/calcOrder';
 import { inputTableColumns, inputTableRegionId } from '../../canvas/inputTable';
 import { DEFAULT_TEXT_PROPS } from '../../canvas/model/types';
 import { PAGE_GAP, pageSize } from '../../export/pageGeometry';
-import type { ConstructionBracing, Shape, TableShape, TextShape, MathShape } from '../../canvas/model/types';
+import type { ConstructionBracing, Shape, TableShape, TaperProfile, TextShape, MathShape } from '../../canvas/model/types';
 
 /** Absolute brace stations in metres. Missing data retains the legacy worksheet. */
-export type { ConstructionBracing } from '../../canvas/model/types';
+export type { ConstructionBracing, TaperProfile, TaperSegment } from '../../canvas/model/types';
+
+/** No segments: depth linear from h_A to h_B (the sheet inputs). */
+export const linearTaper = (): TaperProfile => ({ segments: [] });
+
+/**
+ * Segment lengths (m) of a taper profile on span L, ETABS-style: absolute lengths as given, proportional ones
+ * share what the absolute ones leave. An error message when they do not fit the span.
+ */
+export function taperLengths(p: TaperProfile, L: number): number[] | string {
+  const segs = p.segments;
+  if (segs.length > 50) return 'At most 50 segments.';
+  if (segs.some((g) => !(g.length > 0) || !Number.isFinite(g.length))) return 'Every segment length must be positive.';
+  if (segs.some((g) => !(g.h > 0) || !Number.isFinite(g.h))) return 'Every depth must be positive.';
+  const abs = segs.filter((g) => g.type === 'abs').reduce((a, g) => a + g.length, 0);
+  const w = segs.filter((g) => g.type === 'prop').reduce((a, g) => a + g.length, 0);
+  if (w > 0) {
+    if (L - abs < 1e-6) return `Absolute lengths (${+abs.toFixed(4)} m) leave nothing of the span L = ${+L.toFixed(4)} m for the proportional segments.`;
+    return segs.map((g) => (g.type === 'abs' ? g.length : ((L - abs) * g.length) / w));
+  }
+  if (Math.abs(abs - L) > 1e-6) return `Absolute lengths add up to ${+abs.toFixed(4)} m; they must equal the span L = ${+L.toFixed(4)} m (or make one segment proportional).`;
+  return segs.map((g) => g.length);
+}
+
+export function validateTaper(p: TaperProfile, L: number): string | null {
+  if (p.segments.length < 2) return null;
+  const r = taperLengths(p, L);
+  return typeof r === 'string' ? r : null;
+}
+
+/**
+ * Vertices of the depth profile: x (m from A) and h (mm), h_A at x = 0, the segment ends, h_B at x = L; depths
+ * limited to the library depth hLib. Fewer than 2 segments (or an invalid profile): linear from h_A to h_B.
+ */
+export function taperStations(p: TaperProfile, L: number, hA: number, hB: number, hLib = Infinity): { x: number[]; h: number[] } {
+  const lens = p.segments.length >= 2 ? taperLengths(p, L) : 'linear';
+  if (typeof lens === 'string') return { x: [0, L], h: [hA, hB] };
+  const x = [0], h = [hA];
+  lens.forEach((l, i) => { x.push(x[i] + l); h.push(i === lens.length - 1 ? hB : Math.min(p.segments[i].h, hLib)); });
+  x[x.length - 1] = L;
+  return { x, h };
+}
+
+/** Depth at x (m) on the profile vertices (linear between them). */
+export const depthAt = (st: { x: number[]; h: number[] }, x: number): number => interp(st.x, st.h, x);
 export const legacyBracing = (): ConstructionBracing => ({ mode: 'legacy', enabled: false, positions: [] });
 export function validateBracing(b: ConstructionBracing, L: number): string | null {
   if (b.positions.length > 1000) return 'At most 1000 intermediate braces are supported.';
@@ -120,12 +164,12 @@ export interface LtbAnnex { x: number[]; M: number[]; h: number[]; braces: numbe
 const feLtbCache = new Map<string, { LT?: LtbOut; nc?: LtbOut; annex?: LtbAnnex }>();
 const FE_MEMBER_KEYS = ['L', 'L1', 'w1', 'LLT', 'LLTnc', 'gM1', 'ctap', 'cweld', 'czg', 'cNA', 'cbrace', 'kLT', 'Lbr', 'ctr', 'cLTd'];
 const FE_SECTION_KEYS = ['h_a', 't_f', 't_w', 'b_a', 'r', 'f_y', 'Ea', 'Ga', 'I_a', 'I_z', 'I_t', 'I_w', 'W_pl'];
-function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: FeLoads | null, bracing = legacyBracing()): { LT?: LtbOut; nc?: LtbOut; annex?: LtbAnnex } {
+function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: FeLoads | null, bracing = legacyBracing(), stations?: { x: number[]; h: number[] }): { LT?: LtbOut; nc?: LtbOut; annex?: LtbAnnex } {
   const hAt = (xmm: number) => hAtM(xmm / 1000); // depth at x in mm
   const hR = rRef.h_a, tf = rRef.t_f, tw = rRef.t_w, b = rRef.b_a, r = rRef.r, fy = rRef.f_y, E = rRef.Ea, G = rRef.Ga;
   if (![hR, tf, tw, b, r, fy, E, G, rRef.I_z, rRef.I_t, rRef.I_w, rRef.W_pl].every(Number.isFinite)) return {};
-  // hAtM is constant or linear in this model: its end values fully identify it.
-  const cacheKey = JSON.stringify([FE_MEMBER_KEYS.map((k) => rM[k]), FE_SECTION_KEYS.map((k) => rRef[k]), hAtM(0), hAtM(rM.L), loads, bracing]);
+  // hAtM is constant, linear or piecewise linear through the stations: its ends and stations identify it.
+  const cacheKey = JSON.stringify([FE_MEMBER_KEYS.map((k) => rM[k]), FE_SECTION_KEYS.map((k) => rRef[k]), hAtM(0), hAtM(rM.L), stations, loads, bracing]);
   const cached = feLtbCache.get(cacheKey);
   if (cached) return cached;
   const Af = (1 - Math.PI / 4) * r * r;
@@ -154,7 +198,9 @@ function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: F
     const qAt = (x: number) => sl.dist.reduce((s, d) => s + (x >= d.x1 - 1e-9 && x <= d.x2 + 1e-9 ? d.q1 : 0), 0);
     const flangeRestraints = construction && bracing.mode === 'explicit' && bracing.enabled
       ? bracing.positions.map((x) => ({ x: x * 1000 - x0, z: hAt(x * 1000) / 2 })) : [];
-    const nodes = construction ? annexMesh(l, [...braces, ...flangeRestraints.map((f) => f.x)]) : undefined;
+    // the depth kinks of a multi-segment taper are nodes too
+    const kinks = (stations?.x.slice(1, -1) ?? []).map((x) => x * 1000 - x0);
+    const nodes = construction ? annexMesh(l, [...braces, ...flangeRestraints.map((f) => f.x), ...kinks]) : undefined;
     const base = { L: l, props: (x: number) => props(x0 + x), restraints: braces, flangeRestraints, elements: 24 + 8 * braces.length, nodes };
     const res = ltbAnalysis({ ...base, M: beam.M,
       qzg: (x) => (qAt(x) * zf * hAt(x0 + x)) / 2,
@@ -265,10 +311,12 @@ function interp(xs: number[], ys: number[], x: number): number {
 /** The Annex A system of the last FE LTB (set by combineTaper / results). */
 let annexOut: LtbAnnex | undefined;
 
-export function combineTaper(rM: Results, rA: Results, rB: Results, rP: Results[] = [], loads: FeLoads | null = null, bracing = legacyBracing()): Results {
+export function combineTaper(rM: Results, rA: Results, rB: Results, rP: Results[] = [], loads: FeLoads | null = null, bracing = legacyBracing(),
+  stations: { x: number[]; h: number[] } = { x: [0, rM.L], h: [rM.hA, rM.hB] }, rV: Results[] = []): Results {
   const L = rM.L, hA = rM.hA, hB = rM.hB, xM = rM.xM;
-  const hAt = (x: number) => hA + ((hB - hA) * x) / L;
-  const out = { ...rM, vectors: { ...rM.vectors }, errors: [rM, rA, rB, ...rP].flatMap((r) => r.errors) } as Results;
+  // depth profile: linear from h_A to h_B, or through the intermediate vertices (runs rV at their depths)
+  const hAt = (x: number) => depthAt(stations, x);
+  const out = { ...rM, vectors: { ...rM.vectors, taperX: [...stations.x], taperH: [...stations.h] }, errors: [rM, rA, rB, ...rP, ...rV].flatMap((r) => r.errors) } as unknown as Results;
   const at = (k: string, x: number, h = Number.isFinite(x) ? hAt(x) : NaN) => { out[`at.${k}`] = x; out[`hat.${k}`] = h; };
   for (const [k] of CHECKS) at(k, xM);
   for (const k of EXTRA_UR) at(k, xM);
@@ -281,18 +329,18 @@ export function combineTaper(rM: Results, rA: Results, rB: Results, rP: Results[
     at(k, a >= b ? 0 : L);
   }
   for (const k of TAPER_MAX) {
-    const c = [[rM[`UR.${k}`], xM], [rA[`UR.${k}`], 0], [rB[`UR.${k}`], L]].filter(([u]) => Number.isFinite(u)).sort((p, q) => q[0] - p[0]);
+    const c = [[rM[`UR.${k}`], xM], [rA[`UR.${k}`], 0], [rB[`UR.${k}`], L], ...rV.map((r, i) => [r[`UR.${k}`], stations.x[i + 1]])].filter(([u]) => Number.isFinite(u)).sort((p, q) => q[0] - p[0]);
     if (!c.length) continue;
     out[`UR.${k}`] = c[0][0];
     at(k, NaN, hAt(c[0][1])); // the worst of the depths, not one location
   }
   // LTB over the real (varying) section: EN 1993-1-1 §6.3.4 with α_cr from finite elements (ltb.ts)
   out.taper = 1;
-  const lt = feLtb(out, rA, hAt, loads, bracing);
+  const lt = feLtb(out, rA, hAt, loads, bracing, stations);
   applyFeLtb(out, lt, at);
   annexOut = lt.annex;
   // the three runs as nodes over depth, for values at the local depth h(x)
-  const nodes = [[hA, rA], [hAt(xM), rM], [hB, rB], ...rP.map((r) => [r.h_a, r])] as [number, Results][];
+  const nodes = [[hA, rA], [hAt(xM), rM], [hB, rB], ...[...rP, ...rV].map((r) => [r.h_a, r])] as [number, Results][];
   nodes.sort((p, q) => p[0] - q[0]);
   const hs = nodes.map(([h]) => h);
   const local = (get: (r: Results) => number, h: number) => interp(hs, nodes.map(([, r]) => get(r)), h);
@@ -483,6 +531,7 @@ export function studPlans(p: Results, c: DesignCriteria): { sc: number; scB: num
  */
 export function designSection(model: CompositeModel, screen: CompositeModel | null, id: number, c: DesignCriteria, mode: 'composite' | 'bare'): Design {
   screen?.setBracing(model.bracing);
+  screen?.setTaper(model.taper);
   if (c.studs === 'prefer-uniform') {
     const u = designSection(model, screen, id, { ...c, studs: 'uniform' }, mode);
     if (u.pass || u.hopeless || mode === 'bare') return u;
@@ -654,10 +703,11 @@ export function withPageDefaults(raw: string, d = PAGE_DEFAULTS): string {
   return JSON.stringify(doc);
 }
 
-interface CompositeState { values: Record<string, number>; tables: { id: string; rows: string[][] }[]; bracing?: ConstructionBracing }
+interface CompositeState { values: Record<string, number>; tables: { id: string; rows: string[][] }[]; bracing?: ConstructionBracing; taper?: TaperProfile }
 /** The same state transfer is used by every full and screening optimizer worker. */
 export function applyCompositeState(model: CompositeModel, state: CompositeState): void {
   model.setBracing(state.bracing ?? legacyBracing());
+  model.setTaper(state.taper ?? linearTaper());
   for (const f of model.inputs) model.setInput(f.id, state.values[f.id] ?? f.value);
   for (const t of state.tables) model.setTableRows(t.id, t.rows);
 }
@@ -668,6 +718,7 @@ export class CompositeModel {
   readonly tables: LoadTable[] = [];
   sectionId = 0;
   bracing = legacyBracing();
+  taper = linearTaper();
   private feSnapshots: { id: string; unit: string | null }[] = [];
   private readonly e = new CalculationEngine({ unitSystem: 'SI' });
   private readonly rec: Record<string, Shape>;
@@ -684,6 +735,8 @@ export class CompositeModel {
     this.doc = JSON.parse(raw);
     const braceNote = this.doc.shapes.find((s) => s.type === 'text' && (s as TextShape).props.constructionBracing) as TextShape | undefined;
     if (braceNote?.props.constructionBracing) this.setBracing(braceNote.props.constructionBracing);
+    const taperNote = this.doc.shapes.find((s) => s.type === 'text' && (s as TextShape).props.taperProfile) as TextShape | undefined;
+    if (taperNote?.props.taperProfile) this.setTaper(taperNote.props.taperProfile);
     if (options.screening) {
       for (const s of this.doc.shapes) {
         if (s.type === 'math' && /\\mathrm\{map\}\\left\(d_/.test((s as MathShape).props.latex)) {
@@ -788,6 +841,11 @@ export class CompositeModel {
     this.bracing = { ...b, positions: [...b.positions].sort((a, c) => a - c) };
   }
 
+  setTaper(p: TaperProfile): void {
+    this.invalidateFeSnapshots();
+    this.taper = { segments: p.segments.map((g) => ({ ...g })) };
+  }
+
   setSection(id: number): void {
     this.invalidateFeSnapshots();
     this.sectionId = id;
@@ -829,6 +887,7 @@ export class CompositeModel {
   ): OptimizeResult {
     const maxDepth = opts.maxDepth ?? null, targets = opts.targets ?? { strength: 1, deflection: 1 }, screen = opts.screen;
     screen?.setBracing(this.bracing);
+    screen?.setTaper(this.taper);
     const start = this.sectionId;
     // optional depth limit h ≤ maxDepth (mm), e.g. from the ceiling void
     const keep = this.detail();
@@ -868,7 +927,13 @@ export class CompositeModel {
     const invalid = validateBracing(this.bracing, r.L);
     if (this.bracing.mode === 'explicit' && invalid) { r.errors.push(invalid); r['UR.LT'] = Infinity; return r; }
     const loads = this.feLoads(r);
-    if (!(r.ctap >= 1) || !(Math.abs(r.hA - r.hB) > 0.5)) {
+    const hLib = sections.find((x) => x.id === this.sectionId)?.values.h ?? Infinity;
+    const stations = taperStations(this.taper, r.L, r.hA, r.hB, hLib);
+    if (r.ctap >= 1) {
+      const invalidTaper = validateTaper(this.taper, r.L);
+      if (invalidTaper) { r.errors.push(invalidTaper); r['UR.des'] = Infinity; return r; }
+    }
+    if (!(r.ctap >= 1) || !(Math.max(...stations.h) - Math.min(...stations.h) > 0.5)) {
       // uniform beam: LTB by finite elements too (M_cr directly), then the summary again
       const lt = feLtb(r, r, () => r.h_a, loads, this.bracing);
       this.lastAnnex = lt.annex ?? null;
@@ -880,22 +945,24 @@ export class CompositeModel {
     const use = this.inputs.find((f) => f.name === 'd_{use}');
     if (!use) return r;
     const at = (h: number) => { this.e.setDefinitionOverride(use.id, { value: h, unit: null } as never); return this.run(); };
-    const hM = r.hA + ((r.hB - r.hA) * r.xM) / r.L;
+    const hM = depthAt(stations, r.xM);
     const mid = (r.hA + r.hB) / 2;
     const rM = Math.abs(hM - mid) < 0.05 ? r : at(hM);
     const rA = at(r.hA), rB = at(r.hB);
+    // a run at the depth of each intermediate vertex of the profile (always: the worst-depth checks list them)
+    const rV = stations.h.slice(1, -1).map((h) => at(h));
     // a run at the depth of each point-load position (web checks F.P, FM there), unless a run is already at it
-    const done = [r.hA, hM, r.hB];
+    const done = [r.hA, hM, r.hB, ...stations.h];
     const rP: Results[] = [];
     for (const a of rM.vectors.aP ?? []) {
-      const h = r.hA + ((r.hB - r.hA) * a) / r.L;
+      const h = depthAt(stations, a);
       if (!Number.isFinite(h) || done.some((d) => Math.abs(d - h) < 0.05)) continue;
       done.push(h);
       rP.push(at(h));
     }
     this.e.setDefinitionOverride(use.id, { value: 0, unit: null } as never);
     annexOut = undefined;
-    const out = combineTaper(rM, rA, rB, rP, loads, this.bracing);
+    const out = combineTaper(rM, rA, rB, rP, loads, this.bracing, stations, rV);
     this.lastLtb = out;
     this.lastAnnex = annexOut ?? null;
     return out;
@@ -984,7 +1051,18 @@ export class CompositeModel {
       const t = this.tableShapes.get(s.id);
       return t ?? s;
     });
-    const filtered = shapes.filter((s) => !s.id.startsWith('construction-bracing'));
+    const filtered = shapes.filter((s) => !s.id.startsWith('construction-bracing') && !s.id.startsWith('taper-profile'));
+    // multi-segment taper: the profile (it round-trips through the note) and its vertices, after the sheet
+    if (this.taper.segments.length >= 2) {
+      const stride0 = pageSize('portrait').h + PAGE_GAP;
+      const y0 = (Math.floor(Math.max(...filtered.map((s) => s.y)) / stride0) + 1) * stride0 + 60;
+      const r = this.lastLtb, st = r?.vectors.taperX && r.vectors.taperH ? { x: r.vectors.taperX, h: r.vectors.taperH } : null;
+      const rows = st ? st.x.map((x, i) => `<li>x = ${+x.toFixed(4)} m: h = ${+st.h[i].toFixed(1)} mm${i === 0 ? ' (support A)' : i === st.x.length - 1 ? ' (support B)' : ''}</li>`).join('') : '';
+      const segs = this.taper.segments.map((g, i) => `<li>Segment ${i + 1}: ${g.type === 'abs' ? `${+g.length.toFixed(4)} m (absolute)` : `${+g.length.toFixed(4)} (proportional)`}, to h = ${i === this.taper.segments.length - 1 ? 'h_B' : `${+g.h.toFixed(1)} mm`}</li>`).join('');
+      filtered.push({ id: 'taper-profile', type: 'text', x: 76, y: y0, props: { ...DEFAULT_TEXT_PROPS, fontFamily: 'Roboto', fontSize: 13, w: 640, h: 80, pageBreak: true, taperProfile: structuredClone(this.taper),
+        html: `<h2>Tapered beam: depth profile</h2><p>The web depth varies linearly within each segment (ETABS-style nonprismatic member; flanges and web thickness of the library section). The sheet above is evaluated at one depth; the page runs it at each vertex depth, at x_M and under each point load, and the construction LTB uses h(x) of this profile.</p><ul>${segs}</ul>` } });
+      if (rows) filtered.push({ id: 'taper-profile-vertices', type: 'text', x: 76, y: y0 + 240, props: { ...DEFAULT_TEXT_PROPS, fontFamily: 'Roboto', fontSize: 13, w: 640, h: 40 + 20 * st!.x.length, html: `<p>Vertices of the profile:</p><ul>${rows}</ul>` } });
+    }
     if (this.bracing.mode === 'legacy' && !this.bracing.positions.length) return { ...this.doc, shapes: filtered, title: 'Composite Beam EC4 - mCompositeBeamDesign', updatedAt: new Date().toISOString() };
     const stride = pageSize('portrait').h + PAGE_GAP;
     const pageY = (Math.floor(Math.max(...filtered.map((s) => s.y)) / stride) + 1) * stride + 60;

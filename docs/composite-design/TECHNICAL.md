@@ -402,3 +402,24 @@ engine evaluates regions top to bottom; only the printed copy is reflowed. `fini
 `tools/templates/layout.mjs` sets the paper; the eigenvalue vector μ_FE prints at 10 px so it fits one column.
 A thin rule (same line as the header and footer) is drawn in the gutter of each printed page whose right column
 has content (`ColumnRules` in `src/export/PrintView.tsx`; `printColumns` gives the column geometry).
+
+## Tapered beam: depth profile (multi-segment, ETABS-style)
+
+`Depth profile…` opens a nonprismatic-segment dialog like ETABS (Frame Section Property Data → Nonprismatic): h_A at
+support A, then segments with a length type (absolute, m; or proportional: a share of what the absolute lengths leave
+of the span) and an end depth; the last segment ends at h_B. The web depth is linear within each segment; flanges and
+web thickness stay as the library section, depths are limited to the library depth. No profile (or one segment) is the
+linear h_A → h_B taper. `taperLengths`, `taperStations`, `validateTaper` in `model.ts`.
+
+- The sheet is run at every vertex depth (as well as h_A, h_B, h(x_M) and h at each point load); the worst-depth checks
+  include the vertices, and the values at a local depth interpolate over all runs.
+- Construction LTB (FE): props(x) follow h(x) of the profile and every vertex is a node of the 12-element mesh
+  (Annex A writes the same h_FE).
+- The profile round-trips through the report (`taperProfile` on the `taper-profile` note, sanitised by the serializer)
+  and travels with undo, the optimiser state and the construction-stage preview.
+- An invalid profile (absolute lengths ≠ L without a proportional segment, or leaving nothing for one) is reported and
+  blocks export.
+
+Tests: segment lengths (ETABS example 1 m / proportional / 1 m on 5.2 m = 1, 3.2, 1); a vertex on the straight line
+gives the linear results; a haunched 300 / 403.2 / 403.2 / 300 beam gives α_cr equal to a direct FE solve on that h(x);
+report round trip; e2e of the dialog.

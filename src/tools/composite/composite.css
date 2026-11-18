@@ -235,3 +235,17 @@ td.pass, b.pass { color: var(--pass); } td.warn, b.warn { color: var(--warn); } 
 .sheet-sec.forces-panel { box-sizing: border-box; width: calc(100% - max(400px, (100% - 2rem) * 0.38) - 1.2rem); }
 @media (max-width: 900px) { .sheet-sec.forces-panel { width: 100%; } }
 @media print { .info-button { display: none; } }
+
+/* tapered section: ETABS-style nonprismatic segments */
+.taper-profile-row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.taper-dialog .taper-preview { width: 100%; height: auto; margin: 0.5rem 0; background: var(--sheet); border: 1px solid var(--line, #d0d7de); border-radius: 4px; }
+.taper-dialog .tp-flange { stroke: var(--ink); stroke-width: 2; }
+.taper-dialog .tp-web { fill: rgb(30 64 175 / 0.08); stroke: none; }
+.taper-dialog .tp-seg { fill: transparent; cursor: pointer; }
+.taper-dialog .tp-seg.on { fill: rgb(30 64 175 / 0.10); stroke: rgb(30 64 175 / 0.6); stroke-dasharray: 4 3; }
+.taper-dialog .tp-vertex { stroke: var(--ink); stroke-width: 0.8; stroke-dasharray: 2 2; }
+.taper-dialog .tp-label, .taper-dialog .tp-dim { font-size: 11px; fill: var(--ink); font-variant-numeric: tabular-nums; }
+.taper-dialog .tp-dim { fill: #57606a; }
+.taper-dialog .taper-table tr.sel { background: #e8eefb; }
+.taper-dialog .taper-table td.ro { color: #57606a; font-variant-numeric: tabular-nums; }
+.taper-dialog .taper-tools { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.4rem 0; }
