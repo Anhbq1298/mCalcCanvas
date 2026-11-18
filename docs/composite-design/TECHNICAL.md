@@ -360,3 +360,16 @@ documentation of the Singapore NA (λ_LT,0 / β, the NA curve table, k_c = 1/√
 M_b,Rd 92.24 kNm), the STAAD Singapore NA verification (Φ_LT 0.705), (6.56) for recommended values.
 Page default case: unchanged (tapered welded, UR_LT 1.028); rolled uniform beams get the NA benefit
 (worksheet default 1.869 → 1.585; page tapered as rolled 0.848 → 0.731).
+
+## National Annex: load combination and other parts (c_NA)
+
+Singapore (c_NA = 1, default), NA to SS EN 1990: ULS by (6.10a) γ_G G + γ_Q ψ₀ Q and (6.10b) ξ γ_G G + γ_Q Q,
+γ_G 1.35, γ_Q 1.5, ξ 0.925, ψ₀ 0.7 (categories A–D), on g₀ and every table row; the combination with the larger maximum
+moment governs moments (M_v, M_P, F_d), the larger end shear governs shears. The row γ_F column applies only with
+recommended values ((6.10)). Construction stage unchanged ((6.10a) with ψ₀ = 1 for construction loads equals (6.10)).
+EC2 / EC3 / EC4 partial factors (γ_C 1.5, γ_S 1.15, γ_M0 = γ_M1 = 1.0) are the recommended values in the Singapore NA
+too; α_cc (0.85 in flexure in the Singapore NA to SS EN 1992-1-1) is not used by EC4's plastic resistance (0.85 f_cd
+built in); γ_V = 1.25 kept (the Singapore NA to SS EN 1994-1-1 is not public; not verified).
+Sources: SCIA documentation of the Singapore NA to SS EN 1990 (6.10a/b, ξ 0.925, ψ factors) and SS EN 1992-1-1.
+Page default case: M_Ed 135.2 → 130.9 kNm ((6.10a) governs), V_Ed 134.8 → 131.2 kN; UR.des 0.717 and the governing
+LTB 1.028 unchanged.

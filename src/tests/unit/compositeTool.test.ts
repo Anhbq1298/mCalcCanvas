@@ -10,6 +10,7 @@ import { parseDocument } from '../../documents/DocumentSerializer';
 describe('mCompositeBeamDesign headless model', () => {
   it('finds the inputs, reads the worksheet results and follows input, section and load-table changes', () => {
     const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+    m.setInput(m.inputs.find((f) => f.name === 'c_{NA}')!.id, 0); // the reference uses the EN recommended values ((6.10), §6.3.2.2)
     expect(m.inputs.length).toBeGreaterThan(40);
     expect(m.inputs.find((f) => f.name === 'L')).toMatchObject({ value: 8, unit: 'm' });
     expect(m.sectionId).toBe(3148);
@@ -200,6 +201,7 @@ describe('mCompositeBeamDesign headless model', () => {
   it('steel deck mode matches the independent reference; the solid slab is unchanged by the deck inputs', () => {
     const ref = JSON.parse(readFileSync('docs/composite-design/reference_deck.json', 'utf8'));
     const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+    m.setInput(m.inputs.find((f) => f.name === 'c_{NA}')!.id, 0); // the reference uses the EN recommended values ((6.10), §6.3.2.2)
     const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
     const solid = m.results();
     expect([solid.cdeck, solid.hpe, solid.kd, solid.nre, solid.cbb, solid.ccc, solid['UR.sf.c'], solid['UR.L.c']]).toEqual([0, 0, 1, 1, 1, 0, 0, 0]);
@@ -208,6 +210,7 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(solid.chd).toBeCloseTo(60, 9);
     { // a deck slab has one bar layer by default (on the deck, counted as A_b); two layers on request
       const d = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+      d.setInput(d.inputs.find((f) => f.name === 'c_{NA}')!.id, 0); // the reference uses the EN recommended values ((6.10), §6.3.2.2)
       const put = (n: string, v: number) => d.setInput(d.inputs.find((f) => f.name === n)!.id, v);
       put('c_{deck}', 1);
       let q = d.results();
@@ -250,6 +253,7 @@ describe('mCompositeBeamDesign headless model', () => {
   // 120 slab on a 58 mm transverse deck, b_0 82 mm, 19 x 100 studs, C25/30). Slab weight set to its 7.2 kN/m.
   it('steel deck mode reproduces the published SBE Part 4 example A.3', () => {
     const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+    m.setInput(m.inputs.find((f) => f.name === 'c_{NA}')!.id, 0); // the reference uses the EN recommended values ((6.10), §6.3.2.2)
     const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
     m.setSection(sections.find((x) => x.name === 'IPE 270')!.id);
     set('L', 7.5); set('s_b', 3); set('h_c', 120); set('c_{deck}', 1); set('c_{re}', 0); set('h_p', 58); set('b_r', 82); set('e_r', 207); set('n_r', 1);
@@ -478,6 +482,11 @@ describe('mCompositeBeamDesign headless model', () => {
     step('FE internal forces of the design loads = the moment diagram of the sheet', () => {
       const L = r.L * 1000, b = solveBeam({ L, EI: () => 1, supports: [{ x: 0, w: true }, { x: L, w: true }], loads: m.feLoads(r)! });
       r.vectors.x.forEach((x, i) => expect(b.M(x * 1000) / 1e6).toBeCloseTo(r.vectors.M[i], 6));
+      // Singapore NA: (6.10a)/(6.10b) on G and Q, the same in the FE loads
+      set('c_{NA}', 1);
+      const s = m.results(), Ls = s.L * 1000, bs = solveBeam({ L: Ls, EI: () => 1, supports: [{ x: 0, w: true }, { x: Ls, w: true }], loads: m.feLoads(s)! });
+      s.vectors.x.forEach((x, i) => expect(bs.M(x * 1000) / 1e6).toBeCloseTo(s.vectors.M[i], 6));
+      set('c_{NA}', 0);
     });
     step('bare steel unrestrained (studs too far apart): LT.nc by FE with the real moment diagram and point loads', () => {
       set('s_{sc.A}', 1200); set('s_{sc.B}', 1200);

@@ -49,8 +49,9 @@ input('Concrete C30/37, EC2 Table 3.1', 'f_{ck}', 30, 'MPa');
 input('Concrete secant modulus', 'E_{cm}', 33, 'GPa');
 input('Wet RC density', '\\rho_c', 25, 'kN/m^3');
 input('Reinforcement B500', 'f_{sk}', 500, 'MPa');
-H(3, '1.3 Partial and combination factors (EN recommended; NA to confirm)');
-for (const [sym,val,lab] of [['\\gamma_C',1.5,'Concrete'],['\\gamma_S',1.15,'Reinforcement'],['\\gamma_V',1.25,'Shear connectors'],['\\gamma_{M0}',1,'Steel, cross-section'],['\\gamma_{M1}',1,'Steel, member buckling'],['\\gamma_G',1.35,'Permanent actions'],['\\gamma_Q',1.5,'Variable actions'],['\\psi_2',0.3,'Quasi-permanent, imposed']]) input(lab,sym,val);
+H(3, '1.3 Partial and combination factors');
+T('γ_C, γ_S, γ_V, γ_M0, γ_M1, γ_G, γ_Q: the EN recommended values, the same in the Singapore NA (SS EN 1990, 1992-1-1, 1993-1-1). Singapore NA to SS EN 1990: ULS by (6.10a) / (6.10b) with ξ = 0.925 and ψ_0 (Table A1.1) when c_NA = 1.');
+for (const [sym,val,lab] of [['\\gamma_C',1.5,'Concrete'],['\\gamma_S',1.15,'Reinforcement'],['\\gamma_V',1.25,'Shear connectors'],['\\gamma_{M0}',1,'Steel, cross-section'],['\\gamma_{M1}',1,'Steel, member buckling'],['\\gamma_G',1.35,'Permanent actions'],['\\gamma_Q',1.5,'Variable actions'],['\\psi_2',0.3,'Quasi-permanent, imposed'],['\\psi_0',0.7,'Combination value, imposed (categories A–D)'],['\\xi',0.925,'Reduction of permanent actions in (6.10b), Singapore NA']]) input(lab,sym,val);
 H(3, '1.4 Steel section (Browse the section library)');
 P('Steel section (Browse to change)', R`\mathrm{Section}\coloneq3148`);
 T('Library: BS 4-1 dimensions, properties from the geometry. Check against project tables.');
@@ -87,7 +88,7 @@ input('If braced: LTB restraint at k_LT L (brace spacing / span); the moments st
 input('Construction imposed load', 'q_{con}', 0.75, 'kPa');
 input('Formwork load (removable)', 'g_{form}', 0.5, 'kPa');
 input('Load position for LTB: 1 = top flange (default), 0 = shear centre, −1 = bottom flange', 'c_{zg}', 1);
-input('National Annex for EN 1993-1-1 LTB: 1 = Singapore (NA to SS EN 1993-1-1, default; same values as the UK NA), 0 = EN recommended values', 'c_{NA}', 1);
+input('National Annex: 1 = Singapore (NA to SS EN 1990: (6.10a)/(6.10b), ξ 0.925; NA to SS EN 1993-1-1: LTB §6.3.2.3), default; 0 = EN recommended values ((6.10) with the row factors γ_F; LTB §6.3.2.2)', 'c_{NA}', 1);
 H(3, '1.6 Load tables: one row per load; pattern G = permanent, Q = imposed');
 const TBL = (x, cols, rows, widths) => ({ id: l.id(), type: 'table', x, y: l.ln(l.st.page, l.st.row) - 8, props: {
   w: widths.reduce((a, b) => a + b, 0), h: (rows.length + 2) * 32, rows: rows.length + 2, columns: cols.length, columnWidths: widths, headerRow: true, input: true,
@@ -206,9 +207,20 @@ LINK('forces', 'Internal forces along the span from the load tables', () => {
  calc('Characteristic moment, G + Q', 'M_{s.k}', R`\mathrm{map}\left(M_s,x_v,1,1\right)`, 'kN m', 'fo');
  calc('Characteristic moment, ψ_2 Q', 'M_{q.qp}', R`\mathrm{map}\left(M_s,x_v,0,\psi_2\right)`, 'kN m', 'fo');
  calc('Characteristic moment, Q', 'M_{q.k}', R`\mathrm{map}\left(M_s,x_v,0,1\right)`, 'kN m', 'fo');
- calc('Design bending moment along the span', 'M_v', R`\gamma_{G.sw}g_0\frac{x_v\left(L-x_v\right)}{2}+M_{U.v}`, 'kN m', 'fo');
- calc('Design shear force along the span', 'V_v', R`\gamma_{G.sw}g_0\left(\frac{L}{2}-x_v\right)+V_{U.v}`, 'kN', 'fo');
- calc('Design moments under the point loads', 'M_P', R`\gamma_{G.sw}g_0\frac{a_P\left(L-a_P\right)}{2}+M_{U.P}`, 'kN m', false);
+ T('ULS combination. Singapore NA (c_NA = 1): (6.10a) γ_G G + γ_Q ψ_0 Q and (6.10b) ξ γ_G G + γ_Q Q on g_0 and every table row; the larger maximum moment governs the moments, the larger end shear the shears. Recommended values (c_NA = 0): (6.10), each row with its own γ_F.');
+ calc('Maximum moment, (6.10a)', 'M_{a.max}', R`\max\left(\gamma_G g_0\frac{x_v\left(L-x_v\right)}{2}+\mathrm{map}\left(M_s,x_v,\gamma_G,\gamma_Q\psi_0\right)\right)`, 'kN m', false);
+ calc('Maximum moment, (6.10b)', 'M_{b.max}', R`\max\left(\xi\gamma_G g_0\frac{x_v\left(L-x_v\right)}{2}+\mathrm{map}\left(M_s,x_v,\xi\gamma_G,\gamma_Q\right)\right)`, 'kN m', false);
+ calc('Maximum shear, (6.10a)', 'V_{a.max}', R`\max\left(\left|\gamma_G g_0\left(\frac{L}{2}-x_v\right)+\mathrm{map}\left(V_s,x_v,\gamma_G,\gamma_Q\psi_0\right)\right|\right)`, 'kN', false);
+ calc('Maximum shear, (6.10b)', 'V_{b.max}', R`\max\left(\left|\xi\gamma_G g_0\left(\frac{L}{2}-x_v\right)+\mathrm{map}\left(V_s,x_v,\xi\gamma_G,\gamma_Q\right)\right|\right)`, 'kN', false);
+ P('Governing for moments: 1 = (6.10b), 0 = (6.10a)', R`c_{b.M}\coloneq${IF([R`M_{b.max}\ge M_{a.max}`, '1'], [null, '0'])}`, M({ precision: 0 }));
+ P('Governing for shears: 1 = (6.10b), 0 = (6.10a)', R`c_{b.V}\coloneq${IF([R`V_{b.max}\ge V_{a.max}`, '1'], [null, '0'])}`, M({ precision: 0 }));
+ P('Factor on permanent actions, moments', R`k_{G.M}\coloneq${IF([R`c_{b.M}\ge1`, R`\xi\gamma_G`], [null, R`\gamma_G`])}`, M({ precision: 4 }));
+ P('Factor on variable actions, moments', R`k_{Q.M}\coloneq${IF([R`c_{b.M}\ge1`, R`\gamma_Q`], [null, R`\gamma_Q\psi_0`])}`, M({ precision: 4 }));
+ P('Factor on permanent actions, shears', R`k_{G.V}\coloneq${IF([R`c_{b.V}\ge1`, R`\xi\gamma_G`], [null, R`\gamma_G`])}`, M({ precision: 4 }));
+ P('Factor on variable actions, shears', R`k_{Q.V}\coloneq${IF([R`c_{b.V}\ge1`, R`\gamma_Q`], [null, R`\gamma_Q\psi_0`])}`, M({ precision: 4 }));
+ calc('Design bending moment along the span', 'M_v', IF([R`c_{NA}\ge1`, R`k_{G.M}g_0\frac{x_v\left(L-x_v\right)}{2}+\mathrm{map}\left(M_s,x_v,k_{G.M},k_{Q.M}\right)`], [null, R`\gamma_{G.sw}g_0\frac{x_v\left(L-x_v\right)}{2}+M_{U.v}`]), 'kN m', 'fo');
+ calc('Design shear force along the span', 'V_v', IF([R`c_{NA}\ge1`, R`k_{G.V}g_0\left(\frac{L}{2}-x_v\right)+\mathrm{map}\left(V_s,x_v,k_{G.V},k_{Q.V}\right)`], [null, R`\gamma_{G.sw}g_0\left(\frac{L}{2}-x_v\right)+V_{U.v}`]), 'kN', 'fo');
+ calc('Design moments under the point loads', 'M_P', IF([R`c_{NA}\ge1`, R`k_{G.M}g_0\frac{a_P\left(L-a_P\right)}{2}+\mathrm{map}\left(M_s,a_P,k_{G.M},k_{Q.M}\right)`], [null, R`\gamma_{G.sw}g_0\frac{a_P\left(L-a_P\right)}{2}+M_{U.P}`]), 'kN m', false);
  calc('Maximum design moment', 'M_{2.Ed}', R`\max\left(\max\left(M_v\right),\max\left(M_P\right)\right)`, 'kN m', false);
  calc('Position of the maximum moment', 'x_M', R`\mathrm{at}\left(x_v,\mathrm{at}\left(\mathrm{match}\left(\max\left(M_v\right),M_v\right),0\right)\right)`, 'm', false);
  calc('Maximum design shear (support)', 'V_{2.Ed}', R`\max\left(\mathrm{at}\left(V_v,0\right),-\mathrm{at}\left(V_v,\mathrm{last}\left(V_v\right)\right)\right)`, 'kN', false);
@@ -422,7 +434,7 @@ T('beam end bearing on its support (c = 0). Set c_F,P / c_F,S = 0 where loads ar
 calc('Web depth between flanges', 'h_w', R`h_a-2t_f`, 'mm', false);
 calc('(6.8)', 'm_1', R`\frac{b_a}{t_w}`, '', false);
 calc('(6.9), used if λ_F > 0.5', 'm_2', R`0.02\left(\frac{h_w}{t_f}\right)^2`, '', false);
-calc('Design point loads per row', 'F_d', R`F_U`, 'kN', 'fo');
+calc('Design point loads per row (the governing combination when c_NA = 1)', 'F_d', IF([R`c_{NA}\ge1`, R`k_{G.M}G_P+k_{Q.M}Q_P`], [null, R`F_U`]), 'kN', 'fo');
 P('Rows at the same position as x (1) or not (0)', R`e_P(x)\coloneq${IF([R`\left|a_P-x\right|<1\,\mathrm{mm}`, '1'], [null, '0'])}`, M(units('')));
 P('Total design point load at x', R`F_x(x)\coloneq\mathrm{dot}\left(F_d,e_P(x)\right)`, M(units('')));
 calc('Total point load at each loaded position', 'F_{loc}', R`\mathrm{map}\left(F_x,a_P\right)`, 'kN', 'fo');

@@ -855,6 +855,9 @@ export function App() {
             <button type="button" className="rowbtn" aria-label="Close" onClick={() => loadRef.current?.close()}>×</button>
           </header>
           <p className="hint">Area and point loads act on the beam and update the diagrams and checks as you change them. Other inputs are in the panel on the left.</p>
+          {value(byName('c_{NA}')) >= 1 && (
+            <p className="hint" data-testid="combo-note">Singapore NA (SS EN 1990): ULS by (6.10a) 1.35G + 1.5ψ<sub>0</sub>Q and (6.10b) 0.925·1.35G + 1.5Q. Governing: <b>{res.cbM >= 1 ? '(6.10b)' : '(6.10a)'}</b> (max M {fmt(res.Mamax, 1)} / {fmt(res.Mbmax, 1)} kNm). The γ<sub>F</sub> column is used only with EN recommended values.</p>
+          )}
           {loadTable(areaT, 0)}
           {loadTable(pointT, 1)}
           <section aria-labelledby="h-zg">

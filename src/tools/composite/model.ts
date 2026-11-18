@@ -58,7 +58,7 @@ const SCALARS: Probe[] = [
   ['dmax', '\\delta_{max}', 'mm'], ['wc', 'w_c', 'mm'], ['ccam', 'c_{cam}', null], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['f1', 'f_1', 'Hz'], ['f1nc', 'f_{1.nc}', 'Hz'], ['flim', 'f_{lim}', 'Hz'], ['Ecdyn', 'E_{c.dyn}', 'GPa'], ['ddyn', '\\delta_{dyn}', 'mm'], ['ddynnc', '\\delta_{dyn.nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
   // tapered beam
   ['McrSN', 'M_{cr.SN}', 'kN m'], ['McrSheet', 'M_{cr}', 'kN m'], ['McrncSN', 'M_{cr.nc.SN}', 'kN m'], ['ctap', 'c_{tap}', null], ['hA', 'h_A', 'mm'], ['hB', 'h_B', 'mm'],
-  ['Ea', 'E_a', 'MPa'], ['Ga', 'G_a', 'MPa'], ['gM1', '\\gamma_{M1}', null], ['aLT', '\\alpha_{LT}', null], ['cweld', 'c_{weld}', null], ['czg', 'c_{zg}', null], ['cNA', 'c_{NA}', null], ['Lbr', 'L_{br}', 'm'], ['kLT', 'k_{LT}', null],
+  ['Ea', 'E_a', 'MPa'], ['Ga', 'G_a', 'MPa'], ['gM1', '\\gamma_{M1}', null], ['aLT', '\\alpha_{LT}', null], ['cweld', 'c_{weld}', null], ['czg', 'c_{zg}', null], ['cNA', 'c_{NA}', null], ['kGM', 'k_{G.M}', null], ['kQM', 'k_{Q.M}', null], ['cbM', 'c_{b.M}', null], ['Mamax', 'M_{a.max}', 'kN m'], ['Mbmax', 'M_{b.max}', 'kN m'], ['Lbr', 'L_{br}', 'm'], ['kLT', 'k_{LT}', null],
   ['cFP', 'c_{F.P}', null], ['FRda', 'F_{Rd.a}', 'kN'], ['MelRd', 'M_{el.Rd}', 'kN m'],
 ];
 /** Utilisations the summary uses but the check table does not list (bare-steel bending and shear at x_M). */
@@ -795,17 +795,20 @@ export class CompositeModel {
     const L = r.L * 1000, sbField = this.inputs.find((f) => f.name === 's_b');
     if (!(L > 0) || !sbField || !Number.isFinite(r.g0)) return null;
     const sb = this.inputValue(sbField.id);
-    const dist: DistLoad[] = [{ x1: 0, x2: L, q1: r.g0 * (Number.isFinite(r.gsw) ? r.gsw : 1.35) }];
+    // Singapore NA: the governing (6.10a)/(6.10b) factors of the sheet on G and Q; else each row's γ_F
+    const na = r.cNA >= 1 && Number.isFinite(r.kGM) && Number.isFinite(r.kQM);
+    const factor = (row: string[], g: number) => (na ? (String(row[0]).trim().toUpperCase().startsWith('Q') ? r.kQM : r.kGM) : g);
+    const dist: DistLoad[] = [{ x1: 0, x2: L, q1: r.g0 * (na ? r.kGM : Number.isFinite(r.gsw) ? r.gsw : 1.35) }];
     const point: { x: number; P: number }[] = [];
     const num = (v: string | undefined) => { const n = Number(v); return Number.isFinite(n) ? n : NaN; };
     const [area, pt] = this.tables;
     for (const row of area?.rows ?? []) {
       const x1 = num(row[1]) * 1000, x2 = num(row[2]) * 1000, p = num(row[3]), g = num(row[4]);
-      if ([x1, x2, p, g].every(Number.isFinite) && x2 > x1 && p !== 0) dist.push({ x1: Math.max(0, x1), x2: Math.min(L, x2), q1: p * sb * g });
+      if ([x1, x2, p].every(Number.isFinite) && (na || Number.isFinite(g)) && x2 > x1 && p !== 0) dist.push({ x1: Math.max(0, x1), x2: Math.min(L, x2), q1: p * sb * factor(row, g) });
     }
     for (const row of pt?.rows ?? []) {
       const a = num(row[1]) * 1000, F = num(row[2]), g = num(row[3]);
-      if ([a, F, g].every(Number.isFinite) && a >= 0 && a <= L && F !== 0) point.push({ x: a, P: F * g * 1000 });
+      if ([a, F].every(Number.isFinite) && (na || Number.isFinite(g)) && a >= 0 && a <= L && F !== 0) point.push({ x: a, P: F * factor(row, g) * 1000 });
     }
     return { dist, point };
   }

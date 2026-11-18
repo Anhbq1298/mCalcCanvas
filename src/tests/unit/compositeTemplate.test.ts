@@ -49,6 +49,17 @@ describe('EC4 phase-one composite worksheet', () => {
     };
     const passes = (start:string) => e.getResult(region(start))?.check?.pass;
     const studs = region('n_h\\coloneq');
+    step('Singapore NA (default): ULS by (6.10a) / (6.10b) with ξ 0.925, ψ0 0.7 — by hand; the pins below use the recommended values', () => {
+      const L = value('L','m'), g0 = value('g_0','kN/m'), sb = value('s_b','m');
+      // table rows: G 1.5 kPa and Q 3 kPa over the span; G 30 kN and Q 45 kN at 3 m
+      const M = (kG: number, kQ: number, x: number) => (kG * (g0 + 1.5 * sb) + kQ * 3 * sb) * x * (L - x) / 2 + (kG * 30 + kQ * 45) * (x <= 3 ? x * (L - 3) / L : 3 * (L - x) / L);
+      const peak = (kG: number, kQ: number) => { let m = 0; for (let i = 0; i <= 2000; i++) m = Math.max(m, M(kG, kQ, L * i / 2000)); return m; };
+      const a = peak(1.35, 1.5 * 0.7), b = peak(0.925 * 1.35, 1.5);
+      expect(value('M_{a.max}','kN m')).toBeCloseTo(a, 2);
+      expect(value('M_{b.max}','kN m')).toBeCloseTo(b, 2);
+      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(Math.max(a, b), 2);
+      e.setDefinitionOverride(region('c_{NA}\\coloneq'), { value: 0 });
+    });
     step('all active equations are dimensionally valid', () => {
       expect(math.flatMap(s => {
         const r=e.getResult(s.id);return r?.status === 'error' ? [`${s.props.latex}: ${r.error?.message}`] : [];
@@ -95,6 +106,8 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('y_a','mm')).toBeCloseTo(5.980819814498238,7);
     });
     step('construction stability failure remains visible: Singapore NA (§6.3.2.3) and recommended values (§6.3.2.2)', () => {
+      const na = region('c_{NA}\\coloneq');
+      e.setDefinitionOverride(na, { value: 1 });
       expect(value('M_{cr}','kN m')).toBeCloseTo(109.43069617269316,6);
       // Singapore NA, rolled h/b = 2.29: curve c, λ0 0.4, β 0.75, k_c = 1/√1.127, f (6.58) — by hand
       const W = value('W_{pl}','mm^3'), fy = value('f_y','MPa'), lam = Math.sqrt(W * fy / (109.43069617269316e6));
@@ -102,11 +115,9 @@ describe('EC4 phase-one composite worksheet', () => {
       const f = Math.min(1, 1 - 0.5 * (1 - 1 / Math.sqrt(1.127)) * (1 - 2 * (lam - 0.8) ** 2));
       expect(value('\\alpha_{LT}')).toBe(0.49);
       expect(value('M_{b.Rd}','kN m')).toBeCloseTo((Math.min(1, 1 / lam ** 2, chi0 / f) * W * fy) / 1e6, 6);
-      const na = region('c_{NA}\\coloneq');
       e.setDefinitionOverride(na, { value: 0 });
       expect(value('M_{b.Rd}','kN m')).toBeCloseTo(91.39834274475413,6);
       expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(1.8715996613080623,7);
-      e.setDefinitionOverride(na, null);
       expect(value('\\delta_1','mm')).toBeCloseTo(18.3427102904894,6);
       // the construction deflection curve peaks at mid-span with the closed-form 5wL⁴/384EI
       expect(value('\\max\\left(\\delta_{1.v}\\right)','mm')).toBeCloseTo(18.3427102904894,6);
