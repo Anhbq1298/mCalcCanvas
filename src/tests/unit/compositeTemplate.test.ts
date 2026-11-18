@@ -49,6 +49,17 @@ describe('EC4 phase-one composite worksheet', () => {
     };
     const passes = (start:string) => e.getResult(region(start))?.check?.pass;
     const studs = region('n_h\\coloneq');
+    step('Singapore NA (default): ULS by (6.10a) / (6.10b) with ξ 0.925, ψ0 0.7 — by hand; the pins below use the recommended values', () => {
+      const L = value('L','m'), g0 = value('g_0','kN/m'), sb = value('s_b','m');
+      // table rows: G 1.5 kPa and Q 3 kPa over the span; G 30 kN and Q 45 kN at 3 m
+      const M = (kG: number, kQ: number, x: number) => (kG * (g0 + 1.5 * sb) + kQ * 3 * sb) * x * (L - x) / 2 + (kG * 30 + kQ * 45) * (x <= 3 ? x * (L - 3) / L : 3 * (L - x) / L);
+      const peak = (kG: number, kQ: number) => { let m = 0; for (let i = 0; i <= 2000; i++) m = Math.max(m, M(kG, kQ, L * i / 2000)); return m; };
+      const a = peak(1.35, 1.5 * 0.7), b = peak(0.925 * 1.35, 1.5);
+      expect(value('M_{a.max}','kN m')).toBeCloseTo(a, 2);
+      expect(value('M_{b.max}','kN m')).toBeCloseTo(b, 2);
+      expect(value('M_{2.Ed}','kN m')).toBeCloseTo(Math.max(a, b), 2);
+      e.setDefinitionOverride(region('c_{NA}\\coloneq'), { value: 0 });
+    });
     step('all active equations are dimensionally valid', () => {
       expect(math.flatMap(s => {
         const r=e.getResult(s.id);return r?.status === 'error' ? [`${s.props.latex}: ${r.error?.message}`] : [];
@@ -94,8 +105,17 @@ describe('EC4 phase-one composite worksheet', () => {
       e.setDefinitionOverride(studs, null);
       expect(value('y_a','mm')).toBeCloseTo(5.980819814498238,7);
     });
-    step('construction stability failure remains visible', () => {
+    step('construction stability failure remains visible: Singapore NA (§6.3.2.3) and recommended values (§6.3.2.2)', () => {
+      const na = region('c_{NA}\\coloneq');
+      e.setDefinitionOverride(na, { value: 1 });
       expect(value('M_{cr}','kN m')).toBeCloseTo(109.43069617269316,6);
+      // Singapore NA, rolled h/b = 2.29: curve c, λ0 0.4, β 0.75, k_c = 1/√1.127, f (6.58) — by hand
+      const W = value('W_{pl}','mm^3'), fy = value('f_y','MPa'), lam = Math.sqrt(W * fy / (109.43069617269316e6));
+      const phi = 0.5 * (1 + 0.49 * (lam - 0.4) + 0.75 * lam ** 2), chi0 = Math.min(1, 1 / lam ** 2, 1 / (phi + Math.sqrt(phi ** 2 - 0.75 * lam ** 2)));
+      const f = Math.min(1, 1 - 0.5 * (1 - 1 / Math.sqrt(1.127)) * (1 - 2 * (lam - 0.8) ** 2));
+      expect(value('\\alpha_{LT}')).toBe(0.49);
+      expect(value('M_{b.Rd}','kN m')).toBeCloseTo((Math.min(1, 1 / lam ** 2, chi0 / f) * W * fy) / 1e6, 6);
+      e.setDefinitionOverride(na, { value: 0 });
       expect(value('M_{b.Rd}','kN m')).toBeCloseTo(91.39834274475413,6);
       expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(1.8715996613080623,7);
       expect(value('\\delta_1','mm')).toBeCloseTo(18.3427102904894,6);
@@ -242,19 +262,23 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('\\mathrm{UR}_{F.P}')).toBeCloseTo(0.19837,4); expect(value('\\mathrm{UR}_{F.S}')).toBeCloseTo(0.62909,4);
       expect(value('\\mathrm{UR}_{FM}')).toBeCloseTo(0.50778,4); expect(value('c_{rest}')).toBe(1);
     });
-    step('propped construction: span and LTB length k_LT L, g0 on the composite section, slip factor 0.5', () => {
-      const prop = region('c_{prop}\\coloneq');
+    step('braced construction: LTB restraint at k_LT L only — moments, deflections and the slip factor unchanged', () => {
+      const prop = region('c_{brace}\\coloneq');
+      const M1 = value('M_{1.Ed}','kN m'), d1 = value('\\delta_1','mm'), dg = value('\\delta_g','mm'), Cs = value('C_s'), dtot = value('\\delta_{tot}','mm');
       e.setDefinitionOverride(prop, { value: 1 });
       expect(value('L_{LT}','m')).toBeCloseTo(4,9);
-      expect(value('M_{1.Ed}','kN m')).toBeCloseTo(42.76527683130001,6);
-      expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(0.215929288170264,7);
-      expect(value('\\delta_1','mm')).toBeCloseTo(1.1464193931555875,7);
-      expect(value('\\delta_g','mm')).toBeCloseTo(4.749074859401146,7);
-      expect(value('C_s')).toBeCloseTo(0.5,10);
-      expect(value('\\delta_{slip}','mm')).toBeCloseTo(3.084829292980651,3);
-      expect(value('\\delta_{tot}','mm')).toBeCloseTo(23.122062152720268,2);
+      expect(value('M_{1.Ed}','kN m')).toBeCloseTo(M1,9); // bracing does not change the moments: w L² / 8
+      expect(value('\\delta_1','mm')).toBeCloseTo(d1,9);
+      // SN003b on the braced length 4 m: M_cr and UR by hand from the sheet's own section values
+      const Ncr = value('N_{cr}','kN'), Iw = value('I_w','cm^6'), Iz = value('I_z','cm^4'), It = value('I_t','cm^4'), zg = value('z_g','cm');
+      const Mcr = 1.127 * Ncr * (Math.sqrt(Iw / Iz + (8100 * It) / Ncr + (0.454 * zg) ** 2) - 0.454 * zg) / 100; // kN, cm → kN m
+      expect(Ncr).toBeCloseTo(Math.PI ** 2 * 21000 * Iz / 400 ** 2, 6);
+      expect(value('M_{cr}','kN m')).toBeCloseTo(Mcr, 3);
+      expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(M1 / value('M_{b.Rd}','kN m'), 9);
+      expect([value('\\delta_g','mm'), value('C_s'), value('\\delta_{tot}','mm')]).toEqual([dg, Cs, dtot]); // the beam is not propped
+      expect(Cs).toBe(0.3);
       e.setDefinitionOverride(prop, null);
-      expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(1.8715996613080623,7);
+      expect(value('\\mathrm{UR}_{LT}')).toBeCloseTo(171.06110732520006 / value('M_{b.Rd}','kN m'),7);
     });
     step('SCI P364 Example 8 (533×165×75 UKB S275, L = 12 m, C25/30): same equations, same results', () => {
       const set: [string, number, string | null][] = [['L\\coloneq',12,'m'],['s_b\\coloneq',3.5,'m'],['h_c\\coloneq',130,'mm'],['f_y\\coloneq',275,'MPa'],

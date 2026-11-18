@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { chiLT, FORK, ltbAnalysis, ltbCriticalFactor, solveBeam } from '../../../engineering/fem';
+import { chiLT, chiLTMod, FORK, ltbAnalysis, ltbCriticalFactor, solveBeam } from '../../../engineering/fem';
 import { step } from '../../step';
 import { ritzMcrFactor } from './ritz';
 import { ltbeamReferences } from './ltbeamReferences';
@@ -133,6 +133,29 @@ describe('FEM: lateral-torsional buckling eigenvalues', () => {
       expect(ltbCriticalFactor({ ...input, flangeRestraints: mid, qzg: () => -zg })).toBeGreaterThan(ltbCriticalFactor({ ...input, flangeRestraints: mid, qzg: () => 0 }));
       expect(ltbCriticalFactor({ ...input, flangeRestraints: mid, qzg: () => 0 })).toBeGreaterThan(at(L / 2));
       expect(ltbCriticalFactor({ ...input, flangeRestraints: [{ x: 0, z: zg }, ...mid], elements: 64 })).toBeCloseTo(at(L / 2), 9);
+    });
+    step('published examples: SX001a / SBE Part 4 A.1 (IPE 330, top-flange UDL) M_cr 113.9; SCI P387 Ex. 02 (457×191×98) M_cr 534.0', () => {
+      const run = (Lb: number, Izb: number, Itb: number, Iwb: number, Gb: number, q: number, z: number) => {
+        const b = solveBeam({ L: Lb, EI: () => 1, supports: [{ x: 0, w: true }, { x: Lb, w: true }], loads: { dist: [{ x1: 0, x2: Lb, q1: q }] } });
+        return (ltbCriticalFactor({ L: Lb, props: () => ({ EIz: E * Izb, GIt: Gb * Itb, EIw: E * Iwb }), M: b.M, qzg: () => q * z, elements: 48 }) * q * Lb * Lb) / 8 / 1e6;
+      };
+      const sx = run(5700, 788.1e4, 28.15e4, 199100e6, 80770, 22.28, 165);
+      expect(rel(sx, 113.9)).toBeLessThan(0.005); // FE 114.0
+      // §6.3.2.3 chain as the source (curve c, λ0 0.4, β 0.75, f with k_c 0.94 ≈ 1/√1.127 = 0.942 of the Singapore NA)
+      const lam = Math.sqrt((804.3e3 * 235) / (sx * 1e6));
+      expect(lam).toBeCloseTo(1.288, 2);
+      for (const kc of [0.94, 1 / Math.sqrt(1.127)]) {
+        const c = chiLTMod(lam, 0.49, 0.4, 0.75, kc);
+        expect(c.chi0).toBeCloseTo(0.48, 2); expect(c.f).toBeCloseTo(0.984, 2);
+        expect(rel(c.chi * 804.3e3 * 235, 92.24e6)).toBeLessThan(0.005); // M_b,Rd 92.24 kNm
+      }
+      // STAAD.Pro verification "EC3 Singapore NA – I section with conc load" (HD 320×127): λ̄ 0.656, α 0.34 → Φ 0.705
+      const phi = 0.5 * (1 + 0.34 * (0.656 - 0.4) + 0.75 * 0.656 ** 2);
+      expect(phi).toBeCloseTo(0.705, 3);
+      expect(chiLTMod(0.656, 0.34, 0.4, 0.75, 1).chi0).toBeCloseTo(1 / (phi + Math.sqrt(phi ** 2 - 0.75 * 0.656 ** 2)), 9);
+      // recommended values reduce to (6.56)
+      expect(chiLTMod(1.2, 0.34, 0.2, 1, 1).chi).toBeCloseTo(chiLT(1.2, 0.34), 12);
+      expect(rel(run(6000, 2350e4, 121e4, 1180000e6, 81000, 60.8, 0), 534.0)).toBeLessThan(0.005); // FE 536.0
     });
     step('χ_LT (6.56)', () => {
       expect(chiLT(0.2, 0.34)).toBe(1);

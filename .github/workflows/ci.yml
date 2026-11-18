@@ -36,13 +36,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: UI_SNAPSHOTS=1 npm run test:e2e
+      # Composite-only changes (the design page, its worksheet, the FEM module, docs, unit tests) run only the
+      # composite browser tests; anything else runs the whole suite.
+      - name: Choose the browser tests
+        id: scope
+        env:
+          BEFORE: ${{ github.event.before || github.event.pull_request.base.sha }}
+        run: |
+          files=$(git diff --name-only "$BEFORE" "$GITHUB_SHA" 2>/dev/null || echo ALL)
+          echo "$files"
+          scope=composite
+          [ -z "$files" ] && scope=full
+          for f in $files; do
+            case "$f" in
+              src/tools/composite/*|src/engineering/fem/*|templates/Composite_Beam_EC4.mCCV|tools/templates/gen_composite.mjs|tools/templates/sizes_composite.json|tools/templates/reference_*|docs/*|src/tests/unit/*|src/tests/integration/composite-tool.spec.ts) ;;
+              *) scope=full ;;
+            esac
+          done
+          echo "scope=$scope" >> "$GITHUB_OUTPUT"
+      - if: steps.scope.outputs.scope == 'composite'
+        run: npx playwright test src/tests/integration/composite-tool.spec.ts
+      - if: steps.scope.outputs.scope != 'composite'
+        run: UI_SNAPSHOTS=1 npm run test:e2e
       - name: Upload UI snapshots
         if: always()
         uses: actions/upload-artifact@v4

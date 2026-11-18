@@ -13,6 +13,7 @@ import { parseDocument } from '../../documents/DocumentSerializer';
 describe('mCompositeBeamDesign headless model', () => {
   it('finds the inputs, reads the worksheet results and follows input, section and load-table changes', () => {
     const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+    m.setInput(m.inputs.find((f) => f.name === 'c_{NA}')!.id, 0); // the reference uses the EN recommended values ((6.10), §6.3.2.2)
     expect(m.inputs.length).toBeGreaterThan(40);
     expect(m.inputs.find((f) => f.name === 'L')).toMatchObject({ value: 8, unit: 'm' });
     expect(m.sectionId).toBe(3148);
@@ -203,6 +204,7 @@ describe('mCompositeBeamDesign headless model', () => {
   it('steel deck mode matches the independent reference; the solid slab is unchanged by the deck inputs', () => {
     const ref = JSON.parse(readFileSync('docs/composite-design/reference_deck.json', 'utf8'));
     const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+    m.setInput(m.inputs.find((f) => f.name === 'c_{NA}')!.id, 0); // the reference uses the EN recommended values ((6.10), §6.3.2.2)
     const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
     const solid = m.results();
     expect([solid.cdeck, solid.hpe, solid.kd, solid.nre, solid.cbb, solid.ccc, solid['UR.sf.c'], solid['UR.L.c']]).toEqual([0, 0, 1, 1, 1, 0, 0, 0]);
@@ -211,6 +213,7 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(solid.chd).toBeCloseTo(60, 9);
     { // a deck slab has one bar layer by default (on the deck, counted as A_b); two layers on request
       const d = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+      d.setInput(d.inputs.find((f) => f.name === 'c_{NA}')!.id, 0); // the reference uses the EN recommended values ((6.10), §6.3.2.2)
       const put = (n: string, v: number) => d.setInput(d.inputs.find((f) => f.name === n)!.id, v);
       put('c_{deck}', 1);
       let q = d.results();
@@ -253,6 +256,7 @@ describe('mCompositeBeamDesign headless model', () => {
   // 120 slab on a 58 mm transverse deck, b_0 82 mm, 19 x 100 studs, C25/30). Slab weight set to its 7.2 kN/m.
   it('steel deck mode reproduces the published SBE Part 4 example A.3', () => {
     const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+    m.setInput(m.inputs.find((f) => f.name === 'c_{NA}')!.id, 0); // the reference uses the EN recommended values ((6.10), §6.3.2.2)
     const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
     m.setSection(sections.find((x) => x.name === 'IPE 270')!.id);
     set('L', 7.5); set('s_b', 3); set('h_c', 120); set('c_{deck}', 1); set('c_{re}', 0); set('h_p', 58); set('b_r', 82); set('e_r', 207); set('n_r', 1);
@@ -301,11 +305,10 @@ describe('mCompositeBeamDesign headless model', () => {
     const m = new CompositeModel(raw), screen = new CompositeModel(raw, { screening: true });
     const id = (name: string) => sections.find((x) => x.name === name)!.id;
     const base: DesignCriteria = { strength: 1, deflection: 1, etaMin: 0, etaMax: 1, studs: 'segmented', bars: [10, 12, 13], camber: null };
-    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 8, 33, false)).toBe(25); // 26.4 → 25
-    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 8, 20, false)).toBe(0); // 16 → 15 < minimum
-    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 7, 33, false)).toBe(0); // short span
-    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 8, 33, true)).toBe(0); // propped
-    expect(camberFor({ pct: 80, min: 20, max: 30, step: 5, minSpan: 7.5 }, 12, 90, false)).toBe(30); // capped
+    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 8, 33)).toBe(25); // 26.4 → 25
+    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 8, 20)).toBe(0); // 16 → 15 < minimum
+    expect(camberFor({ pct: 80, min: 20, max: 100, step: 5, minSpan: 7.5 }, 7, 33)).toBe(0); // short span
+    expect(camberFor({ pct: 80, min: 20, max: 30, step: 5, minSpan: 7.5 }, 12, 90)).toBe(30); // capped
     expect(designSection(m, screen, id('UB 406x178x60'), base, 'composite').pass).toBe(false); // construction LTB
     const seg = designSection(m, screen, id('UB 457x191x89'), base, 'composite');
     expect(seg.pass && seg.composite).toBe(true);
@@ -436,8 +439,11 @@ describe('mCompositeBeamDesign headless model', () => {
     // the finite-element LTB reproduces the sheet's SN003b formula for a (nearly) uniform beam (same curve)
     const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
     set('c_{weld}', 0);
+    const rolledSG = m.results()['UR.LT']; // Singapore NA (default): §6.3.2.3, curve c (h/b 2.4), β 0.75, f
+    set('c_{NA}', 0);
     const rolled = m.results();
-    expect(rolled['UR.LT']).toBeCloseTo(0.848, 3); // rolled curve b
+    expect(rolled['UR.LT']).toBeCloseTo(0.848, 3); // recommended values: §6.3.2.2 curve b
+    expect(rolledSG).toBeCloseTo(0.731, 3);
     set('h_{A.in}', 402.2);
     const near = m.results();
     set('c_{tap}', 0);
@@ -469,6 +475,7 @@ describe('mCompositeBeamDesign headless model', () => {
   it('LTB by finite elements for a uniform beam: FE internal forces = the sheet; M_cr used directly, close to SN003b', () => {
     const m = new CompositeModel(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
     const set = (n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
+    set('c_{NA}', 0); // recommended values: the pinned (6.56) chain
     let r = m.results();
     step('construction, UDL on the top flange: FE M_cr within 1 % of SN003b (C1 1.127, C2 0.454)', () => {
       expect(r['Mcr.LT'] / r.McrSN).toBeGreaterThan(0.99);
@@ -478,6 +485,11 @@ describe('mCompositeBeamDesign headless model', () => {
     step('FE internal forces of the design loads = the moment diagram of the sheet', () => {
       const L = r.L * 1000, b = solveBeam({ L, EI: () => 1, supports: [{ x: 0, w: true }, { x: L, w: true }], loads: m.feLoads(r)! });
       r.vectors.x.forEach((x, i) => expect(b.M(x * 1000) / 1e6).toBeCloseTo(r.vectors.M[i], 6));
+      // Singapore NA: (6.10a)/(6.10b) on G and Q, the same in the FE loads
+      set('c_{NA}', 1);
+      const s = m.results(), Ls = s.L * 1000, bs = solveBeam({ L: Ls, EI: () => 1, supports: [{ x: 0, w: true }, { x: Ls, w: true }], loads: m.feLoads(s)! });
+      s.vectors.x.forEach((x, i) => expect(bs.M(x * 1000) / 1e6).toBeCloseTo(s.vectors.M[i], 6));
+      set('c_{NA}', 0);
     });
     step('bare steel unrestrained (studs too far apart): LT.nc by FE with the real moment diagram and point loads', () => {
       set('s_{sc.A}', 1200); set('s_{sc.B}', 1200);
@@ -492,6 +504,18 @@ describe('mCompositeBeamDesign headless model', () => {
       expect(Number(/coloneq ([\d.]+)/.exec(lat)![1])).toBeCloseTo(r['Mcr.LT'], 2);
       const rep = new CompositeModel(JSON.stringify(doc)).results();
       expect(rep.McrSheet).toBeCloseTo(r['Mcr.LT'], 2); // the sheet's own M_cr is now the FE value
+    });
+    step('braced construction (propped, k_LT): fork restraints at k_LT L, the moment of the span L unchanged', () => {
+      const unbraced = m.results();
+      set('c_{brace}', 1); set('k_{LT}', 0.5);
+      const q = m.results();
+      expect(q.M1).toBeCloseTo(unbraced.M1, 9); // w L² / 8 either way
+      expect(q.LLT).toBeCloseTo(q.L / 2, 9);
+      // FE M_cr of the whole span with a fork at mid-span: the half-span value with the mid-span part of the diagram
+      expect(q['Mcr.LT']).toBeGreaterThan(2 * unbraced['Mcr.LT']);
+      expect(q['UR.LT']).toBeLessThan(unbraced['UR.LT']);
+      expect(q['Mcr.LT'] / q.McrSN).toBeGreaterThan(0.9); // SN003b on the braced segment (UDL C1, C2) is an approximation here
+      set('c_{brace}', 0);
     });
     step('load position: shear centre and bottom flange raise M_cr, top flange is the default', () => {
       const top = r['Mcr.LT'];
@@ -513,6 +537,19 @@ describe('mCompositeBeamDesign headless model', () => {
       expect(uniform.M1).toBe(original.M1);
       expect(uniform.M1).toBeCloseTo(uniform.w1 * uniform.L ** 2 / 8, 9);
       expect(uniform['Mcr.LT']).toBeGreaterThan(original['Mcr.LT']);
+      setMain('c_{brace}', 1); setMain('k_{LT}', 0.5);
+      expect(main.results()['acr.LT']).toBe(uniform['acr.LT']); // no hidden legacy forks
+      const base = { L: 8000, props: () => ({ EIz: uniform.Ea * uniform.I_z * 1e4, GIt: uniform.Ga * uniform.I_t * 1e4, EIw: uniform.Ea * uniform.I_w * 1e6 }),
+        flangeRestraints: bracing.positions.map((x) => ({ x: x * 1000, z: uniform.h_a / 2 })) };
+      const gradient = ltbCriticalFactor({ ...base, M: (x) => uniform.w1 * x * (8000 - x) / 2 });
+      const constant = ltbCriticalFactor({ ...base, M: () => 1 });
+      expect(uniform['C1.LT']).toBeCloseTo(Math.max(1, gradient * uniform.w1 * 8000 ** 2 / 8 / constant), 8);
+      setMain('c_{NA}', 0);
+      const recommended = main.results();
+      expect(recommended['acr.LT']).toBe(uniform['acr.LT']);
+      expect(recommended['chi.LT']).not.toBe(uniform['chi.LT']);
+      setMain('c_{NA}', 1);
+      expect(main.results()['chi.LT']).toBe(uniform['chi.LT']);
       main.setBracing({ ...bracing, positions: [2] });
       expect(main.results()['acr.LT']).not.toBe(uniform['acr.LT']);
       main.setBracing(bracing);

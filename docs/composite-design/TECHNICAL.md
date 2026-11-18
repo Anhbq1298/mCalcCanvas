@@ -67,7 +67,7 @@ Annex: the general force model and branch boundaries.
   SFD/BMD), 3 EN 1993-1-1 construction checks, 4 EN 1994-1-1 composite checks (incl. SLS),
   5 EN 1992-1-1 slab longitudinal shear, 6 summary by code, annex. Loading and section 3 start on a new
   page: app feature `pageBreak` on a text shape, honoured by the template / print layout planner.
-- Propping `c_prop` (0 = unpropped, default; 1 = propped) drives if-blocks: construction span and LTB
+- [Superseded 2026-11-18: `c_prop` is now `c_brace`, LTB bracing only — see the end of this file.] Propping `c_prop` (0 = unpropped, default; 1 = propped) drove if-blocks: construction span and LTB
   length L_1 = L_LT = k_LT·L (user input k_LT) when propped; g_0 deflects the long-term composite section
   instead of the steel alone; the slip factor C_s is 0.5 instead of 0.3. Prop reactions and the prop
   removal stage are not checked.
@@ -337,3 +337,39 @@ SDL point load 60 kN at 1 m from A. UR.des = 0.717 (slab bars b-b); governing 1.
   is §6.3.2 with λ̄ = √(W_pl f_y / M_cr). Deck-restrained construction (L_LT = e_r) and stud-restrained bare steel keep
   the sheet's value. Load position (Modify load): top flange (default), shear centre, bottom flange (worksheet c_zg).
 - The report: the sheet's M_cr = M_cr.FE when the page writes it (uniform beams), else the SN003b value (M_cr.SN).
+
+## Construction bracing (k_LT)
+
+k_LT is LTB bracing only: fork restraints at k_LT L during construction. The moments, shear and deflection stay
+those of the simple span L (w₁L²/8, w₁L/2, 5w₁L⁴/384EI). The sheet's L_LT = k_LT L (SN003b on the braced length);
+the page's FE takes the whole span with its moment diagram and forks at the braces. (A continuous-beam model of the
+props, 518d74e, was reverted: the input is bracing, not a change of the structural scheme.)
+
+**c_brace (formerly c_prop) is LTB bracing only** (2026-11-18): the beam is never propped. Bracing adds fork
+restraints at k_LT L in construction; moments, shear, the construction deflection, g₀ on the steel alone and the
+slip factor C_s = 0.3 are unchanged. The camber rule no longer depends on it.
+
+## National Annex for LTB (c_NA, default Singapore)
+
+`c_NA = 1` (default): NA to SS EN 1993-1-1 (Singapore; the same LTB values as the UK NA). Rolled I: §6.3.2.3,
+λ_LT,0 = 0.4, β = 0.75, curves h/b ≤ 2 b, ≤ 3.1 c, else d; f (6.58) with k_c = 1/√C1 (the page takes C1 from the FE:
+M_cr of the moment diagram at the shear centre / M_cr of uniform moment, same restraints; the sheet uses 1.127 or
+the page's C_1.FE). Welded I (tapered, c_weld = 1): λ_LT,0 = 0.2, β = 1, h/b ≤ 2 c, else d, no f — the same as
+§6.3.2.2. `c_NA = 0`: EN recommended values, §6.3.2.2 with Table 6.4. γ_M0 = γ_M1 = 1.0 in both. Sources: STAAD.Pro
+documentation of the Singapore NA (λ_LT,0 / β, the NA curve table, k_c = 1/√C1). Checks: SX001a (§6.3.2.3,
+M_b,Rd 92.24 kNm), the STAAD Singapore NA verification (Φ_LT 0.705), (6.56) for recommended values.
+Page default case: unchanged (tapered welded, UR_LT 1.028); rolled uniform beams get the NA benefit
+(worksheet default 1.869 → 1.585; page tapered as rolled 0.848 → 0.731).
+
+## National Annex: load combination and other parts (c_NA)
+
+Singapore (c_NA = 1, default), NA to SS EN 1990: ULS by (6.10a) γ_G G + γ_Q ψ₀ Q and (6.10b) ξ γ_G G + γ_Q Q,
+γ_G 1.35, γ_Q 1.5, ξ 0.925, ψ₀ 0.7 (categories A–D), on g₀ and every table row; the combination with the larger maximum
+moment governs moments (M_v, M_P, F_d), the larger end shear governs shears. The row γ_F column applies only with
+recommended values ((6.10)). Construction stage unchanged ((6.10a) with ψ₀ = 1 for construction loads equals (6.10)).
+EC2 / EC3 / EC4 partial factors (γ_C 1.5, γ_S 1.15, γ_M0 = γ_M1 = 1.0) are the recommended values in the Singapore NA
+too; α_cc (0.85 in flexure in the Singapore NA to SS EN 1992-1-1) is not used by EC4's plastic resistance (0.85 f_cd
+built in); γ_V = 1.25 kept (the Singapore NA to SS EN 1994-1-1 is not public; not verified).
+Sources: SCIA documentation of the Singapore NA to SS EN 1990 (6.10a/b, ξ 0.925, ψ factors) and SS EN 1992-1-1.
+Page default case: M_Ed 135.2 → 130.9 kNm ((6.10a) governs), V_Ed 134.8 → 131.2 kN; UR.des 0.717 and the governing
+LTB 1.028 unchanged.

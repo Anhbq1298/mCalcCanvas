@@ -43,12 +43,16 @@ export function ConstructionStage({ inputs, values, tables, sectionId, bracing, 
     <div className="opt-form"><div className="opt-head"><h2 id="construction-title">Define Construction Stage</h2></div>
     <div className="fields">{inputs.filter((f) => /Construction stage/.test(f.group)).map((f) => <label className="f" key={f.id}>
       <span>{f.label}{f.unit ? ` (${f.unit})` : ''}</span>
-      <input className="num-input" type="number" step="any" aria-label={f.name} value={draft[f.id] ?? f.value} onChange={(e) => setDraft({ ...draft, [f.id]: e.target.valueAsNumber })} />
+      {f.name === 'c_{NA}' ? <select aria-label={f.name} value={(draft[f.id] ?? f.value) >= 1 ? '1' : '0'} onChange={(e) => setDraft({ ...draft, [f.id]: Number(e.target.value) })}>
+        <option value="1">Singapore NA</option><option value="0">EN recommended values</option>
+      </select> : f.name === 'c_{brace}' ? <input type="checkbox" aria-label={f.name} disabled={b.mode === 'explicit'} checked={(draft[f.id] ?? f.value) >= 1} onChange={(e) => setDraft({ ...draft, [f.id]: e.target.checked ? 1 : 0 })} /> : (
+      <input className="num-input" type="number" step="any" disabled={b.mode === 'explicit' && ['c_{brace}', 'k_{LT}'].includes(f.name)} aria-label={f.name} value={draft[f.id] ?? f.value} onChange={(e) => setDraft({ ...draft, [f.id]: e.target.valueAsNumber })} />
+      )}
     </label>)}</div>
     <label className="f"><span>Restraint model</span><select aria-label="Restraint model" value={b.mode} onChange={(e) => setB({ ...b, mode: e.target.value === 'legacy' ? 'legacy' : 'explicit' })}>
-      <option value="legacy">Legacy worksheet / vertical propping</option><option value="explicit">Explicit top-flange lateral braces</option>
+      <option value="legacy">Legacy kLT fork approximation</option><option value="explicit">Explicit top-flange lateral braces</option>
     </select></label>
-    <p className="hint">kLT controls vertical prop spacing in this worksheet. It never creates lateral braces. Convert by selecting explicit mode and entering actual stations.</p>
+    <p className="hint">Legacy c_brace / kLT generates equally spaced forks. Explicit mode uses only the saved top-flange stations; kLT is ignored.</p>
     {b.mode === 'explicit' && <>
       <label><input type="checkbox" checked={b.enabled} onChange={(e) => setB({ ...b, enabled: e.target.checked })} /> Enable temporary lateral bracing</label>
       {!b.enabled && <p className="hint">Stored brace stations are disabled and excluded from the calculation.</p>}

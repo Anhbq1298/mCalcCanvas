@@ -361,7 +361,15 @@ export function App() {
     setOpt({ running: false, result, seconds: (performance.now() - t0) / 1000 });
   };
   const renderField = (f: InputField) =>
-    ['c_{prop}', 'c_{LT.d}', 'c_{pe}'].includes(f.name) ? (
+    f.name === 'c_{NA}' ? (
+      <label key={f.id} className={`f wide ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
+        <span>National Annex <em className="input-description">EN 1993-1-1 lateral-torsional buckling (§6.3.2)</em></span>
+        <select id={`in-${f.id}`} data-testid="na" value={value(f) >= 1 ? '1' : '0'} onChange={(e) => setInput(f, Number(e.target.value))}>
+          <option value="1">Singapore (NA to SS EN 1993-1-1; same LTB values as the UK NA): §6.3.2.3</option>
+          <option value="0">EN recommended values: §6.3.2.2</option>
+        </select>
+      </label>
+    ) : ['c_{brace}', 'c_{LT.d}', 'c_{pe}'].includes(f.name) ? (
       <label key={f.id} className={`f check ${changed(f) ? 'changed' : ''}`} htmlFor={`in-${f.id}`}>
         <span><Sym latex={f.name} /> <em className="input-description"><Rich text={f.label.replace(/:\s*1 = yes.*$/, '')} /></em></span>
         <input id={`in-${f.id}`} type="checkbox" checked={value(f) >= 1} onChange={(e) => setInput(f, e.target.checked ? 1 : 0)} />
@@ -549,7 +557,7 @@ export function App() {
 
                   </>
                 ) : (
-                  <div className="fields">{fields.filter((f) => f.name !== 'h_c' && f.name !== 'c_{zg}' && !(res.ctop === 0 && ['d_{s.t}', 's_{f.t}'].includes(f.name))).map(renderField)}</div>
+                  <div className="fields">{fields.filter((f) => !(bracing.mode === 'explicit' && ['c_{brace}', 'k_{LT}'].includes(f.name)) && f.name !== 'h_c' && f.name !== 'c_{zg}' && !(res.ctop === 0 && ['d_{s.t}', 's_{f.t}'].includes(f.name))).map(renderField)}</div>
                 )}
               </section>
             ))}
@@ -859,6 +867,9 @@ export function App() {
             <button type="button" className="rowbtn" aria-label="Close" onClick={() => loadRef.current?.close()}>×</button>
           </header>
           <p className="hint">Area and point loads act on the beam and update the diagrams and checks as you change them. Other inputs are in the panel on the left.</p>
+          {value(byName('c_{NA}')) >= 1 && (
+            <p className="hint" data-testid="combo-note">Singapore NA (SS EN 1990): ULS by (6.10a) 1.35G + 1.5ψ<sub>0</sub>Q and (6.10b) 0.925·1.35G + 1.5Q. Governing: <b>{res.cbM >= 1 ? '(6.10b)' : '(6.10a)'}</b> (max M {fmt(res.Mamax, 1)} / {fmt(res.Mbmax, 1)} kNm). The γ<sub>F</sub> column is used only with EN recommended values.</p>
+          )}
           {loadTable(areaT, 0)}
           {loadTable(pointT, 1)}
           <section aria-labelledby="h-zg">

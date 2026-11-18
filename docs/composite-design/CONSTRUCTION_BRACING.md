@@ -54,31 +54,28 @@ A numerical equality in this special case does not make the constraints identica
 
 ## Application and migration
 
-This checkout differs from the supplied repository description: it has no c_brace,
-no c_NA selector and no FE-derived Singapore C1 branch. Here kLT belongs to c_prop
-and sets vertical prop spacing. It never generated intermediate lateral forks.
-Those existing inputs and the existing resistance calculation are preserved.
-The template still flags Singapore NA verification as outstanding.
+The integrated checkout retains the upstream c_brace / kLT legacy fork model
+and National Annex selector. Missing bracing data selects legacy mode; legacy
+c_brace = 1 still generates the existing equally spaced interior forks.
 
-Missing bracing data selects legacy worksheet mode. Conversion is explicit in
-Define Construction Stage: choose explicit mode, enable temporary braces, and
-enter physical stations. No positions are inferred from kLT. Saved positions are
-absolute metres; dimensions and section edits do not move them. A span edit that
-leaves a station outside the beam produces a validation error.
+Conversion is explicit in Define Construction Stage: choose explicit mode, enable
+temporary braces, and enter physical stations. Explicit mode ignores legacy
+c_brace / kLT and applies no shortened effective LTB length. Saved positions are
+absolute metres; section edits do not move them. A span edit that leaves a station
+outside the beam produces a validation error and blocks report export.
 
-Existing vertical props continue dividing the construction beam into its existing
-fork-ended spans. Braces inside each span use local coordinates and local depth.
-The in-plane construction loads and moment/shear diagrams do not change. With no
-vertical props, M1 = w1 L^2 / 8. No effective-length reduction is added for braces.
-Continuous transverse deck restraint retains precedence; when it governs, the
-modal and report say that the worksheet/deck approximation is in use.
+Construction is the full simply-supported span: M1 = w1 L^2 / 8. Lateral braces
+never provide vertical support. Continuous transverse deck restraint retains
+precedence and the modal/report identify its worksheet approximation. The upstream
+Singapore NA resistance chain is retained; both shear-centre FEM problems used
+for its C1 receive the identical explicit flange constraints or legacy forks.
 
 The modal uses a separate calculation worker for draft results. Save commits
 numerical inputs and braces as one undo action; Cancel and Escape discard drafts.
 Reset resets the construction inputs and returns to legacy mode. Calculations,
 full optimizer workers and screening workers share the same state-transfer helper.
 A worker-local cache (256 physical problems) reuses FEM results across detail
-candidates. Its key includes all section properties, span and propping, loads and
+candidates. Its key includes all section properties, span, legacy braces, NA, loads and
 load height, linear depth endpoints, and the complete bracing configuration.
 Changing a station, section or loading therefore selects a different problem.
 
@@ -89,7 +86,7 @@ report note. It survives the normal document sanitizer and canvas save/export pa
 no extra input table is added to the two load tables. The report lists absolute
 stations and normalized coordinates on additional pages.
 
-The report carries full-precision FEM Mcr, alpha_cr, alpha_ult and the governing
+The report carries full-precision FEM Mcr, C1, alpha_cr, alpha_ult and the governing
 imperfection factor as worksheet input definitions. Its construction slenderness
 and resistance equations use these to reproduce the page utilization, including
 for a tapered section. SN003b remains an explicitly labelled analytical comparison.
@@ -122,7 +119,16 @@ edits. Regenerate the report through the composite tool for a revised design.
   mode constraints, local taper depth, worker state, disabled braces, deck precedence,
   sanitizer rejection and direct worksheet-engine reproduction of the tapered UR.
 - Template regenerated and measured without moved-region warnings. The template PDF
-  and a 35-page explicit-bracing tapered report were rendered and visually reviewed.
+  and a 37-page explicit-bracing tapered report were rendered and visually reviewed.
 - `npm run deadcode` still exits 1 for pre-existing unused items (including the
   composite LTB re-export shim, font dependency and unused exports). The composite
   app entry is now registered so its live components are recognized by Knip.
+
+
+Integration with origin/main preserves the upstream Singapore NA load combinations
+and resistance chain, and its legacy c_brace / kLT fork calculation. Explicit
+flange stations override legacy forks in both the critical-load and C1 problems;
+cache keys include NA and legacy/deck restraint settings. Regression checks pin
+C1 independently, switch the NA without changing the elastic critical factor,
+and reproduce the merged worksheet UR after export/reopen. The merged revision
+passed typecheck, lint, 36 unit files / 97 tests, and 78 E2E tests (2 skipped).

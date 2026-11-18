@@ -20,6 +20,8 @@ test('mCompositeBeamDesign calculates, follows a large point load and hands the 
     }).toPass();
   }
   await page.setViewportSize({ width: 1440, height: 900 });
+  // the large point-load case below is pinned with the EN recommended values ((6.10) with the row γ_F)
+  await page.getByTestId('na').selectOption('0');
   await page.getByRole('button', { name: 'Geometry input guide', exact: true }).click();
   await expect(page.getByRole('dialog', { name: 'Geometry input guide', exact: true })).toContainText('Span');
   await page.keyboard.press('Escape');
@@ -66,7 +68,7 @@ test('mCompositeBeamDesign optimizes the section in a dialog with strength and d
   // the optimizer is for uniform sections only
   await expect(page.getByTestId('optimize-open')).toBeDisabled();
   await page.getByTestId('taper').uncheck();
-  await expect(page.getByTestId('ur-max')).toHaveText('0.789', { timeout: 30_000 });
+  await expect(page.getByTestId('ur-max')).toHaveText('0.717', { timeout: 30_000 });
   await page.getByTestId('optimize-open').click();
   await expect(page.getByRole('dialog', { name: 'Optimize section' })).toBeVisible();
   await page.getByTestId('t-strength').fill('abc');
@@ -145,6 +147,7 @@ test('tapered beam: the default case is tapered; unticking gives the uniform sec
   await expect(page.getByTestId('ur-table')).toContainText('x = 0.00 m, h = 300.0 mm');
   // load position for LTB (Modify load): the shear centre is less onerous than the top flange
   await page.getByTestId('load-open').click();
+  await expect(page.getByTestId('combo-note')).toContainText('Governing: (6.10a)'); // Singapore NA, heavy permanent load
   await page.getByTestId('load-zg').selectOption('0');
   await expect(page.getByTestId('ur-max')).not.toHaveText('1.028', { timeout: 30_000 });
   expect(Number(await page.getByTestId('ur-max').textContent())).toBeLessThan(1.028);
@@ -152,10 +155,14 @@ test('tapered beam: the default case is tapered; unticking gives the uniform sec
   await expect(page.getByTestId('ur-max')).toHaveText('1.028', { timeout: 30_000 });
   await page.getByRole('button', { name: 'Done' }).click();
   await page.getByTestId('taper-fab').selectOption('r');
-  await expect(page.getByTestId('ur-max')).toHaveText('0.848', { timeout: 30_000 }); // rolled curve b
+  await expect(page.getByTestId('ur-max')).toHaveText('0.731', { timeout: 30_000 }); // rolled, Singapore NA §6.3.2.3 (curve c, β 0.75, f)
+  await page.getByTestId('na').selectOption('0');
+  await expect(page.getByTestId('ur-max')).toHaveText('0.848', { timeout: 30_000 }); // recommended values §6.3.2.2, curve b
+  await page.getByTestId('na').selectOption('1');
+  await expect(page.getByTestId('ur-max')).toHaveText('0.731', { timeout: 30_000 });
   await expect(page.getByTestId('optimize-taper')).toBeVisible();
   await page.getByTestId('taper').uncheck();
-  await expect(page.getByTestId('ur-max')).toHaveText('0.789', { timeout: 30_000 });
+  await expect(page.getByTestId('ur-max')).toHaveText('0.717', { timeout: 30_000 });
   await expect(page.getByTestId('optimize-open')).toBeEnabled();
   await page.getByTestId('taper').check();
   const hA = page.locator('label:has-text("Depth at start") input');
@@ -165,7 +172,7 @@ test('tapered beam: the default case is tapered; unticking gives the uniform sec
   await page.getByRole('button', { name: 'Tapered beam input guide', exact: true }).click();
   await expect(page.getByTestId('taper-note')).toContainText('Same depth at both ends', { timeout: 30_000 });
   await page.keyboard.press('Escape');
-  await expect(page.getByTestId('ur-max')).toHaveText('0.789', { timeout: 30_000 });
+  await expect(page.getByTestId('ur-max')).toHaveText('0.717', { timeout: 30_000 });
 });
 
 
