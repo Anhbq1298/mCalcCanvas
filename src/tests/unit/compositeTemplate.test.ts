@@ -363,11 +363,11 @@ describe('EC4 phase-one composite worksheet', () => {
       expect(value('h_a','mm')).toBe(406.4);
     });
 
-    step('four static symbolic figures and five graphs (V, M, construction δ_1(x), M_Rd(x), δ(x)); explicit review status', () => {
+    step('four static symbolic figures and seven graphs (V, M, construction δ_1(x), M_Rd(x), δ(x); Annex A: M(x), buckled shape); explicit review status', () => {
       const texts=doc.shapes.filter(s => s.type==='text');
       expect(texts.filter(s=>/^F\d —/.test(s.props.html)).map(s=>s.props.html.slice(0,2))).toEqual(['F1','F2','F3','F4']);
       expect(texts.some(s=>s.props.html.includes('<i>h</i><sub>c</sub>'))).toBe(true);
-      expect(doc.shapes.filter(s=>s.type==='graph')).toHaveLength(5);
+      expect(doc.shapes.filter(s=>s.type==='graph')).toHaveLength(7);
       expect(doc.shapes.some(s=>s.type==='image')).toBe(false);
       expect(texts.some(s=>s.props.html.includes('Singapore NA verification is outstanding'))).toBe(true);
     });

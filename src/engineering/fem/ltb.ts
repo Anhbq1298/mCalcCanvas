@@ -39,9 +39,20 @@ export interface LtbInput {
   /** Lateral restraint at height z above the shear centre: v + z phi = 0 (mm). */
   flangeRestraints?: { x: number; z: number }[];
   elements?: number;
+  /** explicit mesh (node positions, mm); overrides `elements` */
+  nodes?: number[];
 }
 
-export interface LtbResult { lambda: number; mode: { x: number[]; v: number[]; phi: number[] } | null }
+export interface LtbResult {
+  lambda: number;
+  mode: { x: number[]; v: number[]; phi: number[] } | null;
+  /**
+   * with `matrices`: node positions, fixed DOF (index 4·node + [v, v′, φ, φ′]), flange constraints v + z φ = 0
+   * (v DOF index and z, mm) and the element matrices k_e, b_e (8 × 8, local order v₀ v′₀ φ₀ φ′₀ v₁ v′₁ φ₁ φ′₁ =
+   * global 4e … 4e + 7)
+   */
+  system?: { x: number[]; fixed: number[]; coupled: { v: number; z: number }[]; Ke: number[][][]; Be: number[][][] };
+}
 
 const GAUSS = [[-0.861136311594053, 0.347854845137454], [-0.339981043584856, 0.652145154862546], [0.339981043584856, 0.652145154862546], [0.861136311594053, 0.347854845137454]];
 
@@ -71,32 +82,37 @@ export function jacobiEigen(A0: number[][], vectors = false): { values: number[]
 export const jacobiEigenvalues = (A0: number[][]): number[] => jacobiEigen(A0).values;
 
 /** Critical load factor and buckled shape. lambda = Infinity if the loading cannot cause LTB, NaN if the supports leave a mechanism. */
-export function ltbAnalysis(inp: LtbInput, withMode = false): LtbResult {
+export function ltbAnalysis(inp: LtbInput, withMode = false, matrices = false): LtbResult {
   const { L } = inp;
   const qzg = inp.qzg ?? (() => 0);
   const supports = [...(inp.supports ?? [FORK(0), FORK(L)]), ...(inp.restraints ?? []).map(FORK)];
   const flange = inp.flangeRestraints ?? [];
   if (flange.some(({ x, z }) => !Number.isFinite(x) || !Number.isFinite(z) || x < 0 || x > L)) throw new Error('Invalid flange restraint');
-  const xs = meshStations(L, [...supports.map((s) => s.x), ...flange.map((s) => s.x), ...(inp.pointLoads ?? []).map((p) => p.x)], inp.elements ?? 24, 4);
+  const xs = inp.nodes ?? meshStations(L, [...supports.map((s) => s.x), ...flange.map((s) => s.x), ...(inp.pointLoads ?? []).map((p) => p.x)], inp.elements ?? 24, 4);
   const nn = xs.length, n = 4 * nn;
   const K = Array.from({ length: n }, () => new Float64Array(n));
   const B = Array.from({ length: n }, () => new Float64Array(n));
+  const Ke: number[][][] = [], Be: number[][][] = [];
   for (let e = 0; e < nn - 1; e++) {
     const x0 = xs[e], l = xs[e + 1] - x0;
-    const vd = [4 * e, 4 * e + 1, 4 * e + 4, 4 * e + 5], pd = [4 * e + 2, 4 * e + 3, 4 * e + 6, 4 * e + 7];
+    // element matrices in the local order v₀ v′₀ φ₀ φ′₀ v₁ v′₁ φ₁ φ′₁ (= global 4e … 4e + 7)
+    const ke = Array.from({ length: 8 }, () => new Array<number>(8).fill(0)), be = ke.map((r) => r.map(() => 0));
+    const vd = [0, 1, 4, 5], pd = [2, 3, 6, 7];
     for (const [g, w] of GAUSS) {
       const xi = (g + 1) / 2, x = x0 + xi * l, wl = (w * l) / 2;
       const { N, d1, d2 } = hermite(xi, l);
       const p = inp.props(x), m = inp.M(x), qz = qzg(x);
       for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) {
-        K[vd[i]][vd[j]] += wl * p.EIz * d2[i] * d2[j];
-        K[pd[i]][pd[j]] += wl * (p.GIt * d1[i] * d1[j] + p.EIw * d2[i] * d2[j]);
+        ke[vd[i]][vd[j]] += wl * p.EIz * d2[i] * d2[j];
+        ke[pd[i]][pd[j]] += wl * (p.GIt * d1[i] * d1[j] + p.EIw * d2[i] * d2[j]);
         // λ B = −(second variation of the load potential): M_y coupling and load height
-        B[vd[i]][pd[j]] -= wl * m * d2[i] * N[j];
-        B[pd[j]][vd[i]] -= wl * m * d2[i] * N[j];
-        B[pd[i]][pd[j]] += wl * qz * N[i] * N[j];
+        be[vd[i]][pd[j]] -= wl * m * d2[i] * N[j];
+        be[pd[j]][vd[i]] -= wl * m * d2[i] * N[j];
+        be[pd[i]][pd[j]] += wl * qz * N[i] * N[j];
       }
     }
+    for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) { K[4 * e + i][4 * e + j] += ke[i][j]; B[4 * e + i][4 * e + j] += be[i][j]; }
+    if (matrices) { Ke.push(ke); Be.push(be); }
   }
   const nodeAt = (x: number) => xs.findIndex((t) => Math.abs(t - x) < 1e-6);
   for (const p of inp.pointLoads ?? []) { const i = nodeAt(p.x); if (i >= 0) B[4 * i + 2][4 * i + 2] += p.Pzg; }
@@ -137,12 +153,15 @@ export function ltbAnalysis(inp: LtbInput, withMode = false): LtbResult {
     return R;
   };
   const Kr = reduce(K), Br = reduce(B);
+  const system = matrices
+    ? { x: xs, fixed: [...fixed].sort((a, b) => a - b), coupled: [...coupled].filter(([v]) => !fixed.has(v) && !fixed.has(v + 2)).map(([v, z]) => ({ v, z })), Ke, Be }
+    : undefined;
   // Cholesky K = L Lᵀ: a non-positive pivot means a mechanism (rigid-body mode) left by the supports
   const Lc = Array.from({ length: m }, () => new Float64Array(m));
   for (let i = 0; i < m; i++) for (let j = 0; j <= i; j++) {
     let s = Kr[i][j];
     for (let t = 0; t < j; t++) s -= Lc[i][t] * Lc[j][t];
-    if (i === j) { if (s <= 1e-8 * Math.abs(Kr[i][i])) return { lambda: NaN, mode: null }; Lc[i][i] = Math.sqrt(s); } else Lc[i][j] = s / Lc[j][j];
+    if (i === j) { if (s <= 1e-8 * Math.abs(Kr[i][i])) return { lambda: NaN, mode: null, system }; Lc[i][i] = Math.sqrt(s); } else Lc[i][j] = s / Lc[j][j];
   }
   const solveL = (col: number[]) => { const y = new Array<number>(m); for (let i = 0; i < m; i++) { let s = col[i]; for (let t = 0; t < i; t++) s -= Lc[i][t] * y[t]; y[i] = s / Lc[i][i]; } return y; };
   const b = Br.map((r) => Array.from(r));
@@ -152,7 +171,7 @@ export function ltbAnalysis(inp: LtbInput, withMode = false): LtbResult {
   // λ = 1/μ: the largest positive μ gives the smallest positive λ; μ ≤ 0 (load reversal or none) ignored
   let k = -1;
   eig.values.forEach((mu, i) => { if (mu > 1e-15 && (k < 0 || mu > eig.values[k])) k = i; });
-  if (k < 0) return { lambda: Infinity, mode: null };
+  if (k < 0) return { lambda: Infinity, mode: null, system };
   let mode: LtbResult['mode'] = null;
   if (withMode && eig.vectors) {
     // d = L⁻ᵀ y
@@ -162,7 +181,7 @@ export function ltbAnalysis(inp: LtbInput, withMode = false): LtbResult {
     T.forEach((t, i) => { if (t.j >= 0) full[i] = t.a * d[t.j]; });
     mode = { x: xs, v: xs.map((_, i) => full[4 * i]), phi: xs.map((_, i) => full[4 * i + 2]) };
   }
-  return { lambda: 1 / eig.values[k], mode };
+  return { lambda: 1 / eig.values[k], mode, system };
 }
 
 /** Smallest positive critical load factor λ_cr (Infinity: no LTB under this loading; NaN: mechanism). */

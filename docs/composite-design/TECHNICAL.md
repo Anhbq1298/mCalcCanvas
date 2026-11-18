@@ -373,3 +373,23 @@ built in); γ_V = 1.25 kept (the Singapore NA to SS EN 1994-1-1 is not public; n
 Sources: SCIA documentation of the Singapore NA to SS EN 1990 (6.10a/b, ξ 0.925, ψ factors) and SS EN 1992-1-1.
 Page default case: M_Ed 135.2 → 130.9 kNm ((6.10a) governs), V_Ed 134.8 → 131.2 kN; UR.des 0.717 and the governing
 LTB 1.028 unchanged.
+
+## Report: Annex A, the LTB eigenvalue with the matrix functions
+
+The construction-stage FE system is written into the report on a 12-element mesh: every brace station (legacy forks
+or explicit top-flange braces) is a node, the rest by halving the longest element (`annexMesh`); the page uses the same
+mesh, so both give the same α_cr. The page writes the node positions, the FE moment M(x), the depth h(x), the 24
+element matrices k_e, b_e (8 × 8, N and mm) and the constraint matrix C (52 rows, one column per constraint: e_i for a
+fixed DOF, e_v + z e_φ for a top-flange brace v + z φ = 0). The worksheet assembles K = Σ P_eᵀ k_e P_e,
+B = Σ P_eᵀ b_e P_e (P_e = rows 4e … 4e + 7 of identity(52)), adds the penalty K_p = K + 10⁸ (C Cᵀ), solves
+B d = μ K_p d with genvals / genvecs, takes α_cr = 1/max μ, the buckled shape v, φ at the nodes and M_cr = α_cr max|M|.
+
+- Each column of C is scaled by √K_jj of its first DOF, so the penalty is 10⁸ times the local stiffness. One global
+  weight (10⁸ max K) leaves v + z φ ill-conditioned: the v and φ′ stiffnesses differ by about 10¹⁰ and the Cholesky
+  of K_p fails.
+- C Cᵀ is bracketed before the 10⁸: (10⁸ C) Cᵀ is not bitwise symmetric, and genvals then leaves the symmetric
+  (Cholesky) path.
+- The data regions (x, M, h, braces, C, k_e, b_e) are marked constant, so they are not highlighted as inputs.
+
+Tests: the report's α_cr equals the page's for uniform, tapered and explicitly braced beams (to 1e-6; the penalty
+differs from the page's exact elimination by about 1e-8).

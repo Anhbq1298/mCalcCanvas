@@ -5,7 +5,7 @@
  * No formula is duplicated here.
  */
 import { sections } from '../../engineering/steel/sections';
-import { chiLTMod, ltbCriticalFactor, solveBeam, type DistLoad } from '../../engineering/fem';
+import { chiLTMod, ltbAnalysis, ltbCriticalFactor, solveBeam, type DistLoad } from '../../engineering/fem';
 import { CalculationEngine } from '../../engine';
 import { calcKey } from '../../canvas/calcOrder';
 import { inputTableColumns, inputTableRegionId } from '../../canvas/inputTable';
@@ -70,7 +70,7 @@ const SCALARS: Probe[] = [
   // deflection
   ['dmax', '\\delta_{max}', 'mm'], ['wc', 'w_c', 'mm'], ['ccam', 'c_{cam}', null], ['dlim', '\\delta_{lim}', 'mm'], ['dq', '\\delta_{q.max}', 'mm'], ['dnc', '\\delta_{nc}', 'mm'], ['f1', 'f_1', 'Hz'], ['f1nc', 'f_{1.nc}', 'Hz'], ['flim', 'f_{lim}', 'Hz'], ['Ecdyn', 'E_{c.dyn}', 'GPa'], ['ddyn', '\\delta_{dyn}', 'mm'], ['ddynnc', '\\delta_{dyn.nc}', 'mm'], ['LLTnc', 'L_{LT.nc}', 'mm'],
   // tapered beam
-  ['McrSN', 'M_{cr.SN}', 'kN m'], ['McrSheet', 'M_{cr}', 'kN m'], ['McrncSN', 'M_{cr.nc.SN}', 'kN m'], ['ctap', 'c_{tap}', null], ['hA', 'h_A', 'mm'], ['hB', 'h_B', 'mm'],
+  ['McrSN', 'M_{cr.SN}', 'kN m'], ['acrA', '\\alpha_{cr.A}', null], ['McrA', 'M_{cr.A}', 'kN m'], ['McrSheet', 'M_{cr}', 'kN m'], ['McrncSN', 'M_{cr.nc.SN}', 'kN m'], ['ctap', 'c_{tap}', null], ['hA', 'h_A', 'mm'], ['hB', 'h_B', 'mm'],
   ['Ea', 'E_a', 'MPa'], ['Ga', 'G_a', 'MPa'], ['gM1', '\\gamma_{M1}', null], ['aLT', '\\alpha_{LT}', null], ['cweld', 'c_{weld}', null], ['czg', 'c_{zg}', null], ['cLTd', 'c_{LT.d}', null], ['cNA', 'c_{NA}', null], ['kGM', 'k_{G.M}', null], ['kQM', 'k_{Q.M}', null], ['cbM', 'c_{b.M}', null], ['Mamax', 'M_{a.max}', 'kN m'], ['Mbmax', 'M_{b.max}', 'kN m'], ['Lbr', 'L_{br}', 'm'], ['kLT', 'k_{LT}', null],
   ['cFP', 'c_{F.P}', null], ['FRda', 'F_{Rd.a}', 'kN'], ['MelRd', 'M_{el.Rd}', 'kN m'],
 ];
@@ -112,13 +112,15 @@ const UR_BARE = ['M.nc', 'MV.nc', 'V.nc', 'LT.nc', 'F.P', 'F.S', 'FM.nc', 'd.nc'
 type LtbOut = { ur: number; x: number; acr: number; aul: number; lam: number; chi: number; alpha: number; Mcr: number; C1: number };
 /** ULS loads of the composite stage on the steel beam, N/mm, N and mm: self-weight γ_G,sw g_0 and the load tables. */
 export interface FeLoads { dist: DistLoad[]; point: { x: number; P: number }[] }
+/** The construction-stage FE system for the report's Annex A: nodes, moment, depth, K and B (N, mm), DOF selections. */
+export interface LtbAnnex { x: number[]; M: number[]; h: number[]; braces: number[]; czg: number; Ke: number[][][]; Be: number[][][]; fixed: number[]; coupled: { v: number; z: number }[]; acr: number }
 // Detail candidates often share the exact steel/loading/restraint problem. Cache
 // only those physical inputs, never the worksheet URs or the candidate section ID.
 // Each calculation worker owns its own bounded cache.
-const feLtbCache = new Map<string, { LT?: LtbOut; nc?: LtbOut }>();
+const feLtbCache = new Map<string, { LT?: LtbOut; nc?: LtbOut; annex?: LtbAnnex }>();
 const FE_MEMBER_KEYS = ['L', 'L1', 'w1', 'LLT', 'LLTnc', 'gM1', 'ctap', 'cweld', 'czg', 'cNA', 'cbrace', 'kLT', 'Lbr', 'ctr', 'cLTd'];
 const FE_SECTION_KEYS = ['h_a', 't_f', 't_w', 'b_a', 'r', 'f_y', 'Ea', 'Ga', 'I_a', 'I_z', 'I_t', 'I_w', 'W_pl'];
-function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: FeLoads | null, bracing = legacyBracing()): { LT?: LtbOut; nc?: LtbOut } {
+function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: FeLoads | null, bracing = legacyBracing()): { LT?: LtbOut; nc?: LtbOut; annex?: LtbAnnex } {
   const hAt = (xmm: number) => hAtM(xmm / 1000); // depth at x in mm
   const hR = rRef.h_a, tf = rRef.t_f, tw = rRef.t_w, b = rRef.b_a, r = rRef.r, fy = rRef.f_y, E = rRef.Ea, G = rRef.Ga;
   if (![hR, tf, tw, b, r, fy, E, G, rRef.I_z, rRef.I_t, rRef.I_w, rRef.W_pl].every(Number.isFinite)) return {};
@@ -144,16 +146,28 @@ function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: F
   const zf = Number.isFinite(rM.czg) ? Math.max(-1, Math.min(1, rM.czg)) : 1; // load height, fraction of h/2
   const L = rM.L * 1000;
   // one simply supported, fork-ended span [x0, x0 + l] (mm) under its loads: FE internal forces, then the eigenvalue
+  // construction: also the system written into the report (Annex A), on a 12-element mesh the report solves with its
+  // matrix functions; the page uses the same mesh, so both give the same α_cr
+  let annex: LtbAnnex | undefined;
   const segment = (x0: number, l: number, sl: FeLoads, braces: number[] = [], construction = false) => {
     const beam = solveBeam({ L: l, EI: () => E * rRef.I_a * 1e4, supports: [{ x: 0, w: true }, { x: l, w: true }], loads: sl });
     const qAt = (x: number) => sl.dist.reduce((s, d) => s + (x >= d.x1 - 1e-9 && x <= d.x2 + 1e-9 ? d.q1 : 0), 0);
     const flangeRestraints = construction && bracing.mode === 'explicit' && bracing.enabled
       ? bracing.positions.map((x) => ({ x: x * 1000 - x0, z: hAt(x * 1000) / 2 })) : [];
-    const base = { L: l, props: (x: number) => props(x0 + x), restraints: braces, flangeRestraints, elements: 24 + 8 * braces.length };
-    const acr = ltbCriticalFactor({ ...base, M: beam.M,
+    const nodes = construction ? annexMesh(l, [...braces, ...flangeRestraints.map((f) => f.x)]) : undefined;
+    const base = { L: l, props: (x: number) => props(x0 + x), restraints: braces, flangeRestraints, elements: 24 + 8 * braces.length, nodes };
+    const res = ltbAnalysis({ ...base, M: beam.M,
       qzg: (x) => (qAt(x) * zf * hAt(x0 + x)) / 2,
       pointLoads: sl.point.map((p) => ({ x: p.x, Pzg: (p.P * zf * hAt(x0 + p.x)) / 2 })),
-    });
+    }, false, !!nodes);
+    const acr = res.lambda;
+    if (nodes && res.system) {
+      const { x: xs, fixed, coupled, Ke, Be } = res.system;
+      annex = {
+        x: xs.map((x) => (x0 + x) / 1000), M: xs.map((x) => beam.M(x) / 1e6), h: xs.map((x) => hAt(x0 + x)),
+        braces: [...braces, ...flangeRestraints.map((f) => f.x)].map((b) => (x0 + b) / 1000).sort((a, c) => a - c), czg: zf, Ke, Be, fixed, coupled, acr,
+      };
+    }
     let au = Infinity, xu = x0 + l / 2, Mmax = 0;
     for (let i = 0; i <= 200; i++) {
       const x = (l * i) / 200, m = Math.abs(beam.M(x));
@@ -184,9 +198,39 @@ function feLtb(rM: Results, rRef: Results, hAtM: (x: number) => number, loads: F
     const s = segment(0, L, loads);
     if (s) out.nc = s;
   }
+  if (annex) out.annex = annex;
   if (feLtbCache.size >= 256) feLtbCache.delete(feLtbCache.keys().next().value!);
   feLtbCache.set(cacheKey, out);
   return out;
+}
+
+/**
+ * The construction-stage mesh, also the report's Annex A (which sums exactly 12 elements): 13 nodes with every brace
+ * station a node; the rest by halving the longest element. undefined (the default mesh, no annex) for more than
+ * 11 interior stations.
+ */
+export function annexMesh(l: number, stations: number[]): number[] | undefined {
+  const xs = [...new Set([0, l, ...stations.filter((x) => x > 1e-6 && x < l - 1e-6)].map((x) => Math.round(x * 1e6) / 1e6))].sort((a, b) => a - b);
+  if (xs.length > 13) return undefined;
+  while (xs.length < 13) {
+    let k = 0;
+    for (let i = 1; i < xs.length - 1; i++) if (xs[i + 1] - xs[i] > xs[k + 1] - xs[k] + 1e-9) k = i;
+    xs.splice(k + 1, 0, (xs[k] + xs[k + 1]) / 2);
+  }
+  return xs;
+}
+
+/**
+ * Annex A constraints as the columns of a 52-row matrix C: a fixed DOF i is e_i; a flange brace e_v + z e_φ
+ * (v + z φ = 0). Each column is scaled by √K_ii of its first DOF, so the penalty 10⁸ C Cᵀ is 10⁸ times the local
+ * stiffness: one global weight (10⁸ max K) would leave v + z φ ill-conditioned (v and φ′ stiffnesses differ by
+ * about 10¹⁰).
+ */
+function constraintMatrix(ax: LtbAnnex): number[][] {
+  const kd = new Array<number>(52).fill(0);
+  ax.Ke.forEach((k, e) => k.forEach((row, i) => (kd[4 * e + i] += row[i])));
+  const cols = [...ax.fixed.map((i) => [[i, 1]]), ...ax.coupled.map(({ v, z }) => [[v, 1], [v + 2, z]])].map((c) => c.map(([i, a]) => [i, a * Math.sqrt(kd[c[0][0]])]));
+  return Array.from({ length: 52 }, (_, r) => cols.map((c) => c.find(([i]) => i === r)?.[1] ?? 0));
 }
 
 /** Write the finite-element LTB into a result: UR, location, α_cr, M_cr; then the design summary again. */
@@ -218,6 +262,9 @@ function interp(xs: number[], ys: number[], x: number): number {
  * section values of x_M, the checks combined as above, plus at.<check> = x (m) of the governing section
  * (NaN for span-wide checks and the worst-depth checks) and hat.<check> = the depth used (mm; NaN span-wide).
  */
+/** The Annex A system of the last FE LTB (set by combineTaper / results). */
+let annexOut: LtbAnnex | undefined;
+
 export function combineTaper(rM: Results, rA: Results, rB: Results, rP: Results[] = [], loads: FeLoads | null = null, bracing = legacyBracing()): Results {
   const L = rM.L, hA = rM.hA, hB = rM.hB, xM = rM.xM;
   const hAt = (x: number) => hA + ((hB - hA) * x) / L;
@@ -241,7 +288,9 @@ export function combineTaper(rM: Results, rA: Results, rB: Results, rP: Results[
   }
   // LTB over the real (varying) section: EN 1993-1-1 §6.3.4 with α_cr from finite elements (ltb.ts)
   out.taper = 1;
-  applyFeLtb(out, feLtb(out, rA, hAt, loads, bracing), at);
+  const lt = feLtb(out, rA, hAt, loads, bracing);
+  applyFeLtb(out, lt, at);
+  annexOut = lt.annex;
   // the three runs as nodes over depth, for values at the local depth h(x)
   const nodes = [[hA, rA], [hAt(xM), rM], [hB, rB], ...rP.map((r) => [r.h_a, r])] as [number, Results][];
   nodes.sort((p, q) => p[0] - q[0]);
@@ -822,6 +871,7 @@ export class CompositeModel {
     if (!(r.ctap >= 1) || !(Math.abs(r.hA - r.hB) > 0.5)) {
       // uniform beam: LTB by finite elements too (M_cr directly), then the summary again
       const lt = feLtb(r, r, () => r.h_a, loads, this.bracing);
+      this.lastAnnex = lt.annex ?? null;
       applyFeLtb(r, lt, (k, x) => { r[`at.${k}`] = x; r[`hat.${k}`] = r.h_a; });
       if (lt.nc) r['UR.des'] = urDes(r);
       this.lastLtb = r;
@@ -844,13 +894,17 @@ export class CompositeModel {
       rP.push(at(h));
     }
     this.e.setDefinitionOverride(use.id, { value: 0, unit: null } as never);
+    annexOut = undefined;
     const out = combineTaper(rM, rA, rB, rP, loads, this.bracing);
     this.lastLtb = out;
+    this.lastAnnex = annexOut ?? null;
     return out;
   }
 
   /** Last member result with construction FEM factors for the report. */
   private lastLtb: Results | null = null;
+  /** Last construction-stage FE system, written into the report's Annex A. */
+  private lastAnnex: LtbAnnex | null = null;
 
   /**
    * ULS loads of the composite stage on the steel beam alone for the in-plane FE, N/mm, N, mm: γ_G,sw g_0 over the
@@ -905,8 +959,21 @@ export class CompositeModel {
     // Construction FEM factors reproduce the page check, including tapered members.
     this.results();
     const fe = this.lastLtb, feCr: [string, number][] = [['M_{cr.FE}', fe?.['Mcr.LT'] ?? NaN], ['M_{cr.nc.FE}', fe?.['Mcr.LT.nc'] ?? NaN], ['a_{ult.FE}', fe?.['aul.LT'] ?? NaN], ['a_{cr.FE}', fe?.['acr.LT'] ?? NaN], ['a_{LT.FE}', fe?.['alpha.LT'] ?? NaN], ['C_{1.FE}', fe?.['C1.LT'] ?? NaN]];
+        // Annex A: the FE system, solved in the report with genvals / genvecs
+    const ax = this.lastAnnex, num = (v: number) => (Math.abs(v) < 1e-300 ? '0' : Number(v.toPrecision(12)).toString().replace(/e\+?(-?\d+)/, '\\cdot10^{$1}'));
+    const clean = (vals: number[]) => { const big = Math.max(...vals.map(Math.abs), 0); return vals.map((v) => (Math.abs(v) <= 1e-9 * big ? 0 : v)); };
+    const col = (vals: number[], unit: string) => `\\mathrm{stack}\\left(${clean(vals).map((v) => `${num(v)}${unit}`).join(',')}\\right)`;
+    const mat = (m: number[][]) => { const big = Math.max(...m.flat().map(Math.abs), 0); return `\\begin{bmatrix}${m.map((r) => r.map((v) => num(Math.abs(v) <= 1e-12 * big ? 0 : v)).join('&')).join('\\\\')}\\end{bmatrix}`; };
+    const annexLatex: [string, string][] = ax ? [
+      ['x_{FE}', col(ax.x, '\\,\\mathrm{m}')], ['M_{FE}', col(ax.M, '\\,\\mathrm{kN}\\cdot\\mathrm{m}')], ['h_{FE}', col(ax.h, '\\,\\mathrm{mm}')],
+      ['x_{br.FE}', ax.braces.length ? col(ax.braces, '\\,\\mathrm{m}') : '0\\,\\mathrm{m}'], ['c_{zg.FE}', num(ax.czg)],
+      ['C_{FE}', mat(constraintMatrix(ax))],
+      ...ax.Ke.map((m, e): [string, string] => [`k_{e${e}}`, mat(m)]), ...ax.Be.map((m, e): [string, string] => [`b_{e${e}}`, mat(m)]),
+    ] : [];
     const shapes = this.doc.shapes.map((s) => {
       const fcr = s.type === 'math' ? feCr.find(([n]) => (s as MathShape).props.latex.startsWith(`${n}\\coloneq`)) : undefined;
+      const an = s.type === 'math' ? annexLatex.find(([n]) => (s as MathShape).props.latex.startsWith(`${n}\\coloneq`)) : undefined;
+      if (an) return { ...s, props: { ...(s as MathShape).props, latex: `${an[0]}\\coloneq${an[1]}` } };
       if (fcr) return { ...s, props: { ...(s as MathShape).props, latex: `${fcr[0]}\\coloneq ${Number.isFinite(fcr[1]) ? fcr[1] : 0}${fcr[0].startsWith('M_') ? '\\,\\mathrm{kN}\\cdot\\mathrm{m}' : ''}` } };
       if (s.id === this.sectionRegion) return { ...s, props: { ...(s as MathShape).props, latex: `\\mathrm{Section}\\coloneq${this.sectionId}` } };
       const v = this.values.get(s.id);

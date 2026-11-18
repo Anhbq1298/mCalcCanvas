@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { ltbCriticalFactor, solveBeam } from '../../engineering/fem';
-import { applyCompositeState, validateBracing, withPageDefaults, BAR_DIAMETERS, CHECKS, camberFor, CompositeModel, designSection, type DesignCriteria, DEFLECTION_CHECKS, governingCheck, governingSplit, STUD_SPACINGS } from '../../tools/composite/model';
+import { annexMesh, applyCompositeState, validateBracing, withPageDefaults, BAR_DIAMETERS, CHECKS, camberFor, CompositeModel, designSection, type DesignCriteria, DEFLECTION_CHECKS, governingCheck, governingSplit, STUD_SPACINGS } from '../../tools/composite/model';
 import { sections } from '../../engineering/steel/sections';
 import { step } from '../step';
 import { CalculationEngine } from '../../engine';
@@ -433,6 +433,8 @@ describe('mCompositeBeamDesign headless model', () => {
     expect(governingCheck(r).ur).toBeCloseTo(1.028, 3);
     expect([r['alpha.LT'], r['at.LT']]).toEqual([0.76, expect.any(Number)]);
     expect(r['at.LT']).toBeCloseTo(2.34, 2); // the shallow side of mid-span: least W_pl f_y / M_Ed
+    const rep = new CompositeModel(JSON.stringify(m.reportDocument())).results(); // Annex A of the tapered beam
+    expect(rep.acrA / r['acr.LT']).toBeCloseTo(1, 6);
     // hand check: λ̄ = √(α_ult,k / α_cr), χ (6.56), UR = 1 / (χ α_ult,k)
     const lam = Math.sqrt(r['aul.LT'] / r['acr.LT']), phi = 0.5 * (1 + 0.76 * (lam - 0.2) + lam ** 2);
     expect(r['UR.LT']).toBeCloseTo(1 / ((1 / (phi + Math.sqrt(phi ** 2 - lam ** 2))) * r['aul.LT']), 9);
@@ -498,6 +500,12 @@ describe('mCompositeBeamDesign headless model', () => {
       expect(r['Mcr.LT.nc']).toBeGreaterThan(0);
       expect(r['UR.LT.nc']).toBeCloseTo(1 / (r['chi.LT.nc'] * r['aul.LT.nc']), 9);
     });
+    step('Annex A: the report solves the FE system itself (genvals / genvecs) and finds the page α_cr and M_cr', () => {
+      const q = m.results(), rep = new CompositeModel(JSON.stringify(m.reportDocument())).results();
+      expect(rep.errors).toEqual([]);
+      expect(rep.acrA / q['acr.LT']).toBeCloseTo(1, 6);
+      expect(rep.McrA / q['Mcr.LT']).toBeCloseTo(1, 3);
+    });
     step('the report carries the FE M_cr and reproduces the page UR', () => {
       const doc = m.reportDocument() as { shapes: { type: string; props: { latex?: string } }[] };
       const lat = doc.shapes.find((x) => x.type === 'math' && x.props.latex?.startsWith('M_{cr.FE}\\coloneq'))!.props.latex!;
@@ -539,8 +547,10 @@ describe('mCompositeBeamDesign headless model', () => {
       expect(uniform['Mcr.LT']).toBeGreaterThan(original['Mcr.LT']);
       setMain('c_{brace}', 1); setMain('k_{LT}', 0.5);
       expect(main.results()['acr.LT']).toBe(uniform['acr.LT']); // no hidden legacy forks
+      // the construction stage runs on the report's Annex A mesh (12 elements, braces at nodes)
+      const mesh = annexMesh(8000, bracing.positions.map((x) => x * 1000));
       const base = { L: 8000, props: () => ({ EIz: uniform.Ea * uniform.I_z * 1e4, GIt: uniform.Ga * uniform.I_t * 1e4, EIw: uniform.Ea * uniform.I_w * 1e6 }),
-        flangeRestraints: bracing.positions.map((x) => ({ x: x * 1000, z: uniform.h_a / 2 })) };
+        flangeRestraints: bracing.positions.map((x) => ({ x: x * 1000, z: uniform.h_a / 2 })), nodes: mesh };
       const gradient = ltbCriticalFactor({ ...base, M: (x) => uniform.w1 * x * (8000 - x) / 2 });
       const constant = ltbCriticalFactor({ ...base, M: () => 1 });
       expect(uniform['C1.LT']).toBeCloseTo(Math.max(1, gradient * uniform.w1 * 8000 ** 2 / 8 / constant), 8);
@@ -566,7 +576,7 @@ describe('mCompositeBeamDesign headless model', () => {
         EIw: tapered.Ea * tapered.I_w * 1e6 * ((hAt(x) - tapered.t_f) / (hR - tapered.t_f)) ** 2,
       });
       const direct = ltbCriticalFactor({ L: 8000, props, M: (x) => tapered.w1 * x * (8000 - x) / 2,
-        qzg: (x) => tapered.w1 * hAt(x) / 2, flangeRestraints: bracing.positions.map((x) => ({ x: x * 1000, z: hAt(x * 1000) / 2 })) });
+        qzg: (x) => tapered.w1 * hAt(x) / 2, flangeRestraints: bracing.positions.map((x) => ({ x: x * 1000, z: hAt(x * 1000) / 2 })), nodes: mesh });
       expect(tapered['acr.LT']).toBeCloseTo(direct, 7);
       const payload = structuredClone({ values: Object.fromEntries(main.inputs.map((f) => [f.id, main.inputValue(f.id)])), tables: main.tables, bracing: main.bracing });
       const screen = new CompositeModel(raw, { screening: true });
@@ -574,6 +584,11 @@ describe('mCompositeBeamDesign headless model', () => {
       const screening = screen.results();
       expect(screening['acr.LT']).toBeCloseTo(tapered['acr.LT'], 9);
       expect(screening['UR.LT']).toBeCloseTo(tapered['UR.LT'], 9);
+      // Annex A: the report solves the braced system (v + z φ = 0 by penalty) and finds the page α_cr
+      const annexDoc = main.reportDocument() as { shapes: { type: string; props: { latex?: string; constant?: boolean } }[] };
+      const cfe = annexDoc.shapes.find((x) => x.type === 'math' && x.props.latex?.startsWith('C_{FE}\\coloneq'))!;
+      expect(cfe.props.constant).toBe(true); // data, not a highlighted input
+      expect(new CompositeModel(JSON.stringify(annexDoc)).results().acrA / tapered['acr.LT']).toBeCloseTo(1, 6);
       const doc = parseDocument(main.reportDocument());
       const reopened = new CompositeModel(JSON.stringify(doc));
       expect(reopened.bracing).toEqual(bracing);
