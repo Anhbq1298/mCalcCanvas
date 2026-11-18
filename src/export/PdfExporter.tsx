@@ -26,7 +26,9 @@ async function buildPrintView(): Promise<{ pages: number; outside: number }> {
   const shapes = plan && !canUseSourceLayout ? plan.shapes : source;
   const n = plan && !canUseSourceLayout ? plan.pages : pageCount(shapes, settings.pageOrientation, settings.pages);
   const pages = Array.from({ length: n }, (_, i) => ({ index: i, shapes: shapesOnPage(shapes, i, settings.pageOrientation) }));
-  await renderPrint(<PrintView pages={pages} />);
+  // Column rules between the reading columns of a reflowed wide sheet (e.g. A3 landscape).
+  const columns = plan && !canUseSourceLayout && plan.columns > 1 ? plan.columns : 1;
+  await renderPrint(<PrintView pages={pages} columns={columns} />);
   return { pages: n, outside: shapesOutsidePrintArea(shapes, settings.pageOrientation).length };
 }
 

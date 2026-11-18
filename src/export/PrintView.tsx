@@ -5,7 +5,9 @@ import type { CalculationResult } from '../engine/CalculationEngine';
 import { useAppStore } from '../store/appStore';
 import { ReportResults, ReportShapes } from '../store/reportResults';
 import { PageChrome } from './PageChrome';
-import { currentPageSetup, pageBox, paperMm } from './pageGeometry';
+import { printColumns } from '../canvas/templateLayout';
+import { shapeBounds } from '../canvas/model/geometry';
+import { currentPageSetup, marginPx, pageBox, pageSize, paperMm } from './pageGeometry';
 
 /** One printed sheet: a worksheet page (optionally with one case's results) or a free page (case summary). */
 export type PrintSheet =
@@ -13,12 +15,27 @@ export type PrintSheet =
   | { key: string; kind: 'free'; content: ReactNode; caseLabel?: string };
 
 /** The printable A4 pages: each page renders its shapes in static mode plus the header/footer. */
-export function PrintView({ pages }: { pages: { index: number; shapes: Shape[] }[] }) {
+export function PrintView({ pages, columns = 1 }: { pages: { index: number; shapes: Shape[] }[]; columns?: number }) {
   const shapes = Object.fromEntries(pages.flatMap(p => p.shapes).map(s => [s.id, s]));
-  return <ReportShapes.Provider value={shapes}><PrintSheets sheets={pages.map((p) => ({ key: String(p.index), kind: 'page', index: p.index, shapes: p.shapes }))} /></ReportShapes.Provider>;
+  return <ReportShapes.Provider value={shapes}><PrintSheets columns={columns} sheets={pages.map((p) => ({ key: String(p.index), kind: 'page', index: p.index, shapes: p.shapes }))} /></ReportShapes.Provider>;
 }
 
-export function PrintSheets({ sheets }: { sheets: PrintSheet[] }) {
+/** Thin vertical rules in the gutters of a page that uses more than one reading column. */
+function ColumnRules({ index, shapes, columns }: { index: number; shapes: Shape[]; columns: number }) {
+  const { settings } = useAppStore.getState();
+  const page = pageBox(index, settings.pageOrientation);
+  const m = marginPx();
+  const { width, gutter } = printColumns(pageSize(settings.pageOrientation).w - m.left - m.right);
+  const rules: number[] = [];
+  for (let c = 1; c < columns; c++) {
+    const x = m.left + c * (width + gutter) - gutter / 2;
+    // Only between columns that hold content on this page.
+    if (shapes.some((s) => shapeBounds(s).x - page.x > x)) rules.push(x);
+  }
+  return <>{rules.map((x) => <div key={x} className="print-column-rule" data-testid="print-column-rule" style={{ left: x, top: m.top, height: page.h - m.top - m.bottom }} />)}</>;
+}
+
+export function PrintSheets({ sheets, columns = 1 }: { sheets: PrintSheet[]; columns?: number }) {
   const { settings } = useAppStore.getState();
   const total = sheets.length;
   // Paper from the page setup (A4/A3, portrait/landscape); the PDF page size follows it.
@@ -40,6 +57,7 @@ export function PrintSheets({ sheets }: { sheets: PrintSheet[] }) {
           ) : (
             <div className="print-free">{sheet.content}</div>
           )}
+          {sheet.kind === 'page' && columns > 1 && <ColumnRules index={sheet.index} shapes={sheet.shapes} columns={columns} />}
           <PageChrome index={n} total={total} caseLabel={sheet.caseLabel} />
         </section>
       ))}

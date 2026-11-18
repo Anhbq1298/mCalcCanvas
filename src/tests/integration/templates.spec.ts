@@ -38,6 +38,8 @@ test('every calculation template prints compactly without changing editable geom
       await expect(page.locator('#print-root .print-page')).toHaveCount(1);
       await expect(page.locator('#print-root .print-page')).toHaveAttribute('data-paper', 'A3 landscape');
       await expect(page.locator('#print-root [data-testid=math-region]')).toHaveCount(results.length);
+      // Two reading columns on A3 landscape, with a rule in the gutter.
+      await expect(page.locator('#print-root [data-testid=print-column-rule]')).toHaveCount(1);
       expect(await snapshot()).toBe(landscapeBefore);
     }
   }

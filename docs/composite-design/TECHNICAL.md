@@ -400,3 +400,5 @@ The worksheet is saved as A3 landscape with Optimize print layout on: the print 
 columns (22 printed pages instead of 42 on A4 portrait). The canvas keeps the single-column order, because the
 engine evaluates regions top to bottom; only the printed copy is reflowed. `finish({ page })` in
 `tools/templates/layout.mjs` sets the paper; the eigenvalue vector μ_FE prints at 10 px so it fits one column.
+A thin rule (same line as the header and footer) is drawn in the gutter of each printed page whose right column
+has content (`ColumnRules` in `src/export/PrintView.tsx`; `printColumns` gives the column geometry).

@@ -12,8 +12,16 @@ interface TemplateLayoutResult {
   pages: number;
   utilization: number[];
   issues: string[];
+  /** Reading columns per page (1 unless mode 'print' on a wide sheet). */
+  columns: number;
 }
 type Block = { shapes: Shape[]; box: Box };
+
+/** Reading columns of the print plan for a printable width (px): 642 px columns, 24 px gutter. */
+export function printColumns(usableWidth: number): { count: number; width: number; gutter: number } {
+  const count = Math.max(1, Math.floor((usableWidth + 24) / (642 + 24)));
+  return { count, width: (usableWidth - (count - 1) * 24) / count, gutter: 24 };
+}
 
 /** Pure template/print planner. It never changes source formulas, ids or input bindings.
  * Existing rows and grouped drawings move together; gaps and old page breaks are discarded.
@@ -24,8 +32,7 @@ export function optimizeTemplateLayout(input: Shape[], options: TemplateLayoutOp
   const height = options.height ?? 1123;
   const m = options.margins ?? { left: 76, right: 76, top: 60, bottom: 60 };
   const usable = { w: width - m.left - m.right, h: height - m.top - m.bottom };
-  const columns = options.mode === 'print' ? Math.max(1, Math.floor((usable.w + 24) / (642 + 24))) : 1;
-  const columnWidth = (usable.w - (columns - 1) * 24) / columns;
+  const { count: columns, width: columnWidth } = options.mode === 'print' ? printColumns(usable.w) : { count: 1, width: usable.w };
   const gap = options.mode === 'print' ? 4 : 6;
   const groups = new Map<string, Shape[]>();
   for (const shape of input) {
@@ -116,5 +123,5 @@ export function optimizeTemplateLayout(input: Shape[], options: TemplateLayoutOp
     bottom = top + block.box.h;
     used[page] = Math.max(used[page] ?? 0, bottom - m.top);
   }
-  return { shapes: input.map(s => moved.get(s.id) ?? { ...s }), pages: page + 1, utilization: used.map(h => h / usable.h), issues };
+  return { shapes: input.map(s => moved.get(s.id) ?? { ...s }), pages: page + 1, utilization: used.map(h => h / usable.h), issues, columns };
 }
