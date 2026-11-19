@@ -249,3 +249,12 @@ td.pass, b.pass { color: var(--pass); } td.warn, b.warn { color: var(--warn); } 
 .taper-dialog .taper-table tr.sel { background: #e8eefb; }
 .taper-dialog .taper-table td.ro { color: #57606a; font-variant-numeric: tabular-nums; }
 .taper-dialog .taper-tools { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.4rem 0; }
+
+/* beam column (internal forces and deflections, aligned with the elevation) and the serviceability panel beside it */
+.beam-row { display: flex; align-items: flex-start; gap: 1.2rem; }
+.beam-row > .sheet-sec.forces-panel { flex: none; }
+.beam-row > .sheet-sec.sls-panel { box-sizing: border-box; flex: 1 1 0; min-width: 0; }
+@media (max-width: 900px) { .beam-row { flex-direction: column; } .beam-row > .sheet-sec.forces-panel { width: 100%; } }
+.sls-table { width: 100%; font-variant-numeric: tabular-nums; }
+.sls-table th, .sls-table td { text-align: right; padding: 0.2rem 0.3rem; }
+.sls-table th:first-child, .sls-table td:first-child { text-align: left; }

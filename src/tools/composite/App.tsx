@@ -634,6 +634,7 @@ export function App() {
                 <tr><td>Line load w<sub>Ed</sub> (kN/m)</td><td>–</td><td>{fmt(res.w1, 2)} over {fmt(res.L1, 2)} m</td></tr>
               </tbody>
             </table>
+            <div className="beam-row">
             <section className="sheet-sec forces-panel" aria-labelledby="h-forces" data-testid="forces-panel">
               <div className="sec-head"><h2 id="h-forces">Internal forces, ULS</h2><span className="hint">hover or ← → on a chart to read values</span></div>
                         <h3>Shear V<sub>Ed</sub>, max {fmt(res.V2, 1)} kN</h3>
@@ -666,7 +667,50 @@ export function App() {
                 </>
               );
             })()}
+            <h3 id="h-defl1">Deflection, construction stage (steel alone), max {fmt(res.d1, 1)} mm</h3>
+            <LineChart
+              alignBeam
+              series={[
+                { x: v.x1v, y: v.d1v, color: C.blue, label: 'δ_1' },
+                { x: [v.x1v[0] ?? 0, v.x1v[v.x1v.length - 1] ?? 1], y: [res.dlim, res.dlim], color: C.red, label: 'limit', dash: true, width: 1.2 },
+              ]}
+              height={130}
+              invertY
+              yUnit="mm"
+              label={`Construction deflection, maximum ${fmt(res.d1, 1)} mm against a limit of ${fmt(res.dlim, 1)} mm`}
+            />
+            <Legend items={[{ color: C.blue, label: 'δ_1(x), steel alone' }, { color: C.red, label: 'limit L/r', dash: true }]} />
+            <h3 id="h-defl">Deflection, permanent stage, {composite ? 'composite' : 'bare steel'}, max {fmt(dMax, 1)} mm</h3>
+            <LineChart
+              alignBeam
+              series={[
+                { x: v.x, y: v.d, color: C.blue, label: 'DL+LL' },
+                { x: v.x, y: v.dq, color: C.green, label: 'LL', width: 1.4 },
+                { x: [v.x[0] ?? 0, v.x[v.x.length - 1] ?? 1], y: [res.dlim, res.dlim], color: C.red, label: 'limit', dash: true, width: 1.2 },
+              ]}
+              height={150}
+              invertY
+              yUnit="mm"
+              label={`Deflection, maximum ${fmt(dMax, 1)} mm against a limit of ${fmt(res.dlim, 1)} mm`}
+            />
+            <Legend items={[{ color: C.blue, label: '1.0 DL + 1.0 LL' }, { color: C.green, label: 'LL' }, { color: C.red, label: 'limit L/r', dash: true }]} />
           </section>
+            <aside className="sheet-sec sls-panel" aria-labelledby="h-sls" data-testid="sls-panel">
+              <div className="sec-head"><h2 id="h-sls">Serviceability</h2><span className="hint">1.0 DL + 1.0 LL; construction: w<sub>1,k</sub> = {fmt(res.w1k, 2)} kN/m over L<sub>1</sub> = {fmt(res.L1, 2)} m</span></div>
+              <table className="kv sls-table">
+                <thead><tr><th>Deflection</th><th>max (mm)</th><th>limit (mm)</th><th>UR</th></tr></thead>
+                <tbody>
+                  <tr><td>δ<sub>1</sub>, construction (steel alone)</td><td>{fmt(res.d1, 1)}</td><td>{fmt((res.L1 * 1000) / res.rlim1, 1)}</td><td className={tone(res['UR.d.1'])}>{fmt(res['UR.d.1'], 3)}</td></tr>
+                  <tr><td>δ, total less precamber, {composite ? 'composite' : 'bare steel'}</td><td>{fmt(dMax, 1)}</td><td>{fmt(res.dlim, 1)}</td><td className={tone(composite ? res['UR.d.x'] : res['UR.d.nc'])}>{fmt(composite ? res['UR.d.x'] : res['UR.d.nc'], 3)}</td></tr>
+                  <tr><td>δ<sub>LL</sub>, live load</td><td>{fmt(res.dq, 1)}</td><td>{fmt((res.L * 1000) / res.rlimq, 1)}</td><td className={tone(composite ? res['UR.d.q'] : res['UR.d.q.nc'])}>{fmt(composite ? res['UR.d.q'] : res['UR.d.q.nc'], 3)}</td></tr>
+                </tbody>
+              </table>
+              <p className="hint" data-testid="frequency">
+              Natural frequency f<sub>1</sub> = {fmt(composite ? res.f1 : res.f1nc, 2)} Hz{composite ? '' : ' (steel alone)'} against the limit f<sub>lim</sub> = {fmt(res.flim, 2)} Hz: UR = {fmt(composite ? res['UR.fn'] : res['UR.fn.nc'], 3)}. f<sub>1</sub> = 18/√δ, δ = {fmt(composite ? res.ddyn : res.ddynnc, 1)} mm under g<sub>0</sub> + G + ψ<sub>vib</sub>Q on the dynamic section (SCI P354 approximation, E<sub>c.dyn</sub> = {fmt(res.Ecdyn ?? 38, 1)} GPa; SCI P354 / AD 433 give 38 GPa, AISC DG11 uses 1.35 E<sub>cm</sub>; change E<sub>c.dyn</sub> under Serviceability).
+            
+              </p>
+            </aside>
+            </div>
 
             <section className="sheet-sec" aria-labelledby="h-shear3d">
               <div className="sec-head"><h2 id="h-shear3d">Longitudinal shear surfaces a-a, b-b{res.ccc >= 1 ? ' and c-c' : ''}</h2><span className="hint">EN 1994-1-1 §6.6.6.1, Figure 6.15{deck ? ', §6.6.6.4, Figure 6.16' : ''}; the surfaces run the whole length of the beam</span></div>
@@ -700,40 +744,6 @@ export function App() {
                 </figure>
               </div>
               <p className="hint">Front face = cross-section to scale; the length along the span is not. Bars counted must be anchored past each surface (EC2 §8.4). v<sub>f</sub> = {res.nre > 1 ? `${fmt(res.nre, 0)} ` : ''}P<sub>Rd</sub>/s<sub>min</sub> = {fmt(res.vf, 0)} kN/m pulls the slab outstand along the beam.</p>
-            </section>
-            <section className="sheet-sec forces-panel" aria-labelledby="h-defl1" data-testid="defl1-panel">
-              <div className="sec-head"><h2 id="h-defl1">Deflection, construction stage (steel alone)</h2><span className="hint">w<sub>1,k</sub> = g<sub>0</sub> + (g<sub>form</sub> + q<sub>con</sub>)·s<sub>b</sub> = {fmt(res.w1k, 2)} kN/m over L<sub>1</sub> = {fmt(res.L1, 2)} m</span></div>
-              <LineChart
-                alignBeam
-                series={[
-                  { x: v.x1v, y: v.d1v, color: C.blue, label: 'δ_1' },
-                  { x: [v.x1v[0] ?? 0, v.x1v[v.x1v.length - 1] ?? 1], y: [res.dlim, res.dlim], color: C.red, label: 'limit', dash: true, width: 1.2 },
-                ]}
-                height={170}
-                invertY
-                yUnit="mm"
-                label={`Construction deflection, maximum ${fmt(res.d1, 1)} mm against a limit of ${fmt(res.dlim, 1)} mm`}
-              />
-              <Legend items={[{ color: C.blue, label: `δ_1(x), steel alone, max ${fmt(res.d1, 1)} mm` }, { color: C.red, label: `limit L/r = ${fmt(res.dlim, 1)} mm`, dash: true }]} />
-            </section>
-            <section className="sheet-sec forces-panel" aria-labelledby="h-defl" data-testid="defl-panel">
-              <div className="sec-head"><h2 id="h-defl">Deflection, permanent stage, {composite ? 'composite (partial interaction)' : 'bare steel'}</h2><span className="hint">1.0 DL + 1.0 LL, permanent stage</span></div>
-            <LineChart
-              alignBeam
-              series={[
-                { x: v.x, y: v.d, color: C.blue, label: 'DL+LL' },
-                { x: v.x, y: v.dq, color: C.green, label: 'LL', width: 1.4 },
-                { x: [v.x[0] ?? 0, v.x[v.x.length - 1] ?? 1], y: [res.dlim, res.dlim], color: C.red, label: 'limit', dash: true, width: 1.2 },
-              ]}
-              height={190}
-              invertY
-              yUnit="mm"
-              label={`Deflection, maximum ${fmt(dMax, 1)} mm against a limit of ${fmt(res.dlim, 1)} mm`}
-            />
-            <Legend items={[{ color: C.blue, label: `1.0 DL + 1.0 LL, max ${fmt(dMax, 1)} mm` }, { color: C.green, label: `LL, max ${fmt(Math.max(...v.dq), 1)} mm` }, { color: C.red, label: `limit L/r = ${fmt(res.dlim, 1)} mm`, dash: true }]} />
-            <p className="hint" data-testid="frequency">
-              Natural frequency f<sub>1</sub> = {fmt(composite ? res.f1 : res.f1nc, 2)} Hz{composite ? '' : ' (steel alone)'} against the limit f<sub>lim</sub> = {fmt(res.flim, 2)} Hz: UR = {fmt(composite ? res['UR.fn'] : res['UR.fn.nc'], 3)}. f<sub>1</sub> = 18/√δ, δ = {fmt(composite ? res.ddyn : res.ddynnc, 1)} mm under g<sub>0</sub> + G + ψ<sub>vib</sub>Q on the dynamic section (SCI P354 approximation, E<sub>c.dyn</sub> = {fmt(res.Ecdyn ?? 38, 1)} GPa; SCI P354 / AD 433 give 38 GPa, AISC DG11 uses 1.35 E<sub>cm</sub>; change E<sub>c.dyn</sub> under Serviceability).
-            </p>
             </section>
           </section>
 

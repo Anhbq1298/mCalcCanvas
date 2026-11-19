@@ -451,5 +451,6 @@ round trip; e2e of the dialog.
 
 ## Deflection plots
 
-Both deflection plots use the beam column width and margins of the internal-force diagrams (`alignBeam`, the
-`forces-panel` width), so x lines up with the elevation, V_Ed and M_Ed above.
+The construction and permanent-stage deflection plots sit in the beam column under V_Ed, M_Ed and the stud diagram
+(`forces-panel`, `alignBeam`), so x lines up with the elevation. Beside the column, the Serviceability panel lists
+δ_1, δ (total less precamber) and δ_LL with their limits and UR, and the natural frequency.
