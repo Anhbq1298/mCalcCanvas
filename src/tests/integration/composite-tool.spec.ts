@@ -234,23 +234,22 @@ test('tapered beam depth profile: ETABS-style segments in a dialog, haunched end
   await page.getByTestId('taper-edit').click();
   const dlg = page.getByTestId('taper-dialog');
   await expect(dlg).toBeVisible();
-  // three segments: 1 m haunch at A, proportional middle at the library depth, 1 m haunch at B down to 300
-  const row = (i: number) => dlg.locator('tbody tr').nth(i);
-  await page.getByTestId('taper-split').click();
-  await page.getByTestId('taper-split').click();
-  await expect(dlg.locator('tbody tr')).toHaveCount(3);
-  for (const [i, type, len, h] of [[0, 'abs', '1', '402.6'], [1, 'prop', '1', '402.6'], [2, 'abs', '1', '300']] as const) {
-    await row(i).getByLabel(`Segment ${i + 1} length type`).selectOption(type);
-    await row(i).getByLabel(`Segment ${i + 1} length`, { exact: true }).fill(len);
-    await row(i).getByLabel(`Segment ${i + 1} end depth`).fill(h);
-  }
-  await expect(row(1).locator('td').nth(5)).toHaveText('4.200');
+  // haunched ends: points at 1 m and 4.2 m from A at the library depth, 300 mm at both supports
+  await expect(dlg.getByLabel('Depth at A')).toHaveValue('300');
+  await page.getByTestId('taper-add').click();
+  await page.getByTestId('taper-add').click();
+  await expect(dlg.locator('tbody tr')).toHaveCount(4);
+  await dlg.getByLabel('Point 1 x').fill('1');
+  await dlg.getByLabel('Point 1 h').fill('402.6');
+  await dlg.getByLabel('Point 2 x').fill('4.2');
+  await dlg.getByLabel('Point 2 h').fill('402.6');
+  await dlg.getByLabel('Depth at B').fill('300');
   await expect(page.getByTestId('taper-preview')).toBeVisible();
-  // a profile that does not fit the span blocks OK
-  await row(1).getByLabel('Segment 2 length type').selectOption('abs');
-  await expect(dlg.getByRole('alert')).toContainText('must equal the span');
+  // a point outside the span blocks OK
+  await dlg.getByLabel('Point 2 x').fill('6');
+  await expect(dlg.getByRole('alert')).toContainText('between the supports');
   await expect(page.getByTestId('taper-save')).toBeDisabled();
-  await row(1).getByLabel('Segment 2 length type').selectOption('prop');
+  await dlg.getByLabel('Point 2 x').fill('4.2');
   await page.getByTestId('taper-save').click();
   await expect(dlg).toBeHidden();
   await expect(page.getByTestId('taper-profile-summary')).toContainText('3 segments: 300 → 403 → 403 → 300 mm');

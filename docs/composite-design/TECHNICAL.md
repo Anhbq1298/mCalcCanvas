@@ -405,10 +405,11 @@ has content (`ColumnRules` in `src/export/PrintView.tsx`; `printColumns` gives t
 
 ## Tapered beam: depth profile (multi-segment, ETABS-style)
 
-`Depth profile…` opens a nonprismatic-segment dialog like ETABS (Frame Section Property Data → Nonprismatic): h_A at
-support A, then segments with a length type (absolute, m; or proportional: a share of what the absolute lengths leave
-of the span) and an end depth; the last segment ends at h_B. The web depth is linear within each segment; flanges and
-web thickness stay as the library section, depths are limited to the library depth. No profile (or one segment) is the
+`Depth profile…` opens a points table: the depth h at each distance x from support A (support A at x = 0 and B at
+x = L are always points; add, edit or delete the ones between). The web depth is linear between points; flanges and
+web thickness stay as the library section, depths are limited to the library depth. It is stored as ETABS-style
+nonprismatic segments: absolute lengths between the points and a last proportional segment to B, so the points keep
+their distance from A when L changes. No interior point is the
 linear h_A → h_B taper. `taperLengths`, `taperStations`, `validateTaper` in `model.ts`.
 
 - The sheet is run at every vertex depth (as well as h_A, h_B, h(x_M) and h at each point load); the worst-depth checks
