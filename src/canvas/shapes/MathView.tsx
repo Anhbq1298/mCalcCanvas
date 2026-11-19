@@ -24,8 +24,8 @@ import { UNIT_COLOR } from '../../math/unitStyle';
 import { releaseActiveMathEditor, setActiveMathEditor, setKeyReplayer } from '../../math/activeEditor';
 import { setMathEditingBounds } from './mathEditingBounds';
 
-const PAD_X = 4;
-const PAD_Y = 2;
+const PAD_X = 2;
+const PAD_Y = 0;
 
 /** A math region: MathLive editor while editing, rendered equation + result otherwise. */
 export function MathView({ shape, editing, isStatic }: { shape: MathShape; editing: boolean; isStatic: boolean }) {
