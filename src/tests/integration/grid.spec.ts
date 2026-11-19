@@ -31,6 +31,7 @@ test.describe('optional grid snapping', () => {
 
     await page.getByTestId('format-tab-document').click();
     await page.getByTestId('doc-snap').check();
+    await page.getByTestId('doc-snap-spacing').selectOption('major'); // worksheet lines (40 px)
     await page.getByTestId('format-tab-math').click();
     await page.getByTestId('tool-math').click();
     await page.mouse.click(613, 417);
@@ -76,6 +77,21 @@ test.describe('optional grid snapping', () => {
     await page.pdf({ path: testInfo.outputPath('small-square-snap.pdf'), preferCSSPageSize: true, printBackground: true });
   });
 
+  test('the + cross steps by the drawn small squares by default, with or without snapping', async ({ page }) => {
+    await openFresh(page);
+    await newBlankWorksheet(page, 'page');
+    await page.getByTestId('format-tab-document').click();
+    await expect(page.getByTestId('doc-snap-spacing')).toHaveValue('minor');
+    await page.getByTestId('format-tab-math').click();
+    const cross = () => page.evaluate(() => (window as unknown as { __calccanvas: { store: { getState(): { crosshair: { x: number; y: number } | null } } } }).__calccanvas.store.getState().crosshair);
+    // a click 100 px below the writable top (5 squares, between worksheet lines) lands there
+    const p = await pageToScreen(page, 76 + 61, 60 + 101);
+    await page.mouse.click(p.x, p.y);
+    await expect.poll(cross).toEqual({ x: 76 + 60, y: 60 + 100 });
+    await page.keyboard.press('ArrowDown');
+    await expect.poll(cross).toEqual({ x: 76 + 60, y: 60 + 120 });
+  });
+
   test('the 3 × 3 grid, regions and selection stay synchronized through zoom levels', async ({ page }, testInfo) => {
     await openFresh(page);
     await newBlankWorksheet(page, 'free');
@@ -118,6 +134,7 @@ test.describe('math and text regions snap strictly to the grid', () => {
     await newBlankWorksheet(page, 'page');
     await page.getByTestId('format-tab-document').click();
     await page.getByTestId('doc-snap').check();
+    await page.getByTestId('doc-snap-spacing').selectOption('major'); // worksheet lines (40 px)
     await page.getByTestId('format-tab-math').click();
   });
 
@@ -188,6 +205,7 @@ test.describe('moving regions', () => {
     await newBlankWorksheet(page, 'page');
     await page.getByTestId('format-tab-document').click();
     await page.getByTestId('doc-snap').check();
+    await page.getByTestId('doc-snap-spacing').selectOption('major'); // worksheet lines (40 px)
     await page.getByTestId('format-tab-math').click();
   });
 
@@ -241,6 +259,7 @@ test.describe('lines like a document', () => {
     await newBlankWorksheet(page, 'page');
     await page.getByTestId('format-tab-document').click();
     await page.getByTestId('doc-snap').check();
+    await page.getByTestId('doc-snap-spacing').selectOption('major'); // worksheet lines (40 px)
     await page.getByTestId('format-tab-math').click();
     const at = async (y: number) => {
       const p = await pageToScreen(page, 76 + 30, y - 10);
@@ -285,6 +304,7 @@ test('a region dropped onto another pushes it down instead of overlapping', asyn
   await newBlankWorksheet(page, 'page');
   await page.getByTestId('format-tab-document').click();
   await page.getByTestId('doc-snap').check();
+  await page.getByTestId('doc-snap-spacing').selectOption('major'); // worksheet lines (40 px)
   await page.getByTestId('format-tab-math').click();
   for (const [y, txt] of [[100, 'a:1'], [180, 'b:2'], [220, 'c:3']] as const) {
     const p = await pageToScreen(page, 76 + 30, y - 10);

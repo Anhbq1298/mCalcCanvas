@@ -130,6 +130,8 @@ export const DEFAULT_SETTINGS: DocumentSettings = {
   vectorLimit: 10,
   showMatrixIndices: false,
   collapseNestedMatrices: false,
+  // the + cross and snapped regions step by the drawn small squares (20 px); 'major' = worksheet lines (40 px)
+  baselineSnap: 'minor',
 };
 
 export interface DocumentSummary {

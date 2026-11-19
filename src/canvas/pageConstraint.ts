@@ -93,9 +93,9 @@ function gridPoint(p: Point): Point {
   return { x: o.x + Math.round((p.x - o.x) / GRID_SIZE) * GRID_SIZE, y: o.y + Math.round((p.y - o.y) / GRID_SIZE) * GRID_SIZE };
 }
 
-/** Baselines snap to worksheet lines (40 px) or, if chosen, grid squares (20 px). */
+/** Baselines snap to the drawn grid squares (20 px, the default) or, if chosen, worksheet lines (40 px). */
 export function baselineStep(): number {
-  return useAppStore.getState().settings.baselineSnap === 'minor' ? GRID_SIZE : LINE_HEIGHT;
+  return useAppStore.getState().settings.baselineSnap === 'major' ? LINE_HEIGHT : GRID_SIZE;
 }
 
 /** Nearest worksheet line or grid square, measured from the grid origin. */

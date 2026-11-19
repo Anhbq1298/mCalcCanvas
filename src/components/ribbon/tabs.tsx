@@ -241,7 +241,7 @@ export function CalculationTab() {
             <TBSelect
               label="Equations and text snap their baseline to worksheet lines (40 px) or to every grid square (20 px)"
               testId="baseline-snap"
-              value={settings.baselineSnap ?? 'major'}
+              value={settings.baselineSnap ?? 'minor'}
               width={96}
               onChange={(v) => updateSettings({ baselineSnap: v as 'major' | 'minor' })}
               options={[['major', 'Lines'], ['minor', 'Squares']]}
@@ -387,7 +387,7 @@ export function DocumentTab() {
             label="Snap spacing for equations and text"
             testId="doc-snap-spacing"
             disabled={!isSnap}
-            value={settings.baselineSnap ?? 'major'}
+            value={settings.baselineSnap ?? 'minor'}
             width={144}
             onChange={(v) => updateSettings({ baselineSnap: v as 'major' | 'minor' })}
             options={[['minor', 'Small squares'], ['major', 'Worksheet lines']]}
