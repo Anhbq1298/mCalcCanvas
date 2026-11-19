@@ -116,7 +116,7 @@ export function useCanvasKeyboard(): void {
       // Mathcad: a double quote on empty space starts a text region.
       if (e.key === '"' && !st.editingId && st.selection.length === 0 && st.tool === 'select') {
         e.preventDefault();
-        createTextRegion(insertionPoint());
+        createTextRegion(insertionPoint('text'));
         return;
       }
       // Mathcad behaviour: just start typing to create a math region.

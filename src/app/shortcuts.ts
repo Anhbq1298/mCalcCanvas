@@ -55,7 +55,8 @@ export const SHORTCUTS: ShortcutDefinition[] = [
 
   // --- Regions -------------------------------------------------------------
   { id: 'new-math', category: 'Regions', command: 'Insert math region', description: 'Start typing on an empty spot: a math region is created at the + cross', keys: ['Type'], scope: 'worksheet' },
-  { id: 'new-text', category: 'Regions', command: 'Insert text region', description: 'Type a double quote on an empty spot (Ctrl+T belongs to the browser)', keys: ['"'], scope: 'worksheet' },
+  { id: 'new-text', category: 'Regions', command: 'Insert text region', description: 'A text region at the + cross (or the pointer). In a normal browser tab Chrome and Edge keep Ctrl+T for a new tab; a double quote on an empty spot always works', keys: [MOD_LABEL, 'T'], scope: 'worksheet', chords: [{ key: 't', mod: true }] },
+  { id: 'new-text-quote', category: 'Regions', command: 'Insert text region', description: 'Type a double quote on an empty spot', keys: ['"'], scope: 'worksheet' },
   { id: 'edit', category: 'Regions', command: 'Edit region', description: 'Edit the selected region (double-click also works)', keys: ['Enter'], scope: 'worksheet' },
   { id: 'finish', category: 'Regions', command: 'Finish region', description: 'Leave the region being edited', keys: ['Esc'], scope: 'math' },
   { id: 'copy', category: 'Regions', command: 'Copy', description: 'Copy the selected regions', keys: [MOD_LABEL, 'C'], scope: 'worksheet', chords: [{ key: 'c', mod: true }] },

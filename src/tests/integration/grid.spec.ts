@@ -92,6 +92,28 @@ test.describe('optional grid snapping', () => {
     await expect.poll(cross).toEqual({ x: 76 + 60, y: 60 + 120 });
   });
 
+  test('a math region sits on the line of the + cross (its baseline on the grid line); Ctrl+T adds text', async ({ page }) => {
+    await openFresh(page);
+    await newBlankWorksheet(page, 'page');
+    const p = await pageToScreen(page, 76 + 101, 60 + 101);
+    await page.mouse.click(p.x, p.y);
+    await page.keyboard.type('a:2', { delay: 30 });
+    await page.keyboard.press('Enter');
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __calccanvas: { store: { getState(): { crosshair: unknown } } } }).__calccanvas.store.getState().crosshair)).toEqual({ x: 76 + 100, y: 60 + 140 });
+    await page.keyboard.type('b:3', { delay: 30 });
+    await page.keyboard.press('Escape');
+    await page.mouse.click(5, 5);
+    const lines = () => page.evaluate(() => Object.values((window as unknown as { __calccanvas: { store: { getState(): { shapes: Record<string, { type: string; y: number; props: { baseline?: number } }> } } } }).__calccanvas.store.getState().shapes)
+      .filter((s) => s.type === 'math').map((s) => s.y + (s.props.baseline ?? NaN)));
+    // first baselines on the cross line (y 160) and on a grid line below the first region (y 200)
+    await expect.poll(lines).toEqual([60 + 100, 60 + 140]);
+    // Ctrl+T: a text region at the + cross
+    const q = await pageToScreen(page, 76 + 101, 60 + 241);
+    await page.mouse.click(q.x, q.y);
+    await page.keyboard.press('Control+t');
+    await expect(page.locator('[data-testid=text-region]')).toHaveCount(1);
+  });
+
   test('the 3 × 3 grid, regions and selection stay synchronized through zoom levels', async ({ page }, testInfo) => {
     await openFresh(page);
     await newBlankWorksheet(page, 'free');

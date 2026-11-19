@@ -10,8 +10,8 @@ import { MathRenderer } from '../../math/MathRenderer';
 import { useRegionResult } from '../../store/calculationStore';
 import { select, stopEditing, updateShape, useCanvasStore } from '../model/canvasStore';
 import { fontStack, type MathShape } from '../model/types';
-import { majorLineAtOrBelow } from '../pageConstraint';
-import { convertMathRegionToText, separateRegion } from '../canvasActions';
+import { snapLineAtOrBelow } from '../pageConstraint';
+import { convertMathRegionToText, separateRegion, unanchoredRegions } from '../canvasActions';
 import { useSeparateAfterEditing } from './useSeparate';
 import { useSeen } from './useSeen';
 import { annexInfo, annexNumber, pageNumberOf } from '../annex';
@@ -69,6 +69,7 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
       const nw = Math.max(24, Math.ceil(el.offsetWidth));
       const nh = Math.max(20, Math.ceil(el.offsetHeight));
       const patch: { w?: number; h?: number; baseline?: number } = {};
+      let y: number | undefined;
       if (Math.abs(nw - shape.props.w) > 1 || Math.abs(nh - shape.props.h) > 1) Object.assign(patch, { w: nw, h: nh });
       // Baseline of the rendered equation (not while typing, so the region doesn't jump):
       // it is placed on a major grid line, like writing on ruled paper.
@@ -77,10 +78,18 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         const r = el.getBoundingClientRect();
         const scale = el.offsetHeight ? r.height / el.offsetHeight : 1;
         const b = Math.round((probe.getBoundingClientRect().bottom - r.top) / (scale || 1));
-        if (b > 0 && b !== shape.props.baseline) patch.baseline = b;
+        if (b > 0 && b !== shape.props.baseline) {
+          // a region just created at the cross (placed with the estimated baseline 4 + font size): keep its
+          // baseline on the line; only once, so loading, undo or a later edit never moves it
+          if (unanchoredRegions.delete(shape.id) && !useCanvasStore.getState().dragging) {
+            const dy = 4 + shape.props.fontSize - b;
+            if (dy) y = shape.y + dy;
+          }
+          patch.baseline = b;
+        }
       }
       if (Object.keys(patch).length) {
-        updateShape(shape.id, { props: patch }, { history: false });
+        updateShape(shape.id, y === undefined ? { props: patch } : { y, props: patch }, { history: false });
         // Grew or moved to its baseline: don't sit on top of the next region.
         if (!editing && !useCanvasStore.getState().dragging) separateRegion(shape.id);
       }
@@ -136,8 +145,8 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
         const s = useCanvasStore.getState().shapes[shape.id];
         const bottom = s ? s.y + (s.type === 'math' ? s.props.h : 0) : 0;
         select([]);
-        // Next major line with room for a one-line equation above it.
-        if (s) useCanvasStore.setState({ crosshair: { x: s.x, y: majorLineAtOrBelow(bottom + 26) } });
+        // The next line with room for a one-line equation above it (its baseline goes on the cross).
+        if (s) useCanvasStore.setState({ crosshair: { x: s.x, y: snapLineAtOrBelow(bottom + 4 + (s.type === 'math' ? s.props.fontSize : 18)) } });
       }
     },
     [shape.id],

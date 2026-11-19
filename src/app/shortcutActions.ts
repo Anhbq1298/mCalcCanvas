@@ -1,7 +1,7 @@
 /** What each registered shortcut (app/shortcuts.ts, by id) does. */
 import { setParagraphStyle } from '../canvas/headings';
 import type { HeadingLevel } from '../canvas/model/types';
-import { copySelection, cutSelection, duplicateSelection, groupSelection, ungroupSelection } from '../canvas/canvasActions';
+import { copySelection, createTextRegion, cutSelection, duplicateSelection, groupSelection, insertionPoint, ungroupSelection } from '../canvas/canvasActions';
 import { redo, selectAll, undo, useCanvasStore } from '../canvas/model/canvasStore';
 import { useAppStore } from '../store/appStore';
 import { commands } from './commands';
@@ -30,6 +30,11 @@ export const SHORTCUT_ACTIONS: Record<string, ShortcutAction> = {
   'select-all': () => selectAll(),
   group: () => groupSelection(),
   ungroup: () => ungroupSelection(),
+  // Ctrl+T: a text region at the + cross (the page takes the key where the browser lets it)
+  'new-text': () => {
+    if (useCanvasStore.getState().editingId) return false;
+    createTextRegion(insertionPoint('text'));
+  },
   'blank-page': () => commands.insertBlankPage(),
   'page-break': () => commands.pageBreak(),
   'heading-0': heading(0),

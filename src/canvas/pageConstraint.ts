@@ -118,6 +118,13 @@ export function nextPrintableTop(y: number): number | null {
   return printableBox(next, orientation()).y;
 }
 
+/** The first snap line (a grid square, or a worksheet line if chosen) at or below y. */
+export function snapLineAtOrBelow(y: number): number {
+  const o = gridOrigin({ x: 0, y });
+  const step = baselineStep();
+  return o.y + Math.ceil((y - o.y - 1e-6) / step) * step;
+}
+
 /** First worksheet line at or below y (for placing the cross under a region). */
 export function majorLineAtOrBelow(y: number): number {
   const o = gridOrigin({ x: 0, y });

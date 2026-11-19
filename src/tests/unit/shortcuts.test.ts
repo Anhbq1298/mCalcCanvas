@@ -28,9 +28,10 @@ describe('shortcut registry', () => {
       expect(findShortcut(key({ key: 'z', ctrlKey: true }), 'global')).toBeUndefined();
       expect(findShortcut(key({ key: '1', code: 'Digit1', ctrlKey: true, altKey: true }), 'global')?.id).toBe('heading-1');
     });
-    step('nothing claims a chord the browser keeps for itself', () => {
+    step('nothing claims a chord the browser keeps for itself, except Ctrl+T (text region, by request: it works where the browser passes it on, and a double quote is the fallback)', () => {
       const labels = SHORTCUTS.filter((s) => s.chords).map(keyLabel).map((l) => l.replace('⌘', 'Ctrl'));
-      for (const r of BROWSER_RESERVED) expect(labels).not.toContain(r);
+      for (const r of BROWSER_RESERVED.filter((r) => r !== 'Ctrl+T')) expect(labels).not.toContain(r);
+      expect(findShortcut(key({ key: 't', ctrlKey: true }), 'worksheet')?.id).toBe('new-text');
     });
   });
 });

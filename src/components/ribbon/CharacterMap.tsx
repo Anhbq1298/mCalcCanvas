@@ -53,7 +53,7 @@ const CHARACTER_SETS: { title: string; chars: Char[] }[] = [
 function insertCharacter([ch, , latex]: Char): void {
   if (formatEditingText('insertText', ch)) return;
   if (insertIntoActiveMath(latex ?? ch)) return;
-  createTextRegion(insertionPoint(), ch);
+  createTextRegion(insertionPoint('text'), ch);
 }
 
 export function CharacterMap() {

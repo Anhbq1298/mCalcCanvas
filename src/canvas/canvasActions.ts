@@ -67,14 +67,19 @@ export function viewportCenter(): Point {
   return screenToPage({ x: viewport.w / 2, y: viewport.h / 2 }, get().camera);
 }
 
-/** Where a new region goes: the pointer if it is over the canvas, else the view centre. */
-export function insertionPoint(): Point {
+/**
+ * Top-left of a new region so that its first baseline sits on the line of the + cross (a grid line), like
+ * writing on ruled paper: the pointer if it is over the canvas, else the view centre. A math region's
+ * measured baseline then keeps it on that line (MathView).
+ */
+export function insertionPoint(kind: 'math' | 'text' = 'math'): Point {
+  const b = kind === 'text' ? Math.round(DEFAULT_TEXT_PROPS.fontSize * 1.09) : 4 + DEFAULT_MATH_PROPS.fontSize;
   const cross = get().crosshair;
-  if (cross) return { x: cross.x, y: cross.y - 14 };
-  if (lastPointer.inside && printableAt(lastPointer)) return { x: lastPointer.x, y: lastPointer.y - 14 };
+  if (cross) return { x: cross.x, y: cross.y - b };
+  if (lastPointer.inside && printableAt(lastPointer)) { const p = crossPoint(lastPointer); return { x: p.x, y: p.y - b }; }
   if (constrained()) return nextWritingPoint(viewportCenter());
   const c = viewportCenter();
-  return { x: c.x - 40, y: c.y - 14 };
+  return { x: c.x - 40, y: c.y - b };
 }
 
 /** Move the + insertion cross, keeping it on the writable page area (it may continue onto the next page). */
@@ -189,8 +194,12 @@ function totalPagesNow(): number {
   return pageCount(orderedShapes(), orientation, useAppStore.getState().settings.pages);
 }
 
+/** Math regions created here and not measured yet: their first measured baseline is put on the cross line (MathView). */
+export const unanchoredRegions = new Set<string>();
+
 export function createMathRegion(point: Point, latex = ''): string {
   const id = newShapeId();
+  unanchoredRegions.add(id);
   const p = snapPoint(point);
   addShapes([{ id, type: 'math', x: p.x, y: p.y, props: { ...DEFAULT_MATH_PROPS, latex } }], { select: true });
   clampShapesIntoPage([id]);
