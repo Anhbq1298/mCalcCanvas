@@ -29,6 +29,10 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
     await page.mouse.click(900, 700);
     // the empty numerator √ and the denominator stay visible as thin squares
     await expect(page.locator('[data-testid=math-region] .math-slot')).toHaveCount(2);
+    // a definition with no value yet: a ≔ □
+    await addRegion(page, 300, 320, ['b:']);
+    await page.mouse.click(900, 700);
+    await expect(page.locator('[data-testid=math-region] .math-slot')).toHaveCount(3);
   });
 
   test('operators leave literal subscripts reached by typing, arrows or a mouse click', async ({ page }, testInfo) => {
