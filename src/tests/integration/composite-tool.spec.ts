@@ -261,3 +261,27 @@ test('tapered beam depth profile: ETABS-style segments in a dialog, haunched end
   await expect(page.getByTestId('taper-profile-summary')).toContainText('Linear');
   await expect(page.getByTestId('ur-max')).toHaveText('1.028', { timeout: 30_000 });
 });
+
+test('sunken slab zones: a thinner slab over part of the span, checked at its critical section', async ({ page }) => {
+  await page.goto('/composite/');
+  await expect(page.getByTestId('ur-max')).toHaveText('1.028', { timeout: 30_000 });
+  await expect(page.getByTestId('slabzone-summary')).toContainText('None');
+  await page.getByTestId('slabzone-open').click();
+  const dlg = page.getByTestId('slabzone-dialog');
+  await page.getByTestId('slabzone-add').click();
+  await dlg.getByLabel('Zone 1 x from').fill('2');
+  await dlg.getByLabel('Zone 1 x to').fill('3.2');
+  await dlg.getByLabel('Zone 1 slab thickness').fill('90');
+  await expect(dlg.getByRole('alert')).toContainText('at least 100 mm');
+  await expect(page.getByTestId('slabzone-save')).toBeDisabled();
+  await dlg.getByLabel('Zone 1 slab thickness').fill('100');
+  await expect(dlg.getByTestId('slabzone-table')).toContainText('75');
+  await expect(dlg).toContainText('not ductile');
+  await page.getByTestId('slabzone-save').click();
+  await expect(dlg).toBeHidden();
+  await expect(page.getByTestId('slabzone-summary')).toContainText('x 2.00–3.20 m: 100 mm (section x = 2.00 m, UR', { timeout: 30_000 });
+  await expect(page.getByTestId('slabzone-row')).toContainText('steel section alone');
+  await expect(page.getByTestId('elev-slabzone')).toHaveCount(1);
+  await page.keyboard.press('Control+z');
+  await expect(page.getByTestId('slabzone-summary')).toContainText('None');
+});

@@ -11,10 +11,93 @@ import { calcKey } from '../../canvas/calcOrder';
 import { inputTableColumns, inputTableRegionId } from '../../canvas/inputTable';
 import { DEFAULT_TEXT_PROPS } from '../../canvas/model/types';
 import { PAGE_GAP, pageSize } from '../../export/pageGeometry';
-import type { ConstructionBracing, Shape, TableShape, TaperProfile, TextShape, MathShape } from '../../canvas/model/types';
+import type { ConstructionBracing, Shape, SlabZones, TableShape, TaperProfile, TextShape, MathShape } from '../../canvas/model/types';
 
 /** Absolute brace stations in metres. Missing data retains the legacy worksheet. */
-export type { ConstructionBracing, TaperProfile, TaperSegment } from '../../canvas/model/types';
+export type { ConstructionBracing, SlabZone, SlabZones, TaperProfile, TaperSegment } from '../../canvas/model/types';
+
+/** Sunken slab: least overall thickness of a zone (mm), and the stud height (mm) where the slab is this thin or thinner. */
+export const SLAB_ZONE_MIN = 100;
+export const SLAB_ZONE_SHORT_STUD = 75;
+/** Stud height after welding in a zone of slab thickness hc (mm). */
+export const zoneStudHeight = (hc: number, hsc: number): number => (hc <= SLAB_ZONE_MIN + 1e-9 ? SLAB_ZONE_SHORT_STUD : hsc);
+
+/** An error message for zones that do not fit the span or the slab, else null. */
+export function validateSlabZones(z: SlabZones, L: number, hc: number): string | null {
+  const zs = [...z.zones].sort((a, b) => a.x1 - b.x1);
+  for (const [i, q] of zs.entries()) {
+    if (!(q.x1 >= -1e-9 && q.x2 <= L + 1e-9 && q.x2 - q.x1 > 1e-6)) return `Slab zone ${i + 1}: needs 0 ≤ x from < x to ≤ L = ${+L.toFixed(3)} m.`;
+    if (!(q.hc >= SLAB_ZONE_MIN - 1e-9)) return `Slab zone ${i + 1}: the slab is at least ${SLAB_ZONE_MIN} mm thick.`;
+    if (!(q.hc <= hc + 1e-9)) return `Slab zone ${i + 1}: ${+q.hc.toFixed(1)} mm is thicker than the slab (h_c = ${+hc.toFixed(1)} mm).`;
+    if (i && q.x1 < zs[i - 1].x2 - 1e-9) return 'Slab zones overlap.';
+  }
+  return null;
+}
+
+/**
+ * Sunken slab zones on a result: the resistances in each zone from a sheet run with the zone's slab (rZ), relative
+ * to a run with the full slab at the same steel depth (rR); load effects from the member result (the full slab's
+ * self-weight is kept, conservative). Bending along the span uses M_Rd,x scaled by rZ / rR in the zone (η_x from
+ * the studs provided with the zone's P_Rd and N_c,f); bending at x_M if x_M is in a zone; the slab checks are the
+ * worse of the two runs; deflections and frequency with the zone's I over the zone (∫ M m / EI).
+ */
+export function applySlabZones(out: Results, runs: { zone: { x1: number; x2: number; hc: number }; hsc: number; rZ: Results; rR: Results }[]): Results {
+  if (!runs.length) return out;
+  const L = out.L, xs = out.vectors.x ?? [], Ms = out.vectors.M ?? [];
+  const inZone = (x: number, z: { x1: number; x2: number }) => x >= z.x1 - 1e-9 && x <= z.x2 + 1e-9;
+  const res = { ...out, vectors: { ...out.vectors }, errors: [...out.errors, ...runs.flatMap((q) => q.rZ.errors.map((e) => `Slab zone: ${e}`))] } as Results;
+  res.zoneDuctile = runs.every((q) => q.rZ.hsc >= 4 * q.rZ.dsc - 1e-9) ? 1 : 0;
+  const at = (k: string, x: number) => { res[`at.${k}`] = x; };
+  // bending along the span
+  const mrd0 = out.vectors.MRdx ?? [];
+  if (xs.length && mrd0.length === xs.length) {
+    const mrd = xs.map((x, i) => {
+      const q = runs.find((z) => inZone(x, z.zone));
+      // studs shorter than 4d are not ductile (§6.6.1.2): the steel section alone, as the sheet's M_Rd gate
+      if (q && !(q.rZ.hsc >= 4 * q.rZ.dsc - 1e-9)) return Math.min(mrd0[i], q.rZ.MaRd);
+      const a = q?.rZ.vectors.MRdx?.[i], b = q?.rR.vectors.MRdx?.[i];
+      return q && a !== undefined && b !== undefined && b > 0 ? (mrd0[i] * a) / b : mrd0[i];
+    });
+    let worst = 0, xw = out['at.M.x'];
+    xs.forEach((x, i) => { const u = mrd[i] > 0 ? Math.abs(Ms[i]) / mrd[i] : 0; if (u > worst) { worst = u; xw = x; } });
+    res['UR.M.x'] = worst; at('M.x', xw);
+    res.vectors.MRdx = mrd;
+  }
+  // the critical section of each zone: largest |M_Ed| in it
+  const zx: number[] = [], zm: number[] = [], zr: number[] = [], zu: number[] = [], zh: number[] = [], zs: number[] = [], zeta: number[] = [];
+  for (const q of runs) {
+    let iw = -1;
+    xs.forEach((x, i) => { if (inZone(x, q.zone) && (iw < 0 || Math.abs(Ms[i]) > Math.abs(Ms[iw]))) iw = i; });
+    const mr = iw >= 0 ? res.vectors.MRdx?.[iw] ?? NaN : NaN;
+    zx.push(iw >= 0 ? xs[iw] : (q.zone.x1 + q.zone.x2) / 2); zm.push(iw >= 0 ? Math.abs(Ms[iw]) : NaN); zr.push(mr); zu.push(iw >= 0 ? Math.abs(Ms[iw]) / mr : NaN);
+    zh.push(q.zone.hc); zs.push(q.hsc); zeta.push(q.rZ.eta);
+  }
+  Object.assign(res.vectors, { zoneX1: runs.map((q) => q.zone.x1), zoneX2: runs.map((q) => q.zone.x2), zoneHc: zh, zoneHsc: zs, zoneXc: zx, zoneMEd: zm, zoneMRd: zr, zoneUr: zu, zoneEta: zeta });
+  // bending at x_M (and with shear) in a zone: M_Rd of the zone's section
+  const qM = runs.find((q) => inZone(out.xM, q.zone));
+  if (qM && qM.rZ.MRd > 0) for (const k of ['M.2', 'MV']) if (Number.isFinite(out[`UR.${k}`])) res[`UR.${k}`] = (out[`UR.${k}`] * qM.rR.MRd) / qM.rZ.MRd;
+  // slab and stud checks: the worse of the full slab and each zone
+  for (const k of ['sf', 'L', 'sf.b', 'L.b', 'sf.c', 'L.c']) {
+    for (const q of runs) if (Number.isFinite(q.rZ[`UR.${k}`]) && !(res[`UR.${k}`] >= q.rZ[`UR.${k}`])) { res[`UR.${k}`] = q.rZ[`UR.${k}`]; at(k, (q.zone.x1 + q.zone.x2) / 2); }
+  }
+  // deflection ∝ ∫ M m / EI: M ∝ x(L − x), m ∝ min(x, L − x); the zone's I over the zone
+  const n = 120;
+  const f = (key: 'I_L' | 'I_0') => {
+    let a = 0, b = 0;
+    for (let i = 0; i < n; i++) {
+      const x = ((i + 0.5) * L) / n, w = x * (L - x) * Math.min(x, L - x), q = runs.find((z) => inZone(x, z.zone));
+      a += w * (q && q.rZ[key] > 0 ? q.rR[key] / q.rZ[key] : 1); b += w;
+    }
+    return a / b;
+  };
+  const fL = f('I_L'), f0 = f('I_0');
+  if (Number.isFinite(out['UR.d.x'])) { res['UR.d.x'] = out['UR.d.x'] * fL; res.dmax = out.dmax * fL; res.vectors.d = (out.vectors.d ?? []).map((d) => d * fL); }
+  if (Number.isFinite(out['UR.d.q'])) { res['UR.d.q'] = out['UR.d.q'] * f0; res.dq = out.dq * f0; if (out.vectors.dq) res.vectors.dq = out.vectors.dq.map((d) => d * f0); }
+  if (Number.isFinite(out['UR.fn'])) { res['UR.fn'] = out['UR.fn'] * Math.sqrt(f0); res.f1 = out.f1 / Math.sqrt(f0); }
+  res.comp = out.comp >= 1 && res['UR.M.x'] <= 1 ? 1 : 0;
+  res['UR.des'] = urDes(res);
+  return res;
+}
 
 /** No segments: depth linear from h_A to h_B (the sheet inputs). */
 export const linearTaper = (): TaperProfile => ({ segments: [] });
@@ -532,6 +615,7 @@ export function studPlans(p: Results, c: DesignCriteria): { sc: number; scB: num
 export function designSection(model: CompositeModel, screen: CompositeModel | null, id: number, c: DesignCriteria, mode: 'composite' | 'bare'): Design {
   screen?.setBracing(model.bracing);
   screen?.setTaper(model.taper);
+  screen?.setSlabZones(model.slab);
   if (c.studs === 'prefer-uniform') {
     const u = designSection(model, screen, id, { ...c, studs: 'uniform' }, mode);
     if (u.pass || u.hopeless || mode === 'bare') return u;
@@ -703,11 +787,12 @@ export function withPageDefaults(raw: string, d = PAGE_DEFAULTS): string {
   return JSON.stringify(doc);
 }
 
-interface CompositeState { values: Record<string, number>; tables: { id: string; rows: string[][] }[]; bracing?: ConstructionBracing; taper?: TaperProfile }
+interface CompositeState { values: Record<string, number>; tables: { id: string; rows: string[][] }[]; bracing?: ConstructionBracing; taper?: TaperProfile; slab?: SlabZones }
 /** The same state transfer is used by every full and screening optimizer worker. */
 export function applyCompositeState(model: CompositeModel, state: CompositeState): void {
   model.setBracing(state.bracing ?? legacyBracing());
   model.setTaper(state.taper ?? linearTaper());
+  model.setSlabZones(state.slab ?? { zones: [] });
   for (const f of model.inputs) model.setInput(f.id, state.values[f.id] ?? f.value);
   for (const t of state.tables) model.setTableRows(t.id, t.rows);
 }
@@ -719,6 +804,7 @@ export class CompositeModel {
   sectionId = 0;
   bracing = legacyBracing();
   taper = linearTaper();
+  slab: SlabZones = { zones: [] };
   private feSnapshots: { id: string; unit: string | null }[] = [];
   private readonly e = new CalculationEngine({ unitSystem: 'SI' });
   private readonly rec: Record<string, Shape>;
@@ -737,6 +823,8 @@ export class CompositeModel {
     if (braceNote?.props.constructionBracing) this.setBracing(braceNote.props.constructionBracing);
     const taperNote = this.doc.shapes.find((s) => s.type === 'text' && (s as TextShape).props.taperProfile) as TextShape | undefined;
     if (taperNote?.props.taperProfile) this.setTaper(taperNote.props.taperProfile);
+    const slabNote = this.doc.shapes.find((s) => s.type === 'text' && (s as TextShape).props.slabZones) as TextShape | undefined;
+    if (slabNote?.props.slabZones) this.setSlabZones(slabNote.props.slabZones);
     if (options.screening) {
       for (const s of this.doc.shapes) {
         if (s.type === 'math' && /\\mathrm\{map\}\\left\(d_/.test((s as MathShape).props.latex)) {
@@ -841,6 +929,11 @@ export class CompositeModel {
     this.bracing = { ...b, positions: [...b.positions].sort((a, c) => a - c) };
   }
 
+  setSlabZones(z: SlabZones): void {
+    this.invalidateFeSnapshots();
+    this.slab = { zones: z.zones.map((q) => ({ ...q })) };
+  }
+
   setTaper(p: TaperProfile): void {
     this.invalidateFeSnapshots();
     this.taper = { segments: p.segments.map((g) => ({ ...g })) };
@@ -888,6 +981,7 @@ export class CompositeModel {
     const maxDepth = opts.maxDepth ?? null, targets = opts.targets ?? { strength: 1, deflection: 1 }, screen = opts.screen;
     screen?.setBracing(this.bracing);
     screen?.setTaper(this.taper);
+    screen?.setSlabZones(this.slab);
     const start = this.sectionId;
     // optional depth limit h ≤ maxDepth (mm), e.g. from the ceiling void
     const keep = this.detail();
@@ -922,6 +1016,37 @@ export class CompositeModel {
    * each critical section (d_use) and combines the checks by location (combineTaper).
    */
   results(): Results {
+    const r = this.memberResults();
+    if (!this.slab.zones.length || !Number.isFinite(r['UR.des'])) return r;
+    const hcField = this.inputs.find((f) => f.name === 'h_c'), hscField = this.inputs.find((f) => f.name === 'h_{sc}'), use = this.inputs.find((f) => f.name === 'd_{use}');
+    if (!hcField || !hscField) return r;
+    const hc = this.inputValue(hcField.id), hsc = this.inputValue(hscField.id);
+    const invalid = validateSlabZones(this.slab, r.L, hc);
+    if (invalid) return { ...r, errors: [...r.errors, invalid], 'UR.des': Infinity } as unknown as Results;
+    const set = (f: InputField, v: number) => this.e.setDefinitionOverride(f.id, { value: v, unit: f.unit || null } as never);
+    const hAtX = (x: number) => (r.taper >= 1 && r.vectors.taperX ? depthAt({ x: r.vectors.taperX, h: r.vectors.taperH }, x) : 0);
+    const runs = [...this.slab.zones].sort((a, b) => a.x1 - b.x1).map((zone) => {
+      // steel depth of the zone's critical section (tapered); 0 = the sheet's own depth
+      const xs = r.vectors.x ?? [], Ms = r.vectors.M ?? [];
+      let xc = (zone.x1 + zone.x2) / 2, mw = -1;
+      xs.forEach((x, i) => { if (x >= zone.x1 - 1e-9 && x <= zone.x2 + 1e-9 && Math.abs(Ms[i]) > mw) { mw = Math.abs(Ms[i]); xc = x; } });
+      const tapered = !!use && r.taper >= 1;
+      if (tapered) set(use, hAtX(xc));
+      const rR = tapered ? this.run() : r;
+      const zh = zoneStudHeight(zone.hc, hsc);
+      set(hcField, zone.hc); set(hscField, zh);
+      const rZ = this.run();
+      set(hcField, hc); set(hscField, hsc);
+      return { zone, hsc: zh, rZ, rR };
+    });
+    if (use && r.taper >= 1) set(use, 0);
+    const out = applySlabZones(r, runs);
+    if (this.lastLtb === r) this.lastLtb = out;
+    return out;
+  }
+
+  /** The member results without the sunken slab zones. */
+  private memberResults(): Results {
     this.lastLtb = null;
     const r = this.run();
     const invalid = validateBracing(this.bracing, r.L);
@@ -1051,7 +1176,18 @@ export class CompositeModel {
       const t = this.tableShapes.get(s.id);
       return t ?? s;
     });
-    const filtered = shapes.filter((s) => !s.id.startsWith('construction-bracing') && !s.id.startsWith('taper-profile'));
+    const filtered = shapes.filter((s) => !s.id.startsWith('construction-bracing') && !s.id.startsWith('taper-profile') && !s.id.startsWith('slab-zones'));
+    // sunken slab zones: the zones (they round-trip through the note) and the check at each critical section
+    if (this.slab.zones.length) {
+      const stride0 = pageSize('portrait').h + PAGE_GAP;
+      const y0 = (Math.floor(Math.max(...filtered.map((s) => s.y)) / stride0) + 1) * stride0 + 60;
+      const r = this.lastLtb ?? this.results(), v = r.vectors ?? {};
+      const hsc = this.inputValue(this.inputs.find((f) => f.name === 'h_{sc}')!.id);
+      const rows = this.slab.zones.map((z, i) => `<li>Zone ${i + 1}: x = ${+z.x1.toFixed(3)} to ${+z.x2.toFixed(3)} m, slab ${+z.hc.toFixed(0)} mm, studs h_sc = ${zoneStudHeight(z.hc, hsc)} mm`
+        + (Number.isFinite(v.zoneUr?.[i]) ? `; critical section x = ${+v.zoneXc[i].toFixed(3)} m: M_Ed = ${+v.zoneMEd[i].toFixed(1)} kN m, M_Rd,x = ${+v.zoneMRd[i].toFixed(1)} kN m (η_x from the studs provided), UR = ${+v.zoneUr[i].toFixed(3)}` : '') + '</li>').join('');
+      filtered.push({ id: 'slab-zones', type: 'text', x: 76, y: y0, props: { ...DEFAULT_TEXT_PROPS, fontFamily: 'Roboto', fontSize: 13, w: 640, h: 120 + 40 * this.slab.zones.length, pageBreak: true, slabZones: structuredClone(this.slab),
+        html: `<h2>Sunken slab zones</h2><p>Over each zone the slab is thinner (sunken top); where it is ${SLAB_ZONE_MIN} mm or less the studs are ${SLAB_ZONE_SHORT_STUD} mm high. The sheet above is for the full slab. The page runs it again with each zone's slab and studs: in the zone M_Rd,x (η_x from the studs provided, P_Rd and N_c,f of the zone) replaces that of the full slab; bending at x_M uses the zone's M_Rd if x_M is in a zone; the slab shear checks take the worse of the two; deflections and frequency use the zone's I over the zone. Load effects are those of the full slab (its self-weight kept). Studs shorter than 4d are not ductile (EN 1994-1-1 §6.6.1.2): such a zone is checked as the steel section alone.</p><ul>${rows}</ul><p>Governing bending along the span: UR_M.x = ${+r['UR.M.x'].toFixed(3)} at x = ${+(+r['at.M.x']).toFixed(3)} m.</p>` } });
+    }
     // multi-segment taper: the profile (it round-trips through the note) and its vertices, after the sheet
     if (this.taper.segments.length >= 2) {
       const stride0 = pageSize('portrait').h + PAGE_GAP;

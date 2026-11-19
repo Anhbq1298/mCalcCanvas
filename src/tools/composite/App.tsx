@@ -8,17 +8,18 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { sections } from '../../engineering/steel/sections';
-import { legacyBracing, linearTaper, taperStations, validateBracing, validateTaper, type ConstructionBracing, type TaperProfile, BAR_DIAMETERS, BAR_SPACINGS, CHECKS, governingCheck, type DesignCriteria, type InputField, type LoadTable, type Results } from './model';
+import { legacyBracing, linearTaper, taperStations, validateBracing, validateSlabZones, validateTaper, type ConstructionBracing, type SlabZones, type TaperProfile, BAR_DIAMETERS, BAR_SPACINGS, CHECKS, governingCheck, type DesignCriteria, type InputField, type LoadTable, type Results } from './model';
 import type { OptimizeResult, ToWorker } from './worker';
 import { BeamCad, DeckProfile, Legend, LineChart, LongSection, PointDrawing, ShearSurface3D, UdlDrawing, type AreaLoad, type PointLoad } from './charts';
 import { headerParts } from '../../canvas/inputTable';
 import { C, fmt } from './format';
 import { ConstructionStage } from './ConstructionStage';
 import { TaperDialog } from './TaperDialog';
+import { SlabZoneDialog } from './SlabZoneDialog';
 import { optimizeDesign, warmOptimizer } from './optimizer';
 
 /** One state of the inputs: input values, load-table rows and section, for undo/redo. */
-type Snap = { bracing: ConstructionBracing; taper: TaperProfile; values: Record<string, number>; rows: Record<string, string[][]>; sectionId: number };
+type Snap = { bracing: ConstructionBracing; taper: TaperProfile; slab: SlabZones; values: Record<string, number>; rows: Record<string, string[][]>; sectionId: number };
 import { Rich } from './rich';
 
 const HANDOFF_KEY = 'calccanvas.handoff'; // read once by mCalcCanvas (?open=handoff)
@@ -137,6 +138,8 @@ export function App() {
   const [constructionOpen, setConstructionOpen] = useState(false);
   const [taper, setTaper] = useState<TaperProfile>(linearTaper);
   const [taperOpen, setTaperOpen] = useState(false);
+  const [slab, setSlab] = useState<SlabZones>({ zones: [] });
+  const [slabOpen, setSlabOpen] = useState(false);
   const [values, setValues] = useState<Record<string, number>>({});
   const [family, setFamily] = useState('UB');
   const [hMax, setHMax] = useState('');
@@ -166,6 +169,7 @@ export function App() {
       if (m.kind === 'init') {
         setBracing(m.bracing ?? legacyBracing());
         setTaper(m.taper ?? linearTaper());
+        setSlab(m.slab ?? { zones: [] });
         // build the optimiser's worker models in the background, after the page is up
         setTimeout(() => warmOptimizer({ values: {}, tables: m.tables.map((t: LoadTable) => ({ id: t.id, rows: t.rows })) }), 2500);
         setState({ inputs: m.inputs, tables: m.tables, sectionId: m.sectionId, results: m.results, defaults: { tables: m.tables, sectionId: m.sectionId } });
@@ -250,7 +254,7 @@ export function App() {
   const gov = governingCheck(res);
   const overall = gov.ur;
   const governing = shown.find(([key]) => key === gov.key) ?? shown[0];
-  const invalidBracing = (bracing.mode === 'explicit' && !!validateBracing(bracing, value(byName('L')))) || (value(byName('c_{tap}')) >= 1 && !!validateTaper(taper, value(byName('L'))));
+  const invalidBracing = (bracing.mode === 'explicit' && !!validateBracing(bracing, value(byName('L')))) || (value(byName('c_{tap}')) >= 1 && !!validateTaper(taper, value(byName('L')))) || (slab.zones.length > 0 && !!validateSlabZones(slab, value(byName('L')), value(byName('h_c'))));
   const section = sections.find((s) => s.id === state.sectionId);
   const pass = overall <= 1;
   const hLib = section?.values.h ?? res.h_a;
@@ -275,7 +279,7 @@ export function App() {
     setState((s) => s && { ...s, tables: s.tables.map((x) => (x.id === t.id ? { ...x, rows } : x)) });
     send({ kind: 'table', id: t.id, rows });
   };
-  const snap = (): Snap => ({ bracing, taper, values: Object.fromEntries(inputs.map((f) => [f.id, value(f)])), rows: Object.fromEntries(tables.map((t) => [t.id, t.rows])), sectionId: state.sectionId });
+  const snap = (): Snap => ({ bracing, taper, slab, values: Object.fromEntries(inputs.map((f) => [f.id, value(f)])), rows: Object.fromEntries(tables.map((t) => [t.id, t.rows])), sectionId: state.sectionId });
   const record = () => {
     const h = history.current;
     h.past.push(snap());
@@ -288,6 +292,7 @@ export function App() {
     try {
       setBracing(t.bracing); send({ kind: 'bracing', bracing: t.bracing });
       setTaper(t.taper); send({ kind: 'taper', taper: t.taper, values: {} });
+      setSlab(t.slab); send({ kind: 'slab', slab: t.slab });
       inputs.forEach((f) => { const nv = t.values[f.id]; if (nv !== undefined && nv !== value(f)) setInput(f, nv); });
       tables.forEach((tb) => { const rows = t.rows[tb.id]; if (rows && JSON.stringify(rows) !== JSON.stringify(tb.rows)) setRows(tb, rows); });
       if (t.sectionId !== state.sectionId) { send({ kind: 'section', id: t.sectionId }); setFamily(sections.find((x) => x.id === t.sectionId)?.family ?? family); }
@@ -371,7 +376,7 @@ export function App() {
     setOpt({ running: true });
     const t0 = performance.now();
     const result = await optimizeDesign(optLabel, optSections.map((x) => ({ id: x.id, name: x.name, mass: x.values.mass, h: x.values.h })), value(byName('L')), criteria,
-      { bracing, taper, values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) }, (i, n, name) => setOpt({ running: true, i, n, name }));
+      { bracing, taper, slab, values, tables: state.tables.map((t) => ({ id: t.id, rows: t.rows })) }, (i, n, name) => setOpt({ running: true, i, n, name }));
     setOpt({ running: false, result, seconds: (performance.now() - t0) / 1000 });
   };
   const renderField = (f: InputField) =>
@@ -566,6 +571,16 @@ export function App() {
                       )}
                       {renderField(byName('h_c'))}
                     </div>
+                    <div className="define-row" data-testid="slabzone-row">
+                      <button type="button" className="btn" data-testid="slabzone-open" onClick={() => setSlabOpen(true)}>Sunken slab zones…</button>
+                      <span className="hint" data-testid="slabzone-summary">{slab.zones.length
+                        ? slab.zones.map((z, i) => {
+                          const u = res.vectors?.zoneUr?.[i], xc = res.vectors?.zoneXc?.[i];
+                          return `x ${fmt(z.x1, 2)}–${fmt(z.x2, 2)} m: ${fmt(z.hc, 0)} mm${Number.isFinite(u) ? ` (section x = ${fmt(xc, 2)} m, UR ${fmt(u, 3)})` : ''}`;
+                        }).join('; ')
+                        : 'None: full slab over the span'}</span>
+                      {slab.zones.length > 0 && res.zoneDuctile === 0 && <small className="fail" role="alert">75 mm studs &lt; 4d: steel section alone in the zone</small>}
+                    </div>
                     {deck && (
                       <div className="define-row">
                         <button type="button" className="btn" data-testid="deck-open" onClick={() => deckRef.current?.showModal()}>Define deck…</button>
@@ -686,9 +701,10 @@ export function App() {
               </div>
               <p className="hint">Front face = cross-section to scale; the length along the span is not. Bars counted must be anchored past each surface (EC2 §8.4). v<sub>f</sub> = {res.nre > 1 ? `${fmt(res.nre, 0)} ` : ''}P<sub>Rd</sub>/s<sub>min</sub> = {fmt(res.vf, 0)} kN/m pulls the slab outstand along the beam.</p>
             </section>
-            <section className="sheet-sec" aria-labelledby="h-defl1">
+            <section className="sheet-sec forces-panel" aria-labelledby="h-defl1" data-testid="defl1-panel">
               <div className="sec-head"><h2 id="h-defl1">Deflection, construction stage (steel alone)</h2><span className="hint">w<sub>1,k</sub> = g<sub>0</sub> + (g<sub>form</sub> + q<sub>con</sub>)·s<sub>b</sub> = {fmt(res.w1k, 2)} kN/m over L<sub>1</sub> = {fmt(res.L1, 2)} m</span></div>
               <LineChart
+                alignBeam
                 series={[
                   { x: v.x1v, y: v.d1v, color: C.blue, label: 'δ_1' },
                   { x: [v.x1v[0] ?? 0, v.x1v[v.x1v.length - 1] ?? 1], y: [res.dlim, res.dlim], color: C.red, label: 'limit', dash: true, width: 1.2 },
@@ -700,9 +716,10 @@ export function App() {
               />
               <Legend items={[{ color: C.blue, label: `δ_1(x), steel alone, max ${fmt(res.d1, 1)} mm` }, { color: C.red, label: `limit L/r = ${fmt(res.dlim, 1)} mm`, dash: true }]} />
             </section>
-            <section className="sheet-sec" aria-labelledby="h-defl">
+            <section className="sheet-sec forces-panel" aria-labelledby="h-defl" data-testid="defl-panel">
               <div className="sec-head"><h2 id="h-defl">Deflection, permanent stage, {composite ? 'composite (partial interaction)' : 'bare steel'}</h2><span className="hint">1.0 DL + 1.0 LL, permanent stage</span></div>
             <LineChart
+              alignBeam
               series={[
                 { x: v.x, y: v.d, color: C.blue, label: 'DL+LL' },
                 { x: v.x, y: v.dq, color: C.green, label: 'LL', width: 1.4 },
@@ -831,6 +848,9 @@ export function App() {
 
         </div>
       </main>
+      {slabOpen && <SlabZoneDialog L={value(byName('L'))} hc={value(byName('h_c'))} hsc={value(byName('h_{sc}'))} dsc={value(byName('d_{sc}'))} zones={slab}
+        onClose={() => setSlabOpen(false)}
+        onSave={(z) => { record(); setSlab(z); send({ kind: 'slab', slab: z }); }} />}
       {taperOpen && <TaperDialog L={value(byName('L'))} hA={Math.min(value(byName('h_{A.in}')) || hLib, hLib)} hB={Math.min(value(byName('h_{B.in}')) || hLib, hLib)} hLib={hLib} sectionName={section?.name ?? ''} profile={taper}
         onClose={() => setTaperOpen(false)}
         onSave={(hA, hB, p) => {
@@ -840,7 +860,7 @@ export function App() {
           setTaper(p);
           send({ kind: 'taper', taper: p, values: { [fa.id]: hA, [fb.id]: hB } });
         }} />}
-      {constructionOpen && <ConstructionStage initialResults={res} inputs={inputs} values={snap().values} tables={tables} sectionId={state.sectionId} bracing={bracing} taper={taper}
+      {constructionOpen && <ConstructionStage initialResults={res} inputs={inputs} values={snap().values} tables={tables} sectionId={state.sectionId} bracing={bracing} taper={taper} slab={slab}
         onClose={() => setConstructionOpen(false)} onSave={(draft, b) => {
           record(); setValues(draft); setBracing(b);
           send({ kind: 'construction', values: draft, bracing: b });

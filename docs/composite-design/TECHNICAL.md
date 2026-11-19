@@ -424,3 +424,32 @@ linear h_A → h_B taper. `taperLengths`, `taperStations`, `validateTaper` in `m
 Tests: segment lengths (ETABS example 1 m / proportional / 1 m on 5.2 m = 1, 3.2, 1); a vertex on the straight line
 gives the linear results; a haunched 300 / 403.2 / 403.2 / 300 beam gives α_cr equal to a direct FE solve on that h(x);
 report round trip; e2e of the dialog.
+
+## Sunken slab zones
+
+`Sunken slab zones…` (under the slab thickness) lists stretches of the span, x from / to support A, where the slab top
+is sunken and the overall slab is thinner (≥ 100 mm, ≤ h_c). Studs in a zone with a slab of 100 mm or less are 75 mm
+high (`zoneStudHeight`). `validateSlabZones`, `applySlabZones` in `model.ts`.
+
+- For each zone the sheet is run again with h_c and h_sc of the zone (rZ), and with the full slab at the same steel
+  depth (rR; the member result itself for a uniform beam, a run at h(x_c) for a tapered one).
+- Bending along the span: inside a zone M_Rd,x = M_Rd,x(member) × M_Rd,x(rZ) / M_Rd,x(rR): η_x from the studs
+  provided, P_Rd and N_c,f of the zone. The critical section of a zone is its largest |M_Ed| (reported with M_Rd,x and
+  UR). Bending at x_M (and with shear) uses M_Rd(rZ) / M_Rd(rR) when x_M is in a zone.
+- Studs shorter than 4d are not ductile (EN 1994-1-1 §6.6.1.2): in such a zone M_Rd,x = M_a,Rd, as the sheet's M_Rd
+  gate. 75 mm studs of d 19 (4d = 76 mm) fall here; d 16 keeps the composite resistance.
+- Slab checks (surfaces a-a, b-b, c-c): the worse of the full slab and each zone.
+- Deflection and frequency: δ ∝ ∫ M m / EI with the zone's I over the zone (I_L for the total, I_0 for the live load
+  and frequency); the factor is applied to the whole total deflection (construction part included, conservative).
+- Load effects stay those of the full slab (its self-weight kept, conservative).
+- The zones round-trip through the report (`slabZones` on the `slab-zones` note) and travel with undo, the optimiser
+  state and the construction preview. The elevation drawing shows the step in the slab.
+
+Tests: validation; a 150 mm zone gives M_Rd,x of a 150 mm slab inside the zone and unchanged outside; a whole-span
+zone gives the live-load deflection of the 150 mm slab; 100 mm with d 19 is not ductile (M_a,Rd), d 16 is; report
+round trip; e2e of the dialog.
+
+## Deflection plots
+
+Both deflection plots use the beam column width and margins of the internal-force diagrams (`alignBeam`, the
+`forces-panel` width), so x lines up with the elevation, V_Ed and M_Ed above.

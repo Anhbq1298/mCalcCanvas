@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { legacyBracing, linearTaper, validateBracing, type ConstructionBracing, type TaperProfile, type InputField, type LoadTable, type Results } from './model';
+import { legacyBracing, linearTaper, validateBracing, type ConstructionBracing, type SlabZones, type TaperProfile, type InputField, type LoadTable, type Results } from './model';
 import { ConstructionBraceElevation } from './charts';
 import { fmt } from './format';
 import type { ToWorker } from './worker';
 
-export function ConstructionStage({ inputs, values, tables, sectionId, bracing, taper = linearTaper(), initialResults, onSave, onClose }: {
+export function ConstructionStage({ inputs, values, tables, sectionId, bracing, taper = linearTaper(), slab, initialResults, onSave, onClose }: {
   inputs: InputField[]; values: Record<string, number>; tables: LoadTable[]; sectionId: number;
-  bracing: ConstructionBracing; taper?: TaperProfile; initialResults: Results; onSave: (v: Record<string, number>, b: ConstructionBracing) => void; onClose: () => void;
+  bracing: ConstructionBracing; taper?: TaperProfile; slab?: SlabZones; initialResults: Results; onSave: (v: Record<string, number>, b: ConstructionBracing) => void; onClose: () => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const [draft, setDraft] = useState(values);
@@ -28,10 +28,10 @@ export function ConstructionStage({ inputs, values, tables, sectionId, bracing, 
     worker.addEventListener('message', listener);
     const timer = setTimeout(() => {
       setPending(true);
-      worker.postMessage({ kind: 'preview', request: revision, sectionId, values: draft, tables: tables.map((t) => ({ id: t.id, rows: t.rows })), bracing: b, taper } satisfies ToWorker);
+      worker.postMessage({ kind: 'preview', request: revision, sectionId, values: draft, tables: tables.map((t) => ({ id: t.id, rows: t.rows })), bracing: b, taper, slab } satisfies ToWorker);
     }, 180);
     return () => { clearTimeout(timer); worker.removeEventListener('message', listener); };
-  }, [worker, draft, b, tables, sectionId, taper]);
+  }, [worker, draft, b, tables, sectionId, taper, slab]);
   const positions = [...b.positions].sort((a, c) => a - c);
   const spacing = Math.max(...[0, ...positions, L].slice(1).map((x, i) => x - [0, ...positions][i]));
   const update = (i: number, x: number) => {

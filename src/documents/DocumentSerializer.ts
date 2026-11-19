@@ -129,6 +129,7 @@ export function sanitizeShape(raw: unknown): Shape | null {
           ...annexRole(p.annex),
           ...constructionBracing(p.constructionBracing),
           ...taperProfile(p.taperProfile),
+          ...slabZones(p.slabZones),
           ...(p.pageBreak === true ? { pageBreak: true } : {}),
           ...(typeof p.showWhen === 'string' && p.showWhen.trim() ? { showWhen: p.showWhen.slice(0, 2000) } : {}),
         },
@@ -351,6 +352,15 @@ function constructionBracing(value: unknown): { constructionBracing?: import('..
   if ((b.mode !== 'legacy' && b.mode !== 'explicit') || typeof b.enabled !== 'boolean' || !Array.isArray(b.positions)
     || b.positions.length > 1000 || !b.positions.every((x: unknown) => typeof x === 'number' && Number.isFinite(x) && x > 0 && x <= 1e6)) return {};
   return { constructionBracing: { mode: b.mode, enabled: b.enabled, positions: [...b.positions].sort((a: number, c: number) => a - c) } };
+}
+
+/** Optional composite slab zones (sunken slab); anything malformed is dropped. */
+function slabZones(value: unknown): { slabZones?: import('../canvas/model/types').SlabZones } {
+  if (!value || typeof value !== 'object' || !Array.isArray((value as { zones?: unknown }).zones)) return {};
+  const zs = (value as { zones: unknown[] }).zones;
+  const num = (v: unknown) => typeof v === 'number' && Number.isFinite(v);
+  if (zs.length > 20 || !zs.every((z) => !!z && typeof z === 'object' && num((z as Record<string, unknown>).x1) && num((z as Record<string, unknown>).x2) && num((z as Record<string, unknown>).hc))) return {};
+  return { slabZones: { zones: zs.map((z) => { const t = z as { x1: number; x2: number; hc: number }; return { x1: t.x1, x2: t.x2, hc: t.hc }; }) } };
 }
 
 /** Optional composite taper profile (segments from support A); anything malformed is dropped. */

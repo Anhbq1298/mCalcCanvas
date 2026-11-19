@@ -2,7 +2,7 @@
  * Worker pool of the section optimiser for mCompositeBeamDesign: each worker holds the worksheet and designs
  * one section at a time (designSection in model.ts), so several sections are designed in parallel.
  */
-import type { ConstructionBracing, TaperProfile, Design, DesignCriteria, OptimizeResult } from './model';
+import type { ConstructionBracing, SlabZones, TaperProfile, Design, DesignCriteria, OptimizeResult } from './model';
 import type { ToWorker } from './worker';
 
 let pool: Worker[] = [];
@@ -18,7 +18,7 @@ function ensurePool(): Worker[] {
 }
 
 /** Start the pool in the background (models built while the user is still entering data). */
-export function warmOptimizer(state: { bracing?: ConstructionBracing; taper?: TaperProfile; values: Record<string, number>; tables: { id: string; rows: string[][] }[] }): void {
+export function warmOptimizer(state: { bracing?: ConstructionBracing; taper?: TaperProfile; slab?: SlabZones; values: Record<string, number>; tables: { id: string; rows: string[][] }[] }): void {
   for (const w of ensurePool()) w.postMessage({ kind: 'state', ...state } satisfies ToWorker);
 }
 
@@ -34,7 +34,7 @@ export function optimizeDesign(
   secs: { id: number; name: string; mass: number; h: number }[], // lightest first
   spanM: number,
   criteria: DesignCriteria,
-  state: { bracing?: ConstructionBracing; taper?: TaperProfile; values: Record<string, number>; tables: { id: string; rows: string[][] }[] },
+  state: { bracing?: ConstructionBracing; taper?: TaperProfile; slab?: SlabZones; values: Record<string, number>; tables: { id: string; rows: string[][] }[] },
   progress: (done: number, total: number, name: string) => void,
 ): Promise<OptimizeResult> {
   const workers = ensurePool();

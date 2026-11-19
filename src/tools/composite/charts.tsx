@@ -664,6 +664,15 @@ export function BeamCad({ r, name, part }: { r: Record<string, number> & { vecto
         <line x1={X0} x2={X1} y1={yS + t_f * kv} y2={yS + t_f * kv} stroke={ink} strokeWidth={CAD.dim} />
         <polyline points={tx.map((x: number, i: number) => `${X(x * 1000)},${yS + (th[i] - t_f) * kv}`).join(' ')} fill="none" stroke={ink} strokeWidth={CAD.dim} />
         {tx.length > 2 && tx.slice(1, -1).map((x: number, i: number) => <g key={`tv${i}`}><line x1={X(x * 1000)} x2={X(x * 1000)} y1={yS} y2={yS + th[i + 1] * kv} stroke={dimC} strokeWidth={CAD.dim} strokeDasharray="3 2" />{txt(X(x * 1000), yS + th[i + 1] * kv + 13, fmt(th[i + 1], 0), 'middle')}</g>)}
+        {/* sunken slab zones: the slab top drops to the zone thickness */}
+        {(r.vectors?.zoneX1 ?? []).map((x1: number, i: number) => {
+          const x2 = r.vectors!.zoneX2[i], hz = r.vectors!.zoneHc[i], d = (h_c - hz) * kv;
+          return <g key={`sz${i}`} data-testid="elev-slabzone">
+            <rect x={X(x1 * 1000)} y={top - 0.5} width={X(x2 * 1000) - X(x1 * 1000)} height={d + 0.5} fill={C.sheet} />
+            <polyline points={`${X(x1 * 1000)},${top} ${X(x1 * 1000)},${top + d} ${X(x2 * 1000)},${top + d} ${X(x2 * 1000)},${top}`} fill="none" stroke={ink} strokeWidth={CAD.geo} />
+            {txt((X(x1 * 1000) + X(x2 * 1000)) / 2, top + d - 3, `${fmt(hz, 0)}`, 'middle')}
+          </g>;
+        })}
         {/* supports */}
         <g fill={C.sheet} stroke={ink} strokeWidth={CAD.geo}>
           <path d={`M${X0},${yBA + 1} l-8,13 h16 z`} />

@@ -61,9 +61,17 @@ export interface ConstructionBracing { mode: 'legacy' | 'explicit'; enabled: boo
 export interface TaperSegment { type: 'abs' | 'prop'; length: number; h: number }
 export interface TaperProfile { segments: TaperSegment[] }
 
+/**
+ * Composite tool: zones of the span where the slab is thinner (sunken top), from x1 to x2 (m from support A),
+ * with the overall slab thickness hc (mm) there. Studs in a zone with hc ≤ 100 mm are 75 mm high.
+ */
+export interface SlabZone { x1: number; x2: number; hc: number }
+export interface SlabZones { zones: SlabZone[] }
+
 export interface TextProps {
   constructionBracing?: ConstructionBracing;
   taperProfile?: TaperProfile;
+  slabZones?: SlabZones;
   w: number;
   /** Measured height (kept in sync with the rendered text). */
   h: number;

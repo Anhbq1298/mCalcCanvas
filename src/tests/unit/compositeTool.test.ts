@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { ltbCriticalFactor, solveBeam } from '../../engineering/fem';
-import { annexMesh, taperLengths, taperStations, applyCompositeState, validateBracing, withPageDefaults, BAR_DIAMETERS, CHECKS, camberFor, CompositeModel, designSection, type DesignCriteria, DEFLECTION_CHECKS, governingCheck, governingSplit, STUD_SPACINGS } from '../../tools/composite/model';
+import { annexMesh, taperLengths, taperStations, validateSlabZones, zoneStudHeight, applyCompositeState, validateBracing, withPageDefaults, BAR_DIAMETERS, CHECKS, camberFor, CompositeModel, designSection, type DesignCriteria, DEFLECTION_CHECKS, governingCheck, governingSplit, STUD_SPACINGS } from '../../tools/composite/model';
 import { sections } from '../../engineering/steel/sections';
 import { step } from '../step';
 import { CalculationEngine } from '../../engine';
@@ -418,6 +418,60 @@ describe('mCompositeBeamDesign headless model', () => {
       expect(t[k]).toBeGreaterThanOrEqual(base[k] - 1e-9);
     }
     expect(governingCheck(t).ur).toBeGreaterThanOrEqual(t['UR.des'] - 1e-9);
+  }, 300_000);
+
+  it('sunken slab zones: the zone slab at its critical section, 75 mm studs at 100 mm, deflection over the zone, report round trip', () => {
+    const page = withPageDefaults(readFileSync('templates/Composite_Beam_EC4.mCCV', 'utf8'));
+    const make = () => { const m = new CompositeModel(page); m.setInput(m.inputs.find((f) => f.name === 'c_{tap}')!.id, 0); return m; };
+    const set = (m: CompositeModel, n: string, v: number) => m.setInput(m.inputs.find((f) => f.name === n)!.id, v);
+    const m = make();
+    const base = m.results();
+    expect(validateSlabZones({ zones: [{ x1: 2, x2: 3.2, hc: 90 }] }, 5.2, 200)).toMatch(/at least 100 mm/);
+    expect(validateSlabZones({ zones: [{ x1: 2, x2: 3.2, hc: 250 }] }, 5.2, 200)).toMatch(/thicker than the slab/);
+    expect(validateSlabZones({ zones: [{ x1: 1, x2: 3, hc: 150 }, { x1: 2.5, x2: 4, hc: 150 }] }, 5.2, 200)).toMatch(/overlap/);
+    expect(validateSlabZones({ zones: [{ x1: 4, x2: 6, hc: 150 }] }, 5.2, 200)).toMatch(/≤ L/);
+    expect(zoneStudHeight(100, 100)).toBe(75);
+    expect(zoneStudHeight(120, 100)).toBe(100);
+
+    // a 150 mm zone over 2–3.2 m: in the zone M_Rd,x is that of a 150 mm slab (same studs), elsewhere unchanged
+    m.setSlabZones({ zones: [{ x1: 2, x2: 3.2, hc: 150 }] });
+    const z = m.results();
+    const thin = make(); set(thin, 'h_c', 150);
+    const t = thin.results();
+    const xs = base.vectors.x;
+    xs.forEach((x, i) => expect(z.vectors.MRdx[i]).toBeCloseTo(x >= 2 && x <= 3.2 ? t.vectors.MRdx[i] : base.vectors.MRdx[i], 9));
+    const ic = xs.indexOf(z.vectors.zoneXc[0]);
+    expect(z.vectors.zoneXc[0]).toBeCloseTo(2, 2); // largest |M| in the zone: its end nearer mid-span (point load at 1 m)
+    expect(z.vectors.zoneUr[0]).toBeCloseTo(Math.abs(base.vectors.M[ic]) / t.vectors.MRdx[ic], 9);
+    expect(z['UR.M.x']).toBeCloseTo(Math.max(...xs.map((_, i) => Math.abs(base.vectors.M[i]) / z.vectors.MRdx[i])), 9);
+    // x_M is outside the zone: bending at x_M unchanged; slab shear the worse of the two
+    expect(z.xM < 2 || z.xM > 3.2).toBe(true);
+    expect(z['UR.M.2']).toBe(base['UR.M.2']);
+    expect(z['UR.L']).toBeCloseTo(Math.max(base['UR.L'], t['UR.L']), 9);
+    // a zone over the whole span: live-load deflection of the 150 mm slab (same loads, I_0 of the zone)
+    m.setSlabZones({ zones: [{ x1: 0, x2: 5.2, hc: 150 }] });
+    const all = m.results();
+    expect(all['UR.d.q'] / (base['UR.d.q'] * base.I_0 / t.I_0)).toBeCloseTo(1, 3);
+    expect(all['UR.M.2']).toBeCloseTo(base['UR.M.2'] * base.MRd / t.MRd, 9); // x_M in the zone
+    // 100 mm: 75 mm studs, shorter than 4d = 76 mm for d 19, not ductile: the steel section alone in the zone
+    m.setSlabZones({ zones: [{ x1: 2, x2: 3.2, hc: 100 }] });
+    const z100 = m.results();
+    expect(z100.zoneDuctile).toBe(0);
+    expect(z100.vectors.zoneHsc).toEqual([75]);
+    expect(z100.vectors.zoneMRd[0]).toBeCloseTo(base.MaRd, 9);
+    // d 16 (4d = 64 mm): ductile, composite in the zone
+    set(m, 'd_{sc}', 16);
+    const d16 = m.results();
+    expect(d16.zoneDuctile).toBe(1);
+    expect(d16.vectors.zoneMRd[0]).toBeGreaterThan(d16.MaRd);
+    // the report carries the zones and reopens with them
+    const doc = parseDocument(m.reportDocument());
+    const reopened = new CompositeModel(JSON.stringify(doc));
+    expect(reopened.slab).toEqual(m.slab);
+    expect(reopened.results()['UR.M.x']).toBeCloseTo(d16['UR.M.x'], 9);
+    // an invalid zone is reported, not calculated
+    m.setSlabZones({ zones: [{ x1: 2, x2: 3.2, hc: 80 }] });
+    expect(m.results().errors.join()).toMatch(/at least 100 mm/);
   }, 300_000);
 
   it('tapered beam with a depth profile (ETABS-style segments): lengths, vertex runs, FE LTB on h(x), report round trip', () => {
