@@ -5,7 +5,8 @@
  *   =          evaluate the whole region (jumps out of fractions/exponents)
  *   \          square root           Ctrl+\   nth root
  *   |          absolute value        '        parentheses around selection
- *   .          literal subscript after a name (M.Ed → M_Ed)
+ *   .          literal subscript after a name (M.Ed → M_Ed); inside a subscript "." and "_" stay in it
+ *              as a literal "." (one level: M.Ed.x → M_{Ed.x}, never M_{E_{d_x}})
  *   ;          range operator  ..    (i := 0..n−1)
  *   Ctrl+G     Greek ↔ Latin for the letter before the caret (a ↔ α)
  *   Ctrl+9 / Ctrl+0 / Ctrl+3 / Ctrl+=    ≤  ≥  ≠  (boolean =)
@@ -69,6 +70,21 @@ export function leaveLiteralSubscript(mf: MathfieldElement): void {
     mf.position = parent;
   }
   mf.position = target;
+}
+
+/**
+ * Is the caret inside a literal subscript (a name's index, not the limits of Σ, ∫, lim …)? Uses MathLive's
+ * model (not public API); without it, false (MathLive's own behaviour).
+ */
+export function inLiteralSubscript(mf: MathfieldElement): boolean {
+  type Atom = { parentBranch?: unknown; parent?: Atom; command?: string };
+  const model = (mf as unknown as { _mathfield?: { model?: { at(i: number): Atom | undefined } } })._mathfield?.model;
+  let a: Atom | undefined;
+  try { a = model?.at(mf.position); } catch { return false; }
+  for (let guard = 0; a && guard < 64; guard++, a = a.parent) {
+    if (a.parentBranch === 'subscript') return !isLimitOperator(a.parent?.command ?? '');
+  }
+  return false;
 }
 
 function charBefore(mf: MathfieldElement): string {
@@ -155,7 +171,13 @@ export function handleMathcadKey(e: KeyboardEvent, mf: MathfieldElement, changed
     case "'":
       insert('\\left(#@\\right)');
       return true;
+    case '_':
+      // One level of subscript: inside a name's subscript "_" adds a literal "." instead of nesting.
+      if (inLiteralSubscript(mf)) return insert('.'), true;
+      return false;
     case '.': {
+      // Inside a name's subscript: a literal "." (one level, M_{Ed.x}).
+      if (inLiteralSubscript(mf)) return insert('.'), true;
       // After a name, "." starts a literal subscript; after a digit it is a decimal point.
       const prev = charBefore(mf);
       if (/^[A-Za-z]$/.test(prev) || /^\\[a-zA-Z]+$/.test(prev) && prev in LATIN_FROM_GREEK) {

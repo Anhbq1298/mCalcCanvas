@@ -16,6 +16,21 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
     await resultOf(page, '\\alpha').toBe('2');
   });
 
+  test('one level of subscript: "." and "_" inside a subscript stay in it as "."', async ({ page }) => {
+    await addRegion(page, 300, 220, ['M.Ed.x:4']);
+    await expect.poll(async () => (await regions(page))[0]?.latex).toMatch(/^M_\{Ed\.x\}\\coloneq\s*4$/);
+    await addRegion(page, 300, 300, ['f.c_k:30', '=']);
+    await resultOf(page, 'f_{c.k}').toBe('30');
+    await expect.poll(async () => (await regions(page)).map((r) => r.latex).join(' ')).not.toMatch(/_\{[^}]*_/);
+  });
+
+  test('empty operand slots stay visible on the sheet as thin squares', async ({ page }) => {
+    await addRegion(page, 300, 220, ['a:', '/', '\\']);
+    await page.mouse.click(900, 700);
+    // the empty numerator √ and the denominator stay visible as thin squares
+    await expect(page.locator('[data-testid=math-region] .math-slot')).toHaveCount(2);
+  });
+
   test('operators leave literal subscripts reached by typing, arrows or a mouse click', async ({ page }, testInfo) => {
     await addRegion(page, 500, 280, ['M.Ed:100']);
     await addRegion(page, 500, 360, ['N.Ed:20']);

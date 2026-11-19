@@ -35,6 +35,8 @@ export function configureMathfield(mf: MathfieldElement): void {
   // \unit{kN} is one atomic, upright token: typing after it is ordinary math
   // again (a plain \mathrm would make the following letters upright too).
   mf.macros = { ...mf.macros, unit: { args: 1, def: '\\mathrm{#1}', captureSelection: true, expand: false } };
+  // operand slots (\placeholder) as a thin square, not MathLive's heavy rounded one
+  mf.placeholderSymbol = '\u25A1';
   mf.smartMode = false;
   mf.smartFence = true;
   mf.mathVirtualKeyboardPolicy = 'auto';

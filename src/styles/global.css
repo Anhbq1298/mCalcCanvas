@@ -745,3 +745,13 @@ tr.is-selected > td { background: var(--color-accent-soft) !important; }
   .rb-label { display: none; }
   .rb-body { height: 78px; }
 }
+
+/* Empty operand slots (\placeholder{}) of a region that is not being edited: the thin square □, muted, so the
+   slot stays visible and easy to click into; the editor shows the same thin square. */
+.math-region .ML__latex .math-slot {
+  color: var(--color-muted-foreground);
+}
+math-field {
+  --placeholder-color: var(--color-muted-foreground);
+  --placeholder-opacity: 0.85;
+}
