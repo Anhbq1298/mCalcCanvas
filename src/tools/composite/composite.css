@@ -212,7 +212,8 @@ td.pass, b.pass { color: var(--pass); } td.warn, b.warn { color: var(--warn); } 
 @media (max-width: 560px) { .opt-form fieldset.crit .fields.three { grid-template-columns: 1fr 1fr; } }
 
 /* loading sheet: beam and load drawings share one column (aligned spans), the cross-section sits beside them */
-.sheet.cad-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(400px, 38%); gap: 0 1.2rem; align-items: start; }
+.sheet.cad-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 1.2rem; align-items: start; }
+.cad-section { max-width: 520px; margin: 0 auto; }
 @media (max-width: 900px) { .sheet.cad-grid { grid-template-columns: 1fr; } }
 
 /* Compact input labels; full definitions stay in the keyboard-accessible guides. */
@@ -232,7 +233,7 @@ td.pass, b.pass { color: var(--pass); } td.warn, b.warn { color: var(--warn); } 
 .input-guide dt { font-weight: 500; }
 .input-guide dd { margin: 0; }
 /* Match the CAD column and its 34 px support offsets at every viewport. */
-.sheet-sec.forces-panel { box-sizing: border-box; width: calc(100% - max(400px, (100% - 2rem) * 0.38) - 1.2rem); }
+.sheet-sec.forces-panel { box-sizing: border-box; width: 100%; }
 @media (max-width: 900px) { .sheet-sec.forces-panel { width: 100%; } }
 @media print { .info-button { display: none; } }
 
@@ -250,11 +251,7 @@ td.pass, b.pass { color: var(--pass); } td.warn, b.warn { color: var(--warn); } 
 .taper-dialog .taper-table td.ro { color: #57606a; font-variant-numeric: tabular-nums; }
 .taper-dialog .taper-tools { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.4rem 0; }
 
-/* beam column (internal forces and deflections, aligned with the elevation) and the serviceability panel beside it */
-.beam-row { display: flex; align-items: flex-start; gap: 1.2rem; }
-.beam-row > .sheet-sec.forces-panel { flex: none; }
-.beam-row > .sheet-sec.sls-panel { box-sizing: border-box; flex: 1 1 0; min-width: 0; }
-@media (max-width: 900px) { .beam-row { flex-direction: column; } .beam-row > .sheet-sec.forces-panel { width: 100%; } }
+/* serviceability summary under the beam diagrams */
 .sls-table { width: 100%; font-variant-numeric: tabular-nums; }
 .sls-table th, .sls-table td { text-align: right; padding: 0.2rem 0.3rem; }
 .sls-table th:first-child, .sls-table td:first-child { text-align: left; }

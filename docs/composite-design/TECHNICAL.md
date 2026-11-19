@@ -449,8 +449,9 @@ Tests: validation; a 150 mm zone gives M_Rd,x of a 150 mm slab inside the zone a
 zone gives the live-load deflection of the 150 mm slab; 100 mm with d 19 is not ductile (M_a,Rd), d 16 is; report
 round trip; e2e of the dialog.
 
-## Deflection plots
+## Page layout: one column
 
-The construction and permanent-stage deflection plots sit in the beam column under V_Ed, M_Ed and the stud diagram
-(`forces-panel`, `alignBeam`), so x lines up with the elevation. Beside the column, the Serviceability panel lists
-δ_1, δ (total less precamber) and δ_LL with their limits and UR, and the natural frequency.
+The loading stage is one column: the longitudinal section, the cross-section with the plastic stress block under it,
+the load drawings, then V_Ed, M_Ed, the studs and both deflection plots, all the full width (`alignBeam`), so x lines
+up from the elevation down. The Serviceability summary (δ_1, total δ, δ_LL with limits and UR; natural frequency)
+follows the plots.

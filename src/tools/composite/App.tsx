@@ -613,14 +613,12 @@ export function App() {
               <div>
                 <h3>Beam: longitudinal section</h3>
                 <BeamCad part="elevation" r={res} name={sections.find((x) => x.id === state.sectionId)?.name ?? ''} />
+                <h3>Cross-section and plastic stress block at x<sub>M</sub></h3>
+                <div className="cad-section"><BeamCad part="section" r={res} name="" /></div>
                 <h3>Uniformly distributed loads</h3>
                 <UdlDrawing L={res.L} area={area} sb={sb} sw={{ ga: res.ga, gc: res.gc, gF: res.gsw }} />
                 <h3>Point loads</h3>
                 <PointDrawing L={res.L} points={points} />
-              </div>
-              <div>
-                <h3>Cross-section and plastic stress block at x<sub>M</sub></h3>
-                <BeamCad part="section" r={res} name="" />
               </div>
             </div>
             <table className="stage-table">
@@ -634,7 +632,6 @@ export function App() {
                 <tr><td>Line load w<sub>Ed</sub> (kN/m)</td><td>–</td><td>{fmt(res.w1, 2)} over {fmt(res.L1, 2)} m</td></tr>
               </tbody>
             </table>
-            <div className="beam-row">
             <section className="sheet-sec forces-panel" aria-labelledby="h-forces" data-testid="forces-panel">
               <div className="sec-head"><h2 id="h-forces">Internal forces, ULS</h2><span className="hint">hover or ← → on a chart to read values</span></div>
                         <h3>Shear V<sub>Ed</sub>, max {fmt(res.V2, 1)} kN</h3>
@@ -710,7 +707,6 @@ export function App() {
             
               </p>
             </aside>
-            </div>
 
             <section className="sheet-sec" aria-labelledby="h-shear3d">
               <div className="sec-head"><h2 id="h-shear3d">Longitudinal shear surfaces a-a, b-b{res.ccc >= 1 ? ' and c-c' : ''}</h2><span className="hint">EN 1994-1-1 §6.6.6.1, Figure 6.15{deck ? ', §6.6.6.4, Figure 6.16' : ''}; the surfaces run the whole length of the beam</span></div>
