@@ -6,6 +6,7 @@ import { templateById, type TemplateId } from '../../documents/templates';
 import { sectionById } from '../../engineering/steel/sections';
 import { hollowProperties } from '../../tools/steel/sections';
 import { readFileSync } from 'node:fs';
+import type { Shape } from '../../canvas/model/types';
 import { SteelModel, type SteelState } from '../../tools/steel/model';
 import { agrees, EXAMPLES, exampleMember, exampleSectionId } from '../../tools/steel/examples';
 import { c1OfPsi, LTB_CASES } from '../../tools/steel/ltbCases';
@@ -266,6 +267,42 @@ describe('published worked examples (SCI P364, P374, NSC, Designers\' Guide, STA
         expect(r.errors).toEqual([]);
         const off = ex.published.flatMap(([label, , , v, compared], i) => (compared === false || agrees(r.extra[i], v) ? [] : [`${label}: sheet ${r.extra[i]}, printed ${v}`]));
         expect(off, ex.title).toEqual([]);
+      });
+    }
+  });
+});
+
+describe('mSteelBeamColumn report document', () => {
+  it('captures every page input and recalculates to the page result in a fresh engine', () => {
+    const raw = (shape: string) => readFileSync(`templates/Steel_Section_${shape}_EC3.mCCV`, 'utf8');
+    const base = { fyNom: 355, fyBasis: 0 as const, gammaM0: 1.05, eta: 1.0, member: { ...exampleMember(EXAMPLES[0]), Ly: 5.5, ky: 0.85, Lz: 3.2, kz: 1, Llt: 3.2, nLT: 0, C1: 2.08, C2: 0, psi: -0.3, zg: 150, cNA: 0 as const, Cmy: 0.7, Cmz: 0.65, CmLT: 0.75, gammaM1: 1.1 } };
+    const combos = [{ name: 'A', N: 900, My: 120, Mz: 15, Vz: 80, Vy: 10 }, { name: 'B', N: -200, My: 200, Mz: 0, Vz: 150, Vy: 0 }, { name: 'C', N: 1600, My: 30, Mz: 25, Vz: 20, Vy: 20 }];
+    const cases: SteelState[] = [
+      { ...base, shape: 'I', sectionId: exampleSectionId(EXAMPLES[1]), hollow: { h: 0, b: 0, t: 0, d: 0, cf: 0 }, combos },
+      { ...base, shape: 'RHS', sectionId: 0, hollow: { h: 300, b: 200, t: 10, d: 0, cf: 1 }, combos },
+      { ...base, shape: 'CHS', sectionId: 0, hollow: { h: 0, b: 0, t: 10, d: 273, cf: 0 }, combos },
+    ];
+    for (const st of cases) {
+      step(st.shape, () => {
+        const md = new SteelModel(raw(st.shape), st.shape);
+        const res = md.runAll(st), gi = res.reduce((g, r, i) => (r.v.UR > res[g].v.UR ? i : g), 0);
+        const doc = md.reportDocument(st, res, { combo: gi, key: 'UR', ur: res[gi].v.UR }) as { shapes: Shape[]; inputResult: { rows: unknown[] } };
+        expect(doc.inputResult.rows).toHaveLength(3);
+        const text = doc.shapes.filter((x) => x.type === 'text').map((x) => (x.type === 'text' ? x.props.html : '')).join(' ');
+        expect(text).toContain('moment diagram');
+        // a fresh engine on the report document, as mCalcCanvas opens it, gives the page's governing result
+        const rec = Object.fromEntries(doc.shapes.map((x) => [x.id, x]));
+        const e = new CalculationEngine({ unitSystem: 'SI' });
+        const math = doc.shapes.filter((x) => x.type === 'math');
+        e.batch(() => { for (const x of math) if (x.type === 'math') e.setRegion(x.id, { latex: x.props.latex, order: calcKey(x, rec), displayUnit: null, precision: null }); });
+        expect(math.filter((x) => e.getResult(x.id)?.status === 'error').map((x) => (x.type === 'math' ? x.props.latex.slice(0, 40) : ''))).toEqual([]);
+        e.setRegion('p', { latex: '\\mathrm{UR}=', order: [1e9] as never, displayUnit: null, precision: null });
+        expect(e.getResult('p')!.value!.number!).toBeCloseTo(res[gi].v.UR, 9);
+        const latex = math.map((x) => (x.type === 'math' ? x.props.latex : ''));
+        for (const want of ['L_{y}\\coloneq 5.5\\,\\mathrm{m}', 'k_{y}\\coloneq 0.85', 'C_{my}\\coloneq 0.7', '\\gamma_{M1}\\coloneq 1.1', 'c_{fy}\\coloneq 0', `N_{Ed}\\coloneq ${combos[gi].N}\\,\\mathrm{kN}`]) expect(latex, want).toContain(want);
+        if (st.shape === 'I') for (const want of ['n_{LT}\\coloneq 0', 'C_{1.u}\\coloneq 2.08', 'z_{g}\\coloneq 150\\,\\mathrm{mm}', 'c_{NA}\\coloneq 0']) expect(latex, want).toContain(want);
+        if (st.shape === 'RHS') for (const want of ['C_{1}\\coloneq 2.08', '\\mathrm{CF}\\coloneq 1', 'h\\coloneq 300\\,\\mathrm{mm}']) expect(latex, want).toContain(want);
+        if (st.shape === 'CHS') expect(latex).toContain('d\\coloneq 273\\,\\mathrm{mm}');
       });
     }
   });

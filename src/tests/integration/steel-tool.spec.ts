@@ -47,30 +47,31 @@ test('mSteelBeamColumn checks every combination, reads ETABS rows, finds the lig
   expect(latex).toContain('N_{Ed}\\coloneq 1800\\,\\mathrm{kN}');
 });
 
-test('mSteelBeamColumn verification examples: published values agree with the sheet and go into the report', async ({ page, context }) => {
+test('mSteelBeamColumn report: hollow section with a hand C1 opens in mCalcCanvas with the page result', async ({ page, context }) => {
   test.setTimeout(120_000);
   await page.goto('/steel/');
   await expect(page.getByTestId('overall-ur')).not.toHaveText('–', { timeout: 30_000 });
-  for (const id of ['p364-10', 'p374-5', 'staad-chs']) {
-    await page.getByTestId('example').selectOption(id);
-    const rows = page.getByTestId('verification').locator('tbody tr');
-    await expect(rows.first()).toBeVisible();
-    await expect(page.getByTestId('verification').locator('td.fail')).toHaveCount(0);
-    expect(await page.getByTestId('verification').locator('td.pass').count()).toBe(await rows.count());
-  }
-  // a manual change leaves the example
-  await page.locator('input[data-input="N_Ed row 1"]').fill('100');
-  await page.locator('input[data-input="N_Ed row 1"]').blur();
-  await expect(page.getByTestId('verification')).toHaveCount(0);
-  await page.getByTestId('example').selectOption('p364-3');
-  await expect(page.getByTestId('check-LT')).toHaveText(/^0\.89/);
+  await page.getByTestId('shape-RHS').click();
+  await page.getByTestId('ltb-diagram').click();
+  await page.getByTestId('ltb-psi').fill('-0.5');
+  await page.getByTestId('ltb-psi-use').click();
+  await expect(page.getByTestId('c1-shown')).toHaveText('2.330');
+  const ur = (await page.getByTestId('overall-ur').textContent())!;
   const [report] = await Promise.all([context.waitForEvent('page'), page.getByTestId('open-report').click()]);
   await report.waitForFunction(() => !!(window as unknown as { __calccanvas?: unknown }).__calccanvas);
   await report.evaluate(async () => { const c = (window as unknown as { __calccanvas: { loaded: Promise<void>; idle(): Promise<void> } }).__calccanvas; await c.loaded; await c.idle(); });
   await expect(report.locator('[data-testid=math-region][data-status=error]')).toHaveCount(0);
-  const html = await report.evaluate(() => Object.values((window as unknown as { __calccanvas: { store: { getState(): { shapes: Record<string, { type: string; props: { html?: string } }> } } } }).__calccanvas.store.getState().shapes).flatMap((s) => (s.type === 'text' ? [s.props.html ?? ''] : [])).join('\n'));
-  expect(html).toContain('Verification: I/H bending + LTB');
-  expect(html).not.toContain('differs');
+  const got = await report.evaluate(() => {
+    const c = (window as unknown as { __calccanvas: { store: { getState(): { shapes: Record<string, { id: string; y: number; type: string; props: { latex?: string; html?: string } }> }; setState(s: unknown): void } } }).__calccanvas;
+    const shapes = Object.values(c.store.getState().shapes);
+    const gov = shapes.find((s) => s.type === 'math' && s.props.latex === '\\mathrm{UR}\\coloneq\\max\\left(\\mathrm{UR}_{6.2},\\mathrm{UR}_{6.3}\\right)')!;
+    c.store.setState({ camera: { x: 0, y: gov.y - 200, z: 1 } });
+    return { id: gov.id, c1: shapes.some((s) => s.props.latex === 'C_{1}\\coloneq 2.33'), text: shapes.filter((s) => s.type === 'text').map((s) => s.props.html).join(' ') };
+  });
+  expect(got.c1).toBe(true);
+  expect(got.text).toContain('ψ = -0.5');
+  // the governing UR of the report, recalculated by mCalcCanvas, is the page's
+  await expect(report.locator(`[data-testid=math-region][data-shape-id="${got.id}"]`)).toContainText(ur);
 });
 
 test('mSteelBeamColumn moment diagram picker: SN003b cases with Table B.3 Cm, end-moment ratio and user C1, C2', async ({ page }) => {
@@ -78,18 +79,22 @@ test('mSteelBeamColumn moment diagram picker: SN003b cases with Table B.3 Cm, en
   await expect(page.getByTestId('overall-ur')).not.toHaveText('–', { timeout: 30_000 });
   await page.getByTestId('ltb-diagram').click();
   await page.getByTestId('ltb-case-10').click();
-  await expect(page.getByTestId('ltb-diagram')).toContainText('UDL, simply supported');
+  await expect(page.getByTestId('ltb-diagram')).toHaveAttribute('title', /UDL, simply supported/);
+  await expect(page.getByTestId('c1-shown')).toHaveText('1.127');
+  await expect(page.getByTestId('c2-shown')).toHaveText('0.454');
   await expect(page.locator('input[data-input="Cmy"]')).toHaveValue('0.95');
   await expect(page.locator('input[data-input="CmLT"]')).toHaveValue('0.95');
   await page.getByTestId('ltb-diagram').click();
   await page.getByTestId('ltb-psi').fill('-0.5');
   await page.getByTestId('ltb-psi-use').click();
-  await expect(page.getByTestId('ltb-diagram')).toContainText('ψ = -0.5 · C1 2.330');
+  await expect(page.getByTestId('c1-shown')).toHaveText('2.330');
+  await expect(page.getByTestId('c2-shown')).toHaveText('0.000');
   await expect(page.locator('input[data-input="Cmy"]')).toHaveValue('0.4');
   await page.getByTestId('ltb-diagram').click();
   await page.getByTestId('ltb-c1').fill('2.2');
   await page.getByTestId('ltb-c2').fill('0.3');
   await page.getByTestId('ltb-user-use').click();
-  await expect(page.getByTestId('ltb-diagram')).toContainText('User · C1 2.200, C2 0.300');
+  await expect(page.getByTestId('c1-shown')).toHaveText('2.200');
+  await expect(page.getByTestId('c2-shown')).toHaveText('0.300');
   await expect(page.getByTestId('member-props')).toContainText('M');
 });

@@ -51,9 +51,8 @@ export function MomentDiagramButton({ value, onChange, onCm, withC2 }: {
   const p = num(psi), u1 = num(c1), u2 = num(c2);
   return (
     <>
-      <button type="button" className="diagram-btn" data-testid="ltb-diagram" onClick={() => { setC1(String(value.C1)); setC2(String(value.C2)); ref.current?.showModal(); }}>
-        <DiagramIcon c={current ?? { kind: 'end', psi: value.psi ?? 1 }} w={96} h={46} />
-        <span>{choiceLabel(value)}<em>Change…</em></span>
+      <button type="button" className="btn browse" data-testid="ltb-diagram" title={choiceLabel(value)} onClick={() => { setC1(String(value.C1)); setC2(String(value.C2)); ref.current?.showModal(); }}>
+        <DiagramIcon c={current ?? { kind: 'end', psi: value.psi ?? 1 }} w={44} h={22} />Browse…
       </button>
       <dialog ref={ref} className="opt-dialog wide" aria-label="Moment diagram for lateral-torsional buckling">
         <div className="opt-form">

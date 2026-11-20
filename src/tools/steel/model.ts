@@ -10,7 +10,7 @@ import { PAGE_GAP, pageSize } from '../../export/pageGeometry';
 import { sectionById } from '../../engineering/steel/sections';
 import type { MathShape, Shape } from '../../canvas/model/types';
 import { hollowName, type Shape as Kind } from './sections';
-import { agrees, EXAMPLES, TOLERANCE } from './examples';
+import { choiceLabel } from './ltbCases';
 
 export interface Combo { name: string; N: number; Vy: number; Vz: number; My: number; Mz: number }
 export interface Hollow { h: number; b: number; t: number; d: number; cf: 0 | 1 }
@@ -18,7 +18,7 @@ export interface Hollow { h: number; b: number; t: number; d: number; cf: 0 | 1 
 export interface Member { psi?: number; Ly: number; ky: number; Lz: number; kz: number; Llt: number; nLT: number; C1: number; C2: number; zg: number; cNA: 0 | 1; Cmy: number; Cmz: number; CmLT: number; gammaM1: number }
 export const DEFAULT_MEMBER: Member = { Ly: 4, ky: 1, Lz: 4, kz: 1, Llt: 4, nLT: 1, C1: 1, C2: 0, zg: 0, cNA: 1, Cmy: 1, Cmz: 1, CmLT: 1, gammaM1: 1 };
 /** fyBasis: 1 = product-standard thickness steps (Singapore / UK NA), 0 = EN 1993-1-1 Table 3.1. probes: extra worksheet values to read (verification). */
-export interface SteelState { shape: Kind; sectionId: number; hollow: Hollow; fyNom: number; fyBasis: 0 | 1; gammaM0: number; eta: number; member: Member; combos: Combo[]; probes?: [latex: string, unit: string | null][]; example?: string }
+export interface SteelState { shape: Kind; sectionId: number; hollow: Hollow; fyNom: number; fyBasis: 0 | 1; gammaM0: number; eta: number; member: Member; combos: Combo[]; probes?: [latex: string, unit: string | null][] }
 
 /** Check keys per worksheet, with labels and clauses (the summary UR is their maximum). */
 const MEMBER_CHECKS: [string, string, string][] = [['b.y', 'Flexural buckling y-y', '6.3.1'], ['b.z', 'Flexural buckling z-z', '6.3.1']];
@@ -176,18 +176,7 @@ export class SteelModel {
     const stride = pageSize('portrait').h + PAGE_GAP;
     const y0 = (Math.floor(Math.max(...shapes.map((s) => s.y)) / stride) + 1) * stride + 60;
     shapes.push({ id: 'steel-combos', type: 'text', x: 76, y: y0, props: { ...DEFAULT_TEXT_PROPS, fontFamily: 'Roboto', fontSize: 12, w: 640, h: 90 + 44 * st.combos.length, pageBreak: true,
-      html: `<h2>Load combinations (mSteelBeamColumn)</h2><p>${escape(name)}, f<sub>y,nom</sub> = ${st.fyNom} MPa. The sheet is evaluated for the governing combination; every combination is also in Input &amp; Results (Calculation tab) to re-run or print.</p><ul>${rows}</ul>` } } as unknown as Shape);
-    const ex = EXAMPLES.find((x) => x.id === st.example);
-    if (ex && results[0]) {
-      const y1 = y0 + (Math.floor((90 + 44 * st.combos.length) / stride) + 1) * stride;
-      const vals = this.run(st.combos[0], ex.published.map(([, l, u]) => [l, u]));
-      const rowsV = ex.published.map(([label, , unit, printed, compared], i) => {
-        const x = vals.extra[i], ok = compared === false ? 'shown only' : agrees(x, printed) ? 'agrees' : '<b>differs</b>';
-        return `<li>${escape(label)}: published ${printed}${unit ? ` ${unit}` : ''}, this sheet ${Number.isFinite(x) ? +x.toPrecision(4) : '–'} → ${ok}</li>`;
-      }).join('');
-      shapes.push({ id: 'steel-verification', type: 'text', x: 76, y: y1, props: { ...DEFAULT_TEXT_PROPS, fontFamily: 'Roboto', fontSize: 12, w: 640, h: 120 + 22 * ex.published.length, pageBreak: true,
-        html: `<h2>Verification: ${escape(ex.title)}</h2><p>Source: ${escape(ex.source)} (${escape(ex.url)}). The worksheet above is evaluated with the example's data (combination "${escape(ex.combo.name)}"). Agreement: ${TOLERANCE}.${ex.note ? ` ${escape(ex.note)}` : ''}</p><ul>${rowsV}</ul>` } } as unknown as Shape);
-    }
+      html: `<h2>Load combinations (mSteelBeamColumn)</h2><p>${escape(name)}, f<sub>y,nom</sub> = ${st.fyNom} MPa (${st.fyBasis === 0 ? 'EN 1993-1-1 Table 3.1' : 'product standard'}). Member: ${memberText(st, this.shape)}. The sheet is evaluated for the governing combination; every combination is also in Input &amp; Results (Calculation tab) to re-run or print.</p><ul>${rows}</ul>` } } as unknown as Shape);
     const ir = this.doc.inputResult as { rows: unknown[] } | undefined;
     const inputResult = ir ? { ...ir, rows: st.combos.map((cb, i) => ({ id: `c${i + 1}`, name: cb.name, values: { n: cb.N, my: cb.My, mz: cb.Mz, vz: cb.Vz, vy: cb.Vy } })) } : undefined;
     return { ...this.doc, title: `Steel cross-section check – ${name}`, shapes, ...(inputResult ? { inputResult } : {}) };
@@ -199,6 +188,16 @@ function memberValues(st: SteelState): Record<string, number> {
   const m = st.member;
   return { '\\gamma_{M1}': m.gammaM1, 'L_{y}': m.Ly, 'k_{y}': m.ky, 'L_{z}': m.Lz, 'k_{z}': m.kz, 'L_{LT}': m.Llt, 'n_{LT}': m.nLT, 'C_{1.u}': m.C1, 'C_{2.u}': m.C2, 'C_{1}': m.C1,
     'z_{g}': m.zg, 'c_{NA}': m.cNA, 'C_{my}': m.Cmy, 'C_{mz}': m.Cmz, 'C_{mLT}': m.CmLT };
+}
+
+/** Member data as written into the sheet, with the source of C1, C2 (SN003b case, ψ or user). */
+function memberText(st: SteelState, shape: Kind): string {
+  const m = st.member;
+  const parts = [`L_y = ${m.Ly} m (k_y ${m.ky})`, `L_z = ${m.Lz} m (k_z ${m.kz})`];
+  if (shape !== 'CHS') parts.push(`L_LT = ${m.Llt} m`, `moment diagram: ${escape(choiceLabel(m))}`, `LTB ${m.cNA ? '§6.3.2.3 with the Singapore / UK NA' : '§6.3.2.2'}`);
+  if (shape === 'I') parts.push(`z_g = ${+m.zg.toFixed(1)} mm`);
+  parts.push(`C_my ${m.Cmy}, C_mz ${m.Cmz}${shape === 'I' ? `, C_mLT ${m.CmLT}` : ''}`, `γ_M1 ${m.gammaM1}`);
+  return parts.join('; ');
 }
 
 function escape(t: string): string {
