@@ -8,6 +8,7 @@ import { hollowProperties } from '../../tools/steel/sections';
 import { readFileSync } from 'node:fs';
 import { SteelModel, type SteelState } from '../../tools/steel/model';
 import { agrees, EXAMPLES, exampleMember, exampleSectionId } from '../../tools/steel/examples';
+import { c1OfPsi, LTB_CASES } from '../../tools/steel/ltbCases';
 
 /** Evaluate a section worksheet with some inputs replaced (by the start of their LaTeX). */
 function evaluate(id: TemplateId, given: Record<string, string>) {
@@ -210,6 +211,13 @@ describe('steel cross-section templates (EN 1993-1-1 §6.2)', () => {
         expect(r.v('\\mathrm{Class}')).toBeLessThanOrEqual(2);
         for (const k of ['b.y', 'b.z', 'b.T', 'LT', '6.61', '6.62']) expect(r.v(`\\mathrm{UR}_{${k}}`), `${sec} ${k}`).toBeCloseTo(o(`\\mathrm{UR}_{${k}}`), 9);
       }
+    });
+    step('the page moment-diagram picker uses the worksheet SN003b table; ψ interpolates Table 3.1', () => {
+      const { shapes } = templateById('steel-section-i')!.instantiate!();
+      const cell = (k: 1 | 2, n: number) => { const m = shapes.find((s) => s.type === 'math' && s.props.latex.startsWith(`C_{${k}.${n}}\\coloneq`)); return m?.type === 'math' ? Number(m.props.latex.split('\\coloneq')[1]) : NaN; };
+      for (const c of LTB_CASES) { expect(cell(1, c.n), `C1 case ${c.n}`).toBe(c.c1); expect(cell(2, c.n), `C2 case ${c.n}`).toBe(c.c2); }
+      expect(c1OfPsi(0)).toBeCloseTo(1.77, 9);
+      expect(c1OfPsi(-0.6)).toBeCloseTo(2.33 + 0.4 * (2.57 - 2.33), 9);
     });
     step('member checks of every shape against hand references (NA §6.3.2.3 with f, hollow curves, Class 3 Annex B, tension)', () => {
       const chi = (lam: number, al: number) => { const ph = 0.5 * (1 + al * (lam - 0.2) + lam * lam); return Math.min(1, 1 / (ph + Math.sqrt(ph * ph - lam * lam))); };

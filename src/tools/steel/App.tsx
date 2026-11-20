@@ -12,6 +12,7 @@ import { Rich } from '../composite/rich';
 import { CHECKS, DEFAULT_MEMBER, governing, isMemberCheck, type Combo, type ComboResult, type Member, type SteelState } from './model';
 import { hollowName, hollowSections, I_FAMILIES, iSections, type Shape } from './sections';
 import { SectionDrawing } from './charts';
+import { MomentDiagramButton } from './MomentDiagram';
 import type { FromWorker, ToWorker } from './worker';
 import { parseCombos } from './paste';
 import { agrees, EXAMPLES, exampleMember, exampleSectionId, TOLERANCE } from './examples';
@@ -21,10 +22,6 @@ const STORE_KEY = 'msteelbeamcolumn.v2';
 const NUMBER = /^\s*-?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?\s*$/;
 const GRADES: [string, number][] = [['S235', 235], ['S275', 275], ['S355', 355], ['S420', 420], ['S460', 460]];
 const COLS: [keyof Combo, string, string][] = [['N', 'N_Ed', 'kN'], ['My', 'M_y,Ed', 'kN m'], ['Mz', 'M_z,Ed', 'kN m'], ['Vz', 'V_z,Ed', 'kN'], ['Vy', 'V_y,Ed', 'kN']];
-const LTB_CASES: [number, string][] = [
-  ...[1, 0.75, 0.5, 0.25, 0, -0.25, -0.5, -0.75, -1].map((psi, i): [number, string] => [i + 1, `End moments, ψ = ${psi > 0 ? '+' : ''}${psi}`]),
-  [10, 'UDL, simply supported'], [11, 'UDL, fixed ends'], [12, 'Mid-point load, simply supported'], [13, 'Mid-point load, fixed ends'], [0, 'User C1, C2'],
-];
 const tone = (v: number) => (!Number.isFinite(v) ? 'fail' : v > 1 ? 'fail' : v > 0.9 ? 'warn' : 'pass');
 
 interface Page {
@@ -197,11 +194,11 @@ export function App() {
       <main>
         <div className="workspace steel">
           {/* ── Inputs ── */}
-          <form className="panel inputs" id="design-inputs" aria-label="Design inputs" onSubmit={(e) => e.preventDefault()} noValidate>
+          <form className="panel inputs rows" id="design-inputs" aria-label="Design inputs" onSubmit={(e) => e.preventDefault()} noValidate>
             <section aria-labelledby="h-examples">
               <h2 id="h-examples">Verification examples</h2>
-              <label className="f wide"><span className="sr-only">Published worked example</span>
-                <select data-testid="example" value={page.example ?? ''} onChange={(e) => loadExample(e.target.value)}>
+              <Row desc="Published worked example (loads its data; comparison on the right and in the report)" block>
+                <select data-testid="example" value={page.example ?? ''} onChange={(e) => loadExample(e.target.value)} aria-label="Published worked example">
                   <option value="">None (own design)</option>
                   {(['I', 'RHS', 'CHS'] as const).map((sh) => (
                     <optgroup key={sh} label={sh === 'I' ? 'I / H' : sh === 'RHS' ? 'RHS / SHS' : 'CHS'}>
@@ -209,129 +206,117 @@ export function App() {
                     </optgroup>
                   ))}
                 </select>
-              </label>
-              <p className="hint">Loads a published worked example; the sheet's values are compared with the printed ones on the right and in the report.</p>
+              </Row>
             </section>
             <section aria-labelledby="h-section">
               <h2 id="h-section">Section</h2>
-              <div className="seg" role="radiogroup" aria-label="Section type">
-                {(['I', 'RHS', 'CHS'] as const).map((s) => (
-                  <button key={s} type="button" role="radio" aria-checked={shape === s} className={shape === s ? 'on' : ''} data-testid={`shape-${s}`}
-                    onClick={() => { set({ shape: s }); setSelected(null); setDesign((d) => ({ ...d, pick: null, msg: '', family: s === 'I' ? page.family : s === 'RHS' ? page.hollowFamily : 'CHS' })); }}>
-                    {s === 'I' ? 'I / H' : s === 'RHS' ? 'RHS / SHS' : 'CHS'}
-                  </button>
-                ))}
-              </div>
-              <div className="fields">
-                {shape === 'I' && <>
-                  <label className="f"><span>Family</span>
-                    <select value={page.family} onChange={(e) => set({ family: e.target.value, sectionId: iSections(e.target.value)[0].id })}>{I_FAMILIES.map((f) => <option key={f}>{f}</option>)}</select>
-                  </label>
-                  <label className="f"><span>Size</span>
-                    <select data-testid="section-select" value={page.sectionId} onChange={(e) => set({ sectionId: Number(e.target.value) })}>
-                      {iSections(page.family).slice().sort((a, b) => a.values.h - b.values.h || a.values.mass - b.values.mass).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
-                    </select>
-                  </label>
-                  <p className="hint wide">{sectionById(page.sectionId).standard} · {fmt(sectionById(page.sectionId).values.mass, 1)} kg/m</p>
-                </>}
-                {shape !== 'I' && <>
-                  <label className="f"><span>Process</span>
-                    <select value={page.cf} onChange={(e) => set({ cf: Number(e.target.value) as 0 | 1 })}>
-                      <option value={0}>Hot-finished EN 10210</option><option value={1}>Cold-formed EN 10219</option>
-                    </select>
-                  </label>
-                  {shape === 'RHS' && <label className="f"><span>Family</span>
-                    <select value={page.hollowFamily} onChange={(e) => { const fam = e.target.value as 'SHS' | 'RHS'; const first = hollowSections(fam, page.cf)[0].dims; set({ hollowFamily: fam, rhs: { h: first.h!, b: first.b!, t: first.t } }); }}>
-                      <option>SHS</option><option>RHS</option>
-                    </select>
-                  </label>}
-                  <label className={`f ${shape === 'CHS' ? '' : 'wide'}`}><span>Size</span>
-                    <select data-testid="hollow-select" value={hollowCurrent?.name ?? ''} onChange={(e) => {
-                      const s = hollowList.find((x) => x.name === e.target.value);
-                      if (s) set(shape === 'CHS' ? { chs: { d: s.dims.d!, t: s.dims.t } } : { rhs: { h: s.dims.h!, b: s.dims.b!, t: s.dims.t } });
-                    }}>
-                      {!hollowCurrent && <option value="">Custom</option>}
-                      {hollowList.slice().sort((a, b) => (a.dims.h ?? a.dims.d!) - (b.dims.h ?? b.dims.d!) || (a.dims.b ?? 0) - (b.dims.b ?? 0) || a.dims.t - b.dims.t).map((s) => <option key={s.name}>{s.name}</option>)}
-                    </select>
-                  </label>
-                  {shape === 'RHS' ? (['h', 'b', 't'] as const).map((k) => (
-                    <label key={k} className="f"><span><i>{k}</i> (mm)</span><NumberField id={`in-${k}`} label={k} value={page.rhs[k]} onCommit={(n) => set({ rhs: { ...page.rhs, [k]: n } })} /></label>
-                  )) : (['d', 't'] as const).map((k) => (
-                    <label key={k} className="f"><span><i>{k}</i> (mm)</span><NumberField id={`in-${k}`} label={k} value={page.chs[k]} onCommit={(n) => set({ chs: { ...page.chs, [k]: n } })} /></label>
+              <Row desc="Section type">
+                <div className="seg" role="radiogroup" aria-label="Section type">
+                  {(['I', 'RHS', 'CHS'] as const).map((s) => (
+                    <button key={s} type="button" role="radio" aria-checked={shape === s} className={shape === s ? 'on' : ''} data-testid={`shape-${s}`}
+                      onClick={() => { set({ shape: s }); setSelected(null); setDesign((d) => ({ ...d, pick: null, msg: '', family: s === 'I' ? page.family : s === 'RHS' ? page.hollowFamily : 'CHS' })); }}>
+                      {s === 'I' ? 'I/H' : s === 'RHS' ? 'RHS' : 'CHS'}
+                    </button>
                   ))}
-                  <p className="hint wide">{fmt(mass, 1)} kg/m · properties calculated in the sheet from the dimensions with {page.cf ? 'EN 10219-2' : 'EN 10210-2'} corner radii. Sizes: common range, check availability.</p>
-                </>}
-              </div>
+                </div>
+              </Row>
+              {shape === 'I' && <>
+                <Row desc="Section family">
+                  <select aria-label="Family" value={page.family} onChange={(e) => set({ family: e.target.value, sectionId: iSections(e.target.value)[0].id })}>{I_FAMILIES.map((f) => <option key={f}>{f}</option>)}</select>
+                </Row>
+                <Row desc="Section size" note={`${sectionById(page.sectionId).standard} · ${fmt(sectionById(page.sectionId).values.mass, 1)} kg/m`}>
+                  <select aria-label="Size" data-testid="section-select" value={page.sectionId} onChange={(e) => set({ sectionId: Number(e.target.value) })}>
+                    {iSections(page.family).slice().sort((a, b) => a.values.h - b.values.h || a.values.mass - b.values.mass).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+                  </select>
+                </Row>
+              </>}
+              {shape !== 'I' && <>
+                <Row desc="Manufacturing process (corner radii, buckling curve)">
+                  <select aria-label="Process" value={page.cf} onChange={(e) => set({ cf: Number(e.target.value) as 0 | 1 })}>
+                    <option value={0}>Hot-finished</option><option value={1}>Cold-formed</option>
+                  </select>
+                </Row>
+                {shape === 'RHS' && <Row desc="Section family">
+                  <select aria-label="Family" value={page.hollowFamily} onChange={(e) => { const fam = e.target.value as 'SHS' | 'RHS'; const first = hollowSections(fam, page.cf)[0].dims; set({ hollowFamily: fam, rhs: { h: first.h!, b: first.b!, t: first.t } }); }}>
+                    <option>SHS</option><option>RHS</option>
+                  </select>
+                </Row>}
+                <Row desc="Section size (common range; or enter the dimensions below)">
+                  <select aria-label="Size" data-testid="hollow-select" value={hollowCurrent?.name ?? ''} onChange={(e) => {
+                    const s = hollowList.find((x) => x.name === e.target.value);
+                    if (s) set(shape === 'CHS' ? { chs: { d: s.dims.d!, t: s.dims.t } } : { rhs: { h: s.dims.h!, b: s.dims.b!, t: s.dims.t } });
+                  }}>
+                    {!hollowCurrent && <option value="">Custom</option>}
+                    {hollowList.slice().sort((a, b) => (a.dims.h ?? a.dims.d!) - (b.dims.h ?? b.dims.d!) || (a.dims.b ?? 0) - (b.dims.b ?? 0) || a.dims.t - b.dims.t).map((s) => <option key={s.name}>{s.name}</option>)}
+                  </select>
+                </Row>
+                {shape === 'RHS' ? ([['h', 'Depth, along z'], ['b', 'Width, along y'], ['t', 'Wall thickness']] as const).map(([k, d]) => (
+                  <Row key={k} desc={d} sym={k} unit="mm"><NumberField id={`in-${k}`} label={k} value={page.rhs[k]} onCommit={(n) => set({ rhs: { ...page.rhs, [k]: n } })} /></Row>
+                )) : ([['d', 'Outside diameter'], ['t', 'Wall thickness']] as const).map(([k, d]) => (
+                  <Row key={k} desc={d} sym={k} unit="mm"><NumberField id={`in-${k}`} label={k} value={page.chs[k]} onCommit={(n) => set({ chs: { ...page.chs, [k]: n } })} /></Row>
+                ))}
+                <p className="hint">{fmt(mass, 1)} kg/m · properties calculated in the sheet with {page.cf ? 'EN 10219-2' : 'EN 10210-2'} corner radii.</p>
+              </>}
             </section>
             <section aria-labelledby="h-mat">
               <h2 id="h-mat">Material and factors</h2>
-              <div className="fields">
-                <label className="f"><span>Grade</span>
-                  <select data-testid="grade" value={page.fyNom} onChange={(e) => set({ fyNom: Number(e.target.value) })}>
-                    {GRADES.map(([g, f]) => <option key={g} value={f}>{g}</option>)}
-                    {!GRADES.some(([, f]) => f === page.fyNom) && <option value={page.fyNom}>f_y = {page.fyNom}</option>}
-                  </select>
-                </label>
-                <label className="f"><span>f<sub>y</sub> basis</span>
-                  <select data-testid="fy-basis" value={page.fyBasis} onChange={(e) => set({ fyBasis: Number(e.target.value) as 0 | 1 })}>
-                    <option value={1}>Product standard (SG / UK NA)</option><option value={0}>EN 1993-1-1 Table 3.1</option>
-                  </select>
-                </label>
-                <label className="f"><span>f<sub>y</sub> used (MPa)</span><output className="num-input" style={{ background: 'transparent' }}>{fmt(v.fy, 0)}</output></label>
-                <label className="f"><span>γ<sub>M0</sub></span><NumberField id="in-gm0" label="gamma_M0" value={page.gammaM0} onCommit={(n) => set({ gammaM0: n })} /></label>
-                {shape !== 'CHS' && <label className="f"><span>η (shear area)</span><NumberField id="in-eta" label="eta" value={page.eta} onCommit={(n) => set({ eta: n })} /></label>}
-                <p className="hint wide">Product standard: EN 10025-2/-4, EN 10210-1, EN 10219-1 steps at t = 16, 40, 63, 80 mm (e.g. S355: 355, 345, 335, 325). Table 3.1: nominal up to 40 mm. γ<sub>M0</sub>, η: National Annex.</p>
-              </div>
+              <Row desc="Steel grade">
+                <select aria-label="Grade" data-testid="grade" value={page.fyNom} onChange={(e) => set({ fyNom: Number(e.target.value) })}>
+                  {GRADES.map(([g, f]) => <option key={g} value={f}>{g}</option>)}
+                  {!GRADES.some(([, f]) => f === page.fyNom) && <option value={page.fyNom}>f_y = {page.fyNom}</option>}
+                </select>
+              </Row>
+              <Row desc="Yield strength by thickness: product standard (Singapore / UK NA) or EN 1993-1-1 Table 3.1">
+                <select aria-label="f_y basis" data-testid="fy-basis" value={page.fyBasis} onChange={(e) => set({ fyBasis: Number(e.target.value) as 0 | 1 })}>
+                  <option value={1}>Product std</option><option value={0}>Table 3.1</option>
+                </select>
+              </Row>
+              <Row desc="Yield strength used (from the sheet)" sym="f_y" unit="MPa"><output className="num-input out">{fmt(v.fy, 0)}</output></Row>
+              <Row desc="Partial factor, cross-section resistance" sym="γ_M0"><NumberField id="in-gm0" label="gamma_M0" value={page.gammaM0} onCommit={(n) => set({ gammaM0: n })} /></Row>
+              {shape !== 'CHS' && <Row desc="Shear area factor (EN 1993-1-5)" sym="η"><NumberField id="in-eta" label="eta" value={page.eta} onCommit={(n) => set({ eta: n })} /></Row>}
             </section>
             <section aria-labelledby="h-member">
               <h2 id="h-member">Member (§6.3)</h2>
-              <div className="fields">
-                {([['Ly', 'L_y (m)', 'System length, buckling about y-y (major)'], ['ky', 'k_y', 'L_cr,y = k_y L_y'], ['Lz', 'L_z (m)', 'System length, buckling about z-z (minor)'], ['kz', 'k_z', 'L_cr,z = k_z L_z']] as const).map(([k, l, d]) => (
-                  <label key={k} className="f"><span><Rich text={l} /> <em className="sr-only">{d}</em></span><NumberField id={`in-${k}`} label={l} value={page.member[k]} onCommit={(n) => setMember({ [k]: n })} /></label>
-                ))}
-                {shape !== 'CHS' && <label className="f"><span>L<sub>LT</sub> (m) <em className="input-description">0 = restrained</em></span><NumberField id="in-Llt" label="L_LT" value={page.member.Llt} onCommit={(n) => setMember({ Llt: n })} /></label>}
-                {shape === 'I' && <label className="f"><span>Moment diagram (C<sub>1</sub>, C<sub>2</sub>)</span>
-                  <select data-testid="ltb-case" value={page.member.nLT} onChange={(e) => setMember({ nLT: Number(e.target.value) })}>
-                    {LTB_CASES.map(([n, l]) => <option key={n} value={n}>{l}</option>)}
-                  </select>
-                </label>}
-                {(shape === 'RHS' || (shape === 'I' && page.member.nLT === 0)) && <label className="f"><span>C<sub>1</sub></span><NumberField id="in-C1" label="C1" value={page.member.C1} onCommit={(n) => setMember({ C1: n })} /></label>}
-                {shape === 'I' && page.member.nLT === 0 && <label className="f"><span>C<sub>2</sub></span><NumberField id="in-C2" label="C2" value={page.member.C2} onCommit={(n) => setMember({ C2: n })} /></label>}
-                {shape === 'I' && <label className="f"><span>Load position</span>
-                  <select value={Math.sign(page.member.zg)} onChange={(e) => setMember({ zg: Number(e.target.value) * (v.h ?? 0) / 2 })}>
-                    <option value={0}>Shear centre</option><option value={1}>Top flange (destabilising)</option><option value={-1}>Bottom flange</option>
-                  </select>
-                </label>}
-                {shape === 'I' && <label className="f wide"><span>LTB method</span>
-                  <select data-testid="ltb-method" value={page.member.cNA} onChange={(e) => setMember({ cNA: Number(e.target.value) as 0 | 1 })}>
-                    <option value={1}>§6.3.2.3 rolled/welded, Singapore (UK) NA, f with k_c = 1/√C1</option><option value={0}>§6.3.2.2 general, recommended values</option>
-                  </select>
-                </label>}
-                {(shape === 'I' ? ['Cmy', 'Cmz', 'CmLT'] as const : ['Cmy', 'Cmz'] as const).map((k) => (
-                  <label key={k} className="f"><span>C<sub>{k.slice(1)}</sub></span><NumberField id={`in-${k}`} label={k} value={page.member[k]} onCommit={(n) => setMember({ [k]: n })} /></label>
-                ))}
-                <label className="f"><span>γ<sub>M1</sub></span><NumberField id="in-gm1" label="gamma_M1" value={page.member.gammaM1} onCommit={(n) => setMember({ gammaM1: n })} /></label>
-                <p className="hint wide">Same member data for every combination. C<sub>m</sub> from Table B.3 (1.0 = no moment-gradient benefit). <Rich text={shape === 'I' ? 'M_cr from SN003b, fork ends; torsional buckling with L_cr,T = L_cr,z.' : shape === 'RHS' ? 'M_cr without warping, LTB curve d; buckling curve a (hot-finished) or c (cold-formed).' : 'No LTB; buckling curve a (hot-finished) or c (cold-formed).'} /></p>
-              </div>
+              {([['Ly', 'System length for buckling about y-y (major axis)', 'L_y', 'm'], ['ky', 'Effective length factor, L_cr,y = k_y L_y', 'k_y', ''], ['Lz', 'System length for buckling about z-z (minor axis)', 'L_z', 'm'], ['kz', 'Effective length factor, L_cr,z = k_z L_z', 'k_z', '']] as const).map(([k, d, sym, u]) => (
+                <Row key={k} desc={d} sym={sym} unit={u}><NumberField id={`in-${k}`} label={sym} value={page.member[k]} onCommit={(n) => setMember({ [k]: n })} /></Row>
+              ))}
+              {shape !== 'CHS' && <Row desc="Length between lateral restraints of the compression flange (0 = fully restrained)" sym="L_LT" unit="m"><NumberField id="in-Llt" label="L_LT" value={page.member.Llt} onCommit={(n) => setMember({ Llt: n })} /></Row>}
+              {shape !== 'CHS' && <Row desc={shape === 'I' ? 'Moment diagram between lateral restraints (C1, C2)' : 'Moment diagram between lateral restraints (C1)'} block>
+                <MomentDiagramButton value={page.member} withC2={shape === 'I'} onChange={(c) => setMember({ nLT: c.nLT, C1: c.C1, C2: c.C2, psi: c.psi })} onCm={(cm) => setMember({ Cmy: cm, CmLT: cm })} />
+              </Row>}
+              {shape === 'I' && <Row desc="Load position relative to the shear centre" sym="z_g">
+                <select aria-label="Load position" value={Math.sign(page.member.zg)} onChange={(e) => setMember({ zg: Number(e.target.value) * (v.h ?? 0) / 2 })}>
+                  <option value={0}>Shear centre</option><option value={1}>Top flange</option><option value={-1}>Bottom flange</option>
+                </select>
+              </Row>}
+              {shape !== 'CHS' && <Row desc="LTB method: §6.3.2.3 with the Singapore / UK NA (f with k_c = 1/√C1), or §6.3.2.2 recommended">
+                <select aria-label="LTB method" data-testid="ltb-method" value={page.member.cNA} onChange={(e) => setMember({ cNA: Number(e.target.value) as 0 | 1 })}>
+                  <option value={1}>§6.3.2.3 NA</option><option value={0}>§6.3.2.2</option>
+                </select>
+              </Row>}
+              {(shape === 'I' ? [['Cmy', 'Equivalent uniform moment factor, y-y (Table B.3)', 'C_my'], ['Cmz', 'Equivalent uniform moment factor, z-z', 'C_mz'], ['CmLT', 'Equivalent uniform moment factor, LTB', 'C_mLT']] as const
+                : [['Cmy', 'Equivalent uniform moment factor, y-y (Table B.3)', 'C_my'], ['Cmz', 'Equivalent uniform moment factor, z-z', 'C_mz']] as const).map(([k, d, sym]) => (
+                <Row key={k} desc={d} sym={sym}><NumberField id={`in-${k}`} label={k} value={page.member[k]} onCommit={(n) => setMember({ [k]: n })} /></Row>
+              ))}
+              <Row desc="Partial factor, member buckling" sym="γ_M1"><NumberField id="in-gm1" label="gamma_M1" value={page.member.gammaM1} onCommit={(n) => setMember({ gammaM1: n })} /></Row>
+              <p className="hint">Same member data for every combination; C<sub>m</sub> = 1.0 takes no moment-gradient benefit. <Rich text={shape === 'I' ? 'M_cr from SN003b, fork ends; torsional buckling with L_cr,T = L_cr,z.' : shape === 'RHS' ? 'M_cr without warping; buckling curve a (hot-finished) or c (cold-formed).' : 'No LTB; buckling curve a (hot-finished) or c (cold-formed).'} /></p>
             </section>
             <section aria-labelledby="h-design">
               <h2 id="h-design">Lightest passing section</h2>
-              <div className="fields">
-                <label className="f"><span>Family</span>
-                  <select data-testid="design-family" value={designFamilies.includes(design.family) ? design.family : designFamilies[0]} onChange={(e) => setDesign((d) => ({ ...d, family: e.target.value }))}>
-                    {designFamilies.map((f) => <option key={f}>{f}</option>)}
-                  </select>
-                </label>
-                <label className="f"><span>Max. depth (mm)</span>
-                  <input className="num-input" inputMode="decimal" placeholder="none" value={design.maxDepth} onChange={(e) => setDesign((d) => ({ ...d, maxDepth: e.target.value }))} aria-label="Maximum depth" />
-                </label>
-                <label className="f"><span>Target UR</span><NumberField id="in-target" label="target UR" value={design.target} onCommit={(n) => setDesign((d) => ({ ...d, target: n }))} /></label>
-                <div className="f" style={{ justifyContent: 'flex-end' }}>
-                  <button type="button" className="btn primary" data-testid="design-run" disabled={design.running} onClick={runDesign}>{design.running ? 'Searching…' : 'Find'}</button>
-                </div>
-                <p className="hint wide" role="status" data-testid="design-msg">{design.msg || 'Lightest first; every combination must pass (Class ≤ 3, UR ≤ target).'}</p>
-                {design.pick && <button type="button" className="btn wide" data-testid="design-apply" onClick={applyPick}>Use {design.pick.name}</button>}
+              <Row desc="Family to search">
+                <select aria-label="Family to search" data-testid="design-family" value={designFamilies.includes(design.family) ? design.family : designFamilies[0]} onChange={(e) => setDesign((d) => ({ ...d, family: e.target.value }))}>
+                  {designFamilies.map((f) => <option key={f}>{f}</option>)}
+                </select>
+              </Row>
+              <Row desc="Maximum depth (blank = none)" sym="h_max" unit="mm">
+                <input className="num-input" inputMode="decimal" placeholder="none" value={design.maxDepth} onChange={(e) => setDesign((d) => ({ ...d, maxDepth: e.target.value }))} aria-label="Maximum depth" />
+              </Row>
+              <Row desc="Target utilisation for every combination" sym="UR"><NumberField id="in-target" label="target UR" value={design.target} onCommit={(n) => setDesign((d) => ({ ...d, target: n }))} /></Row>
+              <div className="row-actions">
+                <button type="button" className="btn primary" data-testid="design-run" disabled={design.running} onClick={runDesign}>{design.running ? 'Searching…' : 'Find lightest'}</button>
+                {design.pick && <button type="button" className="btn" data-testid="design-apply" onClick={applyPick}>Use {design.pick.name}</button>}
               </div>
+              <p className="hint" role="status" data-testid="design-msg">{design.msg || 'Lightest first; every combination must pass (Class ≤ 3, UR ≤ target).'}</p>
             </section>
           </form>
 
@@ -435,6 +420,17 @@ export function App() {
         </div>}
       </dialog>
     </>
+  );
+}
+
+/** One input row: description (with symbol and unit) on the left, a single control on the right; block: control below. */
+function Row({ desc, sym, unit, note, block, children }: { desc: string; sym?: string; unit?: string; note?: string; block?: boolean; children: React.ReactNode }) {
+  const Tag = block ? 'div' : 'label';
+  return (
+    <Tag className={`row ${block ? 'block' : ''}`}>
+      <span className="row-desc"><Rich text={desc} />{sym ? <> <span className="row-sym"><Rich text={sym} />{unit ? ` (${unit})` : ''}</span></> : unit ? <span className="row-sym"> ({unit})</span> : null}{note ? <small>{note}</small> : null}</span>
+      <span className="row-ctl">{children}</span>
+    </Tag>
   );
 }
 

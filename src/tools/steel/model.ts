@@ -15,7 +15,7 @@ import { agrees, EXAMPLES, TOLERANCE } from './examples';
 export interface Combo { name: string; N: number; Vy: number; Vz: number; My: number; Mz: number }
 export interface Hollow { h: number; b: number; t: number; d: number; cf: 0 | 1 }
 /** Member data (EN 1993-1-1 §6.3): lengths in m, z_g in mm (I/H only); nLT = SN003b case 1–13, 0 = user C1, C2. */
-export interface Member { Ly: number; ky: number; Lz: number; kz: number; Llt: number; nLT: number; C1: number; C2: number; zg: number; cNA: 0 | 1; Cmy: number; Cmz: number; CmLT: number; gammaM1: number }
+export interface Member { psi?: number; Ly: number; ky: number; Lz: number; kz: number; Llt: number; nLT: number; C1: number; C2: number; zg: number; cNA: 0 | 1; Cmy: number; Cmz: number; CmLT: number; gammaM1: number }
 export const DEFAULT_MEMBER: Member = { Ly: 4, ky: 1, Lz: 4, kz: 1, Llt: 4, nLT: 1, C1: 1, C2: 0, zg: 0, cNA: 1, Cmy: 1, Cmz: 1, CmLT: 1, gammaM1: 1 };
 /** fyBasis: 1 = product-standard thickness steps (Singapore / UK NA), 0 = EN 1993-1-1 Table 3.1. probes: extra worksheet values to read (verification). */
 export interface SteelState { shape: Kind; sectionId: number; hollow: Hollow; fyNom: number; fyBasis: 0 | 1; gammaM0: number; eta: number; member: Member; combos: Combo[]; probes?: [latex: string, unit: string | null][]; example?: string }

@@ -72,3 +72,24 @@ test('mSteelBeamColumn verification examples: published values agree with the sh
   expect(html).toContain('Verification: I/H bending + LTB');
   expect(html).not.toContain('differs');
 });
+
+test('mSteelBeamColumn moment diagram picker: SN003b cases with Table B.3 Cm, end-moment ratio and user C1, C2', async ({ page }) => {
+  await page.goto('/steel/');
+  await expect(page.getByTestId('overall-ur')).not.toHaveText('–', { timeout: 30_000 });
+  await page.getByTestId('ltb-diagram').click();
+  await page.getByTestId('ltb-case-10').click();
+  await expect(page.getByTestId('ltb-diagram')).toContainText('UDL, simply supported');
+  await expect(page.locator('input[data-input="Cmy"]')).toHaveValue('0.95');
+  await expect(page.locator('input[data-input="CmLT"]')).toHaveValue('0.95');
+  await page.getByTestId('ltb-diagram').click();
+  await page.getByTestId('ltb-psi').fill('-0.5');
+  await page.getByTestId('ltb-psi-use').click();
+  await expect(page.getByTestId('ltb-diagram')).toContainText('ψ = -0.5 · C1 2.330');
+  await expect(page.locator('input[data-input="Cmy"]')).toHaveValue('0.4');
+  await page.getByTestId('ltb-diagram').click();
+  await page.getByTestId('ltb-c1').fill('2.2');
+  await page.getByTestId('ltb-c2').fill('0.3');
+  await page.getByTestId('ltb-user-use').click();
+  await expect(page.getByTestId('ltb-diagram')).toContainText('User · C1 2.200, C2 0.300');
+  await expect(page.getByTestId('member-props')).toContainText('M');
+});
