@@ -3,14 +3,13 @@
 import tplI from '../../../templates/Steel_Section_I_EC3.mCCV?raw';
 import tplRHS from '../../../templates/Steel_Section_RHS_EC3.mCCV?raw';
 import tplCHS from '../../../templates/Steel_Section_CHS_EC3.mCCV?raw';
-import { governing, SteelModel, type ComboResult, type SteelState } from './model';
+import { governing, SteelModel, type ComboResult, type SteelState, type SummaryGroup } from './model';
 import { hollowSections, iSections, type Shape } from './sections';
-import { sheetView, type SheetView } from './sheetView';
 
 export type ToWorker =
   | { kind: 'run'; request: number; state: SteelState; key: string }
   | { kind: 'report'; request: number; state: SteelState }
-  // the report worksheet of one combination, recalculated, for the read-only view
+  // main formulas of one combination for the page
   | { kind: 'sheet'; request: number; state: SteelState; combo: number }
   // lightest section of a family that passes every combination
   | { kind: 'design'; token: number; state: SteelState; family: string; target: number; maxDepth: number | null };
@@ -18,7 +17,7 @@ export type ToWorker =
 export type FromWorker =
   | { kind: 'results'; request: number; key: string; results: ComboResult[] }
   | { kind: 'report'; request: number; doc: unknown }
-  | { kind: 'sheet'; request: number; view: SheetView }
+  | { kind: 'sheet'; request: number; groups: SummaryGroup[] }
   | { kind: 'progress'; token: number; i: number; n: number; name: string }
   | { kind: 'designed'; token: number; pick: { name: string; state: SteelState; ur: number } | null; tried: number; seconds: number };
 
@@ -34,11 +33,7 @@ self.onmessage = (ev: MessageEvent<ToWorker>) => {
     const md = model(m.state.shape), results = md.runAll(m.state);
     return post({ kind: 'report', request: m.request, doc: md.reportDocument(m.state, results, governing(results, m.state.shape)) });
   }
-  if (m.kind === 'sheet') {
-    const md = model(m.state.shape), results = md.runAll(m.state), combo = Math.min(Math.max(0, m.combo), m.state.combos.length - 1);
-    const doc = md.reportDocument(m.state, results, { combo, key: '', ur: results[combo]?.v.UR ?? NaN }) as { shapes: never[] };
-    return post({ kind: 'sheet', request: m.request, view: sheetView(doc) });
-  }
+  if (m.kind === 'sheet') return post({ kind: 'sheet', request: m.request, groups: model(m.state.shape).summary(m.state, m.combo) });
   if (m.kind === 'design') {
     const t0 = performance.now(), st = m.state, md = model(st.shape);
     const cands: { name: string; state: SteelState }[] = st.shape === 'I'

@@ -66,16 +66,15 @@
 .optimize h3 { margin-top: 0; }
 .sheet-head { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.25rem; padding-top: 0.875rem; border-top: 1px solid var(--rule); }
 .sheet-head h2 { margin: 0; }
-.sheet-host { margin-top: 0.5rem; max-height: 82vh; overflow-y: auto; overflow-x: hidden; background: #e5e9ef; border: 1px solid var(--rule); border-radius: 3px; user-select: text; }
-.sheet-pages { position: absolute; left: 0; top: 0; transform-origin: 0 0; font-family: Roboto, system-ui, sans-serif; }
-.sheet-page { position: absolute; left: 0; background: white; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.18); }
-.sheet-text, .sheet-math, .sheet-img, .sheet-graph { position: absolute; }
-.sheet-text { line-height: 1.35; }
-.sheet-text.h1 { font-weight: 700; } .sheet-text.h2 { font-weight: 700; } .sheet-text.h3 { font-weight: 600; }
-.sheet-text h2 { font-size: 1.15em; margin: 0 0 0.4em; } .sheet-text p { margin: 0 0 0.4em; } .sheet-text ul { margin: 0; padding-left: 1.2em; }
-.sheet-math { white-space: nowrap; line-height: 1.2; display: flex; align-items: center; gap: 6px; }
-.sheet-math.err { outline: 1px dashed #c0392b; }
-.sheet-check { font: 600 10px/1 Roboto, sans-serif; padding: 2px 5px; border-radius: 9px; color: white; }
-.sheet-check.pass { background: #1f8a4c; } .sheet-check.fail { background: #c0392b; }
-.sheet-graph { display: flex; align-items: center; justify-content: center; }
-.sheet-graph svg { max-height: 100%; }
+.formulas { margin-top: 0.5rem; }
+.formulas section + section { margin-top: 0.875rem; }
+.formulas h3 { margin: 0 0 0.25rem; font-size: 0.8125rem; font-weight: 600; color: var(--ink); }
+.formulas table { width: 100%; border-collapse: collapse; }
+.formulas td { padding: 0.25rem 0.375rem; border-bottom: 1px solid color-mix(in srgb, var(--rule) 55%, transparent); vertical-align: middle; font-size: 0.8125rem; }
+.formulas .f-label { width: 14rem; color: var(--ink-2); text-align: left; }
+.formulas .f-math { font-size: 0.9375rem; color: var(--ink); overflow-x: auto; max-width: 0; white-space: nowrap; text-align: left; }
+.formulas .f-math.err { color: var(--red, #c0392b); }
+.formulas .f-tag { width: 2.5rem; text-align: right; }
+.formulas tr.ur-line td { background: color-mix(in srgb, var(--steel) 4%, transparent); }
+.formulas .tag { font-size: 0.6875rem; padding: 1px 6px; }
+

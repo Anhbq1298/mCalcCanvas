@@ -11,6 +11,8 @@ import { sectionById } from '../../engineering/steel/sections';
 import type { MathShape, Shape } from '../../canvas/model/types';
 import { hollowName, type Shape as Kind } from './sections';
 import { choiceLabel } from './ltbCases';
+import { buildDisplay } from '../../math/MathFormatter';
+import { fractionUnitLatex } from '../../math/resultUnit';
 
 export interface Combo { name: string; N: number; Vy: number; Vz: number; My: number; Mz: number }
 export interface Hollow { h: number; b: number; t: number; d: number; cf: 0 | 1 }
@@ -49,6 +51,38 @@ const PROBES: [string, string, string | null][] = [
   ['C1', 'C_{1}', null], ['kyy', 'k_{yy}', null], ['kyz', 'k_{yz}', null], ['kzy', 'k_{zy}', null], ['kzz', 'k_{zz}', null], ['Lcry', 'L_{cr.y}', 'm'], ['Lcrz', 'L_{cr.z}', 'm'],
 ];
 
+export interface SummaryLine { label: string; latex: string; ur?: number; error?: string }
+export interface SummaryGroup { title: string; lines: SummaryLine[] }
+const U = (k: string) => `\\mathrm{UR}_{${k}}`;
+const buckling = (ax: 'y' | 'z'): [string, string][] => [[`L_{cr.${ax}}`, 'Buckling length'], [`N_{cr.${ax}}`, 'Elastic critical force'], [`\\lambda_{${ax}}`, 'Relative slenderness'],
+  [`\\alpha_{${ax}}`, 'Imperfection factor'], [`\\chi_{${ax}}`, 'Reduction factor'], [`N_{b.${ax}.Rd}`, 'Buckling resistance'], [U(`b.${ax}`), 'Utilisation']];
+const COMMON_HEAD: [string, [string, string][]] = ['Material and class', [['f_{y}', 'Yield strength'], ['\\varepsilon', 'Material parameter'], ['\\mathrm{Class}', 'Section class (Table 5.2)']]];
+const MEMBER_TAIL = (shape: Kind): [string, [string, string][]][] => [
+  ['Flexural buckling y-y (§6.3.1)', buckling('y')],
+  ['Flexural buckling z-z (§6.3.1)', buckling('z')],
+  ...(shape === 'I' ? [['Torsional buckling (§6.3.1.4)', [['N_{cr.T}', 'Elastic critical force'], ['\\lambda_{T}', 'Relative slenderness'], ['\\chi_{T}', 'Reduction factor'], ['N_{b.T.Rd}', 'Buckling resistance'], [U('b.T'), 'Utilisation']]] as [string, [string, string][]]] : []),
+  ['Lateral-torsional buckling (§6.3.2)', [['C_{1}', 'Moment diagram factor'], ['M_{cr}', 'Elastic critical moment'], ['\\lambda_{LT}', 'Relative slenderness'], ['\\chi_{LT}', 'Reduction factor'], ['M_{b.Rd}', 'Buckling resistance moment'], [U('LT'), 'Utilisation']]],
+  ['Compression and bending (§6.3.3, Annex B)', [['n_{y}', 'Axial ratio y'], ['n_{z}', 'Axial ratio z'], ['k_{yy}', 'Interaction factor'], ['k_{yz}', 'Interaction factor'], ['k_{zy}', 'Interaction factor'], ['k_{zz}', 'Interaction factor'], [U('6.61'), '(6.61)'], [U('6.62'), '(6.62)']]],
+  ['Summary', [['\\mathrm{UR}_{6.2}', 'Cross-section'], ['\\mathrm{UR}_{6.3}', 'Member'], ['\\mathrm{UR}', 'Governing']]],
+];
+const SUMMARY: Record<Kind, [string, [string, string][]][]> = {
+  I: [COMMON_HEAD,
+    ['Shear (§6.2.6)', [['V_{pl.z.Rd}', 'Plastic shear resistance z'], [U('V.z'), 'Utilisation'], ['V_{pl.y.Rd}', 'Plastic shear resistance y'], [U('V.y'), 'Utilisation'], ['\\rho', 'Shear reduction (6.29)']]],
+    ['Axial force and bending (§6.2.3–6.2.5)', [['N_{pl.Rd}', 'Plastic axial resistance'], [U('N'), 'Utilisation'], ['M_{c.y.Rd}', 'Bending resistance y'], [U('M.y'), 'Utilisation'], ['M_{c.z.Rd}', 'Bending resistance z'], [U('M.z'), 'Utilisation']]],
+    ['Bending and axial force (§6.2.9)', [['n', 'Axial ratio'], ['M_{N.y.Rd}', 'Reduced moment resistance y'], ['M_{N.z.Rd}', 'Reduced moment resistance z'], ['\\mathrm{UR}_{el}', 'Elastic check (6.42)'], [U('sec'), 'Utilisation']]],
+    ...MEMBER_TAIL('I')],
+  RHS: [COMMON_HEAD,
+    ['Shear (§6.2.6)', [['V_{pl.z.Rd}', 'Plastic shear resistance z'], [U('V.z'), 'Utilisation'], ['V_{pl.y.Rd}', 'Plastic shear resistance y'], [U('V.y'), 'Utilisation'], ['\\rho', 'Shear reduction (6.29)']]],
+    ['Axial force and bending (§6.2.3–6.2.5)', [['N_{pl.Rd}', 'Plastic axial resistance'], [U('N'), 'Utilisation'], ['M_{c.y.Rd}', 'Bending resistance y'], [U('M.y'), 'Utilisation'], ['M_{c.z.Rd}', 'Bending resistance z'], [U('M.z'), 'Utilisation']]],
+    ['Bending and axial force (§6.2.9)', [['n', 'Axial ratio'], ['M_{N.y.Rd}', 'Reduced moment resistance y'], ['M_{N.z.Rd}', 'Reduced moment resistance z'], ['\\alpha', 'Exponent (6.41)'], ['\\mathrm{UR}_{el}', 'Elastic check (6.42)'], [U('sec'), 'Utilisation']]],
+    ...MEMBER_TAIL('RHS')],
+  CHS: [COMMON_HEAD,
+    ['Shear (§6.2.6)', [['V_{Ed}', 'Resultant shear'], ['V_{pl.Rd}', 'Plastic shear resistance'], [U('V'), 'Utilisation'], ['\\rho', 'Shear reduction (6.29)']]],
+    ['Axial force and bending (§6.2.3–6.2.5)', [['N_{pl.Rd}', 'Plastic axial resistance'], [U('N'), 'Utilisation'], ['M_{Ed}', 'Resultant moment'], ['M_{c.Rd}', 'Bending resistance'], [U('M'), 'Utilisation']]],
+    ['Bending and axial force (§6.2.9)', [['n', 'Axial ratio'], ['M_{N.Rd}', 'Reduced moment resistance (SCI P363)'], ['\\mathrm{UR}_{el}', 'Elastic check (6.42)'], [U('sec'), 'Utilisation']]],
+    ...MEMBER_TAIL('CHS')],
+};
+
 export interface ComboResult { name: string; v: Record<string, number>; ur: Record<string, number>; extra: number[]; errors: string[] }
 export interface Governing { combo: number; key: string; ur: number }
 
@@ -64,6 +98,8 @@ export class SteelModel {
   /** input name → region id */
   private readonly ids = new Map<string, string>();
   private readonly current = new Map<string, number>();
+  /** defined name → region id (first definition) */
+  private readonly byName = new Map<string, string>();
 
   readonly shape: Kind;
 
@@ -77,7 +113,13 @@ export class SteelModel {
       if (m && (m[1] in UNIT || PLAIN.includes(m[1])) && !this.ids.has(m[1])) this.ids.set(m[1], s.id);
     }
     this.e.batch(() => {
-      for (const s of this.doc.shapes) if (s.type === 'math') this.e.setRegion(s.id, { latex: (s as MathShape).props.latex, order: calcKey(s, rec), displayUnit: (s as MathShape).props.displayUnit || null, precision: null });
+      for (const s of this.doc.shapes) {
+        if (s.type !== 'math') continue;
+        const p = (s as MathShape).props;
+        this.e.setRegion(s.id, { latex: p.latex, order: calcKey(s, rec), displayUnit: p.displayUnit?.trim() || null, precision: p.precision >= 0 ? p.precision : null });
+        const name = /^(.*?)\\coloneq/.exec(p.latex.trim())?.[1];
+        if (name && !this.byName.has(name)) this.byName.set(name, s.id);
+      }
       PROBES.forEach(([k, latex, unit], i) => this.e.setRegion(`probe:${k}`, { latex: `${latex}=`, order: [1e9, i] as never, displayUnit: unit, precision: null }));
       CHECKS[this.shape].forEach(([k], i) => this.e.setRegion(`probe:UR.${k}`, { latex: `\\mathrm{UR}_{${k}}=`, order: [1e9, 100 + i] as never, displayUnit: null, precision: null }));
     });
@@ -149,6 +191,30 @@ export class SteelModel {
       if (u > target) return { ok: false, worst: i, ur: u };
     }
     return { ok: true, worst, ur: max };
+  }
+
+  /**
+   * Main formulas of one combination for the page: each as name = formula = result (no substitution;
+   * a piecewise definition shows only its value), grouped by check, with the check utilisations.
+   */
+  summary(st: SteelState, combo: number): SummaryGroup[] {
+    this.setSection(st);
+    this.run(st.combos[combo] ?? st.combos[0]);
+    const line = (name: string, label: string): SummaryLine | null => {
+      const id = this.byName.get(name);
+      if (!id) return null;
+      const shape = this.doc.shapes.find((x) => x.id === id) as MathShape;
+      const r = this.e.getResult(id);
+      if (!r || r.status !== 'valid') return { label, latex: shape.props.latex, error: r?.error?.message ?? 'not calculated' };
+      const unit = r.value?.unitLatex;
+      const res = unit ? { ...r, value: { ...r.value!, latex: r.value!.latex.replace(unit, fractionUnitLatex(unit)) } } : r;
+      const piecewise = shape.props.latex.includes('\\begin{array}');
+      const latex = buildDisplay(shape.props.latex, res, piecewise ? 'result' : 'formulaResult').latex;
+      const ur = name.startsWith('\\mathrm{UR}') && !/_\{(el|pl)\}$/.test(name) ? r.value?.number : undefined;
+      return { label, latex, ...(ur !== undefined ? { ur } : {}) };
+    };
+    return SUMMARY[this.shape].map(([title, rows]) => ({ title, lines: rows.map(([n, l]) => line(n, l)).filter((x): x is SummaryLine => !!x) }))
+      .filter((g) => g.lines.length);
   }
 
   /** The worksheet with the page inputs and the governing combination written in, all combinations in Input & Results. */

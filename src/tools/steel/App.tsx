@@ -9,10 +9,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { sectionById } from '../../engineering/steel/sections';
 import { fmt } from '../composite/format';
 import { Rich } from '../composite/rich';
-import { CHECKS, DEFAULT_MEMBER, governing, isMemberCheck, type Combo, type ComboResult, type Member, type SteelState } from './model';
+import { CHECKS, DEFAULT_MEMBER, type SummaryGroup, governing, isMemberCheck, type Combo, type ComboResult, type Member, type SteelState } from './model';
 import { hollowName, hollowSections, I_FAMILIES, iSections, type Shape } from './sections';
-import { SheetPanel } from './SheetPanel';
-import type { SheetView } from './sheetView';
+import { MathRenderer } from '../../math/MathRenderer';
+import { SectionDrawing } from './charts';
 import { MomentDiagramButton } from './MomentDiagram';
 import { choiceLabel } from './ltbCases';
 import type { FromWorker, ToWorker } from './worker';
@@ -77,7 +77,7 @@ export function App() {
   const [design, setDesign] = useState<{ family: string; maxDepth: string; target: number; running: boolean; msg: string; pick: { name: string; state: SteelState; ur: number } | null }>(
     { family: 'UC', maxDepth: '', target: 1, running: false, msg: '', pick: null });
   const [pasteOpen, setPasteOpen] = useState(false);
-  const [sheet, setSheet] = useState<{ view: SheetView; key: string } | null>(null);
+  const [sheet, setSheet] = useState<SummaryGroup[] | null>(null);
   const sheetRequest = useRef(0);
   const request = useRef(0), designToken = useRef(0), reportCb = useRef<((doc: unknown) => void) | null>(null);
   const pasteRef = useRef<HTMLDialogElement>(null);
@@ -90,7 +90,7 @@ export function App() {
       const m = ev.data;
       if (m.kind === 'results' && m.request === request.current) { setResults(m.results); setResultsKey(m.key); }
       if (m.kind === 'report' && m.request === request.current) reportCb.current?.(m.doc);
-      if (m.kind === 'sheet' && m.request === sheetRequest.current) setSheet({ view: m.view, key: String(m.request) });
+      if (m.kind === 'sheet' && m.request === sheetRequest.current) setSheet(m.groups);
       if (m.kind === 'progress' && m.token === designToken.current) setDesign((d) => ({ ...d, msg: `Checking ${m.name} (${m.i} of ${m.n})…` }));
       if (m.kind === 'designed' && m.token === designToken.current) {
         setDesign((d) => ({ ...d, running: false, pick: m.pick, msg: m.pick ? `${m.pick.name}: UR ${fmt(m.pick.ur, 3)} for every combination (${m.tried} sections, ${fmt(m.seconds, 1)} s).` : `No section of this family passes every combination (${m.tried} checked).` }));
@@ -143,6 +143,9 @@ export function App() {
     ...(shape === 'I' ? [['N_b,T,Rd', 'kN', r?.v.NbT ?? NaN, 1] as [string, string, number, number]] : []),
     ...(shape !== 'CHS' ? [['M_cr', 'kN m', r?.v.Mcr ?? NaN, 1], ['λ_LT', '', r?.v.lamLT ?? NaN, 3], ['χ_LT', '', r?.v.chiLT ?? NaN, 3]] as [string, string, number, number][] : []),
     ['M_b,Rd', 'kN m', r?.v.Mb ?? NaN, 1], ['k_yy / k_yz', '', NaN, 3], ['k_zy / k_zz', '', NaN, 3]];
+  const props: [string, string, number, number][] = shape === 'CHS'
+    ? [['A', 'cm²', v.A / 100, 2], ['I', 'cm⁴', v.I / 1e4, 0], ['W_el', 'cm³', v.Wel / 1e3, 0], ['W_pl', 'cm³', v.Wpl / 1e3, 0]]
+    : [['A', 'cm²', v.A / 100, 2], ['I_y', 'cm⁴', v.Iy / 1e4, 0], ['I_z', 'cm⁴', v.Iz / 1e4, 0], ['W_pl,y', 'cm³', v.Wply / 1e3, 0], ['W_pl,z', 'cm³', v.Wplz / 1e3, 0], ['W_el,y', 'cm³', v.Wely / 1e3, 0], ['W_el,z', 'cm³', v.Welz / 1e3, 0]];
   const mass = (v.A ?? NaN) * 7.85e-3;
 
   const designFamilies = shape === 'I' ? [...I_FAMILIES] : shape === 'RHS' ? ['SHS', 'RHS'] : ['CHS'];
@@ -319,11 +322,18 @@ export function App() {
               <button type="button" className="btn" data-testid="paste-open" onClick={() => { setPasteOpen(true); pasteRef.current?.showModal(); }}>Paste from Excel / ETABS…</button>
             </div>
             <p className="hint table-note">Click a row for its checks. The page runs the worksheet once per combination; the governing row (amber) is the one written into the report.</p>
-            <div className="sheet-head" id="diagrams">
-              <h2 id="h-sheet">Calculation – {page.combos[shown]?.name}</h2>
-              <span className="hint">The report worksheet for this combination, as mCalcCanvas shows it (read only). Click a row to change it.</span>
+            <div className="xs" id="diagrams">
+              <div><h2 id="h-xs">Cross-section</h2><SectionDrawing shape={shape} v={v} /></div>
+              <table className="props" aria-labelledby="h-xs"><tbody>
+                {props.map(([l, u, x, d]) => <tr key={l}><td><Rich text={l} /></td><td className="num">{fmt(x, d)}</td><td>{u}</td></tr>)}
+                <tr><td>Mass</td><td className="num">{fmt(mass, 1)}</td><td>kg/m</td></tr>
+              </tbody></table>
             </div>
-            <SheetPanel view={sheet?.view ?? null} shape={shape} v={v} />
+            <div className="sheet-head">
+              <h2 id="h-sheet">Calculation – {page.combos[shown]?.name}</h2>
+              <span className="hint">Main formulas from the worksheet, read only; every step is in the full report. Click a row to change the combination.</span>
+            </div>
+            <Formulas groups={sheet} />
           </section>
 
           {/* ── Verdict ── */}
@@ -411,6 +421,28 @@ function Row({ desc, sym, unit, note, block, children }: { desc: string; sym?: s
       <span className="row-desc"><Rich text={desc} />{sym ? <> <span className="row-sym"><Rich text={sym} />{unit ? ` (${unit})` : ''}</span></> : unit ? <span className="row-sym"> ({unit})</span> : null}{note ? <small>{note}</small> : null}</span>
       <span className="row-ctl">{children}</span>
     </Tag>
+  );
+}
+
+function Formulas({ groups }: { groups: SummaryGroup[] | null }) {
+  if (!groups) return null;
+  return (
+    <div className="formulas" data-testid="sheet">
+      {groups.map((g) => (
+        <section key={g.title}>
+          <h3>{g.title}</h3>
+          <table><tbody>
+            {g.lines.map((l, i) => (
+              <tr key={i} className={l.ur !== undefined ? 'ur-line' : ''}>
+                <td className="f-label">{l.label}</td>
+                <td className={`f-math ${l.error ? 'err' : ''}`} title={l.error}><MathRenderer latex={l.latex} /></td>
+                <td className="f-tag">{l.ur !== undefined && <span className={`tag ${tone(l.ur)}`}>{l.ur <= 1 ? 'OK' : 'NG'}</span>}</td>
+              </tr>
+            ))}
+          </tbody></table>
+        </section>
+      ))}
+    </div>
   );
 }
 

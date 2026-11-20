@@ -99,16 +99,18 @@ test('mSteelBeamColumn moment diagram picker: SN003b cases with Table B.3 Cm, en
   await expect(page.getByTestId('member-props')).toContainText('M');
 });
 
-test('mSteelBeamColumn middle sheet: the report worksheet of the shown combination, read only', async ({ page }) => {
+test('mSteelBeamColumn middle column: main formulas of the shown combination, read only', async ({ page }) => {
   await page.goto('/steel/');
   const sheet = page.getByTestId('sheet');
-  await expect(sheet.locator('.sheet-math').first()).toBeVisible({ timeout: 30_000 });
+  await expect(sheet.locator('.f-math').first()).toBeVisible({ timeout: 30_000 });
   await expect(page.locator('#h-sheet')).toContainText('ULS2');
-  await expect(sheet).toContainText('STEEL BEAM-COLUMN CHECK');
-  expect(await sheet.locator('.sheet-math.err').count()).toBe(0);
+  for (const h of ['Shear (§6.2.6)', 'Bending and axial force (§6.2.9)', 'Flexural buckling y-y (§6.3.1)', 'Lateral-torsional buckling (§6.3.2)', 'Compression and bending (§6.3.3, Annex B)']) await expect(sheet).toContainText(h);
+  expect(await sheet.locator('.f-math.err').count()).toBe(0);
   expect(await sheet.locator('input, textarea, math-field, [contenteditable=true]').count()).toBe(0);
-  await expect(sheet.locator('.sheet-math', { hasText: '=1400' }).first()).toBeAttached();
+  // the (6.62) line carries the combination's value and the governing UR
+  const row = sheet.locator('tr', { hasText: '(6.62)' });
+  await expect(row).toContainText('1.381');
   await page.getByTestId('combos').locator('tbody tr').first().click();
   await expect(page.locator('#h-sheet')).toContainText('ULS1');
-  await expect(sheet.locator('.sheet-math', { hasText: '=2200' }).first()).toBeAttached();
+  await expect(sheet.locator('tr', { hasText: 'Governing' })).toContainText('1.234');
 });
