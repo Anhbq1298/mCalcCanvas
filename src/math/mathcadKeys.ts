@@ -5,6 +5,7 @@
  *   =          evaluate the whole region (jumps out of fractions/exponents)
  *   \          square root           Ctrl+\   nth root
  *   |          absolute value        '        parentheses around selection
+ *   ( [ | \\ / ^ with a selection: wrap it ((…), […], |…|, √…, …/□, …^□) instead of typing over it
  *   .          literal subscript after a name (M.Ed → M_Ed); inside a subscript "." and "_" stay in it
  *              as a literal "." (one level: M.Ed.x → M_{Ed.x}, never M_{E_{d_x}})
  *   ;          range operator  ..    (i := 0..n−1)
@@ -13,6 +14,7 @@
  *   Ctrl+Shift+P   π
  */
 import type { MathfieldElement } from 'mathlive';
+import { wholeNameSelection } from './mathClipboard';
 
 /** Mathcad's Symbol-font mapping (Ctrl+G). */
 const GREEK_FROM_LATIN: Record<string, string> = {
@@ -132,6 +134,23 @@ export function handleMathcadKey(e: KeyboardEvent, mf: MathfieldElement, changed
     return false;
   }
   if (e.altKey) return false;
+
+  // A selection wrapped by the key instead of being typed over (Mathcad): ( [ | around it, \\ under √, / over a
+  // fraction, ^ as the base. A selection that cuts a name with a subscript takes the whole name.
+  const WRAP: Record<string, string> = {
+    '(': '\\left(#@\\right)', '[': '\\left[#@\\right]', '|': '\\left|#@\\right|', '\\': '\\sqrt{#@}', '/': '\\frac{#@}{#?}', '^': '{#@}^{#?}',
+  };
+  if (!mf.selectionIsCollapsed && WRAP[e.key]) {
+    wholeNameSelection(mf);
+    let tpl = WRAP[e.key];
+    const sel = mf.getValue(mf.selection, 'latex');
+    // a power of a sum (or of anything with an operator) gets brackets: (a+b)^n
+    if (e.key === '^' && /[+-]|\\cdot|\\times|\\frac/.test(sel)) tpl = '\\left(#@\\right)^{#?}';
+    // the selection's LaTeX put in explicitly, so nothing depends on how MathLive expands #@
+    mf.insert(tpl.replace('#@', () => sel), { selectionMode: tpl.includes('#?') ? 'placeholder' : 'after', focus: true });
+    changed();
+    return true;
+  }
 
   switch (e.key) {
     case ':': {

@@ -60,3 +60,30 @@ test.describe('copying math', () => {
     await expect.poll(async () => (await shapes(page)).find(([t]) => t === 'text')?.[1] ?? '').not.toContain('\\gamma');
   });
 });
+
+test.describe('typing around a selection', () => {
+  test('( [ | \\ / ^ wrap the selection instead of typing over it; a cut name is wrapped whole', async ({ page }) => {
+    await openFresh(page);
+    await newBlankWorksheet(page, 'page');
+    const p = await screenOf(page, 176, 160);
+    await page.mouse.click(p.x, p.y);
+    await page.keyboard.type('x:', { delay: 30 });
+    const value = () => page.evaluate(() => (document.querySelector('math-field') as unknown as { value: string }).value);
+    const set = (v: string) => page.evaluate((x) => { (document.querySelector('math-field') as unknown as { value: string }).value = x; }, v);
+    for (const [start, s, e, keys, expected] of [
+      ['x\\coloneq a+b', 8, 11, '(*2', 'x\\coloneq\\left(a+b\\right)\\cdot2'],
+      ['x\\coloneq a+b', 8, 11, '[', 'x\\coloneq\\left[a+b\\right]'],
+      ['x\\coloneq a+b', 8, 11, '|', 'x\\coloneq\\left|a+b\\right|'],
+      ['x\\coloneq a+b', 8, 11, '\\', 'x\\coloneq\\sqrt{a+b}'],
+      ['x\\coloneq a+b', 8, 11, '/2', 'x\\coloneq\\frac{a+b}{2}'],
+      ['x\\coloneq a+b', 8, 11, '^2', 'x\\coloneq\\left(a+b\\right)^2'],
+      ['x\\coloneq f_{c.k}', 8, 9, '(', 'x\\coloneq\\left(f_{c.k}\\right)'],
+      ['x\\coloneq f_{c.k}', 8, 9, '^2', 'x\\coloneq{f_{c.k}}^2'],
+    ] as [string, number, number, string, string][]) {
+      await set(start);
+      await select(page, s, e);
+      await page.keyboard.type(keys, { delay: 30 });
+      await expect.poll(value).toBe(expected);
+    }
+  });
+});
