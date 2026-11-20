@@ -98,3 +98,17 @@ test('mSteelBeamColumn moment diagram picker: SN003b cases with Table B.3 Cm, en
   await expect(page.getByTestId('c2-shown')).toHaveText('0.300');
   await expect(page.getByTestId('member-props')).toContainText('M');
 });
+
+test('mSteelBeamColumn middle sheet: the report worksheet of the shown combination, read only', async ({ page }) => {
+  await page.goto('/steel/');
+  const sheet = page.getByTestId('sheet');
+  await expect(sheet.locator('.sheet-math').first()).toBeVisible({ timeout: 30_000 });
+  await expect(page.locator('#h-sheet')).toContainText('ULS2');
+  await expect(sheet).toContainText('STEEL BEAM-COLUMN CHECK');
+  expect(await sheet.locator('.sheet-math.err').count()).toBe(0);
+  expect(await sheet.locator('input, textarea, math-field, [contenteditable=true]').count()).toBe(0);
+  await expect(sheet.locator('.sheet-math', { hasText: '=1400' }).first()).toBeAttached();
+  await page.getByTestId('combos').locator('tbody tr').first().click();
+  await expect(page.locator('#h-sheet')).toContainText('ULS1');
+  await expect(sheet.locator('.sheet-math', { hasText: '=2200' }).first()).toBeAttached();
+});

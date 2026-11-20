@@ -64,3 +64,18 @@
 .row-pair .out { width: 4.25rem; text-align: right; background: color-mix(in srgb, var(--rule) 25%, transparent) !important; border: 1px solid var(--rule) !important; }
 .optimize { margin: 0.875rem 0 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--ink); }
 .optimize h3 { margin-top: 0; }
+.sheet-head { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.25rem; padding-top: 0.875rem; border-top: 1px solid var(--rule); }
+.sheet-head h2 { margin: 0; }
+.sheet-host { margin-top: 0.5rem; max-height: 82vh; overflow-y: auto; overflow-x: hidden; background: #e5e9ef; border: 1px solid var(--rule); border-radius: 3px; user-select: text; }
+.sheet-pages { position: absolute; left: 0; top: 0; transform-origin: 0 0; font-family: Roboto, system-ui, sans-serif; }
+.sheet-page { position: absolute; left: 0; background: white; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.18); }
+.sheet-text, .sheet-math, .sheet-img, .sheet-graph { position: absolute; }
+.sheet-text { line-height: 1.35; }
+.sheet-text.h1 { font-weight: 700; } .sheet-text.h2 { font-weight: 700; } .sheet-text.h3 { font-weight: 600; }
+.sheet-text h2 { font-size: 1.15em; margin: 0 0 0.4em; } .sheet-text p { margin: 0 0 0.4em; } .sheet-text ul { margin: 0; padding-left: 1.2em; }
+.sheet-math { white-space: nowrap; line-height: 1.2; display: flex; align-items: center; gap: 6px; }
+.sheet-math.err { outline: 1px dashed #c0392b; }
+.sheet-check { font: 600 10px/1 Roboto, sans-serif; padding: 2px 5px; border-radius: 9px; color: white; }
+.sheet-check.pass { background: #1f8a4c; } .sheet-check.fail { background: #c0392b; }
+.sheet-graph { display: flex; align-items: center; justify-content: center; }
+.sheet-graph svg { max-height: 100%; }

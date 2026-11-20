@@ -11,7 +11,8 @@ import { fmt } from '../composite/format';
 import { Rich } from '../composite/rich';
 import { CHECKS, DEFAULT_MEMBER, governing, isMemberCheck, type Combo, type ComboResult, type Member, type SteelState } from './model';
 import { hollowName, hollowSections, I_FAMILIES, iSections, type Shape } from './sections';
-import { SectionDrawing } from './charts';
+import { SheetPanel } from './SheetPanel';
+import type { SheetView } from './sheetView';
 import { MomentDiagramButton } from './MomentDiagram';
 import { choiceLabel } from './ltbCases';
 import type { FromWorker, ToWorker } from './worker';
@@ -76,6 +77,8 @@ export function App() {
   const [design, setDesign] = useState<{ family: string; maxDepth: string; target: number; running: boolean; msg: string; pick: { name: string; state: SteelState; ur: number } | null }>(
     { family: 'UC', maxDepth: '', target: 1, running: false, msg: '', pick: null });
   const [pasteOpen, setPasteOpen] = useState(false);
+  const [sheet, setSheet] = useState<{ view: SheetView; key: string } | null>(null);
+  const sheetRequest = useRef(0);
   const request = useRef(0), designToken = useRef(0), reportCb = useRef<((doc: unknown) => void) | null>(null);
   const pasteRef = useRef<HTMLDialogElement>(null);
   const state = useMemo(() => toState(page), [page]);
@@ -87,6 +90,7 @@ export function App() {
       const m = ev.data;
       if (m.kind === 'results' && m.request === request.current) { setResults(m.results); setResultsKey(m.key); }
       if (m.kind === 'report' && m.request === request.current) reportCb.current?.(m.doc);
+      if (m.kind === 'sheet' && m.request === sheetRequest.current) setSheet({ view: m.view, key: String(m.request) });
       if (m.kind === 'progress' && m.token === designToken.current) setDesign((d) => ({ ...d, msg: `Checking ${m.name} (${m.i} of ${m.n})…` }));
       if (m.kind === 'designed' && m.token === designToken.current) {
         setDesign((d) => ({ ...d, running: false, pick: m.pick, msg: m.pick ? `${m.pick.name}: UR ${fmt(m.pick.ur, 3)} for every combination (${m.tried} sections, ${fmt(m.seconds, 1)} s).` : `No section of this family passes every combination (${m.tried} checked).` }));
@@ -125,6 +129,11 @@ export function App() {
   const sectionLabel = shape === 'I' ? sectionById(page.sectionId).name : hollowName(shape === 'RHS' ? { kind: 'RHS', ...page.rhs, cf: page.cf } : { kind: 'CHS', ...page.chs });
   const checkLabel = (k: string) => (k === 'class' ? 'Class 4 section (not covered)' : checks.find(([c]) => c === k)?.[1] ?? k);
   const errors = ok?.flatMap((x) => x.errors).slice(0, 3) ?? [];
+  // the read-only worksheet follows the shown combination (selected row, else the governing one)
+  useEffect(() => {
+    if (!ok) return;
+    worker.postMessage({ kind: 'sheet', request: ++sheetRequest.current, state, combo: shown } satisfies ToWorker);
+  }, [worker, state, shown, ok]);
 
   const resist: [string, string, number][] = shape === 'CHS'
     ? [['N_pl,Rd', 'kN', r?.v.Npl ?? NaN], ['V_pl,Rd', 'kN', r?.v.Vpl ?? NaN], ['M_c,Rd', 'kN m', r?.v.Mc ?? NaN], ['M_N,Rd', 'kN m', r?.v.MN ?? NaN]]
@@ -134,9 +143,6 @@ export function App() {
     ...(shape === 'I' ? [['N_b,T,Rd', 'kN', r?.v.NbT ?? NaN, 1] as [string, string, number, number]] : []),
     ...(shape !== 'CHS' ? [['M_cr', 'kN m', r?.v.Mcr ?? NaN, 1], ['λ_LT', '', r?.v.lamLT ?? NaN, 3], ['χ_LT', '', r?.v.chiLT ?? NaN, 3]] as [string, string, number, number][] : []),
     ['M_b,Rd', 'kN m', r?.v.Mb ?? NaN, 1], ['k_yy / k_yz', '', NaN, 3], ['k_zy / k_zz', '', NaN, 3]];
-  const props: [string, string, number, number][] = shape === 'CHS'
-    ? [['A', 'cm²', v.A / 100, 2], ['I', 'cm⁴', v.I / 1e4, 0], ['W_el', 'cm³', v.Wel / 1e3, 0], ['W_pl', 'cm³', v.Wpl / 1e3, 0], ['f_y', 'MPa', v.fy, 0]]
-    : [['A', 'cm²', v.A / 100, 2], ['I_y', 'cm⁴', v.Iy / 1e4, 0], ['I_z', 'cm⁴', v.Iz / 1e4, 0], ['W_pl,y', 'cm³', v.Wply / 1e3, 0], ['W_pl,z', 'cm³', v.Wplz / 1e3, 0], ['W_el,y', 'cm³', v.Wely / 1e3, 0], ['W_el,z', 'cm³', v.Welz / 1e3, 0], ['f_y', 'MPa', v.fy, 0]];
   const mass = (v.A ?? NaN) * 7.85e-3;
 
   const designFamilies = shape === 'I' ? [...I_FAMILIES] : shape === 'RHS' ? ['SHS', 'RHS'] : ['CHS'];
@@ -313,14 +319,11 @@ export function App() {
               <button type="button" className="btn" data-testid="paste-open" onClick={() => { setPasteOpen(true); pasteRef.current?.showModal(); }}>Paste from Excel / ETABS…</button>
             </div>
             <p className="hint table-note">Click a row for its checks. The page runs the worksheet once per combination; the governing row (amber) is the one written into the report.</p>
-            <div className="xs" id="diagrams">
-              <div><h2 id="h-xs">Cross-section</h2><SectionDrawing shape={shape} v={v} /></div>
-              <table className="props" aria-labelledby="h-xs"><tbody>
-                {props.map(([l, u, x, d]) => <tr key={l}><td><Rich text={l} /></td><td className="num">{fmt(x, d)}</td><td>{u}</td></tr>)}
-                <tr><td>Mass</td><td className="num">{fmt(mass, 1)}</td><td>kg/m</td></tr>
-                <tr><td>Class (governing)</td><td className="num">{fmt(gov ? ok?.[gov.combo]?.v.Class ?? NaN : NaN, 0)}</td><td /></tr>
-              </tbody></table>
+            <div className="sheet-head" id="diagrams">
+              <h2 id="h-sheet">Calculation – {page.combos[shown]?.name}</h2>
+              <span className="hint">The report worksheet for this combination, as mCalcCanvas shows it (read only). Click a row to change it.</span>
             </div>
+            <SheetPanel view={sheet?.view ?? null} shape={shape} v={v} />
           </section>
 
           {/* ── Verdict ── */}
