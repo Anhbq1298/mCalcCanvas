@@ -255,3 +255,21 @@ td.pass, b.pass { color: var(--pass); } td.warn, b.warn { color: var(--warn); } 
 .sls-table { width: 100%; font-variant-numeric: tabular-nums; }
 .sls-table th, .sls-table td { text-align: right; padding: 0.2rem 0.3rem; }
 .sls-table th:first-child, .sls-table td:first-child { text-align: left; }
+
+/* ── Phone (≤ 720 px): inputs, then the checks, then the drawings; the governing UR stays at the top ── */
+.phone-bar { display: none; }
+@media (max-width: 720px) {
+  .phone-bar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 0.25rem; padding: 0.375rem 0.75rem; background: var(--paper); border-bottom: 1px solid var(--rule); overflow-x: auto; scrollbar-width: none; }
+  .phone-bar::-webkit-scrollbar { display: none; }
+  .phone-bar a { flex: none; padding: 0.375rem 0.625rem; border-radius: 999px; font-size: 0.8125rem; color: var(--ink-2); text-decoration: none; border: 1px solid var(--rule); min-height: 32px; display: inline-flex; align-items: center; }
+  .phone-bar .phone-ur { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--paper); border: 0; margin-right: 0.25rem; }
+  .phone-bar .phone-ur.pass { background: var(--pass, #1a7f37); }
+  .phone-bar .phone-ur.fail { background: var(--fail, #b42318); }
+  .workspace > .inputs { order: 0; }
+  .workspace > .verdict-panel { order: 1; }
+  .workspace > .stage { order: 2; border-top: 1px solid var(--rule); border-bottom: 0; }
+  #design-inputs, #verdict, #diagrams { scroll-margin-top: 3rem; }
+  /* inputs: two narrow fields per row, readable on a phone; text inputs at 16 px so iOS does not zoom */
+  .inputs input, .inputs select { font-size: 16px; }
+  .stage-table { font-size: 0.75rem; }
+}

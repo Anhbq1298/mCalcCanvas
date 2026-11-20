@@ -455,3 +455,9 @@ The loading stage is one column: the longitudinal section, the cross-section wit
 the load drawings, then V_Ed, M_Ed, the studs and both deflection plots, all the full width (`alignBeam`), so x lines
 up from the elevation down. The Serviceability summary (δ_1, total δ, δ_LL with limits and UR; natural frequency)
 follows the plots.
+
+## Phone layout
+
+At ≤ 720 px the page is one column in the order inputs → checks → drawings, with a sticky bar on top: the governing
+UR (PASS / FAIL) and links to Inputs, Checks and Diagrams. Inputs use 16 px text so iOS does not zoom in. e2e:
+`phone.spec.ts` (iPhone 13).

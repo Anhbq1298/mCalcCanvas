@@ -24,3 +24,20 @@ test('phone: panels are drawers, the page fills the width, header and status bar
   await page.getByTestId('drawer-backdrop').click({ position: { x: vw - 20, y: 200 } });
   await expect(drawer).toHaveCount(0);
 });
+
+test('phone /composite: the governing UR stays at the top, inputs come before the drawings, nothing overflows sideways', async ({ page }) => {
+  await page.goto('/composite/');
+  await expect(page.getByTestId('ur-max')).toHaveText('1.028', { timeout: 30_000 });
+  const bar = page.getByTestId('phone-bar');
+  await expect(bar).toBeVisible();
+  await expect(page.getByTestId('phone-ur')).toHaveText('UR 1.028 FAIL');
+  const y = async (sel: string) => (await page.locator(sel).boundingBox())!.y;
+  expect(await y('#design-inputs')).toBeLessThan(await y('#verdict'));
+  expect(await y('#verdict')).toBeLessThan(await y('#diagrams'));
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width);
+  // the bar stays on screen after scrolling, and a link jumps to its section
+  await page.evaluate(() => scrollTo(0, 2000));
+  await expect.poll(async () => (await bar.boundingBox())!.y).toBeLessThan(2);
+  await bar.getByRole('link', { name: 'Diagrams' }).click();
+  await expect.poll(async () => Math.abs((await page.locator('#diagrams').boundingBox())!.y)).toBeLessThan(80);
+});

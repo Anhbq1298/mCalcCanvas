@@ -471,10 +471,17 @@ export function App() {
         </div>
       </header>
 
+      {/* phone: the governing UR and quick links stay at the top while scrolling */}
+      <nav className="phone-bar" aria-label="Page sections" data-testid="phone-bar">
+        <a href="#verdict" className={`phone-ur ${pass ? 'pass' : 'fail'}`} data-testid="phone-ur">UR {fmt(overall, 3)} {pass ? 'PASS' : 'FAIL'}</a>
+        <a href="#design-inputs">Inputs</a>
+        <a href="#verdict">Checks</a>
+        <a href="#diagrams">Diagrams</a>
+      </nav>
       <main>
         <div className="workspace">
           {/* ── Inputs ── */}
-          <form className="panel inputs" aria-label="Design inputs" onSubmit={(e) => e.preventDefault()} noValidate>
+          <form className="panel inputs" id="design-inputs" aria-label="Design inputs" onSubmit={(e) => e.preventDefault()} noValidate>
             <section aria-labelledby="h-section">
               <div className="input-heading"><h2 id="h-section">Steel section</h2><InputHelp title="Steel section">
                 <p>Select a section family and size. Tapered beams retain the library flange and web thicknesses; the web depth varies linearly between supports A and B, or through intermediate points set with Depth profile… (segments, as a nonprismatic member in ETABS).</p>
@@ -602,7 +609,7 @@ export function App() {
           </form>
 
           {/* ── Loading sheet ── */}
-          <section className="stage" aria-labelledby="h-loading">
+          <section className="stage" id="diagrams" aria-labelledby="h-loading">
             <div className="stagebar">
               <h2 id="h-loading">Loading</h2>
               <span className="hint">span L = {fmt(res.L, 2)} m · beam spacing s<sub>b</sub> = {fmt(sb, 2)} m · self-weight g<sub>0</sub> = {fmt(res.g0, 2)} kN/m</span>
