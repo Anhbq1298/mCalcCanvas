@@ -10,15 +10,15 @@ const server = process.env.APP_URL ? null : spawn(process.execPath, [path.resolv
 try {
   await new Promise((r) => setTimeout(r, 4000));
   const only = process.argv.find((x) => x.startsWith('--only='))?.slice(7);
-  for (const k of ['rect', 'col', 'steel', 'composite'].filter((x) => !only || x === only)) {
-    const measure = () => (k === 'composite' ? node('measure.mjs', 'Composite_Beam_EC4', 'sizes_composite.json') : k === 'steel' ? node('measure.mjs', 'Steel_Beam_Column_EC3', 'sizes_steel.json') : node(`measure_${k}.mjs`));
-    for (let i = 0; i < 2; i++) { node(`gen_${k}.mjs`); measure(); }
-    process.stdout.write(node(`gen_${k}.mjs`));
+  for (const k of ['rect', 'col', 'steel', 'composite', 'section'].filter((x) => !only || x === only)) {
+    const measure = () => (k === 'section' ? ['I', 'RHS', 'CHS'].map((x) => node('measure.mjs', `Steel_Section_${x}_EC3`, `sizes_section_${x.toLowerCase()}.json`)).join('') : k === 'composite' ? node('measure.mjs', 'Composite_Beam_EC4', 'sizes_composite.json') : k === 'steel' ? node('measure.mjs', 'Steel_Beam_Column_EC3', 'sizes_steel.json') : node(`measure_${k}.mjs`));
+    for (let i = 0; i < 2; i++) { node(`gen_${k === 'section' ? 'steel_section' : k}.mjs`); measure(); }
+    process.stdout.write(node(`gen_${k === 'section' ? 'steel_section' : k}.mjs`));
     // Regions the app had to move (overlap or snapping): should be empty.
     const moved = measure().split('\n').filter((l) => l.trim() && Number(l.split(' ')[1]) !== 0);
     if (moved.length) console.warn(`${k}: ${moved.length} regions moved by the app, e.g.\n${moved.slice(0, 3).join('\n')}`);
   }
-  if (process.argv.includes('--pdf')) process.stdout.write(node('pdf.mjs', ...['RC_Rectangular_Column_Check', 'RC_Circular_Column_Check', 'Steel_Beam_Column_EC3', 'Composite_Beam_EC4'].filter((f) => !only || f.toLowerCase().includes(only === 'col' ? 'circular' : only === 'rect' ? 'rectangular' : only))));
+  if (process.argv.includes('--pdf')) process.stdout.write(node('pdf.mjs', ...['RC_Rectangular_Column_Check', 'RC_Circular_Column_Check', 'Steel_Beam_Column_EC3', 'Composite_Beam_EC4', 'Steel_Section_I_EC3', 'Steel_Section_RHS_EC3', 'Steel_Section_CHS_EC3'].filter((f) => !only || f.toLowerCase().includes(only === 'col' ? 'circular' : only === 'rect' ? 'rectangular' : only))));
 } finally {
   server?.kill();
 }

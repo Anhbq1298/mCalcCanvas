@@ -1,0 +1,26 @@
+/* mSteelBeamColumn: additions to the mCompositeBeamDesign sheet styles. */
+.workspace.steel { grid-template-columns: 21rem minmax(30rem, 1fr) 22rem; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; margin-bottom: 0.625rem; }
+.seg button { border: 0; background: var(--field); padding: 0.35rem 0.8rem; cursor: pointer; font-size: 0.8125rem; color: var(--ink-2); }
+.seg button + button { border-left: 1px solid var(--rule); }
+.seg button.on { background: var(--ink); color: var(--paper); font-weight: 500; }
+.combo-scroll { overflow-x: auto; }
+.combos { width: 100%; min-width: 40rem; border-collapse: collapse; }
+.combos col.c-name { width: 11rem; } .combos col.c-cls { width: 3rem; } .combos col.c-ur { width: 4rem; } .combos col.c-del { width: 2rem; }
+.combos th { font-weight: 500; font-size: 0.75rem; color: var(--ink-2); text-align: right; padding: 2px 4px; border-bottom: 1px solid var(--ink); }
+.combos th:first-child { text-align: left; }
+.combos .th-note { font-weight: 400; font-size: 0.6875rem; }
+.combos td { border-bottom: 1px solid var(--rule); }
+.combos td.num { text-align: right; padding-right: 6px; font-weight: 500; }
+.combos tr { cursor: pointer; }
+.combos tr.sel td { background: color-mix(in srgb, var(--steel) 7%, transparent); }
+.combos tr.gov td:first-child { box-shadow: inset 3px 0 0 var(--amber); }
+.name-input { width: 100%; border: 1px solid transparent; background: transparent; padding: 3px 4px; border-radius: 2px; min-height: 1.75rem; color: var(--ink); }
+.name-input:hover { border-color: var(--rule); } .name-input:focus { border-color: var(--focus); background: var(--field); }
+.results.steel-notes { grid-template-columns: 1fr; }
+.scope { padding-left: 1.1rem; margin: 0; } .scope li + li { margin-top: 0.25rem; }
+.opt-dialog textarea { width: 100%; box-sizing: border-box; font: 0.8125rem/1.4 ui-monospace, monospace; border: 1px solid var(--rule); border-radius: 3px; padding: 6px; margin: 0.5rem 0; }
+@media (max-width: 1280px) { .workspace.steel { grid-template-columns: 21rem 1fr; } .workspace.steel .stage { order: 0; grid-column: 1 / -1; } }
+@media (max-width: 720px) { .workspace.steel, .results.steel { grid-template-columns: 1fr; } }
+.xs { display: grid; grid-template-columns: minmax(14rem, 22rem) minmax(12rem, 1fr); gap: 0.5rem 1.5rem; align-items: start; margin-top: 1.25rem; padding-top: 0.875rem; border-top: 1px solid var(--rule); }
+@media (max-width: 720px) { .xs { grid-template-columns: 1fr; } }

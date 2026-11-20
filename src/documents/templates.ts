@@ -11,12 +11,15 @@ import rcCircularColumn from '../../templates/RC_Circular_Column_Check.mCCV?raw'
 import rcRectangularColumn from '../../templates/RC_Rectangular_Column_Check.mCCV?raw';
 import steelBeamColumn from '../../templates/Steel_Beam_Column_EC3.mCCV?raw';
 import compositeBeam from '../../templates/Composite_Beam_EC4.mCCV?raw';
+import steelSectionI from '../../templates/Steel_Section_I_EC3.mCCV?raw';
+import steelSectionRHS from '../../templates/Steel_Section_RHS_EC3.mCCV?raw';
+import steelSectionCHS from '../../templates/Steel_Section_CHS_EC3.mCCV?raw';
 import { escapeHtml } from '../canvas/sanitize';
 import { demoWorksheetShapes } from './demoWorksheet';
 import { A4, PAGE_GAP } from '../export/pageGeometry';
 import { compactTemplate } from './templatePresentation';
 
-export type TemplateId = 'blank' | 'steel-beam' | 'steel-beam-column' | 'rc-beam' | 'rc-circular-column' | 'rc-rectangular-column' | 'composite-beam';
+export type TemplateId = 'blank' | 'steel-beam' | 'steel-beam-column' | 'rc-beam' | 'rc-circular-column' | 'rc-rectangular-column' | 'composite-beam' | 'steel-section-i' | 'steel-section-rhs' | 'steel-section-chs';
 
 interface WorksheetTemplate {
   id: TemplateId;
@@ -54,6 +57,9 @@ const circular = fileTemplate(rcCircularColumn);
 const rectangular = fileTemplate(rcRectangularColumn);
 const steelColumn = fileTemplate(steelBeamColumn);
 const composite = fileTemplate(compositeBeam);
+const sectionI = fileTemplate(steelSectionI);
+const sectionRHS = fileTemplate(steelSectionRHS);
+const sectionCHS = fileTemplate(steelSectionCHS);
 
 function builder() {
   const out: Shape[] = [];
@@ -218,6 +224,24 @@ export const TEMPLATES: WorksheetTemplate[] = [
     name: 'Composite beam (EN 1994-1-1)',
     description: 'Simply supported composite beam, solid slab: construction and composite stages, load tables (area and point loads, G/Q), studs along the span, partial connection, M–V and web checks, SLS, slab shear, and a non-composite alternative. Section from the library (Browse).',
     ...composite,
+  },
+  {
+    id: 'steel-section-i',
+    name: 'Steel cross-section – I/H (EN 1993-1-1 §6.2)',
+    description: 'Section design only: classification, shear, axial, bending and §6.2.9 plastic interaction (Class 1–2) or (6.42) elastic (Class 3), one load combination per run; Input & Results holds the combinations. Library or custom welded I/H.',
+    ...sectionI,
+  },
+  {
+    id: 'steel-section-rhs',
+    name: 'Steel cross-section – RHS/SHS (EN 1993-1-1 §6.2)',
+    description: 'Section design of a hot-finished or cold-formed rectangular hollow section: properties from h, b, t with rounded corners, classification, shear, axial, bending, (6.39)–(6.41) interaction.',
+    ...sectionRHS,
+  },
+  {
+    id: 'steel-section-chs',
+    name: 'Steel cross-section – CHS (EN 1993-1-1 §6.2)',
+    description: 'Section design of a circular hollow section: properties from d, t, classification, resultant shear and bending, reduced plastic moment (SCI P363) or (6.42).',
+    ...sectionCHS,
   },
 ];
 

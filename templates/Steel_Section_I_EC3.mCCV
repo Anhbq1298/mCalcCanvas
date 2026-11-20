@@ -1,0 +1,3044 @@
+{
+  "format": "calccanvas",
+  "id": "tpl-steel-section-i",
+  "version": 3,
+  "title": "Steel Cross-Section Check – I/H (EN 1993-1-1)",
+  "metadata": {
+    "project": "Project name",
+    "calculationReference": "CALC-ST-SI",
+    "preparedBy": "Mark",
+    "checkedBy": "",
+    "revision": "A"
+  },
+  "settings": {
+    "unitSystem": "SI",
+    "precision": 2,
+    "canvasMode": "page",
+    "pageOrientation": "portrait",
+    "showHeaderFooter": true,
+    "textFont": "Roboto",
+    "baselineSnap": "minor",
+    "snapToGrid": false,
+    "optimizePrintLayout": true,
+    "pages": 6
+  },
+  "inputResult": {
+    "title": "Load combinations",
+    "inputs": [
+      {
+        "id": "n",
+        "regionId": "s_seci_k",
+        "label": "N_Ed"
+      },
+      {
+        "id": "my",
+        "regionId": "s_seci_m",
+        "label": "M_y,Ed"
+      },
+      {
+        "id": "mz",
+        "regionId": "s_seci_o",
+        "label": "M_z,Ed"
+      },
+      {
+        "id": "vz",
+        "regionId": "s_seci_q",
+        "label": "V_z,Ed"
+      },
+      {
+        "id": "vy",
+        "regionId": "s_seci_s",
+        "label": "V_y,Ed"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "cls",
+        "regionId": "s_seci_2d",
+        "label": "Class"
+      },
+      {
+        "id": "ur_Vz",
+        "regionId": "s_seci_2n",
+        "label": "UR V.z"
+      },
+      {
+        "id": "ur_Vy",
+        "regionId": "s_seci_2r",
+        "label": "UR V.y"
+      },
+      {
+        "id": "ur_N",
+        "regionId": "s_seci_38",
+        "label": "UR N"
+      },
+      {
+        "id": "ur_My",
+        "regionId": "s_seci_3k",
+        "label": "UR M.y"
+      },
+      {
+        "id": "ur_Mz",
+        "regionId": "s_seci_3o",
+        "label": "UR M.z"
+      },
+      {
+        "id": "ur_sec",
+        "regionId": "s_seci_4l",
+        "label": "UR sec"
+      },
+      {
+        "id": "ur",
+        "regionId": "s_seci_4r",
+        "label": "UR"
+      }
+    ],
+    "rows": [
+      {
+        "id": "c1",
+        "name": "ULS 1",
+        "values": {
+          "n": 1500,
+          "my": 120,
+          "mz": 20,
+          "vz": 150,
+          "vy": 20
+        }
+      },
+      {
+        "id": "c2",
+        "name": "ULS 2",
+        "values": {
+          "n": -300,
+          "my": 180,
+          "mz": 0,
+          "vz": 225,
+          "vy": 0
+        }
+      },
+      {
+        "id": "c3",
+        "name": "ULS 3",
+        "values": {
+          "n": 2100,
+          "my": 36,
+          "mz": 10,
+          "vz": 45,
+          "vy": 20
+        }
+      }
+    ]
+  },
+  "shapes": [
+    {
+      "id": "s_seci_0",
+      "type": "text",
+      "x": 76,
+      "y": 60,
+      "props": {
+        "w": 630,
+        "h": 29,
+        "html": "STEEL CROSS-SECTION CHECK – I/H SECTION (EC3)",
+        "fontFamily": "Roboto",
+        "fontSize": 20,
+        "color": "#1e3a5f",
+        "align": "left",
+        "heading": 1
+      }
+    },
+    {
+      "id": "s_seci_1",
+      "type": "text",
+      "x": 76,
+      "y": 101,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "1. DESIGN BASIS",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_seci_2",
+      "type": "text",
+      "x": 76,
+      "y": 131,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "EN 1993-1-1:2005 + A1:2014: classification §5.5 (Table 5.2) and cross-section resistance §6.2.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_3",
+      "type": "text",
+      "x": 76,
+      "y": 156,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Section design only: member buckling (§6.3) is not part of this sheet. Class 1 to 3.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_4",
+      "type": "text",
+      "x": 76,
+      "y": 181,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "N positive in compression, negative in tension. Moments and shears in either sign; magnitudes are used.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_5",
+      "type": "text",
+      "x": 76,
+      "y": 206,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Not covered: Class 4, torsion, holes and net sections, shear buckling, fire, connections.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_6",
+      "type": "text",
+      "x": 76,
+      "y": 231,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Doubly symmetric rolled or welded I/H. z is the web direction, y the flange direction.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_7",
+      "type": "text",
+      "x": 76,
+      "y": 262,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "2. INPUTS",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_seci_8",
+      "type": "text",
+      "x": 76,
+      "y": 298,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "2.1 Material and partial factors",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_seci_9",
+      "type": "text",
+      "x": 76,
+      "y": 328,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Nominal yield strength of the grade (t ≤ 40 mm)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_a",
+      "type": "math",
+      "x": 396,
+      "y": 325,
+      "props": {
+        "w": 131,
+        "h": 22,
+        "baseline": 16,
+        "latex": "f_{y.nom}\\coloneq355\\,\\mathrm{MPa}",
+        "displayMode": "auto",
+        "displayUnit": "MPa",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_b",
+      "type": "text",
+      "x": 76,
+      "y": 356,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Partial factor, cross-section resistance (National Annex)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_c",
+      "type": "math",
+      "x": 396,
+      "y": 353,
+      "props": {
+        "w": 68,
+        "h": 22,
+        "baseline": 16,
+        "latex": "\\gamma_{M0}\\coloneq1.0",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_d",
+      "type": "text",
+      "x": 76,
+      "y": 384,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Shear area factor η, EN 1993-1-5 §5.1 (National Annex)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_e",
+      "type": "math",
+      "x": 396,
+      "y": 381,
+      "props": {
+        "w": 49,
+        "h": 22,
+        "baseline": 16,
+        "latex": "\\eta\\coloneq1.2",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_f",
+      "type": "text",
+      "x": 76,
+      "y": 415,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "2.2 Section",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_seci_g",
+      "type": "text",
+      "x": 76,
+      "y": 447,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Steel section (Browse)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_h",
+      "type": "math",
+      "x": 396,
+      "y": 442,
+      "props": {
+        "w": 194,
+        "h": 24,
+        "baseline": 18,
+        "latex": "\\mathrm{Section}\\coloneq1211",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_i",
+      "type": "text",
+      "x": 76,
+      "y": 478,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "2.3 Design actions (ULS, one load combination)",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_seci_j",
+      "type": "text",
+      "x": 76,
+      "y": 508,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Axial force, compression positive",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_k",
+      "type": "math",
+      "x": 396,
+      "y": 505,
+      "props": {
+        "w": 114,
+        "h": 22,
+        "baseline": 16,
+        "latex": "N_{Ed}\\coloneq1500\\,\\mathrm{kN}",
+        "displayMode": "auto",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_l",
+      "type": "text",
+      "x": 76,
+      "y": 536,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Bending moment about y-y",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_m",
+      "type": "math",
+      "x": 396,
+      "y": 533,
+      "props": {
+        "w": 143,
+        "h": 22,
+        "baseline": 16,
+        "latex": "M_{y.Ed}\\coloneq120\\,\\mathrm{kN}\\cdot\\mathrm{m}",
+        "displayMode": "auto",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_n",
+      "type": "text",
+      "x": 76,
+      "y": 564,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Bending moment about z-z",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_o",
+      "type": "math",
+      "x": 396,
+      "y": 561,
+      "props": {
+        "w": 135,
+        "h": 22,
+        "baseline": 16,
+        "latex": "M_{z.Ed}\\coloneq20\\,\\mathrm{kN}\\cdot\\mathrm{m}",
+        "displayMode": "auto",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_p",
+      "type": "text",
+      "x": 76,
+      "y": 592,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Shear force along z (web)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_q",
+      "type": "math",
+      "x": 396,
+      "y": 589,
+      "props": {
+        "w": 114,
+        "h": 22,
+        "baseline": 16,
+        "latex": "V_{z.Ed}\\coloneq150\\,\\mathrm{kN}",
+        "displayMode": "auto",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_r",
+      "type": "text",
+      "x": 76,
+      "y": 620,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Shear force along y (flanges)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_s",
+      "type": "math",
+      "x": 396,
+      "y": 617,
+      "props": {
+        "w": 106,
+        "h": 22,
+        "baseline": 16,
+        "latex": "V_{y.Ed}\\coloneq20\\,\\mathrm{kN}",
+        "displayMode": "auto",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_t",
+      "type": "text",
+      "x": 76,
+      "y": 651,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "3. SECTION PROPERTIES",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_seci_u",
+      "type": "text",
+      "x": 76,
+      "y": 681,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Browse: choose a section by name, or enter custom h, b, tf, tw; properties update automatically.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_v",
+      "type": "text",
+      "x": 76,
+      "y": 706,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Custom welded: r = 0, no weld metal; shear areas EN 1993-1-1 §6.2.6(3) with η = 1.0.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_w",
+      "type": "math",
+      "x": 96,
+      "y": 731,
+      "props": {
+        "w": 88,
+        "h": 22,
+        "baseline": 16,
+        "latex": "h\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},0)",
+        "displayMode": "result",
+        "displayUnit": "mm",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_x",
+      "type": "math",
+      "x": 396,
+      "y": 731,
+      "props": {
+        "w": 86,
+        "h": 22,
+        "baseline": 16,
+        "latex": "b\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},1)",
+        "displayMode": "result",
+        "displayUnit": "mm",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_y",
+      "type": "math",
+      "x": 96,
+      "y": 759,
+      "props": {
+        "w": 98,
+        "h": 22,
+        "baseline": 16,
+        "latex": "t_w\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},2)",
+        "displayMode": "result",
+        "displayUnit": "mm",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_z",
+      "type": "math",
+      "x": 396,
+      "y": 759,
+      "props": {
+        "w": 96,
+        "h": 22,
+        "baseline": 16,
+        "latex": "t_f\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},3)",
+        "displayMode": "result",
+        "displayUnit": "mm",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_10",
+      "type": "math",
+      "x": 96,
+      "y": 787,
+      "props": {
+        "w": 78,
+        "h": 22,
+        "baseline": 16,
+        "latex": "r\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},4)",
+        "displayMode": "result",
+        "displayUnit": "mm",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_11",
+      "type": "math",
+      "x": 396,
+      "y": 787,
+      "props": {
+        "w": 103,
+        "h": 22,
+        "baseline": 16,
+        "latex": "A\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},5)",
+        "displayMode": "result",
+        "displayUnit": "cm^2",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_12",
+      "type": "math",
+      "x": 96,
+      "y": 815,
+      "props": {
+        "w": 110,
+        "h": 22,
+        "baseline": 16,
+        "latex": "I_y\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},6)",
+        "displayMode": "result",
+        "displayUnit": "cm^4",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_13",
+      "type": "math",
+      "x": 396,
+      "y": 815,
+      "props": {
+        "w": 102,
+        "h": 22,
+        "baseline": 16,
+        "latex": "I_z\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},7)",
+        "displayMode": "result",
+        "displayUnit": "cm^4",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_14",
+      "type": "math",
+      "x": 96,
+      "y": 843,
+      "props": {
+        "w": 122,
+        "h": 22,
+        "baseline": 16,
+        "latex": "W_{el.y}\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},8)",
+        "displayMode": "result",
+        "displayUnit": "cm^3",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_15",
+      "type": "math",
+      "x": 396,
+      "y": 843,
+      "props": {
+        "w": 113,
+        "h": 22,
+        "baseline": 16,
+        "latex": "W_{el.z}\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},9)",
+        "displayMode": "result",
+        "displayUnit": "cm^3",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_16",
+      "type": "math",
+      "x": 96,
+      "y": 871,
+      "props": {
+        "w": 124,
+        "h": 22,
+        "baseline": 16,
+        "latex": "W_{pl.y}\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},10)",
+        "displayMode": "result",
+        "displayUnit": "cm^3",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_17",
+      "type": "math",
+      "x": 396,
+      "y": 871,
+      "props": {
+        "w": 114,
+        "h": 22,
+        "baseline": 16,
+        "latex": "W_{pl.z}\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},11)",
+        "displayMode": "result",
+        "displayUnit": "cm^3",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_18",
+      "type": "math",
+      "x": 96,
+      "y": 899,
+      "props": {
+        "w": 92,
+        "h": 22,
+        "baseline": 16,
+        "latex": "I_t\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},12)",
+        "displayMode": "result",
+        "displayUnit": "cm^4",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_19",
+      "type": "math",
+      "x": 396,
+      "y": 899,
+      "props": {
+        "w": 128,
+        "h": 22,
+        "baseline": 16,
+        "latex": "I_w\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},13)",
+        "displayMode": "result",
+        "displayUnit": "cm^6",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_1a",
+      "type": "math",
+      "x": 96,
+      "y": 927,
+      "props": {
+        "w": 107,
+        "h": 22,
+        "baseline": 16,
+        "latex": "A_{v.y}\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},14)",
+        "displayMode": "result",
+        "displayUnit": "cm^2",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_1b",
+      "type": "math",
+      "x": 396,
+      "y": 927,
+      "props": {
+        "w": 110,
+        "h": 22,
+        "baseline": 16,
+        "latex": "A_{v.z}\\coloneq \\operatorname{sectionProp}(\\mathrm{Section},15)",
+        "displayMode": "result",
+        "displayUnit": "cm^2",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_1c",
+      "type": "graph",
+      "x": 277,
+      "y": 1231,
+      "props": {
+        "w": 240,
+        "h": 240,
+        "xLabel": "",
+        "yLabel": "",
+        "grid": false,
+        "axesAtOrigin": true,
+        "font": "Roboto",
+        "background": "#fff9c4",
+        "title": "Section",
+        "xUnit": "mm",
+        "yUnit": "mm",
+        "equalAxes": true,
+        "series": [
+          {
+            "id": "outline",
+            "label": "",
+            "x": "\\mathrm{stack}\\left(-\\frac{b}{2},\\frac{b}{2},\\frac{b}{2},\\frac{t_{w}}{2},\\frac{t_{w}}{2},\\frac{b}{2},\\frac{b}{2},-\\frac{b}{2},-\\frac{b}{2},-\\frac{t_{w}}{2},-\\frac{t_{w}}{2},-\\frac{b}{2},-\\frac{b}{2}\\right)",
+            "y": "\\mathrm{stack}\\left(\\frac{h}{2},\\frac{h}{2},\\left(\\frac{h}{2}-t_{f}\\right),\\left(\\frac{h}{2}-t_{f}\\right),-\\left(\\frac{h}{2}-t_{f}\\right),-\\left(\\frac{h}{2}-t_{f}\\right),-\\frac{h}{2},-\\frac{h}{2},-\\left(\\frac{h}{2}-t_{f}\\right),-\\left(\\frac{h}{2}-t_{f}\\right),\\left(\\frac{h}{2}-t_{f}\\right),\\left(\\frac{h}{2}-t_{f}\\right),\\frac{h}{2}\\right)",
+            "style": "line",
+            "r": "",
+            "color": "#1e3a5f",
+            "width": 2,
+            "show": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "s_seci_1d",
+      "type": "text",
+      "x": 76,
+      "y": 1480,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Thickest plate (yield strength)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_1e",
+      "type": "math",
+      "x": 396,
+      "y": 1477,
+      "props": {
+        "w": 208,
+        "h": 22,
+        "baseline": 16,
+        "latex": "t_{max}\\coloneq\\max\\left(t_{f},t_{w}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_1f",
+      "type": "text",
+      "x": 76,
+      "y": 1511,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "Yield strength (EN 1993-1-1 Table 3.1)",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_seci_1g",
+      "type": "text",
+      "x": 76,
+      "y": 1581,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Reduced for t &gt; 40 mm: −20 MPa up to S355, −30 MPa above",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_1h",
+      "type": "math",
+      "x": 396,
+      "y": 1538,
+      "props": {
+        "w": 314,
+        "h": 118,
+        "baseline": 16,
+        "latex": "f_{y}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ t_{max}\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ f_{y.nom}\\le355\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-20\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-30\\,\\mathrm{MPa}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "MPa",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_1i",
+      "type": "text",
+      "x": 76,
+      "y": 1665,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Thickness within Table 3.1",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_1j",
+      "type": "math",
+      "x": 396,
+      "y": 1662,
+      "props": {
+        "w": 270,
+        "h": 22,
+        "baseline": 16,
+        "latex": "t_{max}\\le80\\,\\mathrm{mm}",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_1k",
+      "type": "text",
+      "x": 76,
+      "y": 1696,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "4. CLASSIFICATION (§5.5, Table 5.2)",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_seci_1l",
+      "type": "text",
+      "x": 76,
+      "y": 1755,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Material parameter ε",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_1m",
+      "type": "math",
+      "x": 396,
+      "y": 1726,
+      "props": {
+        "w": 185,
+        "h": 39,
+        "baseline": 22,
+        "latex": "\\varepsilon\\coloneq\\sqrt{\\frac{235\\,\\mathrm{MPa}}{f_{y}}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_1n",
+      "type": "text",
+      "x": 76,
+      "y": 1785,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "4.1 Flange (outstand, taken in uniform compression)",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_seci_1o",
+      "type": "text",
+      "x": 76,
+      "y": 1819,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Flange outstand",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_1p",
+      "type": "math",
+      "x": 396,
+      "y": 1812,
+      "props": {
+        "w": 193,
+        "h": 31,
+        "baseline": 20,
+        "latex": "c_{f}\\coloneq\\frac{b-t_{w}-2r}{2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_1q",
+      "type": "text",
+      "x": 76,
+      "y": 1874,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Flange slenderness c/(t·ε): limits 9, 10, 14",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_1r",
+      "type": "math",
+      "x": 396,
+      "y": 1849,
+      "props": {
+        "w": 115,
+        "h": 33,
+        "baseline": 18,
+        "latex": "\\beta_{f}\\coloneq\\frac{c_{f}}{t_{f}\\varepsilon}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_1s",
+      "type": "text",
+      "x": 76,
+      "y": 1898,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Flange class (Class 1 when nothing is in compression)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_1t",
+      "type": "math",
+      "x": 96,
+      "y": 1922,
+      "props": {
+        "w": 514,
+        "h": 195,
+        "baseline": 16,
+        "latex": "\\mathrm{Class}_{f}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ N_{Ed}\\le0\\,\\mathrm{kN}\\land M_{y.Ed}=0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\land M_{z.Ed}=0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\beta_{f}\\le9\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\beta_{f}\\le10\\\\\\quad\\left\\Vert\\displaystyle 2\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\beta_{f}\\le14\\\\\\quad\\left\\Vert\\displaystyle 3\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 4\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_1u",
+      "type": "text",
+      "x": 76,
+      "y": 2129,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "4.2 Web (internal part, N + My; Mz causes no web stress)",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_seci_1v",
+      "type": "text",
+      "x": 76,
+      "y": 2159,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Web depth between fillets",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_1w",
+      "type": "math",
+      "x": 396,
+      "y": 2156,
+      "props": {
+        "w": 197,
+        "h": 22,
+        "baseline": 16,
+        "latex": "c_{w}\\coloneq h-2t_{f}-2r",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_1x",
+      "type": "text",
+      "x": 76,
+      "y": 2184,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Compressed part of the web at full plasticity",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_1y",
+      "type": "math",
+      "x": 96,
+      "y": 2402,
+      "props": {
+        "w": 376,
+        "h": 137,
+        "baseline": 16,
+        "latex": "\\alpha_{w}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\left|M_{y.Ed}\\right|>0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\\\\\quad\\left\\Vert\\displaystyle \\min\\left(1,\\max\\left(0,0.5\\left(1+\\frac{N_{Ed}}{c_{w}t_{w}f_{y}}\\right)\\right)\\right)\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ N_{Ed}>0\\,\\mathrm{kN}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_1z",
+      "type": "text",
+      "x": 76,
+      "y": 2545,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Elastic stress ratio (compression positive)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_20",
+      "type": "math",
+      "x": 76,
+      "y": 2569,
+      "props": {
+        "w": 472,
+        "h": 124,
+        "baseline": 18,
+        "latex": "\\psi_{w}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\left|M_{y.Ed}\\right|>0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\land\\frac{N_{Ed}}{A}+\\frac{\\left|M_{y.Ed}\\right|c_{w}}{2I_{y}}>0\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle \\max\\left(-3,\\frac{\\frac{N_{Ed}}{A}-\\frac{\\left|M_{y.Ed}\\right|c_{w}}{2I_{y}}}{\\frac{N_{Ed}}{A}+\\frac{\\left|M_{y.Ed}\\right|c_{w}}{2I_{y}}}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_21",
+      "type": "text",
+      "x": 76,
+      "y": 2762,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Class 1 limit of c/(t·ε)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_22",
+      "type": "math",
+      "x": 396,
+      "y": 2699,
+      "props": {
+        "w": 231,
+        "h": 117,
+        "baseline": 16,
+        "latex": "\\beta_{w1}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\alpha_{w}>0.5\\\\\\quad\\left\\Vert\\displaystyle \\frac{396}{13\\alpha_{w}-1}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\frac{36}{\\max\\left(\\alpha_{w},0.01\\right)}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_23",
+      "type": "text",
+      "x": 76,
+      "y": 2885,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Class 2 limit",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_24",
+      "type": "math",
+      "x": 396,
+      "y": 2822,
+      "props": {
+        "w": 231,
+        "h": 117,
+        "baseline": 16,
+        "latex": "\\beta_{w2}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\alpha_{w}>0.5\\\\\\quad\\left\\Vert\\displaystyle \\frac{456}{13\\alpha_{w}-1}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\frac{41.5}{\\max\\left(\\alpha_{w},0.01\\right)}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_25",
+      "type": "text",
+      "x": 76,
+      "y": 2988,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Class 3 limit",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_26",
+      "type": "math",
+      "x": 396,
+      "y": 2945,
+      "props": {
+        "w": 273,
+        "h": 99,
+        "baseline": 16,
+        "latex": "\\beta_{w3}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\psi_{w}>-1\\\\\\quad\\left\\Vert\\displaystyle \\frac{42}{0.67+0.33\\psi_{w}}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 62\\left(1-\\psi_{w}\\right)\\sqrt{-\\psi_{w}}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_27",
+      "type": "text",
+      "x": 76,
+      "y": 3073,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Web slenderness c/(t·ε)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_28",
+      "type": "math",
+      "x": 396,
+      "y": 3050,
+      "props": {
+        "w": 126,
+        "h": 29,
+        "baseline": 16,
+        "latex": "\\beta_{w}\\coloneq\\frac{c_{w}}{t_{w}\\varepsilon}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_29",
+      "type": "text",
+      "x": 76,
+      "y": 3180,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Web class",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_2a",
+      "type": "math",
+      "x": 396,
+      "y": 3097,
+      "props": {
+        "w": 225,
+        "h": 156,
+        "baseline": 16,
+        "latex": "\\mathrm{Class}_{w}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\beta_{w}\\le\\beta_{w1}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\beta_{w}\\le\\beta_{w2}\\\\\\quad\\left\\Vert\\displaystyle 2\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\beta_{w}\\le\\beta_{w3}\\\\\\quad\\left\\Vert\\displaystyle 3\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 4\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_2b",
+      "type": "text",
+      "x": 76,
+      "y": 3265,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "4.3 Section class",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_seci_2c",
+      "type": "text",
+      "x": 76,
+      "y": 3295,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Class of the cross-section",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_2d",
+      "type": "math",
+      "x": 396,
+      "y": 3292,
+      "props": {
+        "w": 228,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{Class}\\coloneq\\max\\left(\\mathrm{Class}_{f},\\mathrm{Class}_{w}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_2e",
+      "type": "text",
+      "x": 76,
+      "y": 3322,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Class 4 (effective section) is not covered",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_2f",
+      "type": "math",
+      "x": 396,
+      "y": 3319,
+      "props": {
+        "w": 174,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{Class}\\le3",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_2g",
+      "type": "text",
+      "x": 76,
+      "y": 3573,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "5. CROSS-SECTION RESISTANCE (§6.2)",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_seci_2h",
+      "type": "text",
+      "x": 76,
+      "y": 3609,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "5.1 Shear (§6.2.6) and its effect on bending (§6.2.8)",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_seci_2i",
+      "type": "text",
+      "x": 76,
+      "y": 3665,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Plastic shear resistance along z (6.18)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_2j",
+      "type": "math",
+      "x": 396,
+      "y": 3636,
+      "props": {
+        "w": 204,
+        "h": 37,
+        "baseline": 22,
+        "latex": "V_{pl.z.Rd}\\coloneq\\frac{A_{v.z}f_{y}}{\\sqrt{3}\\gamma_{M0}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_2k",
+      "type": "text",
+      "x": 76,
+      "y": 3718,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Plastic shear resistance along y",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_2l",
+      "type": "math",
+      "x": 396,
+      "y": 3689,
+      "props": {
+        "w": 204,
+        "h": 37,
+        "baseline": 22,
+        "latex": "V_{pl.y.Rd}\\coloneq\\frac{A_{v.y}f_{y}}{\\sqrt{3}\\gamma_{M0}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_2m",
+      "type": "text",
+      "x": 76,
+      "y": 3771,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Shear along z",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_2n",
+      "type": "math",
+      "x": 396,
+      "y": 3742,
+      "props": {
+        "w": 184,
+        "h": 38,
+        "baseline": 22,
+        "latex": "\\mathrm{UR}_{V.z}\\coloneq \\frac{\\left|V_{z.Ed}\\right|}{V_{pl.z.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_2o",
+      "type": "text",
+      "x": 76,
+      "y": 3798,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.2.6 (6.17)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_2p",
+      "type": "math",
+      "x": 396,
+      "y": 3795,
+      "props": {
+        "w": 215,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{V.z}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_2q",
+      "type": "text",
+      "x": 76,
+      "y": 3852,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Shear along y",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_2r",
+      "type": "math",
+      "x": 396,
+      "y": 3822,
+      "props": {
+        "w": 201,
+        "h": 39,
+        "baseline": 23,
+        "latex": "\\mathrm{UR}_{V.y}\\coloneq \\frac{\\left|V_{y.Ed}\\right|}{V_{pl.y.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_2s",
+      "type": "text",
+      "x": 76,
+      "y": 3879,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.2.6 (6.17)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_2t",
+      "type": "math",
+      "x": 396,
+      "y": 3876,
+      "props": {
+        "w": 232,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{V.y}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_2u",
+      "type": "text",
+      "x": 76,
+      "y": 3912,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "No shear buckling check needed, §6.2.6(6)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_2v",
+      "type": "math",
+      "x": 396,
+      "y": 3903,
+      "props": {
+        "w": 281,
+        "h": 36,
+        "baseline": 22,
+        "latex": "\\frac{h-2t_{f}}{t_{w}}\\le\\frac{72\\varepsilon}{\\eta}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_2w",
+      "type": "text",
+      "x": 76,
+      "y": 3988,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Reduction for shear above 0.5 Vpl (6.29), along z",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_2x",
+      "type": "math",
+      "x": 396,
+      "y": 3945,
+      "props": {
+        "w": 290,
+        "h": 89,
+        "baseline": 16,
+        "latex": "\\rho_{z}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{UR}_{V.z}>0.5\\\\\\quad\\left\\Vert\\displaystyle \\min\\left(0.99,\\left(2\\mathrm{UR}_{V.z}-1\\right)^2\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_2y",
+      "type": "text",
+      "x": 76,
+      "y": 4083,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Along y",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_2z",
+      "type": "math",
+      "x": 396,
+      "y": 4040,
+      "props": {
+        "w": 291,
+        "h": 89,
+        "baseline": 16,
+        "latex": "\\rho_{y}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{UR}_{V.y}>0.5\\\\\\quad\\left\\Vert\\displaystyle \\min\\left(0.99,\\left(2\\mathrm{UR}_{V.y}-1\\right)^2\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_30",
+      "type": "text",
+      "x": 76,
+      "y": 4138,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Larger of both directions",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_31",
+      "type": "math",
+      "x": 396,
+      "y": 4135,
+      "props": {
+        "w": 140,
+        "h": 22,
+        "baseline": 16,
+        "latex": "\\rho\\coloneq\\max\\left(\\rho_{z},\\rho_{y}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_32",
+      "type": "text",
+      "x": 76,
+      "y": 4163,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "The reduced yield strength (1 − ρ)f_y is applied to the whole section (conservative, §6.2.8(3)).",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_33",
+      "type": "text",
+      "x": 76,
+      "y": 4188,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "ρ is capped at 0.99 so the other checks stay finite when the shear check itself fails.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_34",
+      "type": "text",
+      "x": 76,
+      "y": 4219,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "5.2 Axial force (§6.2.3, §6.2.4) and bending (§6.2.5)",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_seci_35",
+      "type": "text",
+      "x": 76,
+      "y": 4255,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Plastic axial resistance, compression (6.10) or gross tension (6.6)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_36",
+      "type": "math",
+      "x": 396,
+      "y": 4246,
+      "props": {
+        "w": 174,
+        "h": 36,
+        "baseline": 22,
+        "latex": "N_{pl.Rd}\\coloneq\\frac{Af_{y}}{\\gamma_{M0}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_37",
+      "type": "text",
+      "x": 76,
+      "y": 4317,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Axial force",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_38",
+      "type": "math",
+      "x": 396,
+      "y": 4288,
+      "props": {
+        "w": 169,
+        "h": 38,
+        "baseline": 22,
+        "latex": "\\mathrm{UR}_{N}\\coloneq \\frac{\\left|N_{Ed}\\right|}{N_{pl.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_39",
+      "type": "text",
+      "x": 76,
+      "y": 4344,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.2.3 (6.5), §6.2.4 (6.9)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_3a",
+      "type": "math",
+      "x": 396,
+      "y": 4341,
+      "props": {
+        "w": 208,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{N}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_3b",
+      "type": "text",
+      "x": 76,
+      "y": 4391,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Section modulus about y: plastic for Class 1, 2; elastic for Class 3",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_3c",
+      "type": "math",
+      "x": 396,
+      "y": 4368,
+      "props": {
+        "w": 228,
+        "h": 79,
+        "baseline": 16,
+        "latex": "W_{y}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le2\\\\\\quad\\left\\Vert\\displaystyle W_{pl.y}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle W_{el.y}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "cm^3",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_3d",
+      "type": "text",
+      "x": 76,
+      "y": 4496,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Section modulus about z",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_3e",
+      "type": "math",
+      "x": 396,
+      "y": 4453,
+      "props": {
+        "w": 220,
+        "h": 79,
+        "baseline": 16,
+        "latex": "W_{z}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le2\\\\\\quad\\left\\Vert\\displaystyle W_{pl.z}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle W_{el.z}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "cm^3",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_3f",
+      "type": "text",
+      "x": 76,
+      "y": 4548,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Bending resistance about y (6.13), (6.14), reduced for shear",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_3g",
+      "type": "math",
+      "x": 396,
+      "y": 4538,
+      "props": {
+        "w": 261,
+        "h": 37,
+        "baseline": 23,
+        "latex": "M_{c.y.Rd}\\coloneq\\frac{W_{y}f_{y}\\left(1-\\rho\\right)}{\\gamma_{M0}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_3h",
+      "type": "text",
+      "x": 76,
+      "y": 4754,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Bending resistance about z",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_3i",
+      "type": "math",
+      "x": 396,
+      "y": 4744,
+      "props": {
+        "w": 273,
+        "h": 37,
+        "baseline": 23,
+        "latex": "M_{c.z.Rd}\\coloneq\\frac{W_{z}f_{y}\\left(1-\\rho\\right)}{\\gamma_{M0}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_3j",
+      "type": "text",
+      "x": 76,
+      "y": 4817,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Bending about y",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_3k",
+      "type": "math",
+      "x": 396,
+      "y": 4787,
+      "props": {
+        "w": 189,
+        "h": 39,
+        "baseline": 23,
+        "latex": "\\mathrm{UR}_{M.y}\\coloneq \\frac{\\left|M_{y.Ed}\\right|}{M_{c.y.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_3l",
+      "type": "text",
+      "x": 76,
+      "y": 4844,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.2.5 (6.12)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_3m",
+      "type": "math",
+      "x": 396,
+      "y": 4841,
+      "props": {
+        "w": 218,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{M.y}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_3n",
+      "type": "text",
+      "x": 76,
+      "y": 4878,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Bending about z",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_3o",
+      "type": "math",
+      "x": 396,
+      "y": 4868,
+      "props": {
+        "w": 197,
+        "h": 36,
+        "baseline": 23,
+        "latex": "\\mathrm{UR}_{M.z}\\coloneq \\frac{\\left|M_{z.Ed}\\right|}{M_{c.z.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_3p",
+      "type": "text",
+      "x": 76,
+      "y": 4913,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.2.5 (6.12)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_3q",
+      "type": "math",
+      "x": 396,
+      "y": 4910,
+      "props": {
+        "w": 225,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{M.z}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_3r",
+      "type": "text",
+      "x": 76,
+      "y": 4943,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "6. BENDING, SHEAR AND AXIAL FORCE (§6.2.9, §6.2.10)",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_seci_3s",
+      "type": "text",
+      "x": 76,
+      "y": 4976,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Axial resistance with the shear reduction",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_3t",
+      "type": "math",
+      "x": 396,
+      "y": 4973,
+      "props": {
+        "w": 235,
+        "h": 22,
+        "baseline": 16,
+        "latex": "N_{V.Rd}\\coloneq\\left(1-\\rho\\right)N_{pl.Rd}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_3u",
+      "type": "text",
+      "x": 76,
+      "y": 5011,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Axial ratio",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_3v",
+      "type": "math",
+      "x": 396,
+      "y": 5001,
+      "props": {
+        "w": 144,
+        "h": 36,
+        "baseline": 23,
+        "latex": "n\\coloneq\\frac{\\left|N_{Ed}\\right|}{N_{V.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_3w",
+      "type": "text",
+      "x": 76,
+      "y": 5049,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "6.1 Class 1 and 2: reduced plastic moments (§6.2.9.1)",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_seci_3x",
+      "type": "text",
+      "x": 76,
+      "y": 5086,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Plastic moment resistances, reduced for shear",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_3y",
+      "type": "math",
+      "x": 396,
+      "y": 5076,
+      "props": {
+        "w": 278,
+        "h": 37,
+        "baseline": 23,
+        "latex": "M_{pl.y.Rd}\\coloneq\\frac{W_{pl.y}f_{y}\\left(1-\\rho\\right)}{\\gamma_{M0}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_3z",
+      "type": "text",
+      "x": 76,
+      "y": 5129,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_40",
+      "type": "math",
+      "x": 396,
+      "y": 5119,
+      "props": {
+        "w": 290,
+        "h": 37,
+        "baseline": 23,
+        "latex": "M_{pl.z.Rd}\\coloneq\\frac{W_{pl.z}f_{y}\\left(1-\\rho\\right)}{\\gamma_{M0}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_41",
+      "type": "text",
+      "x": 76,
+      "y": 5165,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Web depth between flanges",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_42",
+      "type": "math",
+      "x": 396,
+      "y": 5162,
+      "props": {
+        "w": 163,
+        "h": 22,
+        "baseline": 16,
+        "latex": "h_{w}\\coloneq h-2t_{f}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_43",
+      "type": "text",
+      "x": 76,
+      "y": 5201,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Web area ratio (6.36)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_44",
+      "type": "math",
+      "x": 396,
+      "y": 5190,
+      "props": {
+        "w": 241,
+        "h": 39,
+        "baseline": 24,
+        "latex": "a\\coloneq\\min\\left(\\frac{A-2bt_{f}}{A},0.5\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_45",
+      "type": "text",
+      "x": 76,
+      "y": 5235,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "About y: no reduction when (6.33) and (6.34) hold; else (6.36)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_46",
+      "type": "math",
+      "x": 96,
+      "y": 5259,
+      "props": {
+        "w": 531,
+        "h": 101,
+        "baseline": 17,
+        "latex": "M_{N.y.Rd}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\left|N_{Ed}\\right|\\le0.25N_{V.Rd}\\land\\left|N_{Ed}\\right|\\le 0.5h_{w}t_{w}\\frac{f_{y}\\left(1-\\rho\\right)}{\\gamma_{M0}}\\\\\\quad\\left\\Vert\\displaystyle M_{pl.y.Rd}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\min\\left(M_{pl.y.Rd},M_{pl.y.Rd}\\frac{1-n}{1-0.5a}\\right)\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_47",
+      "type": "text",
+      "x": 76,
+      "y": 5366,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "About z: no reduction when (6.35) holds or n ≤ a; else (6.38)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_48",
+      "type": "math",
+      "x": 96,
+      "y": 5390,
+      "props": {
+        "w": 438,
+        "h": 116,
+        "baseline": 19,
+        "latex": "M_{N.z.Rd}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\left(\\left|N_{Ed}\\right|\\le h_{w}t_{w}\\frac{f_{y}\\left(1-\\rho\\right)}{\\gamma_{M0}}\\right)\\lor\\left(n\\le a\\right)\\\\\\quad\\left\\Vert\\displaystyle M_{pl.z.Rd}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle M_{pl.z.Rd}\\left(1-\\left(\\frac{n-a}{1-a}\\right)^2\\right)\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_49",
+      "type": "text",
+      "x": 76,
+      "y": 5515,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Exponents (6.41), I and H sections",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_4a",
+      "type": "math",
+      "x": 396,
+      "y": 5512,
+      "props": {
+        "w": 38,
+        "h": 22,
+        "baseline": 16,
+        "latex": "\\alpha\\coloneq2",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_4b",
+      "type": "text",
+      "x": 76,
+      "y": 5543,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_4c",
+      "type": "math",
+      "x": 396,
+      "y": 5540,
+      "props": {
+        "w": 166,
+        "h": 22,
+        "baseline": 16,
+        "latex": "\\beta\\coloneq\\max\\left(5n,1\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_4d",
+      "type": "text",
+      "x": 76,
+      "y": 5568,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "One moment only: (6.31) M_Ed/M_N,Rd ≤ 1. Both moments: (6.41) biaxial criterion.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_4e",
+      "type": "text",
+      "x": 76,
+      "y": 5593,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Utilisation, plastic (n ≥ 1: axial force alone exceeds the resistance)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_4f",
+      "type": "math",
+      "x": 96,
+      "y": 5915,
+      "props": {
+        "w": 375,
+        "h": 223,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{pl}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ n\\ge1\\\\\\quad\\left\\Vert\\displaystyle n\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ M_{z.Ed}=0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\\\\\quad\\left\\Vert\\displaystyle \\frac{\\left|M_{y.Ed}\\right|}{M_{N.y.Rd}}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ M_{y.Ed}=0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\\\\\quad\\left\\Vert\\displaystyle \\frac{\\left|M_{z.Ed}\\right|}{M_{N.z.Rd}}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\left(\\frac{\\left|M_{y.Ed}\\right|}{M_{N.y.Rd}}\\right)^{\\alpha}+\\left(\\frac{\\left|M_{z.Ed}\\right|}{M_{N.z.Rd}}\\right)^{\\beta}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_4g",
+      "type": "text",
+      "x": 76,
+      "y": 6150,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "6.2 Class 3: elastic stresses (§6.2.9.2, (6.42))",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_seci_4h",
+      "type": "text",
+      "x": 76,
+      "y": 6177,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Peak normal stress over f_y(1 − ρ)/γM0",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_4i",
+      "type": "math",
+      "x": 96,
+      "y": 6201,
+      "props": {
+        "w": 422,
+        "h": 39,
+        "baseline": 23,
+        "latex": "\\mathrm{UR}_{el}\\coloneq\\frac{\\left|N_{Ed}\\right|}{N_{V.Rd}}+\\frac{\\left|M_{y.Ed}\\right|\\gamma_{M0}}{W_{el.y}f_{y}\\left(1-\\rho\\right)}+\\frac{\\left|M_{z.Ed}\\right|\\gamma_{M0}}{W_{el.z}f_{y}\\left(1-\\rho\\right)}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_4j",
+      "type": "text",
+      "x": 76,
+      "y": 6252,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "6.3 Combined check",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_seci_4k",
+      "type": "text",
+      "x": 76,
+      "y": 6322,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Class 1, 2: plastic; Class 3: elastic",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_4l",
+      "type": "math",
+      "x": 396,
+      "y": 6279,
+      "props": {
+        "w": 235,
+        "h": 79,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{sec}\\coloneq \\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le2\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{UR}_{pl}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{UR}_{el}\\right.\\end{array}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_4m",
+      "type": "text",
+      "x": 76,
+      "y": 6367,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.2.9 (6.31), (6.41), (6.42)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_4n",
+      "type": "math",
+      "x": 396,
+      "y": 6364,
+      "props": {
+        "w": 221,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{sec}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_seci_4o",
+      "type": "text",
+      "x": 76,
+      "y": 6397,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "7. SUMMARY",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_seci_4p",
+      "type": "text",
+      "x": 76,
+      "y": 6427,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Results apply only within the stated assumptions and scope; applicability is not checked.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_4q",
+      "type": "text",
+      "x": 76,
+      "y": 6452,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Governing utilisation",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "groupId": "s_seci_group_4q"
+    },
+    {
+      "id": "s_seci_4r",
+      "type": "math",
+      "x": 96,
+      "y": 6469,
+      "props": {
+        "w": 442,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}\\coloneq\\max\\left(\\mathrm{UR}_{V.z},\\mathrm{UR}_{V.y},\\mathrm{UR}_{N},\\mathrm{UR}_{M.y},\\mathrm{UR}_{M.z},\\mathrm{UR}_{sec}\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "groupId": "s_seci_group_4q"
+    },
+    {
+      "id": "s_seci_4s",
+      "type": "text",
+      "x": 76,
+      "y": 6512,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Cross-section resistance check",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "groupId": "s_seci_group_4q"
+    },
+    {
+      "id": "s_seci_4t",
+      "type": "math",
+      "x": 396,
+      "y": 6509,
+      "props": {
+        "w": 189,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "groupId": "s_seci_group_4q"
+    },
+    {
+      "id": "s_seci_4u",
+      "type": "text",
+      "x": 76,
+      "y": 6548,
+      "props": {
+        "w": 630,
+        "h": 29,
+        "html": "ANNEX",
+        "fontFamily": "Roboto",
+        "fontSize": 20,
+        "color": "#1e3a5f",
+        "align": "left",
+        "heading": 1,
+        "annex": {
+          "kind": "start"
+        }
+      }
+    }
+  ],
+  "createdAt": "2026-01-01T00:00:00.000Z",
+  "updatedAt": "2026-01-01T00:00:00.000Z"
+}

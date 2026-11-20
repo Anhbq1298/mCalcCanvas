@@ -225,14 +225,16 @@ export async function initDocuments(): Promise<void> {
   await engine.ready();
   // ?template=<id> always starts a new worksheet from that template (link-friendly);
   // the parameter is removed so a reload reopens the worksheet instead of creating another.
-  // ?open=handoff opens a worksheet handed over by a tool page (mCompositeBeamDesign's report).
+  // ?open=handoff opens a worksheet handed over by a tool page (mCompositeBeamDesign, mSteelBeamColumn report).
   if (new URLSearchParams(window.location.search).get('open') === 'handoff') {
     const url = new URL(window.location.href);
     url.searchParams.delete('open');
     window.history.replaceState(null, '', url);
     const handed = takeHandoff();
     if (handed) {
-      await openFile(new File([handed], 'Composite_Beam_EC4.mCCV'));
+      let title = 'Report';
+      try { title = String((JSON.parse(handed) as { title?: unknown }).title ?? title); } catch { /* openFile reports the error */ }
+      await openFile(new File([handed], `${title.replace(/[\\/:*?"<>|]+/g, ' ').trim() || 'Report'}.mCCV`));
       return;
     }
   }

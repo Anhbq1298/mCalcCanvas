@@ -60,6 +60,8 @@ Never weaken an assertion to make a test pass.
 
 The files are `templates/RC_Rectangular_Column_Check.mCCV`, `templates/RC_Circular_Column_Check.mCCV` and `templates/Steel_Beam_Column_EC3.mCCV` (generator `gen_steel.mjs`, test `steelTemplate.test.ts`, notes `docs/steel-design/TECHNICAL.md`; `-- --only=steel` regenerates just this one) (`.mCCV` is the only worksheet/template extension; the content is the JSON document).
 
+Section design (mSteelBeamColumn, `steel/` page, `src/tools/steel/`): `gen_steel_section.mjs` writes `Steel_Section_{I,RHS,CHS}_EC3.mCCV` (§5.5 + §6.2 only; `-- --only=section`), pinned by `steelSectionTemplates.test.ts` (Blue Book properties, hand reference for every class/interaction branch). The page runs the sheet once per load combination with definition overrides; e2e `steel-tool.spec.ts`.
+
 **Never hand-edit the `.mCCV` JSON.** It is generated.
 
 To change a template:

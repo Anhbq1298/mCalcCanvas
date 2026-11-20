@@ -1,0 +1,2118 @@
+{
+  "format": "calccanvas",
+  "id": "tpl-steel-section-chs",
+  "version": 3,
+  "title": "Steel Cross-Section Check – CHS (EN 1993-1-1)",
+  "metadata": {
+    "project": "Project name",
+    "calculationReference": "CALC-ST-SC",
+    "preparedBy": "Mark",
+    "checkedBy": "",
+    "revision": "A"
+  },
+  "settings": {
+    "unitSystem": "SI",
+    "precision": 2,
+    "canvasMode": "page",
+    "pageOrientation": "portrait",
+    "showHeaderFooter": true,
+    "textFont": "Roboto",
+    "baselineSnap": "minor",
+    "snapToGrid": false,
+    "optimizePrintLayout": true,
+    "pages": 4
+  },
+  "inputResult": {
+    "title": "Load combinations",
+    "inputs": [
+      {
+        "id": "n",
+        "regionId": "s_secchs_k",
+        "label": "N_Ed"
+      },
+      {
+        "id": "my",
+        "regionId": "s_secchs_m",
+        "label": "M_y,Ed"
+      },
+      {
+        "id": "mz",
+        "regionId": "s_secchs_o",
+        "label": "M_z,Ed"
+      },
+      {
+        "id": "vz",
+        "regionId": "s_secchs_q",
+        "label": "V_z,Ed"
+      },
+      {
+        "id": "vy",
+        "regionId": "s_secchs_s",
+        "label": "V_y,Ed"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "cls",
+        "regionId": "s_secchs_1m",
+        "label": "Class"
+      },
+      {
+        "id": "ur_V",
+        "regionId": "s_secchs_1w",
+        "label": "UR V"
+      },
+      {
+        "id": "ur_N",
+        "regionId": "s_secchs_27",
+        "label": "UR N"
+      },
+      {
+        "id": "ur_M",
+        "regionId": "s_secchs_2h",
+        "label": "UR M"
+      },
+      {
+        "id": "ur_sec",
+        "regionId": "s_secchs_32",
+        "label": "UR sec"
+      },
+      {
+        "id": "ur",
+        "regionId": "s_secchs_38",
+        "label": "UR"
+      }
+    ],
+    "rows": [
+      {
+        "id": "c1",
+        "name": "ULS 1",
+        "values": {
+          "n": 900,
+          "my": 60,
+          "mz": 15,
+          "vz": 100,
+          "vy": 20
+        }
+      },
+      {
+        "id": "c2",
+        "name": "ULS 2",
+        "values": {
+          "n": -180,
+          "my": 90,
+          "mz": 0,
+          "vz": 150,
+          "vy": 0
+        }
+      },
+      {
+        "id": "c3",
+        "name": "ULS 3",
+        "values": {
+          "n": 1260,
+          "my": 18,
+          "mz": 7.5,
+          "vz": 30,
+          "vy": 20
+        }
+      }
+    ]
+  },
+  "shapes": [
+    {
+      "id": "s_secchs_0",
+      "type": "text",
+      "x": 76,
+      "y": 60,
+      "props": {
+        "w": 630,
+        "h": 29,
+        "html": "STEEL CROSS-SECTION CHECK – CIRCULAR HOLLOW SECTION (EC3)",
+        "fontFamily": "Roboto",
+        "fontSize": 20,
+        "color": "#1e3a5f",
+        "align": "left",
+        "heading": 1
+      }
+    },
+    {
+      "id": "s_secchs_1",
+      "type": "text",
+      "x": 76,
+      "y": 101,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "1. DESIGN BASIS",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_secchs_2",
+      "type": "text",
+      "x": 76,
+      "y": 131,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "EN 1993-1-1:2005 + A1:2014: classification §5.5 (Table 5.2) and cross-section resistance §6.2.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_3",
+      "type": "text",
+      "x": 76,
+      "y": 156,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Section design only: member buckling (§6.3) is not part of this sheet. Class 1 to 3.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_4",
+      "type": "text",
+      "x": 76,
+      "y": 181,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "N positive in compression, negative in tension. Moments and shears in either sign; magnitudes are used.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_5",
+      "type": "text",
+      "x": 76,
+      "y": 206,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Not covered: Class 4, torsion, holes and net sections, shear buckling, fire, connections.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_6",
+      "type": "text",
+      "x": 76,
+      "y": 231,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Hot-finished or cold-formed CHS: bending and shear are combined as resultants.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_7",
+      "type": "text",
+      "x": 76,
+      "y": 262,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "2. INPUTS",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_secchs_8",
+      "type": "text",
+      "x": 76,
+      "y": 298,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "2.1 Material and partial factors",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_secchs_9",
+      "type": "text",
+      "x": 76,
+      "y": 328,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Nominal yield strength of the grade (t ≤ 40 mm)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_a",
+      "type": "math",
+      "x": 396,
+      "y": 325,
+      "props": {
+        "w": 131,
+        "h": 22,
+        "baseline": 16,
+        "latex": "f_{y.nom}\\coloneq355\\,\\mathrm{MPa}",
+        "displayMode": "auto",
+        "displayUnit": "MPa",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_b",
+      "type": "text",
+      "x": 76,
+      "y": 356,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Partial factor, cross-section resistance (National Annex)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_c",
+      "type": "math",
+      "x": 396,
+      "y": 353,
+      "props": {
+        "w": 68,
+        "h": 22,
+        "baseline": 16,
+        "latex": "\\gamma_{M0}\\coloneq1.0",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_d",
+      "type": "text",
+      "x": 76,
+      "y": 387,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "2.2 Section",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_secchs_e",
+      "type": "text",
+      "x": 76,
+      "y": 417,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Outside diameter",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_f",
+      "type": "math",
+      "x": 396,
+      "y": 414,
+      "props": {
+        "w": 103,
+        "h": 22,
+        "baseline": 16,
+        "latex": "d\\coloneq219.1\\,\\mathrm{mm}",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_g",
+      "type": "text",
+      "x": 76,
+      "y": 445,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Wall thickness",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_h",
+      "type": "math",
+      "x": 396,
+      "y": 442,
+      "props": {
+        "w": 80,
+        "h": 22,
+        "baseline": 16,
+        "latex": "t\\coloneq10\\,\\mathrm{mm}",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_i",
+      "type": "text",
+      "x": 76,
+      "y": 476,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "2.3 Design actions (ULS, one load combination)",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_secchs_j",
+      "type": "text",
+      "x": 76,
+      "y": 506,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Axial force, compression positive",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_k",
+      "type": "math",
+      "x": 396,
+      "y": 503,
+      "props": {
+        "w": 106,
+        "h": 22,
+        "baseline": 16,
+        "latex": "N_{Ed}\\coloneq900\\,\\mathrm{kN}",
+        "displayMode": "auto",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_l",
+      "type": "text",
+      "x": 76,
+      "y": 534,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Bending moment about y-y",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_m",
+      "type": "math",
+      "x": 396,
+      "y": 531,
+      "props": {
+        "w": 135,
+        "h": 22,
+        "baseline": 16,
+        "latex": "M_{y.Ed}\\coloneq60\\,\\mathrm{kN}\\cdot\\mathrm{m}",
+        "displayMode": "auto",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_n",
+      "type": "text",
+      "x": 76,
+      "y": 562,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Bending moment about z-z",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_o",
+      "type": "math",
+      "x": 396,
+      "y": 559,
+      "props": {
+        "w": 135,
+        "h": 22,
+        "baseline": 16,
+        "latex": "M_{z.Ed}\\coloneq15\\,\\mathrm{kN}\\cdot\\mathrm{m}",
+        "displayMode": "auto",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_p",
+      "type": "text",
+      "x": 76,
+      "y": 590,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Shear force along z",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_q",
+      "type": "math",
+      "x": 396,
+      "y": 587,
+      "props": {
+        "w": 114,
+        "h": 22,
+        "baseline": 16,
+        "latex": "V_{z.Ed}\\coloneq100\\,\\mathrm{kN}",
+        "displayMode": "auto",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_r",
+      "type": "text",
+      "x": 76,
+      "y": 618,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Shear force along y",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_s",
+      "type": "math",
+      "x": 396,
+      "y": 615,
+      "props": {
+        "w": 106,
+        "h": 22,
+        "baseline": 16,
+        "latex": "V_{y.Ed}\\coloneq20\\,\\mathrm{kN}",
+        "displayMode": "auto",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_t",
+      "type": "text",
+      "x": 76,
+      "y": 649,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "3. SECTION PROPERTIES",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_secchs_u",
+      "type": "text",
+      "x": 76,
+      "y": 682,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Inside diameter",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_v",
+      "type": "math",
+      "x": 396,
+      "y": 679,
+      "props": {
+        "w": 162,
+        "h": 22,
+        "baseline": 16,
+        "latex": "d_{i}\\coloneq d-2t",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_w",
+      "type": "text",
+      "x": 76,
+      "y": 720,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Area",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_x",
+      "type": "math",
+      "x": 396,
+      "y": 707,
+      "props": {
+        "w": 201,
+        "h": 37,
+        "baseline": 26,
+        "latex": "A\\coloneq\\frac{\\pi\\left(d^2-d_{i}^2\\right)}{4}",
+        "displayMode": "formulaResult",
+        "displayUnit": "cm^2",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_y",
+      "type": "text",
+      "x": 76,
+      "y": 763,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Second moment of area",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_z",
+      "type": "math",
+      "x": 396,
+      "y": 750,
+      "props": {
+        "w": 193,
+        "h": 37,
+        "baseline": 26,
+        "latex": "I\\coloneq\\frac{\\pi\\left(d^4-d_{i}^4\\right)}{64}",
+        "displayMode": "formulaResult",
+        "displayUnit": "cm^4",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_10",
+      "type": "text",
+      "x": 76,
+      "y": 799,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Elastic modulus",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_11",
+      "type": "math",
+      "x": 396,
+      "y": 793,
+      "props": {
+        "w": 145,
+        "h": 30,
+        "baseline": 19,
+        "latex": "W_{el}\\coloneq\\frac{2I}{d}",
+        "displayMode": "formulaResult",
+        "displayUnit": "cm^3",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_12",
+      "type": "text",
+      "x": 76,
+      "y": 840,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Plastic modulus",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_13",
+      "type": "math",
+      "x": 396,
+      "y": 829,
+      "props": {
+        "w": 177,
+        "h": 35,
+        "baseline": 24,
+        "latex": "W_{pl}\\coloneq\\frac{d^3-d_{i}^3}{6}",
+        "displayMode": "formulaResult",
+        "displayUnit": "cm^3",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_14",
+      "type": "text",
+      "x": 76,
+      "y": 876,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Shear area, §6.2.6(3)(g)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_15",
+      "type": "math",
+      "x": 396,
+      "y": 870,
+      "props": {
+        "w": 153,
+        "h": 30,
+        "baseline": 19,
+        "latex": "A_{v}\\coloneq\\frac{2A}{\\pi}",
+        "displayMode": "formulaResult",
+        "displayUnit": "cm^2",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_16",
+      "type": "text",
+      "x": 76,
+      "y": 906,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Angles for drawing",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_17",
+      "type": "math",
+      "x": 396,
+      "y": 906,
+      "props": {
+        "w": 139,
+        "h": 29,
+        "baseline": 18,
+        "latex": "\\varphi_{t}\\coloneq\\mathrm{seq}\\left(0,2\\pi,\\frac{\\pi}{36}\\right)",
+        "displayMode": "formula",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_18",
+      "type": "graph",
+      "x": 76,
+      "y": 1231,
+      "props": {
+        "w": 220,
+        "h": 220,
+        "xLabel": "",
+        "yLabel": "",
+        "grid": false,
+        "axesAtOrigin": true,
+        "font": "Roboto",
+        "background": "#fff9c4",
+        "title": "Section",
+        "xUnit": "mm",
+        "yUnit": "mm",
+        "equalAxes": true,
+        "series": [
+          {
+            "id": "outer",
+            "label": "",
+            "x": "\\frac{d}{2}\\cos\\left(\\varphi_{t}\\right)",
+            "y": "\\frac{d}{2}\\sin\\left(\\varphi_{t}\\right)",
+            "style": "line",
+            "r": "",
+            "color": "#1e3a5f",
+            "width": 2,
+            "show": ""
+          },
+          {
+            "id": "inner",
+            "label": "",
+            "x": "\\frac{d_{i}}{2}\\cos\\left(\\varphi_{t}\\right)",
+            "y": "\\frac{d_{i}}{2}\\sin\\left(\\varphi_{t}\\right)",
+            "style": "line",
+            "r": "",
+            "color": "#1e3a5f",
+            "width": 2,
+            "show": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "s_secchs_19",
+      "type": "text",
+      "x": 76,
+      "y": 1460,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Thickest plate (yield strength)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_1a",
+      "type": "math",
+      "x": 396,
+      "y": 1457,
+      "props": {
+        "w": 121,
+        "h": 22,
+        "baseline": 16,
+        "latex": "t_{max}\\coloneq t",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_1b",
+      "type": "text",
+      "x": 76,
+      "y": 1491,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "Yield strength (EN 1993-1-1 Table 3.1)",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_secchs_1c",
+      "type": "text",
+      "x": 76,
+      "y": 1561,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Reduced for t &gt; 40 mm: −20 MPa up to S355, −30 MPa above",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_1d",
+      "type": "math",
+      "x": 396,
+      "y": 1518,
+      "props": {
+        "w": 314,
+        "h": 118,
+        "baseline": 16,
+        "latex": "f_{y}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ t_{max}\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ f_{y.nom}\\le355\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-20\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-30\\,\\mathrm{MPa}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "MPa",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_1e",
+      "type": "text",
+      "x": 76,
+      "y": 1645,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Thickness within Table 3.1",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_1f",
+      "type": "math",
+      "x": 396,
+      "y": 1642,
+      "props": {
+        "w": 258,
+        "h": 22,
+        "baseline": 16,
+        "latex": "t_{max}\\le80\\,\\mathrm{mm}",
+        "displayMode": "auto",
+        "displayUnit": "mm",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_1g",
+      "type": "text",
+      "x": 76,
+      "y": 1676,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "4. CLASSIFICATION (§5.5, Table 5.2)",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_secchs_1h",
+      "type": "text",
+      "x": 76,
+      "y": 1735,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Material parameter ε",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_1i",
+      "type": "math",
+      "x": 396,
+      "y": 1706,
+      "props": {
+        "w": 185,
+        "h": 39,
+        "baseline": 22,
+        "latex": "\\varepsilon\\coloneq\\sqrt{\\frac{235\\,\\mathrm{MPa}}{f_{y}}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_1j",
+      "type": "text",
+      "x": 76,
+      "y": 1765,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Slenderness d/(t·ε²): limits 50, 70, 90",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_1k",
+      "type": "math",
+      "x": 396,
+      "y": 1759,
+      "props": {
+        "w": 113,
+        "h": 30,
+        "baseline": 19,
+        "latex": "\\beta_{d}\\coloneq\\frac{d}{t\\varepsilon^2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_1l",
+      "type": "text",
+      "x": 76,
+      "y": 1795,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Class of the cross-section (Class 1 when nothing is in compression)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_1m",
+      "type": "math",
+      "x": 96,
+      "y": 1819,
+      "props": {
+        "w": 506,
+        "h": 195,
+        "baseline": 16,
+        "latex": "\\mathrm{Class}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ N_{Ed}\\le0\\,\\mathrm{kN}\\land M_{y.Ed}=0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\land M_{z.Ed}=0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\beta_{d}\\le50\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\beta_{d}\\le70\\\\\\quad\\left\\Vert\\displaystyle 2\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ \\beta_{d}\\le90\\\\\\quad\\left\\Vert\\displaystyle 3\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 4\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_1n",
+      "type": "text",
+      "x": 76,
+      "y": 2023,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Class 4 (effective section) is not covered",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_1o",
+      "type": "math",
+      "x": 396,
+      "y": 2020,
+      "props": {
+        "w": 174,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{Class}\\le3",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_1p",
+      "type": "text",
+      "x": 76,
+      "y": 2053,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "5. CROSS-SECTION RESISTANCE (§6.2)",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_secchs_1q",
+      "type": "text",
+      "x": 76,
+      "y": 2089,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "5.1 Shear (§6.2.6) and its effect on bending (§6.2.8)",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_secchs_1r",
+      "type": "text",
+      "x": 76,
+      "y": 2122,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Resultant shear force",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_1s",
+      "type": "math",
+      "x": 396,
+      "y": 2116,
+      "props": {
+        "w": 229,
+        "h": 29,
+        "baseline": 19,
+        "latex": "V_{Ed}\\coloneq\\sqrt{V_{y.Ed}^2+V_{z.Ed}^2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_1t",
+      "type": "text",
+      "x": 76,
+      "y": 2180,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Plastic shear resistance (6.18)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_1u",
+      "type": "math",
+      "x": 396,
+      "y": 2151,
+      "props": {
+        "w": 187,
+        "h": 37,
+        "baseline": 22,
+        "latex": "V_{pl.Rd}\\coloneq\\frac{A_{v}f_{y}}{\\sqrt{3}\\gamma_{M0}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_1v",
+      "type": "text",
+      "x": 76,
+      "y": 2428,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Shear",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_1w",
+      "type": "math",
+      "x": 396,
+      "y": 2402,
+      "props": {
+        "w": 159,
+        "h": 35,
+        "baseline": 19,
+        "latex": "\\mathrm{UR}_{V}\\coloneq \\frac{V_{Ed}}{V_{pl.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_1x",
+      "type": "text",
+      "x": 76,
+      "y": 2455,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.2.6 (6.17)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_1y",
+      "type": "math",
+      "x": 396,
+      "y": 2452,
+      "props": {
+        "w": 199,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{V}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_1z",
+      "type": "text",
+      "x": 76,
+      "y": 2522,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Reduction for shear above 0.5 Vpl (6.29)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_20",
+      "type": "math",
+      "x": 396,
+      "y": 2479,
+      "props": {
+        "w": 275,
+        "h": 89,
+        "baseline": 16,
+        "latex": "\\rho\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{UR}_{V}>0.5\\\\\\quad\\left\\Vert\\displaystyle \\min\\left(0.99,\\left(2\\mathrm{UR}_{V}-1\\right)^2\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_21",
+      "type": "text",
+      "x": 76,
+      "y": 2574,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "The reduced yield strength (1 − ρ)f_y is applied to the whole section (conservative, §6.2.8(3)).",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_22",
+      "type": "text",
+      "x": 76,
+      "y": 2599,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "ρ is capped at 0.99 so the other checks stay finite when the shear check itself fails.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_23",
+      "type": "text",
+      "x": 76,
+      "y": 2630,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "5.2 Axial force (§6.2.3, §6.2.4) and bending (§6.2.5)",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_secchs_24",
+      "type": "text",
+      "x": 76,
+      "y": 2666,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Plastic axial resistance, compression (6.10) or gross tension (6.6)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_25",
+      "type": "math",
+      "x": 396,
+      "y": 2657,
+      "props": {
+        "w": 174,
+        "h": 36,
+        "baseline": 22,
+        "latex": "N_{pl.Rd}\\coloneq\\frac{Af_{y}}{\\gamma_{M0}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_26",
+      "type": "text",
+      "x": 76,
+      "y": 2728,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Axial force",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_27",
+      "type": "math",
+      "x": 396,
+      "y": 2699,
+      "props": {
+        "w": 169,
+        "h": 38,
+        "baseline": 22,
+        "latex": "\\mathrm{UR}_{N}\\coloneq \\frac{\\left|N_{Ed}\\right|}{N_{pl.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_28",
+      "type": "text",
+      "x": 76,
+      "y": 2755,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.2.3 (6.5), §6.2.4 (6.9)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_29",
+      "type": "math",
+      "x": 396,
+      "y": 2752,
+      "props": {
+        "w": 208,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{N}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_2a",
+      "type": "text",
+      "x": 76,
+      "y": 2785,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Resultant bending moment",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_2b",
+      "type": "math",
+      "x": 396,
+      "y": 2779,
+      "props": {
+        "w": 271,
+        "h": 29,
+        "baseline": 19,
+        "latex": "M_{Ed}\\coloneq\\sqrt{M_{y.Ed}^2+M_{z.Ed}^2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_2c",
+      "type": "text",
+      "x": 76,
+      "y": 2837,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Section modulus: plastic for Class 1, 2; elastic for Class 3",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_2d",
+      "type": "math",
+      "x": 396,
+      "y": 2814,
+      "props": {
+        "w": 213,
+        "h": 79,
+        "baseline": 16,
+        "latex": "W\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le2\\\\\\quad\\left\\Vert\\displaystyle W_{pl}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle W_{el}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "cm^3",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_2e",
+      "type": "text",
+      "x": 76,
+      "y": 2909,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Bending resistance (6.13), (6.14), reduced for shear",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_2f",
+      "type": "math",
+      "x": 396,
+      "y": 2899,
+      "props": {
+        "w": 258,
+        "h": 37,
+        "baseline": 23,
+        "latex": "M_{c.Rd}\\coloneq\\frac{Wf_{y}\\left(1-\\rho\\right)}{\\gamma_{M0}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_2g",
+      "type": "text",
+      "x": 76,
+      "y": 2969,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Bending",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_2h",
+      "type": "math",
+      "x": 396,
+      "y": 2942,
+      "props": {
+        "w": 170,
+        "h": 33,
+        "baseline": 20,
+        "latex": "\\mathrm{UR}_{M}\\coloneq \\frac{M_{Ed}}{M_{c.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_2i",
+      "type": "text",
+      "x": 76,
+      "y": 2996,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.2.5 (6.12)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_2j",
+      "type": "math",
+      "x": 396,
+      "y": 2993,
+      "props": {
+        "w": 210,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{M}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_2k",
+      "type": "text",
+      "x": 76,
+      "y": 3026,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "6. BENDING, SHEAR AND AXIAL FORCE (§6.2.9, §6.2.10)",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_secchs_2l",
+      "type": "text",
+      "x": 76,
+      "y": 3059,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Axial resistance with the shear reduction",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_2m",
+      "type": "math",
+      "x": 396,
+      "y": 3056,
+      "props": {
+        "w": 235,
+        "h": 22,
+        "baseline": 16,
+        "latex": "N_{V.Rd}\\coloneq\\left(1-\\rho\\right)N_{pl.Rd}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_2n",
+      "type": "text",
+      "x": 76,
+      "y": 3094,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Axial ratio",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_2o",
+      "type": "math",
+      "x": 396,
+      "y": 3084,
+      "props": {
+        "w": 144,
+        "h": 36,
+        "baseline": 23,
+        "latex": "n\\coloneq\\frac{\\left|N_{Ed}\\right|}{N_{V.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_2p",
+      "type": "text",
+      "x": 76,
+      "y": 3132,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "6.1 Class 1 and 2: reduced plastic moments (§6.2.9.1)",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_secchs_2q",
+      "type": "text",
+      "x": 76,
+      "y": 3169,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Plastic moment resistance, reduced for shear",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_2r",
+      "type": "math",
+      "x": 396,
+      "y": 3159,
+      "props": {
+        "w": 272,
+        "h": 37,
+        "baseline": 23,
+        "latex": "M_{pl.Rd}\\coloneq\\frac{W_{pl}f_{y}\\left(1-\\rho\\right)}{\\gamma_{M0}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_2s",
+      "type": "text",
+      "x": 76,
+      "y": 3202,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Reduced for axial force, SCI P363 §10.2.1 (Blue Book)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_2t",
+      "type": "math",
+      "x": 96,
+      "y": 3226,
+      "props": {
+        "w": 345,
+        "h": 29,
+        "baseline": 19,
+        "latex": "M_{N.Rd}\\coloneq M_{pl.Rd}\\left(1-\\min\\left(1,n\\right)^{1.7}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_2u",
+      "type": "text",
+      "x": 76,
+      "y": 3261,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "With α = β = 2 (§6.2.9.1(6)), (6.41) is (M_Ed/M_N,Rd)² ≤ 1, i.e. the resultant M_Ed/M_N,Rd ≤ 1.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_2v",
+      "type": "text",
+      "x": 76,
+      "y": 3329,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Utilisation, plastic (n ≥ 1: axial force alone exceeds the resistance)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_2w",
+      "type": "math",
+      "x": 396,
+      "y": 3286,
+      "props": {
+        "w": 217,
+        "h": 98,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{pl}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ n<1\\\\\\quad\\left\\Vert\\displaystyle \\frac{M_{Ed}}{M_{N.Rd}}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle n\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_2x",
+      "type": "text",
+      "x": 76,
+      "y": 3573,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "6.2 Class 3: elastic stresses (§6.2.9.2, (6.42))",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_secchs_2y",
+      "type": "text",
+      "x": 76,
+      "y": 3629,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Peak normal stress over f_y(1 − ρ)/γM0",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_2z",
+      "type": "math",
+      "x": 396,
+      "y": 3600,
+      "props": {
+        "w": 286,
+        "h": 38,
+        "baseline": 22,
+        "latex": "\\mathrm{UR}_{el}\\coloneq\\frac{\\left|N_{Ed}\\right|}{N_{V.Rd}}+\\frac{M_{Ed}\\gamma_{M0}}{W_{el}f_{y}\\left(1-\\rho\\right)}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_30",
+      "type": "text",
+      "x": 76,
+      "y": 3659,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "6.3 Combined check",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_secchs_31",
+      "type": "text",
+      "x": 76,
+      "y": 3729,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Class 1, 2: plastic; Class 3: elastic",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_32",
+      "type": "math",
+      "x": 396,
+      "y": 3686,
+      "props": {
+        "w": 227,
+        "h": 79,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{sec}\\coloneq \\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le2\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{UR}_{pl}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\mathrm{UR}_{el}\\right.\\end{array}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_33",
+      "type": "text",
+      "x": 76,
+      "y": 3774,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.2.9 (6.31), (6.41), (6.42)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_34",
+      "type": "math",
+      "x": 396,
+      "y": 3771,
+      "props": {
+        "w": 213,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{sec}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_35",
+      "type": "text",
+      "x": 76,
+      "y": 3804,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "7. SUMMARY",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_secchs_36",
+      "type": "text",
+      "x": 76,
+      "y": 3834,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Results apply only within the stated assumptions and scope; applicability is not checked.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_37",
+      "type": "text",
+      "x": 76,
+      "y": 3859,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Governing utilisation",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "groupId": "s_secchs_group_37"
+    },
+    {
+      "id": "s_secchs_38",
+      "type": "math",
+      "x": 96,
+      "y": 3876,
+      "props": {
+        "w": 321,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}\\coloneq\\max\\left(\\mathrm{UR}_{V},\\mathrm{UR}_{N},\\mathrm{UR}_{M},\\mathrm{UR}_{sec}\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "groupId": "s_secchs_group_37"
+    },
+    {
+      "id": "s_secchs_39",
+      "type": "text",
+      "x": 76,
+      "y": 3919,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Cross-section resistance check",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "groupId": "s_secchs_group_37"
+    },
+    {
+      "id": "s_secchs_3a",
+      "type": "math",
+      "x": 396,
+      "y": 3916,
+      "props": {
+        "w": 189,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "groupId": "s_secchs_group_37"
+    },
+    {
+      "id": "s_secchs_3b",
+      "type": "text",
+      "x": 76,
+      "y": 3955,
+      "props": {
+        "w": 630,
+        "h": 29,
+        "html": "ANNEX",
+        "fontFamily": "Roboto",
+        "fontSize": 20,
+        "color": "#1e3a5f",
+        "align": "left",
+        "heading": 1,
+        "annex": {
+          "kind": "start"
+        }
+      }
+    }
+  ],
+  "createdAt": "2026-01-01T00:00:00.000Z",
+  "updatedAt": "2026-01-01T00:00:00.000Z"
+}
