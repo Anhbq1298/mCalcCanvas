@@ -2,7 +2,7 @@
   "format": "calccanvas",
   "id": "tpl-steel-section-chs",
   "version": 3,
-  "title": "Steel Cross-Section Check – CHS (EN 1993-1-1)",
+  "title": "Steel Beam-Column Check – CHS (EN 1993-1-1)",
   "metadata": {
     "project": "Project name",
     "calculationReference": "CALC-ST-SC",
@@ -20,66 +20,91 @@
     "baselineSnap": "minor",
     "snapToGrid": false,
     "optimizePrintLayout": true,
-    "pages": 4
+    "pages": 8
   },
   "inputResult": {
     "title": "Load combinations",
     "inputs": [
       {
         "id": "n",
-        "regionId": "s_secchs_k",
+        "regionId": "s_secchs_o",
         "label": "N_Ed"
       },
       {
         "id": "my",
-        "regionId": "s_secchs_m",
+        "regionId": "s_secchs_q",
         "label": "M_y,Ed"
       },
       {
         "id": "mz",
-        "regionId": "s_secchs_o",
+        "regionId": "s_secchs_s",
         "label": "M_z,Ed"
       },
       {
         "id": "vz",
-        "regionId": "s_secchs_q",
+        "regionId": "s_secchs_u",
         "label": "V_z,Ed"
       },
       {
         "id": "vy",
-        "regionId": "s_secchs_s",
+        "regionId": "s_secchs_w",
         "label": "V_y,Ed"
       }
     ],
     "outputs": [
       {
         "id": "cls",
-        "regionId": "s_secchs_1m",
+        "regionId": "s_secchs_2g",
         "label": "Class"
       },
       {
         "id": "ur_V",
-        "regionId": "s_secchs_1w",
+        "regionId": "s_secchs_2q",
         "label": "UR V"
       },
       {
         "id": "ur_N",
-        "regionId": "s_secchs_27",
+        "regionId": "s_secchs_31",
         "label": "UR N"
       },
       {
         "id": "ur_M",
-        "regionId": "s_secchs_2h",
+        "regionId": "s_secchs_3b",
         "label": "UR M"
       },
       {
         "id": "ur_sec",
-        "regionId": "s_secchs_32",
+        "regionId": "s_secchs_3w",
         "label": "UR sec"
       },
       {
+        "id": "ur_by",
+        "regionId": "s_secchs_4o",
+        "label": "UR b.y"
+      },
+      {
+        "id": "ur_bz",
+        "regionId": "s_secchs_53",
+        "label": "UR b.z"
+      },
+      {
+        "id": "ur_LT",
+        "regionId": "s_secchs_5i",
+        "label": "UR LT"
+      },
+      {
+        "id": "ur_661",
+        "regionId": "s_secchs_60",
+        "label": "UR 6.61"
+      },
+      {
+        "id": "ur_662",
+        "regionId": "s_secchs_64",
+        "label": "UR 6.62"
+      },
+      {
         "id": "ur",
-        "regionId": "s_secchs_38",
+        "regionId": "s_secchs_6f",
         "label": "UR"
       }
     ],
@@ -128,7 +153,7 @@
       "props": {
         "w": 630,
         "h": 29,
-        "html": "STEEL CROSS-SECTION CHECK – CIRCULAR HOLLOW SECTION (EC3)",
+        "html": "STEEL BEAM-COLUMN CHECK – CIRCULAR HOLLOW SECTION (EC3)",
         "fontFamily": "Roboto",
         "fontSize": 20,
         "color": "#1e3a5f",
@@ -175,7 +200,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "Section design only: member buckling (§6.3) is not part of this sheet. Class 1 to 3.",
+        "html": "Members §6.3: flexural buckling, torsional buckling (I/H), lateral-torsional buckling (I/H, RHS) and",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -190,7 +215,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "N positive in compression, negative in tension. Moments and shears in either sign; magnitudes are used.",
+        "html": "interaction (6.61)/(6.62) with Annex B (Method 2). Uniform member, Class 1 to 3.",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -205,7 +230,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "Not covered: Class 4, torsion, holes and net sections, shear buckling, fire, connections.",
+        "html": "N positive in compression, negative in tension. Moments and shears in either sign; magnitudes are used.",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -220,7 +245,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "Hot-finished or cold-formed CHS: bending and shear are combined as resultants.",
+        "html": "Not covered: Class 4, torsion, holes and net sections, shear buckling, fire, connections. N &lt; 0 (tension):",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -231,7 +256,37 @@
       "id": "s_secchs_7",
       "type": "text",
       "x": 76,
-      "y": 262,
+      "y": 256,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "no compression buckling; LTB and the interaction run with N = 0 (no tension credit).",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_8",
+      "type": "text",
+      "x": 76,
+      "y": 281,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Hot-finished or cold-formed CHS: bending and shear are combined as resultants.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_9",
+      "type": "text",
+      "x": 76,
+      "y": 312,
       "props": {
         "w": 630,
         "h": 24,
@@ -244,10 +299,10 @@
       }
     },
     {
-      "id": "s_secchs_8",
+      "id": "s_secchs_a",
       "type": "text",
       "x": 76,
-      "y": 298,
+      "y": 348,
       "props": {
         "w": 630,
         "h": 21,
@@ -260,10 +315,10 @@
       }
     },
     {
-      "id": "s_secchs_9",
+      "id": "s_secchs_b",
       "type": "text",
       "x": 76,
-      "y": 328,
+      "y": 378,
       "props": {
         "w": 304,
         "h": 18,
@@ -275,10 +330,10 @@
       }
     },
     {
-      "id": "s_secchs_a",
+      "id": "s_secchs_c",
       "type": "math",
       "x": 396,
-      "y": 325,
+      "y": 375,
       "props": {
         "w": 131,
         "h": 22,
@@ -293,10 +348,10 @@
       }
     },
     {
-      "id": "s_secchs_b",
+      "id": "s_secchs_d",
       "type": "text",
       "x": 76,
-      "y": 356,
+      "y": 406,
       "props": {
         "w": 304,
         "h": 18,
@@ -308,10 +363,10 @@
       }
     },
     {
-      "id": "s_secchs_c",
+      "id": "s_secchs_e",
       "type": "math",
       "x": 396,
-      "y": 353,
+      "y": 403,
       "props": {
         "w": 68,
         "h": 22,
@@ -326,10 +381,10 @@
       }
     },
     {
-      "id": "s_secchs_d",
+      "id": "s_secchs_f",
       "type": "text",
       "x": 76,
-      "y": 387,
+      "y": 437,
       "props": {
         "w": 630,
         "h": 21,
@@ -342,10 +397,10 @@
       }
     },
     {
-      "id": "s_secchs_e",
+      "id": "s_secchs_g",
       "type": "text",
       "x": 76,
-      "y": 417,
+      "y": 467,
       "props": {
         "w": 304,
         "h": 18,
@@ -357,10 +412,10 @@
       }
     },
     {
-      "id": "s_secchs_f",
+      "id": "s_secchs_h",
       "type": "math",
       "x": 396,
-      "y": 414,
+      "y": 464,
       "props": {
         "w": 103,
         "h": 22,
@@ -375,10 +430,10 @@
       }
     },
     {
-      "id": "s_secchs_g",
+      "id": "s_secchs_i",
       "type": "text",
       "x": 76,
-      "y": 445,
+      "y": 495,
       "props": {
         "w": 304,
         "h": 18,
@@ -390,10 +445,10 @@
       }
     },
     {
-      "id": "s_secchs_h",
+      "id": "s_secchs_j",
       "type": "math",
       "x": 396,
-      "y": 442,
+      "y": 492,
       "props": {
         "w": 80,
         "h": 22,
@@ -408,10 +463,43 @@
       }
     },
     {
-      "id": "s_secchs_i",
+      "id": "s_secchs_k",
       "type": "text",
       "x": 76,
-      "y": 476,
+      "y": 523,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Process: 0 = hot-finished EN 10210, 1 = cold-formed EN 10219",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_l",
+      "type": "math",
+      "x": 396,
+      "y": 520,
+      "props": {
+        "w": 50,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{CF}\\coloneq0",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_m",
+      "type": "text",
+      "x": 76,
+      "y": 553,
       "props": {
         "w": 630,
         "h": 21,
@@ -424,10 +512,10 @@
       }
     },
     {
-      "id": "s_secchs_j",
+      "id": "s_secchs_n",
       "type": "text",
       "x": 76,
-      "y": 506,
+      "y": 583,
       "props": {
         "w": 304,
         "h": 18,
@@ -439,10 +527,10 @@
       }
     },
     {
-      "id": "s_secchs_k",
+      "id": "s_secchs_o",
       "type": "math",
       "x": 396,
-      "y": 503,
+      "y": 580,
       "props": {
         "w": 106,
         "h": 22,
@@ -457,10 +545,10 @@
       }
     },
     {
-      "id": "s_secchs_l",
+      "id": "s_secchs_p",
       "type": "text",
       "x": 76,
-      "y": 534,
+      "y": 611,
       "props": {
         "w": 304,
         "h": 18,
@@ -472,10 +560,10 @@
       }
     },
     {
-      "id": "s_secchs_m",
+      "id": "s_secchs_q",
       "type": "math",
       "x": 396,
-      "y": 531,
+      "y": 608,
       "props": {
         "w": 135,
         "h": 22,
@@ -490,10 +578,10 @@
       }
     },
     {
-      "id": "s_secchs_n",
+      "id": "s_secchs_r",
       "type": "text",
       "x": 76,
-      "y": 562,
+      "y": 639,
       "props": {
         "w": 304,
         "h": 18,
@@ -505,10 +593,10 @@
       }
     },
     {
-      "id": "s_secchs_o",
+      "id": "s_secchs_s",
       "type": "math",
       "x": 396,
-      "y": 559,
+      "y": 636,
       "props": {
         "w": 135,
         "h": 22,
@@ -523,10 +611,10 @@
       }
     },
     {
-      "id": "s_secchs_p",
+      "id": "s_secchs_t",
       "type": "text",
       "x": 76,
-      "y": 590,
+      "y": 667,
       "props": {
         "w": 304,
         "h": 18,
@@ -538,10 +626,10 @@
       }
     },
     {
-      "id": "s_secchs_q",
+      "id": "s_secchs_u",
       "type": "math",
       "x": 396,
-      "y": 587,
+      "y": 664,
       "props": {
         "w": 114,
         "h": 22,
@@ -556,10 +644,10 @@
       }
     },
     {
-      "id": "s_secchs_r",
+      "id": "s_secchs_v",
       "type": "text",
       "x": 76,
-      "y": 618,
+      "y": 695,
       "props": {
         "w": 304,
         "h": 18,
@@ -571,10 +659,10 @@
       }
     },
     {
-      "id": "s_secchs_s",
+      "id": "s_secchs_w",
       "type": "math",
       "x": 396,
-      "y": 615,
+      "y": 692,
       "props": {
         "w": 106,
         "h": 22,
@@ -589,10 +677,338 @@
       }
     },
     {
-      "id": "s_secchs_t",
+      "id": "s_secchs_x",
       "type": "text",
       "x": 76,
-      "y": 649,
+      "y": 726,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "2.4 Member (buckling, LTB, interaction)",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_secchs_y",
+      "type": "text",
+      "x": 76,
+      "y": 756,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Elastic modulus",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_z",
+      "type": "math",
+      "x": 396,
+      "y": 753,
+      "props": {
+        "w": 100,
+        "h": 22,
+        "baseline": 16,
+        "latex": "E\\coloneq210\\,\\mathrm{GPa}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_10",
+      "type": "text",
+      "x": 76,
+      "y": 784,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Shear modulus",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_11",
+      "type": "math",
+      "x": 396,
+      "y": 781,
+      "props": {
+        "w": 92,
+        "h": 22,
+        "baseline": 16,
+        "latex": "G\\coloneq81\\,\\mathrm{GPa}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_12",
+      "type": "text",
+      "x": 76,
+      "y": 812,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Partial factor, member buckling (National Annex)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_13",
+      "type": "math",
+      "x": 396,
+      "y": 809,
+      "props": {
+        "w": 68,
+        "h": 22,
+        "baseline": 16,
+        "latex": "\\gamma_{M1}\\coloneq1.0",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_14",
+      "type": "text",
+      "x": 76,
+      "y": 840,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "System length for buckling about y-y (major axis)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_15",
+      "type": "math",
+      "x": 396,
+      "y": 837,
+      "props": {
+        "w": 71,
+        "h": 22,
+        "baseline": 16,
+        "latex": "L_{y}\\coloneq4\\,\\mathrm{m}",
+        "displayMode": "auto",
+        "displayUnit": "m",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_16",
+      "type": "text",
+      "x": 76,
+      "y": 868,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Effective length factor about y-y",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_17",
+      "type": "math",
+      "x": 396,
+      "y": 865,
+      "props": {
+        "w": 56,
+        "h": 22,
+        "baseline": 16,
+        "latex": "k_{y}\\coloneq1.0",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_18",
+      "type": "text",
+      "x": 76,
+      "y": 896,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "System length for buckling about z-z (minor axis)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_19",
+      "type": "math",
+      "x": 396,
+      "y": 893,
+      "props": {
+        "w": 71,
+        "h": 22,
+        "baseline": 16,
+        "latex": "L_{z}\\coloneq4\\,\\mathrm{m}",
+        "displayMode": "auto",
+        "displayUnit": "m",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_1a",
+      "type": "text",
+      "x": 76,
+      "y": 924,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Effective length factor about z-z",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_1b",
+      "type": "math",
+      "x": 396,
+      "y": 921,
+      "props": {
+        "w": 56,
+        "h": 22,
+        "baseline": 16,
+        "latex": "k_{z}\\coloneq1.0",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_1c",
+      "type": "text",
+      "x": 76,
+      "y": 952,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Equivalent uniform moment factor Cmy (Table B.3)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_1d",
+      "type": "math",
+      "x": 396,
+      "y": 949,
+      "props": {
+        "w": 70,
+        "h": 22,
+        "baseline": 16,
+        "latex": "C_{my}\\coloneq1.0",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_1e",
+      "type": "text",
+      "x": 76,
+      "y": 980,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Equivalent uniform moment factor Cmz (Table B.3)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_1f",
+      "type": "math",
+      "x": 396,
+      "y": 977,
+      "props": {
+        "w": 70,
+        "h": 22,
+        "baseline": 16,
+        "latex": "C_{mz}\\coloneq1.0",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_1g",
+      "type": "text",
+      "x": 76,
+      "y": 1005,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Conservative defaults Cm = 1.0 (no moment-gradient benefit); same factors for every combination.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_1h",
+      "type": "text",
+      "x": 76,
+      "y": 1231,
       "props": {
         "w": 630,
         "h": 24,
@@ -605,10 +1021,10 @@
       }
     },
     {
-      "id": "s_secchs_u",
+      "id": "s_secchs_1i",
       "type": "text",
       "x": 76,
-      "y": 682,
+      "y": 1264,
       "props": {
         "w": 304,
         "h": 18,
@@ -620,10 +1036,10 @@
       }
     },
     {
-      "id": "s_secchs_v",
+      "id": "s_secchs_1j",
       "type": "math",
       "x": 396,
-      "y": 679,
+      "y": 1261,
       "props": {
         "w": 162,
         "h": 22,
@@ -638,10 +1054,10 @@
       }
     },
     {
-      "id": "s_secchs_w",
+      "id": "s_secchs_1k",
       "type": "text",
       "x": 76,
-      "y": 720,
+      "y": 1302,
       "props": {
         "w": 304,
         "h": 18,
@@ -653,10 +1069,10 @@
       }
     },
     {
-      "id": "s_secchs_x",
+      "id": "s_secchs_1l",
       "type": "math",
       "x": 396,
-      "y": 707,
+      "y": 1289,
       "props": {
         "w": 201,
         "h": 37,
@@ -671,10 +1087,10 @@
       }
     },
     {
-      "id": "s_secchs_y",
+      "id": "s_secchs_1m",
       "type": "text",
       "x": 76,
-      "y": 763,
+      "y": 1345,
       "props": {
         "w": 304,
         "h": 18,
@@ -686,10 +1102,10 @@
       }
     },
     {
-      "id": "s_secchs_z",
+      "id": "s_secchs_1n",
       "type": "math",
       "x": 396,
-      "y": 750,
+      "y": 1332,
       "props": {
         "w": 193,
         "h": 37,
@@ -704,10 +1120,10 @@
       }
     },
     {
-      "id": "s_secchs_10",
+      "id": "s_secchs_1o",
       "type": "text",
       "x": 76,
-      "y": 799,
+      "y": 1381,
       "props": {
         "w": 304,
         "h": 18,
@@ -719,10 +1135,10 @@
       }
     },
     {
-      "id": "s_secchs_11",
+      "id": "s_secchs_1p",
       "type": "math",
       "x": 396,
-      "y": 793,
+      "y": 1375,
       "props": {
         "w": 145,
         "h": 30,
@@ -737,10 +1153,10 @@
       }
     },
     {
-      "id": "s_secchs_12",
+      "id": "s_secchs_1q",
       "type": "text",
       "x": 76,
-      "y": 840,
+      "y": 1422,
       "props": {
         "w": 304,
         "h": 18,
@@ -752,10 +1168,10 @@
       }
     },
     {
-      "id": "s_secchs_13",
+      "id": "s_secchs_1r",
       "type": "math",
       "x": 396,
-      "y": 829,
+      "y": 1411,
       "props": {
         "w": 177,
         "h": 35,
@@ -770,10 +1186,10 @@
       }
     },
     {
-      "id": "s_secchs_14",
+      "id": "s_secchs_1s",
       "type": "text",
       "x": 76,
-      "y": 876,
+      "y": 1458,
       "props": {
         "w": 304,
         "h": 18,
@@ -785,10 +1201,10 @@
       }
     },
     {
-      "id": "s_secchs_15",
+      "id": "s_secchs_1t",
       "type": "math",
       "x": 396,
-      "y": 870,
+      "y": 1452,
       "props": {
         "w": 153,
         "h": 30,
@@ -803,10 +1219,10 @@
       }
     },
     {
-      "id": "s_secchs_16",
+      "id": "s_secchs_1u",
       "type": "text",
       "x": 76,
-      "y": 906,
+      "y": 1513,
       "props": {
         "w": 304,
         "h": 18,
@@ -818,10 +1234,10 @@
       }
     },
     {
-      "id": "s_secchs_17",
+      "id": "s_secchs_1v",
       "type": "math",
       "x": 396,
-      "y": 906,
+      "y": 1488,
       "props": {
         "w": 139,
         "h": 29,
@@ -836,10 +1252,10 @@
       }
     },
     {
-      "id": "s_secchs_18",
+      "id": "s_secchs_1w",
       "type": "graph",
-      "x": 76,
-      "y": 1231,
+      "x": 287,
+      "y": 1537,
       "props": {
         "w": 220,
         "h": 220,
@@ -880,10 +1296,10 @@
       }
     },
     {
-      "id": "s_secchs_19",
+      "id": "s_secchs_1x",
       "type": "text",
       "x": 76,
-      "y": 1460,
+      "y": 1766,
       "props": {
         "w": 304,
         "h": 18,
@@ -895,10 +1311,10 @@
       }
     },
     {
-      "id": "s_secchs_1a",
+      "id": "s_secchs_1y",
       "type": "math",
       "x": 396,
-      "y": 1457,
+      "y": 1763,
       "props": {
         "w": 121,
         "h": 22,
@@ -913,14 +1329,14 @@
       }
     },
     {
-      "id": "s_secchs_1b",
+      "id": "s_secchs_1z",
       "type": "text",
       "x": 76,
-      "y": 1491,
+      "y": 1797,
       "props": {
         "w": 630,
         "h": 21,
-        "html": "Yield strength (EN 1993-1-1 Table 3.1)",
+        "html": "Yield strength",
         "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
@@ -929,14 +1345,14 @@
       }
     },
     {
-      "id": "s_secchs_1c",
+      "id": "s_secchs_20",
       "type": "text",
       "x": 76,
-      "y": 1561,
+      "y": 1827,
       "props": {
         "w": 304,
         "h": 18,
-        "html": "Reduced for t &gt; 40 mm: −20 MPa up to S355, −30 MPa above",
+        "html": "Basis: 1 = product standard (EN 10025-2/-4, EN 10210-1, EN 10219-1 thickness steps; Singapore / UK NA), 0 = EN 1993-1-1 Table 3.1",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -944,15 +1360,48 @@
       }
     },
     {
-      "id": "s_secchs_1d",
+      "id": "s_secchs_21",
       "type": "math",
       "x": 396,
-      "y": 1518,
+      "y": 1824,
       "props": {
-        "w": 314,
-        "h": 118,
+        "w": 48,
+        "h": 22,
         "baseline": 16,
-        "latex": "f_{y}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ t_{max}\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ f_{y.nom}\\le355\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-20\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-30\\,\\mathrm{MPa}\\right.\\end{array}",
+        "latex": "c_{fy}\\coloneq1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_22",
+      "type": "text",
+      "x": 76,
+      "y": 1852,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Product standard: steps at 16, 40, 63, 80, 100 mm",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_23",
+      "type": "math",
+      "x": 96,
+      "y": 2402,
+      "props": {
+        "w": 376,
+        "h": 809,
+        "baseline": 16,
+        "latex": "f_{y.ps}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ t_{max}\\le16\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ t_{max}\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle \\begin{array}{||l}\\mathrm{if}\\ f_{y.nom}\\ge420\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-20\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-10\\,\\mathrm{MPa}\\right.\\end{array}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ t_{max}\\le63\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle \\begin{array}{||l}\\mathrm{if}\\ f_{y.nom}\\ge420\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-30\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-20\\,\\mathrm{MPa}\\right.\\end{array}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ t_{max}\\le80\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle \\begin{array}{||l}\\mathrm{if}\\ f_{y.nom}\\ge420\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-50\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ f_{y.nom}\\le235\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-20\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-30\\,\\mathrm{MPa}\\right.\\end{array}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\begin{array}{||l}\\mathrm{if}\\ f_{y.nom}\\ge420\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-60\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ f_{y.nom}\\le235\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-20\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-40\\,\\mathrm{MPa}\\right.\\end{array}\\right.\\end{array}",
         "displayMode": "auto",
         "displayUnit": "MPa",
         "precision": 1,
@@ -962,14 +1411,14 @@
       }
     },
     {
-      "id": "s_secchs_1e",
+      "id": "s_secchs_24",
       "type": "text",
       "x": 76,
-      "y": 1645,
+      "y": 3217,
       "props": {
-        "w": 304,
+        "w": 630,
         "h": 18,
-        "html": "Thickness within Table 3.1",
+        "html": "Table 3.1: −20 MPa above 40 mm up to S355, −30 MPa above",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -977,15 +1426,81 @@
       }
     },
     {
-      "id": "s_secchs_1f",
+      "id": "s_secchs_25",
+      "type": "math",
+      "x": 96,
+      "y": 3241,
+      "props": {
+        "w": 329,
+        "h": 118,
+        "baseline": 16,
+        "latex": "f_{y.31}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ t_{max}\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ f_{y.nom}\\le355\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-20\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-30\\,\\mathrm{MPa}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "MPa",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_26",
+      "type": "text",
+      "x": 76,
+      "y": 3616,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Yield strength used",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_27",
       "type": "math",
       "x": 396,
-      "y": 1642,
+      "y": 3573,
       "props": {
-        "w": 258,
+        "w": 203,
+        "h": 79,
+        "baseline": 16,
+        "latex": "f_{y}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ c_{fy}\\ge1\\\\\\quad\\left\\Vert\\displaystyle f_{y.ps}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{y.31}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "MPa",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_28",
+      "type": "text",
+      "x": 76,
+      "y": 3661,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Thickness within the steps",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_29",
+      "type": "math",
+      "x": 396,
+      "y": 3658,
+      "props": {
+        "w": 266,
         "h": 22,
         "baseline": 16,
-        "latex": "t_{max}\\le80\\,\\mathrm{mm}",
+        "latex": "t_{max}\\le100\\,\\mathrm{mm}",
         "displayMode": "auto",
         "displayUnit": "mm",
         "precision": 1,
@@ -995,10 +1510,10 @@
       }
     },
     {
-      "id": "s_secchs_1g",
+      "id": "s_secchs_2a",
       "type": "text",
       "x": 76,
-      "y": 1676,
+      "y": 3692,
       "props": {
         "w": 630,
         "h": 24,
@@ -1011,10 +1526,10 @@
       }
     },
     {
-      "id": "s_secchs_1h",
+      "id": "s_secchs_2b",
       "type": "text",
       "x": 76,
-      "y": 1735,
+      "y": 3751,
       "props": {
         "w": 304,
         "h": 18,
@@ -1026,10 +1541,10 @@
       }
     },
     {
-      "id": "s_secchs_1i",
+      "id": "s_secchs_2c",
       "type": "math",
       "x": 396,
-      "y": 1706,
+      "y": 3722,
       "props": {
         "w": 185,
         "h": 39,
@@ -1044,10 +1559,10 @@
       }
     },
     {
-      "id": "s_secchs_1j",
+      "id": "s_secchs_2d",
       "type": "text",
       "x": 76,
-      "y": 1765,
+      "y": 3781,
       "props": {
         "w": 304,
         "h": 18,
@@ -1059,10 +1574,10 @@
       }
     },
     {
-      "id": "s_secchs_1k",
+      "id": "s_secchs_2e",
       "type": "math",
       "x": 396,
-      "y": 1759,
+      "y": 3775,
       "props": {
         "w": 113,
         "h": 30,
@@ -1077,10 +1592,10 @@
       }
     },
     {
-      "id": "s_secchs_1l",
+      "id": "s_secchs_2f",
       "type": "text",
       "x": 76,
-      "y": 1795,
+      "y": 3811,
       "props": {
         "w": 630,
         "h": 18,
@@ -1092,10 +1607,10 @@
       }
     },
     {
-      "id": "s_secchs_1m",
+      "id": "s_secchs_2g",
       "type": "math",
       "x": 96,
-      "y": 1819,
+      "y": 3835,
       "props": {
         "w": 506,
         "h": 195,
@@ -1110,10 +1625,10 @@
       }
     },
     {
-      "id": "s_secchs_1n",
+      "id": "s_secchs_2h",
       "type": "text",
       "x": 76,
-      "y": 2023,
+      "y": 4039,
       "props": {
         "w": 304,
         "h": 18,
@@ -1125,10 +1640,10 @@
       }
     },
     {
-      "id": "s_secchs_1o",
+      "id": "s_secchs_2i",
       "type": "math",
       "x": 396,
-      "y": 2020,
+      "y": 4036,
       "props": {
         "w": 174,
         "h": 21,
@@ -1143,10 +1658,10 @@
       }
     },
     {
-      "id": "s_secchs_1p",
+      "id": "s_secchs_2j",
       "type": "text",
       "x": 76,
-      "y": 2053,
+      "y": 4069,
       "props": {
         "w": 630,
         "h": 24,
@@ -1159,10 +1674,10 @@
       }
     },
     {
-      "id": "s_secchs_1q",
+      "id": "s_secchs_2k",
       "type": "text",
       "x": 76,
-      "y": 2089,
+      "y": 4105,
       "props": {
         "w": 630,
         "h": 21,
@@ -1175,10 +1690,10 @@
       }
     },
     {
-      "id": "s_secchs_1r",
+      "id": "s_secchs_2l",
       "type": "text",
       "x": 76,
-      "y": 2122,
+      "y": 4138,
       "props": {
         "w": 304,
         "h": 18,
@@ -1190,10 +1705,10 @@
       }
     },
     {
-      "id": "s_secchs_1s",
+      "id": "s_secchs_2m",
       "type": "math",
       "x": 396,
-      "y": 2116,
+      "y": 4132,
       "props": {
         "w": 229,
         "h": 29,
@@ -1208,10 +1723,10 @@
       }
     },
     {
-      "id": "s_secchs_1t",
+      "id": "s_secchs_2n",
       "type": "text",
       "x": 76,
-      "y": 2180,
+      "y": 4196,
       "props": {
         "w": 304,
         "h": 18,
@@ -1223,10 +1738,10 @@
       }
     },
     {
-      "id": "s_secchs_1u",
+      "id": "s_secchs_2o",
       "type": "math",
       "x": 396,
-      "y": 2151,
+      "y": 4167,
       "props": {
         "w": 187,
         "h": 37,
@@ -1241,10 +1756,10 @@
       }
     },
     {
-      "id": "s_secchs_1v",
+      "id": "s_secchs_2p",
       "type": "text",
       "x": 76,
-      "y": 2428,
+      "y": 4246,
       "props": {
         "w": 304,
         "h": 18,
@@ -1256,10 +1771,10 @@
       }
     },
     {
-      "id": "s_secchs_1w",
+      "id": "s_secchs_2q",
       "type": "math",
       "x": 396,
-      "y": 2402,
+      "y": 4220,
       "props": {
         "w": 159,
         "h": 35,
@@ -1274,10 +1789,10 @@
       }
     },
     {
-      "id": "s_secchs_1x",
+      "id": "s_secchs_2r",
       "type": "text",
       "x": 76,
-      "y": 2455,
+      "y": 4273,
       "props": {
         "w": 304,
         "h": 18,
@@ -1289,10 +1804,10 @@
       }
     },
     {
-      "id": "s_secchs_1y",
+      "id": "s_secchs_2s",
       "type": "math",
       "x": 396,
-      "y": 2452,
+      "y": 4270,
       "props": {
         "w": 199,
         "h": 21,
@@ -1307,10 +1822,10 @@
       }
     },
     {
-      "id": "s_secchs_1z",
+      "id": "s_secchs_2t",
       "type": "text",
       "x": 76,
-      "y": 2522,
+      "y": 4340,
       "props": {
         "w": 304,
         "h": 18,
@@ -1322,10 +1837,10 @@
       }
     },
     {
-      "id": "s_secchs_20",
+      "id": "s_secchs_2u",
       "type": "math",
       "x": 396,
-      "y": 2479,
+      "y": 4297,
       "props": {
         "w": 275,
         "h": 89,
@@ -1340,10 +1855,10 @@
       }
     },
     {
-      "id": "s_secchs_21",
+      "id": "s_secchs_2v",
       "type": "text",
       "x": 76,
-      "y": 2574,
+      "y": 4392,
       "props": {
         "w": 630,
         "h": 19,
@@ -1355,10 +1870,10 @@
       }
     },
     {
-      "id": "s_secchs_22",
+      "id": "s_secchs_2w",
       "type": "text",
       "x": 76,
-      "y": 2599,
+      "y": 4417,
       "props": {
         "w": 630,
         "h": 19,
@@ -1370,10 +1885,10 @@
       }
     },
     {
-      "id": "s_secchs_23",
+      "id": "s_secchs_2x",
       "type": "text",
       "x": 76,
-      "y": 2630,
+      "y": 4448,
       "props": {
         "w": 630,
         "h": 21,
@@ -1386,10 +1901,10 @@
       }
     },
     {
-      "id": "s_secchs_24",
+      "id": "s_secchs_2y",
       "type": "text",
       "x": 76,
-      "y": 2666,
+      "y": 4484,
       "props": {
         "w": 304,
         "h": 18,
@@ -1401,10 +1916,10 @@
       }
     },
     {
-      "id": "s_secchs_25",
+      "id": "s_secchs_2z",
       "type": "math",
       "x": 396,
-      "y": 2657,
+      "y": 4475,
       "props": {
         "w": 174,
         "h": 36,
@@ -1419,10 +1934,10 @@
       }
     },
     {
-      "id": "s_secchs_26",
+      "id": "s_secchs_30",
       "type": "text",
       "x": 76,
-      "y": 2728,
+      "y": 4546,
       "props": {
         "w": 304,
         "h": 18,
@@ -1434,10 +1949,10 @@
       }
     },
     {
-      "id": "s_secchs_27",
+      "id": "s_secchs_31",
       "type": "math",
       "x": 396,
-      "y": 2699,
+      "y": 4517,
       "props": {
         "w": 169,
         "h": 38,
@@ -1452,10 +1967,10 @@
       }
     },
     {
-      "id": "s_secchs_28",
+      "id": "s_secchs_32",
       "type": "text",
       "x": 76,
-      "y": 2755,
+      "y": 4747,
       "props": {
         "w": 304,
         "h": 18,
@@ -1467,10 +1982,10 @@
       }
     },
     {
-      "id": "s_secchs_29",
+      "id": "s_secchs_33",
       "type": "math",
       "x": 396,
-      "y": 2752,
+      "y": 4744,
       "props": {
         "w": 208,
         "h": 21,
@@ -1485,10 +2000,10 @@
       }
     },
     {
-      "id": "s_secchs_2a",
+      "id": "s_secchs_34",
       "type": "text",
       "x": 76,
-      "y": 2785,
+      "y": 4777,
       "props": {
         "w": 304,
         "h": 18,
@@ -1500,10 +2015,10 @@
       }
     },
     {
-      "id": "s_secchs_2b",
+      "id": "s_secchs_35",
       "type": "math",
       "x": 396,
-      "y": 2779,
+      "y": 4771,
       "props": {
         "w": 271,
         "h": 29,
@@ -1518,10 +2033,10 @@
       }
     },
     {
-      "id": "s_secchs_2c",
+      "id": "s_secchs_36",
       "type": "text",
       "x": 76,
-      "y": 2837,
+      "y": 4829,
       "props": {
         "w": 304,
         "h": 18,
@@ -1533,10 +2048,10 @@
       }
     },
     {
-      "id": "s_secchs_2d",
+      "id": "s_secchs_37",
       "type": "math",
       "x": 396,
-      "y": 2814,
+      "y": 4806,
       "props": {
         "w": 213,
         "h": 79,
@@ -1551,10 +2066,10 @@
       }
     },
     {
-      "id": "s_secchs_2e",
+      "id": "s_secchs_38",
       "type": "text",
       "x": 76,
-      "y": 2909,
+      "y": 4901,
       "props": {
         "w": 304,
         "h": 18,
@@ -1566,10 +2081,10 @@
       }
     },
     {
-      "id": "s_secchs_2f",
+      "id": "s_secchs_39",
       "type": "math",
       "x": 396,
-      "y": 2899,
+      "y": 4891,
       "props": {
         "w": 258,
         "h": 37,
@@ -1584,10 +2099,10 @@
       }
     },
     {
-      "id": "s_secchs_2g",
+      "id": "s_secchs_3a",
       "type": "text",
       "x": 76,
-      "y": 2969,
+      "y": 4961,
       "props": {
         "w": 304,
         "h": 18,
@@ -1599,10 +2114,10 @@
       }
     },
     {
-      "id": "s_secchs_2h",
+      "id": "s_secchs_3b",
       "type": "math",
       "x": 396,
-      "y": 2942,
+      "y": 4934,
       "props": {
         "w": 170,
         "h": 33,
@@ -1617,10 +2132,10 @@
       }
     },
     {
-      "id": "s_secchs_2i",
+      "id": "s_secchs_3c",
       "type": "text",
       "x": 76,
-      "y": 2996,
+      "y": 4988,
       "props": {
         "w": 304,
         "h": 18,
@@ -1632,10 +2147,10 @@
       }
     },
     {
-      "id": "s_secchs_2j",
+      "id": "s_secchs_3d",
       "type": "math",
       "x": 396,
-      "y": 2993,
+      "y": 4985,
       "props": {
         "w": 210,
         "h": 21,
@@ -1650,10 +2165,10 @@
       }
     },
     {
-      "id": "s_secchs_2k",
+      "id": "s_secchs_3e",
       "type": "text",
       "x": 76,
-      "y": 3026,
+      "y": 5018,
       "props": {
         "w": 630,
         "h": 24,
@@ -1666,10 +2181,10 @@
       }
     },
     {
-      "id": "s_secchs_2l",
+      "id": "s_secchs_3f",
       "type": "text",
       "x": 76,
-      "y": 3059,
+      "y": 5051,
       "props": {
         "w": 304,
         "h": 18,
@@ -1681,10 +2196,10 @@
       }
     },
     {
-      "id": "s_secchs_2m",
+      "id": "s_secchs_3g",
       "type": "math",
       "x": 396,
-      "y": 3056,
+      "y": 5048,
       "props": {
         "w": 235,
         "h": 22,
@@ -1699,10 +2214,10 @@
       }
     },
     {
-      "id": "s_secchs_2n",
+      "id": "s_secchs_3h",
       "type": "text",
       "x": 76,
-      "y": 3094,
+      "y": 5086,
       "props": {
         "w": 304,
         "h": 18,
@@ -1714,10 +2229,10 @@
       }
     },
     {
-      "id": "s_secchs_2o",
+      "id": "s_secchs_3i",
       "type": "math",
       "x": 396,
-      "y": 3084,
+      "y": 5076,
       "props": {
         "w": 144,
         "h": 36,
@@ -1732,10 +2247,10 @@
       }
     },
     {
-      "id": "s_secchs_2p",
+      "id": "s_secchs_3j",
       "type": "text",
       "x": 76,
-      "y": 3132,
+      "y": 5124,
       "props": {
         "w": 630,
         "h": 21,
@@ -1748,10 +2263,10 @@
       }
     },
     {
-      "id": "s_secchs_2q",
+      "id": "s_secchs_3k",
       "type": "text",
       "x": 76,
-      "y": 3169,
+      "y": 5161,
       "props": {
         "w": 304,
         "h": 18,
@@ -1763,10 +2278,10 @@
       }
     },
     {
-      "id": "s_secchs_2r",
+      "id": "s_secchs_3l",
       "type": "math",
       "x": 396,
-      "y": 3159,
+      "y": 5151,
       "props": {
         "w": 272,
         "h": 37,
@@ -1781,10 +2296,10 @@
       }
     },
     {
-      "id": "s_secchs_2s",
+      "id": "s_secchs_3m",
       "type": "text",
       "x": 76,
-      "y": 3202,
+      "y": 5194,
       "props": {
         "w": 630,
         "h": 18,
@@ -1796,10 +2311,10 @@
       }
     },
     {
-      "id": "s_secchs_2t",
+      "id": "s_secchs_3n",
       "type": "math",
       "x": 96,
-      "y": 3226,
+      "y": 5218,
       "props": {
         "w": 345,
         "h": 29,
@@ -1814,10 +2329,10 @@
       }
     },
     {
-      "id": "s_secchs_2u",
+      "id": "s_secchs_3o",
       "type": "text",
       "x": 76,
-      "y": 3261,
+      "y": 5253,
       "props": {
         "w": 630,
         "h": 19,
@@ -1829,10 +2344,10 @@
       }
     },
     {
-      "id": "s_secchs_2v",
+      "id": "s_secchs_3p",
       "type": "text",
       "x": 76,
-      "y": 3329,
+      "y": 5321,
       "props": {
         "w": 304,
         "h": 18,
@@ -1844,10 +2359,10 @@
       }
     },
     {
-      "id": "s_secchs_2w",
+      "id": "s_secchs_3q",
       "type": "math",
       "x": 396,
-      "y": 3286,
+      "y": 5278,
       "props": {
         "w": 217,
         "h": 98,
@@ -1862,10 +2377,10 @@
       }
     },
     {
-      "id": "s_secchs_2x",
+      "id": "s_secchs_3r",
       "type": "text",
       "x": 76,
-      "y": 3573,
+      "y": 5388,
       "props": {
         "w": 630,
         "h": 21,
@@ -1878,10 +2393,10 @@
       }
     },
     {
-      "id": "s_secchs_2y",
+      "id": "s_secchs_3s",
       "type": "text",
       "x": 76,
-      "y": 3629,
+      "y": 5444,
       "props": {
         "w": 304,
         "h": 18,
@@ -1893,10 +2408,10 @@
       }
     },
     {
-      "id": "s_secchs_2z",
+      "id": "s_secchs_3t",
       "type": "math",
       "x": 396,
-      "y": 3600,
+      "y": 5415,
       "props": {
         "w": 286,
         "h": 38,
@@ -1911,10 +2426,10 @@
       }
     },
     {
-      "id": "s_secchs_30",
+      "id": "s_secchs_3u",
       "type": "text",
       "x": 76,
-      "y": 3659,
+      "y": 5474,
       "props": {
         "w": 630,
         "h": 21,
@@ -1927,10 +2442,10 @@
       }
     },
     {
-      "id": "s_secchs_31",
+      "id": "s_secchs_3v",
       "type": "text",
       "x": 76,
-      "y": 3729,
+      "y": 5544,
       "props": {
         "w": 304,
         "h": 18,
@@ -1942,10 +2457,10 @@
       }
     },
     {
-      "id": "s_secchs_32",
+      "id": "s_secchs_3w",
       "type": "math",
       "x": 396,
-      "y": 3686,
+      "y": 5501,
       "props": {
         "w": 227,
         "h": 79,
@@ -1960,10 +2475,10 @@
       }
     },
     {
-      "id": "s_secchs_33",
+      "id": "s_secchs_3x",
       "type": "text",
       "x": 76,
-      "y": 3774,
+      "y": 5589,
       "props": {
         "w": 304,
         "h": 18,
@@ -1975,10 +2490,10 @@
       }
     },
     {
-      "id": "s_secchs_34",
+      "id": "s_secchs_3y",
       "type": "math",
       "x": 396,
-      "y": 3771,
+      "y": 5586,
       "props": {
         "w": 213,
         "h": 21,
@@ -1993,14 +2508,14 @@
       }
     },
     {
-      "id": "s_secchs_35",
+      "id": "s_secchs_3z",
       "type": "text",
       "x": 76,
-      "y": 3804,
+      "y": 5619,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "7. SUMMARY",
+        "html": "7. MEMBER: COMPRESSION (§6.3.1)",
         "fontFamily": "Roboto",
         "fontSize": 16,
         "color": "#0f172a",
@@ -2009,10 +2524,1338 @@
       }
     },
     {
-      "id": "s_secchs_36",
+      "id": "s_secchs_40",
       "type": "text",
       "x": 76,
-      "y": 3834,
+      "y": 5652,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Compression part of the axial force",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_41",
+      "type": "math",
+      "x": 396,
+      "y": 5649,
+      "props": {
+        "w": 249,
+        "h": 22,
+        "baseline": 16,
+        "latex": "N_{c.Ed}\\coloneq\\max\\left(N_{Ed},0\\,\\mathrm{kN}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_42",
+      "type": "text",
+      "x": 76,
+      "y": 5680,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Buckling lengths",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_43",
+      "type": "math",
+      "x": 396,
+      "y": 5677,
+      "props": {
+        "w": 130,
+        "h": 22,
+        "baseline": 16,
+        "latex": "L_{cr.y}\\coloneq k_{y}L_{y}",
+        "displayMode": "formulaResult",
+        "displayUnit": "m",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_44",
+      "type": "text",
+      "x": 76,
+      "y": 5708,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_45",
+      "type": "math",
+      "x": 396,
+      "y": 5705,
+      "props": {
+        "w": 129,
+        "h": 22,
+        "baseline": 16,
+        "latex": "L_{cr.z}\\coloneq k_{z}L_{z}",
+        "displayMode": "formulaResult",
+        "displayUnit": "m",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_46",
+      "type": "text",
+      "x": 76,
+      "y": 5958,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Imperfection factor, Table 6.2: hot-finished a (S460: a0), cold-formed c",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_47",
+      "type": "math",
+      "x": 396,
+      "y": 5915,
+      "props": {
+        "w": 283,
+        "h": 118,
+        "baseline": 16,
+        "latex": "\\alpha_{y}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{CF}\\ge1\\\\\\quad\\left\\Vert\\displaystyle 0.49\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ f_{y.nom}\\ge460\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle 0.13\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0.21\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_48",
+      "type": "text",
+      "x": 76,
+      "y": 6042,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_49",
+      "type": "math",
+      "x": 396,
+      "y": 6039,
+      "props": {
+        "w": 104,
+        "h": 22,
+        "baseline": 16,
+        "latex": "\\alpha_{z}\\coloneq\\alpha_{y}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_4a",
+      "type": "text",
+      "x": 76,
+      "y": 6070,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Steel grade within the range of these curves",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_4b",
+      "type": "math",
+      "x": 396,
+      "y": 6067,
+      "props": {
+        "w": 276,
+        "h": 22,
+        "baseline": 16,
+        "latex": "f_{y}\\le460\\,\\mathrm{MPa}",
+        "displayMode": "auto",
+        "displayUnit": "MPa",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_4c",
+      "type": "text",
+      "x": 76,
+      "y": 6101,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "Flexural buckling about y-y",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_secchs_4d",
+      "type": "text",
+      "x": 76,
+      "y": 6156,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Elastic critical force",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_4e",
+      "type": "math",
+      "x": 396,
+      "y": 6128,
+      "props": {
+        "w": 175,
+        "h": 38,
+        "baseline": 21,
+        "latex": "N_{cr.y}\\coloneq\\frac{\\pi^2EI}{L_{cr.y}^2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_4f",
+      "type": "text",
+      "x": 76,
+      "y": 6195,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Relative slenderness (6.50)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_4g",
+      "type": "math",
+      "x": 396,
+      "y": 6180,
+      "props": {
+        "w": 159,
+        "h": 48,
+        "baseline": 28,
+        "latex": "\\lambda_{y}\\coloneq\\sqrt{\\frac{Af_{y}}{N_{cr.y}}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_4h",
+      "type": "text",
+      "x": 76,
+      "y": 6237,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_4i",
+      "type": "math",
+      "x": 396,
+      "y": 6234,
+      "props": {
+        "w": 293,
+        "h": 22,
+        "baseline": 16,
+        "latex": "\\Phi_{y}\\coloneq0.5\\left(1+\\alpha_{y}\\left(\\lambda_{y}-0.2\\right)+\\lambda_{y}^2\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_4j",
+      "type": "text",
+      "x": 76,
+      "y": 6282,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Reduction factor (6.49)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_4k",
+      "type": "math",
+      "x": 396,
+      "y": 6262,
+      "props": {
+        "w": 286,
+        "h": 60,
+        "baseline": 33,
+        "latex": "\\chi_{y}\\coloneq\\min\\left(1,\\frac{1}{\\Phi_{y}+\\sqrt{\\Phi_{y}^2-\\lambda_{y}^2}}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_4l",
+      "type": "text",
+      "x": 76,
+      "y": 6337,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Buckling resistance (6.47)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_4m",
+      "type": "math",
+      "x": 396,
+      "y": 6328,
+      "props": {
+        "w": 195,
+        "h": 36,
+        "baseline": 22,
+        "latex": "N_{b.y.Rd}\\coloneq\\frac{\\chi_{y}Af_{y}}{\\gamma_{M1}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_4n",
+      "type": "text",
+      "x": 76,
+      "y": 6396,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Flexural buckling about y",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_4o",
+      "type": "math",
+      "x": 396,
+      "y": 6370,
+      "props": {
+        "w": 178,
+        "h": 35,
+        "baseline": 19,
+        "latex": "\\mathrm{UR}_{b.y}\\coloneq \\frac{N_{c.Ed}}{N_{b.y.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_4p",
+      "type": "text",
+      "x": 76,
+      "y": 6423,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.3.1.1 (6.46)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_4q",
+      "type": "math",
+      "x": 396,
+      "y": 6420,
+      "props": {
+        "w": 214,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{b.y}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_4r",
+      "type": "text",
+      "x": 76,
+      "y": 6453,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "Flexural buckling about z-z",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_secchs_4s",
+      "type": "text",
+      "x": 76,
+      "y": 6508,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Elastic critical force",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_4t",
+      "type": "math",
+      "x": 396,
+      "y": 6480,
+      "props": {
+        "w": 175,
+        "h": 36,
+        "baseline": 21,
+        "latex": "N_{cr.z}\\coloneq\\frac{\\pi^2EI}{L_{cr.z}^2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_4u",
+      "type": "text",
+      "x": 76,
+      "y": 6544,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Relative slenderness (6.50)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_4v",
+      "type": "math",
+      "x": 396,
+      "y": 6532,
+      "props": {
+        "w": 159,
+        "h": 39,
+        "baseline": 25,
+        "latex": "\\lambda_{z}\\coloneq\\sqrt{\\frac{Af_{y}}{N_{cr.z}}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_4w",
+      "type": "text",
+      "x": 76,
+      "y": 6580,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_4x",
+      "type": "math",
+      "x": 396,
+      "y": 6577,
+      "props": {
+        "w": 293,
+        "h": 22,
+        "baseline": 16,
+        "latex": "\\Phi_{z}\\coloneq0.5\\left(1+\\alpha_{z}\\left(\\lambda_{z}-0.2\\right)+\\lambda_{z}^2\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_4y",
+      "type": "text",
+      "x": 76,
+      "y": 6620,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Reduction factor (6.49)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_4z",
+      "type": "math",
+      "x": 396,
+      "y": 6605,
+      "props": {
+        "w": 282,
+        "h": 48,
+        "baseline": 28,
+        "latex": "\\chi_{z}\\coloneq\\min\\left(1,\\frac{1}{\\Phi_{z}+\\sqrt{\\Phi_{z}^2-\\lambda_{z}^2}}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_50",
+      "type": "text",
+      "x": 76,
+      "y": 6668,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Buckling resistance (6.47)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_51",
+      "type": "math",
+      "x": 396,
+      "y": 6659,
+      "props": {
+        "w": 195,
+        "h": 36,
+        "baseline": 22,
+        "latex": "N_{b.z.Rd}\\coloneq\\frac{\\chi_{z}Af_{y}}{\\gamma_{M1}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_52",
+      "type": "text",
+      "x": 76,
+      "y": 6728,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Flexural buckling about z",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_53",
+      "type": "math",
+      "x": 396,
+      "y": 6701,
+      "props": {
+        "w": 177,
+        "h": 33,
+        "baseline": 20,
+        "latex": "\\mathrm{UR}_{b.z}\\coloneq \\frac{N_{c.Ed}}{N_{b.z.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_54",
+      "type": "text",
+      "x": 76,
+      "y": 6755,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.3.1.1 (6.46)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_55",
+      "type": "math",
+      "x": 396,
+      "y": 6752,
+      "props": {
+        "w": 213,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{b.z}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_56",
+      "type": "text",
+      "x": 76,
+      "y": 6779,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Closed hollow sections: torsional buckling does not govern (not checked).",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_57",
+      "type": "text",
+      "x": 76,
+      "y": 6810,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "8. MEMBER: LATERAL-TORSIONAL BUCKLING (§6.3.2)",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_secchs_58",
+      "type": "text",
+      "x": 76,
+      "y": 6840,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Circular hollow section: not susceptible to lateral-torsional buckling.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_59",
+      "type": "text",
+      "x": 76,
+      "y": 6868,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Reduction factor",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_5a",
+      "type": "math",
+      "x": 396,
+      "y": 6865,
+      "props": {
+        "w": 55,
+        "h": 22,
+        "baseline": 16,
+        "latex": "\\chi_{LT}\\coloneq1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_5b",
+      "type": "text",
+      "x": 76,
+      "y": 7095,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Bending resistances with γM1 (same about both axes)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_5c",
+      "type": "math",
+      "x": 396,
+      "y": 7086,
+      "props": {
+        "w": 214,
+        "h": 36,
+        "baseline": 22,
+        "latex": "M_{y.Rk1}\\coloneq\\frac{Wf_{y}}{\\gamma_{M1}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_5d",
+      "type": "text",
+      "x": 76,
+      "y": 7131,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_5e",
+      "type": "math",
+      "x": 396,
+      "y": 7128,
+      "props": {
+        "w": 221,
+        "h": 22,
+        "baseline": 16,
+        "latex": "M_{z.Rk1}\\coloneq M_{y.Rk1}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_5f",
+      "type": "text",
+      "x": 76,
+      "y": 7159,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Buckling resistance moment (6.55)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_5g",
+      "type": "math",
+      "x": 396,
+      "y": 7156,
+      "props": {
+        "w": 241,
+        "h": 22,
+        "baseline": 16,
+        "latex": "M_{b.Rd}\\coloneq\\chi_{LT}M_{y.Rk1}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_5h",
+      "type": "text",
+      "x": 76,
+      "y": 7194,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Lateral-torsional buckling",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_5i",
+      "type": "math",
+      "x": 396,
+      "y": 7184,
+      "props": {
+        "w": 183,
+        "h": 36,
+        "baseline": 23,
+        "latex": "\\mathrm{UR}_{LT}\\coloneq \\frac{\\left|M_{y.Ed}\\right|}{M_{b.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_5j",
+      "type": "text",
+      "x": 76,
+      "y": 7229,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.3.2.1 (6.54)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_5k",
+      "type": "math",
+      "x": 396,
+      "y": 7226,
+      "props": {
+        "w": 213,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{LT}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_5l",
+      "type": "text",
+      "x": 76,
+      "y": 7259,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "9. MEMBER: COMPRESSION AND BENDING (§6.3.3, Annex B)",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_secchs_5m",
+      "type": "text",
+      "x": 76,
+      "y": 7289,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Hollow sections: not susceptible to torsional deformations, Table B.1. Class 3: elastic columns.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_5n",
+      "type": "text",
+      "x": 76,
+      "y": 7340,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Axial ratios",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_5o",
+      "type": "math",
+      "x": 396,
+      "y": 7314,
+      "props": {
+        "w": 156,
+        "h": 35,
+        "baseline": 19,
+        "latex": "n_{y}\\coloneq\\frac{N_{c.Ed}}{N_{b.y.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_5p",
+      "type": "text",
+      "x": 76,
+      "y": 7391,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_5q",
+      "type": "math",
+      "x": 396,
+      "y": 7364,
+      "props": {
+        "w": 155,
+        "h": 33,
+        "baseline": 20,
+        "latex": "n_{z}\\coloneq\\frac{N_{c.Ed}}{N_{b.z.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_5r",
+      "type": "text",
+      "x": 76,
+      "y": 7415,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Table B.1",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_5s",
+      "type": "math",
+      "x": 96,
+      "y": 7439,
+      "props": {
+        "w": 358,
+        "h": 79,
+        "baseline": 16,
+        "latex": "k_{yy}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le2\\\\\\quad\\left\\Vert\\displaystyle C_{my}\\left(1+\\min\\left(\\lambda_{y}-0.2,0.8\\right)n_{y}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle C_{my}\\left(1+\\min\\left(0.6\\lambda_{y},0.6\\right)n_{y}\\right)\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_5t",
+      "type": "text",
+      "x": 76,
+      "y": 7524,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Table B.1",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_5u",
+      "type": "math",
+      "x": 96,
+      "y": 7548,
+      "props": {
+        "w": 357,
+        "h": 79,
+        "baseline": 16,
+        "latex": "k_{zz}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le2\\\\\\quad\\left\\Vert\\displaystyle C_{mz}\\left(1+\\min\\left(\\lambda_{z}-0.2,0.8\\right)n_{z}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle C_{mz}\\left(1+\\min\\left(0.6\\lambda_{z},0.6\\right)n_{z}\\right)\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_5v",
+      "type": "text",
+      "x": 76,
+      "y": 7676,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Table B.1",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_5w",
+      "type": "math",
+      "x": 396,
+      "y": 7633,
+      "props": {
+        "w": 208,
+        "h": 79,
+        "baseline": 16,
+        "latex": "k_{yz}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le2\\\\\\quad\\left\\Vert\\displaystyle 0.6k_{zz}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle k_{zz}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_5x",
+      "type": "text",
+      "x": 76,
+      "y": 7761,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Table B.1",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_5y",
+      "type": "math",
+      "x": 396,
+      "y": 7718,
+      "props": {
+        "w": 208,
+        "h": 79,
+        "baseline": 16,
+        "latex": "k_{zy}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le2\\\\\\quad\\left\\Vert\\displaystyle 0.6k_{yy}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0.8k_{yy}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_5z",
+      "type": "text",
+      "x": 76,
+      "y": 7803,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Interaction (6.61)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_60",
+      "type": "math",
+      "x": 96,
+      "y": 7827,
+      "props": {
+        "w": 336,
+        "h": 36,
+        "baseline": 23,
+        "latex": "\\mathrm{UR}_{6.61}\\coloneq n_{y}+k_{yy}\\frac{\\left|M_{y.Ed}\\right|}{M_{b.Rd}}+k_{yz}\\frac{\\left|M_{z.Ed}\\right|}{M_{z.Rk1}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_61",
+      "type": "text",
+      "x": 76,
+      "y": 7872,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.3.3 (6.61)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_62",
+      "type": "math",
+      "x": 396,
+      "y": 7869,
+      "props": {
+        "w": 204,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{6.61}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_63",
+      "type": "text",
+      "x": 76,
+      "y": 7896,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Interaction (6.62)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_64",
+      "type": "math",
+      "x": 96,
+      "y": 7920,
+      "props": {
+        "w": 343,
+        "h": 36,
+        "baseline": 23,
+        "latex": "\\mathrm{UR}_{6.62}\\coloneq n_{z}+k_{zy}\\frac{\\left|M_{y.Ed}\\right|}{M_{b.Rd}}+k_{zz}\\frac{\\left|M_{z.Ed}\\right|}{M_{z.Rk1}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_65",
+      "type": "text",
+      "x": 76,
+      "y": 7965,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.3.3 (6.62)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_66",
+      "type": "math",
+      "x": 396,
+      "y": 7962,
+      "props": {
+        "w": 218,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{6.62}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secchs_67",
+      "type": "text",
+      "x": 76,
+      "y": 7989,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Cm from Table B.3 for the moment diagram between braced points; ΔM = 0 for Class 1 to 3.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secchs_68",
+      "type": "text",
+      "x": 76,
+      "y": 8020,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "10. SUMMARY",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_secchs_69",
+      "type": "text",
+      "x": 76,
+      "y": 8050,
       "props": {
         "w": 630,
         "h": 19,
@@ -2024,31 +3867,31 @@
       }
     },
     {
-      "id": "s_secchs_37",
+      "id": "s_secchs_6a",
       "type": "text",
       "x": 76,
-      "y": 3859,
+      "y": 8257,
       "props": {
         "w": 630,
         "h": 18,
-        "html": "Governing utilisation",
+        "html": "Cross-section (§6.2)",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       },
-      "groupId": "s_secchs_group_37"
+      "groupId": "s_secchs_group_6a"
     },
     {
-      "id": "s_secchs_38",
+      "id": "s_secchs_6b",
       "type": "math",
       "x": 96,
-      "y": 3876,
+      "y": 8274,
       "props": {
-        "w": 321,
+        "w": 336,
         "h": 21,
         "baseline": 16,
-        "latex": "\\mathrm{UR}\\coloneq\\max\\left(\\mathrm{UR}_{V},\\mathrm{UR}_{N},\\mathrm{UR}_{M},\\mathrm{UR}_{sec}\\right)",
+        "latex": "\\mathrm{UR}_{6.2}\\coloneq\\max\\left(\\mathrm{UR}_{V},\\mathrm{UR}_{N},\\mathrm{UR}_{M},\\mathrm{UR}_{sec}\\right)",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": 3,
@@ -2056,31 +3899,101 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "groupId": "s_secchs_group_37"
+      "groupId": "s_secchs_group_6a"
     },
     {
-      "id": "s_secchs_39",
+      "id": "s_secchs_6c",
       "type": "text",
       "x": 76,
-      "y": 3919,
+      "y": 8317,
       "props": {
-        "w": 304,
+        "w": 630,
         "h": 18,
-        "html": "Cross-section resistance check",
+        "html": "Member (§6.3)",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       },
-      "groupId": "s_secchs_group_37"
+      "groupId": "s_secchs_group_6a"
     },
     {
-      "id": "s_secchs_3a",
+      "id": "s_secchs_6d",
+      "type": "math",
+      "x": 96,
+      "y": 8334,
+      "props": {
+        "w": 396,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{6.3}\\coloneq\\max\\left(\\mathrm{UR}_{b.y},\\mathrm{UR}_{b.z},\\mathrm{UR}_{LT},\\mathrm{UR}_{6.61},\\mathrm{UR}_{6.62}\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "groupId": "s_secchs_group_6a"
+    },
+    {
+      "id": "s_secchs_6e",
+      "type": "text",
+      "x": 76,
+      "y": 8377,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Governing utilisation",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "groupId": "s_secchs_group_6a"
+    },
+    {
+      "id": "s_secchs_6f",
       "type": "math",
       "x": 396,
-      "y": 3916,
+      "y": 8374,
       "props": {
-        "w": 189,
+        "w": 232,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}\\coloneq\\max\\left(\\mathrm{UR}_{6.2},\\mathrm{UR}_{6.3}\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "groupId": "s_secchs_group_6a"
+    },
+    {
+      "id": "s_secchs_6g",
+      "type": "text",
+      "x": 76,
+      "y": 8417,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Section and member check",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "groupId": "s_secchs_group_6a"
+    },
+    {
+      "id": "s_secchs_6h",
+      "type": "math",
+      "x": 396,
+      "y": 8414,
+      "props": {
+        "w": 155,
         "h": 21,
         "baseline": 16,
         "latex": "\\mathrm{UR}\\le1",
@@ -2091,13 +4004,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "groupId": "s_secchs_group_37"
+      "groupId": "s_secchs_group_6a"
     },
     {
-      "id": "s_secchs_3b",
+      "id": "s_secchs_6i",
       "type": "text",
       "x": 76,
-      "y": 3955,
+      "y": 8453,
       "props": {
         "w": 630,
         "h": 29,

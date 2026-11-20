@@ -227,20 +227,20 @@ export const TEMPLATES: WorksheetTemplate[] = [
   },
   {
     id: 'steel-section-i',
-    name: 'Steel cross-section – I/H (EN 1993-1-1 §6.2)',
-    description: 'Section design only: classification, shear, axial, bending and §6.2.9 plastic interaction (Class 1–2) or (6.42) elastic (Class 3), one load combination per run; Input & Results holds the combinations. Library or custom welded I/H.',
+    name: 'Steel beam-column, section + member – I/H (EN 1993-1-1)',
+    description: 'Classification, §6.2 section checks with §6.2.9 plastic (Class 1–2) or (6.42) elastic (Class 3) interaction, and §6.3 member checks: flexural, torsional and lateral-torsional buckling (SN003b Mcr, §6.3.2.3 Singapore/UK NA or §6.3.2.2), (6.61)/(6.62) Annex B. Input & Results holds the load combinations.',
     ...sectionI,
   },
   {
     id: 'steel-section-rhs',
-    name: 'Steel cross-section – RHS/SHS (EN 1993-1-1 §6.2)',
-    description: 'Section design of a hot-finished or cold-formed rectangular hollow section: properties from h, b, t with rounded corners, classification, shear, axial, bending, (6.39)–(6.41) interaction.',
+    name: 'Steel beam-column, section + member – RHS/SHS (EN 1993-1-1)',
+    description: 'Hot-finished or cold-formed RHS/SHS: properties from h, b, t with rounded corners, §6.2 checks with (6.39)–(6.41), §6.3 flexural and lateral-torsional buckling, Annex B interaction.',
     ...sectionRHS,
   },
   {
     id: 'steel-section-chs',
-    name: 'Steel cross-section – CHS (EN 1993-1-1 §6.2)',
-    description: 'Section design of a circular hollow section: properties from d, t, classification, resultant shear and bending, reduced plastic moment (SCI P363) or (6.42).',
+    name: 'Steel beam-column, section + member – CHS (EN 1993-1-1)',
+    description: 'Circular hollow section: properties from d, t, §6.2 checks with M_N (SCI P363) or (6.42), §6.3 flexural buckling and Annex B interaction.',
     ...sectionCHS,
   },
 ];

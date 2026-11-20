@@ -4,10 +4,12 @@ import { expect, test } from '@playwright/test';
 test('mSteelBeamColumn checks every combination, reads ETABS rows, finds the lightest section and hands the report over', async ({ page, context }) => {
   test.setTimeout(180_000);
   await page.goto('/steel/');
-  // default: UC 305x305x97 S355 (Class 3 flange), three combinations; ULS2 governs (6.42)
-  await expect(page.getByTestId('overall-ur')).toHaveText('1.171', { timeout: 30_000 });
-  await expect(page.getByTestId('ur-0')).toHaveText('0.991');
+  // default: UC 305x305x97 S355 (Class 3 flange), L = 4 m, three combinations; ULS2 governs by (6.62)
+  await expect(page.getByTestId('overall-ur')).toHaveText('1.381', { timeout: 30_000 });
+  await expect(page.getByTestId('ur-0')).toHaveText('1.234');
   await expect(page.getByTestId('section-drawing')).toBeVisible();
+  await expect(page.getByTestId('check-sec')).toHaveText('1.179');
+  await expect(page.getByTestId('check-6.62')).toHaveText('1.381');
   // ETABS frame forces: the last six numbers are P V2 V3 T M2 M3 (P tension positive)
   await page.getByTestId('paste-open').click();
   await page.getByTestId('paste-format').selectOption('etabs');
@@ -43,4 +45,30 @@ test('mSteelBeamColumn checks every combination, reads ETABS rows, finds the lig
   // the governing combination of the lightest UC (ULS1, the larger axial force) is written into the sheet
   expect(latex).toContain('M_{y.Ed}\\coloneq 150\\,\\mathrm{kN}\\cdot\\mathrm{m}');
   expect(latex).toContain('N_{Ed}\\coloneq 1800\\,\\mathrm{kN}');
+});
+
+test('mSteelBeamColumn verification examples: published values agree with the sheet and go into the report', async ({ page, context }) => {
+  test.setTimeout(120_000);
+  await page.goto('/steel/');
+  await expect(page.getByTestId('overall-ur')).not.toHaveText('–', { timeout: 30_000 });
+  for (const id of ['p364-10', 'p374-5', 'staad-chs']) {
+    await page.getByTestId('example').selectOption(id);
+    const rows = page.getByTestId('verification').locator('tbody tr');
+    await expect(rows.first()).toBeVisible();
+    await expect(page.getByTestId('verification').locator('td.fail')).toHaveCount(0);
+    expect(await page.getByTestId('verification').locator('td.pass').count()).toBe(await rows.count());
+  }
+  // a manual change leaves the example
+  await page.locator('input[data-input="N_Ed row 1"]').fill('100');
+  await page.locator('input[data-input="N_Ed row 1"]').blur();
+  await expect(page.getByTestId('verification')).toHaveCount(0);
+  await page.getByTestId('example').selectOption('p364-3');
+  await expect(page.getByTestId('check-LT')).toHaveText(/^0\.89/);
+  const [report] = await Promise.all([context.waitForEvent('page'), page.getByTestId('open-report').click()]);
+  await report.waitForFunction(() => !!(window as unknown as { __calccanvas?: unknown }).__calccanvas);
+  await report.evaluate(async () => { const c = (window as unknown as { __calccanvas: { loaded: Promise<void>; idle(): Promise<void> } }).__calccanvas; await c.loaded; await c.idle(); });
+  await expect(report.locator('[data-testid=math-region][data-status=error]')).toHaveCount(0);
+  const html = await report.evaluate(() => Object.values((window as unknown as { __calccanvas: { store: { getState(): { shapes: Record<string, { type: string; props: { html?: string } }> } } } }).__calccanvas.store.getState().shapes).flatMap((s) => (s.type === 'text' ? [s.props.html ?? ''] : [])).join('\n'));
+  expect(html).toContain('Verification: I/H bending + LTB');
+  expect(html).not.toContain('differs');
 });

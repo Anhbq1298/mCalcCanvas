@@ -38,10 +38,13 @@ function rolledI({h,b,tw,tf,r}) {
  for(const k of Object.keys(v))if(!['h','b','tw','tf','r'].includes(k))v[k]=round(v[k]);
  return v;
 }
+// BS 4-1 dimensions printed in published examples replace rounded source rows; new rows are appended (IDs stay).
+const fix=JSON.parse(fs.readFileSync(`${directory}/BS4-corrections.json`,'utf8'));
 for(const [n,family] of ['UB','UC'].entries()) {
  const source=JSON.parse(fs.readFileSync(`${directory}/${family}.source.json`,'utf8'));
- for(const [i,p] of source.profiles.entries())
-  records.push({id:3000+n*500+i,name:p.designation,family,standard:source.standard,manufacturing:'rolled',source:'structuralcodes (Apache-2.0) dimensions; geometry-derived properties',version:'0.7.3',values:rolledI(p.geometry)});
+ const profiles=[...source.profiles,...(fix.append[family]??[])].map(p=>fix.replace[p.designation]?{...p,geometry:fix.replace[p.designation],fixed:true}:fix.append[family]?.includes(p)?{...p,fixed:true}:p);
+ for(const [i,p] of profiles.entries())
+  records.push({id:3000+n*500+i,name:p.designation,family,standard:source.standard,manufacturing:'rolled',source:p.fixed?`BS 4-1 dimensions (${fix.source}); geometry-derived properties`:'structuralcodes (Apache-2.0) dimensions; geometry-derived properties',version:'0.7.3',values:rolledI(p.geometry)});
 }
 if(new Set(records.map(s=>s.id)).size!==records.length)throw new Error('Duplicate section IDs');
 fs.writeFileSync(`${directory}/catalogue.json`,JSON.stringify(records)+'\n');

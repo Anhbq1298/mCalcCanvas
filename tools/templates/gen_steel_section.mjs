@@ -5,11 +5,19 @@
 // Hollow-section properties: EN 10210-2 / EN 10219-2 geometry with rounded corners (Annex B style), checked
 // against the Tata Steel Blue Book (SCI P363) in src/tests/unit/steelSectionTemplates.test.ts.
 import { createLayout, R } from './layout.mjs';
+import { ltbCaseTable } from './ltbTable.mjs';
+import sectionFormulae from '../../src/engineering/steel/sectionFormulae.json' with { type: 'json' };
 
 const IF = (...branches) => {
   const rows = branches.map(([c, v], i) => (c === null ? R`\mathrm{else}` : `${i ? R`\mathrm{else}\ ` : ''}\\mathrm{if}\\ ${c}`) + R`\\\quad\left\Vert\displaystyle ${v}\right.`);
   return R`\begin{array}{||l}` + rows.join(R`\\`) + R`\end{array}`;
 };
+const curve = (symbol) => {
+  const { branches, otherwise } = sectionFormulae.curves[symbol];
+  return IF(...branches.map(({ condition, value }) => [condition, value]), [null, otherwise]);
+};
+const chiOf = (phi, lam) => R`\min\left(1,\frac{1}{${phi}+\sqrt{${phi}^2-${lam}^2}}\right)`;
+const phiOf = (lam, alpha) => R`0.5\left(1+${alpha}\left(${lam}-0.2\right)+${lam}^2\right)`;
 const aN = R`\left|N_{Ed}\right|`, aMy = R`\left|M_{y.Ed}\right|`, aMz = R`\left|M_{z.Ed}\right|`;
 const kNm0 = R`0\,\mathrm{kN}\cdot\mathrm{m}`;
 const p3 = { precision: 3 };
@@ -32,7 +40,7 @@ const NO_COMPRESSION = R`N_{Ed}\le0\,\mathrm{kN}\land M_{y.Ed}=${kNm0}\land M_{z
 
 function sheet(shape) {
   const L = createLayout({ idPrefix: `s_sec${shape.toLowerCase()}`, sizesFile: `sizes_section_${shape.toLowerCase()}.json`, textFont: 'Roboto', mathColumn: 396 });
-  const { gap, H, T, P, ROW, S, GRAPH, M, mm, kN, kNm, MPa, fr, KEEP, need, finish } = L;
+  const { gap, H, T, P, ROW, S, GRAPH, M, mm, kN, kNm, MPa, fr, KEEP, need, LINK, finish } = L;
   const U = {};
   const UR = (desc, name, latex, clause) => {
     U[name] = R`\mathrm{UR}_{${name}}\coloneq ${latex}`;
@@ -46,12 +54,14 @@ function sheet(shape) {
   const title = { I: 'I/H SECTION', RHS: 'RECTANGULAR HOLLOW SECTION', CHS: 'CIRCULAR HOLLOW SECTION' }[shape];
 
   // ================= 1. Basis =================
-  H(1, `STEEL CROSS-SECTION CHECK – ${title} (EC3)`);
+  H(1, `STEEL BEAM-COLUMN CHECK – ${title} (EC3)`);
   H(2, '1. DESIGN BASIS');
   T('EN 1993-1-1:2005 + A1:2014: classification §5.5 (Table 5.2) and cross-section resistance §6.2.');
-  T('Section design only: member buckling (§6.3) is not part of this sheet. Class 1 to 3.');
+  T('Members §6.3: flexural buckling, torsional buckling (I/H), lateral-torsional buckling (I/H, RHS) and');
+  T('interaction (6.61)/(6.62) with Annex B (Method 2). Uniform member, Class 1 to 3.');
   T('N positive in compression, negative in tension. Moments and shears in either sign; magnitudes are used.');
-  T('Not covered: Class 4, torsion, holes and net sections, shear buckling, fire, connections.');
+  T('Not covered: Class 4, torsion, holes and net sections, shear buckling, fire, connections. N < 0 (tension):');
+  T('no compression buckling; LTB and the interaction run with N = 0 (no tension credit).');
   if (I) T('Doubly symmetric rolled or welded I/H. z is the web direction, y the flange direction.');
   if (RHS) T('Hot-finished (EN 10210-2) or cold-formed (EN 10219-2) RHS/SHS; h along z, b along y.');
   if (CHS) T('Hot-finished or cold-formed CHS: bending and shear are combined as resultants.');
@@ -73,6 +83,7 @@ function sheet(shape) {
   if (CHS) {
     P('Outside diameter', R`d\coloneq219.1\,\mathrm{mm}`, M({ displayUnit: 'mm', precision: 1 }));
     P('Wall thickness', R`t\coloneq10\,\mathrm{mm}`, M({ displayUnit: 'mm', precision: 1 }));
+    P('Process: 0 = hot-finished EN 10210, 1 = cold-formed EN 10219', R`\mathrm{CF}\coloneq0`);
   }
   H(3, '2.3 Design actions (ULS, one load combination)');
   P('Axial force, compression positive', ACT.N, M(kN));
@@ -80,6 +91,30 @@ function sheet(shape) {
   P('Bending moment about z-z', ACT.Mz, M(kNm));
   P(I ? 'Shear force along z (web)' : 'Shear force along z', ACT.Vz, M(kN));
   P(I ? 'Shear force along y (flanges)' : 'Shear force along y', ACT.Vy, M(kN));
+  H(3, '2.4 Member (buckling, LTB, interaction)');
+  P('Elastic modulus', R`E\coloneq210\,\mathrm{GPa}`);
+  P('Shear modulus', R`G\coloneq81\,\mathrm{GPa}`);
+  P('Partial factor, member buckling (National Annex)', R`\gamma_{M1}\coloneq1.0`);
+  P('System length for buckling about y-y (major axis)', R`L_{y}\coloneq4\,\mathrm{m}`, M({ displayUnit: 'm', precision: 3 }));
+  P('Effective length factor about y-y', R`k_{y}\coloneq1.0`);
+  P('System length for buckling about z-z (minor axis)', R`L_{z}\coloneq4\,\mathrm{m}`, M({ displayUnit: 'm', precision: 3 }));
+  P('Effective length factor about z-z', R`k_{z}\coloneq1.0`);
+  if (!CHS) P('Length between lateral restraints of the compression flange (0 = fully restrained)', R`L_{LT}\coloneq4\,\mathrm{m}`, M({ displayUnit: 'm', precision: 3 }));
+  if (I) {
+    P('LTB moment case 1 to 13 (SN003b, Annex); 0 = use C1, C2 below', R`n_{LT}\coloneq1`);
+    P('User C1 (only when the case is 0)', R`C_{1.u}\coloneq1.0`);
+    P('User C2 (only when the case is 0)', R`C_{2.u}\coloneq0`);
+    P('Load height above the shear centre (destabilising positive)', R`z_{g}\coloneq0\,\mathrm{mm}`, M(mm));
+    P('LTB method: 1 = §6.3.2.3 with the Singapore / UK NA; 0 = §6.3.2.2, recommended', R`c_{NA}\coloneq1`);
+  }
+  if (RHS) {
+    P('Moment distribution factor C1 (SN003b; 1.0 for uniform moment)', R`C_{1}\coloneq1.0`);
+    P('LTB method: 1 = §6.3.2.3 with the Singapore / UK NA; 0 = §6.3.2.2, recommended', R`c_{NA}\coloneq1`);
+  }
+  P('Equivalent uniform moment factor Cmy (Table B.3)', R`C_{my}\coloneq1.0`);
+  P('Equivalent uniform moment factor Cmz (Table B.3)', R`C_{mz}\coloneq1.0`);
+  if (I) P('Equivalent uniform moment factor CmLT (Table B.3)', R`C_{mLT}\coloneq1.0`);
+  T('Conservative defaults Cm = 1.0 (no moment-gradient benefit); same factors for every combination.');
 
   // ================= 3. Section properties =================
   H(2, '3. SECTION PROPERTIES');
@@ -154,9 +189,14 @@ function sheet(shape) {
       ] });
     P('Thickest plate (yield strength)', R`t_{max}\coloneq t`, M({ displayUnit: 'mm', precision: 1 }));
   }
-  H(3, 'Yield strength (EN 1993-1-1 Table 3.1)');
-  P('Reduced for t > 40 mm: −20 MPa up to S355, −30 MPa above', R`f_{y}\coloneq${IF([R`t_{max}\le40\,\mathrm{mm}`, R`f_{y.nom}`], [R`f_{y.nom}\le355\,\mathrm{MPa}`, R`f_{y.nom}-20\,\mathrm{MPa}`], [null, R`f_{y.nom}-30\,\mathrm{MPa}`])}`, M(MPa));
-  P('Thickness within Table 3.1', R`t_{max}\le80\,\mathrm{mm}`, M({ displayUnit: 'mm', precision: 1 }));
+  H(3, 'Yield strength');
+  P('Basis: 1 = product standard (EN 10025-2/-4, EN 10210-1, EN 10219-1 thickness steps; Singapore / UK NA), 0 = EN 1993-1-1 Table 3.1', R`c_{fy}\coloneq1`);
+  const big = R`f_{y.nom}\ge420\,\mathrm{MPa}`, low = R`f_{y.nom}\le235\,\mathrm{MPa}`;
+  const step = (a, b, c) => IF([big, R`f_{y.nom}-${a}\,\mathrm{MPa}`], ...(c ? [[low, R`f_{y.nom}-${c}\,\mathrm{MPa}`]] : []), [null, R`f_{y.nom}-${b}\,\mathrm{MPa}`]);
+  P('Product standard: steps at 16, 40, 63, 80, 100 mm', R`f_{y.ps}\coloneq${IF([R`t_{max}\le16\,\mathrm{mm}`, R`f_{y.nom}`], [R`t_{max}\le40\,\mathrm{mm}`, step(20, 10)], [R`t_{max}\le63\,\mathrm{mm}`, step(30, 20)], [R`t_{max}\le80\,\mathrm{mm}`, step(50, 30, 20)], [null, step(60, 40, 20)])}`, M(MPa));
+  P('Table 3.1: −20 MPa above 40 mm up to S355, −30 MPa above', R`f_{y.31}\coloneq${IF([R`t_{max}\le40\,\mathrm{mm}`, R`f_{y.nom}`], [R`f_{y.nom}\le355\,\mathrm{MPa}`, R`f_{y.nom}-20\,\mathrm{MPa}`], [null, R`f_{y.nom}-30\,\mathrm{MPa}`])}`, M(MPa));
+  P('Yield strength used', R`f_{y}\coloneq${IF([R`c_{fy}\ge1`, R`f_{y.ps}`], [null, R`f_{y.31}`])}`, M(MPa));
+  P('Thickness within the steps', R`t_{max}\le100\,\mathrm{mm}`, M({ displayUnit: 'mm', precision: 1 }));
 
   // ================= 4. Classification =================
   H(2, '4. CLASSIFICATION (§5.5, Table 5.2)');
@@ -286,20 +326,137 @@ function sheet(shape) {
   H(3, '6.3 Combined check');
   UR('Class 1, 2: plastic; Class 3: elastic', 'sec', IF([R`\mathrm{Class}\le2`, R`\mathrm{UR}_{pl}`], [null, R`\mathrm{UR}_{el}`]), '§6.2.9 (6.31), (6.41), (6.42)');
 
-  // ================= 7. Summary =================
-  H(2, '7. SUMMARY');
+  // ================= 7. Flexural and torsional buckling =================
+  H(2, '7. MEMBER: COMPRESSION (§6.3.1)');
+  P('Compression part of the axial force', R`N_{c.Ed}\coloneq\max\left(N_{Ed},0\,\mathrm{kN}\right)`, M(kN, fr));
+  P('Buckling lengths', R`L_{cr.y}\coloneq k_{y}L_{y}`, M({ displayUnit: 'm', precision: 3 }, fr));
+  P('', R`L_{cr.z}\coloneq k_{z}L_{z}`, M({ displayUnit: 'm', precision: 3 }, fr));
+  const Iy = CHS ? 'I' : 'I_{y}', Iz = CHS ? 'I' : 'I_{z}';
+  if (I) {
+    P('Imperfection factor about y: Table 6.2, welded when Section = 0', R`\alpha_{y}\coloneq${curve(R`\alpha_{y}`)}`);
+    P('Imperfection factor about z', R`\alpha_{z}\coloneq${curve(R`\alpha_{z}`)}`);
+  } else {
+    P('Imperfection factor, Table 6.2: hot-finished a (S460: a0), cold-formed c', R`\alpha_{y}\coloneq${IF([R`\mathrm{CF}\ge1`, '0.49'], [R`f_{y.nom}\ge460\,\mathrm{MPa}`, '0.13'], [null, '0.21'])}`);
+    P('', R`\alpha_{z}\coloneq\alpha_{y}`);
+  }
+  P('Steel grade within the range of these curves', R`f_{y}\le460\,\mathrm{MPa}`, M(MPa));
+  for (const ax of ['y', 'z']) {
+    H(3, `Flexural buckling about ${ax}-${ax}`);
+    P('Elastic critical force', R`N_{cr.${ax}}\coloneq\frac{\pi^2E${ax === 'y' ? Iy : Iz}}{L_{cr.${ax}}^2}`, M(kN, fr));
+    P('Relative slenderness (6.50)', R`\lambda_{${ax}}\coloneq\sqrt{\frac{Af_{y}}{N_{cr.${ax}}}}`, M(p3, fr));
+    P('', R`\Phi_{${ax}}\coloneq${phiOf(R`\lambda_{${ax}}`, R`\alpha_{${ax}}`)}`, M(p3, fr));
+    P('Reduction factor (6.49)', R`\chi_{${ax}}\coloneq${chiOf(R`\Phi_{${ax}}`, R`\lambda_{${ax}}`)}`, M(p3, fr));
+    P('Buckling resistance (6.47)', R`N_{b.${ax}.Rd}\coloneq\frac{\chi_{${ax}}Af_{y}}{\gamma_{M1}}`, M(kN, fr));
+    UR(`Flexural buckling about ${ax}`, `b.${ax}`, R`\frac{N_{c.Ed}}{N_{b.${ax}.Rd}}`, '§6.3.1.1 (6.46)');
+  }
+  if (I) {
+    H(3, 'Torsional buckling (§6.3.1.4), length L_cr,T = L_cr,z');
+    P('Polar radius of gyration', R`i_{0}\coloneq\sqrt{\frac{I_{y}+I_{z}}{A}}`, M(mm, fr));
+    P('Elastic critical force', R`N_{cr.T}\coloneq\frac{1}{i_{0}^2}\left(GI_{t}+\frac{\pi^2EI_{w}}{L_{cr.z}^2}\right)`, M(kN, fr));
+    P('Relative slenderness (6.52)', R`\lambda_{T}\coloneq\sqrt{\frac{Af_{y}}{N_{cr.T}}}`, M(p3, fr));
+    P('Curve for z-z, §6.3.1.4(3)', R`\Phi_{T}\coloneq${phiOf(R`\lambda_{T}`, R`\alpha_{z}`)}`, M(p3, fr));
+    P('Reduction factor', R`\chi_{T}\coloneq${chiOf(R`\Phi_{T}`, R`\lambda_{T}`)}`, M(p3, fr));
+    P('Buckling resistance', R`N_{b.T.Rd}\coloneq\frac{\chi_{T}Af_{y}}{\gamma_{M1}}`, M(kN, fr));
+    UR('Torsional buckling', 'b.T', R`\frac{N_{c.Ed}}{N_{b.T.Rd}}`, '§6.3.1.1 (6.46)');
+  } else T('Closed hollow sections: torsional buckling does not govern (not checked).');
+
+  // ================= 8. LTB =================
+  H(2, '8. MEMBER: LATERAL-TORSIONAL BUCKLING (§6.3.2)');
+  if (I) {
+    T('Mcr: SCI NCCI SN003b eq. (1), fork supports, k = kw = 1. L_LT = 0: no LTB (χ_LT = 1).');
+    LINK('ltb', 'LTB moment cases – C1 and C2 (SN003b Tables 3.1 and 3.2)', () => ltbCaseTable(L));
+    P('Case valid: 0, or a whole number 1 to 13', R`\delta_{LT}\coloneq${IF([R`n_{LT}=0`, '1'], [R`n_{LT}=\mathrm{floor}\left(n_{LT}\right)\land n_{LT}\ge1\land n_{LT}\le13`, '1'], [null, '0'])}`);
+    P('', R`\delta_{LT}\ge1`);
+    P('Moment distribution factor', R`C_{1}\coloneq${IF([R`n_{LT}=0`, 'C_{1.u}'], [null, R`\mathrm{linterp}\left(n_{t},C_{1.t},n_{LT}\right)`])}`, M(p3));
+    P('Load height factor', R`C_{2}\coloneq${IF([R`n_{LT}=0`, 'C_{2.u}'], [null, R`\mathrm{linterp}\left(n_{t},C_{2.t},n_{LT}\right)`])}`, M(p3));
+    P('Euler force over L_LT', R`N_{cr.LT}\coloneq${IF([R`L_{LT}>0\,\mathrm{m}`, R`\frac{\pi^2EI_{z}}{L_{LT}^2}`], [null, R`0\,\mathrm{kN}`])}`, M(kN));
+    P('Elastic critical moment, SN003b (1)', R`M_{cr}\coloneq${IF([R`L_{LT}>0\,\mathrm{m}`, R`C_{1}N_{cr.LT}\left(\sqrt{\frac{I_{w}}{I_{z}}+\frac{GI_{t}}{N_{cr.LT}}+\left(C_{2}z_{g}\right)^2}-C_{2}z_{g}\right)`], [null, R`0\,\mathrm{kN}\cdot\mathrm{m}`])}`, M(kNm));
+    P('Relative slenderness (0 when restrained)', R`\lambda_{LT}\coloneq${IF([R`L_{LT}>0\,\mathrm{m}`, R`\sqrt{\frac{W_{y}f_{y}}{M_{cr}}}`], [null, '0'])}`, M(p3));
+    T('§6.3.2.3 (NA): rolled λ_LT,0 = 0.4, β = 0.75, curves h/b ≤ 2 b, ≤ 3.1 c, else d; welded (Section = 0)');
+    T('λ_LT,0 = 0.2, β = 1, h/b ≤ 2 c, else d; f with k_c = 1/√C1. §6.3.2.2: Table 6.4, λ_LT,0 = 0.2, β = 1.');
+    const NA = R`c_{NA}\ge1`;
+    P('Imperfection factor, §6.3.2.3 with the NA (Section = 0: welded)', R`\alpha_{LT.NA}\coloneq${IF([R`\mathrm{Section}=0\land\frac{h}{b}\le2`, '0.49'], [R`\mathrm{Section}=0`, '0.76'], [R`\frac{h}{b}\le2`, '0.34'], [R`\frac{h}{b}\le3.1`, '0.49'], [null, '0.76'])}`, M({ precision: 2 }));
+    P('Imperfection factor, §6.3.2.2, Table 6.4', R`\alpha_{LT.EN}\coloneq${curve(R`\alpha_{LT}`)}`, M({ precision: 2 }));
+    P('Used', R`\alpha_{LT}\coloneq${IF([NA, R`\alpha_{LT.NA}`], [null, R`\alpha_{LT.EN}`])}`, M({ precision: 2 }));
+    P('Plateau length', R`\lambda_{LT.0}\coloneq${IF([R`${NA}\land\mathrm{Section}>0`, '0.4'], [null, '0.2'])}`, M({ precision: 2 }));
+    P('Factor β', R`\beta_{LT}\coloneq${IF([R`${NA}\land\mathrm{Section}>0`, '0.75'], [null, '1'])}`, M({ precision: 2 }));
+    P('(6.56) / (6.57)', R`\Phi_{LT}\coloneq0.5\left(1+\alpha_{LT}\left(\lambda_{LT}-\lambda_{LT.0}\right)+\beta_{LT}\lambda_{LT}^2\right)`, M(p3, fr));
+    P('Reduction factor', R`\chi_{LT.0}\coloneq${IF([R`\lambda_{LT}\le\lambda_{LT.0}`, '1'], [null, R`\min\left(1,\frac{1}{\lambda_{LT}^2},\frac{1}{\Phi_{LT}+\sqrt{\Phi_{LT}^2-\beta_{LT}\lambda_{LT}^2}}\right)`])}`, M(p3));
+    P('Correction factor k_c = 1/√C1 (NA, rolled; else 1)', R`k_{c}\coloneq${IF([R`${NA}\land\mathrm{Section}>0`, R`\frac{1}{\sqrt{C_{1}}}`], [null, '1'])}`, M(p3));
+    P('(6.58)', R`f_{LT}\coloneq\min\left(1,1-0.5\left(1-k_{c}\right)\left(1-2\left(\lambda_{LT}-0.8\right)^2\right)\right)`, M(p3, fr));
+    P('Modified reduction factor', R`\chi_{LT}\coloneq${IF([R`\lambda_{LT}\le\lambda_{LT.0}`, '1'], [null, R`\min\left(1,\frac{1}{\lambda_{LT}^2},\frac{\chi_{LT.0}}{f_{LT}}\right)`])}`, M(p3));
+  } else if (RHS) {
+    T('Closed section: warping neglected, load at the shear centre. §6.3.2.3 with the Singapore / UK NA: λ_LT,0 = 0.4,');
+    T('β = 0.75, hot-finished h/b ≤ 2 b, ≤ 3.1 c, else d; cold-formed h/b ≤ 2 c, else d; f with k_c = 1/√C1.');
+    T('§6.3.2.2 (recommended): Table 6.4 other cross-sections, curve d, λ_LT,0 = 0.2, β = 1.');
+    P('Mid-line corner radius', R`r_{m}\coloneq\frac{r_{o}+r_{i}}{2}`, M(mm, fr));
+    P('Mid-line perimeter', R`p_{m}\coloneq2\left(h+b-2t\right)-2\left(4-\pi\right)r_{m}`, M(mm, fr));
+    P('Enclosed area', R`A_{h}\coloneq\left(h-t\right)\left(b-t\right)-\left(4-\pi\right)r_{m}^2`, M({ displayUnit: 'cm^2', precision: 1 }, fr));
+    P('Torsion constant (EN 10210-2 Annex B form)', R`I_{t}\coloneq\frac{t^3p_{m}}{3}+\frac{4tA_{h}^2}{p_{m}}`, M({ displayUnit: 'cm^4', precision: 0 }, fr));
+    P('Elastic critical moment', R`M_{cr}\coloneq${IF([R`L_{LT}>0\,\mathrm{m}`, R`\frac{C_{1}\pi}{L_{LT}}\sqrt{EI_{z}GI_{t}}`], [null, R`0\,\mathrm{kN}\cdot\mathrm{m}`])}`, M(kNm));
+    P('Relative slenderness (0 when restrained)', R`\lambda_{LT}\coloneq${IF([R`L_{LT}>0\,\mathrm{m}`, R`\sqrt{\frac{W_{y}f_{y}}{M_{cr}}}`], [null, '0'])}`, M(p3));
+    const NA = R`c_{NA}\ge1`;
+    P('Imperfection factor', R`\alpha_{LT}\coloneq${IF([R`${NA}\land\mathrm{CF}<1\land\frac{h}{b}\le2`, '0.34'], [R`${NA}\land\mathrm{CF}<1\land\frac{h}{b}\le3.1`, '0.49'], [R`${NA}\land\mathrm{CF}\ge1\land\frac{h}{b}\le2`, '0.49'], [null, '0.76'])}`, M({ precision: 2 }));
+    P('Plateau length', R`\lambda_{LT.0}\coloneq${IF([NA, '0.4'], [null, '0.2'])}`, M({ precision: 2 }));
+    P('Factor β', R`\beta_{LT}\coloneq${IF([NA, '0.75'], [null, '1'])}`, M({ precision: 2 }));
+    P('(6.56) / (6.57)', R`\Phi_{LT}\coloneq0.5\left(1+\alpha_{LT}\left(\lambda_{LT}-\lambda_{LT.0}\right)+\beta_{LT}\lambda_{LT}^2\right)`, M(p3, fr));
+    P('Reduction factor', R`\chi_{LT.0}\coloneq${IF([R`\lambda_{LT}\le\lambda_{LT.0}`, '1'], [null, R`\min\left(1,\frac{1}{\lambda_{LT}^2},\frac{1}{\Phi_{LT}+\sqrt{\Phi_{LT}^2-\beta_{LT}\lambda_{LT}^2}}\right)`])}`, M(p3));
+    P('Correction factor k_c = 1/√C1 (NA; else 1)', R`k_{c}\coloneq${IF([NA, R`\frac{1}{\sqrt{C_{1}}}`], [null, '1'])}`, M(p3));
+    P('(6.58)', R`f_{LT}\coloneq\min\left(1,1-0.5\left(1-k_{c}\right)\left(1-2\left(\lambda_{LT}-0.8\right)^2\right)\right)`, M(p3, fr));
+    P('Modified reduction factor', R`\chi_{LT}\coloneq${IF([R`\lambda_{LT}\le\lambda_{LT.0}`, '1'], [null, R`\min\left(1,\frac{1}{\lambda_{LT}^2},\frac{\chi_{LT.0}}{f_{LT}}\right)`])}`, M(p3));
+  } else {
+    T('Circular hollow section: not susceptible to lateral-torsional buckling.');
+    P('Reduction factor', R`\chi_{LT}\coloneq1`);
+  }
+  if (CHS) {
+    P('Bending resistances with γM1 (same about both axes)', R`M_{y.Rk1}\coloneq\frac{Wf_{y}}{\gamma_{M1}}`, M(kNm, fr));
+    P('', R`M_{z.Rk1}\coloneq M_{y.Rk1}`, M(kNm, fr));
+  } else {
+    P('Bending resistances with γM1', R`M_{y.Rk1}\coloneq\frac{W_{y}f_{y}}{\gamma_{M1}}`, M(kNm, fr));
+    P('', R`M_{z.Rk1}\coloneq\frac{W_{z}f_{y}}{\gamma_{M1}}`, M(kNm, fr));
+  }
+  P('Buckling resistance moment (6.55)', R`M_{b.Rd}\coloneq\chi_{LT}M_{y.Rk1}`, M(kNm, fr));
+  UR('Lateral-torsional buckling', 'LT', R`\frac{${aMy}}{M_{b.Rd}}`, '§6.3.2.1 (6.54)');
+
+  // ================= 9. Interaction =================
+  H(2, '9. MEMBER: COMPRESSION AND BENDING (§6.3.3, Annex B)');
+  T(I ? 'I/H: torsionally susceptible (Table B.2) when L_LT > 0, else Table B.1. Class 3: elastic columns.'
+    : 'Hollow sections: not susceptible to torsional deformations, Table B.1. Class 3: elastic columns.');
+  P('Axial ratios', R`n_{y}\coloneq\frac{N_{c.Ed}}{N_{b.y.Rd}}`, M(p3, fr));
+  P('', R`n_{z}\coloneq\frac{N_{c.Ed}}{N_{b.z.Rd}}`, M(p3, fr));
+  const PL = R`\mathrm{Class}\le2`;
+  P('Table B.1', R`k_{yy}\coloneq${IF([PL, R`C_{my}\left(1+\min\left(\lambda_{y}-0.2,0.8\right)n_{y}\right)`], [null, R`C_{my}\left(1+\min\left(0.6\lambda_{y},0.6\right)n_{y}\right)`])}`, M(p3));
+  P('Table B.1', R`k_{zz}\coloneq${IF([PL, I ? R`C_{mz}\left(1+\min\left(2\lambda_{z}-0.6,1.4\right)n_{z}\right)` : R`C_{mz}\left(1+\min\left(\lambda_{z}-0.2,0.8\right)n_{z}\right)`], [null, R`C_{mz}\left(1+\min\left(0.6\lambda_{z},0.6\right)n_{z}\right)`])}`, M(p3));
+  P('Table B.1', R`k_{yz}\coloneq${IF([PL, R`0.6k_{zz}`], [null, R`k_{zz}`])}`, M(p3));
+  const b1 = IF([PL, R`0.6k_{yy}`], [null, R`0.8k_{yy}`]);
+  if (I) {
+    const B2pl = IF([R`\lambda_{z}\ge0.4`, R`\max\left(1-\frac{0.1\lambda_{z}n_{z}}{C_{mLT}-0.25},1-\frac{0.1n_{z}}{C_{mLT}-0.25}\right)`], [null, R`\min\left(0.6+\lambda_{z},1-\frac{0.1\lambda_{z}n_{z}}{C_{mLT}-0.25}\right)`]);
+    P('Table B.2 (torsionally susceptible), Class 1, 2', R`k_{zy.pl}\coloneq${B2pl}`, M(p3));
+    P('Table B.2, Class 3', R`k_{zy.el}\coloneq\max\left(1-\frac{0.05\lambda_{z}n_{z}}{C_{mLT}-0.25},1-\frac{0.05n_{z}}{C_{mLT}-0.25}\right)`, M(p3, fr));
+    P('Factor used', R`k_{zy}\coloneq${IF([R`L_{LT}=0\,\mathrm{m}`, b1], [PL, R`k_{zy.pl}`], [null, R`k_{zy.el}`])}`, M(p3));
+  } else P('Table B.1', R`k_{zy}\coloneq${b1}`, M(p3));
+  UR('Interaction (6.61)', '6.61', R`n_{y}+k_{yy}\frac{${aMy}}{M_{b.Rd}}+k_{yz}\frac{${aMz}}{M_{z.Rk1}}`, '§6.3.3 (6.61)');
+  UR('Interaction (6.62)', '6.62', R`n_{z}+k_{zy}\frac{${aMy}}{M_{b.Rd}}+k_{zz}\frac{${aMz}}{M_{z.Rk1}}`, '§6.3.3 (6.62)');
+  T('Cm from Table B.3 for the moment diagram between braced points; ΔM = 0 for Class 1 to 3.');
+
+  // ================= 10. Summary =================
+  H(2, '10. SUMMARY');
   T('Results apply only within the stated assumptions and scope; applicability is not checked.');
-  const keys = CHS ? ['V', 'N', 'M', 'sec'] : ['V.z', 'V.y', 'N', 'M.y', 'M.z', 'sec'];
-  const GOV = R`\mathrm{UR}\coloneq\max\left(${keys.map((k) => R`\mathrm{UR}_{${k}}`).join(',')}\right)`;
-  need(6);
+  const keys = [...(CHS ? ['V', 'N', 'M', 'sec'] : ['V.z', 'V.y', 'N', 'M.y', 'M.z', 'sec']), 'b.y', 'b.z', ...(I ? ['b.T'] : []), 'LT', '6.61', '6.62'];
+  const GOV = R`\mathrm{UR}\coloneq\max\left(\mathrm{UR}_{6.2},\mathrm{UR}_{6.3}\right)`;
+  const mk = ['b.y', 'b.z', 'b.T', 'LT', '6.61', '6.62'];
+  const list = (ks) => ks.map((k) => R`\mathrm{UR}_{${k}}`).join(',');
+  need(8);
   KEEP(() => {
+    P('Cross-section (§6.2)', R`\mathrm{UR}_{6.2}\coloneq\max\left(${list(keys.filter((k) => !mk.includes(k)))}\right)`, M(p3));
+    P('Member (§6.3)', R`\mathrm{UR}_{6.3}\coloneq\max\left(${list(keys.filter((k) => mk.includes(k)))}\right)`, M(p3));
     P('Governing utilisation', GOV, M(p3));
-    P('Cross-section resistance check', R`\mathrm{UR}\le1`);
+    P('Section and member check', R`\mathrm{UR}\le1`);
   });
 
   const file = `Steel_Section_${shape}_EC3.mCCV`;
   finish({
-    id: `tpl-steel-section-${shape.toLowerCase()}`, title: `Steel Cross-Section Check – ${shape === 'I' ? 'I/H' : shape} (EN 1993-1-1)`, reference: `CALC-ST-S${shape[0]}`, file,
+    id: `tpl-steel-section-${shape.toLowerCase()}`, title: `Steel Beam-Column Check – ${shape === 'I' ? 'I/H' : shape} (EN 1993-1-1)`, reference: `CALC-ST-S${shape[0]}`, file,
     batch: {
       title: 'Load combinations',
       inputs: [['n', 'N_Ed', ACT.N], ['my', 'M_y,Ed', ACT.My], ['mz', 'M_z,Ed', ACT.Mz], ['vz', 'V_z,Ed', ACT.Vz], ['vy', 'V_y,Ed', ACT.Vy]],

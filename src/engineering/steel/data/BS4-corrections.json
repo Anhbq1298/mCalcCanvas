@@ -1,0 +1,11 @@
+{
+  "note": "BS 4-1:2005 dimensions printed in published worked examples, replacing rounded structuralcodes dimensions (h, b, r). New designations are appended after the source rows so existing IDs never change.",
+  "source": "SCI P364 (2013) Steel building design: worked examples - open sections, Examples 9, 10, 11",
+  "replace": {
+    "UC 305x305x97": { "h": 307.9, "b": 305.3, "tw": 9.9, "tf": 15.4, "r": 15.2 },
+    "UC 203x203x46": { "h": 203.2, "b": 203.6, "tw": 7.2, "tf": 11.0, "r": 10.2 }
+  },
+  "append": {
+    "UC": [{ "designation": "UC 356x368x129", "geometry": { "h": 355.6, "b": 368.6, "tw": 10.4, "tf": 17.5, "r": 15.2 } }]
+  }
+}

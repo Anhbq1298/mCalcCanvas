@@ -2,7 +2,7 @@
   "format": "calccanvas",
   "id": "tpl-steel-section-rhs",
   "version": 3,
-  "title": "Steel Cross-Section Check – RHS (EN 1993-1-1)",
+  "title": "Steel Beam-Column Check – RHS (EN 1993-1-1)",
   "metadata": {
     "project": "Project name",
     "calculationReference": "CALC-ST-SR",
@@ -20,76 +20,101 @@
     "baselineSnap": "minor",
     "snapToGrid": false,
     "optimizePrintLayout": true,
-    "pages": 8
+    "pages": 13
   },
   "inputResult": {
     "title": "Load combinations",
     "inputs": [
       {
         "id": "n",
-        "regionId": "s_secrhs_q",
+        "regionId": "s_secrhs_s",
         "label": "N_Ed"
       },
       {
         "id": "my",
-        "regionId": "s_secrhs_s",
+        "regionId": "s_secrhs_u",
         "label": "M_y,Ed"
       },
       {
         "id": "mz",
-        "regionId": "s_secrhs_u",
+        "regionId": "s_secrhs_w",
         "label": "M_z,Ed"
       },
       {
         "id": "vz",
-        "regionId": "s_secrhs_w",
+        "regionId": "s_secrhs_y",
         "label": "V_z,Ed"
       },
       {
         "id": "vy",
-        "regionId": "s_secrhs_y",
+        "regionId": "s_secrhs_10",
         "label": "V_y,Ed"
       }
     ],
     "outputs": [
       {
         "id": "cls",
-        "regionId": "s_secrhs_3n",
+        "regionId": "s_secrhs_4l",
         "label": "Class"
       },
       {
         "id": "ur_Vz",
-        "regionId": "s_secrhs_3x",
+        "regionId": "s_secrhs_4v",
         "label": "UR V.z"
       },
       {
         "id": "ur_Vy",
-        "regionId": "s_secrhs_41",
+        "regionId": "s_secrhs_4z",
         "label": "UR V.y"
       },
       {
         "id": "ur_N",
-        "regionId": "s_secrhs_4i",
+        "regionId": "s_secrhs_5g",
         "label": "UR N"
       },
       {
         "id": "ur_My",
-        "regionId": "s_secrhs_4u",
+        "regionId": "s_secrhs_5s",
         "label": "UR M.y"
       },
       {
         "id": "ur_Mz",
-        "regionId": "s_secrhs_4y",
+        "regionId": "s_secrhs_5w",
         "label": "UR M.z"
       },
       {
         "id": "ur_sec",
-        "regionId": "s_secrhs_5v",
+        "regionId": "s_secrhs_6t",
         "label": "UR sec"
       },
       {
+        "id": "ur_by",
+        "regionId": "s_secrhs_7l",
+        "label": "UR b.y"
+      },
+      {
+        "id": "ur_bz",
+        "regionId": "s_secrhs_80",
+        "label": "UR b.z"
+      },
+      {
+        "id": "ur_LT",
+        "regionId": "s_secrhs_97",
+        "label": "UR LT"
+      },
+      {
+        "id": "ur_661",
+        "regionId": "s_secrhs_9p",
+        "label": "UR 6.61"
+      },
+      {
+        "id": "ur_662",
+        "regionId": "s_secrhs_9t",
+        "label": "UR 6.62"
+      },
+      {
         "id": "ur",
-        "regionId": "s_secrhs_61",
+        "regionId": "s_secrhs_a4",
         "label": "UR"
       }
     ],
@@ -138,7 +163,7 @@
       "props": {
         "w": 630,
         "h": 29,
-        "html": "STEEL CROSS-SECTION CHECK – RECTANGULAR HOLLOW SECTION (EC3)",
+        "html": "STEEL BEAM-COLUMN CHECK – RECTANGULAR HOLLOW SECTION (EC3)",
         "fontFamily": "Roboto",
         "fontSize": 20,
         "color": "#1e3a5f",
@@ -185,7 +210,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "Section design only: member buckling (§6.3) is not part of this sheet. Class 1 to 3.",
+        "html": "Members §6.3: flexural buckling, torsional buckling (I/H), lateral-torsional buckling (I/H, RHS) and",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -200,7 +225,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "N positive in compression, negative in tension. Moments and shears in either sign; magnitudes are used.",
+        "html": "interaction (6.61)/(6.62) with Annex B (Method 2). Uniform member, Class 1 to 3.",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -215,7 +240,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "Not covered: Class 4, torsion, holes and net sections, shear buckling, fire, connections.",
+        "html": "N positive in compression, negative in tension. Moments and shears in either sign; magnitudes are used.",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -230,7 +255,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "Hot-finished (EN 10210-2) or cold-formed (EN 10219-2) RHS/SHS; h along z, b along y.",
+        "html": "Not covered: Class 4, torsion, holes and net sections, shear buckling, fire, connections. N &lt; 0 (tension):",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -241,7 +266,37 @@
       "id": "s_secrhs_7",
       "type": "text",
       "x": 76,
-      "y": 262,
+      "y": 256,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "no compression buckling; LTB and the interaction run with N = 0 (no tension credit).",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_8",
+      "type": "text",
+      "x": 76,
+      "y": 281,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Hot-finished (EN 10210-2) or cold-formed (EN 10219-2) RHS/SHS; h along z, b along y.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_9",
+      "type": "text",
+      "x": 76,
+      "y": 312,
       "props": {
         "w": 630,
         "h": 24,
@@ -254,10 +309,10 @@
       }
     },
     {
-      "id": "s_secrhs_8",
+      "id": "s_secrhs_a",
       "type": "text",
       "x": 76,
-      "y": 298,
+      "y": 348,
       "props": {
         "w": 630,
         "h": 21,
@@ -270,10 +325,10 @@
       }
     },
     {
-      "id": "s_secrhs_9",
+      "id": "s_secrhs_b",
       "type": "text",
       "x": 76,
-      "y": 328,
+      "y": 378,
       "props": {
         "w": 304,
         "h": 18,
@@ -285,10 +340,10 @@
       }
     },
     {
-      "id": "s_secrhs_a",
+      "id": "s_secrhs_c",
       "type": "math",
       "x": 396,
-      "y": 325,
+      "y": 375,
       "props": {
         "w": 131,
         "h": 22,
@@ -303,10 +358,10 @@
       }
     },
     {
-      "id": "s_secrhs_b",
+      "id": "s_secrhs_d",
       "type": "text",
       "x": 76,
-      "y": 356,
+      "y": 406,
       "props": {
         "w": 304,
         "h": 18,
@@ -318,10 +373,10 @@
       }
     },
     {
-      "id": "s_secrhs_c",
+      "id": "s_secrhs_e",
       "type": "math",
       "x": 396,
-      "y": 353,
+      "y": 403,
       "props": {
         "w": 68,
         "h": 22,
@@ -336,10 +391,10 @@
       }
     },
     {
-      "id": "s_secrhs_d",
+      "id": "s_secrhs_f",
       "type": "text",
       "x": 76,
-      "y": 384,
+      "y": 434,
       "props": {
         "w": 304,
         "h": 18,
@@ -351,10 +406,10 @@
       }
     },
     {
-      "id": "s_secrhs_e",
+      "id": "s_secrhs_g",
       "type": "math",
       "x": 396,
-      "y": 381,
+      "y": 431,
       "props": {
         "w": 49,
         "h": 22,
@@ -369,10 +424,10 @@
       }
     },
     {
-      "id": "s_secrhs_f",
+      "id": "s_secrhs_h",
       "type": "text",
       "x": 76,
-      "y": 415,
+      "y": 465,
       "props": {
         "w": 630,
         "h": 21,
@@ -385,10 +440,10 @@
       }
     },
     {
-      "id": "s_secrhs_g",
+      "id": "s_secrhs_i",
       "type": "text",
       "x": 76,
-      "y": 445,
+      "y": 495,
       "props": {
         "w": 304,
         "h": 18,
@@ -400,10 +455,10 @@
       }
     },
     {
-      "id": "s_secrhs_h",
+      "id": "s_secrhs_j",
       "type": "math",
       "x": 396,
-      "y": 442,
+      "y": 492,
       "props": {
         "w": 92,
         "h": 22,
@@ -418,10 +473,10 @@
       }
     },
     {
-      "id": "s_secrhs_i",
+      "id": "s_secrhs_k",
       "type": "text",
       "x": 76,
-      "y": 473,
+      "y": 523,
       "props": {
         "w": 304,
         "h": 18,
@@ -433,10 +488,10 @@
       }
     },
     {
-      "id": "s_secrhs_j",
+      "id": "s_secrhs_l",
       "type": "math",
       "x": 396,
-      "y": 470,
+      "y": 520,
       "props": {
         "w": 89,
         "h": 22,
@@ -451,10 +506,10 @@
       }
     },
     {
-      "id": "s_secrhs_k",
+      "id": "s_secrhs_m",
       "type": "text",
       "x": 76,
-      "y": 501,
+      "y": 551,
       "props": {
         "w": 304,
         "h": 18,
@@ -466,10 +521,10 @@
       }
     },
     {
-      "id": "s_secrhs_l",
+      "id": "s_secrhs_n",
       "type": "math",
       "x": 396,
-      "y": 498,
+      "y": 548,
       "props": {
         "w": 80,
         "h": 22,
@@ -484,10 +539,10 @@
       }
     },
     {
-      "id": "s_secrhs_m",
+      "id": "s_secrhs_o",
       "type": "text",
       "x": 76,
-      "y": 529,
+      "y": 579,
       "props": {
         "w": 304,
         "h": 18,
@@ -499,10 +554,10 @@
       }
     },
     {
-      "id": "s_secrhs_n",
+      "id": "s_secrhs_p",
       "type": "math",
       "x": 396,
-      "y": 526,
+      "y": 576,
       "props": {
         "w": 50,
         "h": 21,
@@ -517,10 +572,10 @@
       }
     },
     {
-      "id": "s_secrhs_o",
+      "id": "s_secrhs_q",
       "type": "text",
       "x": 76,
-      "y": 559,
+      "y": 609,
       "props": {
         "w": 630,
         "h": 21,
@@ -533,10 +588,10 @@
       }
     },
     {
-      "id": "s_secrhs_p",
+      "id": "s_secrhs_r",
       "type": "text",
       "x": 76,
-      "y": 589,
+      "y": 639,
       "props": {
         "w": 304,
         "h": 18,
@@ -548,10 +603,10 @@
       }
     },
     {
-      "id": "s_secrhs_q",
+      "id": "s_secrhs_s",
       "type": "math",
       "x": 396,
-      "y": 586,
+      "y": 636,
       "props": {
         "w": 106,
         "h": 22,
@@ -566,10 +621,10 @@
       }
     },
     {
-      "id": "s_secrhs_r",
+      "id": "s_secrhs_t",
       "type": "text",
       "x": 76,
-      "y": 617,
+      "y": 667,
       "props": {
         "w": 304,
         "h": 18,
@@ -581,10 +636,10 @@
       }
     },
     {
-      "id": "s_secrhs_s",
+      "id": "s_secrhs_u",
       "type": "math",
       "x": 396,
-      "y": 614,
+      "y": 664,
       "props": {
         "w": 135,
         "h": 22,
@@ -599,10 +654,10 @@
       }
     },
     {
-      "id": "s_secrhs_t",
+      "id": "s_secrhs_v",
       "type": "text",
       "x": 76,
-      "y": 645,
+      "y": 695,
       "props": {
         "w": 304,
         "h": 18,
@@ -614,10 +669,10 @@
       }
     },
     {
-      "id": "s_secrhs_u",
+      "id": "s_secrhs_w",
       "type": "math",
       "x": 396,
-      "y": 642,
+      "y": 692,
       "props": {
         "w": 135,
         "h": 22,
@@ -632,10 +687,10 @@
       }
     },
     {
-      "id": "s_secrhs_v",
+      "id": "s_secrhs_x",
       "type": "text",
       "x": 76,
-      "y": 673,
+      "y": 723,
       "props": {
         "w": 304,
         "h": 18,
@@ -647,10 +702,10 @@
       }
     },
     {
-      "id": "s_secrhs_w",
+      "id": "s_secrhs_y",
       "type": "math",
       "x": 396,
-      "y": 670,
+      "y": 720,
       "props": {
         "w": 114,
         "h": 22,
@@ -665,10 +720,10 @@
       }
     },
     {
-      "id": "s_secrhs_x",
+      "id": "s_secrhs_z",
       "type": "text",
       "x": 76,
-      "y": 701,
+      "y": 751,
       "props": {
         "w": 304,
         "h": 18,
@@ -680,10 +735,10 @@
       }
     },
     {
-      "id": "s_secrhs_y",
+      "id": "s_secrhs_10",
       "type": "math",
       "x": 396,
-      "y": 698,
+      "y": 748,
       "props": {
         "w": 106,
         "h": 22,
@@ -698,10 +753,437 @@
       }
     },
     {
-      "id": "s_secrhs_z",
+      "id": "s_secrhs_11",
       "type": "text",
       "x": 76,
-      "y": 732,
+      "y": 782,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "2.4 Member (buckling, LTB, interaction)",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_secrhs_12",
+      "type": "text",
+      "x": 76,
+      "y": 812,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Elastic modulus",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_13",
+      "type": "math",
+      "x": 396,
+      "y": 809,
+      "props": {
+        "w": 100,
+        "h": 22,
+        "baseline": 16,
+        "latex": "E\\coloneq210\\,\\mathrm{GPa}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_14",
+      "type": "text",
+      "x": 76,
+      "y": 840,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Shear modulus",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_15",
+      "type": "math",
+      "x": 396,
+      "y": 837,
+      "props": {
+        "w": 92,
+        "h": 22,
+        "baseline": 16,
+        "latex": "G\\coloneq81\\,\\mathrm{GPa}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_16",
+      "type": "text",
+      "x": 76,
+      "y": 868,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Partial factor, member buckling (National Annex)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_17",
+      "type": "math",
+      "x": 396,
+      "y": 865,
+      "props": {
+        "w": 68,
+        "h": 22,
+        "baseline": 16,
+        "latex": "\\gamma_{M1}\\coloneq1.0",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_18",
+      "type": "text",
+      "x": 76,
+      "y": 896,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "System length for buckling about y-y (major axis)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_19",
+      "type": "math",
+      "x": 396,
+      "y": 893,
+      "props": {
+        "w": 71,
+        "h": 22,
+        "baseline": 16,
+        "latex": "L_{y}\\coloneq4\\,\\mathrm{m}",
+        "displayMode": "auto",
+        "displayUnit": "m",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_1a",
+      "type": "text",
+      "x": 76,
+      "y": 924,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Effective length factor about y-y",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_1b",
+      "type": "math",
+      "x": 396,
+      "y": 921,
+      "props": {
+        "w": 56,
+        "h": 22,
+        "baseline": 16,
+        "latex": "k_{y}\\coloneq1.0",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_1c",
+      "type": "text",
+      "x": 76,
+      "y": 952,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "System length for buckling about z-z (minor axis)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_1d",
+      "type": "math",
+      "x": 396,
+      "y": 949,
+      "props": {
+        "w": 71,
+        "h": 22,
+        "baseline": 16,
+        "latex": "L_{z}\\coloneq4\\,\\mathrm{m}",
+        "displayMode": "auto",
+        "displayUnit": "m",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_1e",
+      "type": "text",
+      "x": 76,
+      "y": 980,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Effective length factor about z-z",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_1f",
+      "type": "math",
+      "x": 396,
+      "y": 977,
+      "props": {
+        "w": 56,
+        "h": 22,
+        "baseline": 16,
+        "latex": "k_{z}\\coloneq1.0",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_1g",
+      "type": "text",
+      "x": 76,
+      "y": 1008,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Length between lateral restraints of the compression flange (0 = fully restrained)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_1h",
+      "type": "math",
+      "x": 396,
+      "y": 1005,
+      "props": {
+        "w": 81,
+        "h": 22,
+        "baseline": 16,
+        "latex": "L_{LT}\\coloneq4\\,\\mathrm{m}",
+        "displayMode": "auto",
+        "displayUnit": "m",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_1i",
+      "type": "text",
+      "x": 76,
+      "y": 1036,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Moment distribution factor C1 (SN003b; 1.0 for uniform moment)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_1j",
+      "type": "math",
+      "x": 396,
+      "y": 1033,
+      "props": {
+        "w": 60,
+        "h": 22,
+        "baseline": 16,
+        "latex": "C_{1}\\coloneq1.0",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_1k",
+      "type": "text",
+      "x": 76,
+      "y": 1234,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "LTB method: 1 = §6.3.2.3 with the Singapore / UK NA; 0 = §6.3.2.2, recommended",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_1l",
+      "type": "math",
+      "x": 396,
+      "y": 1231,
+      "props": {
+        "w": 54,
+        "h": 22,
+        "baseline": 16,
+        "latex": "c_{NA}\\coloneq1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_1m",
+      "type": "text",
+      "x": 76,
+      "y": 1262,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Equivalent uniform moment factor Cmy (Table B.3)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_1n",
+      "type": "math",
+      "x": 396,
+      "y": 1259,
+      "props": {
+        "w": 70,
+        "h": 22,
+        "baseline": 16,
+        "latex": "C_{my}\\coloneq1.0",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_1o",
+      "type": "text",
+      "x": 76,
+      "y": 1290,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Equivalent uniform moment factor Cmz (Table B.3)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_1p",
+      "type": "math",
+      "x": 396,
+      "y": 1287,
+      "props": {
+        "w": 70,
+        "h": 22,
+        "baseline": 16,
+        "latex": "C_{mz}\\coloneq1.0",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_1q",
+      "type": "text",
+      "x": 76,
+      "y": 1315,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Conservative defaults Cm = 1.0 (no moment-gradient benefit); same factors for every combination.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_1r",
+      "type": "text",
+      "x": 76,
+      "y": 1346,
       "props": {
         "w": 630,
         "h": 24,
@@ -714,10 +1196,10 @@
       }
     },
     {
-      "id": "s_secrhs_10",
+      "id": "s_secrhs_1s",
       "type": "text",
       "x": 76,
-      "y": 768,
+      "y": 1382,
       "props": {
         "w": 630,
         "h": 21,
@@ -730,10 +1212,10 @@
       }
     },
     {
-      "id": "s_secrhs_11",
+      "id": "s_secrhs_1t",
       "type": "text",
       "x": 76,
-      "y": 795,
+      "y": 1409,
       "props": {
         "w": 630,
         "h": 19,
@@ -745,10 +1227,10 @@
       }
     },
     {
-      "id": "s_secrhs_12",
+      "id": "s_secrhs_1u",
       "type": "text",
       "x": 76,
-      "y": 903,
+      "y": 1517,
       "props": {
         "w": 304,
         "h": 18,
@@ -760,10 +1242,10 @@
       }
     },
     {
-      "id": "s_secrhs_13",
+      "id": "s_secrhs_1v",
       "type": "math",
       "x": 396,
-      "y": 820,
+      "y": 1434,
       "props": {
         "w": 246,
         "h": 156,
@@ -778,10 +1260,10 @@
       }
     },
     {
-      "id": "s_secrhs_14",
+      "id": "s_secrhs_1w",
       "type": "text",
       "x": 76,
-      "y": 1025,
+      "y": 1639,
       "props": {
         "w": 304,
         "h": 18,
@@ -793,10 +1275,10 @@
       }
     },
     {
-      "id": "s_secrhs_15",
+      "id": "s_secrhs_1x",
       "type": "math",
       "x": 396,
-      "y": 982,
+      "y": 1596,
       "props": {
         "w": 186,
         "h": 79,
@@ -811,10 +1293,10 @@
       }
     },
     {
-      "id": "s_secrhs_16",
+      "id": "s_secrhs_1y",
       "type": "text",
       "x": 76,
-      "y": 1231,
+      "y": 1681,
       "props": {
         "w": 630,
         "h": 18,
@@ -826,10 +1308,10 @@
       }
     },
     {
-      "id": "s_secrhs_17",
+      "id": "s_secrhs_1z",
       "type": "math",
       "x": 96,
-      "y": 1255,
+      "y": 1705,
       "props": {
         "w": 326,
         "h": 22,
@@ -844,10 +1326,10 @@
       }
     },
     {
-      "id": "s_secrhs_18",
+      "id": "s_secrhs_20",
       "type": "text",
       "x": 76,
-      "y": 1289,
+      "y": 1739,
       "props": {
         "w": 630,
         "h": 21,
@@ -860,10 +1342,10 @@
       }
     },
     {
-      "id": "s_secrhs_19",
+      "id": "s_secrhs_21",
       "type": "text",
       "x": 76,
-      "y": 1316,
+      "y": 1766,
       "props": {
         "w": 630,
         "h": 19,
@@ -875,10 +1357,10 @@
       }
     },
     {
-      "id": "s_secrhs_1a",
+      "id": "s_secrhs_22",
       "type": "text",
       "x": 76,
-      "y": 1364,
+      "y": 1814,
       "props": {
         "w": 304,
         "h": 18,
@@ -890,10 +1372,10 @@
       }
     },
     {
-      "id": "s_secrhs_1b",
+      "id": "s_secrhs_23",
       "type": "math",
       "x": 396,
-      "y": 1341,
+      "y": 1791,
       "props": {
         "w": 145,
         "h": 27,
@@ -908,10 +1390,10 @@
       }
     },
     {
-      "id": "s_secrhs_1c",
+      "id": "s_secrhs_24",
       "type": "text",
       "x": 76,
-      "y": 1404,
+      "y": 1854,
       "props": {
         "w": 304,
         "h": 18,
@@ -923,10 +1405,10 @@
       }
     },
     {
-      "id": "s_secrhs_1d",
+      "id": "s_secrhs_25",
       "type": "math",
       "x": 396,
-      "y": 1378,
+      "y": 1828,
       "props": {
         "w": 170,
         "h": 31,
@@ -941,10 +1423,10 @@
       }
     },
     {
-      "id": "s_secrhs_1e",
+      "id": "s_secrhs_26",
       "type": "text",
       "x": 76,
-      "y": 1424,
+      "y": 1874,
       "props": {
         "w": 304,
         "h": 18,
@@ -956,10 +1438,10 @@
       }
     },
     {
-      "id": "s_secrhs_1f",
+      "id": "s_secrhs_27",
       "type": "math",
       "x": 396,
-      "y": 1418,
+      "y": 1868,
       "props": {
         "w": 236,
         "h": 30,
@@ -974,10 +1456,10 @@
       }
     },
     {
-      "id": "s_secrhs_1g",
+      "id": "s_secrhs_28",
       "type": "text",
       "x": 76,
-      "y": 1457,
+      "y": 1907,
       "props": {
         "w": 304,
         "h": 18,
@@ -989,10 +1471,10 @@
       }
     },
     {
-      "id": "s_secrhs_1h",
+      "id": "s_secrhs_29",
       "type": "math",
       "x": 396,
-      "y": 1454,
+      "y": 1904,
       "props": {
         "w": 151,
         "h": 22,
@@ -1007,10 +1489,10 @@
       }
     },
     {
-      "id": "s_secrhs_1i",
+      "id": "s_secrhs_2a",
       "type": "text",
       "x": 76,
-      "y": 1485,
+      "y": 1935,
       "props": {
         "w": 304,
         "h": 18,
@@ -1022,10 +1504,10 @@
       }
     },
     {
-      "id": "s_secrhs_1j",
+      "id": "s_secrhs_2b",
       "type": "math",
       "x": 396,
-      "y": 1482,
+      "y": 1932,
       "props": {
         "w": 147,
         "h": 22,
@@ -1040,10 +1522,10 @@
       }
     },
     {
-      "id": "s_secrhs_1k",
+      "id": "s_secrhs_2c",
       "type": "text",
       "x": 76,
-      "y": 1513,
+      "y": 1963,
       "props": {
         "w": 304,
         "h": 18,
@@ -1055,10 +1537,10 @@
       }
     },
     {
-      "id": "s_secrhs_1l",
+      "id": "s_secrhs_2d",
       "type": "math",
       "x": 396,
-      "y": 1510,
+      "y": 1960,
       "props": {
         "w": 314,
         "h": 22,
@@ -1073,10 +1555,10 @@
       }
     },
     {
-      "id": "s_secrhs_1m",
+      "id": "s_secrhs_2e",
       "type": "text",
       "x": 76,
-      "y": 1538,
+      "y": 1988,
       "props": {
         "w": 630,
         "h": 18,
@@ -1088,10 +1570,10 @@
       }
     },
     {
-      "id": "s_secrhs_1n",
+      "id": "s_secrhs_2f",
       "type": "math",
       "x": 96,
-      "y": 1562,
+      "y": 2012,
       "props": {
         "w": 389,
         "h": 39,
@@ -1106,10 +1588,10 @@
       }
     },
     {
-      "id": "s_secrhs_1o",
+      "id": "s_secrhs_2g",
       "type": "text",
       "x": 76,
-      "y": 1607,
+      "y": 2057,
       "props": {
         "w": 630,
         "h": 18,
@@ -1121,10 +1603,10 @@
       }
     },
     {
-      "id": "s_secrhs_1p",
+      "id": "s_secrhs_2h",
       "type": "math",
       "x": 96,
-      "y": 1631,
+      "y": 2081,
       "props": {
         "w": 386,
         "h": 39,
@@ -1139,10 +1621,10 @@
       }
     },
     {
-      "id": "s_secrhs_1q",
+      "id": "s_secrhs_2i",
       "type": "text",
       "x": 76,
-      "y": 1679,
+      "y": 2129,
       "props": {
         "w": 304,
         "h": 18,
@@ -1154,10 +1636,10 @@
       }
     },
     {
-      "id": "s_secrhs_1r",
+      "id": "s_secrhs_2j",
       "type": "math",
       "x": 396,
-      "y": 1676,
+      "y": 2126,
       "props": {
         "w": 183,
         "h": 22,
@@ -1172,10 +1654,10 @@
       }
     },
     {
-      "id": "s_secrhs_1s",
+      "id": "s_secrhs_2k",
       "type": "text",
       "x": 76,
-      "y": 1704,
+      "y": 2154,
       "props": {
         "w": 630,
         "h": 18,
@@ -1187,10 +1669,10 @@
       }
     },
     {
-      "id": "s_secrhs_1t",
+      "id": "s_secrhs_2l",
       "type": "math",
       "x": 96,
-      "y": 1728,
+      "y": 2178,
       "props": {
         "w": 388,
         "h": 39,
@@ -1205,10 +1687,10 @@
       }
     },
     {
-      "id": "s_secrhs_1u",
+      "id": "s_secrhs_2m",
       "type": "text",
       "x": 76,
-      "y": 1773,
+      "y": 2402,
       "props": {
         "w": 630,
         "h": 18,
@@ -1220,10 +1702,10 @@
       }
     },
     {
-      "id": "s_secrhs_1v",
+      "id": "s_secrhs_2n",
       "type": "math",
       "x": 96,
-      "y": 1797,
+      "y": 2426,
       "props": {
         "w": 384,
         "h": 39,
@@ -1238,10 +1720,10 @@
       }
     },
     {
-      "id": "s_secrhs_1w",
+      "id": "s_secrhs_2o",
       "type": "text",
       "x": 76,
-      "y": 1845,
+      "y": 2474,
       "props": {
         "w": 304,
         "h": 18,
@@ -1253,10 +1735,10 @@
       }
     },
     {
-      "id": "s_secrhs_1x",
+      "id": "s_secrhs_2p",
       "type": "math",
       "x": 396,
-      "y": 1842,
+      "y": 2471,
       "props": {
         "w": 183,
         "h": 22,
@@ -1271,10 +1753,10 @@
       }
     },
     {
-      "id": "s_secrhs_1y",
+      "id": "s_secrhs_2q",
       "type": "text",
       "x": 76,
-      "y": 1879,
+      "y": 2508,
       "props": {
         "w": 304,
         "h": 18,
@@ -1286,10 +1768,10 @@
       }
     },
     {
-      "id": "s_secrhs_1z",
+      "id": "s_secrhs_2r",
       "type": "math",
       "x": 396,
-      "y": 1870,
+      "y": 2499,
       "props": {
         "w": 160,
         "h": 33,
@@ -1304,10 +1786,10 @@
       }
     },
     {
-      "id": "s_secrhs_20",
+      "id": "s_secrhs_2s",
       "type": "text",
       "x": 76,
-      "y": 1916,
+      "y": 2545,
       "props": {
         "w": 304,
         "h": 18,
@@ -1319,10 +1801,10 @@
       }
     },
     {
-      "id": "s_secrhs_21",
+      "id": "s_secrhs_2t",
       "type": "math",
       "x": 396,
-      "y": 1909,
+      "y": 2538,
       "props": {
         "w": 160,
         "h": 31,
@@ -1337,10 +1819,10 @@
       }
     },
     {
-      "id": "s_secrhs_22",
+      "id": "s_secrhs_2u",
       "type": "text",
       "x": 76,
-      "y": 1946,
+      "y": 2575,
       "props": {
         "w": 630,
         "h": 18,
@@ -1352,10 +1834,10 @@
       }
     },
     {
-      "id": "s_secrhs_23",
+      "id": "s_secrhs_2v",
       "type": "math",
       "x": 96,
-      "y": 1970,
+      "y": 2599,
       "props": {
         "w": 525,
         "h": 39,
@@ -1370,10 +1852,10 @@
       }
     },
     {
-      "id": "s_secrhs_24",
+      "id": "s_secrhs_2w",
       "type": "text",
       "x": 76,
-      "y": 2015,
+      "y": 2644,
       "props": {
         "w": 630,
         "h": 18,
@@ -1385,10 +1867,10 @@
       }
     },
     {
-      "id": "s_secrhs_25",
+      "id": "s_secrhs_2x",
       "type": "math",
       "x": 96,
-      "y": 2039,
+      "y": 2668,
       "props": {
         "w": 521,
         "h": 39,
@@ -1403,10 +1885,10 @@
       }
     },
     {
-      "id": "s_secrhs_26",
+      "id": "s_secrhs_2y",
       "type": "text",
       "x": 76,
-      "y": 2091,
+      "y": 2720,
       "props": {
         "w": 304,
         "h": 18,
@@ -1418,10 +1900,10 @@
       }
     },
     {
-      "id": "s_secrhs_27",
+      "id": "s_secrhs_2z",
       "type": "math",
       "x": 396,
-      "y": 2084,
+      "y": 2713,
       "props": {
         "w": 177,
         "h": 32,
@@ -1436,10 +1918,10 @@
       }
     },
     {
-      "id": "s_secrhs_28",
+      "id": "s_secrhs_30",
       "type": "text",
       "x": 76,
-      "y": 2129,
+      "y": 2758,
       "props": {
         "w": 304,
         "h": 18,
@@ -1451,10 +1933,10 @@
       }
     },
     {
-      "id": "s_secrhs_29",
+      "id": "s_secrhs_31",
       "type": "math",
       "x": 396,
-      "y": 2122,
+      "y": 2751,
       "props": {
         "w": 178,
         "h": 32,
@@ -1469,10 +1951,10 @@
       }
     },
     {
-      "id": "s_secrhs_2a",
+      "id": "s_secrhs_32",
       "type": "graph",
       "x": 277,
-      "y": 2402,
+      "y": 2789,
       "props": {
         "w": 240,
         "h": 240,
@@ -1513,10 +1995,10 @@
       }
     },
     {
-      "id": "s_secrhs_2b",
+      "id": "s_secrhs_33",
       "type": "text",
       "x": 76,
-      "y": 2651,
+      "y": 3038,
       "props": {
         "w": 304,
         "h": 18,
@@ -1528,10 +2010,10 @@
       }
     },
     {
-      "id": "s_secrhs_2c",
+      "id": "s_secrhs_34",
       "type": "math",
       "x": 396,
-      "y": 2648,
+      "y": 3035,
       "props": {
         "w": 121,
         "h": 22,
@@ -1546,14 +2028,14 @@
       }
     },
     {
-      "id": "s_secrhs_2d",
+      "id": "s_secrhs_35",
       "type": "text",
       "x": 76,
-      "y": 2682,
+      "y": 3069,
       "props": {
         "w": 630,
         "h": 21,
-        "html": "Yield strength (EN 1993-1-1 Table 3.1)",
+        "html": "Yield strength",
         "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
@@ -1562,14 +2044,14 @@
       }
     },
     {
-      "id": "s_secrhs_2e",
+      "id": "s_secrhs_36",
       "type": "text",
       "x": 76,
-      "y": 2752,
+      "y": 3099,
       "props": {
         "w": 304,
         "h": 18,
-        "html": "Reduced for t &gt; 40 mm: −20 MPa up to S355, −30 MPa above",
+        "html": "Basis: 1 = product standard (EN 10025-2/-4, EN 10210-1, EN 10219-1 thickness steps; Singapore / UK NA), 0 = EN 1993-1-1 Table 3.1",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -1577,15 +2059,48 @@
       }
     },
     {
-      "id": "s_secrhs_2f",
+      "id": "s_secrhs_37",
       "type": "math",
       "x": 396,
-      "y": 2709,
+      "y": 3096,
       "props": {
-        "w": 314,
-        "h": 118,
+        "w": 48,
+        "h": 22,
         "baseline": 16,
-        "latex": "f_{y}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ t_{max}\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ f_{y.nom}\\le355\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-20\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-30\\,\\mathrm{MPa}\\right.\\end{array}",
+        "latex": "c_{fy}\\coloneq1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_38",
+      "type": "text",
+      "x": 76,
+      "y": 3124,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Product standard: steps at 16, 40, 63, 80, 100 mm",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_39",
+      "type": "math",
+      "x": 96,
+      "y": 3573,
+      "props": {
+        "w": 376,
+        "h": 809,
+        "baseline": 16,
+        "latex": "f_{y.ps}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ t_{max}\\le16\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ t_{max}\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle \\begin{array}{||l}\\mathrm{if}\\ f_{y.nom}\\ge420\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-20\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-10\\,\\mathrm{MPa}\\right.\\end{array}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ t_{max}\\le63\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle \\begin{array}{||l}\\mathrm{if}\\ f_{y.nom}\\ge420\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-30\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-20\\,\\mathrm{MPa}\\right.\\end{array}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ t_{max}\\le80\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle \\begin{array}{||l}\\mathrm{if}\\ f_{y.nom}\\ge420\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-50\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ f_{y.nom}\\le235\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-20\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-30\\,\\mathrm{MPa}\\right.\\end{array}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\begin{array}{||l}\\mathrm{if}\\ f_{y.nom}\\ge420\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-60\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ f_{y.nom}\\le235\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-20\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-40\\,\\mathrm{MPa}\\right.\\end{array}\\right.\\end{array}",
         "displayMode": "auto",
         "displayUnit": "MPa",
         "precision": 1,
@@ -1595,14 +2110,14 @@
       }
     },
     {
-      "id": "s_secrhs_2g",
+      "id": "s_secrhs_3a",
       "type": "text",
       "x": 76,
-      "y": 2836,
+      "y": 4388,
       "props": {
-        "w": 304,
+        "w": 630,
         "h": 18,
-        "html": "Thickness within Table 3.1",
+        "html": "Table 3.1: −20 MPa above 40 mm up to S355, −30 MPa above",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
@@ -1610,15 +2125,81 @@
       }
     },
     {
-      "id": "s_secrhs_2h",
+      "id": "s_secrhs_3b",
+      "type": "math",
+      "x": 96,
+      "y": 4412,
+      "props": {
+        "w": 329,
+        "h": 118,
+        "baseline": 16,
+        "latex": "f_{y.31}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ t_{max}\\le40\\,\\mathrm{mm}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ f_{y.nom}\\le355\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-20\\,\\mathrm{MPa}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{y.nom}-30\\,\\mathrm{MPa}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "MPa",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_3c",
+      "type": "text",
+      "x": 76,
+      "y": 4787,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Yield strength used",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_3d",
       "type": "math",
       "x": 396,
-      "y": 2833,
+      "y": 4744,
       "props": {
-        "w": 258,
+        "w": 203,
+        "h": 79,
+        "baseline": 16,
+        "latex": "f_{y}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ c_{fy}\\ge1\\\\\\quad\\left\\Vert\\displaystyle f_{y.ps}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle f_{y.31}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "MPa",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_3e",
+      "type": "text",
+      "x": 76,
+      "y": 4832,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Thickness within the steps",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_3f",
+      "type": "math",
+      "x": 396,
+      "y": 4829,
+      "props": {
+        "w": 266,
         "h": 22,
         "baseline": 16,
-        "latex": "t_{max}\\le80\\,\\mathrm{mm}",
+        "latex": "t_{max}\\le100\\,\\mathrm{mm}",
         "displayMode": "auto",
         "displayUnit": "mm",
         "precision": 1,
@@ -1628,10 +2209,10 @@
       }
     },
     {
-      "id": "s_secrhs_2i",
+      "id": "s_secrhs_3g",
       "type": "text",
       "x": 76,
-      "y": 2867,
+      "y": 4863,
       "props": {
         "w": 630,
         "h": 24,
@@ -1644,10 +2225,10 @@
       }
     },
     {
-      "id": "s_secrhs_2j",
+      "id": "s_secrhs_3h",
       "type": "text",
       "x": 76,
-      "y": 2926,
+      "y": 4922,
       "props": {
         "w": 304,
         "h": 18,
@@ -1659,10 +2240,10 @@
       }
     },
     {
-      "id": "s_secrhs_2k",
+      "id": "s_secrhs_3i",
       "type": "math",
       "x": 396,
-      "y": 2897,
+      "y": 4893,
       "props": {
         "w": 185,
         "h": 39,
@@ -1677,10 +2258,10 @@
       }
     },
     {
-      "id": "s_secrhs_2l",
+      "id": "s_secrhs_3j",
       "type": "text",
       "x": 76,
-      "y": 2950,
+      "y": 4946,
       "props": {
         "w": 630,
         "h": 19,
@@ -1692,10 +2273,10 @@
       }
     },
     {
-      "id": "s_secrhs_2m",
+      "id": "s_secrhs_3k",
       "type": "text",
       "x": 76,
-      "y": 2975,
+      "y": 4971,
       "props": {
         "w": 630,
         "h": 19,
@@ -1707,10 +2288,10 @@
       }
     },
     {
-      "id": "s_secrhs_2n",
+      "id": "s_secrhs_3l",
       "type": "text",
       "x": 76,
-      "y": 3006,
+      "y": 5002,
       "props": {
         "w": 630,
         "h": 21,
@@ -1723,10 +2304,10 @@
       }
     },
     {
-      "id": "s_secrhs_2o",
+      "id": "s_secrhs_3m",
       "type": "text",
       "x": 76,
-      "y": 3036,
+      "y": 5032,
       "props": {
         "w": 304,
         "h": 18,
@@ -1738,10 +2319,10 @@
       }
     },
     {
-      "id": "s_secrhs_2p",
+      "id": "s_secrhs_3n",
       "type": "math",
       "x": 396,
-      "y": 3033,
+      "y": 5029,
       "props": {
         "w": 152,
         "h": 22,
@@ -1756,10 +2337,10 @@
       }
     },
     {
-      "id": "s_secrhs_2q",
+      "id": "s_secrhs_3o",
       "type": "text",
       "x": 76,
-      "y": 3061,
+      "y": 5057,
       "props": {
         "w": 630,
         "h": 18,
@@ -1771,10 +2352,10 @@
       }
     },
     {
-      "id": "s_secrhs_2r",
+      "id": "s_secrhs_3p",
       "type": "math",
       "x": 96,
-      "y": 3085,
+      "y": 5081,
       "props": {
         "w": 371,
         "h": 176,
@@ -1789,10 +2370,10 @@
       }
     },
     {
-      "id": "s_secrhs_2s",
+      "id": "s_secrhs_3q",
       "type": "text",
       "x": 76,
-      "y": 3267,
+      "y": 5263,
       "props": {
         "w": 630,
         "h": 18,
@@ -1804,10 +2385,10 @@
       }
     },
     {
-      "id": "s_secrhs_2t",
+      "id": "s_secrhs_3r",
       "type": "math",
       "x": 96,
-      "y": 3573,
+      "y": 5287,
       "props": {
         "w": 461,
         "h": 165,
@@ -1822,10 +2403,10 @@
       }
     },
     {
-      "id": "s_secrhs_2u",
+      "id": "s_secrhs_3s",
       "type": "text",
       "x": 76,
-      "y": 3807,
+      "y": 5521,
       "props": {
         "w": 304,
         "h": 18,
@@ -1837,10 +2418,10 @@
       }
     },
     {
-      "id": "s_secrhs_2v",
+      "id": "s_secrhs_3t",
       "type": "math",
       "x": 396,
-      "y": 3744,
+      "y": 5458,
       "props": {
         "w": 227,
         "h": 117,
@@ -1855,10 +2436,10 @@
       }
     },
     {
-      "id": "s_secrhs_2w",
+      "id": "s_secrhs_3u",
       "type": "text",
       "x": 76,
-      "y": 3930,
+      "y": 5644,
       "props": {
         "w": 304,
         "h": 18,
@@ -1870,10 +2451,10 @@
       }
     },
     {
-      "id": "s_secrhs_2x",
+      "id": "s_secrhs_3v",
       "type": "math",
       "x": 396,
-      "y": 3867,
+      "y": 5581,
       "props": {
         "w": 227,
         "h": 117,
@@ -1888,10 +2469,10 @@
       }
     },
     {
-      "id": "s_secrhs_2y",
+      "id": "s_secrhs_3w",
       "type": "text",
       "x": 76,
-      "y": 4033,
+      "y": 5958,
       "props": {
         "w": 304,
         "h": 18,
@@ -1903,10 +2484,10 @@
       }
     },
     {
-      "id": "s_secrhs_2z",
+      "id": "s_secrhs_3x",
       "type": "math",
       "x": 396,
-      "y": 3990,
+      "y": 5915,
       "props": {
         "w": 254,
         "h": 99,
@@ -1921,10 +2502,10 @@
       }
     },
     {
-      "id": "s_secrhs_30",
+      "id": "s_secrhs_3y",
       "type": "text",
       "x": 76,
-      "y": 4118,
+      "y": 6043,
       "props": {
         "w": 304,
         "h": 18,
@@ -1936,10 +2517,10 @@
       }
     },
     {
-      "id": "s_secrhs_31",
+      "id": "s_secrhs_3z",
       "type": "math",
       "x": 396,
-      "y": 4095,
+      "y": 6020,
       "props": {
         "w": 116,
         "h": 27,
@@ -1954,10 +2535,10 @@
       }
     },
     {
-      "id": "s_secrhs_32",
+      "id": "s_secrhs_40",
       "type": "text",
       "x": 76,
-      "y": 4225,
+      "y": 6150,
       "props": {
         "w": 304,
         "h": 18,
@@ -1969,10 +2550,10 @@
       }
     },
     {
-      "id": "s_secrhs_33",
+      "id": "s_secrhs_41",
       "type": "math",
       "x": 396,
-      "y": 4142,
+      "y": 6067,
       "props": {
         "w": 219,
         "h": 156,
@@ -1987,10 +2568,10 @@
       }
     },
     {
-      "id": "s_secrhs_34",
+      "id": "s_secrhs_42",
       "type": "text",
       "x": 76,
-      "y": 4310,
+      "y": 6235,
       "props": {
         "w": 630,
         "h": 21,
@@ -2003,10 +2584,10 @@
       }
     },
     {
-      "id": "s_secrhs_35",
+      "id": "s_secrhs_43",
       "type": "text",
       "x": 76,
-      "y": 4340,
+      "y": 6265,
       "props": {
         "w": 304,
         "h": 18,
@@ -2018,10 +2599,10 @@
       }
     },
     {
-      "id": "s_secrhs_36",
+      "id": "s_secrhs_44",
       "type": "math",
       "x": 396,
-      "y": 4337,
+      "y": 6262,
       "props": {
         "w": 148,
         "h": 22,
@@ -2036,10 +2617,10 @@
       }
     },
     {
-      "id": "s_secrhs_37",
+      "id": "s_secrhs_45",
       "type": "text",
       "x": 76,
-      "y": 4365,
+      "y": 6290,
       "props": {
         "w": 630,
         "h": 18,
@@ -2051,10 +2632,10 @@
       }
     },
     {
-      "id": "s_secrhs_38",
+      "id": "s_secrhs_46",
       "type": "math",
       "x": 96,
-      "y": 4389,
+      "y": 6314,
       "props": {
         "w": 368,
         "h": 176,
@@ -2069,10 +2650,10 @@
       }
     },
     {
-      "id": "s_secrhs_39",
+      "id": "s_secrhs_47",
       "type": "text",
       "x": 76,
-      "y": 4744,
+      "y": 6496,
       "props": {
         "w": 630,
         "h": 18,
@@ -2084,10 +2665,10 @@
       }
     },
     {
-      "id": "s_secrhs_3a",
+      "id": "s_secrhs_48",
       "type": "math",
       "x": 96,
-      "y": 4768,
+      "y": 6520,
       "props": {
         "w": 457,
         "h": 154,
@@ -2102,10 +2683,10 @@
       }
     },
     {
-      "id": "s_secrhs_3b",
+      "id": "s_secrhs_49",
       "type": "text",
       "x": 76,
-      "y": 4991,
+      "y": 6743,
       "props": {
         "w": 304,
         "h": 18,
@@ -2117,10 +2698,10 @@
       }
     },
     {
-      "id": "s_secrhs_3c",
+      "id": "s_secrhs_4a",
       "type": "math",
       "x": 396,
-      "y": 4928,
+      "y": 6680,
       "props": {
         "w": 224,
         "h": 117,
@@ -2135,10 +2716,10 @@
       }
     },
     {
-      "id": "s_secrhs_3d",
+      "id": "s_secrhs_4b",
       "type": "text",
       "x": 76,
-      "y": 5114,
+      "y": 7149,
       "props": {
         "w": 304,
         "h": 18,
@@ -2150,10 +2731,10 @@
       }
     },
     {
-      "id": "s_secrhs_3e",
+      "id": "s_secrhs_4c",
       "type": "math",
       "x": 396,
-      "y": 5051,
+      "y": 7086,
       "props": {
         "w": 224,
         "h": 117,
@@ -2168,10 +2749,10 @@
       }
     },
     {
-      "id": "s_secrhs_3f",
+      "id": "s_secrhs_4d",
       "type": "text",
       "x": 76,
-      "y": 5217,
+      "y": 7252,
       "props": {
         "w": 304,
         "h": 18,
@@ -2183,10 +2764,10 @@
       }
     },
     {
-      "id": "s_secrhs_3g",
+      "id": "s_secrhs_4e",
       "type": "math",
       "x": 396,
-      "y": 5174,
+      "y": 7209,
       "props": {
         "w": 250,
         "h": 99,
@@ -2201,10 +2782,10 @@
       }
     },
     {
-      "id": "s_secrhs_3h",
+      "id": "s_secrhs_4f",
       "type": "text",
       "x": 76,
-      "y": 5302,
+      "y": 7337,
       "props": {
         "w": 304,
         "h": 18,
@@ -2216,10 +2797,10 @@
       }
     },
     {
-      "id": "s_secrhs_3i",
+      "id": "s_secrhs_4g",
       "type": "math",
       "x": 396,
-      "y": 5279,
+      "y": 7314,
       "props": {
         "w": 113,
         "h": 27,
@@ -2234,10 +2815,10 @@
       }
     },
     {
-      "id": "s_secrhs_3j",
+      "id": "s_secrhs_4h",
       "type": "text",
       "x": 76,
-      "y": 5409,
+      "y": 7444,
       "props": {
         "w": 304,
         "h": 18,
@@ -2249,10 +2830,10 @@
       }
     },
     {
-      "id": "s_secrhs_3k",
+      "id": "s_secrhs_4i",
       "type": "math",
       "x": 396,
-      "y": 5326,
+      "y": 7361,
       "props": {
         "w": 214,
         "h": 156,
@@ -2267,10 +2848,10 @@
       }
     },
     {
-      "id": "s_secrhs_3l",
+      "id": "s_secrhs_4j",
       "type": "text",
       "x": 76,
-      "y": 5494,
+      "y": 7529,
       "props": {
         "w": 630,
         "h": 21,
@@ -2283,10 +2864,10 @@
       }
     },
     {
-      "id": "s_secrhs_3m",
+      "id": "s_secrhs_4k",
       "type": "text",
       "x": 76,
-      "y": 5524,
+      "y": 7559,
       "props": {
         "w": 304,
         "h": 18,
@@ -2298,10 +2879,10 @@
       }
     },
     {
-      "id": "s_secrhs_3n",
+      "id": "s_secrhs_4l",
       "type": "math",
       "x": 396,
-      "y": 5521,
+      "y": 7556,
       "props": {
         "w": 224,
         "h": 21,
@@ -2316,10 +2897,10 @@
       }
     },
     {
-      "id": "s_secrhs_3o",
+      "id": "s_secrhs_4m",
       "type": "text",
       "x": 76,
-      "y": 5551,
+      "y": 7586,
       "props": {
         "w": 304,
         "h": 18,
@@ -2331,10 +2912,10 @@
       }
     },
     {
-      "id": "s_secrhs_3p",
+      "id": "s_secrhs_4n",
       "type": "math",
       "x": 396,
-      "y": 5548,
+      "y": 7583,
       "props": {
         "w": 174,
         "h": 21,
@@ -2349,10 +2930,10 @@
       }
     },
     {
-      "id": "s_secrhs_3q",
+      "id": "s_secrhs_4o",
       "type": "text",
       "x": 76,
-      "y": 5581,
+      "y": 7616,
       "props": {
         "w": 630,
         "h": 24,
@@ -2365,10 +2946,10 @@
       }
     },
     {
-      "id": "s_secrhs_3r",
+      "id": "s_secrhs_4p",
       "type": "text",
       "x": 76,
-      "y": 5617,
+      "y": 7652,
       "props": {
         "w": 630,
         "h": 21,
@@ -2381,10 +2962,10 @@
       }
     },
     {
-      "id": "s_secrhs_3s",
+      "id": "s_secrhs_4q",
       "type": "text",
       "x": 76,
-      "y": 5673,
+      "y": 7708,
       "props": {
         "w": 304,
         "h": 18,
@@ -2396,10 +2977,10 @@
       }
     },
     {
-      "id": "s_secrhs_3t",
+      "id": "s_secrhs_4r",
       "type": "math",
       "x": 396,
-      "y": 5644,
+      "y": 7679,
       "props": {
         "w": 196,
         "h": 37,
@@ -2414,10 +2995,10 @@
       }
     },
     {
-      "id": "s_secrhs_3u",
+      "id": "s_secrhs_4s",
       "type": "text",
       "x": 76,
-      "y": 5726,
+      "y": 7761,
       "props": {
         "w": 304,
         "h": 18,
@@ -2429,10 +3010,10 @@
       }
     },
     {
-      "id": "s_secrhs_3v",
+      "id": "s_secrhs_4t",
       "type": "math",
       "x": 396,
-      "y": 5697,
+      "y": 7732,
       "props": {
         "w": 196,
         "h": 37,
@@ -2447,10 +3028,10 @@
       }
     },
     {
-      "id": "s_secrhs_3w",
+      "id": "s_secrhs_4u",
       "type": "text",
       "x": 76,
-      "y": 5944,
+      "y": 7814,
       "props": {
         "w": 304,
         "h": 18,
@@ -2462,10 +3043,10 @@
       }
     },
     {
-      "id": "s_secrhs_3x",
+      "id": "s_secrhs_4v",
       "type": "math",
       "x": 396,
-      "y": 5915,
+      "y": 7785,
       "props": {
         "w": 184,
         "h": 38,
@@ -2480,10 +3061,10 @@
       }
     },
     {
-      "id": "s_secrhs_3y",
+      "id": "s_secrhs_4w",
       "type": "text",
       "x": 76,
-      "y": 5971,
+      "y": 7841,
       "props": {
         "w": 304,
         "h": 18,
@@ -2495,10 +3076,10 @@
       }
     },
     {
-      "id": "s_secrhs_3z",
+      "id": "s_secrhs_4x",
       "type": "math",
       "x": 396,
-      "y": 5968,
+      "y": 7838,
       "props": {
         "w": 215,
         "h": 21,
@@ -2513,10 +3094,10 @@
       }
     },
     {
-      "id": "s_secrhs_40",
+      "id": "s_secrhs_4y",
       "type": "text",
       "x": 76,
-      "y": 6025,
+      "y": 7895,
       "props": {
         "w": 304,
         "h": 18,
@@ -2528,10 +3109,10 @@
       }
     },
     {
-      "id": "s_secrhs_41",
+      "id": "s_secrhs_4z",
       "type": "math",
       "x": 396,
-      "y": 5995,
+      "y": 7865,
       "props": {
         "w": 193,
         "h": 39,
@@ -2546,10 +3127,10 @@
       }
     },
     {
-      "id": "s_secrhs_42",
+      "id": "s_secrhs_50",
       "type": "text",
       "x": 76,
-      "y": 6052,
+      "y": 7922,
       "props": {
         "w": 304,
         "h": 18,
@@ -2561,10 +3142,10 @@
       }
     },
     {
-      "id": "s_secrhs_43",
+      "id": "s_secrhs_51",
       "type": "math",
       "x": 396,
-      "y": 6049,
+      "y": 7919,
       "props": {
         "w": 224,
         "h": 21,
@@ -2579,10 +3160,10 @@
       }
     },
     {
-      "id": "s_secrhs_44",
+      "id": "s_secrhs_52",
       "type": "text",
       "x": 76,
-      "y": 6086,
+      "y": 7956,
       "props": {
         "w": 304,
         "h": 18,
@@ -2594,10 +3175,10 @@
       }
     },
     {
-      "id": "s_secrhs_45",
+      "id": "s_secrhs_53",
       "type": "math",
       "x": 396,
-      "y": 6076,
+      "y": 7946,
       "props": {
         "w": 317,
         "h": 37,
@@ -2612,10 +3193,10 @@
       }
     },
     {
-      "id": "s_secrhs_46",
+      "id": "s_secrhs_54",
       "type": "text",
       "x": 76,
-      "y": 6162,
+      "y": 8032,
       "props": {
         "w": 304,
         "h": 18,
@@ -2627,10 +3208,10 @@
       }
     },
     {
-      "id": "s_secrhs_47",
+      "id": "s_secrhs_55",
       "type": "math",
       "x": 396,
-      "y": 6119,
+      "y": 7989,
       "props": {
         "w": 290,
         "h": 89,
@@ -2645,10 +3226,10 @@
       }
     },
     {
-      "id": "s_secrhs_48",
+      "id": "s_secrhs_56",
       "type": "text",
       "x": 76,
-      "y": 6257,
+      "y": 8300,
       "props": {
         "w": 304,
         "h": 18,
@@ -2660,10 +3241,10 @@
       }
     },
     {
-      "id": "s_secrhs_49",
+      "id": "s_secrhs_57",
       "type": "math",
       "x": 396,
-      "y": 6214,
+      "y": 8257,
       "props": {
         "w": 291,
         "h": 89,
@@ -2678,10 +3259,10 @@
       }
     },
     {
-      "id": "s_secrhs_4a",
+      "id": "s_secrhs_58",
       "type": "text",
       "x": 76,
-      "y": 6312,
+      "y": 8355,
       "props": {
         "w": 304,
         "h": 18,
@@ -2693,10 +3274,10 @@
       }
     },
     {
-      "id": "s_secrhs_4b",
+      "id": "s_secrhs_59",
       "type": "math",
       "x": 396,
-      "y": 6309,
+      "y": 8352,
       "props": {
         "w": 140,
         "h": 22,
@@ -2711,10 +3292,10 @@
       }
     },
     {
-      "id": "s_secrhs_4c",
+      "id": "s_secrhs_5a",
       "type": "text",
       "x": 76,
-      "y": 6337,
+      "y": 8380,
       "props": {
         "w": 630,
         "h": 19,
@@ -2726,10 +3307,10 @@
       }
     },
     {
-      "id": "s_secrhs_4d",
+      "id": "s_secrhs_5b",
       "type": "text",
       "x": 76,
-      "y": 6362,
+      "y": 8405,
       "props": {
         "w": 630,
         "h": 19,
@@ -2741,10 +3322,10 @@
       }
     },
     {
-      "id": "s_secrhs_4e",
+      "id": "s_secrhs_5c",
       "type": "text",
       "x": 76,
-      "y": 6393,
+      "y": 8436,
       "props": {
         "w": 630,
         "h": 21,
@@ -2757,10 +3338,10 @@
       }
     },
     {
-      "id": "s_secrhs_4f",
+      "id": "s_secrhs_5d",
       "type": "text",
       "x": 76,
-      "y": 6429,
+      "y": 8472,
       "props": {
         "w": 304,
         "h": 18,
@@ -2772,10 +3353,10 @@
       }
     },
     {
-      "id": "s_secrhs_4g",
+      "id": "s_secrhs_5e",
       "type": "math",
       "x": 396,
-      "y": 6420,
+      "y": 8463,
       "props": {
         "w": 174,
         "h": 36,
@@ -2790,10 +3371,10 @@
       }
     },
     {
-      "id": "s_secrhs_4h",
+      "id": "s_secrhs_5f",
       "type": "text",
       "x": 76,
-      "y": 6491,
+      "y": 8534,
       "props": {
         "w": 304,
         "h": 18,
@@ -2805,10 +3386,10 @@
       }
     },
     {
-      "id": "s_secrhs_4i",
+      "id": "s_secrhs_5g",
       "type": "math",
       "x": 396,
-      "y": 6462,
+      "y": 8505,
       "props": {
         "w": 169,
         "h": 38,
@@ -2823,10 +3404,10 @@
       }
     },
     {
-      "id": "s_secrhs_4j",
+      "id": "s_secrhs_5h",
       "type": "text",
       "x": 76,
-      "y": 6518,
+      "y": 8561,
       "props": {
         "w": 304,
         "h": 18,
@@ -2838,10 +3419,10 @@
       }
     },
     {
-      "id": "s_secrhs_4k",
+      "id": "s_secrhs_5i",
       "type": "math",
       "x": 396,
-      "y": 6515,
+      "y": 8558,
       "props": {
         "w": 208,
         "h": 21,
@@ -2856,10 +3437,10 @@
       }
     },
     {
-      "id": "s_secrhs_4l",
+      "id": "s_secrhs_5j",
       "type": "text",
       "x": 76,
-      "y": 6565,
+      "y": 8608,
       "props": {
         "w": 304,
         "h": 18,
@@ -2871,10 +3452,10 @@
       }
     },
     {
-      "id": "s_secrhs_4m",
+      "id": "s_secrhs_5k",
       "type": "math",
       "x": 396,
-      "y": 6542,
+      "y": 8585,
       "props": {
         "w": 220,
         "h": 79,
@@ -2889,10 +3470,10 @@
       }
     },
     {
-      "id": "s_secrhs_4n",
+      "id": "s_secrhs_5l",
       "type": "text",
       "x": 76,
-      "y": 6670,
+      "y": 8713,
       "props": {
         "w": 304,
         "h": 18,
@@ -2904,10 +3485,10 @@
       }
     },
     {
-      "id": "s_secrhs_4o",
+      "id": "s_secrhs_5m",
       "type": "math",
       "x": 396,
-      "y": 6627,
+      "y": 8670,
       "props": {
         "w": 220,
         "h": 79,
@@ -2922,10 +3503,10 @@
       }
     },
     {
-      "id": "s_secrhs_4p",
+      "id": "s_secrhs_5n",
       "type": "text",
       "x": 76,
-      "y": 6722,
+      "y": 8765,
       "props": {
         "w": 304,
         "h": 18,
@@ -2937,10 +3518,10 @@
       }
     },
     {
-      "id": "s_secrhs_4q",
+      "id": "s_secrhs_5o",
       "type": "math",
       "x": 396,
-      "y": 6712,
+      "y": 8755,
       "props": {
         "w": 274,
         "h": 37,
@@ -2955,10 +3536,10 @@
       }
     },
     {
-      "id": "s_secrhs_4r",
+      "id": "s_secrhs_5p",
       "type": "text",
       "x": 76,
-      "y": 6765,
+      "y": 8808,
       "props": {
         "w": 304,
         "h": 18,
@@ -2970,10 +3551,10 @@
       }
     },
     {
-      "id": "s_secrhs_4s",
+      "id": "s_secrhs_5q",
       "type": "math",
       "x": 396,
-      "y": 6755,
+      "y": 8798,
       "props": {
         "w": 273,
         "h": 37,
@@ -2988,10 +3569,10 @@
       }
     },
     {
-      "id": "s_secrhs_4t",
+      "id": "s_secrhs_5r",
       "type": "text",
       "x": 76,
-      "y": 6828,
+      "y": 8871,
       "props": {
         "w": 304,
         "h": 18,
@@ -3003,10 +3584,10 @@
       }
     },
     {
-      "id": "s_secrhs_4u",
+      "id": "s_secrhs_5s",
       "type": "math",
       "x": 396,
-      "y": 6798,
+      "y": 8841,
       "props": {
         "w": 189,
         "h": 39,
@@ -3021,10 +3602,10 @@
       }
     },
     {
-      "id": "s_secrhs_4v",
+      "id": "s_secrhs_5t",
       "type": "text",
       "x": 76,
-      "y": 6855,
+      "y": 8898,
       "props": {
         "w": 304,
         "h": 18,
@@ -3036,10 +3617,10 @@
       }
     },
     {
-      "id": "s_secrhs_4w",
+      "id": "s_secrhs_5u",
       "type": "math",
       "x": 396,
-      "y": 6852,
+      "y": 8895,
       "props": {
         "w": 218,
         "h": 21,
@@ -3054,10 +3635,10 @@
       }
     },
     {
-      "id": "s_secrhs_4x",
+      "id": "s_secrhs_5v",
       "type": "text",
       "x": 76,
-      "y": 6889,
+      "y": 8932,
       "props": {
         "w": 304,
         "h": 18,
@@ -3069,10 +3650,10 @@
       }
     },
     {
-      "id": "s_secrhs_4y",
+      "id": "s_secrhs_5w",
       "type": "math",
       "x": 396,
-      "y": 6879,
+      "y": 8922,
       "props": {
         "w": 197,
         "h": 36,
@@ -3087,10 +3668,10 @@
       }
     },
     {
-      "id": "s_secrhs_4z",
+      "id": "s_secrhs_5x",
       "type": "text",
       "x": 76,
-      "y": 7089,
+      "y": 8967,
       "props": {
         "w": 304,
         "h": 18,
@@ -3102,10 +3683,10 @@
       }
     },
     {
-      "id": "s_secrhs_50",
+      "id": "s_secrhs_5y",
       "type": "math",
       "x": 396,
-      "y": 7086,
+      "y": 8964,
       "props": {
         "w": 225,
         "h": 21,
@@ -3120,10 +3701,10 @@
       }
     },
     {
-      "id": "s_secrhs_51",
+      "id": "s_secrhs_5z",
       "type": "text",
       "x": 76,
-      "y": 7119,
+      "y": 8997,
       "props": {
         "w": 630,
         "h": 24,
@@ -3136,10 +3717,10 @@
       }
     },
     {
-      "id": "s_secrhs_52",
+      "id": "s_secrhs_60",
       "type": "text",
       "x": 76,
-      "y": 7152,
+      "y": 9030,
       "props": {
         "w": 304,
         "h": 18,
@@ -3151,10 +3732,10 @@
       }
     },
     {
-      "id": "s_secrhs_53",
+      "id": "s_secrhs_61",
       "type": "math",
       "x": 396,
-      "y": 7149,
+      "y": 9027,
       "props": {
         "w": 235,
         "h": 22,
@@ -3169,10 +3750,10 @@
       }
     },
     {
-      "id": "s_secrhs_54",
+      "id": "s_secrhs_62",
       "type": "text",
       "x": 76,
-      "y": 7187,
+      "y": 9065,
       "props": {
         "w": 304,
         "h": 18,
@@ -3184,10 +3765,10 @@
       }
     },
     {
-      "id": "s_secrhs_55",
+      "id": "s_secrhs_63",
       "type": "math",
       "x": 396,
-      "y": 7177,
+      "y": 9055,
       "props": {
         "w": 144,
         "h": 36,
@@ -3202,10 +3783,10 @@
       }
     },
     {
-      "id": "s_secrhs_56",
+      "id": "s_secrhs_64",
       "type": "text",
       "x": 76,
-      "y": 7225,
+      "y": 9103,
       "props": {
         "w": 630,
         "h": 21,
@@ -3218,10 +3799,10 @@
       }
     },
     {
-      "id": "s_secrhs_57",
+      "id": "s_secrhs_65",
       "type": "text",
       "x": 76,
-      "y": 7262,
+      "y": 9140,
       "props": {
         "w": 304,
         "h": 18,
@@ -3233,10 +3814,10 @@
       }
     },
     {
-      "id": "s_secrhs_58",
+      "id": "s_secrhs_66",
       "type": "math",
       "x": 396,
-      "y": 7252,
+      "y": 9130,
       "props": {
         "w": 290,
         "h": 37,
@@ -3251,10 +3832,10 @@
       }
     },
     {
-      "id": "s_secrhs_59",
+      "id": "s_secrhs_67",
       "type": "text",
       "x": 76,
-      "y": 7305,
+      "y": 9183,
       "props": {
         "w": 304,
         "h": 18,
@@ -3266,10 +3847,10 @@
       }
     },
     {
-      "id": "s_secrhs_5a",
+      "id": "s_secrhs_68",
       "type": "math",
       "x": 396,
-      "y": 7295,
+      "y": 9173,
       "props": {
         "w": 290,
         "h": 37,
@@ -3284,10 +3865,10 @@
       }
     },
     {
-      "id": "s_secrhs_5b",
+      "id": "s_secrhs_69",
       "type": "text",
       "x": 76,
-      "y": 7344,
+      "y": 9222,
       "props": {
         "w": 304,
         "h": 18,
@@ -3299,10 +3880,10 @@
       }
     },
     {
-      "id": "s_secrhs_5c",
+      "id": "s_secrhs_6a",
       "type": "math",
       "x": 396,
-      "y": 7338,
+      "y": 9216,
       "props": {
         "w": 239,
         "h": 30,
@@ -3317,10 +3898,10 @@
       }
     },
     {
-      "id": "s_secrhs_5d",
+      "id": "s_secrhs_6b",
       "type": "text",
       "x": 76,
-      "y": 7380,
+      "y": 9434,
       "props": {
         "w": 304,
         "h": 18,
@@ -3332,10 +3913,10 @@
       }
     },
     {
-      "id": "s_secrhs_5e",
+      "id": "s_secrhs_6c",
       "type": "math",
       "x": 396,
-      "y": 7374,
+      "y": 9428,
       "props": {
         "w": 239,
         "h": 30,
@@ -3350,10 +3931,10 @@
       }
     },
     {
-      "id": "s_secrhs_5f",
+      "id": "s_secrhs_6d",
       "type": "text",
       "x": 76,
-      "y": 7410,
+      "y": 9464,
       "props": {
         "w": 630,
         "h": 18,
@@ -3365,10 +3946,10 @@
       }
     },
     {
-      "id": "s_secrhs_5g",
+      "id": "s_secrhs_6e",
       "type": "math",
       "x": 96,
-      "y": 7434,
+      "y": 9488,
       "props": {
         "w": 447,
         "h": 39,
@@ -3383,10 +3964,10 @@
       }
     },
     {
-      "id": "s_secrhs_5h",
+      "id": "s_secrhs_6f",
       "type": "text",
       "x": 76,
-      "y": 7479,
+      "y": 9533,
       "props": {
         "w": 630,
         "h": 18,
@@ -3398,10 +3979,10 @@
       }
     },
     {
-      "id": "s_secrhs_5i",
+      "id": "s_secrhs_6g",
       "type": "math",
       "x": 96,
-      "y": 7503,
+      "y": 9557,
       "props": {
         "w": 447,
         "h": 39,
@@ -3416,10 +3997,10 @@
       }
     },
     {
-      "id": "s_secrhs_5j",
+      "id": "s_secrhs_6h",
       "type": "text",
       "x": 76,
-      "y": 7591,
+      "y": 9645,
       "props": {
         "w": 304,
         "h": 18,
@@ -3431,10 +4012,10 @@
       }
     },
     {
-      "id": "s_secrhs_5k",
+      "id": "s_secrhs_6i",
       "type": "math",
       "x": 396,
-      "y": 7548,
+      "y": 9602,
       "props": {
         "w": 277,
         "h": 99,
@@ -3449,10 +4030,10 @@
       }
     },
     {
-      "id": "s_secrhs_5l",
+      "id": "s_secrhs_6j",
       "type": "text",
       "x": 76,
-      "y": 7656,
+      "y": 9710,
       "props": {
         "w": 304,
         "h": 18,
@@ -3464,10 +4045,10 @@
       }
     },
     {
-      "id": "s_secrhs_5m",
+      "id": "s_secrhs_6k",
       "type": "math",
       "x": 396,
-      "y": 7653,
+      "y": 9707,
       "props": {
         "w": 98,
         "h": 22,
@@ -3482,10 +4063,10 @@
       }
     },
     {
-      "id": "s_secrhs_5n",
+      "id": "s_secrhs_6l",
       "type": "text",
       "x": 76,
-      "y": 7681,
+      "y": 9735,
       "props": {
         "w": 630,
         "h": 19,
@@ -3497,10 +4078,10 @@
       }
     },
     {
-      "id": "s_secrhs_5o",
+      "id": "s_secrhs_6m",
       "type": "text",
       "x": 76,
-      "y": 7706,
+      "y": 9760,
       "props": {
         "w": 630,
         "h": 18,
@@ -3512,10 +4093,10 @@
       }
     },
     {
-      "id": "s_secrhs_5p",
+      "id": "s_secrhs_6n",
       "type": "math",
       "x": 96,
-      "y": 7730,
+      "y": 9784,
       "props": {
         "w": 400,
         "h": 225,
@@ -3530,10 +4111,10 @@
       }
     },
     {
-      "id": "s_secrhs_5q",
+      "id": "s_secrhs_6o",
       "type": "text",
       "x": 76,
-      "y": 7967,
+      "y": 10021,
       "props": {
         "w": 630,
         "h": 21,
@@ -3546,10 +4127,10 @@
       }
     },
     {
-      "id": "s_secrhs_5r",
+      "id": "s_secrhs_6p",
       "type": "text",
       "x": 76,
-      "y": 7994,
+      "y": 10048,
       "props": {
         "w": 630,
         "h": 18,
@@ -3561,10 +4142,10 @@
       }
     },
     {
-      "id": "s_secrhs_5s",
+      "id": "s_secrhs_6q",
       "type": "math",
       "x": 96,
-      "y": 8018,
+      "y": 10072,
       "props": {
         "w": 422,
         "h": 39,
@@ -3579,10 +4160,10 @@
       }
     },
     {
-      "id": "s_secrhs_5t",
+      "id": "s_secrhs_6r",
       "type": "text",
       "x": 76,
-      "y": 8257,
+      "y": 10123,
       "props": {
         "w": 630,
         "h": 21,
@@ -3595,10 +4176,10 @@
       }
     },
     {
-      "id": "s_secrhs_5u",
+      "id": "s_secrhs_6s",
       "type": "text",
       "x": 76,
-      "y": 8327,
+      "y": 10193,
       "props": {
         "w": 304,
         "h": 18,
@@ -3610,10 +4191,10 @@
       }
     },
     {
-      "id": "s_secrhs_5v",
+      "id": "s_secrhs_6t",
       "type": "math",
       "x": 396,
-      "y": 8284,
+      "y": 10150,
       "props": {
         "w": 227,
         "h": 79,
@@ -3628,10 +4209,10 @@
       }
     },
     {
-      "id": "s_secrhs_5w",
+      "id": "s_secrhs_6u",
       "type": "text",
       "x": 76,
-      "y": 8372,
+      "y": 10238,
       "props": {
         "w": 304,
         "h": 18,
@@ -3643,10 +4224,10 @@
       }
     },
     {
-      "id": "s_secrhs_5x",
+      "id": "s_secrhs_6v",
       "type": "math",
       "x": 396,
-      "y": 8369,
+      "y": 10235,
       "props": {
         "w": 213,
         "h": 21,
@@ -3661,14 +4242,14 @@
       }
     },
     {
-      "id": "s_secrhs_5y",
+      "id": "s_secrhs_6w",
       "type": "text",
       "x": 76,
-      "y": 8402,
+      "y": 10268,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "7. SUMMARY",
+        "html": "7. MEMBER: COMPRESSION (§6.3.1)",
         "fontFamily": "Roboto",
         "fontSize": 16,
         "color": "#0f172a",
@@ -3677,10 +4258,1797 @@
       }
     },
     {
-      "id": "s_secrhs_5z",
+      "id": "s_secrhs_6x",
       "type": "text",
       "x": 76,
-      "y": 8432,
+      "y": 10301,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Compression part of the axial force",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_6y",
+      "type": "math",
+      "x": 396,
+      "y": 10298,
+      "props": {
+        "w": 249,
+        "h": 22,
+        "baseline": 16,
+        "latex": "N_{c.Ed}\\coloneq\\max\\left(N_{Ed},0\\,\\mathrm{kN}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_6z",
+      "type": "text",
+      "x": 76,
+      "y": 10329,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Buckling lengths",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_70",
+      "type": "math",
+      "x": 396,
+      "y": 10326,
+      "props": {
+        "w": 130,
+        "h": 22,
+        "baseline": 16,
+        "latex": "L_{cr.y}\\coloneq k_{y}L_{y}",
+        "displayMode": "formulaResult",
+        "displayUnit": "m",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_71",
+      "type": "text",
+      "x": 76,
+      "y": 10357,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_72",
+      "type": "math",
+      "x": 396,
+      "y": 10354,
+      "props": {
+        "w": 129,
+        "h": 22,
+        "baseline": 16,
+        "latex": "L_{cr.z}\\coloneq k_{z}L_{z}",
+        "displayMode": "formulaResult",
+        "displayUnit": "m",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_73",
+      "type": "text",
+      "x": 76,
+      "y": 10642,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Imperfection factor, Table 6.2: hot-finished a (S460: a0), cold-formed c",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_74",
+      "type": "math",
+      "x": 396,
+      "y": 10599,
+      "props": {
+        "w": 283,
+        "h": 118,
+        "baseline": 16,
+        "latex": "\\alpha_{y}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{CF}\\ge1\\\\\\quad\\left\\Vert\\displaystyle 0.49\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ f_{y.nom}\\ge460\\,\\mathrm{MPa}\\\\\\quad\\left\\Vert\\displaystyle 0.13\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0.21\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_75",
+      "type": "text",
+      "x": 76,
+      "y": 10726,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_76",
+      "type": "math",
+      "x": 396,
+      "y": 10723,
+      "props": {
+        "w": 104,
+        "h": 22,
+        "baseline": 16,
+        "latex": "\\alpha_{z}\\coloneq\\alpha_{y}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": -1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_77",
+      "type": "text",
+      "x": 76,
+      "y": 10754,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Steel grade within the range of these curves",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_78",
+      "type": "math",
+      "x": 396,
+      "y": 10751,
+      "props": {
+        "w": 276,
+        "h": 22,
+        "baseline": 16,
+        "latex": "f_{y}\\le460\\,\\mathrm{MPa}",
+        "displayMode": "auto",
+        "displayUnit": "MPa",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_79",
+      "type": "text",
+      "x": 76,
+      "y": 10785,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "Flexural buckling about y-y",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_secrhs_7a",
+      "type": "text",
+      "x": 76,
+      "y": 10823,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Elastic critical force",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_7b",
+      "type": "math",
+      "x": 396,
+      "y": 10812,
+      "props": {
+        "w": 182,
+        "h": 41,
+        "baseline": 24,
+        "latex": "N_{cr.y}\\coloneq\\frac{\\pi^2EI_{y}}{L_{cr.y}^2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_7c",
+      "type": "text",
+      "x": 76,
+      "y": 10874,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Relative slenderness (6.50)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_7d",
+      "type": "math",
+      "x": 396,
+      "y": 10859,
+      "props": {
+        "w": 159,
+        "h": 48,
+        "baseline": 28,
+        "latex": "\\lambda_{y}\\coloneq\\sqrt{\\frac{Af_{y}}{N_{cr.y}}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_7e",
+      "type": "text",
+      "x": 76,
+      "y": 10916,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_7f",
+      "type": "math",
+      "x": 396,
+      "y": 10913,
+      "props": {
+        "w": 293,
+        "h": 22,
+        "baseline": 16,
+        "latex": "\\Phi_{y}\\coloneq0.5\\left(1+\\alpha_{y}\\left(\\lambda_{y}-0.2\\right)+\\lambda_{y}^2\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_7g",
+      "type": "text",
+      "x": 76,
+      "y": 10961,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Reduction factor (6.49)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_7h",
+      "type": "math",
+      "x": 396,
+      "y": 10941,
+      "props": {
+        "w": 278,
+        "h": 60,
+        "baseline": 33,
+        "latex": "\\chi_{y}\\coloneq\\min\\left(1,\\frac{1}{\\Phi_{y}+\\sqrt{\\Phi_{y}^2-\\lambda_{y}^2}}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_7i",
+      "type": "text",
+      "x": 76,
+      "y": 11016,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Buckling resistance (6.47)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_7j",
+      "type": "math",
+      "x": 396,
+      "y": 11007,
+      "props": {
+        "w": 195,
+        "h": 36,
+        "baseline": 22,
+        "latex": "N_{b.y.Rd}\\coloneq\\frac{\\chi_{y}Af_{y}}{\\gamma_{M1}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_7k",
+      "type": "text",
+      "x": 76,
+      "y": 11075,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Flexural buckling about y",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_7l",
+      "type": "math",
+      "x": 396,
+      "y": 11049,
+      "props": {
+        "w": 178,
+        "h": 35,
+        "baseline": 19,
+        "latex": "\\mathrm{UR}_{b.y}\\coloneq \\frac{N_{c.Ed}}{N_{b.y.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_7m",
+      "type": "text",
+      "x": 76,
+      "y": 11102,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.3.1.1 (6.46)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_7n",
+      "type": "math",
+      "x": 396,
+      "y": 11099,
+      "props": {
+        "w": 214,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{b.y}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_7o",
+      "type": "text",
+      "x": 76,
+      "y": 11132,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "Flexural buckling about z-z",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_secrhs_7p",
+      "type": "text",
+      "x": 76,
+      "y": 11188,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Elastic critical force",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_7q",
+      "type": "math",
+      "x": 396,
+      "y": 11159,
+      "props": {
+        "w": 181,
+        "h": 37,
+        "baseline": 22,
+        "latex": "N_{cr.z}\\coloneq\\frac{\\pi^2EI_{z}}{L_{cr.z}^2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_7r",
+      "type": "text",
+      "x": 76,
+      "y": 11224,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Relative slenderness (6.50)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_7s",
+      "type": "math",
+      "x": 396,
+      "y": 11212,
+      "props": {
+        "w": 159,
+        "h": 39,
+        "baseline": 25,
+        "latex": "\\lambda_{z}\\coloneq\\sqrt{\\frac{Af_{y}}{N_{cr.z}}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_7t",
+      "type": "text",
+      "x": 76,
+      "y": 11260,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_7u",
+      "type": "math",
+      "x": 396,
+      "y": 11257,
+      "props": {
+        "w": 293,
+        "h": 22,
+        "baseline": 16,
+        "latex": "\\Phi_{z}\\coloneq0.5\\left(1+\\alpha_{z}\\left(\\lambda_{z}-0.2\\right)+\\lambda_{z}^2\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_7v",
+      "type": "text",
+      "x": 76,
+      "y": 11300,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Reduction factor (6.49)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_7w",
+      "type": "math",
+      "x": 396,
+      "y": 11285,
+      "props": {
+        "w": 274,
+        "h": 48,
+        "baseline": 28,
+        "latex": "\\chi_{z}\\coloneq\\min\\left(1,\\frac{1}{\\Phi_{z}+\\sqrt{\\Phi_{z}^2-\\lambda_{z}^2}}\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_7x",
+      "type": "text",
+      "x": 76,
+      "y": 11348,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Buckling resistance (6.47)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_7y",
+      "type": "math",
+      "x": 396,
+      "y": 11339,
+      "props": {
+        "w": 195,
+        "h": 36,
+        "baseline": 22,
+        "latex": "N_{b.z.Rd}\\coloneq\\frac{\\chi_{z}Af_{y}}{\\gamma_{M1}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_7z",
+      "type": "text",
+      "x": 76,
+      "y": 11408,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Flexural buckling about z",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_80",
+      "type": "math",
+      "x": 396,
+      "y": 11381,
+      "props": {
+        "w": 177,
+        "h": 33,
+        "baseline": 20,
+        "latex": "\\mathrm{UR}_{b.z}\\coloneq \\frac{N_{c.Ed}}{N_{b.z.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_81",
+      "type": "text",
+      "x": 76,
+      "y": 11435,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.3.1.1 (6.46)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_82",
+      "type": "math",
+      "x": 396,
+      "y": 11432,
+      "props": {
+        "w": 213,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{b.z}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_83",
+      "type": "text",
+      "x": 76,
+      "y": 11459,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Closed hollow sections: torsional buckling does not govern (not checked).",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_84",
+      "type": "text",
+      "x": 76,
+      "y": 11490,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "8. MEMBER: LATERAL-TORSIONAL BUCKLING (§6.3.2)",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_secrhs_85",
+      "type": "text",
+      "x": 76,
+      "y": 11520,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Closed section: warping neglected, load at the shear centre. §6.3.2.3 with the Singapore / UK NA: λ_LT,0 = 0.4,",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_86",
+      "type": "text",
+      "x": 76,
+      "y": 11545,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "β = 0.75, hot-finished h/b ≤ 2 b, ≤ 3.1 c, else d; cold-formed h/b ≤ 2 c, else d; f with k_c = 1/√C1.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_87",
+      "type": "text",
+      "x": 76,
+      "y": 11570,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "§6.3.2.2 (recommended): Table 6.4 other cross-sections, curve d, λ_LT,0 = 0.2, β = 1.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_88",
+      "type": "text",
+      "x": 76,
+      "y": 11795,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Mid-line corner radius",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_89",
+      "type": "math",
+      "x": 396,
+      "y": 11770,
+      "props": {
+        "w": 158,
+        "h": 29,
+        "baseline": 18,
+        "latex": "r_{m}\\coloneq\\frac{r_{o}+r_{i}}{2}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_8a",
+      "type": "text",
+      "x": 76,
+      "y": 11822,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Mid-line perimeter",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_8b",
+      "type": "math",
+      "x": 396,
+      "y": 11819,
+      "props": {
+        "w": 308,
+        "h": 22,
+        "baseline": 16,
+        "latex": "p_{m}\\coloneq2\\left(h+b-2t\\right)-2\\left(4-\\pi\\right)r_{m}",
+        "displayMode": "formulaResult",
+        "displayUnit": "mm",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_8c",
+      "type": "text",
+      "x": 76,
+      "y": 11850,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Enclosed area",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_8d",
+      "type": "math",
+      "x": 396,
+      "y": 11847,
+      "props": {
+        "w": 314,
+        "h": 22,
+        "baseline": 16,
+        "latex": "A_{h}\\coloneq\\left(h-t\\right)\\left(b-t\\right)-\\left(4-\\pi\\right)r_{m}^2",
+        "displayMode": "formulaResult",
+        "displayUnit": "cm^2",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_8e",
+      "type": "text",
+      "x": 76,
+      "y": 11886,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Torsion constant (EN 10210-2 Annex B form)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_8f",
+      "type": "math",
+      "x": 396,
+      "y": 11875,
+      "props": {
+        "w": 209,
+        "h": 38,
+        "baseline": 24,
+        "latex": "I_{t}\\coloneq\\frac{t^3p_{m}}{3}+\\frac{4tA_{h}^2}{p_{m}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "cm^4",
+        "precision": 0,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_8g",
+      "type": "text",
+      "x": 76,
+      "y": 11962,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Elastic critical moment",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_8h",
+      "type": "math",
+      "x": 396,
+      "y": 11919,
+      "props": {
+        "w": 302,
+        "h": 98,
+        "baseline": 16,
+        "latex": "M_{cr}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ L_{LT}>0\\,\\mathrm{m}\\\\\\quad\\left\\Vert\\displaystyle \\frac{C_{1}\\pi}{L_{LT}}\\sqrt{EI_{z}GI_{t}}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\,\\mathrm{kN}\\cdot\\mathrm{m}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_8i",
+      "type": "text",
+      "x": 76,
+      "y": 12066,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Relative slenderness (0 when restrained)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_8j",
+      "type": "math",
+      "x": 396,
+      "y": 12023,
+      "props": {
+        "w": 229,
+        "h": 100,
+        "baseline": 16,
+        "latex": "\\lambda_{LT}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ L_{LT}>0\\,\\mathrm{m}\\\\\\quad\\left\\Vert\\displaystyle \\sqrt{\\frac{W_{y}f_{y}}{M_{cr}}}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_8k",
+      "type": "text",
+      "x": 76,
+      "y": 12129,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Imperfection factor",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_8l",
+      "type": "math",
+      "x": 96,
+      "y": 12153,
+      "props": {
+        "w": 356,
+        "h": 157,
+        "baseline": 16,
+        "latex": "\\alpha_{LT}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ c_{NA}\\ge1\\land\\mathrm{CF}<1\\land\\frac{h}{b}\\le2\\\\\\quad\\left\\Vert\\displaystyle 0.34\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ c_{NA}\\ge1\\land\\mathrm{CF}<1\\land\\frac{h}{b}\\le3.1\\\\\\quad\\left\\Vert\\displaystyle 0.49\\right.\\\\\\mathrm{else}\\ \\mathrm{if}\\ c_{NA}\\ge1\\land\\mathrm{CF}\\ge1\\land\\frac{h}{b}\\le2\\\\\\quad\\left\\Vert\\displaystyle 0.49\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0.76\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_8m",
+      "type": "text",
+      "x": 76,
+      "y": 12359,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Plateau length",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_8n",
+      "type": "math",
+      "x": 396,
+      "y": 12316,
+      "props": {
+        "w": 187,
+        "h": 79,
+        "baseline": 16,
+        "latex": "\\lambda_{LT.0}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ c_{NA}\\ge1\\\\\\quad\\left\\Vert\\displaystyle 0.4\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0.2\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_8o",
+      "type": "text",
+      "x": 76,
+      "y": 12444,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Factor β",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_8p",
+      "type": "math",
+      "x": 396,
+      "y": 12401,
+      "props": {
+        "w": 187,
+        "h": 79,
+        "baseline": 16,
+        "latex": "\\beta_{LT}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ c_{NA}\\ge1\\\\\\quad\\left\\Vert\\displaystyle 0.75\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 2,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_8q",
+      "type": "text",
+      "x": 76,
+      "y": 12486,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "(6.56) / (6.57)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_8r",
+      "type": "math",
+      "x": 96,
+      "y": 12510,
+      "props": {
+        "w": 373,
+        "h": 22,
+        "baseline": 16,
+        "latex": "\\Phi_{LT}\\coloneq0.5\\left(1+\\alpha_{LT}\\left(\\lambda_{LT}-\\lambda_{LT.0}\\right)+\\beta_{LT}\\lambda_{LT}^2\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_8s",
+      "type": "text",
+      "x": 76,
+      "y": 12538,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Reduction factor",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_8t",
+      "type": "math",
+      "x": 96,
+      "y": 12562,
+      "props": {
+        "w": 404,
+        "h": 108,
+        "baseline": 16,
+        "latex": "\\chi_{LT.0}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\lambda_{LT}\\le\\lambda_{LT.0}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\min\\left(1,\\frac{1}{\\lambda_{LT}^2},\\frac{1}{\\Phi_{LT}+\\sqrt{\\Phi_{LT}^2-\\beta_{LT}\\lambda_{LT}^2}}\\right)\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_8u",
+      "type": "text",
+      "x": 76,
+      "y": 12984,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Correction factor k_c = 1/√C1 (NA; else 1)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_8v",
+      "type": "math",
+      "x": 396,
+      "y": 12941,
+      "props": {
+        "w": 155,
+        "h": 98,
+        "baseline": 16,
+        "latex": "k_{c}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ c_{NA}\\ge1\\\\\\quad\\left\\Vert\\displaystyle \\frac{1}{\\sqrt{C_{1}}}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_8w",
+      "type": "text",
+      "x": 76,
+      "y": 13045,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "(6.58)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_8x",
+      "type": "math",
+      "x": 76,
+      "y": 13069,
+      "props": {
+        "w": 391,
+        "h": 32,
+        "baseline": 18,
+        "latex": "f_{LT}\\coloneq\\min\\left(1,1-0.5\\left(1-k_{c}\\right)\\left(1-2\\left(\\lambda_{LT}-0.8\\right)^2\\right)\\right)",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_8y",
+      "type": "text",
+      "x": 76,
+      "y": 13150,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Modified reduction factor",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_8z",
+      "type": "math",
+      "x": 396,
+      "y": 13107,
+      "props": {
+        "w": 267,
+        "h": 99,
+        "baseline": 16,
+        "latex": "\\chi_{LT}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\lambda_{LT}\\le\\lambda_{LT.0}\\\\\\quad\\left\\Vert\\displaystyle 1\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle \\min\\left(1,\\frac{1}{\\lambda_{LT}^2},\\frac{\\chi_{LT.0}}{f_{LT}}\\right)\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_90",
+      "type": "text",
+      "x": 76,
+      "y": 13221,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Bending resistances with γM1",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_91",
+      "type": "math",
+      "x": 396,
+      "y": 13212,
+      "props": {
+        "w": 221,
+        "h": 36,
+        "baseline": 22,
+        "latex": "M_{y.Rk1}\\coloneq\\frac{W_{y}f_{y}}{\\gamma_{M1}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_92",
+      "type": "text",
+      "x": 76,
+      "y": 13263,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_93",
+      "type": "math",
+      "x": 396,
+      "y": 13254,
+      "props": {
+        "w": 220,
+        "h": 36,
+        "baseline": 22,
+        "latex": "M_{z.Rk1}\\coloneq\\frac{W_{z}f_{y}}{\\gamma_{M1}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_94",
+      "type": "text",
+      "x": 76,
+      "y": 13299,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Buckling resistance moment (6.55)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_95",
+      "type": "math",
+      "x": 396,
+      "y": 13296,
+      "props": {
+        "w": 241,
+        "h": 22,
+        "baseline": 16,
+        "latex": "M_{b.Rd}\\coloneq\\chi_{LT}M_{y.Rk1}",
+        "displayMode": "formulaResult",
+        "displayUnit": "kN m",
+        "precision": 1,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_96",
+      "type": "text",
+      "x": 76,
+      "y": 13334,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Lateral-torsional buckling",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_97",
+      "type": "math",
+      "x": 396,
+      "y": 13324,
+      "props": {
+        "w": 183,
+        "h": 36,
+        "baseline": 23,
+        "latex": "\\mathrm{UR}_{LT}\\coloneq \\frac{\\left|M_{y.Ed}\\right|}{M_{b.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_98",
+      "type": "text",
+      "x": 76,
+      "y": 13369,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.3.2.1 (6.54)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_99",
+      "type": "math",
+      "x": 396,
+      "y": 13366,
+      "props": {
+        "w": 213,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{LT}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_9a",
+      "type": "text",
+      "x": 76,
+      "y": 13399,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "9. MEMBER: COMPRESSION AND BENDING (§6.3.3, Annex B)",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_secrhs_9b",
+      "type": "text",
+      "x": 76,
+      "y": 13429,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Hollow sections: not susceptible to torsional deformations, Table B.1. Class 3: elastic columns.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_9c",
+      "type": "text",
+      "x": 76,
+      "y": 13480,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Axial ratios",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_9d",
+      "type": "math",
+      "x": 396,
+      "y": 13454,
+      "props": {
+        "w": 156,
+        "h": 35,
+        "baseline": 19,
+        "latex": "n_{y}\\coloneq\\frac{N_{c.Ed}}{N_{b.y.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_9e",
+      "type": "text",
+      "x": 76,
+      "y": 13531,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_9f",
+      "type": "math",
+      "x": 396,
+      "y": 13504,
+      "props": {
+        "w": 155,
+        "h": 33,
+        "baseline": 20,
+        "latex": "n_{z}\\coloneq\\frac{N_{c.Ed}}{N_{b.z.Rd}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_9g",
+      "type": "text",
+      "x": 76,
+      "y": 13555,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Table B.1",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_9h",
+      "type": "math",
+      "x": 96,
+      "y": 13579,
+      "props": {
+        "w": 358,
+        "h": 79,
+        "baseline": 16,
+        "latex": "k_{yy}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le2\\\\\\quad\\left\\Vert\\displaystyle C_{my}\\left(1+\\min\\left(\\lambda_{y}-0.2,0.8\\right)n_{y}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle C_{my}\\left(1+\\min\\left(0.6\\lambda_{y},0.6\\right)n_{y}\\right)\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_9i",
+      "type": "text",
+      "x": 76,
+      "y": 13664,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Table B.1",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_9j",
+      "type": "math",
+      "x": 96,
+      "y": 13688,
+      "props": {
+        "w": 357,
+        "h": 79,
+        "baseline": 16,
+        "latex": "k_{zz}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le2\\\\\\quad\\left\\Vert\\displaystyle C_{mz}\\left(1+\\min\\left(\\lambda_{z}-0.2,0.8\\right)n_{z}\\right)\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle C_{mz}\\left(1+\\min\\left(0.6\\lambda_{z},0.6\\right)n_{z}\\right)\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_9k",
+      "type": "text",
+      "x": 76,
+      "y": 13816,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Table B.1",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_9l",
+      "type": "math",
+      "x": 396,
+      "y": 13773,
+      "props": {
+        "w": 200,
+        "h": 79,
+        "baseline": 16,
+        "latex": "k_{yz}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le2\\\\\\quad\\left\\Vert\\displaystyle 0.6k_{zz}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle k_{zz}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_9m",
+      "type": "text",
+      "x": 76,
+      "y": 13901,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Table B.1",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_9n",
+      "type": "math",
+      "x": 396,
+      "y": 13858,
+      "props": {
+        "w": 200,
+        "h": 79,
+        "baseline": 16,
+        "latex": "k_{zy}\\coloneq\\begin{array}{||l}\\mathrm{if}\\ \\mathrm{Class}\\le2\\\\\\quad\\left\\Vert\\displaystyle 0.6k_{yy}\\right.\\\\\\mathrm{else}\\\\\\quad\\left\\Vert\\displaystyle 0.8k_{yy}\\right.\\end{array}",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_9o",
+      "type": "text",
+      "x": 76,
+      "y": 14112,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Interaction (6.61)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_9p",
+      "type": "math",
+      "x": 96,
+      "y": 14136,
+      "props": {
+        "w": 344,
+        "h": 36,
+        "baseline": 23,
+        "latex": "\\mathrm{UR}_{6.61}\\coloneq n_{y}+k_{yy}\\frac{\\left|M_{y.Ed}\\right|}{M_{b.Rd}}+k_{yz}\\frac{\\left|M_{z.Ed}\\right|}{M_{z.Rk1}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_9q",
+      "type": "text",
+      "x": 76,
+      "y": 14181,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.3.3 (6.61)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_9r",
+      "type": "math",
+      "x": 396,
+      "y": 14178,
+      "props": {
+        "w": 218,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{6.61}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_9s",
+      "type": "text",
+      "x": 76,
+      "y": 14205,
+      "props": {
+        "w": 630,
+        "h": 18,
+        "html": "Interaction (6.62)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_9t",
+      "type": "math",
+      "x": 96,
+      "y": 14229,
+      "props": {
+        "w": 335,
+        "h": 36,
+        "baseline": 23,
+        "latex": "\\mathrm{UR}_{6.62}\\coloneq n_{z}+k_{zy}\\frac{\\left|M_{y.Ed}\\right|}{M_{b.Rd}}+k_{zz}\\frac{\\left|M_{z.Ed}\\right|}{M_{z.Rk1}}",
+        "displayMode": "formulaResult",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_9u",
+      "type": "text",
+      "x": 76,
+      "y": 14274,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "§6.3.3 (6.62)",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_9v",
+      "type": "math",
+      "x": 396,
+      "y": 14271,
+      "props": {
+        "w": 210,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{6.62}\\le1",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      }
+    },
+    {
+      "id": "s_secrhs_9w",
+      "type": "text",
+      "x": 76,
+      "y": 14298,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Cm from Table B.3 for the moment diagram between braced points; ΔM = 0 for Class 1 to 3.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_secrhs_9x",
+      "type": "text",
+      "x": 76,
+      "y": 14329,
+      "props": {
+        "w": 630,
+        "h": 24,
+        "html": "10. SUMMARY",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "color": "#0f172a",
+        "align": "left",
+        "heading": 2
+      }
+    },
+    {
+      "id": "s_secrhs_9y",
+      "type": "text",
+      "x": 76,
+      "y": 14359,
       "props": {
         "w": 630,
         "h": 19,
@@ -3692,31 +6060,31 @@
       }
     },
     {
-      "id": "s_secrhs_60",
+      "id": "s_secrhs_9z",
       "type": "text",
       "x": 76,
-      "y": 8457,
+      "y": 14384,
       "props": {
         "w": 630,
         "h": 18,
-        "html": "Governing utilisation",
+        "html": "Cross-section (§6.2)",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       },
-      "groupId": "s_secrhs_group_60"
+      "groupId": "s_secrhs_group_9z"
     },
     {
-      "id": "s_secrhs_61",
+      "id": "s_secrhs_a0",
       "type": "math",
       "x": 96,
-      "y": 8474,
+      "y": 14401,
       "props": {
-        "w": 442,
+        "w": 457,
         "h": 21,
         "baseline": 16,
-        "latex": "\\mathrm{UR}\\coloneq\\max\\left(\\mathrm{UR}_{V.z},\\mathrm{UR}_{V.y},\\mathrm{UR}_{N},\\mathrm{UR}_{M.y},\\mathrm{UR}_{M.z},\\mathrm{UR}_{sec}\\right)",
+        "latex": "\\mathrm{UR}_{6.2}\\coloneq\\max\\left(\\mathrm{UR}_{V.z},\\mathrm{UR}_{V.y},\\mathrm{UR}_{N},\\mathrm{UR}_{M.y},\\mathrm{UR}_{M.z},\\mathrm{UR}_{sec}\\right)",
         "displayMode": "auto",
         "displayUnit": "",
         "precision": 3,
@@ -3724,29 +6092,99 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "groupId": "s_secrhs_group_60"
+      "groupId": "s_secrhs_group_9z"
     },
     {
-      "id": "s_secrhs_62",
+      "id": "s_secrhs_a1",
       "type": "text",
       "x": 76,
-      "y": 8517,
+      "y": 14444,
       "props": {
-        "w": 304,
+        "w": 630,
         "h": 18,
-        "html": "Cross-section resistance check",
+        "html": "Member (§6.3)",
         "fontFamily": "Roboto",
         "fontSize": 12,
         "color": "#475569",
         "align": "left"
       },
-      "groupId": "s_secrhs_group_60"
+      "groupId": "s_secrhs_group_9z"
     },
     {
-      "id": "s_secrhs_63",
+      "id": "s_secrhs_a2",
+      "type": "math",
+      "x": 96,
+      "y": 14461,
+      "props": {
+        "w": 404,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}_{6.3}\\coloneq\\max\\left(\\mathrm{UR}_{b.y},\\mathrm{UR}_{b.z},\\mathrm{UR}_{LT},\\mathrm{UR}_{6.61},\\mathrm{UR}_{6.62}\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "groupId": "s_secrhs_group_9z"
+    },
+    {
+      "id": "s_secrhs_a3",
+      "type": "text",
+      "x": 76,
+      "y": 14504,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Governing utilisation",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "groupId": "s_secrhs_group_9z"
+    },
+    {
+      "id": "s_secrhs_a4",
       "type": "math",
       "x": 396,
-      "y": 8514,
+      "y": 14501,
+      "props": {
+        "w": 240,
+        "h": 21,
+        "baseline": 16,
+        "latex": "\\mathrm{UR}\\coloneq\\max\\left(\\mathrm{UR}_{6.2},\\mathrm{UR}_{6.3}\\right)",
+        "displayMode": "auto",
+        "displayUnit": "",
+        "precision": 3,
+        "autoSize": true,
+        "fontSize": 16,
+        "color": "#0f172a"
+      },
+      "groupId": "s_secrhs_group_9z"
+    },
+    {
+      "id": "s_secrhs_a5",
+      "type": "text",
+      "x": 76,
+      "y": 14544,
+      "props": {
+        "w": 304,
+        "h": 18,
+        "html": "Section and member check",
+        "fontFamily": "Roboto",
+        "fontSize": 12,
+        "color": "#475569",
+        "align": "left"
+      },
+      "groupId": "s_secrhs_group_9z"
+    },
+    {
+      "id": "s_secrhs_a6",
+      "type": "math",
+      "x": 396,
+      "y": 14541,
       "props": {
         "w": 189,
         "h": 21,
@@ -3759,13 +6197,13 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "groupId": "s_secrhs_group_60"
+      "groupId": "s_secrhs_group_9z"
     },
     {
-      "id": "s_secrhs_64",
+      "id": "s_secrhs_a7",
       "type": "text",
       "x": 76,
-      "y": 8553,
+      "y": 14580,
       "props": {
         "w": 630,
         "h": 29,

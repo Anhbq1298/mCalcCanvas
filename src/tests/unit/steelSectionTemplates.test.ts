@@ -5,9 +5,13 @@ import { calcKey } from '../../canvas/engineBridge';
 import { templateById, type TemplateId } from '../../documents/templates';
 import { sectionById } from '../../engineering/steel/sections';
 import { hollowProperties } from '../../tools/steel/sections';
+import { readFileSync } from 'node:fs';
+import { SteelModel, type SteelState } from '../../tools/steel/model';
+import { agrees, EXAMPLES, exampleMember, exampleSectionId } from '../../tools/steel/examples';
 
 /** Evaluate a section worksheet with some inputs replaced (by the start of their LaTeX). */
-function evaluate(id: TemplateId, inputs: Record<string, string>) {
+function evaluate(id: TemplateId, given: Record<string, string>) {
+  const inputs = { 'c_{fy}': '0', ...given }; // hand references below use Table 3.1
   const { shapes } = templateById(id)!.instantiate!();
   for (const s of shapes) {
     if (s.type !== 'math') continue;
@@ -26,6 +30,7 @@ function evaluate(id: TemplateId, inputs: Record<string, string>) {
   const errors = math.filter((s) => e.getResult(s.id)?.status === 'error').map((s) => `${s.props.latex.slice(0, 50)}: ${e.getResult(s.id)?.error?.message}`);
   return { v, errors };
 }
+const m = (x: number) => `${x}\\,\\mathrm{m}`;
 const kN = (x: number) => `${x}\\,\\mathrm{kN}`;
 const kNm = (x: number) => `${x}\\,\\mathrm{kN}\\cdot\\mathrm{m}`;
 const actions = (a: { N: number; My: number; Mz: number; Vz: number; Vy: number }) => ({ 'N_{Ed}': kN(a.N), 'M_{y.Ed}': kNm(a.My), 'M_{z.Ed}': kNm(a.Mz), 'V_{z.Ed}': kN(a.Vz), 'V_{y.Ed}': kN(a.Vy) });
@@ -183,5 +188,77 @@ describe('steel cross-section templates (EN 1993-1-1 §6.2)', () => {
       // the cases reach the plastic and the elastic branch of every shape
       for (const k of ['I1', 'I3', 'RHS1', 'RHS3', 'CHS1', 'CHS3']) expect(seen, k).toContain(k);
     });
+    step('I/H member checks equal the verified beam-column worksheet (§6.3.2.2, Table B.2) for the JRC example and variants', () => {
+      const old = (sec: number, a: Act, L: number, nLT: number) => {
+        const { shapes } = templateById('steel-beam-column')!.instantiate!();
+        const inp: Record<string, string> = { '\\mathrm{Section}': String(sec), 'L_{cr.y}': m(L), 'L_{cr.z}': m(L), 'L_{cr.T}': m(L), 'L_{LT}': m(L), 'n_{LT}': String(nLT), ...actions(a) };
+        for (const s of shapes) if (s.type === 'math') for (const [n, v] of Object.entries(inp)) if (s.props.latex.startsWith(`${n}\\coloneq`)) s.props = { ...s.props, latex: `${n}\\coloneq ${v}` };
+        const rec = Object.fromEntries(shapes.map((x) => [x.id, x]));
+        const e = new CalculationEngine({ unitSystem: 'SI' });
+        e.batch(() => { for (const s of shapes) if (s.type === 'math') e.setRegion(s.id, { latex: s.props.latex, order: calcKey(s, rec), displayUnit: null, precision: null }); });
+        return (name: string) => { e.setRegion('p', { latex: `${name}=`, order: [1e9] as never, displayUnit: null, precision: null }); return e.getResult('p')!.value!.number!; };
+      };
+      const cases: [number, Act, number, number][] = [
+        [1211, { N: 1704, My: 24.8, Mz: 0, Vz: 0, Vy: 0 }, 4.335, 6], // JRC (Simões) example 3, HEB 320
+        [1211, { N: 1200, My: 150, Mz: 20, Vz: 60, Vy: 0 }, 4.335, 5],
+        [1013, { N: 300, My: 110, Mz: 0, Vz: 75, Vy: 0 }, 6, 10], // IPE 400 (the old sheet takes the web in uniform compression when Mz ≠ 0)
+      ];
+      for (const [sec, a, L, nLT] of cases) {
+        const o = old(sec, a, L, nLT);
+        const r = evaluate('steel-section-i', { '\\mathrm{Section}': String(sec), 'L_{y}': m(L), 'L_{z}': m(L), 'L_{LT}': m(L), 'n_{LT}': String(nLT), 'c_{NA}': '0', ...actions(a) });
+        expect(r.errors).toEqual([]);
+        expect(r.v('\\mathrm{Class}')).toBeLessThanOrEqual(2);
+        for (const k of ['b.y', 'b.z', 'b.T', 'LT', '6.61', '6.62']) expect(r.v(`\\mathrm{UR}_{${k}}`), `${sec} ${k}`).toBeCloseTo(o(`\\mathrm{UR}_{${k}}`), 9);
+      }
+    });
+    step('member checks of every shape against hand references (NA §6.3.2.3 with f, hollow curves, Class 3 Annex B, tension)', () => {
+      const chi = (lam: number, al: number) => { const ph = 0.5 * (1 + al * (lam - 0.2) + lam * lam); return Math.min(1, 1 / (ph + Math.sqrt(ph * ph - lam * lam))); };
+      // IPE 400 S355, L_LT = 6 m, UDL case (C1 = 1.127, C2 = 0.454), load on the top flange, Singapore NA
+      const s = sectionById(1013).values, E = 210000, G = 81000, fy = 355, L = 6000, C1 = 1.127, C2 = 0.454, zg = s.h / 2;
+      const Ncr = Math.PI ** 2 * E * s.Iz / L ** 2, Mcr = C1 * Ncr * (Math.sqrt(s.Iw / s.Iz + G * s.It / Ncr + (C2 * zg) ** 2) - C2 * zg);
+      const lam = Math.sqrt(s.Wpl_y * fy / Mcr), al = s.h / s.b <= 2 ? 0.34 : 0.49, ph = 0.5 * (1 + al * (lam - 0.4) + 0.75 * lam * lam);
+      const chi0 = Math.min(1, 1 / lam ** 2, 1 / (ph + Math.sqrt(ph * ph - 0.75 * lam * lam))), kc = 1 / Math.sqrt(C1);
+      const f = Math.min(1, 1 - 0.5 * (1 - kc) * (1 - 2 * (lam - 0.8) ** 2)), chiLT = Math.min(1, 1 / lam ** 2, chi0 / f);
+      const r = evaluate('steel-section-i', { '\\mathrm{Section}': '1013', 'L_{LT}': m(6), 'n_{LT}': '10', 'z_{g}': `${zg}\\,\\mathrm{mm}`, ...actions({ N: 0, My: 150, Mz: 0, Vz: 0, Vy: 0 }) });
+      expect(r.errors).toEqual([]);
+      expect(r.v('\\chi_{LT}')).toBeCloseTo(chiLT, 9);
+      expect(r.v('\\mathrm{UR}_{LT}')).toBeCloseTo(150e6 / (chiLT * s.Wpl_y * fy), 9);
+      // CHS 219.1x10 hot-finished, 6 m both axes: curve a, no LTB; Class 1 Table B.1
+      const p = hollowProperties({ kind: 'CHS', d: 219.1, t: 10 }), A = p.A, lz = Math.sqrt(A * fy / (Math.PI ** 2 * E * p.Iy / 6000 ** 2)), cz = chi(lz, 0.21);
+      const c = evaluate('steel-section-chs', { 'L_{y}': m(6), 'L_{z}': m(6), ...actions({ N: 600, My: 40, Mz: 20, Vz: 0, Vy: 0 }) });
+      expect(c.errors).toEqual([]);
+      const n = 600e3 / (cz * A * fy), kyy = 1 + Math.min(lz - 0.2, 0.8) * n, Mr = p.Wpl_y * fy;
+      expect(c.v('\\mathrm{UR}_{b.y}')).toBeCloseTo(n, 9);
+      expect(c.v('\\mathrm{UR}_{6.61}')).toBeCloseTo(n + kyy * 40e6 / Mr + 0.6 * kyy * 20e6 / Mr, 9);
+      // cold-formed: curve c
+      const cf = evaluate('steel-section-chs', { 'L_{y}': m(6), 'L_{z}': m(6), '\\mathrm{CF}': '1', ...actions({ N: 600, My: 0, Mz: 0, Vz: 0, Vy: 0 }) });
+      expect(cf.v('\\mathrm{UR}_{b.z}')).toBeCloseTo(600e3 / (chi(lz, 0.49) * A * fy), 9);
+      // Class 3 RHS (S460 SHS 250x250x8): elastic Annex B columns; tension: no buckling, interaction with N = 0
+      const q = evaluate('steel-section-rhs', { h: '250\\,\\mathrm{mm}', b: '250\\,\\mathrm{mm}', t: '8\\,\\mathrm{mm}', 'f_{y.nom}': '460\\,\\mathrm{MPa}', 'L_{y}': m(5), 'L_{z}': m(5), 'L_{LT}': m(5), ...actions({ N: 900, My: 60, Mz: 0, Vz: 0, Vy: 0 }) });
+      expect(q.errors).toEqual([]);
+      expect(q.v('\\mathrm{Class}')).toBe(3);
+      expect(q.v('k_{yy}')).toBeCloseTo(1 + Math.min(0.6 * q.v('\\lambda_{y}'), 0.6) * q.v('n_{y}'), 9);
+      expect(q.v('k_{zy}')).toBeCloseTo(0.8 * q.v('k_{yy}'), 9);
+      const t = evaluate('steel-section-rhs', { 'L_{LT}': m(5), ...actions({ N: -400, My: 60, Mz: 10, Vz: 0, Vy: 0 }) });
+      expect(t.v('\\mathrm{UR}_{b.y}')).toBe(0);
+      expect(t.v('\\mathrm{UR}_{6.61}')).toBeCloseTo(t.v('k_{yy}') * 60 / t.v('M_{b.Rd}', 'kN m') + t.v('k_{yz}') * 10 / t.v('M_{z.Rk1}', 'kN m'), 9);
+    });
+  });
+});
+
+describe('published worked examples (SCI P364, P374, NSC, Designers\' Guide, STAAD verification)', () => {
+  it('every printed value is reproduced by the page model within the printed precision', () => {
+    const raw = (shape: string) => readFileSync(`templates/Steel_Section_${shape}_EC3.mCCV`, 'utf8');
+    for (const ex of EXAMPLES) {
+      step(ex.id, () => {
+        const md = new SteelModel(raw(ex.shape), ex.shape);
+        const st: SteelState = { shape: ex.shape, sectionId: exampleSectionId(ex), fyNom: ex.fyNom, fyBasis: ex.fyBasis, gammaM0: 1, eta: 1.2, member: exampleMember(ex),
+          hollow: { h: ex.hollow?.h ?? 0, b: ex.hollow?.b ?? 0, t: ex.hollow?.t ?? 0, d: ex.hollow?.d ?? 0, cf: ex.hollow?.cf ?? 0 }, combos: [ex.combo], probes: ex.published.map(([, l, u]) => [l, u]) };
+        const [r] = md.runAll(st);
+        expect(r.errors).toEqual([]);
+        const off = ex.published.flatMap(([label, , , v, compared], i) => (compared === false || agrees(r.extra[i], v) ? [] : [`${label}: sheet ${r.extra[i]}, printed ${v}`]));
+        expect(off, ex.title).toEqual([]);
+      });
+    }
   });
 });

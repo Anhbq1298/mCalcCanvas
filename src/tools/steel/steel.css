@@ -24,3 +24,7 @@
 @media (max-width: 720px) { .workspace.steel, .results.steel { grid-template-columns: 1fr; } }
 .xs { display: grid; grid-template-columns: minmax(14rem, 22rem) minmax(12rem, 1fr); gap: 0.5rem 1.5rem; align-items: start; margin-top: 1.25rem; padding-top: 0.875rem; border-top: 1px solid var(--rule); }
 @media (max-width: 720px) { .xs { grid-template-columns: 1fr; } }
+.ur tr.group td { font-size: 0.71875rem; font-weight: 500; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.04em; padding-top: 0.5rem; border-bottom: 1px solid var(--ink); }
+.verify { margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px solid var(--rule); }
+.verify th { font-weight: 500; font-size: 0.71875rem; color: var(--ink-2); text-align: right; }
+.verify td:last-child { width: auto; white-space: nowrap; }

@@ -9,27 +9,32 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { sectionById } from '../../engineering/steel/sections';
 import { fmt } from '../composite/format';
 import { Rich } from '../composite/rich';
-import { CHECKS, governing, type Combo, type ComboResult, type SteelState } from './model';
+import { CHECKS, DEFAULT_MEMBER, governing, isMemberCheck, type Combo, type ComboResult, type Member, type SteelState } from './model';
 import { hollowName, hollowSections, I_FAMILIES, iSections, type Shape } from './sections';
 import { SectionDrawing } from './charts';
 import type { FromWorker, ToWorker } from './worker';
 import { parseCombos } from './paste';
+import { agrees, EXAMPLES, exampleMember, exampleSectionId, TOLERANCE } from './examples';
 
 const HANDOFF_KEY = 'calccanvas.handoff'; // read once by mCalcCanvas (?open=handoff)
-const STORE_KEY = 'msteelbeamcolumn.v1';
+const STORE_KEY = 'msteelbeamcolumn.v2';
 const NUMBER = /^\s*-?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?\s*$/;
 const GRADES: [string, number][] = [['S235', 235], ['S275', 275], ['S355', 355], ['S420', 420], ['S460', 460]];
 const COLS: [keyof Combo, string, string][] = [['N', 'N_Ed', 'kN'], ['My', 'M_y,Ed', 'kN m'], ['Mz', 'M_z,Ed', 'kN m'], ['Vz', 'V_z,Ed', 'kN'], ['Vy', 'V_y,Ed', 'kN']];
+const LTB_CASES: [number, string][] = [
+  ...[1, 0.75, 0.5, 0.25, 0, -0.25, -0.5, -0.75, -1].map((psi, i): [number, string] => [i + 1, `End moments, ψ = ${psi > 0 ? '+' : ''}${psi}`]),
+  [10, 'UDL, simply supported'], [11, 'UDL, fixed ends'], [12, 'Mid-point load, simply supported'], [13, 'Mid-point load, fixed ends'], [0, 'User C1, C2'],
+];
 const tone = (v: number) => (!Number.isFinite(v) ? 'fail' : v > 1 ? 'fail' : v > 0.9 ? 'warn' : 'pass');
 
 interface Page {
   shape: Shape; family: string; sectionId: number; hollowFamily: 'SHS' | 'RHS';
   rhs: { h: number; b: number; t: number }; chs: { d: number; t: number }; cf: 0 | 1;
-  fyNom: number; gammaM0: number; eta: number; combos: Combo[];
+  fyNom: number; fyBasis: 0 | 1; gammaM0: number; eta: number; member: Member; combos: Combo[]; example?: string;
 }
 const DEFAULT: Page = {
   shape: 'I', family: 'UC', sectionId: iSections('UC').find((s) => s.name === 'UC 305x305x97')?.id ?? iSections('UC')[0].id, hollowFamily: 'SHS',
-  rhs: { h: 200, b: 200, t: 10 }, chs: { d: 219.1, t: 10 }, cf: 0, fyNom: 355, gammaM0: 1, eta: 1.2,
+  rhs: { h: 200, b: 200, t: 10 }, chs: { d: 219.1, t: 10 }, cf: 0, fyNom: 355, fyBasis: 1, gammaM0: 1, eta: 1.2, member: DEFAULT_MEMBER,
   combos: [
     { name: 'ULS1 1.35G+1.5Q', N: 2200, My: 180, Mz: 25, Vz: 90, Vy: 10 },
     { name: 'ULS2 1.35G+1.5W+0.75Q', N: 1400, My: 260, Mz: 60, Vz: 150, Vy: 35 },
@@ -39,12 +44,13 @@ const DEFAULT: Page = {
 function load(): Page {
   try {
     const p = JSON.parse(localStorage.getItem(STORE_KEY) ?? 'null') as Page | null;
-    if (p && Array.isArray(p.combos) && ['I', 'RHS', 'CHS'].includes(p.shape)) { sectionById(p.sectionId); return { ...DEFAULT, ...p }; }
+    if (p && Array.isArray(p.combos) && ['I', 'RHS', 'CHS'].includes(p.shape)) { sectionById(p.sectionId); return { ...DEFAULT, ...p, member: { ...DEFAULT_MEMBER, ...p.member } }; }
   } catch { /* stored state from another version: start from the default */ }
   return DEFAULT;
 }
 const toState = (p: Page): SteelState => ({
-  shape: p.shape, sectionId: p.sectionId, fyNom: p.fyNom, gammaM0: p.gammaM0, eta: p.eta, combos: p.combos,
+  shape: p.shape, sectionId: p.sectionId, fyNom: p.fyNom, fyBasis: p.fyBasis, gammaM0: p.gammaM0, eta: p.eta, member: p.member, combos: p.combos,
+  ...(p.example ? { example: p.example, probes: EXAMPLES.find((e) => e.id === p.example)?.published.map(([, l, u]): [string, string | null] => [l, u]) ?? [] } : {}),
   hollow: { h: p.rhs.h, b: p.rhs.b, t: p.shape === 'CHS' ? p.chs.t : p.rhs.t, d: p.chs.d, cf: p.cf },
 });
 
@@ -98,7 +104,21 @@ export function App() {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(page)); } catch { /* private mode */ }
   }, [worker, state, stateKey, page]);
 
-  const set = (p: Partial<Page>) => setPage((x) => ({ ...x, ...p }));
+  // any manual change leaves the published example (its comparison would no longer apply)
+  const set = (p: Partial<Page>) => setPage((x) => ({ ...x, ...p, example: undefined }));
+  const loadExample = (id: string) => {
+    const ex = EXAMPLES.find((e) => e.id === id);
+    if (!ex) { set({}); return; }
+    const sec = ex.section ? exampleSectionId(ex) : page.sectionId;
+    setPage((x) => ({
+      ...x, example: ex.id, shape: ex.shape, fyNom: ex.fyNom, fyBasis: ex.fyBasis, gammaM0: 1, eta: 1.2, member: exampleMember(ex), combos: [ex.combo],
+      ...(ex.shape === 'I' ? { sectionId: sec, family: sectionById(sec).family } : {}),
+      ...(ex.shape === 'RHS' && ex.hollow ? { rhs: { h: ex.hollow.h!, b: ex.hollow.b!, t: ex.hollow.t }, cf: ex.hollow.cf, hollowFamily: ex.hollow.h === ex.hollow.b ? 'SHS' as const : 'RHS' as const } : {}),
+      ...(ex.shape === 'CHS' && ex.hollow ? { chs: { d: ex.hollow.d!, t: ex.hollow.t }, cf: ex.hollow.cf } : {}),
+    }));
+    setSelected(null);
+  };
+  const setMember = (m: Partial<Member>) => setPage((x) => ({ ...x, member: { ...x.member, ...m }, example: undefined }));
   const setCombo = (i: number, c: Partial<Combo>) => set({ combos: page.combos.map((x, k) => (k === i ? { ...x, ...c } : x)) });
   const withReport = (fn: (doc: unknown) => void) => { reportCb.current = fn; worker.postMessage({ kind: 'report', request: ++request.current, state } satisfies ToWorker); };
   const fileName = () => `Steel_Section_${page.shape}_EC3.mCCV`;
@@ -114,6 +134,7 @@ export function App() {
   });
 
   const shape = page.shape, checks = CHECKS[shape];
+  const ex = EXAMPLES.find((e) => e.id === page.example);
   const ok = results && results.length === page.combos.length && resultsKey.includes(`"shape":"${page.shape}"`) ? results : null;
   const gov = ok && ok.length ? governing(ok, shape) : null;
   const shown = selected !== null && ok?.[selected] ? selected : gov?.combo ?? 0;
@@ -127,6 +148,10 @@ export function App() {
     ? [['N_pl,Rd', 'kN', r?.v.Npl ?? NaN], ['V_pl,Rd', 'kN', r?.v.Vpl ?? NaN], ['M_c,Rd', 'kN m', r?.v.Mc ?? NaN], ['M_N,Rd', 'kN m', r?.v.MN ?? NaN]]
     : [['N_pl,Rd', 'kN', r?.v.Npl ?? NaN], ['V_pl,z,Rd', 'kN', r?.v.Vplz ?? NaN], ['V_pl,y,Rd', 'kN', r?.v.Vply ?? NaN], ['M_c,y,Rd', 'kN m', r?.v.Mcy ?? NaN], ['M_c,z,Rd', 'kN m', r?.v.Mcz ?? NaN],
       ['M_N,y,Rd', 'kN m', r?.v.MNy ?? NaN], ['M_N,z,Rd', 'kN m', r?.v.MNz ?? NaN]];
+  const member: [string, string, number, number][] = [['L_cr,y / L_cr,z', 'm', NaN, 3], ['N_b,y,Rd', 'kN', r?.v.Nby ?? NaN, 1], ['N_b,z,Rd', 'kN', r?.v.Nbz ?? NaN, 1],
+    ...(shape === 'I' ? [['N_b,T,Rd', 'kN', r?.v.NbT ?? NaN, 1] as [string, string, number, number]] : []),
+    ...(shape !== 'CHS' ? [['M_cr', 'kN m', r?.v.Mcr ?? NaN, 1], ['λ_LT', '', r?.v.lamLT ?? NaN, 3], ['χ_LT', '', r?.v.chiLT ?? NaN, 3]] as [string, string, number, number][] : []),
+    ['M_b,Rd', 'kN m', r?.v.Mb ?? NaN, 1], ['k_yy / k_yz', '', NaN, 3], ['k_zy / k_zz', '', NaN, 3]];
   const props: [string, string, number, number][] = shape === 'CHS'
     ? [['A', 'cm²', v.A / 100, 2], ['I', 'cm⁴', v.I / 1e4, 0], ['W_el', 'cm³', v.Wel / 1e3, 0], ['W_pl', 'cm³', v.Wpl / 1e3, 0], ['f_y', 'MPa', v.fy, 0]]
     : [['A', 'cm²', v.A / 100, 2], ['I_y', 'cm⁴', v.Iy / 1e4, 0], ['I_z', 'cm⁴', v.Iz / 1e4, 0], ['W_pl,y', 'cm³', v.Wply / 1e3, 0], ['W_pl,z', 'cm³', v.Wplz / 1e3, 0], ['W_el,y', 'cm³', v.Wely / 1e3, 0], ['W_el,z', 'cm³', v.Welz / 1e3, 0], ['f_y', 'MPa', v.fy, 0]];
@@ -158,7 +183,7 @@ export function App() {
       <a href="#verdict" className="skip">Skip to results</a>
       <header className="titlebar">
         <h1>mSteel <span>BeamColumn</span></h1>
-        <span className="hint">Cross-section design · EN 1993-1-1 §5.5, §6.2 · I/H, RHS/SHS, CHS · mCalcCanvas engine</span>
+        <span className="hint">Beam-column design · EN 1993-1-1 §6.2 section, §6.3 member · I/H, RHS/SHS, CHS · mCalcCanvas engine</span>
         <span className={`status ${busy ? 'busy' : ''}`} aria-hidden="true">{busy ? 'Calculating…' : 'Up to date'}</span>
         <div className="exports" role="group" aria-label="Report">
           <button type="button" onClick={download} className="btn export" title="Download the worksheet at the governing combination; it reopens in mCalcCanvas">.mCCV</button>
@@ -173,6 +198,20 @@ export function App() {
         <div className="workspace steel">
           {/* ── Inputs ── */}
           <form className="panel inputs" id="design-inputs" aria-label="Design inputs" onSubmit={(e) => e.preventDefault()} noValidate>
+            <section aria-labelledby="h-examples">
+              <h2 id="h-examples">Verification examples</h2>
+              <label className="f wide"><span className="sr-only">Published worked example</span>
+                <select data-testid="example" value={page.example ?? ''} onChange={(e) => loadExample(e.target.value)}>
+                  <option value="">None (own design)</option>
+                  {(['I', 'RHS', 'CHS'] as const).map((sh) => (
+                    <optgroup key={sh} label={sh === 'I' ? 'I / H' : sh === 'RHS' ? 'RHS / SHS' : 'CHS'}>
+                      {EXAMPLES.filter((e) => e.shape === sh).map((e) => <option key={e.id} value={e.id}>{e.title}</option>)}
+                    </optgroup>
+                  ))}
+                </select>
+              </label>
+              <p className="hint">Loads a published worked example; the sheet's values are compared with the printed ones on the right and in the report.</p>
+            </section>
             <section aria-labelledby="h-section">
               <h2 id="h-section">Section</h2>
               <div className="seg" role="radiogroup" aria-label="Section type">
@@ -233,10 +272,46 @@ export function App() {
                     {!GRADES.some(([, f]) => f === page.fyNom) && <option value={page.fyNom}>f_y = {page.fyNom}</option>}
                   </select>
                 </label>
+                <label className="f"><span>f<sub>y</sub> basis</span>
+                  <select data-testid="fy-basis" value={page.fyBasis} onChange={(e) => set({ fyBasis: Number(e.target.value) as 0 | 1 })}>
+                    <option value={1}>Product standard (SG / UK NA)</option><option value={0}>EN 1993-1-1 Table 3.1</option>
+                  </select>
+                </label>
                 <label className="f"><span>f<sub>y</sub> used (MPa)</span><output className="num-input" style={{ background: 'transparent' }}>{fmt(v.fy, 0)}</output></label>
                 <label className="f"><span>γ<sub>M0</sub></span><NumberField id="in-gm0" label="gamma_M0" value={page.gammaM0} onCommit={(n) => set({ gammaM0: n })} /></label>
                 {shape !== 'CHS' && <label className="f"><span>η (shear area)</span><NumberField id="in-eta" label="eta" value={page.eta} onCommit={(n) => set({ eta: n })} /></label>}
-                <p className="hint wide">f<sub>y</sub> from EN 1993-1-1 Table 3.1: nominal up to t = 40 mm, then −20 MPa (≤ S355) or −30 MPa. γ<sub>M0</sub>, η: National Annex.</p>
+                <p className="hint wide">Product standard: EN 10025-2/-4, EN 10210-1, EN 10219-1 steps at t = 16, 40, 63, 80 mm (e.g. S355: 355, 345, 335, 325). Table 3.1: nominal up to 40 mm. γ<sub>M0</sub>, η: National Annex.</p>
+              </div>
+            </section>
+            <section aria-labelledby="h-member">
+              <h2 id="h-member">Member (§6.3)</h2>
+              <div className="fields">
+                {([['Ly', 'L_y (m)', 'System length, buckling about y-y (major)'], ['ky', 'k_y', 'L_cr,y = k_y L_y'], ['Lz', 'L_z (m)', 'System length, buckling about z-z (minor)'], ['kz', 'k_z', 'L_cr,z = k_z L_z']] as const).map(([k, l, d]) => (
+                  <label key={k} className="f"><span><Rich text={l} /> <em className="sr-only">{d}</em></span><NumberField id={`in-${k}`} label={l} value={page.member[k]} onCommit={(n) => setMember({ [k]: n })} /></label>
+                ))}
+                {shape !== 'CHS' && <label className="f"><span>L<sub>LT</sub> (m) <em className="input-description">0 = restrained</em></span><NumberField id="in-Llt" label="L_LT" value={page.member.Llt} onCommit={(n) => setMember({ Llt: n })} /></label>}
+                {shape === 'I' && <label className="f"><span>Moment diagram (C<sub>1</sub>, C<sub>2</sub>)</span>
+                  <select data-testid="ltb-case" value={page.member.nLT} onChange={(e) => setMember({ nLT: Number(e.target.value) })}>
+                    {LTB_CASES.map(([n, l]) => <option key={n} value={n}>{l}</option>)}
+                  </select>
+                </label>}
+                {(shape === 'RHS' || (shape === 'I' && page.member.nLT === 0)) && <label className="f"><span>C<sub>1</sub></span><NumberField id="in-C1" label="C1" value={page.member.C1} onCommit={(n) => setMember({ C1: n })} /></label>}
+                {shape === 'I' && page.member.nLT === 0 && <label className="f"><span>C<sub>2</sub></span><NumberField id="in-C2" label="C2" value={page.member.C2} onCommit={(n) => setMember({ C2: n })} /></label>}
+                {shape === 'I' && <label className="f"><span>Load position</span>
+                  <select value={Math.sign(page.member.zg)} onChange={(e) => setMember({ zg: Number(e.target.value) * (v.h ?? 0) / 2 })}>
+                    <option value={0}>Shear centre</option><option value={1}>Top flange (destabilising)</option><option value={-1}>Bottom flange</option>
+                  </select>
+                </label>}
+                {shape === 'I' && <label className="f wide"><span>LTB method</span>
+                  <select data-testid="ltb-method" value={page.member.cNA} onChange={(e) => setMember({ cNA: Number(e.target.value) as 0 | 1 })}>
+                    <option value={1}>§6.3.2.3 rolled/welded, Singapore (UK) NA, f with k_c = 1/√C1</option><option value={0}>§6.3.2.2 general, recommended values</option>
+                  </select>
+                </label>}
+                {(shape === 'I' ? ['Cmy', 'Cmz', 'CmLT'] as const : ['Cmy', 'Cmz'] as const).map((k) => (
+                  <label key={k} className="f"><span>C<sub>{k.slice(1)}</sub></span><NumberField id={`in-${k}`} label={k} value={page.member[k]} onCommit={(n) => setMember({ [k]: n })} /></label>
+                ))}
+                <label className="f"><span>γ<sub>M1</sub></span><NumberField id="in-gm1" label="gamma_M1" value={page.member.gammaM1} onCommit={(n) => setMember({ gammaM1: n })} /></label>
+                <p className="hint wide">Same member data for every combination. C<sub>m</sub> from Table B.3 (1.0 = no moment-gradient benefit). <Rich text={shape === 'I' ? 'M_cr from SN003b, fork ends; torsional buckling with L_cr,T = L_cr,z.' : shape === 'RHS' ? 'M_cr without warping, LTB curve d; buckling curve a (hot-finished) or c (cold-formed).' : 'No LTB; buckling curve a (hot-finished) or c (cold-formed).'} /></p>
               </div>
             </section>
             <section aria-labelledby="h-design">
@@ -314,10 +389,13 @@ export function App() {
             <p className="basis">Checks for <b>{page.combos[shown]?.name}</b> · Class <b>{fmt(r?.v.Class ?? NaN, 0)}</b> ({(r?.v.Class ?? 9) <= 2 ? 'plastic' : (r?.v.Class ?? 9) <= 3 ? 'elastic' : 'not covered'}) · ρ = {fmt(r?.v.rho ?? NaN, 3)} · n = {fmt(r?.v.n ?? NaN, 3)}</p>
             <table className="ur" data-testid="checks">
               <tbody>
-                {checks.map(([k, label, clause]) => {
-                  const u = r?.ur[k] ?? NaN, g = gov?.combo === shown && gov.key === k;
-                  return <tr key={k} className={g ? 'gov' : ''}><td><Rich text={label} /><span className="clause">EN 1993-1-1 §{clause}</span></td><td className={tone(u)}>{fmt(u, 3)}</td></tr>;
-                })}
+                {[false, true].map((member) => [
+                  <tr key={`h${member}`} className="group"><td colSpan={2}>{member ? 'Member (§6.3)' : 'Cross-section (§6.2)'}</td></tr>,
+                  ...checks.filter(([k]) => isMemberCheck(k) === member).map(([k, label, clause]) => {
+                    const u = r?.ur[k] ?? NaN, g = gov?.combo === shown && gov.key === k;
+                    return <tr key={k} className={g ? 'gov' : ''}><td><Rich text={label} /><span className="clause">EN 1993-1-1 §{clause}</span></td><td className={tone(u)} data-testid={`check-${k}`}>{fmt(u, 3)}</td></tr>;
+                  }),
+                ])}
               </tbody>
               <tfoot><tr><td>Combination UR</td><td className={tone(r?.v.UR ?? NaN)}>{fmt(r?.v.UR ?? NaN, 3)}</td></tr></tfoot>
             </table>
@@ -325,6 +403,14 @@ export function App() {
             <table className="props"><tbody>
               {resist.map(([l, u, x]) => <tr key={l}><td><Rich text={l} /></td><td className="num">{fmt(x, 1)}</td><td>{u}</td></tr>)}
             </tbody></table>
+            <h3>Member (this combination)</h3>
+            <table className="props" data-testid="member-props"><tbody>
+              {member.map(([l, u, x, d]) => {
+                const pair = l === 'L_cr,y / L_cr,z' ? [r?.v.Lcry, r?.v.Lcrz] : l === 'k_yy / k_yz' ? [r?.v.kyy, r?.v.kyz] : l === 'k_zy / k_zz' ? [r?.v.kzy, r?.v.kzz] : null;
+                return <tr key={l}><td><Rich text={l} /></td><td className="num">{pair ? pair.map((q) => fmt(q ?? NaN, d)).join(' / ') : fmt(x, d)}</td><td>{u}</td></tr>;
+              })}
+            </tbody></table>
+            {ex && <VerificationTable ex={ex} values={ok?.[0]?.extra ?? []} />}
           </section>
         </div>
 
@@ -352,10 +438,26 @@ export function App() {
   );
 }
 
+function VerificationTable({ ex, values }: { ex: (typeof EXAMPLES)[number]; values: number[] }) {
+  return (
+    <div className="verify" data-testid="verification">
+      <h3>Published vs this sheet</h3>
+      <p className="hint"><a href={ex.url} target="_blank" rel="noreferrer">{ex.source}</a>. Agreement: {TOLERANCE}.{ex.note ? <> <Rich text={ex.note} /></> : null}</p>
+      <table className="props"><thead><tr><th /><th>Published</th><th>Sheet</th><th /></tr></thead><tbody>
+        {ex.published.map(([label, , unit, printed, compared], i) => {
+          const x = values[i], good = agrees(x, printed);
+          return <tr key={label}><td><Rich text={label} /></td><td className="num">{printed}</td><td className="num">{Number.isFinite(x) ? +x.toPrecision(4) : '–'}</td>
+            <td className={compared === false ? '' : good ? 'pass' : 'fail'} data-testid={`verify-${i}`}>{compared === false ? 'shown' : good ? '✓' : '✗'}{unit ? ` ${unit}` : ''}</td></tr>;
+        })}
+      </tbody></table>
+    </div>
+  );
+}
+
 function Scope() {
   return (
     <ul className="hint scope">
-      <li>Cross-section resistance only (EN 1993-1-1 §6.2): no flexural, torsional or lateral-torsional buckling (§6.3).</li>
+      <li>Cross-section §6.2 and member §6.3 (flexural, torsional (I/H) and lateral-torsional buckling; (6.61), (6.62) with Annex B Method 2). Uniform member, same lengths and C<sub>m</sub> for every combination; tension: no buckling, N = 0 in the interaction.</li>
             <li>Shear above 0.5V<sub>pl</sub> reduces f<sub>y</sub> on the whole section (conservative). Class 4, torsion, holes, shear buckling: not covered.</li>
       <li>CHS: M<sub>N,Rd</sub> = M<sub>pl,Rd</sub>(1 − n<sup>1.7</sup>), SCI P363 (Blue Book); RHS (6.39)–(6.41); I/H (6.33)–(6.41).</li>
     </ul>
