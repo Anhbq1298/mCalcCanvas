@@ -82,8 +82,9 @@ export function MathView({ shape, editing, isStatic }: { shape: MathShape; editi
           // a region just created at the cross (placed with the estimated baseline 4 + font size): keep its
           // baseline on the line; only once, so loading, undo or a later edit never moves it
           if (unanchoredRegions.delete(shape.id) && !useCanvasStore.getState().dragging) {
-            const dy = 4 + shape.props.fontSize - b;
-            if (dy) y = shape.y + dy;
+            const now = useCanvasStore.getState().shapes[shape.id];
+            const dy = now && now.type === 'math' ? 4 + now.props.fontSize - b : 0;
+            if (now && dy) y = now.y + dy;
           }
           patch.baseline = b;
         }

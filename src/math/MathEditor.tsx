@@ -3,6 +3,7 @@ import { flushPendingKeys, releaseActiveMathEditor, setActiveMathEditor, setKeyR
 import { handleMathcadKey } from './mathcadKeys';
 import { configureMathfield, MathfieldElement } from './mathliveSetup';
 import { convertibleMathWord } from './mathToText';
+import { wholeNameSelection } from './mathClipboard';
 
 interface MathEditorProps {
   latex: string;
@@ -74,6 +75,15 @@ export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel
     // Mathcad keystrokes (":" → ≔, "\\" → √, Ctrl+G Greek, "=" evaluates the
     // whole region…). Capture phase, i.e. before MathLive handles the key.
     const onKeyDownCapture = (e: KeyboardEvent) => {
+      // Escape finishes editing before MathLive sees it: MathLive's Escape switches to LaTeX mode, which takes a
+      // selection out of the value (and shows names like \alpha as LaTeX source).
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        callbacks.current.onChange(mf.value);
+        callbacks.current.onExit('escape');
+        return;
+      }
       if (e.key === ' ' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         const word = convertibleMathWord(mf.value);
         if (word) {
@@ -90,6 +100,10 @@ export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel
       }
     };
 
+    // copy / cut a whole name: f_{c.k}, not f alone
+    const onCopyCapture = () => wholeNameSelection(mf);
+    mf.addEventListener('copy', onCopyCapture, { capture: true });
+    mf.addEventListener('cut', onCopyCapture, { capture: true });
     mf.addEventListener('keydown', onKeyDownCapture, { capture: true });
     mf.addEventListener('input', onInput);
     mf.addEventListener('keydown', onKeyDown);
@@ -115,6 +129,8 @@ export function MathEditor({ latex, onChange, onExit, onConvertToText, ariaLabel
 
     return () => {
       cancelAnimationFrame(raf);
+      mf.removeEventListener('copy', onCopyCapture, { capture: true });
+      mf.removeEventListener('cut', onCopyCapture, { capture: true });
       mf.removeEventListener('keydown', onKeyDownCapture, { capture: true });
       mf.removeEventListener('input', onInput);
       mf.removeEventListener('keydown', onKeyDown);

@@ -27,6 +27,7 @@ import { PAGE_GAP, pageBox, pageCount, pageSize } from '../export/pageGeometry';
 import { anchorY, globalLine, lineOccupied, lineRemovable, lineY, pageLines, planLineShift, planSeparation, type LayoutPlan } from './layout';
 import { useAppStore } from '../store/appStore';
 import { buildLibraryShape, SHAPE_LIBRARY } from './shapeLibrary';
+import { copiedMath } from '../math/mathClipboard';
 
 const get = () => useCanvasStore.getState();
 
@@ -418,8 +419,15 @@ export function handlePasteData(data: DataTransfer | null): boolean {
     pasteShapes();
     return true;
   }
+  // math copied from a math region ("$$ … $$"): a math region, not its LaTeX as text
+  const math = copiedMath(text);
+  if (math) {
+    const id = createMathRegion(insertionPoint(), math);
+    useCanvasStore.setState({ editingId: null, selection: [id] });
+    return true;
+  }
   if (text.trim()) {
-    const id = createTextRegion(insertionPoint(), plainTextToHtml(text));
+    const id = createTextRegion(insertionPoint('text'), plainTextToHtml(text));
     useCanvasStore.setState({ editingId: null, selection: [id] });
     return true;
   }

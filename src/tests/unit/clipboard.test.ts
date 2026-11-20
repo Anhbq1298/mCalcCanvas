@@ -21,3 +21,22 @@ describe('pasting CalcCanvas shapes from the clipboard', () => {
     expect(shapes[0].type === 'text' && shapes[0].props.html).toBe('<b>hi</b>');
   });
 });
+
+describe('math copied from a math region (MathLive "$$ … $$")', () => {
+  it('is recognised, pastes as a math region and reads as text', async () => {
+    const { copiedMath, mathToTextHtml } = await import('../../math/mathClipboard');
+    expect(copiedMath('$$ \\alpha_{cr} $$')).toBe('\\alpha_{cr}');
+    expect(copiedMath('\\[x^2\\]')).toBe('x^2');
+    expect(copiedMath('costs $5 and $$ more')).toBeNull();
+    expect(copiedMath('plain text')).toBeNull();
+    expect(mathToTextHtml('\\gamma_{M0}')).toBe('γ<sub>M0</sub>');
+    expect(mathToTextHtml('f_{c.k}\\cdot\\alpha+\\pi')).toBe('f<sub>c.k</sub>·α+π');
+    expect(mathToTextHtml('\\frac{M_{Ed}}{W}\\le1')).toBe('M<sub>Ed</sub>/W≤1');
+    expect(mathToTextHtml('30\\,\\mathrm{kN}')).toBe('30 kN');
+    expect(mathToTextHtml('a<b')).toBe('a&lt;b');
+    useCanvasStore.setState({ shapes: {}, selection: [] });
+    expect(handlePasteData(clipboard('$$ f_{c.k} $$'))).toBe(true);
+    const s = Object.values(useCanvasStore.getState().shapes);
+    expect(s.map((x) => [x.type, (x.props as { latex?: string }).latex])).toEqual([['math', 'f_{c.k}']]);
+  });
+});

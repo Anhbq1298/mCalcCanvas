@@ -8,6 +8,7 @@ import { annexInfo, annexNumber, blockTitle, pageNumberOf } from '../annex';
 import { useAppStore } from '../../store/appStore';
 import { useRegionResult } from '../../store/calculationStore';
 import { conditionHolds, textShowRegionId } from '../textShow';
+import { copiedMath, mathToTextHtml } from '../../math/mathClipboard';
 
 /**
  * Rich text region. While editing it is a contentEditable box (Ctrl+B/I/U
@@ -79,7 +80,9 @@ export function TextView({ shape, editing, isStatic }: { shape: TextShape; editi
           const text = e.clipboardData.getData('text/plain');
           if (!html && !text) return;
           e.preventDefault();
-          const clean = html ? sanitizeHtml(html) : plainTextToHtml(text);
+          // math copied from a math region: readable text (α, f with subscript c.k), not its LaTeX
+          const math = html ? null : copiedMath(text);
+          const clean = math ? sanitizeHtml(mathToTextHtml(math)) : html ? sanitizeHtml(html) : plainTextToHtml(text);
           document.execCommand('insertHTML', false, clean);
         }}
         onKeyDown={(e) => {
