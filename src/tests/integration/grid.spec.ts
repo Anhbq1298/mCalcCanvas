@@ -58,7 +58,11 @@ test.describe('optional grid snapping', () => {
       const [s] = await shapes(page);
       return { x: s.x, baseline: s.y + baseline(s) };
     }).toEqual({ x: 176, baseline: 160 }); // Minor squares between the large grid lines, in both directions.
+    // select the region (not editing it), then nudge it one square down
+    await page.mouse.click(5, 5);
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __calccanvas: { store: { getState(): { editingId: string | null } } } }).__calccanvas.store.getState().editingId)).toBeNull();
     await page.getByTestId('math-region').click();
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __calccanvas: { store: { getState(): { selection: string[]; editingId: string | null } } } }).__calccanvas.store.getState()).then((st) => st.selection.length === 1 && !st.editingId)).toBe(true);
     await page.keyboard.press('ArrowDown');
     await expect.poll(async () => {
       const [s] = await shapes(page);
