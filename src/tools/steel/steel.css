@@ -1,5 +1,5 @@
 /* mSteelBeamColumn: additions to the mCompositeBeamDesign sheet styles. */
-.workspace.steel { grid-template-columns: 24rem minmax(30rem, 1fr) 22rem; }
+.workspace.steel { grid-template-columns: 27.5rem minmax(28rem, 1fr) 22rem; }
 .seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; margin-bottom: 0.625rem; }
 .seg button { border: 0; background: var(--field); padding: 0.35rem 0.8rem; cursor: pointer; font-size: 0.8125rem; color: var(--ink-2); }
 .seg button + button { border-left: 1px solid var(--rule); }
@@ -20,7 +20,7 @@
 .results.steel-notes { grid-template-columns: 1fr; }
 .scope { padding-left: 1.1rem; margin: 0; } .scope li + li { margin-top: 0.25rem; }
 .opt-dialog textarea { width: 100%; box-sizing: border-box; font: 0.8125rem/1.4 ui-monospace, monospace; border: 1px solid var(--rule); border-radius: 3px; padding: 6px; margin: 0.5rem 0; }
-@media (max-width: 1280px) { .workspace.steel { grid-template-columns: 24rem 1fr; } .workspace.steel .stage { order: 0; grid-column: 1 / -1; } }
+@media (max-width: 1280px) { .workspace.steel { grid-template-columns: 27.5rem 1fr; } .workspace.steel .stage { order: 0; grid-column: 1 / -1; } }
 @media (max-width: 720px) { .workspace.steel, .results.steel { grid-template-columns: 1fr; } }
 .xs { display: grid; grid-template-columns: minmax(14rem, 22rem) minmax(12rem, 1fr); gap: 0.5rem 1.5rem; align-items: start; margin-top: 1.25rem; padding-top: 0.875rem; border-top: 1px solid var(--rule); }
 @media (max-width: 720px) { .xs { grid-template-columns: 1fr; } }
@@ -56,7 +56,9 @@
 .rows .row-ctl:has(select), .rows .row-ctl:has(.seg) { width: 7.75rem; }
 .rows .row-ctl:has(.browse) { width: auto; }
 .btn.browse { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; font-size: 0.8125rem; }
-.rows .row.sub { grid-template-columns: 1fr; padding-top: 0; }
+.rows .row.sub { padding-top: 0.125rem; }
+.factors { display: flex; gap: 1.25rem; justify-content: flex-end; font-size: 0.8125rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.factors b { color: var(--ink); font-weight: 500; }
 .row-pair { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .row-pair label { display: flex; align-items: center; gap: 4px; font-size: 0.75rem; color: var(--ink-2); }
 .row-pair .out { width: 4.25rem; text-align: right; background: color-mix(in srgb, var(--rule) 25%, transparent) !important; border: 1px solid var(--rule) !important; }

@@ -45,14 +45,13 @@ export function MomentDiagramButton({ value, onChange, onCm, withC2 }: {
   const [c1, setC1] = useState(String(value.C1));
   const [c2, setC2] = useState(String(value.C2));
   const [cm, setCm] = useState(true);
-  const current = LTB_CASES.find((x) => x.n === value.nLT);
   const pick = (c: LtbCase) => { onChange({ nLT: c.n, C1: c.c1, C2: c.c2 }); if (cm) onCm(c.cm); ref.current?.close(); };
   const num = (s: string) => (/^\s*-?(\d+\.?\d*|\.\d+)\s*$/.test(s) ? Number(s) : NaN);
   const p = num(psi), u1 = num(c1), u2 = num(c2);
   return (
     <>
       <button type="button" className="btn browse" data-testid="ltb-diagram" title={choiceLabel(value)} onClick={() => { setC1(String(value.C1)); setC2(String(value.C2)); ref.current?.showModal(); }}>
-        <DiagramIcon c={current ?? { kind: 'end', psi: value.psi ?? 1 }} w={44} h={22} />Browse…
+        Browse…
       </button>
       <dialog ref={ref} className="opt-dialog wide" aria-label="Moment diagram for lateral-torsional buckling">
         <div className="opt-form">

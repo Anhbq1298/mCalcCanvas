@@ -203,7 +203,7 @@ export function App() {
                 </Row>
               </>}
               {shape !== 'I' && <>
-                <Row desc="Manufacturing process (corner radii, buckling curve)">
+                <Row desc="Manufacturing process">
                   <select aria-label="Process" value={page.cf} onChange={(e) => set({ cf: Number(e.target.value) as 0 | 1 })}>
                     <option value={0}>Hot-finished</option><option value={1}>Cold-formed</option>
                   </select>
@@ -213,7 +213,7 @@ export function App() {
                     <option>SHS</option><option>RHS</option>
                   </select>
                 </Row>}
-                <Row desc="Section size (common range; or enter the dimensions below)">
+                <Row desc="Section size">
                   <select aria-label="Size" data-testid="hollow-select" value={hollowCurrent?.name ?? ''} onChange={(e) => {
                     const s = hollowList.find((x) => x.name === e.target.value);
                     if (s) set(shape === 'CHS' ? { chs: { d: s.dims.d!, t: s.dims.t } } : { rhs: { h: s.dims.h!, b: s.dims.b!, t: s.dims.t } });
@@ -238,49 +238,46 @@ export function App() {
                   {!GRADES.some(([, f]) => f === page.fyNom) && <option value={page.fyNom}>f_y = {page.fyNom}</option>}
                 </select>
               </Row>
-              <Row desc="Yield strength by thickness: product standard (Singapore / UK NA) or EN 1993-1-1 Table 3.1">
+              <Row desc="Yield strength by thickness" note="Product standard (Singapore / UK NA) or EN 1993-1-1 Table 3.1">
                 <select aria-label="f_y basis" data-testid="fy-basis" value={page.fyBasis} onChange={(e) => set({ fyBasis: Number(e.target.value) as 0 | 1 })}>
                   <option value={1}>Product std</option><option value={0}>Table 3.1</option>
                 </select>
               </Row>
-              <Row desc="Yield strength used (from the sheet)" sym="f_y" unit="MPa"><output className="num-input out">{fmt(v.fy, 0)}</output></Row>
+              <Row desc="Yield strength used" sym="f_y" unit="MPa"><output className="num-input out">{fmt(v.fy, 0)}</output></Row>
               <Row desc="Partial factor, cross-section resistance" sym="γ_M0"><NumberField id="in-gm0" label="gamma_M0" value={page.gammaM0} onCommit={(n) => set({ gammaM0: n })} /></Row>
               {shape !== 'CHS' && <Row desc="Shear area factor (EN 1993-1-5)" sym="η"><NumberField id="in-eta" label="eta" value={page.eta} onCommit={(n) => set({ eta: n })} /></Row>}
             </section>
             <section aria-labelledby="h-member">
               <h2 id="h-member">Member (§6.3)</h2>
-              {([['Ly', 'System length for buckling about y-y (major axis)', 'L_y', 'm'], ['ky', 'Effective length factor, L_cr,y = k_y L_y', 'k_y', ''], ['Lz', 'System length for buckling about z-z (minor axis)', 'L_z', 'm'], ['kz', 'Effective length factor, L_cr,z = k_z L_z', 'k_z', '']] as const).map(([k, d, sym, u]) => (
+              {([['Ly', 'System length, buckling about y-y', 'L_y', 'm'], ['ky', 'Effective length factor', 'k_y', ''], ['Lz', 'System length, buckling about z-z', 'L_z', 'm'], ['kz', 'Effective length factor', 'k_z', '']] as const).map(([k, d, sym, u]) => (
                 <Row key={k} desc={d} sym={sym} unit={u}><NumberField id={`in-${k}`} label={sym} value={page.member[k]} onCommit={(n) => setMember({ [k]: n })} /></Row>
               ))}
-              {shape !== 'CHS' && <Row desc="Length between lateral restraints of the compression flange (0 = fully restrained)" sym="L_LT" unit="m"><NumberField id="in-Llt" label="L_LT" value={page.member.Llt} onCommit={(n) => setMember({ Llt: n })} /></Row>}
+              {shape !== 'CHS' && <Row desc="Unrestrained length for LTB (0 = restrained)" sym="L_LT" unit="m"><NumberField id="in-Llt" label="L_LT" value={page.member.Llt} onCommit={(n) => setMember({ Llt: n })} /></Row>}
               {shape !== 'CHS' && <>
-                <Row desc="Moment diagram between lateral restraints (SN003b; or ψ, C1, C2 by hand)" note={choiceLabel(page.member).split(' · ')[0]}>
+                <Row desc="Moment diagram between lateral restraints" note={choiceLabel(page.member).split(' · ')[0]}>
                   <MomentDiagramButton value={page.member} withC2={shape === 'I'} onChange={(c) => setMember({ nLT: c.nLT, C1: c.C1, C2: c.C2, psi: c.psi })} onCm={(cm) => setMember({ Cmy: cm, CmLT: cm })} />
                 </Row>
                 <div className="row sub">
-                  <span className="row-pair">
-                    <label><span>C<sub>1</sub> =</span><output className="num-input out" data-testid="c1-shown">{fmt(page.member.C1, 3)}</output></label>
-                    {shape === 'I' && <label><span>C<sub>2</sub> =</span><output className="num-input out" data-testid="c2-shown">{fmt(page.member.C2, 3)}</output></label>}
-                    <span className="row-sym">from the diagram (read only)</span>
-                  </span>
+                  <span className="row-desc">Factors from the diagram</span>
+                  <span className="factors"><span>C<sub>1</sub> = <b data-testid="c1-shown">{fmt(page.member.C1, 3)}</b></span>{shape === 'I' && <span>C<sub>2</sub> = <b data-testid="c2-shown">{fmt(page.member.C2, 3)}</b></span>}</span>
                 </div>
               </>}
-              {shape === 'I' && <Row desc="Load position relative to the shear centre" sym="z_g">
+              {shape === 'I' && <Row desc="Load position" sym="z_g">
                 <select aria-label="Load position" value={Math.sign(page.member.zg)} onChange={(e) => setMember({ zg: Number(e.target.value) * (v.h ?? 0) / 2 })}>
                   <option value={0}>Shear centre</option><option value={1}>Top flange</option><option value={-1}>Bottom flange</option>
                 </select>
               </Row>}
-              {shape !== 'CHS' && <Row desc="LTB method: §6.3.2.3 with the Singapore / UK NA (f with k_c = 1/√C1), or §6.3.2.2 recommended">
+              {shape !== 'CHS' && <Row desc="LTB method">
                 <select aria-label="LTB method" data-testid="ltb-method" value={page.member.cNA} onChange={(e) => setMember({ cNA: Number(e.target.value) as 0 | 1 })}>
                   <option value={1}>§6.3.2.3 NA</option><option value={0}>§6.3.2.2</option>
                 </select>
               </Row>}
-              {(shape === 'I' ? [['Cmy', 'Equivalent uniform moment factor, y-y (Table B.3)', 'C_my'], ['Cmz', 'Equivalent uniform moment factor, z-z', 'C_mz'], ['CmLT', 'Equivalent uniform moment factor, LTB', 'C_mLT']] as const
-                : [['Cmy', 'Equivalent uniform moment factor, y-y (Table B.3)', 'C_my'], ['Cmz', 'Equivalent uniform moment factor, z-z', 'C_mz']] as const).map(([k, d, sym]) => (
+              {(shape === 'I' ? [['Cmy', 'Equivalent uniform moment factor, y-y', 'C_my'], ['Cmz', 'Equivalent uniform moment factor, z-z', 'C_mz'], ['CmLT', 'Equivalent uniform moment factor, LTB', 'C_mLT']] as const
+                : [['Cmy', 'Equivalent uniform moment factor, y-y', 'C_my'], ['Cmz', 'Equivalent uniform moment factor, z-z', 'C_mz']] as const).map(([k, d, sym]) => (
                 <Row key={k} desc={d} sym={sym}><NumberField id={`in-${k}`} label={k} value={page.member[k]} onCommit={(n) => setMember({ [k]: n })} /></Row>
               ))}
               <Row desc="Partial factor, member buckling" sym="γ_M1"><NumberField id="in-gm1" label="gamma_M1" value={page.member.gammaM1} onCommit={(n) => setMember({ gammaM1: n })} /></Row>
-              <p className="hint">Same member data for every combination; C<sub>m</sub> = 1.0 takes no moment-gradient benefit. <Rich text={shape === 'I' ? 'M_cr from SN003b, fork ends; torsional buckling with L_cr,T = L_cr,z.' : shape === 'RHS' ? 'M_cr without warping; buckling curve a (hot-finished) or c (cold-formed).' : 'No LTB; buckling curve a (hot-finished) or c (cold-formed).'} /></p>
+              <p className="hint">L<sub>cr</sub> = k L. LTB: §6.3.2.3 with the Singapore / UK NA (f with k<sub>c</sub> = 1/√C<sub>1</sub>) or §6.3.2.2. C<sub>m</sub> from Table B.3; 1.0 takes no moment-gradient benefit. Same member data for every combination. <Rich text={shape === 'I' ? 'M_cr from SN003b, fork ends; torsional buckling with L_cr,T = L_cr,z.' : shape === 'RHS' ? 'M_cr without warping; buckling curve a (hot-finished) or c (cold-formed).' : 'No LTB; buckling curve a (hot-finished) or c (cold-formed).'} /></p>
             </section>
           </form>
 
