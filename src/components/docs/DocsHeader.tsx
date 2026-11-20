@@ -90,7 +90,7 @@ export function DocsHeader() {
             </div>
             <SaveStatus />
           </div>
-          <nav role="menubar" aria-label="Main menu" className="-ml-1 flex items-center [&_button[role=menuitem][aria-haspopup]]:h-6 [&_button[role=menuitem][aria-haspopup]]:px-2 [&_button[role=menuitem][aria-haspopup]]:text-[14px] [&_button[role=menuitem][aria-haspopup]]:text-docs-ink">
+          <nav role="menubar" aria-label="Main menu" className="docs-menubar -ml-1 flex items-center [&_button[role=menuitem][aria-haspopup]]:h-6 [&_button[role=menuitem][aria-haspopup]]:px-2 [&_button[role=menuitem][aria-haspopup]]:text-[14px] [&_button[role=menuitem][aria-haspopup]]:text-docs-ink">
             {Object.entries(menus).map(([name, entries]) => (
               <MenuButton
                 key={name}
@@ -142,10 +142,11 @@ export function DocsHeader() {
         {workspace === 'calculation' && <button
           type="button"
           data-testid="export-pdf"
+          aria-label="Export PDF"
           onClick={() => void commands.exportPdf()}
           className="flex h-10 cursor-pointer items-center gap-2 rounded-full bg-docs-share px-5 text-[14px] font-medium text-docs-ink transition-colors duration-150 hover:bg-docs-share-hover"
         >
-          <FileDown size={17} aria-hidden /> Export PDF
+          <FileDown size={17} aria-hidden /> <span className="export-pdf-label">Export PDF</span>
         </button>}
       </div>
 

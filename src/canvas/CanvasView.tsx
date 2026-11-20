@@ -40,7 +40,8 @@ import { Rulers } from './Rulers';
 export type HandleId = 'nw' | 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'start' | 'end';
 
 type Drag =
-  | { kind: 'pan'; startScreen: Point; cam: Camera }
+  | { kind: 'pan'; startScreen: Point; cam: Camera; tap?: Point }
+  | { kind: 'pinch'; d0: number; mid0: Point; cam: Camera }
   | { kind: 'move'; start: Point; orig: Record<string, Point>; bounds: Box; moved: boolean; clickedId: string; wasSelected: boolean; shift: boolean }
   | { kind: 'marquee'; start: Point; base: string[] }
   | { kind: 'resize'; id: string; handle: HandleId; start: Point; orig: Shape }
@@ -139,6 +140,7 @@ export function CanvasView() {
   const canvasMode = useAppStore((s) => s.settings.canvasMode);
   const containerRef = useRef<HTMLDivElement>(null);
   const drag = useRef<Drag | null>(null);
+  const touches = useRef(new Map<number, Point>());
   const space = useRef(false);
   const [marquee, setMarquee] = useState<Box | null>(null);
   const [panning, setPanning] = useState(false);
@@ -209,6 +211,18 @@ export function CanvasView() {
 
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.button === 2) return;
+    // Touch: two fingers pinch-zoom and pan; one finger on the sheet scrolls it (a tap places the + cross)
+    if (e.pointerType === 'touch') {
+      const rect = containerRef.current!.getBoundingClientRect();
+      touches.current.set(e.pointerId, { x: e.clientX - rect.left, y: e.clientY - rect.top });
+      if (touches.current.size === 2) {
+        const [a, b] = [...touches.current.values()];
+        if (drag.current?.kind === 'move' && drag.current.moved) return;
+        drag.current = { kind: 'pinch', d0: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)), mid0: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }, cam: useCanvasStore.getState().camera };
+        setMarquee(null);
+        return;
+      }
+    }
     const target = e.target as Element;
     // The ⠿ grip moves a region — even while you are typing in it.
     const grip = target.closest('[data-grip]');
@@ -258,6 +272,11 @@ export function CanvasView() {
         }
         const shapeEl = target.closest('[data-shape-id]');
         const id = shapeEl?.getAttribute('data-shape-id');
+        // a finger scrolls the sheet unless it starts on a region that is already selected (then it moves it)
+        if (e.pointerType === 'touch' && !(id && st.selection.includes(id))) {
+          drag.current = { kind: 'pan', startScreen: { x: e.clientX, y: e.clientY }, cam: st.camera, tap: p };
+          return;
+        }
         if (id && st.shapes[id]) {
           useCanvasStore.setState({ crosshair: null });
           const wasSelected = st.selection.includes(id);
@@ -315,10 +334,24 @@ export function CanvasView() {
     lastPointer.x = p.x;
     lastPointer.y = p.y;
     lastPointer.inside = true;
+    if (e.pointerType === 'touch' && touches.current.has(e.pointerId)) {
+      const rect = containerRef.current!.getBoundingClientRect();
+      touches.current.set(e.pointerId, { x: e.clientX - rect.left, y: e.clientY - rect.top });
+    }
     const d = drag.current;
     if (!d) return;
     const st = useCanvasStore.getState();
     switch (d.kind) {
+      case 'pinch': {
+        if (touches.current.size < 2) return;
+        const [a, b] = [...touches.current.values()];
+        const dist = Math.max(1, Math.hypot(a.x - b.x, a.y - b.y));
+        const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+        const z = Math.min(8, Math.max(0.1, (d.cam.z * dist) / d.d0));
+        const anchor = screenToPage(d.mid0, d.cam);
+        setCamera({ x: anchor.x - mid.x / z, y: anchor.y - mid.y / z, z });
+        return;
+      }
       case 'pan': {
         const z = d.cam.z;
         setCamera({ x: d.cam.x - (e.clientX - d.startScreen.x) / z, y: d.cam.y - (e.clientY - d.startScreen.y) / z, z });
@@ -394,13 +427,30 @@ export function CanvasView() {
     }
   };
 
-  const onPointerUp = () => {
+  const onPointerUp = (e?: React.PointerEvent) => {
+    if (e?.pointerType === 'touch') {
+      touches.current.delete(e.pointerId);
+      // lifting one finger of a pinch: keep the view, start nothing new
+      if (drag.current?.kind === 'pinch') {
+        if (!touches.current.size) drag.current = null;
+        return;
+      }
+    }
     const d = drag.current;
     drag.current = null;
     setMarquee(null);
     if (!d) return;
     const st = useCanvasStore.getState();
     switch (d.kind) {
+      case 'pan': {
+        // a tap (no scroll): select the region under it, or place the + cross on the sheet
+        if (!d.tap || !e) break;
+        if (Math.hypot(e.clientX - d.startScreen.x, e.clientY - d.startScreen.y) > 8) break;
+        const id = (document.elementFromPoint(e.clientX, e.clientY) as Element | null)?.closest('[data-shape-id]')?.getAttribute('data-shape-id');
+        if (id && st.shapes[id]) { useCanvasStore.setState({ crosshair: null }); select([id]); }
+        else { select([]); useCanvasStore.setState({ crosshair: printableAt(d.tap) ? crossPoint(d.tap) : null }); }
+        break;
+      }
       case 'move':
         if (d.moved) {
           // Drop: apply the grid-snapped positions (normal, normalised update).
