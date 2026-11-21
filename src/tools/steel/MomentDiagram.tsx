@@ -19,20 +19,25 @@ function shape(c: Pick<LtbCase, 'kind' | 'psi'>): (x: number) => number {
   }
 }
 
+/** Beam with supports and load on top; the moment diagram below on its own base line, drawn as in the code
+ * figures (end moments: M above the line; transverse loads: sagging below, hogging above). */
 export function DiagramIcon({ c, w = 132, h = 64 }: { c: Pick<LtbCase, 'kind' | 'psi'>; w?: number; h?: number }) {
-  const f = shape(c), x0 = 12, x1 = w - 12, mid = h / 2 + 4, amp = h / 2 - 12;
-  const pts = Array.from({ length: 41 }, (_, i) => { const t = i / 40; return [x0 + t * (x1 - x0), mid - f(t) * amp]; });
+  const f = shape(c), x0 = 16, x1 = w - 18, beam = 9, base = 24 + (h - 24) / 2, amp = (h - 24) / 2 - 3;
+  // end moments: M drawn above the line as in SN003b Table 3.1 / EN 1993-1-1 Table B.3; transverse loads: sagging below
+  const sgn = c.kind === 'end' ? -1 : 1, y = (t: number) => base + sgn * f(t) * amp;
+  const pts = Array.from({ length: 41 }, (_, i) => { const t = i / 40; return [x0 + t * (x1 - x0), y(t)]; });
   const fixed = c.kind === 'udl-fixed' || c.kind === 'point-fixed';
   const load = c.kind === 'udl-simple' || c.kind === 'udl-fixed' ? Array.from({ length: 7 }, (_, i) => x0 + 6 + (i * (x1 - x0 - 12)) / 6) : c.kind.startsWith('point') ? [(x0 + x1) / 2] : [];
   return (
     <svg viewBox={`0 0 ${w} ${h}`} width={w} height={h} aria-hidden="true">
-      <path d={`M${x0},${mid} ${pts.map(([x, y]) => `L${x.toFixed(1)},${y.toFixed(1)}`).join(' ')} L${x1},${mid} Z`} fill="color-mix(in srgb, #2B3A8C 14%, transparent)" stroke={C.navy} strokeWidth={1.2} />
-      <line x1={x0} y1={mid} x2={x1} y2={mid} stroke={C.ink} strokeWidth={1.6} />
+      <line x1={x0} y1={beam} x2={x1} y2={beam} stroke={C.ink} strokeWidth={1.6} />
       {[x0, x1].map((x) => (fixed
-        ? <line key={x} x1={x} y1={mid - 9} x2={x} y2={mid + 9} stroke={C.ink} strokeWidth={3} />
-        : <path key={x} d={`M${x},${mid + 1} l-5,8 h10 z`} fill="white" stroke={C.ink} strokeWidth={1} />))}
-      {load.map((x) => <path key={x} d={`M${x},4 V${mid - amp - 3} m-3,-4 l3,4 l3,-4`} fill="none" stroke={C.red} strokeWidth={1} />)}
-      {c.kind === 'end' && <><text x={x0 - 2} y={10} fontSize={9} fill={C.grey}>M</text><text x={x1 - 14} y={10} fontSize={9} fill={C.grey}>ψM</text></>}
+        ? <line key={x} x1={x} y1={beam - 6} x2={x} y2={beam + 6} stroke={C.ink} strokeWidth={3} />
+        : <path key={x} d={`M${x},${beam + 1} l-4,6 h8 z`} fill="white" stroke={C.ink} strokeWidth={1} />))}
+      {load.map((x) => <path key={x} d={`M${x},1 V${beam - 2} m-2.5,-3 l2.5,3 l2.5,-3`} fill="none" stroke={C.red} strokeWidth={1} />)}
+      <path d={`M${x0},${base} ${pts.map(([x, yy]) => `L${x.toFixed(1)},${yy.toFixed(1)}`).join(' ')} L${x1},${base} Z`} fill="color-mix(in srgb, #2B3A8C 14%, transparent)" stroke={C.navy} strokeWidth={1.2} />
+      <line x1={x0} y1={base} x2={x1} y2={base} stroke={C.grey} strokeWidth={0.8} />
+      {c.kind === 'end' && <><text x={1} y={y(0) + 3} fontSize={8} fill={C.grey}>M</text><text x={x1 + 2} y={y(1) + 3} fontSize={8} fill={C.grey}>ψM</text></>}
     </svg>
   );
 }
@@ -71,7 +76,7 @@ export function MomentDiagramButton({ value, onChange, withC2 }: {
                   const on = c.n === value.nLT && !value.c1Default;
                   return (
                     <tr key={c.n} className={on ? 'on' : ''} onClick={() => pick(c)}>
-                      <td>{c.n}</td><td className="b3-d"><DiagramIcon c={c} w={110} h={40} /></td>
+                      <td>{c.n}</td><td className="b3-d"><DiagramIcon c={c} w={120} h={66} /></td>
                       <td className="b3-f">{c.psi! > 0 ? '+' : ''}{c.psi}</td><td className="b3-f">{c.c1.toFixed(3)}</td>
                       <td><button type="button" className="btn" data-testid={`ltb-case-${c.n}`} aria-pressed={on} onClick={(e) => { e.stopPropagation(); pick(c); }}>{on ? 'In use' : 'Use'}</button></td>
                     </tr>
@@ -87,7 +92,7 @@ export function MomentDiagramButton({ value, onChange, withC2 }: {
                   const on = c.n === value.nLT && !value.c1Default;
                   return (
                     <tr key={c.n} className={on ? 'on' : ''} onClick={() => pick(c)}>
-                      <td>{c.n}</td><td className="b3-d"><DiagramIcon c={c} w={110} h={40} /></td>
+                      <td>{c.n}</td><td className="b3-d"><DiagramIcon c={c} w={120} h={66} /></td>
                       <td>{c.label}</td><td className="b3-f">{c.c1.toFixed(3)}</td><td className="b3-f">{c.c2.toFixed(3)}</td>
                       <td><button type="button" className="btn" data-testid={`ltb-case-${c.n}`} aria-pressed={on} onClick={(e) => { e.stopPropagation(); pick(c); }}>{on ? 'In use' : 'Use'}</button></td>
                     </tr>
@@ -99,7 +104,7 @@ export function MomentDiagramButton({ value, onChange, withC2 }: {
           </div>
           <h3>Custom</h3>
           <div className="custom-row">
-            <DiagramIcon c={{ kind: 'end', psi: Number.isFinite(p) ? Math.max(-1, Math.min(1, p)) : 0 }} w={96} h={46} />
+            <DiagramIcon c={{ kind: 'end', psi: Number.isFinite(p) ? Math.max(-1, Math.min(1, p)) : 0 }} w={110} h={66} />
             <label className="f"><span>End moments ψ = M<sub>2</sub>/M<sub>1</sub> (−1 … 1)</span><input className="num-input" data-testid="ltb-psi" value={psi} onChange={(e) => setPsi(e.target.value)} /></label>
             <span className="hint">C<sub>1</sub> = {fmt(Number.isFinite(p) ? c1OfPsi(p) : NaN, 3)} (Table 3.1, interpolated), C<sub>2</sub> = 0</span>
             <button type="button" className="btn" data-testid="ltb-psi-use" disabled={!Number.isFinite(p) || p < -1 || p > 1} onClick={() => { onChange({ nLT: 0, C1: +c1OfPsi(p).toFixed(4), C2: 0, psi: p }); ref.current?.close(); }}>Use</button>
