@@ -277,7 +277,8 @@ test.describe('Mathcad keys, constants, page chrome and text styling', () => {
       await resultOf(page, 'M').toBe('20 (10·kN·m·m/m)');
       await page.screenshot({ path: testInfo.outputPath('scaled-unit.png') });
       await page.reload();
-      await resultOf(page, 'M').toBe('20 (10·kN·m·m/m)');
+      // a reload restarts the worker and the document restore: slower on CI runners
+      await resultOf(page, 'M', 20_000).toBe('20 (10·kN·m·m/m)');
       await block.locator('[data-result-unit]').click();
       await expect(unit).toHaveJSProperty('value', '\\left(\\frac{10\\cdot\\unit{kN}\\cdot\\unit{m}\\cdot\\unit{m}}{\\unit{m}}\\right)');
       await unit.press('Escape');

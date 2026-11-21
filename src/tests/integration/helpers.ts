@@ -25,8 +25,8 @@ export async function region(page: Page, latexPrefix: string): Promise<RegionInf
   return (await regions(page)).find((r) => r.latex.startsWith(latexPrefix));
 }
 
-export function resultOf(page: Page, latexPrefix: string) {
-  return expect.poll(async () => (await region(page, latexPrefix))?.result ?? '<missing>', { timeout: 8000 });
+export function resultOf(page: Page, latexPrefix: string, timeout = 8000) {
+  return expect.poll(async () => (await region(page, latexPrefix))?.result ?? '<missing>', { timeout });
 }
 
 export function errorOf(page: Page, latexPrefix: string) {
