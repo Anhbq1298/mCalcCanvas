@@ -23,10 +23,12 @@ export function c1OfPsi(psi: number): number {
   return 1;
 }
 
-export interface DiagramChoice { nLT: number; C1: number; C2: number; psi?: number }
+/** c1Default: the conservative default C1 = 1.0, C2 = 0 (uniform moment), nLT 0 */
+export interface DiagramChoice { nLT: number; C1: number; C2: number; psi?: number; c1Default?: boolean }
 
 /** The current choice as a short label. */
 export function choiceLabel(m: DiagramChoice): string {
+  if (m.c1Default) return 'Conservative default · C1 1.000, C2 0.000';
   const c = LTB_CASES.find((x) => x.n === m.nLT);
   if (c) return `${c.label} · C1 ${fmt(c.c1, 3)}, C2 ${fmt(c.c2, 3)}`;
   return m.psi !== undefined ? `End moments, ψ = ${m.psi} · C1 ${fmt(m.C1, 3)}` : `User · C1 ${fmt(m.C1, 3)}, C2 ${fmt(m.C2, 3)}`;

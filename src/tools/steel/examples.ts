@@ -107,7 +107,7 @@ export const EXAMPLES: Example[] = [
 ];
 
 export const exampleSectionId = (e: Example) => (e.section ? sections.find((s) => s.name === e.section)!.id : 0);
-export const exampleMember = (e: Example): Member => ({ ...DEFAULT_MEMBER, ...e.member });
+export const exampleMember = (e: Example): Member => ({ ...DEFAULT_MEMBER, c1Default: false, ...e.member });
 
 /** Agreement: within half a unit of the last printed digit, or 1.5 % (sources round intermediate values and use tabulated properties). */
 export const TOLERANCE = 'half a unit of the last printed digit, or 1.5 %';

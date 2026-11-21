@@ -44,17 +44,23 @@ export function MomentDiagramButton({ value, onChange, withC2 }: {
   const [psi, setPsi] = useState(String(value.psi ?? 0));
   const [c1, setC1] = useState(String(value.C1));
   const [c2, setC2] = useState(String(value.C2));
+  const [calc, setCalc] = useState(!value.c1Default);
   const pick = (c: LtbCase) => { onChange({ nLT: c.n, C1: c.c1, C2: c.c2 }); ref.current?.close(); };
   const num = (s: string) => (/^\s*-?(\d+\.?\d*|\.\d+)\s*$/.test(s) ? Number(s) : NaN);
   const p = num(psi), u1 = num(c1), u2 = num(c2);
   return (
     <>
-      <button type="button" className="btn browse" data-testid="ltb-diagram" title={choiceLabel(value)} onClick={() => { setC1(String(value.C1)); setC2(String(value.C2)); ref.current?.showModal(); }}>
+      <button type="button" className="btn browse" data-testid="ltb-diagram" title={choiceLabel(value)} onClick={() => { setCalc(!value.c1Default); setC1(String(value.C1)); setC2(String(value.C2)); ref.current?.showModal(); }}>
         Browse…
       </button>
       <dialog ref={ref} className="opt-dialog wide" aria-label="Moment diagram for lateral-torsional buckling">
         <div className="opt-form">
-          <div className="opt-head"><h2>Moment diagram (C<sub>1</sub>, C<sub>2</sub>)</h2><button type="button" className="btn" onClick={() => ref.current?.close()}>Close</button></div>
+          <div className="opt-head"><h2>Moment diagram (C<sub>1</sub>, C<sub>2</sub>)</h2><button type="button" className="rowbtn" aria-label="Close" onClick={() => ref.current?.close()}>×</button></div>
+          <div className="cm-mode" role="group" aria-label="How C1, C2 are obtained">
+            <label className="check-row cm-toggle"><input type="checkbox" data-testid="ltb-default" checked={!calc} onChange={(e) => setCalc(!e.target.checked)} /> <span>Use default (conservative): C<sub>1</sub> = 1.000, C<sub>2</sub> = 0 (uniform moment)</span></label>
+            <label className="check-row cm-toggle"><input type="checkbox" data-testid="ltb-calc" checked={calc} onChange={(e) => setCalc(e.target.checked)} /> <span>Select from moment diagrams (SCI NCCI SN003b) or enter</span></label>
+          </div>
+          {calc && <>
           <p className="hint">SCI NCCI SN003b Tables 3.1 and 3.2: fork supports, k = k<sub>w</sub> = 1, the diagram between lateral restraints of the compression flange. C<sub>2</sub> acts with the load height z<sub>g</sub> (transverse load cases only).</p>
           <div className="diagram-grid" role="listbox" aria-label="Moment diagrams">
             {LTB_CASES.map((c) => (
@@ -79,6 +85,11 @@ export function MomentDiagramButton({ value, onChange, withC2 }: {
             <button type="button" className="btn" data-testid="ltb-user-use" disabled={!(u1 > 0) || (withC2 && !Number.isFinite(u2))} onClick={() => { onChange({ nLT: 0, C1: u1, C2: withC2 ? u2 : 0 }); ref.current?.close(); }}>Use</button>
           </div>
           <p className="hint">C<sub>1</sub>, C<sub>2</sub> only. C<sub>my</sub>, C<sub>mz</sub>, C<sub>mLT</sub> are set separately (Equivalent uniform moment factors, default 1.0).</p>
+          </>}
+          <div className="opt-run">
+            <span className="hint">{calc ? 'Click a diagram, or Use on a custom row, to apply.' : <>Applies C<sub>1</sub> = 1.000, C<sub>2</sub> = 0.</>}</span>
+            {!calc && <button type="button" className="btn primary" data-testid="ltb-apply" onClick={() => { onChange({ nLT: 0, C1: 1, C2: 0, c1Default: true }); ref.current?.close(); }}>Apply</button>}
+          </div>
         </div>
       </dialog>
     </>

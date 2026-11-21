@@ -261,7 +261,7 @@ export function App() {
               {shape !== 'CHS' && <Row desc="Unrestrained length for LTB (0 = restrained)" sym="L_LT" unit="m"><NumberField id="in-Llt" label="L_LT" value={page.member.Llt} onCommit={(n) => setMember({ Llt: n })} /></Row>}
               {shape !== 'CHS' && <>
                 <Row desc="Moment diagram between lateral restraints" note={choiceLabel(page.member).split(' · ')[0]}>
-                  <MomentDiagramButton value={page.member} withC2={shape === 'I'} onChange={(c) => setMember({ nLT: c.nLT, C1: c.C1, C2: c.C2, psi: c.psi })} />
+                  <MomentDiagramButton value={page.member} withC2={shape === 'I'} onChange={(c) => setMember({ nLT: c.nLT, C1: c.C1, C2: c.C2, psi: c.psi, c1Default: !!c.c1Default })} />
                 </Row>
                 <div className="row sub">
                   <span className="row-desc">Factors from the diagram</span>

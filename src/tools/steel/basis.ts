@@ -64,7 +64,7 @@ export function basisOf(name: string, shape: Shape, q: Q, m: Member, fyBasis: 0 
       if (shape !== 'I') return { note: `Table 6.2, ${q('\\mathrm{CF}') >= 1 ? 'cold-formed → curve c' : `hot-finished → curve ${curveOf(a)}`} (both axes)` };
       return { note: `Table 6.2, ${q('\\mathrm{Section}') === 0 ? 'welded' : 'rolled'} I/H, h/b = ${f(q('h', 'mm') / q('b', 'mm'), 2)}, t_f = ${f(q('t_{f}', 'mm'), 1)} mm, f_y,nom = ${f(q('f_{y.nom}', 'MPa'), 0)} MPa, buckling about ${ax} → curve ${curveOf(a)}` };
     }
-    case 'C_{1}': return shape === 'CHS' ? null : { note: m.nLT > 0 ? `SCI NCCI SN003b Table ${m.nLT <= 9 ? '3.1' : '3.2'}, case ${m.nLT} (from the moment diagram)` : m.psi !== undefined ? `End moments ψ = ${m.psi}: SN003b Table 3.1, interpolated` : 'User value (moment diagram: other)' };
+    case 'C_{1}': return shape === 'CHS' ? null : { note: m.c1Default ? 'Conservative default: C_1 = 1.0, C_2 = 0 (uniform moment)' : m.nLT > 0 ? `SCI NCCI SN003b Table ${m.nLT <= 9 ? '3.1' : '3.2'}, case ${m.nLT} (from the moment diagram)` : m.psi !== undefined ? `End moments ψ = ${m.psi}: SN003b Table 3.1, interpolated` : 'User value (moment diagram: other)' };
     case 'M_{cr}': {
       if (shape === 'RHS') return m.Llt > 0 ? { formula: '\\frac{C_{1}\\pi}{L_{LT}}\\sqrt{EI_{z}GI_{t}}', note: 'Closed section: warping neglected, load at the shear centre' } : { note: 'L_LT = 0: no LTB' };
       return m.Llt > 0 ? { formula: 'C_{1}N_{cr.LT}\\left(\\sqrt{\\frac{I_{w}}{I_{z}}+\\frac{GI_{t}}{N_{cr.LT}}+\\left(C_{2}z_{g}\\right)^2}-C_{2}z_{g}\\right)', note: `SCI NCCI SN003b eq. (1), fork supports, k = k_w = 1; N_cr,LT = π²EI_z/L_LT², C_2 = ${f(q('C_{2}'))}, z_g = ${f(m.zg, 1)} mm` } : { note: 'L_LT = 0: no LTB' };

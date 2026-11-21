@@ -57,6 +57,7 @@ test('mSteelBeamColumn report: hollow section with a hand C1 opens in mCalcCanva
   await expect(page.getByTestId('overall-ur')).not.toHaveText('–', { timeout: 30_000 });
   await page.getByTestId('shape-RHS').click();
   await page.getByTestId('ltb-diagram').click();
+  await page.getByTestId('ltb-calc').check();
   await page.getByTestId('ltb-psi').fill('-0.5');
   await page.getByTestId('ltb-psi-use').click();
   await expect(page.getByTestId('c1-shown')).toHaveText('2.330');
@@ -82,6 +83,7 @@ test('mSteelBeamColumn moment diagram picker: SN003b cases with Table B.3 Cm, en
   await page.goto('/steel/');
   await expect(page.getByTestId('overall-ur')).not.toHaveText('–', { timeout: 30_000 });
   await page.getByTestId('ltb-diagram').click();
+  await page.getByTestId('ltb-calc').check();
   await page.getByTestId('ltb-case-10').click();
   await expect(page.getByTestId('ltb-diagram')).toHaveAttribute('title', /UDL, simply supported/);
   await expect(page.getByTestId('c1-shown')).toHaveText('1.127');
@@ -89,12 +91,14 @@ test('mSteelBeamColumn moment diagram picker: SN003b cases with Table B.3 Cm, en
   await expect(page.getByTestId('cmy-shown')).toHaveText('1.000'); // C_m is set in its own form
   await expect(page.getByTestId('cmlt-shown')).toHaveText('1.000');
   await page.getByTestId('ltb-diagram').click();
+  await page.getByTestId('ltb-calc').check();
   await page.getByTestId('ltb-psi').fill('-0.5');
   await page.getByTestId('ltb-psi-use').click();
   await expect(page.getByTestId('c1-shown')).toHaveText('2.330');
   await expect(page.getByTestId('c2-shown')).toHaveText('0.000');
   await expect(page.getByTestId('cmy-shown')).toHaveText('1.000');
   await page.getByTestId('ltb-diagram').click();
+  await page.getByTestId('ltb-calc').check();
   await page.getByTestId('ltb-c1').fill('2.2');
   await page.getByTestId('ltb-c2').fill('0.3');
   await page.getByTestId('ltb-user-use').click();
@@ -152,4 +156,22 @@ test('C_m form: default 1.0; Table B.3 from moments only when ticked', async ({ 
   await page.getByTestId('cm-apply').click();
   await expect(page.getByTestId('cmy-shown')).toHaveText('1.000');
   await expect(page.getByTestId('cmz-shown')).toHaveText('1.000');
+});
+
+test('C1, C2 form: default tick, then a diagram, then back to default', async ({ page }) => {
+  await page.goto('/steel/');
+  await page.getByTestId('ltb-diagram').click();
+  await expect(page.getByTestId('ltb-default')).toBeChecked();
+  await expect(page.getByTestId('ltb-case-10')).toHaveCount(0);
+  await page.getByTestId('ltb-calc').check();
+  await expect(page.getByTestId('ltb-default')).not.toBeChecked();
+  await page.getByTestId('ltb-case-10').click();
+  await expect(page.getByTestId('c1-shown')).toHaveText('1.127');
+  await page.getByTestId('ltb-diagram').click();
+  await expect(page.getByTestId('ltb-calc')).toBeChecked();
+  await page.getByTestId('ltb-default').check();
+  await page.getByTestId('ltb-apply').click();
+  await expect(page.getByTestId('c1-shown')).toHaveText('1.000');
+  await expect(page.getByTestId('c2-shown')).toHaveText('0.000');
+  await expect(page.getByTestId('ltb-diagram')).toHaveAttribute('title', /Conservative default/);
 });
