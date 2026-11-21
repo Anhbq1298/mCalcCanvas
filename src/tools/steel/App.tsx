@@ -127,6 +127,9 @@ export function App() {
   const r = ok?.[shown], v = ok?.[0]?.v ?? {};
   const overall = gov?.ur ?? NaN, pass = Number.isFinite(overall) && overall <= 1;
   const sectionLabel = shape === 'I' ? sectionById(page.sectionId).name : hollowName(shape === 'RHS' ? { kind: 'RHS', ...page.rhs, cf: page.cf } : { kind: 'CHS', ...page.chs });
+  // cross-section (§6.2) against member (§6.3) for the shown combination
+  const sectionUR = Math.max(...checks.filter(([k]) => !isMemberCheck(k)).map(([k]) => r?.ur[k] ?? NaN));
+  const memberUR = Math.max(...checks.filter(([k]) => isMemberCheck(k)).map(([k]) => r?.ur[k] ?? NaN));
   const checkLabel = (k: string) => (k === 'class' ? 'Class 4 section (not covered)' : checks.find(([c]) => c === k)?.[1] ?? k);
   const errors = ok?.flatMap((x) => x.errors).slice(0, 3) ?? [];
   // the read-only worksheet follows the shown combination (selected row, else the governing one)
@@ -358,14 +361,20 @@ export function App() {
             <table className="ur" data-testid="checks">
               <tbody>
                 {[false, true].map((member) => [
-                  <tr key={`h${member}`} className="group"><td colSpan={2}>{member ? 'Member (§6.3)' : 'Cross-section (§6.2)'}</td></tr>,
+                  <tr key={`h${member}`} className={`group ${(member ? memberUR : sectionUR) >= (member ? sectionUR : memberUR) ? 'governs' : ''}`}>
+                    <td>{member ? 'Member (§6.3)' : 'Cross-section (§6.2)'}{(member ? memberUR : sectionUR) >= (member ? sectionUR : memberUR) && <span className="governs-tag">governs</span>}</td>
+                    <td className={tone(member ? memberUR : sectionUR)} data-testid={member ? 'member-ur' : 'section-ur'}>{fmt(member ? memberUR : sectionUR, 3)}</td>
+                  </tr>,
                   ...checks.filter(([k]) => isMemberCheck(k) === member).map(([k, label, clause]) => {
                     const u = r?.ur[k] ?? NaN, g = gov?.combo === shown && gov.key === k;
                     return <tr key={k} className={g ? 'gov' : ''}><td><Rich text={label} /><span className="clause">EN 1993-1-1 §{clause}</span></td><td className={tone(u)} data-testid={`check-${k}`}>{fmt(u, 3)}</td></tr>;
                   }),
                 ])}
               </tbody>
-              <tfoot><tr><td>Combination UR</td><td className={tone(r?.v.UR ?? NaN)}>{fmt(r?.v.UR ?? NaN, 3)}</td></tr></tfoot>
+              <tfoot><tr><td colSpan={2} className="gov-note">{Number.isFinite(sectionUR) && Number.isFinite(memberUR) ? (memberUR >= sectionUR
+                ? `Member governs: buckling reduces the resistance (χ_y ${fmt(r?.v.chiy ?? NaN, 2)}, χ_z ${fmt(r?.v.chiz ?? NaN, 2)}${shape !== 'CHS' ? `, χ_LT ${fmt(r?.v.chiLT ?? NaN, 2)}` : ''}) and k factors amplify the moments more than the cross-section interaction does.`
+                : `Cross-section governs: the member is stocky or braced (χ near 1) and/or C_m < 1 lowers the equivalent moments in (6.61)/(6.62), so the peak-moment section check (§6.2, γ_M0) is larger.`) : ''}</td></tr>
+                <tr><td>Combination UR</td><td className={tone(r?.v.UR ?? NaN)}>{fmt(r?.v.UR ?? NaN, 3)}</td></tr></tfoot>
             </table>
           </section>
         </div>
