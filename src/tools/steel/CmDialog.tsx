@@ -70,8 +70,11 @@ export function CmButton({ member, withLT, onApply }: { member: Member; withLT: 
             <h2 id="cm-title">Equivalent uniform moment factors C<sub>m</sub></h2>
             <button type="button" className="rowbtn" aria-label="Close" onClick={() => ref.current?.close()}>×</button>
           </header>
-          <label className="check-row cm-toggle"><input type="checkbox" data-testid="cm-calc" checked={calc} onChange={(e) => setCalc(e.target.checked)} /> Calculate from moment diagrams (EN 1993-1-1 Annex B, Table B.3)</label>
-          {!calc && <p className="cm-default" data-testid="cm-default">Conservative default · All C<sub>m</sub> = 1.000</p>}
+          {/* two ticks, one at a time: the default or the Table B.3 calculation */}
+          <div className="cm-mode" role="group" aria-label="How C_m is obtained">
+            <label className="check-row cm-toggle"><input type="checkbox" data-testid="cm-default-tick" checked={!calc} onChange={(e) => setCalc(!e.target.checked)} /> <span>Use default (conservative): all C<sub>m</sub> = 1.000</span></label>
+            <label className="check-row cm-toggle"><input type="checkbox" data-testid="cm-calc" checked={calc} onChange={(e) => setCalc(e.target.checked)} /> <span>Calculate from moment diagrams (EN 1993-1-1 Annex B, Table B.3)</span></label>
+          </div>
           <details className="b3-wrap" open={calc} data-testid="b3">
             <summary>Table B.3: how C<sub>m</sub> follows the moment diagram</summary>
             <TableB3 hits={hits} />

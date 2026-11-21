@@ -133,3 +133,5 @@
 .b3-arrow { stroke: var(--ink); stroke-width: 1.2; }
 .b3-def { font-size: 10px; }
 .b3-pt { fill: var(--ink); }
+.cm-mode { display: flex; flex-direction: column; gap: 0.25rem; margin: 0.75rem 1rem 0.25rem; }
+.cm-mode .cm-toggle { margin: 0; }

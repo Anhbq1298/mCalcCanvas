@@ -122,9 +122,11 @@ test('mSteelBeamColumn middle column: main formulas of the shown combination, re
 test('C_m form: default 1.0; Table B.3 from moments only when ticked', async ({ page }) => {
   await page.goto('/steel/');
   await page.getByTestId('cm-open').click();
-  await expect(page.getByTestId('cm-default')).toContainText('All C');
+  await expect(page.getByTestId('cm-default-tick')).toBeChecked();
+  await expect(page.getByTestId('cm-calc')).not.toBeChecked();
   await expect(page.getByTestId('cm-y-kind')).toHaveCount(0);
   await page.getByTestId('cm-calc').check();
+  await expect(page.getByTestId('cm-default-tick')).not.toBeChecked();
   // fixed-end UDL about y-y: α_s = −0.5 → 0.5; Apply locked until M_s is given
   await page.getByTestId('cm-y-kind').selectOption('udl');
   await page.getByTestId('cm-y-MA').fill('-100');
@@ -145,7 +147,8 @@ test('C_m form: default 1.0; Table B.3 from moments only when ticked', async ({ 
   // reopening keeps the definition; unticking returns all to 1.0
   await page.getByTestId('cm-open').click();
   await expect(page.getByTestId('cm-y-Ms')).toHaveValue('50');
-  await page.getByTestId('cm-calc').uncheck();
+  await page.getByTestId('cm-default-tick').check();
+  await expect(page.getByTestId('cm-calc')).not.toBeChecked();
   await page.getByTestId('cm-apply').click();
   await expect(page.getByTestId('cmy-shown')).toHaveText('1.000');
   await expect(page.getByTestId('cmz-shown')).toHaveText('1.000');
