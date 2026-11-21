@@ -79,7 +79,6 @@ function summaryGroups(shape: Kind): Group[] {
   if (shape === 'I') six('Torsional buckling (§6.3.1.4)', [['N_{cr.T}', 'Elastic critical force'], ['\\lambda_{T}', 'Relative slenderness'], ['\\chi_{T}', 'Reduction factor'], ['N_{b.T.Rd}', 'Buckling resistance'], [U('b.T'), 'Utilisation']]);
   six('Lateral-torsional buckling (§6.3.2)', [['C_{1}', 'Moment diagram factor'], ['M_{cr}', 'Elastic critical moment'], ['\\lambda_{LT}', 'Relative slenderness'], ['\\chi_{LT}', 'Reduction factor'], ['M_{b.Rd}', 'Buckling resistance moment'], [U('LT'), 'Utilisation']]);
   six('Compression and bending (§6.3.3, Annex B)', [['n_{y}', 'Axial ratio y'], ['n_{z}', 'Axial ratio z'], ['k_{yy}', 'Interaction factor'], ['k_{yz}', 'Interaction factor'], ['k_{zy}', 'Interaction factor'], ['k_{zz}', 'Interaction factor'], [U('6.61'), '(6.61)'], [U('6.62'), '(6.62)']]);
-  g.push(['7. Summary', [['\\mathrm{UR}_{6.2}', 'Cross-section'], ['\\mathrm{UR}_{6.3}', 'Member'], ['\\mathrm{UR}', 'Governing']]]);
   return g;
 }
 

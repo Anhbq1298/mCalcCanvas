@@ -135,14 +135,6 @@ export function App() {
     worker.postMessage({ kind: 'sheet', request: ++sheetRequest.current, state, combo: shown } satisfies ToWorker);
   }, [worker, state, shown, ok]);
 
-  const resist: [string, string, number][] = shape === 'CHS'
-    ? [['N_pl,Rd', 'kN', r?.v.Npl ?? NaN], ['V_pl,Rd', 'kN', r?.v.Vpl ?? NaN], ['M_c,Rd', 'kN m', r?.v.Mc ?? NaN], ['M_N,Rd', 'kN m', r?.v.MN ?? NaN]]
-    : [['N_pl,Rd', 'kN', r?.v.Npl ?? NaN], ['V_pl,z,Rd', 'kN', r?.v.Vplz ?? NaN], ['V_pl,y,Rd', 'kN', r?.v.Vply ?? NaN], ['M_c,y,Rd', 'kN m', r?.v.Mcy ?? NaN], ['M_c,z,Rd', 'kN m', r?.v.Mcz ?? NaN],
-      ['M_N,y,Rd', 'kN m', r?.v.MNy ?? NaN], ['M_N,z,Rd', 'kN m', r?.v.MNz ?? NaN]];
-  const member: [string, string, number, number][] = [['L_cr,y / L_cr,z', 'm', NaN, 3], ['N_b,y,Rd', 'kN', r?.v.Nby ?? NaN, 1], ['N_b,z,Rd', 'kN', r?.v.Nbz ?? NaN, 1],
-    ...(shape === 'I' ? [['N_b,T,Rd', 'kN', r?.v.NbT ?? NaN, 1] as [string, string, number, number]] : []),
-    ...(shape !== 'CHS' ? [['M_cr', 'kN m', r?.v.Mcr ?? NaN, 1], ['λ_LT', '', r?.v.lamLT ?? NaN, 3], ['χ_LT', '', r?.v.chiLT ?? NaN, 3]] as [string, string, number, number][] : []),
-    ['M_b,Rd', 'kN m', r?.v.Mb ?? NaN, 1], ['k_yy / k_yz', '', NaN, 3], ['k_zy / k_zz', '', NaN, 3]];
   const props: [string, string, number, number][] = shape === 'CHS'
     ? [['A', 'cm²', v.A / 100, 2], ['I', 'cm⁴', v.I / 1e4, 0], ['W_el', 'cm³', v.Wel / 1e3, 0], ['W_pl', 'cm³', v.Wpl / 1e3, 0]]
     : [['A', 'cm²', v.A / 100, 2], ['I_y', 'cm⁴', v.Iy / 1e4, 0], ['I_z', 'cm⁴', v.Iz / 1e4, 0], ['W_pl,y', 'cm³', v.Wply / 1e3, 0], ['W_pl,z', 'cm³', v.Wplz / 1e3, 0], ['W_el,y', 'cm³', v.Wely / 1e3, 0], ['W_el,z', 'cm³', v.Welz / 1e3, 0]];
@@ -375,17 +367,6 @@ export function App() {
               </div>
               <p className="hint" role="status" data-testid="design-msg">{design.msg || 'Lightest first; every combination must pass (Class ≤ 3, UR ≤ target).'}</p>
             </section>
-            <h3>Resistances (this combination)</h3>
-            <table className="props"><tbody>
-              {resist.map(([l, u, x]) => <tr key={l}><td><Rich text={l} /></td><td className="num">{fmt(x, 1)}</td><td>{u}</td></tr>)}
-            </tbody></table>
-            <h3>Member (this combination)</h3>
-            <table className="props" data-testid="member-props"><tbody>
-              {member.map(([l, u, x, d]) => {
-                const pair = l === 'L_cr,y / L_cr,z' ? [r?.v.Lcry, r?.v.Lcrz] : l === 'k_yy / k_yz' ? [r?.v.kyy, r?.v.kyz] : l === 'k_zy / k_zz' ? [r?.v.kzy, r?.v.kzz] : null;
-                return <tr key={l}><td><Rich text={l} /></td><td className="num">{pair ? pair.map((q) => fmt(q ?? NaN, d)).join(' / ') : fmt(x, d)}</td><td>{u}</td></tr>;
-              })}
-            </tbody></table>
           </section>
         </div>
 

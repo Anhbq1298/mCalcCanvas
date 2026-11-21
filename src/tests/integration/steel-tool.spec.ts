@@ -96,7 +96,6 @@ test('mSteelBeamColumn moment diagram picker: SN003b cases with Table B.3 Cm, en
   await page.getByTestId('ltb-user-use').click();
   await expect(page.getByTestId('c1-shown')).toHaveText('2.200');
   await expect(page.getByTestId('c2-shown')).toHaveText('0.300');
-  await expect(page.getByTestId('member-props')).toContainText('M');
 });
 
 test('mSteelBeamColumn middle column: main formulas of the shown combination, read only', async ({ page }) => {
@@ -104,7 +103,7 @@ test('mSteelBeamColumn middle column: main formulas of the shown combination, re
   const sheet = page.getByTestId('sheet');
   await expect(sheet.locator('.f-math').first()).toBeVisible({ timeout: 30_000 });
   await expect(page.locator('#h-sheet')).toContainText('ULS2');
-  for (const h of ['5.1 Shear (§6.2.6, §6.2.8)', '5.3 Bending, shear and axial force (§6.2.9)', '6.2 Flexural buckling about y-y (§6.3.1)', '6.5 Lateral-torsional buckling (§6.3.2)', '6.6 Compression and bending (§6.3.3, Annex B)', '7. Summary']) await expect(sheet).toContainText(h);
+  for (const h of ['5.1 Shear (§6.2.6, §6.2.8)', '5.3 Bending, shear and axial force (§6.2.9)', '6.2 Flexural buckling about y-y (§6.3.1)', '6.5 Lateral-torsional buckling (§6.3.2)', '6.6 Compression and bending (§6.3.3, Annex B)']) await expect(sheet).toContainText(h);
   expect(await sheet.locator('.f-math.err').count()).toBe(0);
   expect(await sheet.locator('input, textarea, math-field, [contenteditable=true]').count()).toBe(0);
   // the (6.62) line carries the combination's value and the governing UR
@@ -112,5 +111,6 @@ test('mSteelBeamColumn middle column: main formulas of the shown combination, re
   await expect(row).toContainText('1.381');
   await page.getByTestId('combos').locator('tbody tr').first().click();
   await expect(page.locator('#h-sheet')).toContainText('ULS1');
-  await expect(sheet.locator('tr', { hasText: 'Governing' })).toContainText('1.234');
+  await expect(sheet.locator('tr', { hasText: '(6.62)' })).not.toContainText('1.381');
+  await expect(sheet).not.toContainText('7. Summary');
 });
