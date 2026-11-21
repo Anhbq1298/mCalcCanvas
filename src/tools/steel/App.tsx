@@ -330,6 +330,23 @@ export function App() {
 
           {/* ── Verdict ── */}
           <section className="panel verdict-panel" id="verdict" aria-labelledby="h-verdict" aria-live="polite">
+            <section aria-labelledby="h-design" className="optimize rows">
+              <h3 id="h-design">Optimise: lightest passing section</h3>
+              <Row desc="Family to search">
+                <select aria-label="Family to search" data-testid="design-family" value={designFamilies.includes(design.family) ? design.family : designFamilies[0]} onChange={(e) => setDesign((d) => ({ ...d, family: e.target.value }))}>
+                  {designFamilies.map((f) => <option key={f}>{f}</option>)}
+                </select>
+              </Row>
+              <Row desc="Maximum depth (blank = none)" sym="h_max" unit="mm">
+                <input className="num-input" inputMode="decimal" placeholder="none" value={design.maxDepth} onChange={(e) => setDesign((d) => ({ ...d, maxDepth: e.target.value }))} aria-label="Maximum depth" />
+              </Row>
+              <Row desc="Target utilisation for every combination" sym="UR"><NumberField id="in-target" label="target UR" value={design.target} onCommit={(n) => setDesign((d) => ({ ...d, target: n }))} /></Row>
+              <div className="row-actions">
+                <button type="button" className="btn primary" data-testid="design-run" disabled={design.running} onClick={runDesign}>{design.running ? 'Searching…' : 'Find lightest'}</button>
+                {design.pick && <button type="button" className="btn" data-testid="design-apply" onClick={applyPick}>Use {design.pick.name}</button>}
+              </div>
+              <p className="hint" role="status" data-testid="design-msg">{design.msg || 'Lightest first; every combination must pass (Class ≤ 3, UR ≤ target).'}</p>
+            </section>
             <h2 id="h-verdict">{sectionLabel}</h2>
             <div className="verdict">
               <span className={`ratio ${pass ? 'pass' : 'fail'}`} data-testid="overall-ur">{fmt(overall, 3)}</span>
@@ -350,23 +367,6 @@ export function App() {
               </tbody>
               <tfoot><tr><td>Combination UR</td><td className={tone(r?.v.UR ?? NaN)}>{fmt(r?.v.UR ?? NaN, 3)}</td></tr></tfoot>
             </table>
-            <section aria-labelledby="h-design" className="optimize rows">
-              <h3 id="h-design">Optimise: lightest passing section</h3>
-              <Row desc="Family to search">
-                <select aria-label="Family to search" data-testid="design-family" value={designFamilies.includes(design.family) ? design.family : designFamilies[0]} onChange={(e) => setDesign((d) => ({ ...d, family: e.target.value }))}>
-                  {designFamilies.map((f) => <option key={f}>{f}</option>)}
-                </select>
-              </Row>
-              <Row desc="Maximum depth (blank = none)" sym="h_max" unit="mm">
-                <input className="num-input" inputMode="decimal" placeholder="none" value={design.maxDepth} onChange={(e) => setDesign((d) => ({ ...d, maxDepth: e.target.value }))} aria-label="Maximum depth" />
-              </Row>
-              <Row desc="Target utilisation for every combination" sym="UR"><NumberField id="in-target" label="target UR" value={design.target} onCommit={(n) => setDesign((d) => ({ ...d, target: n }))} /></Row>
-              <div className="row-actions">
-                <button type="button" className="btn primary" data-testid="design-run" disabled={design.running} onClick={runDesign}>{design.running ? 'Searching…' : 'Find lightest'}</button>
-                {design.pick && <button type="button" className="btn" data-testid="design-apply" onClick={applyPick}>Use {design.pick.name}</button>}
-              </div>
-              <p className="hint" role="status" data-testid="design-msg">{design.msg || 'Lightest first; every combination must pass (Class ≤ 3, UR ≤ target).'}</p>
-            </section>
           </section>
         </div>
 
