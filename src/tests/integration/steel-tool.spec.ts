@@ -132,6 +132,8 @@ test('C_m form: default 1.0; Table B.3 from moments only when ticked', async ({ 
   await expect(page.getByTestId('cm-apply')).toBeDisabled();
   await page.getByTestId('cm-y-Ms').fill('50');
   await expect(page.getByTestId('cm-y-result')).toContainText('0.500');
+  await expect(page.getByTestId('b3-s2u')).toHaveClass(/on/); // Table B.3 row in use
+  await expect(page.getByTestId('b3-s2u')).toContainText('Cmy');
   await page.getByTestId('cm-z-kind').selectOption('sway');
   await expect(page.getByTestId('cm-z-result')).toContainText('Sway buckling');
   await page.getByTestId('cm-LT-kind').selectOption('same');

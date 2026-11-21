@@ -113,3 +113,23 @@
 .cm-toggle { margin: 0.75rem 1rem 0; font-size: 0.875rem; font-weight: 500; }
 .cm-default { margin: 0.5rem 1rem 0.25rem; padding: 0.5rem 0.75rem; border-left: 3px solid var(--rule); font-size: 0.8125rem; color: var(--ink-2); }
 .cm-miss { color: var(--warn, #9a6700); font-size: 0.8125rem; }
+.b3-wrap { margin: 0.5rem 1rem 0; }
+.b3-wrap > summary { cursor: pointer; font-size: 0.8125rem; color: var(--ink-2); padding: 0.25rem 0; }
+.b3 { margin: 0.25rem 0 0.5rem; }
+.b3 figcaption { font-weight: 600; font-size: 0.8125rem; margin: 0.25rem 0; }
+.b3 table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
+.b3 th, .b3 td { border: 1px solid var(--rule); padding: 4px 8px; text-align: center; vertical-align: middle; }
+.b3 thead th { font-weight: 500; color: var(--ink-2); background: var(--paper-2, #f4f5f7); }
+.b3 td.b3-d { width: 172px; padding: 2px; }
+.b3 td.b3-f { position: relative; }
+.b3 td.b3-f.on { background: #fff4d6; box-shadow: inset 0 0 0 2px #d9a21b; font-weight: 500; }
+.b3-tag { display: block; font-size: 0.6875rem; color: #8a5a00; font-weight: 600; }
+.b3 td.b3-note { text-align: left; color: var(--ink-2); }
+.b3-brace { display: block; margin-top: 2px; }
+.b3-svg { width: 170px; height: auto; display: block; font: 11px var(--font-sans, sans-serif); fill: var(--ink); }
+.b3-fill { fill: #c9ced6; stroke: var(--ink); stroke-width: 1; }
+.b3-axis { stroke: var(--ink); stroke-width: 1; }
+.b3-dash { fill: none; stroke: var(--ink); stroke-width: 0.8; stroke-dasharray: 3 3; }
+.b3-arrow { stroke: var(--ink); stroke-width: 1.2; }
+.b3-def { font-size: 10px; }
+.b3-pt { fill: var(--ink); }

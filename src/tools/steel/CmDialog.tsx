@@ -9,6 +9,7 @@ import { useRef, useState } from 'react';
 import { fmt } from '../composite/format';
 import { CM_KINDS, cmOf, cmValues, type CmDef, type CmDefs, type CmKind } from './cm';
 import type { Member } from './model';
+import { TableB3 } from './TableB3';
 
 type Axis = 'y' | 'z' | 'LT';
 type Kind = CmKind | 'same';
@@ -47,6 +48,12 @@ export function CmButton({ member, withLT, onApply }: { member: Member; withLT: 
     : { calc: false };
   const blocked = calc && axes.some(([a]) => missing(d[a]) !== '');
   const values = cmValues(defs);
+  const hits = calc ? axes.flatMap(([a]) => {
+    const x = d[a];
+    if (x.kind === 'same' || missing(x)) return [];
+    const r = cmOf(defOf(x));
+    return r.row ? [{ row: r.row, col: r.col, tag: a }] : [];
+  }) : [];
   const apply = () => {
     if (blocked) return;
     onApply({ ...values, ...(withLT ? {} : { CmLT: 1 }), cmDef: calc ? defs : undefined });
@@ -65,6 +72,10 @@ export function CmButton({ member, withLT, onApply }: { member: Member; withLT: 
           </header>
           <label className="check-row cm-toggle"><input type="checkbox" data-testid="cm-calc" checked={calc} onChange={(e) => setCalc(e.target.checked)} /> Calculate from moment diagrams (EN 1993-1-1 Annex B, Table B.3)</label>
           {!calc && <p className="cm-default" data-testid="cm-default">Conservative default · All C<sub>m</sub> = 1.000</p>}
+          <details className="b3-wrap" open={calc} data-testid="b3">
+            <summary>Table B.3: how C<sub>m</sub> follows the moment diagram</summary>
+            <TableB3 hits={hits} />
+          </details>
           {calc && <>
             <p className="hint">Moments over the length of each factor, one sign convention (e.g. sagging +). Only the ratios matter. Keep 1.0 where no diagram is at hand.</p>
             {axes.map(([a, title, m]) => {
