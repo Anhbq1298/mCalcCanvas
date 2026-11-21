@@ -78,3 +78,6 @@
 .formulas tr.ur-line td { background: color-mix(in srgb, var(--steel) 4%, transparent); }
 .formulas .tag { font-size: 0.6875rem; padding: 1px 6px; }
 
+/* Upright formulas on the page (MathLive sets letters in KaTeX_Math italic). */
+.formulas .f-math .ML__mathit, .formulas .f-math .ML__cmr, .formulas .f-math .ML__mathbfit { font-family: KaTeX_Main, 'Times New Roman', serif; font-style: normal; }
+.rows .row-sym { font-style: normal; }
