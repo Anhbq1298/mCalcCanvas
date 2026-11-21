@@ -71,7 +71,7 @@ export function TableB3({ hits }: { hits: Hit[] }) {
           <tr><td>−1 ≤ ψ &lt; 0</td>{cell('s3', 'u', <>0.1(1 − ψ) − 0.8{a('s')} ≥ 0.4</>)}{cell('s3', 'c', <>0.2(−ψ) − 0.8{a('s')} ≥ 0.4</>)}</tr>
           <tr><td rowSpan={3} className="b3-d"><SpanGoverns /></td><td>0 ≤ {a('h')} ≤ 1</td><td>−1 ≤ ψ ≤ 1</td>{cell('h1', 'u', <>0.95 + 0.05{a('h')}</>)}{cell('h1', 'c', <>0.90 + 0.10{a('h')}</>)}</tr>
           <tr><td rowSpan={2}>−1 ≤ {a('h')} &lt; 0</td><td>0 ≤ ψ ≤ 1</td>{cell('h2', 'u', <>0.95 + 0.05{a('h')}</>)}{cell('h2', 'c', <>0.90 + 0.10{a('h')}</>)}</tr>
-          <tr><td>−1 ≤ ψ &lt; 0</td>{cell('h3', 'u', <>0.95 + 0.05{a('h')}(1 + 2ψ)</>)}{cell('h3', 'c', <>0.90 − 0.10{a('h')}(1 + 2ψ)</>)}</tr>
+          <tr><td>−1 ≤ ψ &lt; 0</td>{cell('h3', 'u', <>0.95 + 0.05{a('h')}(1 + 2ψ)</>)}{cell('h3', 'c', <>0.90 + 0.10{a('h')}(1 + 2ψ)<sup>*</sup></>)}</tr>
           <tr><td colSpan={5} className="b3-note">Sway buckling mode: C<S>my</S> = 0.9 or C<S>mz</S> = 0.9 respectively.</td></tr>
           <tr><td colSpan={5} className="b3-note">
             Each factor uses the moment diagram between the relevant braced points:
@@ -79,7 +79,7 @@ export function TableB3({ hits }: { hits: Hit[] }) {
           </td></tr>
         </tbody>
       </table>
-      <p className="hint">ψ = the smaller end moment / the larger end moment M<S>h</S>, signs kept.</p>
+      <p className="hint">ψ = the smaller end moment / the larger end moment M<S>h</S>, signs kept. <sup>*</sup> As EN 1993-1-1:2022 (Table 8.9); some printings of EN 1993-1-1:2005 show 0.90 − 0.10α<S>h</S>(1 + 2ψ), which is discontinuous with the row above at ψ = 0.</p>
     </figure>
   );
 }

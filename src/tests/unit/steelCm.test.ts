@@ -16,7 +16,9 @@ describe('C_m, EN 1993-1-1 Table B.3', () => {
     // propped: M_h = −50 at one end, M_s = 80 → α_h = −0.625, ψ = 0
     expect(c({ kind: 'udl', MA: -50, MB: 0, Ms: 80 })).toBeCloseTo(0.95 + 0.05 * -0.625, 6);
     // ψ = −1 with α_h < 0: factor (1 + 2ψ) = −1
-    expect(c({ kind: 'point', MA: -40, MB: 40, Ms: 100 })).toBeCloseTo(0.9 - 0.1 * -0.4 * -1, 6); // as printed: 0.90 − 0.10α_h(1 + 2ψ)
+    expect(c({ kind: 'point', MA: -40, MB: 40, Ms: 100 })).toBeCloseTo(0.9 + 0.1 * -0.4 * -1, 6); // EN 1993-1-1:2022: 0.90 + 0.10α_h(1 + 2ψ)
+    // continuous with the ψ ≥ 0 row at ψ = 0
+    expect(c({ kind: 'point', MA: -40, MB: -1e-9, Ms: 100 })).toBeCloseTo(c({ kind: 'point', MA: -40, MB: 0, Ms: 100 }), 6);
     expect(c({ kind: 'udl', MA: -40, MB: 40, Ms: 100 })).toBeCloseTo(0.95 + 0.05 * -0.4 * -1, 6);
   });
   it('end moment governs (row 2)', () => {

@@ -36,9 +36,10 @@ export function cmOf(d: CmDef): CmResult {
   }
   if (s === 0) return { cm: 1, basis: 'no moments: 1.0' };
   const ah = h / s, k = ah < 0 && psi < 0 ? 1 + 2 * psi : 1;
-  // EN 1993-1-1:2005 as printed: concentrated load with α_h < 0 and ψ < 0 is 0.90 − 0.10α_h(1 + 2ψ)
-  const h3 = k !== 1, cm = udl ? 0.95 + 0.05 * ah * k : h3 ? 0.9 - 0.1 * ah * k : 0.9 + 0.1 * ah;
-  return { cm, basis: `|M_s| > |M_h|, α_h = M_h/M_s = ${r3(ah)}${h3 ? `, ψ = ${r3(psi)} < 0` : ''}, ${udl ? 'uniform' : 'concentrated'} load: ${udl ? '0.95 + 0.05' : h3 ? '0.90 − 0.10' : '0.90 + 0.10'}α_h${h3 ? '(1 + 2ψ)' : ''}`, row: ah >= 0 ? 'h1' : psi >= 0 ? 'h2' : 'h3', col };
+  // concentrated load, α_h < 0, ψ < 0: 0.90 + 0.10α_h(1 + 2ψ) as EN 1993-1-1:2022 Table 8.9 (and IS 800 Table 18); some
+  // EN 1993-1-1:2005 prints "−", which breaks continuity with the ψ ≥ 0 row at ψ = 0
+  const h3 = k !== 1, cm = udl ? 0.95 + 0.05 * ah * k : 0.9 + 0.1 * ah * k;
+  return { cm, basis: `|M_s| > |M_h|, α_h = M_h/M_s = ${r3(ah)}${h3 ? `, ψ = ${r3(psi)} < 0` : ''}, ${udl ? 'uniform' : 'concentrated'} load: ${udl ? '0.95 + 0.05' : '0.90 + 0.10'}α_h${h3 ? '(1 + 2ψ)' : ''}`, row: ah >= 0 ? 'h1' : psi >= 0 ? 'h2' : 'h3', col };
 }
 
 export const CM_KINDS: [CmKind, string][] = [
