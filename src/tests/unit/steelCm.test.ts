@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cmOf } from '../../tools/steel/cm';
+import { cmOf, cmValues } from '../../tools/steel/cm';
 
 // EN 1993-1-1 Table B.3 rows, hand values
 describe('C_m, EN 1993-1-1 Table B.3', () => {
@@ -32,6 +32,15 @@ describe('C_m, EN 1993-1-1 Table B.3', () => {
   it('fixed values', () => {
     expect(c({ kind: 'sway' })).toBe(0.9);
     expect(c({ kind: 'one' })).toBe(1);
-    expect(c({ kind: 'user', value: 0.73 })).toBe(0.73);
   });
 });
+
+describe('C_m applied values', () => {
+  it('calc off → all 1.0; on → per factor, C_mLT may follow C_my', () => {
+    expect(cmValues(undefined)).toEqual({ Cmy: 1, Cmz: 1, CmLT: 1 });
+    expect(cmValues({ calc: false, y: { kind: 'linear', MA: 1, MB: 0 } })).toEqual({ Cmy: 1, Cmz: 1, CmLT: 1 });
+    expect(cmValues({ calc: true, y: { kind: 'one' }, z: { kind: 'sway' }, LT: { kind: 'linear', MA: 100, MB: 0 } })).toEqual({ Cmy: 1, Cmz: 0.9, CmLT: 0.6 });
+    expect(cmValues({ calc: true, y: { kind: 'udl', MA: -100, MB: -100, Ms: 50 }, LT: 'y' })).toEqual({ Cmy: 0.5, Cmz: 1, CmLT: 0.5 });
+  });
+});
+

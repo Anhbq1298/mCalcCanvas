@@ -16,6 +16,7 @@ import { OptimiseDialog, type OptimiseRun } from './OptimiseDialog';
 import { SectionDrawing } from './charts';
 import { MomentDiagramButton } from './MomentDiagram';
 import { CmButton } from './CmDialog';
+import { cmValues } from './cm';
 import { choiceLabel } from './ltbCases';
 import type { FromWorker, Pick, ToWorker } from './worker';
 import { parseCombos } from './paste';
@@ -44,7 +45,7 @@ const DEFAULT: Page = {
 function load(): Page {
   try {
     const p = JSON.parse(localStorage.getItem(STORE_KEY) ?? 'null') as Page | null;
-    if (p && Array.isArray(p.combos) && ['I', 'RHS', 'CHS'].includes(p.shape)) { sectionById(p.sectionId); return { ...DEFAULT, ...p, member: { ...DEFAULT_MEMBER, ...p.member } }; }
+    if (p && Array.isArray(p.combos) && ['I', 'RHS', 'CHS'].includes(p.shape)) { sectionById(p.sectionId); const mem: Member = { ...DEFAULT_MEMBER, ...p.member }; return { ...DEFAULT, ...p, member: { ...mem, ...cmValues(mem.cmDef?.calc ? mem.cmDef : undefined), cmDef: mem.cmDef?.calc ? mem.cmDef : undefined } }; }
   } catch { /* stored state from another version: start from the default */ }
   return DEFAULT;
 }
@@ -260,7 +261,7 @@ export function App() {
               {shape !== 'CHS' && <Row desc="Unrestrained length for LTB (0 = restrained)" sym="L_LT" unit="m"><NumberField id="in-Llt" label="L_LT" value={page.member.Llt} onCommit={(n) => setMember({ Llt: n })} /></Row>}
               {shape !== 'CHS' && <>
                 <Row desc="Moment diagram between lateral restraints" note={choiceLabel(page.member).split(' · ')[0]}>
-                  <MomentDiagramButton value={page.member} withC2={shape === 'I'} onChange={(c) => setMember({ nLT: c.nLT, C1: c.C1, C2: c.C2, psi: c.psi })} onCm={(cm) => setMember({ Cmy: cm, CmLT: cm, cmDef: { ...page.member.cmDef, y: { kind: 'diagram', value: cm }, LT: 'y' } })} />
+                  <MomentDiagramButton value={page.member} withC2={shape === 'I'} onChange={(c) => setMember({ nLT: c.nLT, C1: c.C1, C2: c.C2, psi: c.psi })} />
                 </Row>
                 <div className="row sub">
                   <span className="row-desc">Factors from the diagram</span>
@@ -281,7 +282,7 @@ export function App() {
                 <CmButton member={page.member} withLT={shape === 'I'} onApply={setMember} />
               </Row>
               <div className="row sub">
-                <span className="row-desc">Factors used</span>
+                <span className="row-desc">{page.member.cmDef?.calc ? 'Calculated from moment diagrams' : 'Conservative default'}</span>
                 <span className="factors">
                   <span>C<sub>my</sub> = <b data-testid="cmy-shown">{fmt(page.member.Cmy, 3)}</b></span>
                   <span>C<sub>mz</sub> = <b data-testid="cmz-shown">{fmt(page.member.Cmz, 3)}</b></span>

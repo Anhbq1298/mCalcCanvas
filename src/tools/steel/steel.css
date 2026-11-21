@@ -110,3 +110,6 @@
 .cm-out { margin: 0.5rem 0 0; font-size: 0.8125rem; }
 .cm-out .hint { margin-left: 0.5rem; }
 @media (max-width: 720px) { .cm-grid { grid-template-columns: 1fr 1fr; } }
+.cm-toggle { margin: 0.75rem 1rem 0; font-size: 0.875rem; font-weight: 500; }
+.cm-default { margin: 0.5rem 1rem 0.25rem; padding: 0.5rem 0.75rem; border-left: 3px solid var(--rule); font-size: 0.8125rem; color: var(--ink-2); }
+.cm-miss { color: var(--warn, #9a6700); font-size: 0.8125rem; }

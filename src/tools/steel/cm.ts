@@ -2,19 +2,17 @@
  * Equivalent uniform moment factor C_m, EN 1993-1-1 Annex B Table B.3, from the moments over the
  * buckling length: end moments M_A, M_B and the span moment M_s, one sign convention (e.g. sagging +).
  */
-export type CmKind = 'linear' | 'udl' | 'point' | 'sway' | 'one' | 'user' | 'diagram';
-export interface CmDef { kind: CmKind; MA?: number; MB?: number; Ms?: number; value?: number }
+export type CmKind = 'linear' | 'udl' | 'point' | 'sway' | 'one';
+export interface CmDef { kind: CmKind; MA?: number; MB?: number; Ms?: number }
+/** calc false (or absent): every C_m = 1.0. LT 'y': C_mLT = C_my. */
+export interface CmDefs { calc: boolean; y?: CmDef; z?: CmDef; LT?: CmDef | 'y' }
 export interface CmResult { cm: number; basis: string }
 
 const r3 = (x: number) => +x.toFixed(3);
 
 export function cmOf(d: CmDef): CmResult {
-  if (d.kind === 'one') return { cm: 1, basis: 'taken as 1.0 (no moment-gradient benefit)' };
-  if (d.kind === 'sway') return { cm: 0.9, basis: 'sway buckling mode: 0.9 (Table B.3 note)' };
-  if (d.kind === 'user' || d.kind === 'diagram') {
-    const v = d.value ?? NaN;
-    return { cm: v, basis: d.kind === 'user' ? 'user value' : 'from the moment diagram picker (Table B.3)' };
-  }
+  if (d.kind === 'one') return { cm: 1, basis: 'default 1.0 (no moment-gradient benefit)' };
+  if (d.kind === 'sway') return { cm: 0.9, basis: 'sway buckling: 0.9 (Table B.3)' };
   const a = d.MA ?? 0, b = d.MB ?? 0;
   // M_h: the end moment of larger magnitude; ψ = the other / M_h
   const [h, o] = Math.abs(a) >= Math.abs(b) ? [a, b] : [b, a];
@@ -42,6 +40,14 @@ export function cmOf(d: CmDef): CmResult {
 }
 
 export const CM_KINDS: [CmKind, string][] = [
-  ['linear', 'End moments only (linear)'], ['udl', 'End moments + uniform load'], ['point', 'End moments + concentrated load'],
-  ['sway', 'Sway buckling mode (0.9)'], ['one', 'Conservative (1.0)'], ['user', 'User value'],
+  ['one', 'Keep 1.0'], ['linear', 'Linear (end moments)'], ['udl', 'Uniform load (max in span)'], ['point', 'Concentrated load (max in span)'], ['sway', 'Sway buckling'],
 ];
+
+/** The applied factors for a definition (calc off → all 1.0). */
+export function cmValues(d: CmDefs | undefined): { Cmy: number; Cmz: number; CmLT: number } {
+  if (!d?.calc) return { Cmy: 1, Cmz: 1, CmLT: 1 };
+  const y = cmOf(d.y ?? { kind: 'one' }).cm, z = cmOf(d.z ?? { kind: 'one' }).cm;
+  const lt = d.LT === 'y' ? y : cmOf(d.LT ?? { kind: 'one' }).cm;
+  const r = (x: number) => +x.toFixed(4);
+  return { Cmy: r(y), Cmz: r(z), CmLT: r(lt) };
+}

@@ -1,52 +1,61 @@
 /**
- * Form for the equivalent uniform moment factors C_my, C_mz, C_mLT (EN 1993-1-1 Annex B Table B.3):
- * per axis the user picks the diagram type and enters the end and span moments over that buckling
- * length; C_m and the Table B.3 row used are shown live.
+ * Equivalent uniform moment factors C_my, C_mz, C_mLT (EN 1993-1-1 Annex B Table B.3).
+ * Default: all 1.0 (conservative), nothing to enter. "Calculate from moment diagrams" opens the
+ * per-factor input: keep 1.0, linear (M_A, M_B), span maximum under uniform / concentrated load
+ * (M_A, M_B, M_s), sway buckling 0.9 (C_my, C_mz); C_mLT may follow C_my. Apply is locked while a
+ * required moment is missing.
  */
 import { useRef, useState } from 'react';
 import { fmt } from '../composite/format';
-import { CM_KINDS, cmOf, type CmDef, type CmKind } from './cm';
+import { CM_KINDS, cmOf, cmValues, type CmDef, type CmDefs, type CmKind } from './cm';
 import type { Member } from './model';
 
 type Axis = 'y' | 'z' | 'LT';
-type Draft = { kind: CmKind; MA: string; MB: string; Ms: string; value: string };
+type Kind = CmKind | 'same';
+type Draft = { kind: Kind; MA: string; MB: string; Ms: string };
 const AXES: [Axis, string, string][] = [
-  ['y', 'bending about y-y, over the y-y buckling length L_y', 'y'],
-  ['z', 'bending about z-z, over the z-z buckling length L_z', 'z'],
-  ['LT', 'bending about y-y, between lateral restraints L_LT', 'y'],
+  ['y', 'bending about y-y over the buckling length L_y', 'y'],
+  ['z', 'bending about z-z over the buckling length L_z', 'z'],
+  ['LT', 'M_y between lateral restraints, length L_LT', 'y'],
 ];
 /** text with x_ab subscripts */
 const Sub = ({ t }: { t: string }) => <>{t.split(/_(\w+)/).map((p, i) => (i % 2 ? <sub key={i}>{p}</sub> : p))}</>;
 const num = (s: string) => (/^\s*-?(\d+\.?\d*|\.\d+)\s*$/.test(s) ? Number(s) : NaN);
-const draftOf = (d: CmDef | undefined, v: number): Draft => d && d.kind !== 'diagram'
-  ? { kind: d.kind, MA: String(d.MA ?? ''), MB: String(d.MB ?? ''), Ms: String(d.Ms ?? ''), value: String(d.value ?? v) }
-  : { kind: v === 1 ? 'one' : 'user', MA: '', MB: '', Ms: '', value: String(v) };
-const defOf = (d: Draft): CmDef => (d.kind === 'user' ? { kind: 'user', value: num(d.value) }
-  : d.kind === 'linear' || d.kind === 'udl' || d.kind === 'point' ? { kind: d.kind, MA: num(d.MA) || 0, MB: num(d.MB) || 0, ...(d.kind !== 'linear' ? { Ms: num(d.Ms) || 0 } : {}) }
-    : { kind: d.kind });
-const bad = (d: Draft) => (d.kind === 'user' ? !(num(d.value) > 0)
-  : (d.kind === 'linear' || d.kind === 'udl' || d.kind === 'point') && [d.MA, d.MB, ...(d.kind !== 'linear' ? [d.Ms] : [])].some((s) => s.trim() !== '' && !Number.isFinite(num(s))));
+const str = (x: number | undefined) => (x === undefined ? '' : String(x));
+const draftOf = (d: CmDef | 'y' | undefined): Draft => (d === 'y' ? { kind: 'same', MA: '', MB: '', Ms: '' } : { kind: d?.kind ?? 'one', MA: str(d?.MA), MB: str(d?.MB), Ms: str(d?.Ms) });
+const needs = (k: Kind): ('MA' | 'MB' | 'Ms')[] => (k === 'linear' ? ['MA', 'MB'] : k === 'udl' || k === 'point' ? ['MA', 'MB', 'Ms'] : []);
+const defOf = (d: Draft): CmDef => ({ kind: d.kind === 'same' ? 'one' : d.kind, ...Object.fromEntries(needs(d.kind).map((f) => [f, num(d[f])])) });
+/** what is missing, or '' */
+function missing(d: Draft): string {
+  const f = needs(d.kind);
+  const gap = f.filter((k) => !Number.isFinite(num(d[k])));
+  if (gap.length) return `Enter ${gap.map((k) => k.replace('M', 'M_')).join(', ')}`;
+  if (d.kind === 'linear' && num(d.MA) === 0 && num(d.MB) === 0) return 'At least one end moment must be non-zero';
+  if (d.kind !== 'linear' && f.length && f.every((k) => num(d[k]) === 0)) return 'At least one moment must be non-zero';
+  return '';
+}
 
 export function CmButton({ member, withLT, onApply }: { member: Member; withLT: boolean; onApply: (m: Partial<Member>) => void }) {
   const ref = useRef<HTMLDialogElement>(null);
-  const init = () => ({
-    y: draftOf(member.cmDef?.y, member.Cmy), z: draftOf(member.cmDef?.z, member.Cmz),
-    LT: draftOf(member.cmDef?.LT === 'y' ? undefined : member.cmDef?.LT, member.CmLT),
-  });
+  const init = () => ({ y: draftOf(member.cmDef?.y), z: draftOf(member.cmDef?.z), LT: draftOf(member.cmDef?.LT) });
+  const [calc, setCalc] = useState(!!member.cmDef?.calc);
   const [d, setD] = useState<Record<Axis, Draft>>(init);
-  const [ltSame, setLtSame] = useState(member.cmDef?.LT === 'y');
   const set = (a: Axis, p: Partial<Draft>) => setD((x) => ({ ...x, [a]: { ...x[a], ...p } }));
   const axes = AXES.filter(([a]) => withLT || a !== 'LT');
-  const res = (a: Axis) => cmOf(defOf(d[a === 'LT' && ltSame ? 'y' : a]));
-  const invalid = axes.some(([a]) => !(a === 'LT' && ltSame) && (bad(d[a]) || !(res(a).cm > 0)));
+  const defs: CmDefs = calc
+    ? { calc: true, y: defOf(d.y), z: defOf(d.z), ...(withLT ? { LT: d.LT.kind === 'same' ? 'y' as const : defOf(d.LT) } : {}) }
+    : { calc: false };
+  const blocked = calc && axes.some(([a]) => missing(d[a]) !== '');
+  const values = cmValues(defs);
   const apply = () => {
-    const y = defOf(d.y), z = defOf(d.z), lt = ltSame ? 'y' as const : defOf(d.LT);
-    onApply({ Cmy: +res('y').cm.toFixed(4), Cmz: +res('z').cm.toFixed(4), ...(withLT ? { CmLT: +res('LT').cm.toFixed(4) } : {}), cmDef: { y, z, ...(withLT ? { LT: lt } : {}) } });
+    if (blocked) return;
+    onApply({ ...values, ...(withLT ? {} : { CmLT: 1 }), cmDef: calc ? defs : undefined });
     ref.current?.close();
   };
+  const open = () => { setCalc(!!member.cmDef?.calc); setD(init()); ref.current?.showModal(); };
   return (
     <>
-      <button type="button" className="btn browse" data-testid="cm-open" onClick={() => { setD(init()); setLtSame(member.cmDef?.LT === 'y'); ref.current?.showModal(); }}>Define…</button>
+      <button type="button" className="btn browse" data-testid="cm-open" onClick={open}>Define…</button>
       <dialog ref={ref} className="opt-dialog wide" aria-labelledby="cm-title">
         {/* the member panel is itself a form: no nested form here */}
         <div className="opt-form" role="group" aria-labelledby="cm-title">
@@ -54,29 +63,38 @@ export function CmButton({ member, withLT, onApply }: { member: Member; withLT: 
             <h2 id="cm-title">Equivalent uniform moment factors C<sub>m</sub></h2>
             <button type="button" className="rowbtn" aria-label="Close" onClick={() => ref.current?.close()}>×</button>
           </header>
-          <p className="hint">EN 1993-1-1 Annex B, Table B.3 (Method 2). Enter the moments over the relevant buckling length with one sign convention (e.g. sagging +): M<sub>A</sub>, M<sub>B</sub> at the ends, M<sub>s</sub> in the span. Only the ratios matter, so unit loads or any kN·m are fine.</p>
-          {axes.map(([a, title, m]) => {
-            const x = d[a], r = res(a), same = a === 'LT' && ltSame, moments = x.kind === 'linear' || x.kind === 'udl' || x.kind === 'point';
-            return (
-              <fieldset key={a} className="crit" data-testid={`cm-${a}`}>
-                <legend>C<sub>m{a}</sub>: <Sub t={title} /></legend>
-                {a === 'LT' && <label className="check-row"><input type="checkbox" data-testid="cm-lt-same" checked={ltSame} onChange={(e) => setLtSame(e.target.checked)} /> Same as C<sub>my</sub> (L<sub>LT</sub> = L<sub>y</sub> segment)</label>}
-                {!same && <div className="cm-grid">
-                  <label className="f"><span>Moment diagram</span>
-                    <select data-testid={`cm-${a}-kind`} value={x.kind} onChange={(e) => set(a, { kind: e.target.value as CmKind })}>{CM_KINDS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select>
-                  </label>
-                  {moments && <label className="f"><span>M<sub>{m},A</sub> end (kN·m)</span><input className="num-input" data-testid={`cm-${a}-MA`} inputMode="decimal" value={x.MA} aria-invalid={x.MA.trim() !== '' && !Number.isFinite(num(x.MA))} onChange={(e) => set(a, { MA: e.target.value })} placeholder="0" /></label>}
-                  {moments && <label className="f"><span>M<sub>{m},B</sub> end (kN·m)</span><input className="num-input" data-testid={`cm-${a}-MB`} inputMode="decimal" value={x.MB} aria-invalid={x.MB.trim() !== '' && !Number.isFinite(num(x.MB))} onChange={(e) => set(a, { MB: e.target.value })} placeholder="0" /></label>}
-                  {moments && x.kind !== 'linear' && <label className="f"><span>M<sub>{m},s</sub> span (kN·m)</span><input className="num-input" data-testid={`cm-${a}-Ms`} inputMode="decimal" value={x.Ms} aria-invalid={x.Ms.trim() !== '' && !Number.isFinite(num(x.Ms))} onChange={(e) => set(a, { Ms: e.target.value })} placeholder="0" /></label>}
-                  {x.kind === 'user' && <label className="f"><span>C<sub>m</sub></span><input className="num-input" data-testid={`cm-${a}-value`} inputMode="decimal" value={x.value} aria-invalid={!(num(x.value) > 0)} onChange={(e) => set(a, { value: e.target.value })} /></label>}
-                </div>}
-                <p className="cm-out"><b data-testid={`cm-${a}-result`}>C<sub>m</sub> = {fmt(r.cm, 3)}</b> <span className="hint"><Sub t={same ? 'same as C_my' : r.basis} /></span></p>
-              </fieldset>
-            );
-          })}
+          <label className="check-row cm-toggle"><input type="checkbox" data-testid="cm-calc" checked={calc} onChange={(e) => setCalc(e.target.checked)} /> Calculate from moment diagrams (EN 1993-1-1 Annex B, Table B.3)</label>
+          {!calc && <p className="cm-default" data-testid="cm-default">Conservative default · All C<sub>m</sub> = 1.000</p>}
+          {calc && <>
+            <p className="hint">Moments over the length of each factor, one sign convention (e.g. sagging +). Only the ratios matter. Keep 1.0 where no diagram is at hand.</p>
+            {axes.map(([a, title, m]) => {
+              const x = d[a], f = needs(x.kind), miss = missing(x);
+              const r = x.kind === 'same' ? { cm: values.Cmy, basis: 'same as C_my' } : cmOf(defOf(x));
+              const kinds: [Kind, string][] = a === 'LT' ? [...CM_KINDS.filter(([k]) => k !== 'sway'), ['same', 'Same as C_my']] : CM_KINDS;
+              return (
+                <fieldset key={a} className="crit" data-testid={`cm-${a}`}>
+                  <legend>C<sub>m{a}</sub>: <Sub t={title} /></legend>
+                  <div className="cm-grid">
+                    <label className="f"><span>Moment diagram</span>
+                      <select data-testid={`cm-${a}-kind`} value={x.kind} onChange={(e) => set(a, { kind: e.target.value as Kind })}>{kinds.map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select>
+                    </label>
+                    {f.map((k) => (
+                      <label key={k} className="f"><span>M<sub>{m},{k.slice(1)}</sub> {k === 'Ms' ? 'span' : 'end'} (kN·m)</span>
+                        <input className="num-input" data-testid={`cm-${a}-${k}`} inputMode="decimal" value={x[k]} aria-invalid={x[k].trim() !== '' && !Number.isFinite(num(x[k]))} onChange={(e) => set(a, { [k]: e.target.value })} /></label>
+                    ))}
+                  </div>
+                  <p className="cm-out" data-testid={`cm-${a}-result`}>
+                    {miss ? <span className="cm-miss"><Sub t={miss} /></span>
+                      : x.kind === 'sway' ? <b>Sway buckling · C<sub>m</sub> = 0.900</b>
+                        : <><b>C<sub>m</sub> = {fmt(r.cm, 3)}</b> <span className="hint"><Sub t={r.basis} /></span></>}
+                  </p>
+                </fieldset>
+              );
+            })}
+          </>}
           <div className="opt-run">
-            <span className="hint">The values are written to the worksheet; the basis goes into the report member line.</span>
-            <button type="button" className="btn primary" data-testid="cm-apply" disabled={invalid} onClick={apply}>Apply</button>
+            <span className="hint" data-testid="cm-preview">Applies C<sub>my</sub> = {fmt(values.Cmy, 3)}, C<sub>mz</sub> = {fmt(values.Cmz, 3)}{withLT && <>, C<sub>mLT</sub> = {fmt(values.CmLT, 3)}</>}{blocked && ' (missing data)'}</span>
+            <button type="button" className="btn primary" data-testid="cm-apply" disabled={blocked} onClick={apply}>Apply</button>
           </div>
         </div>
       </dialog>
