@@ -81,3 +81,6 @@
 /* Upright formulas on the page (MathLive sets letters in KaTeX_Math italic). */
 .formulas .f-math .ML__mathit, .formulas .f-math .ML__cmr, .formulas .f-math .ML__mathbfit { font-family: KaTeX_Main, 'Times New Roman', serif; font-style: normal; }
 .rows .row-sym { font-style: normal; }
+.formulas .f-basis { font: 0.75rem/1.35 var(--font-ui, Roboto, system-ui, sans-serif); color: var(--ink-2); white-space: normal; margin-top: 2px; }
+.formulas .f-math { white-space: normal; }
+.formulas .f-math > span { white-space: nowrap; }

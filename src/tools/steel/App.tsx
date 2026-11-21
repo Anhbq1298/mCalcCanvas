@@ -331,7 +331,7 @@ export function App() {
             </div>
             <div className="sheet-head">
               <h2 id="h-sheet">Calculation – {page.combos[shown]?.name}</h2>
-              <span className="hint">Main formulas from the worksheet, read only; every step is in the full report. Click a row to change the combination.</span>
+              <span className="hint">Main formulas from the worksheet, numbered as the report; every step is in the full report. Click a row to change the combination.</span>
             </div>
             <Formulas groups={sheet} />
           </section>
@@ -435,7 +435,7 @@ function Formulas({ groups }: { groups: SummaryGroup[] | null }) {
             {g.lines.map((l, i) => (
               <tr key={i} className={l.ur !== undefined ? 'ur-line' : ''}>
                 <td className="f-label">{l.label}</td>
-                <td className={`f-math ${l.error ? 'err' : ''}`} title={l.error}><MathRenderer latex={l.latex} /></td>
+                <td className={`f-math ${l.error ? 'err' : ''}`} title={l.error}><MathRenderer latex={l.latex} />{l.basis && <div className="f-basis"><Rich text={l.basis} /></div>}</td>
                 <td className="f-tag">{l.ur !== undefined && <span className={`tag ${tone(l.ur)}`}>{l.ur <= 1 ? 'OK' : 'NG'}</span>}</td>
               </tr>
             ))}

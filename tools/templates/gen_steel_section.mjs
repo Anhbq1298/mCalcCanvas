@@ -56,9 +56,10 @@ function sheet(shape) {
   // ================= 1. Basis =================
   H(1, `STEEL BEAM-COLUMN CHECK – ${title} (EC3)`);
   H(2, '1. DESIGN BASIS');
-  T('EN 1993-1-1:2005 + A1:2014: classification §5.5 (Table 5.2) and cross-section resistance §6.2.');
-  T('Members §6.3: flexural buckling, torsional buckling (I/H), lateral-torsional buckling (I/H, RHS) and');
-  T('interaction (6.61)/(6.62) with Annex B (Method 2). Uniform member, Class 1 to 3.');
+  T('EN 1993-1-1:2005 + A1:2014. The check runs in this order, each step using the results before it:');
+  T('section properties and yield strength (3) → class, Table 5.2 (4) → cross-section resistance §6.2 (5, 6) →');
+  T(`member buckling §6.3: compression (7), lateral-torsional buckling (8), compression with bending (9) → summary (10).`);
+  T('Uniform member, Class 1 to 3; Annex B (Method 2) for the interaction factors.');
   T('N positive in compression, negative in tension. Moments and shears in either sign; magnitudes are used.');
   T('Not covered: Class 4, torsion, holes and net sections, shear buckling, fire, connections. N < 0 (tension):');
   T('no compression buckling; LTB and the interaction run with N = 0 (no tension credit).');
@@ -447,6 +448,11 @@ function sheet(shape) {
   const mk = ['b.y', 'b.z', 'b.T', 'LT', '6.61', '6.62'];
   const list = (ks) => ks.map((k) => R`\mathrm{UR}_{${k}}`).join(',');
   need(8);
+  T('Each utilisation from sections 5 to 9; the class from section 4 decides plastic or elastic resistance.');
+  const LABEL = { 'V.z': 'Shear along z, §6.2.6', 'V.y': 'Shear along y, §6.2.6', V: 'Shear, §6.2.6', N: 'Axial force, §6.2.3/6.2.4', 'M.y': 'Bending about y, §6.2.5', 'M.z': 'Bending about z, §6.2.5', M: 'Bending, §6.2.5',
+    sec: 'Bending and axial force, §6.2.9', 'b.y': 'Flexural buckling y-y, §6.3.1', 'b.z': 'Flexural buckling z-z, §6.3.1', 'b.T': 'Torsional buckling, §6.3.1.4', LT: CHS ? 'Bending with γM1 (no LTB), §6.3.2' : 'Lateral-torsional buckling, §6.3.2', '6.61': 'Interaction (6.61), §6.3.3', '6.62': 'Interaction (6.62), §6.3.3' };
+  need(4 + keys.length);
+  for (const k of keys) P(LABEL[k], R`\mathrm{UR}_{${k}}=`, M(p3));
   KEEP(() => {
     P('Cross-section (§6.2)', R`\mathrm{UR}_{6.2}\coloneq\max\left(${list(keys.filter((k) => !mk.includes(k)))}\right)`, M(p3));
     P('Member (§6.3)', R`\mathrm{UR}_{6.3}\coloneq\max\left(${list(keys.filter((k) => mk.includes(k)))}\right)`, M(p3));
