@@ -15,6 +15,7 @@ import { MathRenderer } from '../../math/MathRenderer';
 import { OptimiseDialog, type OptimiseRun } from './OptimiseDialog';
 import { SectionDrawing } from './charts';
 import { MomentDiagramButton } from './MomentDiagram';
+import { CmButton } from './CmDialog';
 import { choiceLabel } from './ltbCases';
 import type { FromWorker, Pick, ToWorker } from './worker';
 import { parseCombos } from './paste';
@@ -259,7 +260,7 @@ export function App() {
               {shape !== 'CHS' && <Row desc="Unrestrained length for LTB (0 = restrained)" sym="L_LT" unit="m"><NumberField id="in-Llt" label="L_LT" value={page.member.Llt} onCommit={(n) => setMember({ Llt: n })} /></Row>}
               {shape !== 'CHS' && <>
                 <Row desc="Moment diagram between lateral restraints" note={choiceLabel(page.member).split(' · ')[0]}>
-                  <MomentDiagramButton value={page.member} withC2={shape === 'I'} onChange={(c) => setMember({ nLT: c.nLT, C1: c.C1, C2: c.C2, psi: c.psi })} onCm={(cm) => setMember({ Cmy: cm, CmLT: cm })} />
+                  <MomentDiagramButton value={page.member} withC2={shape === 'I'} onChange={(c) => setMember({ nLT: c.nLT, C1: c.C1, C2: c.C2, psi: c.psi })} onCm={(cm) => setMember({ Cmy: cm, CmLT: cm, cmDef: { ...page.member.cmDef, y: { kind: 'diagram', value: cm }, LT: 'y' } })} />
                 </Row>
                 <div className="row sub">
                   <span className="row-desc">Factors from the diagram</span>
@@ -276,12 +277,19 @@ export function App() {
                   <option value={1}>§6.3.2.3 NA</option><option value={0}>§6.3.2.2</option>
                 </select>
               </Row>}
-              {(shape === 'I' ? [['Cmy', 'Equivalent uniform moment factor, y-y', 'C_my'], ['Cmz', 'Equivalent uniform moment factor, z-z', 'C_mz'], ['CmLT', 'Equivalent uniform moment factor, LTB', 'C_mLT']] as const
-                : [['Cmy', 'Equivalent uniform moment factor, y-y', 'C_my'], ['Cmz', 'Equivalent uniform moment factor, z-z', 'C_mz']] as const).map(([k, d, sym]) => (
-                <Row key={k} desc={d} sym={sym}><NumberField id={`in-${k}`} label={k} value={page.member[k]} onCommit={(n) => setMember({ [k]: n })} /></Row>
-              ))}
+              <Row desc="Equivalent uniform moment factors" note="EN 1993-1-1 Table B.3">
+                <CmButton member={page.member} withLT={shape === 'I'} onApply={setMember} />
+              </Row>
+              <div className="row sub">
+                <span className="row-desc">Factors used</span>
+                <span className="factors">
+                  <span>C<sub>my</sub> = <b data-testid="cmy-shown">{fmt(page.member.Cmy, 3)}</b></span>
+                  <span>C<sub>mz</sub> = <b data-testid="cmz-shown">{fmt(page.member.Cmz, 3)}</b></span>
+                  {shape === 'I' && <span>C<sub>mLT</sub> = <b data-testid="cmlt-shown">{fmt(page.member.CmLT, 3)}</b></span>}
+                </span>
+              </div>
               <Row desc="Partial factor, member buckling" sym="γ_M1"><NumberField id="in-gm1" label="gamma_M1" value={page.member.gammaM1} onCommit={(n) => setMember({ gammaM1: n })} /></Row>
-              <p className="hint">L<sub>cr</sub> = k L. LTB: §6.3.2.3 with the Singapore / UK NA (f with k<sub>c</sub> = 1/√C<sub>1</sub>) or §6.3.2.2. C<sub>m</sub> from Table B.3; 1.0 takes no moment-gradient benefit. Same member data for every combination. <Rich text={shape === 'I' ? 'M_cr from SN003b, fork ends; torsional buckling with L_cr,T = L_cr,z.' : shape === 'RHS' ? 'M_cr without warping; buckling curve a (hot-finished) or c (cold-formed).' : 'No LTB; buckling curve a (hot-finished) or c (cold-formed).'} /></p>
+              <p className="hint">L<sub>cr</sub> = k L. LTB: §6.3.2.3 with the Singapore / UK NA (f with k<sub>c</sub> = 1/√C<sub>1</sub>) or §6.3.2.2. Same member data for every combination. <Rich text={shape === 'I' ? 'M_cr from SN003b, fork ends; torsional buckling with L_cr,T = L_cr,z.' : shape === 'RHS' ? 'M_cr without warping; buckling curve a (hot-finished) or c (cold-formed).' : 'No LTB; buckling curve a (hot-finished) or c (cold-formed).'} /></p>
             </section>
           </form>
 

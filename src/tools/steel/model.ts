@@ -10,6 +10,7 @@ import { PAGE_GAP, pageSize } from '../../export/pageGeometry';
 import { sectionById } from '../../engineering/steel/sections';
 import type { MathShape, Shape } from '../../canvas/model/types';
 import { hollowName, type Shape as Kind } from './sections';
+import { cmOf, type CmDef } from './cm';
 import { choiceLabel } from './ltbCases';
 import { buildDisplay } from '../../math/MathFormatter';
 import { fractionUnitLatex } from '../../math/resultUnit';
@@ -18,7 +19,7 @@ import { basisOf } from './basis';
 export interface Combo { name: string; N: number; Vy: number; Vz: number; My: number; Mz: number }
 export interface Hollow { h: number; b: number; t: number; d: number; cf: 0 | 1 }
 /** Member data (EN 1993-1-1 §6.3): lengths in m, z_g in mm (I/H only); nLT = SN003b case 1–13, 0 = user C1, C2. */
-export interface Member { psi?: number; Ly: number; ky: number; Lz: number; kz: number; Llt: number; nLT: number; C1: number; C2: number; zg: number; cNA: 0 | 1; Cmy: number; Cmz: number; CmLT: number; gammaM1: number }
+export interface Member { psi?: number; Ly: number; ky: number; Lz: number; kz: number; Llt: number; nLT: number; C1: number; C2: number; zg: number; cNA: 0 | 1; Cmy: number; Cmz: number; CmLT: number; gammaM1: number; cmDef?: { y?: CmDef; z?: CmDef; LT?: CmDef | 'y' } }
 export const DEFAULT_MEMBER: Member = { Ly: 4, ky: 1, Lz: 4, kz: 1, Llt: 4, nLT: 1, C1: 1, C2: 0, zg: 0, cNA: 1, Cmy: 1, Cmz: 1, CmLT: 1, gammaM1: 1 };
 /** fyBasis: 1 = product-standard thickness steps (Singapore / UK NA), 0 = EN 1993-1-1 Table 3.1. probes: extra worksheet values to read (verification). */
 export interface SteelState { shape: Kind; sectionId: number; hollow: Hollow; fyNom: number; fyBasis: 0 | 1; gammaM0: number; eta: number; member: Member; combos: Combo[]; probes?: [latex: string, unit: string | null][] }
@@ -272,7 +273,10 @@ function memberText(st: SteelState, shape: Kind): string {
   const parts = [`L_y = ${m.Ly} m (k_y ${m.ky})`, `L_z = ${m.Lz} m (k_z ${m.kz})`];
   if (shape !== 'CHS') parts.push(`L_LT = ${m.Llt} m`, `moment diagram: ${escape(choiceLabel(m))}`, `LTB ${m.cNA ? '§6.3.2.3 with the Singapore / UK NA' : '§6.3.2.2'}`);
   if (shape === 'I') parts.push(`z_g = ${+m.zg.toFixed(1)} mm`);
-  parts.push(`C_my ${m.Cmy}, C_mz ${m.Cmz}${shape === 'I' ? `, C_mLT ${m.CmLT}` : ''}`, `γ_M1 ${m.gammaM1}`);
+  const why = (d: CmDef | 'y' | undefined, v: number) => (d === 'y' ? ' (as C_my)' : d ? ` (${escape(cmOf(d).basis)})` : v === 1 ? ' (1.0)' : '');
+  parts.push(`C_my ${+m.Cmy.toFixed(3)}${why(m.cmDef?.y, m.Cmy)}`, `C_mz ${+m.Cmz.toFixed(3)}${why(m.cmDef?.z, m.Cmz)}`);
+  if (shape === 'I') parts.push(`C_mLT ${+m.CmLT.toFixed(3)}${why(m.cmDef?.LT, m.CmLT)}`);
+  parts.push(`γ_M1 ${m.gammaM1}`);
   return parts.join('; ');
 }
 

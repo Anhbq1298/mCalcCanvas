@@ -86,14 +86,14 @@ test('mSteelBeamColumn moment diagram picker: SN003b cases with Table B.3 Cm, en
   await expect(page.getByTestId('ltb-diagram')).toHaveAttribute('title', /UDL, simply supported/);
   await expect(page.getByTestId('c1-shown')).toHaveText('1.127');
   await expect(page.getByTestId('c2-shown')).toHaveText('0.454');
-  await expect(page.locator('input[data-input="Cmy"]')).toHaveValue('0.95');
-  await expect(page.locator('input[data-input="CmLT"]')).toHaveValue('0.95');
+  await expect(page.getByTestId('cmy-shown')).toHaveText('0.950');
+  await expect(page.getByTestId('cmlt-shown')).toHaveText('0.950');
   await page.getByTestId('ltb-diagram').click();
   await page.getByTestId('ltb-psi').fill('-0.5');
   await page.getByTestId('ltb-psi-use').click();
   await expect(page.getByTestId('c1-shown')).toHaveText('2.330');
   await expect(page.getByTestId('c2-shown')).toHaveText('0.000');
-  await expect(page.locator('input[data-input="Cmy"]')).toHaveValue('0.4');
+  await expect(page.getByTestId('cmy-shown')).toHaveText('0.400');
   await page.getByTestId('ltb-diagram').click();
   await page.getByTestId('ltb-c1').fill('2.2');
   await page.getByTestId('ltb-c2').fill('0.3');
@@ -118,3 +118,28 @@ test('mSteelBeamColumn middle column: main formulas of the shown combination, re
   await expect(sheet.locator('tr', { hasText: '(6.62)' })).not.toContainText('1.381');
   await expect(sheet).not.toContainText('7. Summary');
 });
+
+test('C_m form: Table B.3 from end and span moments', async ({ page }) => {
+  await page.goto('/steel/');
+  await page.getByTestId('cm-open').click();
+  // fixed-end UDL about y-y: α_s = −0.5 → 0.5
+  await page.getByTestId('cm-y-kind').selectOption('udl');
+  await page.getByTestId('cm-y-MA').fill('-100');
+  await page.getByTestId('cm-y-MB').fill('-100');
+  await page.getByTestId('cm-y-Ms').fill('50');
+  await expect(page.getByTestId('cm-y-result')).toContainText('0.500');
+  await page.getByTestId('cm-z-kind').selectOption('linear');
+  await page.getByTestId('cm-z-MA').fill('80');
+  await page.getByTestId('cm-z-MB').fill('0');
+  await expect(page.getByTestId('cm-z-result')).toContainText('0.600');
+  await page.getByTestId('cm-lt-same').check();
+  await page.getByTestId('cm-apply').click();
+  await expect(page.getByTestId('cmy-shown')).toHaveText('0.500');
+  await expect(page.getByTestId('cmz-shown')).toHaveText('0.600');
+  await expect(page.getByTestId('cmlt-shown')).toHaveText('0.500');
+  // reopening keeps the definition
+  await page.getByTestId('cm-open').click();
+  await expect(page.getByTestId('cm-y-kind')).toHaveValue('udl');
+  await expect(page.getByTestId('cm-y-Ms')).toHaveValue('50');
+});
+

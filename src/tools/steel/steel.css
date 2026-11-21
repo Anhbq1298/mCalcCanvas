@@ -105,3 +105,8 @@
 .opt-results th { font-weight: 500; color: var(--ink-2); text-align: left; border-bottom: 1px solid var(--ink); padding: 3px 6px; font-size: 0.75rem; }
 .opt-results td { border-bottom: 1px solid var(--rule); padding: 3px 6px; }
 .opt-results td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.cm-grid { display: grid; grid-template-columns: 15rem repeat(3, 8.5rem); gap: 0.5rem 0.75rem; align-items: end; }
+.cm-grid select { width: 100%; }
+.cm-out { margin: 0.5rem 0 0; font-size: 0.8125rem; }
+.cm-out .hint { margin-left: 0.5rem; }
+@media (max-width: 720px) { .cm-grid { grid-template-columns: 1fr 1fr; } }
