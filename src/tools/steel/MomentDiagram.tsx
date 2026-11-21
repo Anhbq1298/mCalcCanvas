@@ -62,14 +62,40 @@ export function MomentDiagramButton({ value, onChange, withC2 }: {
           </div>
           {calc && <>
           <p className="hint">SCI NCCI SN003b Tables 3.1 and 3.2: fork supports, k = k<sub>w</sub> = 1, the diagram between lateral restraints of the compression flange. C<sub>2</sub> acts with the load height z<sub>g</sub> (transverse load cases only).</p>
-          <div className="diagram-grid" role="listbox" aria-label="Moment diagrams">
-            {LTB_CASES.map((c) => (
-              <button key={c.n} type="button" role="option" aria-selected={c.n === value.nLT} className={`diagram-card ${c.n === value.nLT ? 'on' : ''}`} data-testid={`ltb-case-${c.n}`} onClick={() => pick(c)}>
-                <DiagramIcon c={c} />
-                <span className="dc-label">{c.n}. {c.label}</span>
-                <span className="dc-val">C<sub>1</sub> {c.c1.toFixed(3)} · C<sub>2</sub> {c.c2.toFixed(3)}</span>
-              </button>
-            ))}
+          <div className="sn-tables">
+            <figure className="b3 sn">
+              <figcaption>SN003b Table 3.1: end moments (C<sub>2</sub> = 0)</figcaption>
+              <table>
+                <thead><tr><th>Case</th><th>Moment diagram</th><th>ψ</th><th>C<sub>1</sub></th><th /></tr></thead>
+                <tbody>{LTB_CASES.filter((c) => c.kind === 'end').map((c) => {
+                  const on = c.n === value.nLT && !value.c1Default;
+                  return (
+                    <tr key={c.n} className={on ? 'on' : ''} onClick={() => pick(c)}>
+                      <td>{c.n}</td><td className="b3-d"><DiagramIcon c={c} w={110} h={40} /></td>
+                      <td className="b3-f">{c.psi! > 0 ? '+' : ''}{c.psi}</td><td className="b3-f">{c.c1.toFixed(3)}</td>
+                      <td><button type="button" className="btn" data-testid={`ltb-case-${c.n}`} aria-pressed={on} onClick={(e) => { e.stopPropagation(); pick(c); }}>{on ? 'In use' : 'Use'}</button></td>
+                    </tr>
+                  );
+                })}</tbody>
+              </table>
+            </figure>
+            <figure className="b3 sn">
+              <figcaption>SN003b Table 3.2: transverse loading</figcaption>
+              <table>
+                <thead><tr><th>Case</th><th>Moment diagram</th><th>Loading and support</th><th>C<sub>1</sub></th><th>C<sub>2</sub></th><th /></tr></thead>
+                <tbody>{LTB_CASES.filter((c) => c.kind !== 'end').map((c) => {
+                  const on = c.n === value.nLT && !value.c1Default;
+                  return (
+                    <tr key={c.n} className={on ? 'on' : ''} onClick={() => pick(c)}>
+                      <td>{c.n}</td><td className="b3-d"><DiagramIcon c={c} w={110} h={40} /></td>
+                      <td>{c.label}</td><td className="b3-f">{c.c1.toFixed(3)}</td><td className="b3-f">{c.c2.toFixed(3)}</td>
+                      <td><button type="button" className="btn" data-testid={`ltb-case-${c.n}`} aria-pressed={on} onClick={(e) => { e.stopPropagation(); pick(c); }}>{on ? 'In use' : 'Use'}</button></td>
+                    </tr>
+                  );
+                })}</tbody>
+              </table>
+              <p className="hint">M<sub>cr</sub> = C<sub>1</sub> π²EI<sub>z</sub>/L² · [√(I<sub>w</sub>/I<sub>z</sub> + L²GI<sub>t</sub>/(π²EI<sub>z</sub>) + (C<sub>2</sub>z<sub>g</sub>)²) − C<sub>2</sub>z<sub>g</sub>]. C<sub>1</sub> raises M<sub>cr</sub> for a non-uniform diagram; C<sub>2</sub> acts with the load height z<sub>g</sub> (top flange +, destabilising).</p>
+            </figure>
           </div>
           <h3>Custom</h3>
           <div className="custom-row">

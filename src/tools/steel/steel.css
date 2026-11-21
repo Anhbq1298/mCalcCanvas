@@ -135,3 +135,14 @@
 .b3-pt { fill: var(--ink); }
 .cm-mode { display: flex; flex-direction: column; gap: 0.25rem; margin: 0.75rem 1rem 0.25rem; }
 .cm-mode .cm-toggle { margin: 0; }
+.sn-tables { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+.b3.sn table { font-size: 0.8125rem; }
+.b3.sn tbody tr { cursor: pointer; }
+.b3.sn tbody tr:hover td { background: color-mix(in srgb, var(--ink) 4%, transparent); }
+.b3.sn tbody tr.on td { background: #fff4d6; font-weight: 500; }
+.b3.sn tbody tr.on td:first-child { box-shadow: inset 3px 0 0 #d9a21b; }
+.b3.sn td.b3-d { width: 112px; }
+.b3.sn td .btn { padding: 2px 10px; font-size: 0.75rem; }
+@media (max-width: 900px) { .sn-tables { grid-template-columns: 1fr; } }
+.b3.sn td:last-child, .b3.sn th:last-child { width: 5.5rem; }
+.b3.sn td:first-child { width: 3rem; }
