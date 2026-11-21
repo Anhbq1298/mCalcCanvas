@@ -30,7 +30,7 @@ function parabola([x0, y0]: P, [x1, y1]: P, [x2, y2]: P): string {
 function Diagram({ ax, h, s, e, xs, sLabel, def }: { ax: number; h: number; s: number; e: number; xs: number; sLabel: [number, number]; def: ReactNode }) {
   const A: P = [20, h], S: P = [xs, s], E: P = [130, e];
   return (
-    <svg viewBox="0 0 170 80" className="b3-svg" aria-hidden="true"><g transform="translate(10 0)">
+    <svg viewBox="0 0 170 88" className="b3-svg" aria-hidden="true"><g transform="translate(10 0)">
       <polygon points={`20,${ax} ${parabola(A, S, E)} 130,${ax}`} className="b3-fill" />
       <line x1="20" y1={ax} x2="130" y2={ax} className="b3-axis" />
       <polyline points={`${A.join(',')} ${S.join(',')} ${E.join(',')}`} className="b3-dash" />
@@ -39,15 +39,15 @@ function Diagram({ ax, h, s, e, xs, sLabel, def }: { ax: number; h: number; s: n
       <text x="-6" y={h + 4}>M<tspan dy="3" fontSize="8">h</tspan></text>
       <text x={sLabel[0]} y={sLabel[1]}>M<tspan dy="3" fontSize="8">s</tspan></text>
       <text x="133" y={e + 4}>ψM<tspan dy="3" fontSize="8">h</tspan></text>
-      <text x="40" y="78" className="b3-def">{def}</text>
+      <text x="44" y="82" className="b3-def">{def}</text>
     </g></svg>
   );
 }
 const ratio = (a: string, b: string) => <>α<tspan dy="3" fontSize="8">{a === 'Ms' ? 's' : 'h'}</tspan><tspan dy="-3"> = M</tspan><tspan dy="3" fontSize="8">{a === 'Ms' ? 's' : 'h'}</tspan><tspan dy="-3">/M</tspan><tspan dy="3" fontSize="8">{b === 'Ms' ? 's' : 'h'}</tspan></>;
 /** end moment M_h governs (hogging at the ends, sagging in the span) */
-const EndGoverns = () => <Diagram ax={36} h={6} s={52} e={24} xs={80} sLabel={[84, 50]} def={ratio('Ms', 'Mh')} />;
+const EndGoverns = () => <Diagram ax={36} h={6} s={52} e={24} xs={80} sLabel={[83, 64]} def={ratio('Ms', 'Mh')} />;
 /** span moment M_s governs */
-const SpanGoverns = () => <Diagram ax={12} h={28} s={62} e={22} xs={72} sLabel={[76, 46]} def={ratio('Mh', 'Ms')} />;
+const SpanGoverns = () => <Diagram ax={12} h={28} s={62} e={22} xs={72} sLabel={[57, 42]} def={ratio('Mh', 'Ms')} />;
 
 export function TableB3({ hits }: { hits: Hit[] }) {
   const on = (row: string, col?: 'u' | 'c') => hits.filter((h) => h.row === row && (!col || !h.col || h.col === col));
