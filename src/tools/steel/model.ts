@@ -55,34 +55,33 @@ const PROBES: [string, string, string | null][] = [
 export interface SummaryLine { label: string; latex: string; basis?: string; ur?: number; error?: string }
 export interface SummaryGroup { title: string; lines: SummaryLine[] }
 const U = (k: string) => `\\mathrm{UR}_{${k}}`;
-const buckling = (ax: 'y' | 'z'): [string, string][] => [[`L_{cr.${ax}}`, 'Buckling length'], [`N_{cr.${ax}}`, 'Elastic critical force'], [`\\lambda_{${ax}}`, 'Relative slenderness'],
-  [`\\alpha_{${ax}}`, 'Imperfection factor'], [`\\chi_{${ax}}`, 'Reduction factor'], [`N_{b.${ax}.Rd}`, 'Buckling resistance'], [U(`b.${ax}`), 'Utilisation']];
-const COMMON_HEAD: [string, [string, string][]] = ['3–4. Yield strength and class', [['f_{y}', 'Yield strength'], ['\\varepsilon', 'Material parameter'], ['\\mathrm{Class}', 'Section class (Table 5.2)']]];
-const MEMBER_TAIL = (shape: Kind): [string, [string, string][]][] => [
-  ['7. Compression: flexural buckling y-y (§6.3.1)', buckling('y')],
-  ['7. Compression: flexural buckling z-z (§6.3.1)', buckling('z')],
-  ...(shape === 'I' ? [['7. Compression: torsional buckling (§6.3.1.4)', [['N_{cr.T}', 'Elastic critical force'], ['\\lambda_{T}', 'Relative slenderness'], ['\\chi_{T}', 'Reduction factor'], ['N_{b.T.Rd}', 'Buckling resistance'], [U('b.T'), 'Utilisation']]] as [string, [string, string][]]] : []),
-  ['8. Lateral-torsional buckling (§6.3.2)', [['C_{1}', 'Moment diagram factor'], ['M_{cr}', 'Elastic critical moment'], ['\\lambda_{LT}', 'Relative slenderness'], ['\\chi_{LT}', 'Reduction factor'], ['M_{b.Rd}', 'Buckling resistance moment'], [U('LT'), 'Utilisation']]],
-  ['9. Compression and bending (§6.3.3, Annex B)', [['n_{y}', 'Axial ratio y'], ['n_{z}', 'Axial ratio z'], ['k_{yy}', 'Interaction factor'], ['k_{yz}', 'Interaction factor'], ['k_{zy}', 'Interaction factor'], ['k_{zz}', 'Interaction factor'], [U('6.61'), '(6.61)'], [U('6.62'), '(6.62)']]],
-  ['10. Summary', [['\\mathrm{UR}_{6.2}', 'Cross-section'], ['\\mathrm{UR}_{6.3}', 'Member'], ['\\mathrm{UR}', 'Governing']]],
-];
-const SUMMARY: Record<Kind, [string, [string, string][]][]> = {
-  I: [COMMON_HEAD,
-    ['5.1 Shear (§6.2.6, §6.2.8)', [['V_{pl.z.Rd}', 'Plastic shear resistance z'], [U('V.z'), 'Utilisation'], ['V_{pl.y.Rd}', 'Plastic shear resistance y'], [U('V.y'), 'Utilisation'], ['\\rho', 'Shear reduction (6.29)']]],
-    ['5.2 Axial force and bending (§6.2.3–6.2.5)', [['N_{pl.Rd}', 'Plastic axial resistance'], [U('N'), 'Utilisation'], ['M_{c.y.Rd}', 'Bending resistance y'], [U('M.y'), 'Utilisation'], ['M_{c.z.Rd}', 'Bending resistance z'], [U('M.z'), 'Utilisation']]],
-    ['6. Bending, shear and axial force (§6.2.9)', [['n', 'Axial ratio'], ['M_{N.y.Rd}', 'Reduced moment resistance y'], ['M_{N.z.Rd}', 'Reduced moment resistance z'], ['\\mathrm{UR}_{el}', 'Elastic check (6.42)'], [U('sec'), 'Utilisation']]],
-    ...MEMBER_TAIL('I')],
-  RHS: [COMMON_HEAD,
-    ['5.1 Shear (§6.2.6, §6.2.8)', [['V_{pl.z.Rd}', 'Plastic shear resistance z'], [U('V.z'), 'Utilisation'], ['V_{pl.y.Rd}', 'Plastic shear resistance y'], [U('V.y'), 'Utilisation'], ['\\rho', 'Shear reduction (6.29)']]],
-    ['5.2 Axial force and bending (§6.2.3–6.2.5)', [['N_{pl.Rd}', 'Plastic axial resistance'], [U('N'), 'Utilisation'], ['M_{c.y.Rd}', 'Bending resistance y'], [U('M.y'), 'Utilisation'], ['M_{c.z.Rd}', 'Bending resistance z'], [U('M.z'), 'Utilisation']]],
-    ['6. Bending, shear and axial force (§6.2.9)', [['n', 'Axial ratio'], ['M_{N.y.Rd}', 'Reduced moment resistance y'], ['M_{N.z.Rd}', 'Reduced moment resistance z'], ['\\alpha', 'Exponent (6.41)'], ['\\mathrm{UR}_{el}', 'Elastic check (6.42)'], [U('sec'), 'Utilisation']]],
-    ...MEMBER_TAIL('RHS')],
-  CHS: [COMMON_HEAD,
-    ['5.1 Shear (§6.2.6, §6.2.8)', [['V_{Ed}', 'Resultant shear'], ['V_{pl.Rd}', 'Plastic shear resistance'], [U('V'), 'Utilisation'], ['\\rho', 'Shear reduction (6.29)']]],
-    ['5.2 Axial force and bending (§6.2.3–6.2.5)', [['N_{pl.Rd}', 'Plastic axial resistance'], [U('N'), 'Utilisation'], ['M_{Ed}', 'Resultant moment'], ['M_{c.Rd}', 'Bending resistance'], [U('M'), 'Utilisation']]],
-    ['6. Bending, shear and axial force (§6.2.9)', [['n', 'Axial ratio'], ['M_{N.Rd}', 'Reduced moment resistance (SCI P363)'], ['\\mathrm{UR}_{el}', 'Elastic check (6.42)'], [U('sec'), 'Utilisation']]],
-    ...MEMBER_TAIL('CHS')],
-};
+type Group = [string, [string, string][]];
+/** The page's formula groups, numbered as the report (gen_steel_section.mjs) so the two read alike. */
+function summaryGroups(shape: Kind): Group[] {
+  const CHS = shape === 'CHS';
+  const g: Group[] = [
+    [`${shape === 'RHS' ? '3.3' : '3.2'} Yield strength`, [['f_{y}', 'Yield strength']]],
+    ['4. Classification (§5.5, Table 5.2)', [['\\varepsilon', 'Material parameter'], ['\\mathrm{Class}', 'Section class']]],
+    ['5.1 Shear (§6.2.6, §6.2.8)', CHS
+      ? [['V_{Ed}', 'Resultant shear'], ['V_{pl.Rd}', 'Plastic shear resistance'], [U('V'), 'Utilisation'], ['\\rho', 'Shear reduction (6.29)']]
+      : [['V_{pl.z.Rd}', 'Plastic shear resistance z'], [U('V.z'), 'Utilisation'], ['V_{pl.y.Rd}', 'Plastic shear resistance y'], [U('V.y'), 'Utilisation'], ['\\rho', 'Shear reduction (6.29)']]],
+    ['5.2 Axial force and bending (§6.2.3–§6.2.5)', CHS
+      ? [['N_{pl.Rd}', 'Plastic axial resistance'], [U('N'), 'Utilisation'], ['M_{Ed}', 'Resultant moment'], ['M_{c.Rd}', 'Bending resistance'], [U('M'), 'Utilisation']]
+      : [['N_{pl.Rd}', 'Plastic axial resistance'], [U('N'), 'Utilisation'], ['M_{c.y.Rd}', 'Bending resistance y'], [U('M.y'), 'Utilisation'], ['M_{c.z.Rd}', 'Bending resistance z'], [U('M.z'), 'Utilisation']]],
+    ['5.3 Bending, shear and axial force (§6.2.9)', CHS
+      ? [['n', 'Axial ratio'], ['M_{N.Rd}', 'Reduced moment resistance'], ['\\mathrm{UR}_{el}', 'Elastic check (6.42)'], [U('sec'), 'Utilisation']]
+      : [['n', 'Axial ratio'], ['M_{N.y.Rd}', 'Reduced moment resistance y'], ['M_{N.z.Rd}', 'Reduced moment resistance z'], ...(shape === 'RHS' ? [['\\alpha', 'Exponent (6.41)'] as [string, string]] : []), ['\\mathrm{UR}_{el}', 'Elastic check (6.42)'], [U('sec'), 'Utilisation']]],
+  ];
+  let k = 0;
+  const six = (t: string, rows: [string, string][]) => g.push([`6.${++k} ${t}`, rows]);
+  six('Buckling lengths and curves (§6.3.1.2, Table 6.2)', [['L_{cr.y}', 'Buckling length y-y'], ['L_{cr.z}', 'Buckling length z-z'], ['\\alpha_{y}', 'Imperfection factor y-y'], ['\\alpha_{z}', 'Imperfection factor z-z']]);
+  for (const ax of ['y', 'z'] as const) six(`Flexural buckling about ${ax}-${ax} (§6.3.1)`, [[`N_{cr.${ax}}`, 'Elastic critical force'], [`\\lambda_{${ax}}`, 'Relative slenderness'], [`\\chi_{${ax}}`, 'Reduction factor'], [`N_{b.${ax}.Rd}`, 'Buckling resistance'], [U(`b.${ax}`), 'Utilisation']]);
+  if (shape === 'I') six('Torsional buckling (§6.3.1.4)', [['N_{cr.T}', 'Elastic critical force'], ['\\lambda_{T}', 'Relative slenderness'], ['\\chi_{T}', 'Reduction factor'], ['N_{b.T.Rd}', 'Buckling resistance'], [U('b.T'), 'Utilisation']]);
+  six('Lateral-torsional buckling (§6.3.2)', [['C_{1}', 'Moment diagram factor'], ['M_{cr}', 'Elastic critical moment'], ['\\lambda_{LT}', 'Relative slenderness'], ['\\chi_{LT}', 'Reduction factor'], ['M_{b.Rd}', 'Buckling resistance moment'], [U('LT'), 'Utilisation']]);
+  six('Compression and bending (§6.3.3, Annex B)', [['n_{y}', 'Axial ratio y'], ['n_{z}', 'Axial ratio z'], ['k_{yy}', 'Interaction factor'], ['k_{yz}', 'Interaction factor'], ['k_{zy}', 'Interaction factor'], ['k_{zz}', 'Interaction factor'], [U('6.61'), '(6.61)'], [U('6.62'), '(6.62)']]);
+  g.push(['7. Summary', [['\\mathrm{UR}_{6.2}', 'Cross-section'], ['\\mathrm{UR}_{6.3}', 'Member'], ['\\mathrm{UR}', 'Governing']]]);
+  return g;
+}
 
 export interface ComboResult { name: string; v: Record<string, number>; ur: Record<string, number>; extra: number[]; errors: string[] }
 export interface Governing { combo: number; key: string; ur: number }
@@ -225,7 +224,7 @@ export class SteelModel {
       const ur = name.startsWith('\\mathrm{UR}') && !/_\{(el|pl)\}$/.test(name) ? r.value?.number : undefined;
       return { label, latex, ...(b ? { basis: b.note } : {}), ...(ur !== undefined ? { ur } : {}) };
     };
-    return SUMMARY[this.shape].map(([title, rows]) => ({ title, lines: rows.map(([n, l]) => line(n, l)).filter((x): x is SummaryLine => !!x) }))
+    return summaryGroups(this.shape).map(([title, rows]) => ({ title, lines: rows.map(([n, l]) => line(n, l)).filter((x): x is SummaryLine => !!x) }))
       .filter((g) => g.lines.length);
   }
 

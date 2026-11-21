@@ -104,7 +104,7 @@ test('mSteelBeamColumn middle column: main formulas of the shown combination, re
   const sheet = page.getByTestId('sheet');
   await expect(sheet.locator('.f-math').first()).toBeVisible({ timeout: 30_000 });
   await expect(page.locator('#h-sheet')).toContainText('ULS2');
-  for (const h of ['5.1 Shear (§6.2.6, §6.2.8)', '6. Bending, shear and axial force (§6.2.9)', '7. Compression: flexural buckling y-y (§6.3.1)', '8. Lateral-torsional buckling (§6.3.2)', '9. Compression and bending (§6.3.3, Annex B)']) await expect(sheet).toContainText(h);
+  for (const h of ['5.1 Shear (§6.2.6, §6.2.8)', '5.3 Bending, shear and axial force (§6.2.9)', '6.2 Flexural buckling about y-y (§6.3.1)', '6.5 Lateral-torsional buckling (§6.3.2)', '6.6 Compression and bending (§6.3.3, Annex B)', '7. Summary']) await expect(sheet).toContainText(h);
   expect(await sheet.locator('.f-math.err').count()).toBe(0);
   expect(await sheet.locator('input, textarea, math-field, [contenteditable=true]').count()).toBe(0);
   // the (6.62) line carries the combination's value and the governing UR

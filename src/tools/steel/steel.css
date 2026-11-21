@@ -84,3 +84,12 @@
 .formulas .f-basis { font: 0.75rem/1.35 var(--font-ui, Roboto, system-ui, sans-serif); color: var(--ink-2); white-space: normal; margin-top: 2px; }
 .formulas .f-math { white-space: normal; }
 .formulas .f-math > span { white-space: nowrap; }
+/* Phone: label above the formula, the formula full width (scrolls sideways if longer). */
+@media (max-width: 720px) {
+  .formulas table, .formulas tbody { display: block; }
+  .formulas tr { display: grid; grid-template-columns: 1fr auto; border-bottom: 1px solid color-mix(in srgb, var(--rule) 55%, transparent); padding: 0.25rem 0; }
+  .formulas td { border-bottom: 0; padding: 0.125rem 0.375rem; }
+  .formulas .f-label { width: auto; grid-column: 1; font-size: 0.75rem; }
+  .formulas .f-tag { grid-column: 2; grid-row: 1; width: auto; }
+  .formulas .f-math { grid-column: 1 / -1; max-width: none; overflow-x: auto; }
+}

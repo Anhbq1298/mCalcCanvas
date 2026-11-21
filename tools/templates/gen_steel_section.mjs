@@ -57,8 +57,8 @@ function sheet(shape) {
   H(1, `STEEL BEAM-COLUMN CHECK – ${title} (EC3)`);
   H(2, '1. DESIGN BASIS');
   T('EN 1993-1-1:2005 + A1:2014. The check runs in this order, each step using the results before it:');
-  T('section properties and yield strength (3) → class, Table 5.2 (4) → cross-section resistance §6.2 (5, 6) →');
-  T(`member buckling §6.3: compression (7), lateral-torsional buckling (8), compression with bending (9) → summary (10).`);
+  T('section properties and yield strength (3) → class, Table 5.2 (4) → cross-section resistance §6.2 (5) →');
+  T('member resistance §6.3: compression, lateral-torsional buckling, compression with bending (6) → summary (7).');
   T('Uniform member, Class 1 to 3; Annex B (Method 2) for the interaction factors.');
   T('N positive in compression, negative in tension. Moments and shears in either sign; magnitudes are used.');
   T('Not covered: Class 4, torsion, holes and net sections, shear buckling, fire, connections. N < 0 (tension):');
@@ -118,7 +118,8 @@ function sheet(shape) {
   T('Conservative defaults Cm = 1.0 (no moment-gradient benefit); same factors for every combination.');
 
   // ================= 3. Section properties =================
-  H(2, '3. SECTION PROPERTIES');
+  H(2, '3. SECTION PROPERTIES AND YIELD STRENGTH');
+  if (!RHS) H(3, '3.1 Dimensions and properties');
   if (I) {
     T('Browse: choose a section by name, or enter custom h, b, tf, tw; properties update automatically.');
     T('Custom welded: r = 0, no weld metal; shear areas EN 1993-1-1 §6.2.6(3) with η = 1.0.');
@@ -190,7 +191,7 @@ function sheet(shape) {
       ] });
     P('Thickest plate (yield strength)', R`t_{max}\coloneq t`, M({ displayUnit: 'mm', precision: 1 }));
   }
-  H(3, 'Yield strength');
+  H(3, `${RHS ? '3.3' : '3.2'} Yield strength`);
   P('Basis: 1 = product standard (EN 10025-2/-4, EN 10210-1, EN 10219-1 thickness steps; Singapore / UK NA), 0 = EN 1993-1-1 Table 3.1', R`c_{fy}\coloneq1`);
   const big = R`f_{y.nom}\ge420\,\mathrm{MPa}`, low = R`f_{y.nom}\le235\,\mathrm{MPa}`;
   const step = (a, b, c) => IF([big, R`f_{y.nom}-${a}\,\mathrm{MPa}`], ...(c ? [[low, R`f_{y.nom}-${c}\,\mathrm{MPa}`]] : []), [null, R`f_{y.nom}-${b}\,\mathrm{MPa}`]);
@@ -248,7 +249,7 @@ function sheet(shape) {
 
   // ================= 5. Resistance =================
   H(2, '5. CROSS-SECTION RESISTANCE (§6.2)');
-  H(3, '5.1 Shear (§6.2.6) and its effect on bending (§6.2.8)');
+  H(3, '5.1 Shear (§6.2.6, §6.2.8)');
   const RHO = (u) => IF([R`\mathrm{UR}_{${u}}>0.5`, R`\min\left(0.99,\left(2\mathrm{UR}_{${u}}-1\right)^2\right)`], [null, '0']);
   if (CHS) {
     P('Resultant shear force', R`V_{Ed}\coloneq\sqrt{V_{y.Ed}^2+V_{z.Ed}^2}`, M(kN, fr));
@@ -268,7 +269,7 @@ function sheet(shape) {
   }
   T('The reduced yield strength (1 − ρ)f_y is applied to the whole section (conservative, §6.2.8(3)).');
   T('ρ is capped at 0.99 so the other checks stay finite when the shear check itself fails.');
-  H(3, '5.2 Axial force (§6.2.3, §6.2.4) and bending (§6.2.5)');
+  H(3, '5.2 Axial force and bending (§6.2.3–§6.2.5)');
   P('Plastic axial resistance, compression (6.10) or gross tension (6.6)', R`N_{pl.Rd}\coloneq\frac{Af_{y}}{\gamma_{M0}}`, M(kN, fr));
   UR('Axial force', 'N', R`\frac{${aN}}{N_{pl.Rd}}`, '§6.2.3 (6.5), §6.2.4 (6.9)');
   if (CHS) {
@@ -286,10 +287,10 @@ function sheet(shape) {
   }
 
   // ================= 6. Interaction =================
-  H(2, '6. BENDING, SHEAR AND AXIAL FORCE (§6.2.9, §6.2.10)');
+  H(3, '5.3 Bending, shear and axial force (§6.2.9)');
   P('Axial resistance with the shear reduction', R`N_{V.Rd}\coloneq\left(1-\rho\right)N_{pl.Rd}`, M(kN, fr));
   P('Axial ratio', R`n\coloneq\frac{${aN}}{N_{V.Rd}}`, M(p3, fr));
-  H(3, '6.1 Class 1 and 2: reduced plastic moments (§6.2.9.1)');
+  T('Class 1 and 2 – reduced plastic moments, §6.2.9.1:');
   if (CHS) {
     P('Plastic moment resistance, reduced for shear', R`M_{pl.Rd}\coloneq\frac{W_{pl}f_{y}\left(1-\rho\right)}{\gamma_{M0}}`, M(kNm, fr));
     P('Reduced for axial force, SCI P363 §10.2.1 (Blue Book)', R`M_{N.Rd}\coloneq M_{pl.Rd}\left(1-\min\left(1,n\right)^{1.7}\right)`, M(kNm, fr));
@@ -321,14 +322,17 @@ function sheet(shape) {
       : R`\left(\left(\frac{${aMy}}{M_{N.y.Rd}}\right)^{\alpha}+\left(\frac{${aMz}}{M_{N.z.Rd}}\right)^{\alpha}\right)^{\frac{1}{\alpha}}`;
     P('Utilisation, plastic (n ≥ 1: axial force alone exceeds the resistance)', R`\mathrm{UR}_{pl}\coloneq${IF(['n\\ge1', 'n'], [R`M_{z.Ed}=${kNm0}`, R`\frac{${aMy}}{M_{N.y.Rd}}`], [R`M_{y.Ed}=${kNm0}`, R`\frac{${aMz}}{M_{N.z.Rd}}`], [null, biax])}`, M(p3));
   }
-  H(3, '6.2 Class 3: elastic stresses (§6.2.9.2, (6.42))');
+  T('Class 3 – elastic stresses, §6.2.9.2, (6.42):');
   if (CHS) P('Peak normal stress over f_y(1 − ρ)/γM0', R`\mathrm{UR}_{el}\coloneq\frac{${aN}}{N_{V.Rd}}+\frac{M_{Ed}\gamma_{M0}}{W_{el}f_{y}\left(1-\rho\right)}`, M(p3, fr));
   else P('Peak normal stress over f_y(1 − ρ)/γM0', R`\mathrm{UR}_{el}\coloneq\frac{${aN}}{N_{V.Rd}}+\frac{${aMy}\gamma_{M0}}{W_{el.y}f_{y}\left(1-\rho\right)}+\frac{${aMz}\gamma_{M0}}{W_{el.z}f_{y}\left(1-\rho\right)}`, M(p3, fr));
-  H(3, '6.3 Combined check');
+  T('Check used for this class:');
   UR('Class 1, 2: plastic; Class 3: elastic', 'sec', IF([R`\mathrm{Class}\le2`, R`\mathrm{UR}_{pl}`], [null, R`\mathrm{UR}_{el}`]), '§6.2.9 (6.31), (6.41), (6.42)');
 
   // ================= 7. Flexural and torsional buckling =================
-  H(2, '7. MEMBER: COMPRESSION (§6.3.1)');
+  H(2, '6. MEMBER RESISTANCE (§6.3)');
+  let sub = 0;
+  const H6 = (t) => H(3, `6.${++sub} ${t}`);
+  H6('Buckling lengths and curves (§6.3.1.2, Table 6.2)');
   P('Compression part of the axial force', R`N_{c.Ed}\coloneq\max\left(N_{Ed},0\,\mathrm{kN}\right)`, M(kN, fr));
   P('Buckling lengths', R`L_{cr.y}\coloneq k_{y}L_{y}`, M({ displayUnit: 'm', precision: 3 }, fr));
   P('', R`L_{cr.z}\coloneq k_{z}L_{z}`, M({ displayUnit: 'm', precision: 3 }, fr));
@@ -342,7 +346,7 @@ function sheet(shape) {
   }
   P('Steel grade within the range of these curves', R`f_{y}\le460\,\mathrm{MPa}`, M(MPa));
   for (const ax of ['y', 'z']) {
-    H(3, `Flexural buckling about ${ax}-${ax}`);
+    H6(`Flexural buckling about ${ax}-${ax} (§6.3.1)`);
     P('Elastic critical force', R`N_{cr.${ax}}\coloneq\frac{\pi^2E${ax === 'y' ? Iy : Iz}}{L_{cr.${ax}}^2}`, M(kN, fr));
     P('Relative slenderness (6.50)', R`\lambda_{${ax}}\coloneq\sqrt{\frac{Af_{y}}{N_{cr.${ax}}}}`, M(p3, fr));
     P('', R`\Phi_{${ax}}\coloneq${phiOf(R`\lambda_{${ax}}`, R`\alpha_{${ax}}`)}`, M(p3, fr));
@@ -351,7 +355,8 @@ function sheet(shape) {
     UR(`Flexural buckling about ${ax}`, `b.${ax}`, R`\frac{N_{c.Ed}}{N_{b.${ax}.Rd}}`, '§6.3.1.1 (6.46)');
   }
   if (I) {
-    H(3, 'Torsional buckling (§6.3.1.4), length L_cr,T = L_cr,z');
+    H6('Torsional buckling (§6.3.1.4)');
+    T('Buckling length L_cr,T = L_cr,z.');
     P('Polar radius of gyration', R`i_{0}\coloneq\sqrt{\frac{I_{y}+I_{z}}{A}}`, M(mm, fr));
     P('Elastic critical force', R`N_{cr.T}\coloneq\frac{1}{i_{0}^2}\left(GI_{t}+\frac{\pi^2EI_{w}}{L_{cr.z}^2}\right)`, M(kN, fr));
     P('Relative slenderness (6.52)', R`\lambda_{T}\coloneq\sqrt{\frac{Af_{y}}{N_{cr.T}}}`, M(p3, fr));
@@ -362,7 +367,7 @@ function sheet(shape) {
   } else T('Closed hollow sections: torsional buckling does not govern (not checked).');
 
   // ================= 8. LTB =================
-  H(2, '8. MEMBER: LATERAL-TORSIONAL BUCKLING (§6.3.2)');
+  H6('Lateral-torsional buckling (§6.3.2)');
   if (I) {
     T('Mcr: SCI NCCI SN003b eq. (1), fork supports, k = kw = 1. L_LT = 0: no LTB (χ_LT = 1).');
     LINK('ltb', 'LTB moment cases – C1 and C2 (SN003b Tables 3.1 and 3.2)', () => ltbCaseTable(L));
@@ -420,7 +425,7 @@ function sheet(shape) {
   UR('Lateral-torsional buckling', 'LT', R`\frac{${aMy}}{M_{b.Rd}}`, '§6.3.2.1 (6.54)');
 
   // ================= 9. Interaction =================
-  H(2, '9. MEMBER: COMPRESSION AND BENDING (§6.3.3, Annex B)');
+  H6('Compression and bending (§6.3.3, Annex B)');
   T(I ? 'I/H: torsionally susceptible (Table B.2) when L_LT > 0, else Table B.1. Class 3: elastic columns.'
     : 'Hollow sections: not susceptible to torsional deformations, Table B.1. Class 3: elastic columns.');
   P('Axial ratios', R`n_{y}\coloneq\frac{N_{c.Ed}}{N_{b.y.Rd}}`, M(p3, fr));
@@ -441,14 +446,14 @@ function sheet(shape) {
   T('Cm from Table B.3 for the moment diagram between braced points; ΔM = 0 for Class 1 to 3.');
 
   // ================= 10. Summary =================
-  H(2, '10. SUMMARY');
+  H(2, '7. SUMMARY');
   T('Results apply only within the stated assumptions and scope; applicability is not checked.');
   const keys = [...(CHS ? ['V', 'N', 'M', 'sec'] : ['V.z', 'V.y', 'N', 'M.y', 'M.z', 'sec']), 'b.y', 'b.z', ...(I ? ['b.T'] : []), 'LT', '6.61', '6.62'];
   const GOV = R`\mathrm{UR}\coloneq\max\left(\mathrm{UR}_{6.2},\mathrm{UR}_{6.3}\right)`;
   const mk = ['b.y', 'b.z', 'b.T', 'LT', '6.61', '6.62'];
   const list = (ks) => ks.map((k) => R`\mathrm{UR}_{${k}}`).join(',');
   need(8);
-  T('Each utilisation from sections 5 to 9; the class from section 4 decides plastic or elastic resistance.');
+  T('Each utilisation from sections 5 and 6; the class from section 4 decides plastic or elastic resistance.');
   const LABEL = { 'V.z': 'Shear along z, §6.2.6', 'V.y': 'Shear along y, §6.2.6', V: 'Shear, §6.2.6', N: 'Axial force, §6.2.3/6.2.4', 'M.y': 'Bending about y, §6.2.5', 'M.z': 'Bending about z, §6.2.5', M: 'Bending, §6.2.5',
     sec: 'Bending and axial force, §6.2.9', 'b.y': 'Flexural buckling y-y, §6.3.1', 'b.z': 'Flexural buckling z-z, §6.3.1', 'b.T': 'Torsional buckling, §6.3.1.4', LT: CHS ? 'Bending with γM1 (no LTB), §6.3.2' : 'Lateral-torsional buckling, §6.3.2', '6.61': 'Interaction (6.61), §6.3.3', '6.62': 'Interaction (6.62), §6.3.3' };
   need(4 + keys.length);

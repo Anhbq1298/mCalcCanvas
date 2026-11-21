@@ -54,72 +54,72 @@
     "outputs": [
       {
         "id": "cls",
-        "regionId": "s_seci_3k",
+        "regionId": "s_seci_3l",
         "label": "Class"
       },
       {
         "id": "ur_Vz",
-        "regionId": "s_seci_3u",
+        "regionId": "s_seci_3v",
         "label": "UR V.z"
       },
       {
         "id": "ur_Vy",
-        "regionId": "s_seci_3y",
+        "regionId": "s_seci_3z",
         "label": "UR V.y"
       },
       {
         "id": "ur_N",
-        "regionId": "s_seci_4f",
+        "regionId": "s_seci_4g",
         "label": "UR N"
       },
       {
         "id": "ur_My",
-        "regionId": "s_seci_4r",
+        "regionId": "s_seci_4s",
         "label": "UR M.y"
       },
       {
         "id": "ur_Mz",
-        "regionId": "s_seci_4v",
+        "regionId": "s_seci_4w",
         "label": "UR M.z"
       },
       {
         "id": "ur_sec",
-        "regionId": "s_seci_5s",
+        "regionId": "s_seci_5t",
         "label": "UR sec"
       },
       {
         "id": "ur_by",
-        "regionId": "s_seci_6k",
+        "regionId": "s_seci_6m",
         "label": "UR b.y"
       },
       {
         "id": "ur_bz",
-        "regionId": "s_seci_6z",
+        "regionId": "s_seci_71",
         "label": "UR b.z"
       },
       {
         "id": "ur_bT",
-        "regionId": "s_seci_7g",
+        "regionId": "s_seci_7j",
         "label": "UR b.T"
       },
       {
         "id": "ur_LT",
-        "regionId": "s_seci_8t",
+        "regionId": "s_seci_8w",
         "label": "UR LT"
       },
       {
         "id": "ur_661",
-        "regionId": "s_seci_9f",
+        "regionId": "s_seci_9i",
         "label": "UR 6.61"
       },
       {
         "id": "ur_662",
-        "regionId": "s_seci_9j",
+        "regionId": "s_seci_9m",
         "label": "UR 6.62"
       },
       {
         "id": "ur",
-        "regionId": "s_seci_aj",
+        "regionId": "s_seci_am",
         "label": "UR"
       }
     ],
@@ -215,7 +215,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "section properties and yield strength (3) → class, Table 5.2 (4) → cross-section resistance §6.2 (5, 6) →",
+        "html": "section properties and yield strength (3) → class, Table 5.2 (4) → cross-section resistance §6.2 (5) →",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -230,7 +230,7 @@
       "props": {
         "w": 630,
         "h": 19,
-        "html": "member buckling §6.3: compression (7), lateral-torsional buckling (8), compression with bending (9) → summary (10).",
+        "html": "member resistance §6.3: compression, lateral-torsional buckling, compression with bending (6) → summary (7).",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -1240,7 +1240,7 @@
       "props": {
         "w": 630,
         "h": 24,
-        "html": "3. SECTION PROPERTIES",
+        "html": "3. SECTION PROPERTIES AND YIELD STRENGTH",
         "fontFamily": "Roboto",
         "fontSize": 16,
         "color": "#0f172a",
@@ -1252,7 +1252,23 @@
       "id": "s_seci_1v",
       "type": "text",
       "x": 76,
-      "y": 1432,
+      "y": 1438,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "3.1 Dimensions and properties",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_seci_1w",
+      "type": "text",
+      "x": 76,
+      "y": 1465,
       "props": {
         "w": 630,
         "h": 19,
@@ -1264,10 +1280,10 @@
       }
     },
     {
-      "id": "s_seci_1w",
+      "id": "s_seci_1x",
       "type": "text",
       "x": 76,
-      "y": 1457,
+      "y": 1490,
       "props": {
         "w": 630,
         "h": 19,
@@ -1279,10 +1295,10 @@
       }
     },
     {
-      "id": "s_seci_1x",
+      "id": "s_seci_1y",
       "type": "math",
       "x": 96,
-      "y": 1482,
+      "y": 1515,
       "props": {
         "w": 88,
         "h": 22,
@@ -1297,10 +1313,10 @@
       }
     },
     {
-      "id": "s_seci_1y",
+      "id": "s_seci_1z",
       "type": "math",
       "x": 396,
-      "y": 1482,
+      "y": 1515,
       "props": {
         "w": 86,
         "h": 22,
@@ -1315,10 +1331,10 @@
       }
     },
     {
-      "id": "s_seci_1z",
+      "id": "s_seci_20",
       "type": "math",
       "x": 96,
-      "y": 1510,
+      "y": 1543,
       "props": {
         "w": 98,
         "h": 22,
@@ -1333,10 +1349,10 @@
       }
     },
     {
-      "id": "s_seci_20",
+      "id": "s_seci_21",
       "type": "math",
       "x": 396,
-      "y": 1510,
+      "y": 1543,
       "props": {
         "w": 96,
         "h": 22,
@@ -1351,10 +1367,10 @@
       }
     },
     {
-      "id": "s_seci_21",
+      "id": "s_seci_22",
       "type": "math",
       "x": 96,
-      "y": 1538,
+      "y": 1571,
       "props": {
         "w": 78,
         "h": 22,
@@ -1369,10 +1385,10 @@
       }
     },
     {
-      "id": "s_seci_22",
+      "id": "s_seci_23",
       "type": "math",
       "x": 396,
-      "y": 1538,
+      "y": 1571,
       "props": {
         "w": 103,
         "h": 22,
@@ -1387,10 +1403,10 @@
       }
     },
     {
-      "id": "s_seci_23",
+      "id": "s_seci_24",
       "type": "math",
       "x": 96,
-      "y": 1566,
+      "y": 1599,
       "props": {
         "w": 110,
         "h": 22,
@@ -1405,10 +1421,10 @@
       }
     },
     {
-      "id": "s_seci_24",
+      "id": "s_seci_25",
       "type": "math",
       "x": 396,
-      "y": 1566,
+      "y": 1599,
       "props": {
         "w": 102,
         "h": 22,
@@ -1423,10 +1439,10 @@
       }
     },
     {
-      "id": "s_seci_25",
+      "id": "s_seci_26",
       "type": "math",
       "x": 96,
-      "y": 1594,
+      "y": 1627,
       "props": {
         "w": 122,
         "h": 22,
@@ -1441,10 +1457,10 @@
       }
     },
     {
-      "id": "s_seci_26",
+      "id": "s_seci_27",
       "type": "math",
       "x": 396,
-      "y": 1594,
+      "y": 1627,
       "props": {
         "w": 113,
         "h": 22,
@@ -1459,10 +1475,10 @@
       }
     },
     {
-      "id": "s_seci_27",
+      "id": "s_seci_28",
       "type": "math",
       "x": 96,
-      "y": 1622,
+      "y": 1655,
       "props": {
         "w": 124,
         "h": 22,
@@ -1477,10 +1493,10 @@
       }
     },
     {
-      "id": "s_seci_28",
+      "id": "s_seci_29",
       "type": "math",
       "x": 396,
-      "y": 1622,
+      "y": 1655,
       "props": {
         "w": 114,
         "h": 22,
@@ -1495,10 +1511,10 @@
       }
     },
     {
-      "id": "s_seci_29",
+      "id": "s_seci_2a",
       "type": "math",
       "x": 96,
-      "y": 1650,
+      "y": 1683,
       "props": {
         "w": 92,
         "h": 22,
@@ -1513,10 +1529,10 @@
       }
     },
     {
-      "id": "s_seci_2a",
+      "id": "s_seci_2b",
       "type": "math",
       "x": 396,
-      "y": 1650,
+      "y": 1683,
       "props": {
         "w": 128,
         "h": 22,
@@ -1531,10 +1547,10 @@
       }
     },
     {
-      "id": "s_seci_2b",
+      "id": "s_seci_2c",
       "type": "math",
       "x": 96,
-      "y": 1678,
+      "y": 1711,
       "props": {
         "w": 107,
         "h": 22,
@@ -1549,10 +1565,10 @@
       }
     },
     {
-      "id": "s_seci_2c",
+      "id": "s_seci_2d",
       "type": "math",
       "x": 396,
-      "y": 1678,
+      "y": 1711,
       "props": {
         "w": 110,
         "h": 22,
@@ -1567,10 +1583,10 @@
       }
     },
     {
-      "id": "s_seci_2d",
+      "id": "s_seci_2e",
       "type": "graph",
       "x": 277,
-      "y": 1706,
+      "y": 1739,
       "props": {
         "w": 240,
         "h": 240,
@@ -1600,10 +1616,10 @@
       }
     },
     {
-      "id": "s_seci_2e",
+      "id": "s_seci_2f",
       "type": "text",
       "x": 76,
-      "y": 1955,
+      "y": 1988,
       "props": {
         "w": 304,
         "h": 18,
@@ -1615,10 +1631,10 @@
       }
     },
     {
-      "id": "s_seci_2f",
+      "id": "s_seci_2g",
       "type": "math",
       "x": 396,
-      "y": 1952,
+      "y": 1985,
       "props": {
         "w": 208,
         "h": 22,
@@ -1633,14 +1649,14 @@
       }
     },
     {
-      "id": "s_seci_2g",
+      "id": "s_seci_2h",
       "type": "text",
       "x": 76,
-      "y": 1986,
+      "y": 2019,
       "props": {
         "w": 630,
         "h": 21,
-        "html": "Yield strength",
+        "html": "3.2 Yield strength",
         "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
@@ -1649,10 +1665,10 @@
       }
     },
     {
-      "id": "s_seci_2h",
+      "id": "s_seci_2i",
       "type": "text",
       "x": 76,
-      "y": 2016,
+      "y": 2049,
       "props": {
         "w": 304,
         "h": 18,
@@ -1664,10 +1680,10 @@
       }
     },
     {
-      "id": "s_seci_2i",
+      "id": "s_seci_2j",
       "type": "math",
       "x": 396,
-      "y": 2013,
+      "y": 2046,
       "props": {
         "w": 48,
         "h": 22,
@@ -1682,10 +1698,10 @@
       }
     },
     {
-      "id": "s_seci_2j",
+      "id": "s_seci_2k",
       "type": "text",
       "x": 76,
-      "y": 2041,
+      "y": 2074,
       "props": {
         "w": 630,
         "h": 18,
@@ -1697,7 +1713,7 @@
       }
     },
     {
-      "id": "s_seci_2k",
+      "id": "s_seci_2l",
       "type": "math",
       "x": 96,
       "y": 2402,
@@ -1715,7 +1731,7 @@
       }
     },
     {
-      "id": "s_seci_2l",
+      "id": "s_seci_2m",
       "type": "text",
       "x": 76,
       "y": 3217,
@@ -1730,7 +1746,7 @@
       }
     },
     {
-      "id": "s_seci_2m",
+      "id": "s_seci_2n",
       "type": "math",
       "x": 96,
       "y": 3241,
@@ -1748,7 +1764,7 @@
       }
     },
     {
-      "id": "s_seci_2n",
+      "id": "s_seci_2o",
       "type": "text",
       "x": 76,
       "y": 3616,
@@ -1763,7 +1779,7 @@
       }
     },
     {
-      "id": "s_seci_2o",
+      "id": "s_seci_2p",
       "type": "math",
       "x": 396,
       "y": 3573,
@@ -1781,7 +1797,7 @@
       }
     },
     {
-      "id": "s_seci_2p",
+      "id": "s_seci_2q",
       "type": "text",
       "x": 76,
       "y": 3661,
@@ -1796,7 +1812,7 @@
       }
     },
     {
-      "id": "s_seci_2q",
+      "id": "s_seci_2r",
       "type": "math",
       "x": 396,
       "y": 3658,
@@ -1814,7 +1830,7 @@
       }
     },
     {
-      "id": "s_seci_2r",
+      "id": "s_seci_2s",
       "type": "text",
       "x": 76,
       "y": 3692,
@@ -1830,7 +1846,7 @@
       }
     },
     {
-      "id": "s_seci_2s",
+      "id": "s_seci_2t",
       "type": "text",
       "x": 76,
       "y": 3751,
@@ -1845,7 +1861,7 @@
       }
     },
     {
-      "id": "s_seci_2t",
+      "id": "s_seci_2u",
       "type": "math",
       "x": 396,
       "y": 3722,
@@ -1863,7 +1879,7 @@
       }
     },
     {
-      "id": "s_seci_2u",
+      "id": "s_seci_2v",
       "type": "text",
       "x": 76,
       "y": 3781,
@@ -1879,7 +1895,7 @@
       }
     },
     {
-      "id": "s_seci_2v",
+      "id": "s_seci_2w",
       "type": "text",
       "x": 76,
       "y": 3815,
@@ -1894,7 +1910,7 @@
       }
     },
     {
-      "id": "s_seci_2w",
+      "id": "s_seci_2x",
       "type": "math",
       "x": 396,
       "y": 3808,
@@ -1912,7 +1928,7 @@
       }
     },
     {
-      "id": "s_seci_2x",
+      "id": "s_seci_2y",
       "type": "text",
       "x": 76,
       "y": 3870,
@@ -1927,7 +1943,7 @@
       }
     },
     {
-      "id": "s_seci_2y",
+      "id": "s_seci_2z",
       "type": "math",
       "x": 396,
       "y": 3845,
@@ -1945,7 +1961,7 @@
       }
     },
     {
-      "id": "s_seci_2z",
+      "id": "s_seci_30",
       "type": "text",
       "x": 76,
       "y": 3894,
@@ -1960,7 +1976,7 @@
       }
     },
     {
-      "id": "s_seci_30",
+      "id": "s_seci_31",
       "type": "math",
       "x": 96,
       "y": 3918,
@@ -1978,7 +1994,7 @@
       }
     },
     {
-      "id": "s_seci_31",
+      "id": "s_seci_32",
       "type": "text",
       "x": 76,
       "y": 4125,
@@ -1994,7 +2010,7 @@
       }
     },
     {
-      "id": "s_seci_32",
+      "id": "s_seci_33",
       "type": "text",
       "x": 76,
       "y": 4155,
@@ -2009,7 +2025,7 @@
       }
     },
     {
-      "id": "s_seci_33",
+      "id": "s_seci_34",
       "type": "math",
       "x": 396,
       "y": 4152,
@@ -2027,7 +2043,7 @@
       }
     },
     {
-      "id": "s_seci_34",
+      "id": "s_seci_35",
       "type": "text",
       "x": 76,
       "y": 4180,
@@ -2042,7 +2058,7 @@
       }
     },
     {
-      "id": "s_seci_35",
+      "id": "s_seci_36",
       "type": "math",
       "x": 96,
       "y": 4204,
@@ -2060,7 +2076,7 @@
       }
     },
     {
-      "id": "s_seci_36",
+      "id": "s_seci_37",
       "type": "text",
       "x": 76,
       "y": 4347,
@@ -2075,7 +2091,7 @@
       }
     },
     {
-      "id": "s_seci_37",
+      "id": "s_seci_38",
       "type": "math",
       "x": 76,
       "y": 4371,
@@ -2093,7 +2109,7 @@
       }
     },
     {
-      "id": "s_seci_38",
+      "id": "s_seci_39",
       "type": "text",
       "x": 76,
       "y": 4807,
@@ -2108,7 +2124,7 @@
       }
     },
     {
-      "id": "s_seci_39",
+      "id": "s_seci_3a",
       "type": "math",
       "x": 396,
       "y": 4744,
@@ -2126,7 +2142,7 @@
       }
     },
     {
-      "id": "s_seci_3a",
+      "id": "s_seci_3b",
       "type": "text",
       "x": 76,
       "y": 4930,
@@ -2141,7 +2157,7 @@
       }
     },
     {
-      "id": "s_seci_3b",
+      "id": "s_seci_3c",
       "type": "math",
       "x": 396,
       "y": 4867,
@@ -2159,7 +2175,7 @@
       }
     },
     {
-      "id": "s_seci_3c",
+      "id": "s_seci_3d",
       "type": "text",
       "x": 76,
       "y": 5033,
@@ -2174,7 +2190,7 @@
       }
     },
     {
-      "id": "s_seci_3d",
+      "id": "s_seci_3e",
       "type": "math",
       "x": 396,
       "y": 4990,
@@ -2192,7 +2208,7 @@
       }
     },
     {
-      "id": "s_seci_3e",
+      "id": "s_seci_3f",
       "type": "text",
       "x": 76,
       "y": 5118,
@@ -2207,7 +2223,7 @@
       }
     },
     {
-      "id": "s_seci_3f",
+      "id": "s_seci_3g",
       "type": "math",
       "x": 396,
       "y": 5095,
@@ -2225,7 +2241,7 @@
       }
     },
     {
-      "id": "s_seci_3g",
+      "id": "s_seci_3h",
       "type": "text",
       "x": 76,
       "y": 5225,
@@ -2240,7 +2256,7 @@
       }
     },
     {
-      "id": "s_seci_3h",
+      "id": "s_seci_3i",
       "type": "math",
       "x": 396,
       "y": 5142,
@@ -2258,7 +2274,7 @@
       }
     },
     {
-      "id": "s_seci_3i",
+      "id": "s_seci_3j",
       "type": "text",
       "x": 76,
       "y": 5310,
@@ -2274,7 +2290,7 @@
       }
     },
     {
-      "id": "s_seci_3j",
+      "id": "s_seci_3k",
       "type": "text",
       "x": 76,
       "y": 5340,
@@ -2289,7 +2305,7 @@
       }
     },
     {
-      "id": "s_seci_3k",
+      "id": "s_seci_3l",
       "type": "math",
       "x": 396,
       "y": 5337,
@@ -2307,7 +2323,7 @@
       }
     },
     {
-      "id": "s_seci_3l",
+      "id": "s_seci_3m",
       "type": "text",
       "x": 76,
       "y": 5367,
@@ -2322,7 +2338,7 @@
       }
     },
     {
-      "id": "s_seci_3m",
+      "id": "s_seci_3n",
       "type": "math",
       "x": 396,
       "y": 5364,
@@ -2340,7 +2356,7 @@
       }
     },
     {
-      "id": "s_seci_3n",
+      "id": "s_seci_3o",
       "type": "text",
       "x": 76,
       "y": 5397,
@@ -2356,14 +2372,14 @@
       }
     },
     {
-      "id": "s_seci_3o",
+      "id": "s_seci_3p",
       "type": "text",
       "x": 76,
       "y": 5433,
       "props": {
         "w": 630,
         "h": 21,
-        "html": "5.1 Shear (§6.2.6) and its effect on bending (§6.2.8)",
+        "html": "5.1 Shear (§6.2.6, §6.2.8)",
         "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
@@ -2372,7 +2388,7 @@
       }
     },
     {
-      "id": "s_seci_3p",
+      "id": "s_seci_3q",
       "type": "text",
       "x": 76,
       "y": 5489,
@@ -2387,7 +2403,7 @@
       }
     },
     {
-      "id": "s_seci_3q",
+      "id": "s_seci_3r",
       "type": "math",
       "x": 396,
       "y": 5460,
@@ -2405,7 +2421,7 @@
       }
     },
     {
-      "id": "s_seci_3r",
+      "id": "s_seci_3s",
       "type": "text",
       "x": 76,
       "y": 5542,
@@ -2420,7 +2436,7 @@
       }
     },
     {
-      "id": "s_seci_3s",
+      "id": "s_seci_3t",
       "type": "math",
       "x": 396,
       "y": 5513,
@@ -2438,7 +2454,7 @@
       }
     },
     {
-      "id": "s_seci_3t",
+      "id": "s_seci_3u",
       "type": "text",
       "x": 76,
       "y": 5595,
@@ -2453,7 +2469,7 @@
       }
     },
     {
-      "id": "s_seci_3u",
+      "id": "s_seci_3v",
       "type": "math",
       "x": 396,
       "y": 5566,
@@ -2471,7 +2487,7 @@
       }
     },
     {
-      "id": "s_seci_3v",
+      "id": "s_seci_3w",
       "type": "text",
       "x": 76,
       "y": 5622,
@@ -2486,7 +2502,7 @@
       }
     },
     {
-      "id": "s_seci_3w",
+      "id": "s_seci_3x",
       "type": "math",
       "x": 396,
       "y": 5619,
@@ -2504,7 +2520,7 @@
       }
     },
     {
-      "id": "s_seci_3x",
+      "id": "s_seci_3y",
       "type": "text",
       "x": 76,
       "y": 5676,
@@ -2519,7 +2535,7 @@
       }
     },
     {
-      "id": "s_seci_3y",
+      "id": "s_seci_3z",
       "type": "math",
       "x": 396,
       "y": 5646,
@@ -2537,7 +2553,7 @@
       }
     },
     {
-      "id": "s_seci_3z",
+      "id": "s_seci_40",
       "type": "text",
       "x": 76,
       "y": 5703,
@@ -2552,7 +2568,7 @@
       }
     },
     {
-      "id": "s_seci_40",
+      "id": "s_seci_41",
       "type": "math",
       "x": 396,
       "y": 5700,
@@ -2570,7 +2586,7 @@
       }
     },
     {
-      "id": "s_seci_41",
+      "id": "s_seci_42",
       "type": "text",
       "x": 76,
       "y": 5924,
@@ -2585,7 +2601,7 @@
       }
     },
     {
-      "id": "s_seci_42",
+      "id": "s_seci_43",
       "type": "math",
       "x": 396,
       "y": 5915,
@@ -2603,7 +2619,7 @@
       }
     },
     {
-      "id": "s_seci_43",
+      "id": "s_seci_44",
       "type": "text",
       "x": 76,
       "y": 6000,
@@ -2618,7 +2634,7 @@
       }
     },
     {
-      "id": "s_seci_44",
+      "id": "s_seci_45",
       "type": "math",
       "x": 396,
       "y": 5957,
@@ -2636,7 +2652,7 @@
       }
     },
     {
-      "id": "s_seci_45",
+      "id": "s_seci_46",
       "type": "text",
       "x": 76,
       "y": 6095,
@@ -2651,7 +2667,7 @@
       }
     },
     {
-      "id": "s_seci_46",
+      "id": "s_seci_47",
       "type": "math",
       "x": 396,
       "y": 6052,
@@ -2669,7 +2685,7 @@
       }
     },
     {
-      "id": "s_seci_47",
+      "id": "s_seci_48",
       "type": "text",
       "x": 76,
       "y": 6150,
@@ -2684,7 +2700,7 @@
       }
     },
     {
-      "id": "s_seci_48",
+      "id": "s_seci_49",
       "type": "math",
       "x": 396,
       "y": 6147,
@@ -2702,7 +2718,7 @@
       }
     },
     {
-      "id": "s_seci_49",
+      "id": "s_seci_4a",
       "type": "text",
       "x": 76,
       "y": 6175,
@@ -2717,7 +2733,7 @@
       }
     },
     {
-      "id": "s_seci_4a",
+      "id": "s_seci_4b",
       "type": "text",
       "x": 76,
       "y": 6200,
@@ -2732,14 +2748,14 @@
       }
     },
     {
-      "id": "s_seci_4b",
+      "id": "s_seci_4c",
       "type": "text",
       "x": 76,
       "y": 6231,
       "props": {
         "w": 630,
         "h": 21,
-        "html": "5.2 Axial force (§6.2.3, §6.2.4) and bending (§6.2.5)",
+        "html": "5.2 Axial force and bending (§6.2.3–§6.2.5)",
         "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
@@ -2748,7 +2764,7 @@
       }
     },
     {
-      "id": "s_seci_4c",
+      "id": "s_seci_4d",
       "type": "text",
       "x": 76,
       "y": 6267,
@@ -2763,7 +2779,7 @@
       }
     },
     {
-      "id": "s_seci_4d",
+      "id": "s_seci_4e",
       "type": "math",
       "x": 396,
       "y": 6258,
@@ -2781,7 +2797,7 @@
       }
     },
     {
-      "id": "s_seci_4e",
+      "id": "s_seci_4f",
       "type": "text",
       "x": 76,
       "y": 6329,
@@ -2796,7 +2812,7 @@
       }
     },
     {
-      "id": "s_seci_4f",
+      "id": "s_seci_4g",
       "type": "math",
       "x": 396,
       "y": 6300,
@@ -2814,7 +2830,7 @@
       }
     },
     {
-      "id": "s_seci_4g",
+      "id": "s_seci_4h",
       "type": "text",
       "x": 76,
       "y": 6356,
@@ -2829,7 +2845,7 @@
       }
     },
     {
-      "id": "s_seci_4h",
+      "id": "s_seci_4i",
       "type": "math",
       "x": 396,
       "y": 6353,
@@ -2847,7 +2863,7 @@
       }
     },
     {
-      "id": "s_seci_4i",
+      "id": "s_seci_4j",
       "type": "text",
       "x": 76,
       "y": 6403,
@@ -2862,7 +2878,7 @@
       }
     },
     {
-      "id": "s_seci_4j",
+      "id": "s_seci_4k",
       "type": "math",
       "x": 396,
       "y": 6380,
@@ -2880,7 +2896,7 @@
       }
     },
     {
-      "id": "s_seci_4k",
+      "id": "s_seci_4l",
       "type": "text",
       "x": 76,
       "y": 6508,
@@ -2895,7 +2911,7 @@
       }
     },
     {
-      "id": "s_seci_4l",
+      "id": "s_seci_4m",
       "type": "math",
       "x": 396,
       "y": 6465,
@@ -2913,7 +2929,7 @@
       }
     },
     {
-      "id": "s_seci_4m",
+      "id": "s_seci_4n",
       "type": "text",
       "x": 76,
       "y": 6560,
@@ -2928,7 +2944,7 @@
       }
     },
     {
-      "id": "s_seci_4n",
+      "id": "s_seci_4o",
       "type": "math",
       "x": 396,
       "y": 6550,
@@ -2946,7 +2962,7 @@
       }
     },
     {
-      "id": "s_seci_4o",
+      "id": "s_seci_4p",
       "type": "text",
       "x": 76,
       "y": 6603,
@@ -2961,7 +2977,7 @@
       }
     },
     {
-      "id": "s_seci_4p",
+      "id": "s_seci_4q",
       "type": "math",
       "x": 396,
       "y": 6593,
@@ -2979,7 +2995,7 @@
       }
     },
     {
-      "id": "s_seci_4q",
+      "id": "s_seci_4r",
       "type": "text",
       "x": 76,
       "y": 6666,
@@ -2994,7 +3010,7 @@
       }
     },
     {
-      "id": "s_seci_4r",
+      "id": "s_seci_4s",
       "type": "math",
       "x": 396,
       "y": 6636,
@@ -3012,7 +3028,7 @@
       }
     },
     {
-      "id": "s_seci_4s",
+      "id": "s_seci_4t",
       "type": "text",
       "x": 76,
       "y": 6693,
@@ -3027,7 +3043,7 @@
       }
     },
     {
-      "id": "s_seci_4t",
+      "id": "s_seci_4u",
       "type": "math",
       "x": 396,
       "y": 6690,
@@ -3045,7 +3061,7 @@
       }
     },
     {
-      "id": "s_seci_4u",
+      "id": "s_seci_4v",
       "type": "text",
       "x": 76,
       "y": 6727,
@@ -3060,7 +3076,7 @@
       }
     },
     {
-      "id": "s_seci_4v",
+      "id": "s_seci_4w",
       "type": "math",
       "x": 396,
       "y": 6717,
@@ -3078,7 +3094,7 @@
       }
     },
     {
-      "id": "s_seci_4w",
+      "id": "s_seci_4x",
       "type": "text",
       "x": 76,
       "y": 6762,
@@ -3093,7 +3109,7 @@
       }
     },
     {
-      "id": "s_seci_4x",
+      "id": "s_seci_4y",
       "type": "math",
       "x": 396,
       "y": 6759,
@@ -3111,26 +3127,26 @@
       }
     },
     {
-      "id": "s_seci_4y",
+      "id": "s_seci_4z",
       "type": "text",
       "x": 76,
       "y": 6792,
       "props": {
         "w": 630,
-        "h": 24,
-        "html": "6. BENDING, SHEAR AND AXIAL FORCE (§6.2.9, §6.2.10)",
+        "h": 21,
+        "html": "5.3 Bending, shear and axial force (§6.2.9)",
         "fontFamily": "Roboto",
-        "fontSize": 16,
-        "color": "#0f172a",
+        "fontSize": 14,
+        "color": "#334155",
         "align": "left",
-        "heading": 2
+        "heading": 3
       }
     },
     {
-      "id": "s_seci_4z",
+      "id": "s_seci_50",
       "type": "text",
       "x": 76,
-      "y": 6825,
+      "y": 6822,
       "props": {
         "w": 304,
         "h": 18,
@@ -3142,10 +3158,10 @@
       }
     },
     {
-      "id": "s_seci_50",
+      "id": "s_seci_51",
       "type": "math",
       "x": 396,
-      "y": 6822,
+      "y": 6819,
       "props": {
         "w": 235,
         "h": 22,
@@ -3160,10 +3176,10 @@
       }
     },
     {
-      "id": "s_seci_51",
+      "id": "s_seci_52",
       "type": "text",
       "x": 76,
-      "y": 6860,
+      "y": 6857,
       "props": {
         "w": 304,
         "h": 18,
@@ -3175,10 +3191,10 @@
       }
     },
     {
-      "id": "s_seci_52",
+      "id": "s_seci_53",
       "type": "math",
       "x": 396,
-      "y": 6850,
+      "y": 6847,
       "props": {
         "w": 144,
         "h": 36,
@@ -3193,26 +3209,25 @@
       }
     },
     {
-      "id": "s_seci_53",
-      "type": "text",
-      "x": 76,
-      "y": 7086,
-      "props": {
-        "w": 630,
-        "h": 21,
-        "html": "6.1 Class 1 and 2: reduced plastic moments (§6.2.9.1)",
-        "fontFamily": "Roboto",
-        "fontSize": 14,
-        "color": "#334155",
-        "align": "left",
-        "heading": 3
-      }
-    },
-    {
       "id": "s_seci_54",
       "type": "text",
       "x": 76,
-      "y": 7123,
+      "y": 6889,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Class 1 and 2 – reduced plastic moments, §6.2.9.1:",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_55",
+      "type": "text",
+      "x": 76,
+      "y": 7096,
       "props": {
         "w": 304,
         "h": 18,
@@ -3224,10 +3239,10 @@
       }
     },
     {
-      "id": "s_seci_55",
+      "id": "s_seci_56",
       "type": "math",
       "x": 396,
-      "y": 7113,
+      "y": 7086,
       "props": {
         "w": 290,
         "h": 37,
@@ -3242,10 +3257,10 @@
       }
     },
     {
-      "id": "s_seci_56",
+      "id": "s_seci_57",
       "type": "text",
       "x": 76,
-      "y": 7166,
+      "y": 7139,
       "props": {
         "w": 304,
         "h": 18,
@@ -3257,10 +3272,10 @@
       }
     },
     {
-      "id": "s_seci_57",
+      "id": "s_seci_58",
       "type": "math",
       "x": 396,
-      "y": 7156,
+      "y": 7129,
       "props": {
         "w": 278,
         "h": 37,
@@ -3275,10 +3290,10 @@
       }
     },
     {
-      "id": "s_seci_58",
+      "id": "s_seci_59",
       "type": "text",
       "x": 76,
-      "y": 7202,
+      "y": 7175,
       "props": {
         "w": 304,
         "h": 18,
@@ -3290,10 +3305,10 @@
       }
     },
     {
-      "id": "s_seci_59",
+      "id": "s_seci_5a",
       "type": "math",
       "x": 396,
-      "y": 7199,
+      "y": 7172,
       "props": {
         "w": 163,
         "h": 22,
@@ -3308,10 +3323,10 @@
       }
     },
     {
-      "id": "s_seci_5a",
+      "id": "s_seci_5b",
       "type": "text",
       "x": 76,
-      "y": 7238,
+      "y": 7211,
       "props": {
         "w": 304,
         "h": 18,
@@ -3323,10 +3338,10 @@
       }
     },
     {
-      "id": "s_seci_5b",
+      "id": "s_seci_5c",
       "type": "math",
       "x": 396,
-      "y": 7227,
+      "y": 7200,
       "props": {
         "w": 241,
         "h": 39,
@@ -3341,10 +3356,10 @@
       }
     },
     {
-      "id": "s_seci_5c",
+      "id": "s_seci_5d",
       "type": "text",
       "x": 76,
-      "y": 7272,
+      "y": 7245,
       "props": {
         "w": 630,
         "h": 18,
@@ -3356,10 +3371,10 @@
       }
     },
     {
-      "id": "s_seci_5d",
+      "id": "s_seci_5e",
       "type": "math",
       "x": 96,
-      "y": 7296,
+      "y": 7269,
       "props": {
         "w": 531,
         "h": 101,
@@ -3374,10 +3389,10 @@
       }
     },
     {
-      "id": "s_seci_5e",
+      "id": "s_seci_5f",
       "type": "text",
       "x": 76,
-      "y": 7403,
+      "y": 7376,
       "props": {
         "w": 630,
         "h": 18,
@@ -3389,10 +3404,10 @@
       }
     },
     {
-      "id": "s_seci_5f",
+      "id": "s_seci_5g",
       "type": "math",
       "x": 96,
-      "y": 7427,
+      "y": 7400,
       "props": {
         "w": 450,
         "h": 116,
@@ -3407,10 +3422,10 @@
       }
     },
     {
-      "id": "s_seci_5g",
+      "id": "s_seci_5h",
       "type": "text",
       "x": 76,
-      "y": 7552,
+      "y": 7525,
       "props": {
         "w": 304,
         "h": 18,
@@ -3422,10 +3437,10 @@
       }
     },
     {
-      "id": "s_seci_5h",
+      "id": "s_seci_5i",
       "type": "math",
       "x": 396,
-      "y": 7549,
+      "y": 7522,
       "props": {
         "w": 38,
         "h": 22,
@@ -3440,10 +3455,10 @@
       }
     },
     {
-      "id": "s_seci_5i",
+      "id": "s_seci_5j",
       "type": "text",
       "x": 76,
-      "y": 7580,
+      "y": 7553,
       "props": {
         "w": 304,
         "h": 18,
@@ -3455,10 +3470,10 @@
       }
     },
     {
-      "id": "s_seci_5j",
+      "id": "s_seci_5k",
       "type": "math",
       "x": 396,
-      "y": 7577,
+      "y": 7550,
       "props": {
         "w": 166,
         "h": 22,
@@ -3473,10 +3488,10 @@
       }
     },
     {
-      "id": "s_seci_5k",
+      "id": "s_seci_5l",
       "type": "text",
       "x": 76,
-      "y": 7605,
+      "y": 7578,
       "props": {
         "w": 630,
         "h": 19,
@@ -3488,10 +3503,10 @@
       }
     },
     {
-      "id": "s_seci_5l",
+      "id": "s_seci_5m",
       "type": "text",
       "x": 76,
-      "y": 7630,
+      "y": 7603,
       "props": {
         "w": 630,
         "h": 18,
@@ -3503,10 +3518,10 @@
       }
     },
     {
-      "id": "s_seci_5m",
+      "id": "s_seci_5n",
       "type": "math",
       "x": 96,
-      "y": 7654,
+      "y": 7627,
       "props": {
         "w": 375,
         "h": 223,
@@ -3521,26 +3536,25 @@
       }
     },
     {
-      "id": "s_seci_5n",
-      "type": "text",
-      "x": 76,
-      "y": 7889,
-      "props": {
-        "w": 630,
-        "h": 21,
-        "html": "6.2 Class 3: elastic stresses (§6.2.9.2, (6.42))",
-        "fontFamily": "Roboto",
-        "fontSize": 14,
-        "color": "#334155",
-        "align": "left",
-        "heading": 3
-      }
-    },
-    {
       "id": "s_seci_5o",
       "type": "text",
       "x": 76,
-      "y": 7916,
+      "y": 7856,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Class 3 – elastic stresses, §6.2.9.2, (6.42):",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_5p",
+      "type": "text",
+      "x": 76,
+      "y": 7881,
       "props": {
         "w": 630,
         "h": 18,
@@ -3552,10 +3566,10 @@
       }
     },
     {
-      "id": "s_seci_5p",
+      "id": "s_seci_5q",
       "type": "math",
       "x": 96,
-      "y": 7940,
+      "y": 7905,
       "props": {
         "w": 422,
         "h": 39,
@@ -3570,26 +3584,25 @@
       }
     },
     {
-      "id": "s_seci_5q",
-      "type": "text",
-      "x": 76,
-      "y": 8257,
-      "props": {
-        "w": 630,
-        "h": 21,
-        "html": "6.3 Combined check",
-        "fontFamily": "Roboto",
-        "fontSize": 14,
-        "color": "#334155",
-        "align": "left",
-        "heading": 3
-      }
-    },
-    {
       "id": "s_seci_5r",
       "type": "text",
       "x": 76,
-      "y": 8327,
+      "y": 7950,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Check used for this class:",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_5s",
+      "type": "text",
+      "x": 76,
+      "y": 8018,
       "props": {
         "w": 304,
         "h": 18,
@@ -3601,10 +3614,10 @@
       }
     },
     {
-      "id": "s_seci_5s",
+      "id": "s_seci_5t",
       "type": "math",
       "x": 396,
-      "y": 8284,
+      "y": 7975,
       "props": {
         "w": 235,
         "h": 79,
@@ -3619,10 +3632,10 @@
       }
     },
     {
-      "id": "s_seci_5t",
+      "id": "s_seci_5u",
       "type": "text",
       "x": 76,
-      "y": 8372,
+      "y": 8063,
       "props": {
         "w": 304,
         "h": 18,
@@ -3634,10 +3647,10 @@
       }
     },
     {
-      "id": "s_seci_5u",
+      "id": "s_seci_5v",
       "type": "math",
       "x": 396,
-      "y": 8369,
+      "y": 8060,
       "props": {
         "w": 221,
         "h": 21,
@@ -3652,14 +3665,14 @@
       }
     },
     {
-      "id": "s_seci_5v",
+      "id": "s_seci_5w",
       "type": "text",
       "x": 76,
-      "y": 8402,
+      "y": 8257,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "7. MEMBER: COMPRESSION (§6.3.1)",
+        "html": "6. MEMBER RESISTANCE (§6.3)",
         "fontFamily": "Roboto",
         "fontSize": 16,
         "color": "#0f172a",
@@ -3668,10 +3681,26 @@
       }
     },
     {
-      "id": "s_seci_5w",
+      "id": "s_seci_5x",
       "type": "text",
       "x": 76,
-      "y": 8435,
+      "y": 8293,
+      "props": {
+        "w": 630,
+        "h": 21,
+        "html": "6.1 Buckling lengths and curves (§6.3.1.2, Table 6.2)",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "color": "#334155",
+        "align": "left",
+        "heading": 3
+      }
+    },
+    {
+      "id": "s_seci_5y",
+      "type": "text",
+      "x": 76,
+      "y": 8323,
       "props": {
         "w": 304,
         "h": 18,
@@ -3683,10 +3712,10 @@
       }
     },
     {
-      "id": "s_seci_5x",
+      "id": "s_seci_5z",
       "type": "math",
       "x": 396,
-      "y": 8432,
+      "y": 8320,
       "props": {
         "w": 257,
         "h": 22,
@@ -3701,10 +3730,10 @@
       }
     },
     {
-      "id": "s_seci_5y",
+      "id": "s_seci_60",
       "type": "text",
       "x": 76,
-      "y": 8463,
+      "y": 8351,
       "props": {
         "w": 304,
         "h": 18,
@@ -3716,10 +3745,10 @@
       }
     },
     {
-      "id": "s_seci_5z",
+      "id": "s_seci_61",
       "type": "math",
       "x": 396,
-      "y": 8460,
+      "y": 8348,
       "props": {
         "w": 130,
         "h": 22,
@@ -3734,10 +3763,10 @@
       }
     },
     {
-      "id": "s_seci_60",
+      "id": "s_seci_62",
       "type": "text",
       "x": 76,
-      "y": 8491,
+      "y": 8379,
       "props": {
         "w": 304,
         "h": 18,
@@ -3749,10 +3778,10 @@
       }
     },
     {
-      "id": "s_seci_61",
+      "id": "s_seci_63",
       "type": "math",
       "x": 396,
-      "y": 8488,
+      "y": 8376,
       "props": {
         "w": 129,
         "h": 22,
@@ -3767,10 +3796,10 @@
       }
     },
     {
-      "id": "s_seci_62",
+      "id": "s_seci_64",
       "type": "text",
       "x": 76,
-      "y": 8599,
+      "y": 8487,
       "props": {
         "w": 304,
         "h": 18,
@@ -3782,10 +3811,10 @@
       }
     },
     {
-      "id": "s_seci_63",
+      "id": "s_seci_65",
       "type": "math",
       "x": 396,
-      "y": 8516,
+      "y": 8404,
       "props": {
         "w": 313,
         "h": 195,
@@ -3800,10 +3829,10 @@
       }
     },
     {
-      "id": "s_seci_64",
+      "id": "s_seci_66",
       "type": "text",
       "x": 76,
-      "y": 8820,
+      "y": 8708,
       "props": {
         "w": 304,
         "h": 18,
@@ -3815,10 +3844,10 @@
       }
     },
     {
-      "id": "s_seci_65",
+      "id": "s_seci_67",
       "type": "math",
       "x": 396,
-      "y": 8717,
+      "y": 8605,
       "props": {
         "w": 313,
         "h": 195,
@@ -3833,10 +3862,10 @@
       }
     },
     {
-      "id": "s_seci_66",
+      "id": "s_seci_68",
       "type": "text",
       "x": 76,
-      "y": 8921,
+      "y": 8809,
       "props": {
         "w": 304,
         "h": 18,
@@ -3848,10 +3877,10 @@
       }
     },
     {
-      "id": "s_seci_67",
+      "id": "s_seci_69",
       "type": "math",
       "x": 396,
-      "y": 8918,
+      "y": 8806,
       "props": {
         "w": 276,
         "h": 22,
@@ -3866,14 +3895,14 @@
       }
     },
     {
-      "id": "s_seci_68",
+      "id": "s_seci_6a",
       "type": "text",
       "x": 76,
-      "y": 8952,
+      "y": 8840,
       "props": {
         "w": 630,
         "h": 21,
-        "html": "Flexural buckling about y-y",
+        "html": "6.2 Flexural buckling about y-y (§6.3.1)",
         "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
@@ -3882,10 +3911,10 @@
       }
     },
     {
-      "id": "s_seci_69",
+      "id": "s_seci_6b",
       "type": "text",
       "x": 76,
-      "y": 8990,
+      "y": 8878,
       "props": {
         "w": 304,
         "h": 18,
@@ -3897,10 +3926,10 @@
       }
     },
     {
-      "id": "s_seci_6a",
+      "id": "s_seci_6c",
       "type": "math",
       "x": 396,
-      "y": 8979,
+      "y": 8867,
       "props": {
         "w": 190,
         "h": 41,
@@ -3915,10 +3944,10 @@
       }
     },
     {
-      "id": "s_seci_6b",
+      "id": "s_seci_6d",
       "type": "text",
       "x": 76,
-      "y": 9041,
+      "y": 8929,
       "props": {
         "w": 304,
         "h": 18,
@@ -3930,10 +3959,10 @@
       }
     },
     {
-      "id": "s_seci_6c",
+      "id": "s_seci_6e",
       "type": "math",
       "x": 396,
-      "y": 9026,
+      "y": 8914,
       "props": {
         "w": 159,
         "h": 48,
@@ -3948,10 +3977,10 @@
       }
     },
     {
-      "id": "s_seci_6d",
+      "id": "s_seci_6f",
       "type": "text",
       "x": 76,
-      "y": 9083,
+      "y": 8971,
       "props": {
         "w": 304,
         "h": 18,
@@ -3963,10 +3992,10 @@
       }
     },
     {
-      "id": "s_seci_6e",
+      "id": "s_seci_6g",
       "type": "math",
       "x": 396,
-      "y": 9080,
+      "y": 8968,
       "props": {
         "w": 293,
         "h": 22,
@@ -3981,10 +4010,10 @@
       }
     },
     {
-      "id": "s_seci_6f",
+      "id": "s_seci_6h",
       "type": "text",
       "x": 76,
-      "y": 9128,
+      "y": 9016,
       "props": {
         "w": 304,
         "h": 18,
@@ -3996,10 +4025,10 @@
       }
     },
     {
-      "id": "s_seci_6g",
+      "id": "s_seci_6i",
       "type": "math",
       "x": 396,
-      "y": 9108,
+      "y": 8996,
       "props": {
         "w": 286,
         "h": 60,
@@ -4014,10 +4043,10 @@
       }
     },
     {
-      "id": "s_seci_6h",
+      "id": "s_seci_6j",
       "type": "text",
       "x": 76,
-      "y": 9183,
+      "y": 9071,
       "props": {
         "w": 304,
         "h": 18,
@@ -4029,10 +4058,10 @@
       }
     },
     {
-      "id": "s_seci_6i",
+      "id": "s_seci_6k",
       "type": "math",
       "x": 396,
-      "y": 9174,
+      "y": 9062,
       "props": {
         "w": 195,
         "h": 36,
@@ -4047,10 +4076,10 @@
       }
     },
     {
-      "id": "s_seci_6j",
+      "id": "s_seci_6l",
       "type": "text",
       "x": 76,
-      "y": 9242,
+      "y": 9130,
       "props": {
         "w": 304,
         "h": 18,
@@ -4062,10 +4091,10 @@
       }
     },
     {
-      "id": "s_seci_6k",
+      "id": "s_seci_6m",
       "type": "math",
       "x": 396,
-      "y": 9216,
+      "y": 9104,
       "props": {
         "w": 178,
         "h": 35,
@@ -4080,10 +4109,10 @@
       }
     },
     {
-      "id": "s_seci_6l",
+      "id": "s_seci_6n",
       "type": "text",
       "x": 76,
-      "y": 9431,
+      "y": 9157,
       "props": {
         "w": 304,
         "h": 18,
@@ -4095,10 +4124,10 @@
       }
     },
     {
-      "id": "s_seci_6m",
+      "id": "s_seci_6o",
       "type": "math",
       "x": 396,
-      "y": 9428,
+      "y": 9154,
       "props": {
         "w": 214,
         "h": 21,
@@ -4113,14 +4142,14 @@
       }
     },
     {
-      "id": "s_seci_6n",
+      "id": "s_seci_6p",
       "type": "text",
       "x": 76,
-      "y": 9461,
+      "y": 9428,
       "props": {
         "w": 630,
         "h": 21,
-        "html": "Flexural buckling about z-z",
+        "html": "6.3 Flexural buckling about z-z (§6.3.1)",
         "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
@@ -4129,10 +4158,10 @@
       }
     },
     {
-      "id": "s_seci_6o",
+      "id": "s_seci_6q",
       "type": "text",
       "x": 76,
-      "y": 9517,
+      "y": 9484,
       "props": {
         "w": 304,
         "h": 18,
@@ -4144,10 +4173,10 @@
       }
     },
     {
-      "id": "s_seci_6p",
+      "id": "s_seci_6r",
       "type": "math",
       "x": 396,
-      "y": 9488,
+      "y": 9455,
       "props": {
         "w": 189,
         "h": 37,
@@ -4162,10 +4191,10 @@
       }
     },
     {
-      "id": "s_seci_6q",
+      "id": "s_seci_6s",
       "type": "text",
       "x": 76,
-      "y": 9553,
+      "y": 9520,
       "props": {
         "w": 304,
         "h": 18,
@@ -4177,10 +4206,10 @@
       }
     },
     {
-      "id": "s_seci_6r",
+      "id": "s_seci_6t",
       "type": "math",
       "x": 396,
-      "y": 9541,
+      "y": 9508,
       "props": {
         "w": 151,
         "h": 39,
@@ -4195,10 +4224,10 @@
       }
     },
     {
-      "id": "s_seci_6s",
+      "id": "s_seci_6u",
       "type": "text",
       "x": 76,
-      "y": 9589,
+      "y": 9556,
       "props": {
         "w": 304,
         "h": 18,
@@ -4210,10 +4239,10 @@
       }
     },
     {
-      "id": "s_seci_6t",
+      "id": "s_seci_6v",
       "type": "math",
       "x": 396,
-      "y": 9586,
+      "y": 9553,
       "props": {
         "w": 293,
         "h": 22,
@@ -4228,10 +4257,10 @@
       }
     },
     {
-      "id": "s_seci_6u",
+      "id": "s_seci_6w",
       "type": "text",
       "x": 76,
-      "y": 9629,
+      "y": 9596,
       "props": {
         "w": 304,
         "h": 18,
@@ -4243,10 +4272,10 @@
       }
     },
     {
-      "id": "s_seci_6v",
+      "id": "s_seci_6x",
       "type": "math",
       "x": 396,
-      "y": 9614,
+      "y": 9581,
       "props": {
         "w": 282,
         "h": 48,
@@ -4261,10 +4290,10 @@
       }
     },
     {
-      "id": "s_seci_6w",
+      "id": "s_seci_6y",
       "type": "text",
       "x": 76,
-      "y": 9677,
+      "y": 9644,
       "props": {
         "w": 304,
         "h": 18,
@@ -4276,10 +4305,10 @@
       }
     },
     {
-      "id": "s_seci_6x",
+      "id": "s_seci_6z",
       "type": "math",
       "x": 396,
-      "y": 9668,
+      "y": 9635,
       "props": {
         "w": 195,
         "h": 36,
@@ -4294,10 +4323,10 @@
       }
     },
     {
-      "id": "s_seci_6y",
+      "id": "s_seci_70",
       "type": "text",
       "x": 76,
-      "y": 9737,
+      "y": 9704,
       "props": {
         "w": 304,
         "h": 18,
@@ -4309,10 +4338,10 @@
       }
     },
     {
-      "id": "s_seci_6z",
+      "id": "s_seci_71",
       "type": "math",
       "x": 396,
-      "y": 9710,
+      "y": 9677,
       "props": {
         "w": 177,
         "h": 33,
@@ -4327,10 +4356,10 @@
       }
     },
     {
-      "id": "s_seci_70",
+      "id": "s_seci_72",
       "type": "text",
       "x": 76,
-      "y": 9764,
+      "y": 9731,
       "props": {
         "w": 304,
         "h": 18,
@@ -4342,10 +4371,10 @@
       }
     },
     {
-      "id": "s_seci_71",
+      "id": "s_seci_73",
       "type": "math",
       "x": 396,
-      "y": 9761,
+      "y": 9728,
       "props": {
         "w": 213,
         "h": 21,
@@ -4360,14 +4389,14 @@
       }
     },
     {
-      "id": "s_seci_72",
+      "id": "s_seci_74",
       "type": "text",
       "x": 76,
-      "y": 9794,
+      "y": 9761,
       "props": {
         "w": 630,
         "h": 21,
-        "html": "Torsional buckling (§6.3.1.4), length L_cr,T = L_cr,z",
+        "html": "6.4 Torsional buckling (§6.3.1.4)",
         "fontFamily": "Roboto",
         "fontSize": 14,
         "color": "#334155",
@@ -4376,10 +4405,25 @@
       }
     },
     {
-      "id": "s_seci_73",
+      "id": "s_seci_75",
       "type": "text",
       "x": 76,
-      "y": 9834,
+      "y": 9788,
+      "props": {
+        "w": 630,
+        "h": 19,
+        "html": "Buckling length L_cr,T = L_cr,z.",
+        "fontFamily": "Roboto",
+        "fontSize": 13,
+        "color": "#475569",
+        "align": "left"
+      }
+    },
+    {
+      "id": "s_seci_76",
+      "type": "text",
+      "x": 76,
+      "y": 9826,
       "props": {
         "w": 304,
         "h": 18,
@@ -4391,10 +4435,10 @@
       }
     },
     {
-      "id": "s_seci_74",
+      "id": "s_seci_77",
       "type": "math",
       "x": 396,
-      "y": 9821,
+      "y": 9813,
       "props": {
         "w": 179,
         "h": 39,
@@ -4409,10 +4453,10 @@
       }
     },
     {
-      "id": "s_seci_75",
+      "id": "s_seci_78",
       "type": "text",
       "x": 76,
-      "y": 9877,
+      "y": 9869,
       "props": {
         "w": 304,
         "h": 18,
@@ -4424,10 +4468,10 @@
       }
     },
     {
-      "id": "s_seci_76",
+      "id": "s_seci_79",
       "type": "math",
       "x": 396,
-      "y": 9866,
+      "y": 9858,
       "props": {
         "w": 281,
         "h": 39,
@@ -4442,10 +4486,10 @@
       }
     },
     {
-      "id": "s_seci_77",
+      "id": "s_seci_7a",
       "type": "text",
       "x": 76,
-      "y": 9923,
+      "y": 9915,
       "props": {
         "w": 304,
         "h": 18,
@@ -4457,10 +4501,10 @@
       }
     },
     {
-      "id": "s_seci_78",
+      "id": "s_seci_7b",
       "type": "math",
       "x": 396,
-      "y": 9911,
+      "y": 9903,
       "props": {
         "w": 156,
         "h": 39,
@@ -4475,10 +4519,10 @@
       }
     },
     {
-      "id": "s_seci_79",
+      "id": "s_seci_7c",
       "type": "text",
       "x": 76,
-      "y": 9959,
+      "y": 9951,
       "props": {
         "w": 304,
         "h": 18,
@@ -4490,10 +4534,10 @@
       }
     },
     {
-      "id": "s_seci_7a",
+      "id": "s_seci_7d",
       "type": "math",
       "x": 396,
-      "y": 9956,
+      "y": 9948,
       "props": {
         "w": 300,
         "h": 22,
@@ -4508,10 +4552,10 @@
       }
     },
     {
-      "id": "s_seci_7b",
+      "id": "s_seci_7e",
       "type": "text",
       "x": 76,
-      "y": 9999,
+      "y": 9991,
       "props": {
         "w": 304,
         "h": 18,
@@ -4523,10 +4567,10 @@
       }
     },
     {
-      "id": "s_seci_7c",
+      "id": "s_seci_7f",
       "type": "math",
       "x": 396,
-      "y": 9984,
+      "y": 9976,
       "props": {
         "w": 292,
         "h": 48,
@@ -4541,10 +4585,10 @@
       }
     },
     {
-      "id": "s_seci_7d",
+      "id": "s_seci_7g",
       "type": "text",
       "x": 76,
-      "y": 10047,
+      "y": 10039,
       "props": {
         "w": 304,
         "h": 18,
@@ -4556,10 +4600,10 @@
       }
     },
     {
-      "id": "s_seci_7e",
+      "id": "s_seci_7h",
       "type": "math",
       "x": 396,
-      "y": 10038,
+      "y": 10030,
       "props": {
         "w": 199,
         "h": 36,
@@ -4574,10 +4618,10 @@
       }
     },
     {
-      "id": "s_seci_7f",
+      "id": "s_seci_7i",
       "type": "text",
       "x": 76,
-      "y": 10107,
+      "y": 10099,
       "props": {
         "w": 304,
         "h": 18,
@@ -4589,10 +4633,10 @@
       }
     },
     {
-      "id": "s_seci_7g",
+      "id": "s_seci_7j",
       "type": "math",
       "x": 396,
-      "y": 10080,
+      "y": 10072,
       "props": {
         "w": 182,
         "h": 33,
@@ -4607,10 +4651,10 @@
       }
     },
     {
-      "id": "s_seci_7h",
+      "id": "s_seci_7k",
       "type": "text",
       "x": 76,
-      "y": 10134,
+      "y": 10126,
       "props": {
         "w": 304,
         "h": 18,
@@ -4622,10 +4666,10 @@
       }
     },
     {
-      "id": "s_seci_7i",
+      "id": "s_seci_7l",
       "type": "math",
       "x": 396,
-      "y": 10131,
+      "y": 10123,
       "props": {
         "w": 216,
         "h": 21,
@@ -4640,26 +4684,26 @@
       }
     },
     {
-      "id": "s_seci_7j",
+      "id": "s_seci_7m",
       "type": "text",
       "x": 76,
-      "y": 10164,
+      "y": 10156,
       "props": {
         "w": 630,
-        "h": 24,
-        "html": "8. MEMBER: LATERAL-TORSIONAL BUCKLING (§6.3.2)",
+        "h": 21,
+        "html": "6.5 Lateral-torsional buckling (§6.3.2)",
         "fontFamily": "Roboto",
-        "fontSize": 16,
-        "color": "#0f172a",
+        "fontSize": 14,
+        "color": "#334155",
         "align": "left",
-        "heading": 2
+        "heading": 3
       }
     },
     {
-      "id": "s_seci_7k",
+      "id": "s_seci_7n",
       "type": "text",
       "x": 76,
-      "y": 10194,
+      "y": 10183,
       "props": {
         "w": 630,
         "h": 19,
@@ -4671,10 +4715,10 @@
       }
     },
     {
-      "id": "s_seci_7l",
+      "id": "s_seci_7o",
       "type": "text",
       "x": 76,
-      "y": 10219,
+      "y": 10208,
       "props": {
         "w": 630,
         "h": 24,
@@ -4690,10 +4734,10 @@
       }
     },
     {
-      "id": "s_seci_7m",
+      "id": "s_seci_7p",
       "type": "text",
       "x": 76,
-      "y": 10249,
+      "y": 10238,
       "props": {
         "w": 630,
         "h": 18,
@@ -4705,10 +4749,10 @@
       }
     },
     {
-      "id": "s_seci_7n",
+      "id": "s_seci_7q",
       "type": "math",
       "x": 96,
-      "y": 10273,
+      "y": 10262,
       "props": {
         "w": 415,
         "h": 118,
@@ -4723,10 +4767,10 @@
       }
     },
     {
-      "id": "s_seci_7o",
+      "id": "s_seci_7r",
       "type": "text",
       "x": 76,
-      "y": 10400,
+      "y": 10389,
       "props": {
         "w": 304,
         "h": 18,
@@ -4738,10 +4782,10 @@
       }
     },
     {
-      "id": "s_seci_7p",
+      "id": "s_seci_7s",
       "type": "math",
       "x": 396,
-      "y": 10397,
+      "y": 10386,
       "props": {
         "w": 161,
         "h": 22,
@@ -4756,7 +4800,7 @@
       }
     },
     {
-      "id": "s_seci_7q",
+      "id": "s_seci_7t",
       "type": "text",
       "x": 76,
       "y": 10642,
@@ -4771,7 +4815,7 @@
       }
     },
     {
-      "id": "s_seci_7r",
+      "id": "s_seci_7u",
       "type": "math",
       "x": 396,
       "y": 10599,
@@ -4789,7 +4833,7 @@
       }
     },
     {
-      "id": "s_seci_7s",
+      "id": "s_seci_7v",
       "type": "text",
       "x": 76,
       "y": 10727,
@@ -4804,7 +4848,7 @@
       }
     },
     {
-      "id": "s_seci_7t",
+      "id": "s_seci_7w",
       "type": "math",
       "x": 396,
       "y": 10684,
@@ -4822,7 +4866,7 @@
       }
     },
     {
-      "id": "s_seci_7u",
+      "id": "s_seci_7x",
       "type": "text",
       "x": 76,
       "y": 10812,
@@ -4837,7 +4881,7 @@
       }
     },
     {
-      "id": "s_seci_7v",
+      "id": "s_seci_7y",
       "type": "math",
       "x": 396,
       "y": 10769,
@@ -4855,7 +4899,7 @@
       }
     },
     {
-      "id": "s_seci_7w",
+      "id": "s_seci_7z",
       "type": "text",
       "x": 76,
       "y": 10874,
@@ -4870,7 +4914,7 @@
       }
     },
     {
-      "id": "s_seci_7x",
+      "id": "s_seci_80",
       "type": "math",
       "x": 96,
       "y": 10898,
@@ -4888,7 +4932,7 @@
       }
     },
     {
-      "id": "s_seci_7y",
+      "id": "s_seci_81",
       "type": "text",
       "x": 76,
       "y": 11046,
@@ -4903,7 +4947,7 @@
       }
     },
     {
-      "id": "s_seci_7z",
+      "id": "s_seci_82",
       "type": "math",
       "x": 396,
       "y": 11003,
@@ -4921,7 +4965,7 @@
       }
     },
     {
-      "id": "s_seci_80",
+      "id": "s_seci_83",
       "type": "text",
       "x": 76,
       "y": 11109,
@@ -4936,7 +4980,7 @@
       }
     },
     {
-      "id": "s_seci_81",
+      "id": "s_seci_84",
       "type": "text",
       "x": 76,
       "y": 11134,
@@ -4951,7 +4995,7 @@
       }
     },
     {
-      "id": "s_seci_82",
+      "id": "s_seci_85",
       "type": "text",
       "x": 76,
       "y": 11242,
@@ -4966,7 +5010,7 @@
       }
     },
     {
-      "id": "s_seci_83",
+      "id": "s_seci_86",
       "type": "math",
       "x": 396,
       "y": 11159,
@@ -4984,7 +5028,7 @@
       }
     },
     {
-      "id": "s_seci_84",
+      "id": "s_seci_87",
       "type": "text",
       "x": 76,
       "y": 11444,
@@ -4999,7 +5043,7 @@
       }
     },
     {
-      "id": "s_seci_85",
+      "id": "s_seci_88",
       "type": "math",
       "x": 396,
       "y": 11361,
@@ -5017,7 +5061,7 @@
       }
     },
     {
-      "id": "s_seci_86",
+      "id": "s_seci_89",
       "type": "text",
       "x": 76,
       "y": 11813,
@@ -5032,7 +5076,7 @@
       }
     },
     {
-      "id": "s_seci_87",
+      "id": "s_seci_8a",
       "type": "math",
       "x": 396,
       "y": 11770,
@@ -5050,7 +5094,7 @@
       }
     },
     {
-      "id": "s_seci_88",
+      "id": "s_seci_8b",
       "type": "text",
       "x": 76,
       "y": 11898,
@@ -5065,7 +5109,7 @@
       }
     },
     {
-      "id": "s_seci_89",
+      "id": "s_seci_8c",
       "type": "math",
       "x": 396,
       "y": 11855,
@@ -5083,7 +5127,7 @@
       }
     },
     {
-      "id": "s_seci_8a",
+      "id": "s_seci_8d",
       "type": "text",
       "x": 76,
       "y": 11983,
@@ -5098,7 +5142,7 @@
       }
     },
     {
-      "id": "s_seci_8b",
+      "id": "s_seci_8e",
       "type": "math",
       "x": 396,
       "y": 11940,
@@ -5116,7 +5160,7 @@
       }
     },
     {
-      "id": "s_seci_8c",
+      "id": "s_seci_8f",
       "type": "text",
       "x": 76,
       "y": 12025,
@@ -5131,7 +5175,7 @@
       }
     },
     {
-      "id": "s_seci_8d",
+      "id": "s_seci_8g",
       "type": "math",
       "x": 96,
       "y": 12049,
@@ -5149,7 +5193,7 @@
       }
     },
     {
-      "id": "s_seci_8e",
+      "id": "s_seci_8h",
       "type": "text",
       "x": 76,
       "y": 12077,
@@ -5164,7 +5208,7 @@
       }
     },
     {
-      "id": "s_seci_8f",
+      "id": "s_seci_8i",
       "type": "math",
       "x": 96,
       "y": 12101,
@@ -5182,7 +5226,7 @@
       }
     },
     {
-      "id": "s_seci_8g",
+      "id": "s_seci_8j",
       "type": "text",
       "x": 76,
       "y": 12258,
@@ -5197,7 +5241,7 @@
       }
     },
     {
-      "id": "s_seci_8h",
+      "id": "s_seci_8k",
       "type": "math",
       "x": 396,
       "y": 12215,
@@ -5215,7 +5259,7 @@
       }
     },
     {
-      "id": "s_seci_8i",
+      "id": "s_seci_8l",
       "type": "text",
       "x": 76,
       "y": 12319,
@@ -5230,7 +5274,7 @@
       }
     },
     {
-      "id": "s_seci_8j",
+      "id": "s_seci_8m",
       "type": "math",
       "x": 76,
       "y": 12343,
@@ -5248,7 +5292,7 @@
       }
     },
     {
-      "id": "s_seci_8k",
+      "id": "s_seci_8n",
       "type": "text",
       "x": 76,
       "y": 12424,
@@ -5263,7 +5307,7 @@
       }
     },
     {
-      "id": "s_seci_8l",
+      "id": "s_seci_8o",
       "type": "math",
       "x": 396,
       "y": 12381,
@@ -5281,7 +5325,7 @@
       }
     },
     {
-      "id": "s_seci_8m",
+      "id": "s_seci_8p",
       "type": "text",
       "x": 76,
       "y": 12495,
@@ -5296,7 +5340,7 @@
       }
     },
     {
-      "id": "s_seci_8n",
+      "id": "s_seci_8q",
       "type": "math",
       "x": 396,
       "y": 12486,
@@ -5314,7 +5358,7 @@
       }
     },
     {
-      "id": "s_seci_8o",
+      "id": "s_seci_8r",
       "type": "text",
       "x": 76,
       "y": 12537,
@@ -5329,7 +5373,7 @@
       }
     },
     {
-      "id": "s_seci_8p",
+      "id": "s_seci_8s",
       "type": "math",
       "x": 396,
       "y": 12528,
@@ -5347,7 +5391,7 @@
       }
     },
     {
-      "id": "s_seci_8q",
+      "id": "s_seci_8t",
       "type": "text",
       "x": 76,
       "y": 12573,
@@ -5362,7 +5406,7 @@
       }
     },
     {
-      "id": "s_seci_8r",
+      "id": "s_seci_8u",
       "type": "math",
       "x": 396,
       "y": 12570,
@@ -5380,7 +5424,7 @@
       }
     },
     {
-      "id": "s_seci_8s",
+      "id": "s_seci_8v",
       "type": "text",
       "x": 76,
       "y": 12608,
@@ -5395,7 +5439,7 @@
       }
     },
     {
-      "id": "s_seci_8t",
+      "id": "s_seci_8w",
       "type": "math",
       "x": 396,
       "y": 12598,
@@ -5413,7 +5457,7 @@
       }
     },
     {
-      "id": "s_seci_8u",
+      "id": "s_seci_8x",
       "type": "text",
       "x": 76,
       "y": 12643,
@@ -5428,7 +5472,7 @@
       }
     },
     {
-      "id": "s_seci_8v",
+      "id": "s_seci_8y",
       "type": "math",
       "x": 396,
       "y": 12640,
@@ -5446,26 +5490,26 @@
       }
     },
     {
-      "id": "s_seci_8w",
+      "id": "s_seci_8z",
       "type": "text",
       "x": 76,
       "y": 12673,
       "props": {
         "w": 630,
-        "h": 24,
-        "html": "9. MEMBER: COMPRESSION AND BENDING (§6.3.3, Annex B)",
+        "h": 21,
+        "html": "6.6 Compression and bending (§6.3.3, Annex B)",
         "fontFamily": "Roboto",
-        "fontSize": 16,
-        "color": "#0f172a",
+        "fontSize": 14,
+        "color": "#334155",
         "align": "left",
-        "heading": 2
+        "heading": 3
       }
     },
     {
-      "id": "s_seci_8x",
+      "id": "s_seci_90",
       "type": "text",
       "x": 76,
-      "y": 12703,
+      "y": 12700,
       "props": {
         "w": 630,
         "h": 19,
@@ -5477,10 +5521,10 @@
       }
     },
     {
-      "id": "s_seci_8y",
+      "id": "s_seci_91",
       "type": "text",
       "x": 76,
-      "y": 12754,
+      "y": 12751,
       "props": {
         "w": 304,
         "h": 18,
@@ -5492,10 +5536,10 @@
       }
     },
     {
-      "id": "s_seci_8z",
+      "id": "s_seci_92",
       "type": "math",
       "x": 396,
-      "y": 12728,
+      "y": 12725,
       "props": {
         "w": 156,
         "h": 35,
@@ -5510,7 +5554,7 @@
       }
     },
     {
-      "id": "s_seci_90",
+      "id": "s_seci_93",
       "type": "text",
       "x": 76,
       "y": 12968,
@@ -5525,7 +5569,7 @@
       }
     },
     {
-      "id": "s_seci_91",
+      "id": "s_seci_94",
       "type": "math",
       "x": 396,
       "y": 12941,
@@ -5543,7 +5587,7 @@
       }
     },
     {
-      "id": "s_seci_92",
+      "id": "s_seci_95",
       "type": "text",
       "x": 76,
       "y": 12992,
@@ -5558,7 +5602,7 @@
       }
     },
     {
-      "id": "s_seci_93",
+      "id": "s_seci_96",
       "type": "math",
       "x": 96,
       "y": 13016,
@@ -5576,7 +5620,7 @@
       }
     },
     {
-      "id": "s_seci_94",
+      "id": "s_seci_97",
       "type": "text",
       "x": 76,
       "y": 13101,
@@ -5591,7 +5635,7 @@
       }
     },
     {
-      "id": "s_seci_95",
+      "id": "s_seci_98",
       "type": "math",
       "x": 96,
       "y": 13125,
@@ -5609,7 +5653,7 @@
       }
     },
     {
-      "id": "s_seci_96",
+      "id": "s_seci_99",
       "type": "text",
       "x": 76,
       "y": 13253,
@@ -5624,7 +5668,7 @@
       }
     },
     {
-      "id": "s_seci_97",
+      "id": "s_seci_9a",
       "type": "math",
       "x": 396,
       "y": 13210,
@@ -5642,7 +5686,7 @@
       }
     },
     {
-      "id": "s_seci_98",
+      "id": "s_seci_9b",
       "type": "text",
       "x": 76,
       "y": 13295,
@@ -5657,7 +5701,7 @@
       }
     },
     {
-      "id": "s_seci_99",
+      "id": "s_seci_9c",
       "type": "math",
       "x": 96,
       "y": 13319,
@@ -5675,7 +5719,7 @@
       }
     },
     {
-      "id": "s_seci_9a",
+      "id": "s_seci_9d",
       "type": "text",
       "x": 76,
       "y": 13443,
@@ -5690,7 +5734,7 @@
       }
     },
     {
-      "id": "s_seci_9b",
+      "id": "s_seci_9e",
       "type": "math",
       "x": 96,
       "y": 13467,
@@ -5708,7 +5752,7 @@
       }
     },
     {
-      "id": "s_seci_9c",
+      "id": "s_seci_9f",
       "type": "text",
       "x": 76,
       "y": 13635,
@@ -5723,7 +5767,7 @@
       }
     },
     {
-      "id": "s_seci_9d",
+      "id": "s_seci_9g",
       "type": "math",
       "x": 396,
       "y": 13512,
@@ -5741,7 +5785,7 @@
       }
     },
     {
-      "id": "s_seci_9e",
+      "id": "s_seci_9h",
       "type": "text",
       "x": 76,
       "y": 13751,
@@ -5756,7 +5800,7 @@
       }
     },
     {
-      "id": "s_seci_9f",
+      "id": "s_seci_9i",
       "type": "math",
       "x": 96,
       "y": 13775,
@@ -5774,7 +5818,7 @@
       }
     },
     {
-      "id": "s_seci_9g",
+      "id": "s_seci_9j",
       "type": "text",
       "x": 76,
       "y": 13820,
@@ -5789,7 +5833,7 @@
       }
     },
     {
-      "id": "s_seci_9h",
+      "id": "s_seci_9k",
       "type": "math",
       "x": 396,
       "y": 13817,
@@ -5807,7 +5851,7 @@
       }
     },
     {
-      "id": "s_seci_9i",
+      "id": "s_seci_9l",
       "type": "text",
       "x": 76,
       "y": 13844,
@@ -5822,7 +5866,7 @@
       }
     },
     {
-      "id": "s_seci_9j",
+      "id": "s_seci_9m",
       "type": "math",
       "x": 96,
       "y": 13868,
@@ -5840,7 +5884,7 @@
       }
     },
     {
-      "id": "s_seci_9k",
+      "id": "s_seci_9n",
       "type": "text",
       "x": 76,
       "y": 13913,
@@ -5855,7 +5899,7 @@
       }
     },
     {
-      "id": "s_seci_9l",
+      "id": "s_seci_9o",
       "type": "math",
       "x": 396,
       "y": 13910,
@@ -5873,7 +5917,7 @@
       }
     },
     {
-      "id": "s_seci_9m",
+      "id": "s_seci_9p",
       "type": "text",
       "x": 76,
       "y": 14112,
@@ -5888,14 +5932,14 @@
       }
     },
     {
-      "id": "s_seci_9n",
+      "id": "s_seci_9q",
       "type": "text",
       "x": 76,
       "y": 14143,
       "props": {
         "w": 630,
         "h": 24,
-        "html": "10. SUMMARY",
+        "html": "7. SUMMARY",
         "fontFamily": "Roboto",
         "fontSize": 16,
         "color": "#0f172a",
@@ -5904,7 +5948,7 @@
       }
     },
     {
-      "id": "s_seci_9o",
+      "id": "s_seci_9r",
       "type": "text",
       "x": 76,
       "y": 14173,
@@ -5919,14 +5963,14 @@
       }
     },
     {
-      "id": "s_seci_9p",
+      "id": "s_seci_9s",
       "type": "text",
       "x": 76,
       "y": 14198,
       "props": {
         "w": 630,
         "h": 19,
-        "html": "Each utilisation from sections 5 to 9; the class from section 4 decides plastic or elastic resistance.",
+        "html": "Each utilisation from sections 5 and 6; the class from section 4 decides plastic or elastic resistance.",
         "fontFamily": "Roboto",
         "fontSize": 13,
         "color": "#475569",
@@ -5934,7 +5978,7 @@
       }
     },
     {
-      "id": "s_seci_9q",
+      "id": "s_seci_9t",
       "type": "text",
       "x": 76,
       "y": 14226,
@@ -5949,7 +5993,7 @@
       }
     },
     {
-      "id": "s_seci_9r",
+      "id": "s_seci_9u",
       "type": "math",
       "x": 396,
       "y": 14223,
@@ -5967,7 +6011,7 @@
       }
     },
     {
-      "id": "s_seci_9s",
+      "id": "s_seci_9v",
       "type": "text",
       "x": 76,
       "y": 14253,
@@ -5982,7 +6026,7 @@
       }
     },
     {
-      "id": "s_seci_9t",
+      "id": "s_seci_9w",
       "type": "math",
       "x": 396,
       "y": 14250,
@@ -6000,7 +6044,7 @@
       }
     },
     {
-      "id": "s_seci_9u",
+      "id": "s_seci_9x",
       "type": "text",
       "x": 76,
       "y": 14280,
@@ -6015,7 +6059,7 @@
       }
     },
     {
-      "id": "s_seci_9v",
+      "id": "s_seci_9y",
       "type": "math",
       "x": 396,
       "y": 14277,
@@ -6033,7 +6077,7 @@
       }
     },
     {
-      "id": "s_seci_9w",
+      "id": "s_seci_9z",
       "type": "text",
       "x": 76,
       "y": 14307,
@@ -6048,7 +6092,7 @@
       }
     },
     {
-      "id": "s_seci_9x",
+      "id": "s_seci_a0",
       "type": "math",
       "x": 396,
       "y": 14304,
@@ -6066,7 +6110,7 @@
       }
     },
     {
-      "id": "s_seci_9y",
+      "id": "s_seci_a1",
       "type": "text",
       "x": 76,
       "y": 14334,
@@ -6081,7 +6125,7 @@
       }
     },
     {
-      "id": "s_seci_9z",
+      "id": "s_seci_a2",
       "type": "math",
       "x": 396,
       "y": 14331,
@@ -6099,7 +6143,7 @@
       }
     },
     {
-      "id": "s_seci_a0",
+      "id": "s_seci_a3",
       "type": "text",
       "x": 76,
       "y": 14361,
@@ -6114,7 +6158,7 @@
       }
     },
     {
-      "id": "s_seci_a1",
+      "id": "s_seci_a4",
       "type": "math",
       "x": 396,
       "y": 14358,
@@ -6132,7 +6176,7 @@
       }
     },
     {
-      "id": "s_seci_a2",
+      "id": "s_seci_a5",
       "type": "text",
       "x": 76,
       "y": 14388,
@@ -6147,7 +6191,7 @@
       }
     },
     {
-      "id": "s_seci_a3",
+      "id": "s_seci_a6",
       "type": "math",
       "x": 396,
       "y": 14385,
@@ -6165,7 +6209,7 @@
       }
     },
     {
-      "id": "s_seci_a4",
+      "id": "s_seci_a7",
       "type": "text",
       "x": 76,
       "y": 14415,
@@ -6180,7 +6224,7 @@
       }
     },
     {
-      "id": "s_seci_a5",
+      "id": "s_seci_a8",
       "type": "math",
       "x": 396,
       "y": 14412,
@@ -6198,7 +6242,7 @@
       }
     },
     {
-      "id": "s_seci_a6",
+      "id": "s_seci_a9",
       "type": "text",
       "x": 76,
       "y": 14442,
@@ -6213,7 +6257,7 @@
       }
     },
     {
-      "id": "s_seci_a7",
+      "id": "s_seci_aa",
       "type": "math",
       "x": 396,
       "y": 14439,
@@ -6231,7 +6275,7 @@
       }
     },
     {
-      "id": "s_seci_a8",
+      "id": "s_seci_ab",
       "type": "text",
       "x": 76,
       "y": 14469,
@@ -6246,7 +6290,7 @@
       }
     },
     {
-      "id": "s_seci_a9",
+      "id": "s_seci_ac",
       "type": "math",
       "x": 396,
       "y": 14466,
@@ -6264,7 +6308,7 @@
       }
     },
     {
-      "id": "s_seci_aa",
+      "id": "s_seci_ad",
       "type": "text",
       "x": 76,
       "y": 14496,
@@ -6279,7 +6323,7 @@
       }
     },
     {
-      "id": "s_seci_ab",
+      "id": "s_seci_ae",
       "type": "math",
       "x": 396,
       "y": 14493,
@@ -6297,7 +6341,7 @@
       }
     },
     {
-      "id": "s_seci_ac",
+      "id": "s_seci_af",
       "type": "text",
       "x": 76,
       "y": 14523,
@@ -6312,7 +6356,7 @@
       }
     },
     {
-      "id": "s_seci_ad",
+      "id": "s_seci_ag",
       "type": "math",
       "x": 396,
       "y": 14520,
@@ -6330,7 +6374,7 @@
       }
     },
     {
-      "id": "s_seci_ae",
+      "id": "s_seci_ah",
       "type": "text",
       "x": 76,
       "y": 14547,
@@ -6343,10 +6387,10 @@
         "color": "#475569",
         "align": "left"
       },
-      "groupId": "s_seci_group_ae"
+      "groupId": "s_seci_group_ah"
     },
     {
-      "id": "s_seci_af",
+      "id": "s_seci_ai",
       "type": "math",
       "x": 96,
       "y": 14564,
@@ -6362,10 +6406,10 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "groupId": "s_seci_group_ae"
+      "groupId": "s_seci_group_ah"
     },
     {
-      "id": "s_seci_ag",
+      "id": "s_seci_aj",
       "type": "text",
       "x": 76,
       "y": 14607,
@@ -6378,10 +6422,10 @@
         "color": "#475569",
         "align": "left"
       },
-      "groupId": "s_seci_group_ae"
+      "groupId": "s_seci_group_ah"
     },
     {
-      "id": "s_seci_ah",
+      "id": "s_seci_ak",
       "type": "math",
       "x": 96,
       "y": 14624,
@@ -6397,10 +6441,10 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "groupId": "s_seci_group_ae"
+      "groupId": "s_seci_group_ah"
     },
     {
-      "id": "s_seci_ai",
+      "id": "s_seci_al",
       "type": "text",
       "x": 76,
       "y": 14667,
@@ -6413,10 +6457,10 @@
         "color": "#475569",
         "align": "left"
       },
-      "groupId": "s_seci_group_ae"
+      "groupId": "s_seci_group_ah"
     },
     {
-      "id": "s_seci_aj",
+      "id": "s_seci_am",
       "type": "math",
       "x": 396,
       "y": 14664,
@@ -6432,10 +6476,10 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "groupId": "s_seci_group_ae"
+      "groupId": "s_seci_group_ah"
     },
     {
-      "id": "s_seci_ak",
+      "id": "s_seci_an",
       "type": "text",
       "x": 76,
       "y": 14707,
@@ -6448,10 +6492,10 @@
         "color": "#475569",
         "align": "left"
       },
-      "groupId": "s_seci_group_ae"
+      "groupId": "s_seci_group_ah"
     },
     {
-      "id": "s_seci_al",
+      "id": "s_seci_ao",
       "type": "math",
       "x": 396,
       "y": 14704,
@@ -6467,10 +6511,10 @@
         "fontSize": 16,
         "color": "#0f172a"
       },
-      "groupId": "s_seci_group_ae"
+      "groupId": "s_seci_group_ah"
     },
     {
-      "id": "s_seci_am",
+      "id": "s_seci_ap",
       "type": "text",
       "x": 76,
       "y": 14743,
@@ -6489,7 +6533,7 @@
       }
     },
     {
-      "id": "s_seci_an",
+      "id": "s_seci_aq",
       "type": "text",
       "x": 76,
       "y": 14784,
@@ -6509,7 +6553,7 @@
       }
     },
     {
-      "id": "s_seci_ao",
+      "id": "s_seci_ar",
       "type": "text",
       "x": 76,
       "y": 14814,
@@ -6524,7 +6568,7 @@
       }
     },
     {
-      "id": "s_seci_ap",
+      "id": "s_seci_as",
       "type": "text",
       "x": 76,
       "y": 14839,
@@ -6539,7 +6583,7 @@
       }
     },
     {
-      "id": "s_seci_aq",
+      "id": "s_seci_at",
       "type": "text",
       "x": 76,
       "y": 14864,
@@ -6554,7 +6598,7 @@
       }
     },
     {
-      "id": "s_seci_ar",
+      "id": "s_seci_au",
       "type": "image",
       "x": 76,
       "y": 15283,
@@ -6563,10 +6607,10 @@
         "h": 740,
         "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iNzQwIiB2aWV3Qm94PSIwIDAgNjQwIDc0MCI+CiAgICA8dGl0bGU+TFRCIGNhc2VzIDEgdG8gNzsgU0NJIE5DQ0kgU04wMDNiIFRhYmxlcyAzLjEgYW5kIDMuMjwvdGl0bGU+CiAgICA8cmVjdCB4PSIwLjUiIHk9IjAuNSIgd2lkdGg9IjYzOSIgaGVpZ2h0PSI3MzkiIGZpbGw9IndoaXRlIiBzdHJva2U9IiM5NGEzYjgiLz4KICAgIDxyZWN0IHg9IjEiIHk9IjEiIHdpZHRoPSI2MzgiIGhlaWdodD0iMzkiIGZpbGw9IiNlZmY2ZmYiLz4KICAgIDxnIHN0cm9rZT0iI2NiZDVlMSIgc3Ryb2tlLXdpZHRoPSIxIj48bGluZSB4MT0iMCIgeTE9IjQwIiB4Mj0iNjQwIiB5Mj0iNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSIxNDAiIHgyPSI2NDAiIHkyPSIxNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSIyNDAiIHgyPSI2NDAiIHkyPSIyNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSIzNDAiIHgyPSI2NDAiIHkyPSIzNDAiIC8+PGxpbmUgeDE9IjAiIHkxPSI0NDAiIHgyPSI2NDAiIHkyPSI0NDAiIC8+PGxpbmUgeDE9IjAiIHkxPSI1NDAiIHgyPSI2NDAiIHkyPSI1NDAiIC8+PGxpbmUgeDE9IjAiIHkxPSI2NDAiIHgyPSI2NDAiIHkyPSI2NDAiIC8+PGxpbmUgeDE9IjYwIiB5MT0iMCIgeDI9IjYwIiB5Mj0iNzQwIiAvPjxsaW5lIHgxPSIyODAiIHkxPSIwIiB4Mj0iMjgwIiB5Mj0iNzQwIiAvPjxsaW5lIHgxPSI0ODAiIHkxPSIwIiB4Mj0iNDgwIiB5Mj0iNzQwIiAvPjxsaW5lIHgxPSI1NjAiIHkxPSIwIiB4Mj0iNTYwIiB5Mj0iNzQwIiAvPjwvZz4KICAgIDxnIGZvbnQtZmFtaWx5PSJSb2JvdG8sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzFlM2E1ZiI+CiAgICAgIDxnIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj48dGV4dCB4PSIzMCIgeT0iMjUiID5DYXNlPC90ZXh0Pjx0ZXh0IHg9IjE3MCIgeT0iMjUiID5Mb2FkaW5nIGFuZCBzdXBwb3J0czwvdGV4dD48dGV4dCB4PSIzODAiIHk9IjI1IiA+QmVuZGluZyBtb21lbnQgZGlhZ3JhbTwvdGV4dD48dGV4dCB4PSI1MjAiIHk9IjI1IiA+QzE8L3RleHQ+PHRleHQgeD0iNjAwIiB5PSIyNSIgPkMyPC90ZXh0PjwvZz4KICAgICAgPGcgaWQ9Imx0Yi1jYXNlLTEiPjx0ZXh0IHg9IjMwIiB5PSI5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjE8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iODIiIHgyPSIyNTQiIHkyPSI4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCw4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iOTciIHgyPSIyNjIiIHkyPSI5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTg4LDU1QTExLDExIDAgMSAxIDc3LDY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDcxTDc3LDY2TDgwLDcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSI2MiIgPk08L3RleHQ+PHBhdGggZD0iTTI1NCw1NUExMSwxMSAwIDEgMCAyNjUsNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjYyLDcxTDI2NSw2NkwyNjgsNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIyMjAiIHk9IjYyIiB0ZXh0LWFuY2hvcj0iZW5kIj4xLjAwTTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjEyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+RW5kIG1vbWVudHM7IM+IID0gKzEuMDA8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9Ijg3IiB4Mj0iNDY2IiB5Mj0iODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCw4N0wyOTQuMDAsMTEyLjAwTDI5OC4zMCwxMTIuMDBMMzAyLjYwLDExMi4wMEwzMDYuOTAsMTEyLjAwTDMxMS4yMCwxMTIuMDBMMzE1LjUwLDExMi4wMEwzMTkuODAsMTEyLjAwTDMyNC4xMCwxMTIuMDBMMzI4LjQwLDExMi4wMEwzMzIuNzAsMTEyLjAwTDMzNy4wMCwxMTIuMDBMMzQxLjMwLDExMi4wMEwzNDUuNjAsMTEyLjAwTDM0OS45MCwxMTIuMDBMMzU0LjIwLDExMi4wMEwzNTguNTAsMTEyLjAwTDM2Mi44MCwxMTIuMDBMMzY3LjEwLDExMi4wMEwzNzEuNDAsMTEyLjAwTDM3NS43MCwxMTIuMDBMMzgwLjAwLDExMi4wMEwzODQuMzAsMTEyLjAwTDM4OC42MCwxMTIuMDBMMzkyLjkwLDExMi4wMEwzOTcuMjAsMTEyLjAwTDQwMS41MCwxMTIuMDBMNDA1LjgwLDExMi4wMEw0MTAuMTAsMTEyLjAwTDQxNC40MCwxMTIuMDBMNDE4LjcwLDExMi4wMEw0MjMuMDAsMTEyLjAwTDQyNy4zMCwxMTIuMDBMNDMxLjYwLDExMi4wMEw0MzUuOTAsMTEyLjAwTDQ0MC4yMCwxMTIuMDBMNDQ0LjUwLDExMi4wMEw0NDguODAsMTEyLjAwTDQ1My4xMCwxMTIuMDBMNDU3LjQwLDExMi4wMEw0NjEuNzAsMTEyLjAwTDQ2Ni4wMCwxMTIuMDBMNDY2LDg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iMTI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTIiPjx0ZXh0IHg9IjMwIiB5PSIxOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij4yPC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjE4MiIgeDI9IjI1NCIgeTI9IjE4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsMTg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxwYXRoIGQ9Ik0yNTQsMTg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxsaW5lIHgxPSIyNDYiIHkxPSIxOTciIHgyPSIyNjIiIHkyPSIxOTciIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik04OCwxNTVBMTEsMTEgMCAxIDEgNzcsMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDE3MUw3NywxNjZMODAsMTcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSIxNjIiID5NPC90ZXh0PjxwYXRoIGQ9Ik0yNTQsMTU1QTExLDExIDAgMSAwIDI2NSwxNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjYyLDE3MUwyNjUsMTY2TDI2OCwxNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIyMjAiIHk9IjE2MiIgdGV4dC1hbmNob3I9ImVuZCI+MC43NU08L3RleHQ+PHRleHQgeD0iMTcxIiB5PSIyMjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkVuZCBtb21lbnRzOyDPiCA9ICswLjc1PC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSIxODciIHgyPSI0NjYiIHkyPSIxODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCwxODdMMjk0LjAwLDIxMi4wMEwyOTguMzAsMjExLjg0TDMwMi42MCwyMTEuNjlMMzA2LjkwLDIxMS41M0wzMTEuMjAsMjExLjM4TDMxNS41MCwyMTEuMjJMMzE5LjgwLDIxMS4wNkwzMjQuMTAsMjEwLjkxTDMyOC40MCwyMTAuNzVMMzMyLjcwLDIxMC41OUwzMzcuMDAsMjEwLjQ0TDM0MS4zMCwyMTAuMjhMMzQ1LjYwLDIxMC4xM0wzNDkuOTAsMjA5Ljk3TDM1NC4yMCwyMDkuODFMMzU4LjUwLDIwOS42NkwzNjIuODAsMjA5LjUwTDM2Ny4xMCwyMDkuMzRMMzcxLjQwLDIwOS4xOUwzNzUuNzAsMjA5LjAzTDM4MC4wMCwyMDguODhMMzg0LjMwLDIwOC43MkwzODguNjAsMjA4LjU2TDM5Mi45MCwyMDguNDFMMzk3LjIwLDIwOC4yNUw0MDEuNTAsMjA4LjA5TDQwNS44MCwyMDcuOTRMNDEwLjEwLDIwNy43OEw0MTQuNDAsMjA3LjYzTDQxOC43MCwyMDcuNDdMNDIzLjAwLDIwNy4zMUw0MjcuMzAsMjA3LjE2TDQzMS42MCwyMDcuMDBMNDM1LjkwLDIwNi44NEw0NDAuMjAsMjA2LjY5TDQ0NC41MCwyMDYuNTNMNDQ4LjgwLDIwNi4zOEw0NTMuMTAsMjA2LjIyTDQ1Ny40MCwyMDYuMDZMNDYxLjcwLDIwNS45MUw0NjYuMDAsMjA1Ljc1TDQ2NiwxODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSIyMjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtMyI+PHRleHQgeD0iMzAiIHk9IjI5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjM8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iMjgyIiB4Mj0iMjU0IiB5Mj0iMjgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCwyODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCwyODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PGxpbmUgeDE9IjI0NiIgeTE9IjI5NyIgeDI9IjI2MiIgeTI9IjI5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTg4LDI1NUExMSwxMSAwIDEgMSA3NywyNjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNNzQsMjcxTDc3LDI2Nkw4MCwyNzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxMDMiIHk9IjI2MiIgPk08L3RleHQ+PHBhdGggZD0iTTI1NCwyNTVBMTEsMTEgMCAxIDAgMjY1LDI2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yNjIsMjcxTDI2NSwyNjZMMjY4LDI3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjIyMCIgeT0iMjYyIiB0ZXh0LWFuY2hvcj0iZW5kIj4wLjUwTTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjMyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+RW5kIG1vbWVudHM7IM+IID0gKzAuNTA8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9IjI4NyIgeDI9IjQ2NiIgeTI9IjI4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDI4N0wyOTQuMDAsMzEyLjAwTDI5OC4zMCwzMTEuNjlMMzAyLjYwLDMxMS4zOEwzMDYuOTAsMzExLjA2TDMxMS4yMCwzMTAuNzVMMzE1LjUwLDMxMC40NEwzMTkuODAsMzEwLjEzTDMyNC4xMCwzMDkuODFMMzI4LjQwLDMwOS41MEwzMzIuNzAsMzA5LjE5TDMzNy4wMCwzMDguODhMMzQxLjMwLDMwOC41NkwzNDUuNjAsMzA4LjI1TDM0OS45MCwzMDcuOTRMMzU0LjIwLDMwNy42M0wzNTguNTAsMzA3LjMxTDM2Mi44MCwzMDcuMDBMMzY3LjEwLDMwNi42OUwzNzEuNDAsMzA2LjM4TDM3NS43MCwzMDYuMDZMMzgwLjAwLDMwNS43NUwzODQuMzAsMzA1LjQ0TDM4OC42MCwzMDUuMTNMMzkyLjkwLDMwNC44MUwzOTcuMjAsMzA0LjUwTDQwMS41MCwzMDQuMTlMNDA1LjgwLDMwMy44OEw0MTAuMTAsMzAzLjU2TDQxNC40MCwzMDMuMjVMNDE4LjcwLDMwMi45NEw0MjMuMDAsMzAyLjYzTDQyNy4zMCwzMDIuMzFMNDMxLjYwLDMwMi4wMEw0MzUuOTAsMzAxLjY5TDQ0MC4yMCwzMDEuMzhMNDQ0LjUwLDMwMS4wNkw0NDguODAsMzAwLjc1TDQ1My4xMCwzMDAuNDRMNDU3LjQwLDMwMC4xM0w0NjEuNzAsMjk5LjgxTDQ2Ni4wMCwyOTkuNTBMNDY2LDI4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjMyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPjxnIGlkPSJsdGItY2FzZS00Ij48dGV4dCB4PSIzMCIgeT0iMzk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+NDwvdGV4dD48bGluZSB4MT0iODgiIHkxPSIzODIiIHgyPSIyNTQiIHkyPSIzODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDM4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDM4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iMzk3IiB4Mj0iMjYyIiB5Mj0iMzk3IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNODgsMzU1QTExLDExIDAgMSAxIDc3LDM2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik03NCwzNzFMNzcsMzY2TDgwLDM3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjEwMyIgeT0iMzYyIiA+TTwvdGV4dD48cGF0aCBkPSJNMjU0LDM1NUExMSwxMSAwIDEgMCAyNjUsMzY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI2MiwzNzFMMjY1LDM2NkwyNjgsMzcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMjIwIiB5PSIzNjIiIHRleHQtYW5jaG9yPSJlbmQiPjAuMjVNPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iNDI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSArMC4yNTwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iMzg3IiB4Mj0iNDY2IiB5Mj0iMzg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsMzg3TDI5NC4wMCw0MTIuMDBMMjk4LjMwLDQxMS41M0wzMDIuNjAsNDExLjA2TDMwNi45MCw0MTAuNTlMMzExLjIwLDQxMC4xM0wzMTUuNTAsNDA5LjY2TDMxOS44MCw0MDkuMTlMMzI0LjEwLDQwOC43MkwzMjguNDAsNDA4LjI1TDMzMi43MCw0MDcuNzhMMzM3LjAwLDQwNy4zMUwzNDEuMzAsNDA2Ljg0TDM0NS42MCw0MDYuMzhMMzQ5LjkwLDQwNS45MUwzNTQuMjAsNDA1LjQ0TDM1OC41MCw0MDQuOTdMMzYyLjgwLDQwNC41MEwzNjcuMTAsNDA0LjAzTDM3MS40MCw0MDMuNTZMMzc1LjcwLDQwMy4wOUwzODAuMDAsNDAyLjYzTDM4NC4zMCw0MDIuMTZMMzg4LjYwLDQwMS42OUwzOTIuOTAsNDAxLjIyTDM5Ny4yMCw0MDAuNzVMNDAxLjUwLDQwMC4yOEw0MDUuODAsMzk5LjgxTDQxMC4xMCwzOTkuMzRMNDE0LjQwLDM5OC44OEw0MTguNzAsMzk4LjQxTDQyMy4wMCwzOTcuOTRMNDI3LjMwLDM5Ny40N0w0MzEuNjAsMzk3LjAwTDQzNS45MCwzOTYuNTNMNDQwLjIwLDM5Ni4wNkw0NDQuNTAsMzk1LjU5TDQ0OC44MCwzOTUuMTNMNDUzLjEwLDM5NC42Nkw0NTcuNDAsMzk0LjE5TDQ2MS43MCwzOTMuNzJMNDY2LjAwLDM5My4yNUw0NjYsMzg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iNDI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTUiPjx0ZXh0IHg9IjMwIiB5PSI0OTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij41PC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjQ4MiIgeDI9IjI1NCIgeTI9IjQ4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsNDg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxwYXRoIGQ9Ik0yNTQsNDg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxsaW5lIHgxPSIyNDYiIHkxPSI0OTciIHgyPSIyNjIiIHkyPSI0OTciIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik04OCw0NTVBMTEsMTEgMCAxIDEgNzcsNDY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTc0LDQ3MUw3Nyw0NjZMODAsNDcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTAzIiB5PSI0NjIiID5NPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iNTI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSAwLjAwPC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSI0ODciIHgyPSI0NjYiIHkyPSI0ODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCw0ODdMMjk0LjAwLDUxMi4wMEwyOTguMzAsNTExLjM4TDMwMi42MCw1MTAuNzVMMzA2LjkwLDUxMC4xM0wzMTEuMjAsNTA5LjUwTDMxNS41MCw1MDguODhMMzE5LjgwLDUwOC4yNUwzMjQuMTAsNTA3LjYzTDMyOC40MCw1MDcuMDBMMzMyLjcwLDUwNi4zOEwzMzcuMDAsNTA1Ljc1TDM0MS4zMCw1MDUuMTNMMzQ1LjYwLDUwNC41MEwzNDkuOTAsNTAzLjg4TDM1NC4yMCw1MDMuMjVMMzU4LjUwLDUwMi42M0wzNjIuODAsNTAyLjAwTDM2Ny4xMCw1MDEuMzhMMzcxLjQwLDUwMC43NUwzNzUuNzAsNTAwLjEzTDM4MC4wMCw0OTkuNTBMMzg0LjMwLDQ5OC44OEwzODguNjAsNDk4LjI1TDM5Mi45MCw0OTcuNjNMMzk3LjIwLDQ5Ny4wMEw0MDEuNTAsNDk2LjM4TDQwNS44MCw0OTUuNzVMNDEwLjEwLDQ5NS4xM0w0MTQuNDAsNDk0LjUwTDQxOC43MCw0OTMuODhMNDIzLjAwLDQ5My4yNUw0MjcuMzAsNDkyLjYzTDQzMS42MCw0OTIuMDBMNDM1LjkwLDQ5MS4zOEw0NDAuMjAsNDkwLjc1TDQ0NC41MCw0OTAuMTNMNDQ4LjgwLDQ4OS41MEw0NTMuMTAsNDg4Ljg4TDQ1Ny40MCw0ODguMjVMNDYxLjcwLDQ4Ny42M0w0NjYuMDAsNDg3LjAwTDQ2Niw0ODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSI1MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz48ZyBpZD0ibHRiLWNhc2UtNiI+PHRleHQgeD0iMzAiIHk9IjU5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjY8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iNTgyIiB4Mj0iMjU0IiB5Mj0iNTgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCw1ODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCw1ODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PGxpbmUgeDE9IjI0NiIgeTE9IjU5NyIgeDI9IjI2MiIgeTI9IjU5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PHBhdGggZD0iTTg4LDU1NUExMSwxMSAwIDEgMSA3Nyw1NjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNNzQsNTcxTDc3LDU2Nkw4MCw1NzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxMDMiIHk9IjU2MiIgPk08L3RleHQ+PHBhdGggZD0iTTI1NCw1NTVBMTEsMTEgMCAxIDEgMjQzLDU2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yNDAsNTcxTDI0Myw1NjZMMjQ2LDU3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjIyMCIgeT0iNTYyIiB0ZXh0LWFuY2hvcj0iZW5kIj7iiJIwLjI1TTwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjYyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+RW5kIG1vbWVudHM7IM+IID0gLTAuMjU8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9IjU4NyIgeDI9IjQ2NiIgeTI9IjU4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDU4N0wyOTQuMDAsNjEyLjAwTDI5OC4zMCw2MTEuMjJMMzAyLjYwLDYxMC40NEwzMDYuOTAsNjA5LjY2TDMxMS4yMCw2MDguODhMMzE1LjUwLDYwOC4wOUwzMTkuODAsNjA3LjMxTDMyNC4xMCw2MDYuNTNMMzI4LjQwLDYwNS43NUwzMzIuNzAsNjA0Ljk3TDMzNy4wMCw2MDQuMTlMMzQxLjMwLDYwMy40MUwzNDUuNjAsNjAyLjYzTDM0OS45MCw2MDEuODRMMzU0LjIwLDYwMS4wNkwzNTguNTAsNjAwLjI4TDM2Mi44MCw1OTkuNTBMMzY3LjEwLDU5OC43MkwzNzEuNDAsNTk3Ljk0TDM3NS43MCw1OTcuMTZMMzgwLjAwLDU5Ni4zOEwzODQuMzAsNTk1LjU5TDM4OC42MCw1OTQuODFMMzkyLjkwLDU5NC4wM0wzOTcuMjAsNTkzLjI1TDQwMS41MCw1OTIuNDdMNDA1LjgwLDU5MS42OUw0MTAuMTAsNTkwLjkxTDQxNC40MCw1OTAuMTNMNDE4LjcwLDU4OS4zNEw0MjMuMDAsNTg4LjU2TDQyNy4zMCw1ODcuNzhMNDMxLjYwLDU4Ny4wMEw0MzUuOTAsNTg2LjIyTDQ0MC4yMCw1ODUuNDRMNDQ0LjUwLDU4NC42Nkw0NDguODAsNTgzLjg4TDQ1My4xMCw1ODMuMDlMNDU3LjQwLDU4Mi4zMUw0NjEuNzAsNTgxLjUzTDQ2Ni4wMCw1ODAuNzVMNDY2LDU4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjYyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPjxnIGlkPSJsdGItY2FzZS03Ij48dGV4dCB4PSIzMCIgeT0iNjk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+NzwvdGV4dD48bGluZSB4MT0iODgiIHkxPSI2ODIiIHgyPSIyNTQiIHkyPSI2ODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDY4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDY4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iNjk3IiB4Mj0iMjYyIiB5Mj0iNjk3IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNODgsNjU1QTExLDExIDAgMSAxIDc3LDY2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik03NCw2NzFMNzcsNjY2TDgwLDY3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjEwMyIgeT0iNjYyIiA+TTwvdGV4dD48cGF0aCBkPSJNMjU0LDY1NUExMSwxMSAwIDEgMSAyNDMsNjY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI0MCw2NzFMMjQzLDY2NkwyNDYsNjcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMjIwIiB5PSI2NjIiIHRleHQtYW5jaG9yPSJlbmQiPuKIkjAuNTBNPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iNzI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSAtMC41MDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iNjg3IiB4Mj0iNDY2IiB5Mj0iNjg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsNjg3TDI5NC4wMCw3MTIuMDBMMjk4LjMwLDcxMS4wNkwzMDIuNjAsNzEwLjEzTDMwNi45MCw3MDkuMTlMMzExLjIwLDcwOC4yNUwzMTUuNTAsNzA3LjMxTDMxOS44MCw3MDYuMzhMMzI0LjEwLDcwNS40NEwzMjguNDAsNzA0LjUwTDMzMi43MCw3MDMuNTZMMzM3LjAwLDcwMi42M0wzNDEuMzAsNzAxLjY5TDM0NS42MCw3MDAuNzVMMzQ5LjkwLDY5OS44MUwzNTQuMjAsNjk4Ljg4TDM1OC41MCw2OTcuOTRMMzYyLjgwLDY5Ny4wMEwzNjcuMTAsNjk2LjA2TDM3MS40MCw2OTUuMTNMMzc1LjcwLDY5NC4xOUwzODAuMDAsNjkzLjI1TDM4NC4zMCw2OTIuMzFMMzg4LjYwLDY5MS4zOEwzOTIuOTAsNjkwLjQ0TDM5Ny4yMCw2ODkuNTBMNDAxLjUwLDY4OC41Nkw0MDUuODAsNjg3LjYzTDQxMC4xMCw2ODYuNjlMNDE0LjQwLDY4NS43NUw0MTguNzAsNjg0LjgxTDQyMy4wMCw2ODMuODhMNDI3LjMwLDY4Mi45NEw0MzEuNjAsNjgyLjAwTDQzNS45MCw2ODEuMDZMNDQwLjIwLDY4MC4xM0w0NDQuNTAsNjc5LjE5TDQ0OC44MCw2NzguMjVMNDUzLjEwLDY3Ny4zMUw0NTcuNDAsNjc2LjM4TDQ2MS43MCw2NzUuNDRMNDY2LjAwLDY3NC41MEw0NjYsNjg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iNzI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+CiAgICA8L2c+CiAgPC9zdmc+"
       },
-      "groupId": "s_seci_group_ar"
+      "groupId": "s_seci_group_au"
     },
     {
-      "id": "s_seci_as",
+      "id": "s_seci_av",
       "type": "math",
       "x": 576,
       "y": 15369,
@@ -6585,10 +6629,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_ar"
+      "groupId": "s_seci_group_au"
     },
     {
-      "id": "s_seci_at",
+      "id": "s_seci_aw",
       "type": "math",
       "x": 656,
       "y": 15369,
@@ -6607,10 +6651,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_ar"
+      "groupId": "s_seci_group_au"
     },
     {
-      "id": "s_seci_au",
+      "id": "s_seci_ax",
       "type": "math",
       "x": 576,
       "y": 15469,
@@ -6629,10 +6673,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_ar"
+      "groupId": "s_seci_group_au"
     },
     {
-      "id": "s_seci_av",
+      "id": "s_seci_ay",
       "type": "math",
       "x": 656,
       "y": 15469,
@@ -6651,10 +6695,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_ar"
+      "groupId": "s_seci_group_au"
     },
     {
-      "id": "s_seci_aw",
+      "id": "s_seci_az",
       "type": "math",
       "x": 576,
       "y": 15569,
@@ -6673,10 +6717,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_ar"
+      "groupId": "s_seci_group_au"
     },
     {
-      "id": "s_seci_ax",
+      "id": "s_seci_b0",
       "type": "math",
       "x": 656,
       "y": 15569,
@@ -6695,10 +6739,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_ar"
+      "groupId": "s_seci_group_au"
     },
     {
-      "id": "s_seci_ay",
+      "id": "s_seci_b1",
       "type": "math",
       "x": 576,
       "y": 15669,
@@ -6717,10 +6761,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_ar"
+      "groupId": "s_seci_group_au"
     },
     {
-      "id": "s_seci_az",
+      "id": "s_seci_b2",
       "type": "math",
       "x": 656,
       "y": 15669,
@@ -6739,10 +6783,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_ar"
+      "groupId": "s_seci_group_au"
     },
     {
-      "id": "s_seci_b0",
+      "id": "s_seci_b3",
       "type": "math",
       "x": 576,
       "y": 15769,
@@ -6761,10 +6805,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_ar"
+      "groupId": "s_seci_group_au"
     },
     {
-      "id": "s_seci_b1",
+      "id": "s_seci_b4",
       "type": "math",
       "x": 656,
       "y": 15769,
@@ -6783,10 +6827,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_ar"
+      "groupId": "s_seci_group_au"
     },
     {
-      "id": "s_seci_b2",
+      "id": "s_seci_b5",
       "type": "math",
       "x": 576,
       "y": 15869,
@@ -6805,10 +6849,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_ar"
+      "groupId": "s_seci_group_au"
     },
     {
-      "id": "s_seci_b3",
+      "id": "s_seci_b6",
       "type": "math",
       "x": 656,
       "y": 15869,
@@ -6827,10 +6871,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_ar"
+      "groupId": "s_seci_group_au"
     },
     {
-      "id": "s_seci_b4",
+      "id": "s_seci_b7",
       "type": "math",
       "x": 576,
       "y": 15969,
@@ -6849,10 +6893,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_ar"
+      "groupId": "s_seci_group_au"
     },
     {
-      "id": "s_seci_b5",
+      "id": "s_seci_b8",
       "type": "math",
       "x": 656,
       "y": 15969,
@@ -6871,10 +6915,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_ar"
+      "groupId": "s_seci_group_au"
     },
     {
-      "id": "s_seci_b6",
+      "id": "s_seci_b9",
       "type": "image",
       "x": 76,
       "y": 16454,
@@ -6883,10 +6927,10 @@
         "h": 640,
         "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iNjQwIiB2aWV3Qm94PSIwIDAgNjQwIDY0MCI+CiAgICA8dGl0bGU+TFRCIGNhc2VzIDggdG8gMTM7IFNDSSBOQ0NJIFNOMDAzYiBUYWJsZXMgMy4xIGFuZCAzLjI8L3RpdGxlPgogICAgPHJlY3QgeD0iMC41IiB5PSIwLjUiIHdpZHRoPSI2MzkiIGhlaWdodD0iNjM5IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjOTRhM2I4Ii8+CiAgICA8cmVjdCB4PSIxIiB5PSIxIiB3aWR0aD0iNjM4IiBoZWlnaHQ9IjM5IiBmaWxsPSIjZWZmNmZmIi8+CiAgICA8ZyBzdHJva2U9IiNjYmQ1ZTEiIHN0cm9rZS13aWR0aD0iMSI+PGxpbmUgeDE9IjAiIHkxPSI0MCIgeDI9IjY0MCIgeTI9IjQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iMTQwIiB4Mj0iNjQwIiB5Mj0iMTQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iMjQwIiB4Mj0iNjQwIiB5Mj0iMjQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iMzQwIiB4Mj0iNjQwIiB5Mj0iMzQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iNDQwIiB4Mj0iNjQwIiB5Mj0iNDQwIiAvPjxsaW5lIHgxPSIwIiB5MT0iNTQwIiB4Mj0iNjQwIiB5Mj0iNTQwIiAvPjxsaW5lIHgxPSI2MCIgeTE9IjAiIHgyPSI2MCIgeTI9IjY0MCIgLz48bGluZSB4MT0iMjgwIiB5MT0iMCIgeDI9IjI4MCIgeTI9IjY0MCIgLz48bGluZSB4MT0iNDgwIiB5MT0iMCIgeDI9IjQ4MCIgeTI9IjY0MCIgLz48bGluZSB4MT0iNTYwIiB5MT0iMCIgeDI9IjU2MCIgeTI9IjY0MCIgLz48L2c+CiAgICA8ZyBmb250LWZhbWlseT0iUm9ib3RvLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMxZTNhNWYiPgogICAgICA8ZyBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+PHRleHQgeD0iMzAiIHk9IjI1IiA+Q2FzZTwvdGV4dD48dGV4dCB4PSIxNzAiIHk9IjI1IiA+TG9hZGluZyBhbmQgc3VwcG9ydHM8L3RleHQ+PHRleHQgeD0iMzgwIiB5PSIyNSIgPkJlbmRpbmcgbW9tZW50IGRpYWdyYW08L3RleHQ+PHRleHQgeD0iNTIwIiB5PSIyNSIgPkMxPC90ZXh0Pjx0ZXh0IHg9IjYwMCIgeT0iMjUiID5DMjwvdGV4dD48L2c+CiAgICAgIDxnIGlkPSJsdGItY2FzZS04Ij48dGV4dCB4PSIzMCIgeT0iOTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjE0Ij44PC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjgyIiB4Mj0iMjU0IiB5Mj0iODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDg0bC02LDEwaDEyeiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzMzNDE1NSIvPjxwYXRoIGQ9Ik0yNTQsODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PGxpbmUgeDE9IjI0NiIgeTE9Ijk3IiB4Mj0iMjYyIiB5Mj0iOTciIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik04OCw1NUExMSwxMSAwIDEgMSA3Nyw2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik03NCw3MUw3Nyw2Nkw4MCw3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjEwMyIgeT0iNjIiID5NPC90ZXh0PjxwYXRoIGQ9Ik0yNTQsNTVBMTEsMTEgMCAxIDEgMjQzLDY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI0MCw3MUwyNDMsNjZMMjQ2LDcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMjIwIiB5PSI2MiIgdGV4dC1hbmNob3I9ImVuZCI+4oiSMC43NU08L3RleHQ+PHRleHQgeD0iMTcxIiB5PSIxMjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkVuZCBtb21lbnRzOyDPiCA9IC0wLjc1PC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSI4NyIgeDI9IjQ2NiIgeTI9Ijg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsODdMMjk0LjAwLDExMi4wMEwyOTguMzAsMTEwLjkxTDMwMi42MCwxMDkuODFMMzA2LjkwLDEwOC43MkwzMTEuMjAsMTA3LjYzTDMxNS41MCwxMDYuNTNMMzE5LjgwLDEwNS40NEwzMjQuMTAsMTA0LjM0TDMyOC40MCwxMDMuMjVMMzMyLjcwLDEwMi4xNkwzMzcuMDAsMTAxLjA2TDM0MS4zMCw5OS45N0wzNDUuNjAsOTguODhMMzQ5LjkwLDk3Ljc4TDM1NC4yMCw5Ni42OUwzNTguNTAsOTUuNTlMMzYyLjgwLDk0LjUwTDM2Ny4xMCw5My40MUwzNzEuNDAsOTIuMzFMMzc1LjcwLDkxLjIyTDM4MC4wMCw5MC4xM0wzODQuMzAsODkuMDNMMzg4LjYwLDg3Ljk0TDM5Mi45MCw4Ni44NEwzOTcuMjAsODUuNzVMNDAxLjUwLDg0LjY2TDQwNS44MCw4My41Nkw0MTAuMTAsODIuNDdMNDE0LjQwLDgxLjM4TDQxOC43MCw4MC4yOEw0MjMuMDAsNzkuMTlMNDI3LjMwLDc4LjA5TDQzMS42MCw3Ny4wMEw0MzUuOTAsNzUuOTFMNDQwLjIwLDc0LjgxTDQ0NC41MCw3My43Mkw0NDguODAsNzIuNjNMNDUzLjEwLDcxLjUzTDQ1Ny40MCw3MC40NEw0NjEuNzAsNjkuMzRMNDY2LjAwLDY4LjI1TDQ2Niw4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjEyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPjxnIGlkPSJsdGItY2FzZS05Ij48dGV4dCB4PSIzMCIgeT0iMTk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+OTwvdGV4dD48bGluZSB4MT0iODgiIHkxPSIxODIiIHgyPSIyNTQiIHkyPSIxODIiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTg4LDE4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48cGF0aCBkPSJNMjU0LDE4NGwtNiwxMGgxMnoiIGZpbGw9IndoaXRlIiBzdHJva2U9IiMzMzQxNTUiLz48bGluZSB4MT0iMjQ2IiB5MT0iMTk3IiB4Mj0iMjYyIiB5Mj0iMTk3IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNODgsMTU1QTExLDExIDAgMSAxIDc3LDE2NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik03NCwxNzFMNzcsMTY2TDgwLDE3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjEwMyIgeT0iMTYyIiA+TTwvdGV4dD48cGF0aCBkPSJNMjU0LDE1NUExMSwxMSAwIDEgMSAyNDMsMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI0MCwxNzFMMjQzLDE2NkwyNDYsMTcxIiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMjIwIiB5PSIxNjIiIHRleHQtYW5jaG9yPSJlbmQiPuKIkjEuMDBNPC90ZXh0Pjx0ZXh0IHg9IjE3MSIgeT0iMjI1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIj5FbmQgbW9tZW50czsgz4ggPSAtMS4wMDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iMTg3IiB4Mj0iNDY2IiB5Mj0iMTg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsMTg3TDI5NC4wMCwyMTIuMDBMMjk4LjMwLDIxMC43NUwzMDIuNjAsMjA5LjUwTDMwNi45MCwyMDguMjVMMzExLjIwLDIwNy4wMEwzMTUuNTAsMjA1Ljc1TDMxOS44MCwyMDQuNTBMMzI0LjEwLDIwMy4yNUwzMjguNDAsMjAyLjAwTDMzMi43MCwyMDAuNzVMMzM3LjAwLDE5OS41MEwzNDEuMzAsMTk4LjI1TDM0NS42MCwxOTcuMDBMMzQ5LjkwLDE5NS43NUwzNTQuMjAsMTk0LjUwTDM1OC41MCwxOTMuMjVMMzYyLjgwLDE5Mi4wMEwzNjcuMTAsMTkwLjc1TDM3MS40MCwxODkuNTBMMzc1LjcwLDE4OC4yNUwzODAuMDAsMTg3LjAwTDM4NC4zMCwxODUuNzVMMzg4LjYwLDE4NC41MEwzOTIuOTAsMTgzLjI1TDM5Ny4yMCwxODIuMDBMNDAxLjUwLDE4MC43NUw0MDUuODAsMTc5LjUwTDQxMC4xMCwxNzguMjVMNDE0LjQwLDE3Ny4wMEw0MTguNzAsMTc1Ljc1TDQyMy4wMCwxNzQuNTBMNDI3LjMwLDE3My4yNUw0MzEuNjAsMTcyLjAwTDQzNS45MCwxNzAuNzVMNDQwLjIwLDE2OS41MEw0NDQuNTAsMTY4LjI1TDQ0OC44MCwxNjcuMDBMNDUzLjEwLDE2NS43NUw0NTcuNDAsMTY0LjUwTDQ2MS43MCwxNjMuMjVMNDY2LjAwLDE2Mi4wMEw0NjYsMTg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iMjI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTEwIj48dGV4dCB4PSIzMCIgeT0iMjk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+MTA8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iMjgyIiB4Mj0iMjU0IiB5Mj0iMjgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCwyODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCwyODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PGxpbmUgeDE9IjI0NiIgeTE9IjI5NyIgeDI9IjI2MiIgeTI9IjI5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PGxpbmUgeDE9Ijg4IiB5MT0iMjUyIiB4Mj0iMjU0IiB5Mj0iMjUyIiBzdHJva2U9IiMyNTYzZWIiLz48bGluZSB4MT0iODgiIHkxPSIyNTIiIHgyPSI4OCIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik04NSwyNjlMODgsMjc0TDkxLDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxMDMuMDkwOTA5MDkwOTA5MSIgeTE9IjI1MiIgeDI9IjEwMy4wOTA5MDkwOTA5MDkxIiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTEwMC4wOTA5MDkwOTA5MDkxLDI2OUwxMDMuMDkwOTA5MDkwOTA5MSwyNzRMMTA2LjA5MDkwOTA5MDkwOTEsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjExOC4xODE4MTgxODE4MTgxOSIgeTE9IjI1MiIgeDI9IjExOC4xODE4MTgxODE4MTgxOSIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xMTUuMTgxODE4MTgxODE4MTksMjY5TDExOC4xODE4MTgxODE4MTgxOSwyNzRMMTIxLjE4MTgxODE4MTgxODE5LDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxMzMuMjcyNzI3MjcyNzI3MjgiIHkxPSIyNTIiIHgyPSIxMzMuMjcyNzI3MjcyNzI3MjgiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTMwLjI3MjcyNzI3MjcyNzI4LDI2OUwxMzMuMjcyNzI3MjcyNzI3MjgsMjc0TDEzNi4yNzI3MjcyNzI3MjcyOCwyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTQ4LjM2MzYzNjM2MzYzNjM3IiB5MT0iMjUyIiB4Mj0iMTQ4LjM2MzYzNjM2MzYzNjM3IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE0NS4zNjM2MzYzNjM2MzYzNywyNjlMMTQ4LjM2MzYzNjM2MzYzNjM3LDI3NEwxNTEuMzYzNjM2MzYzNjM2MzcsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjE2My40NTQ1NDU0NTQ1NDU0NCIgeTE9IjI1MiIgeDI9IjE2My40NTQ1NDU0NTQ1NDU0NCIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xNjAuNDU0NTQ1NDU0NTQ1NDQsMjY5TDE2My40NTQ1NDU0NTQ1NDU0NCwyNzRMMTY2LjQ1NDU0NTQ1NDU0NTQ0LDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxNzguNTQ1NDU0NTQ1NDU0NTYiIHkxPSIyNTIiIHgyPSIxNzguNTQ1NDU0NTQ1NDU0NTYiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTc1LjU0NTQ1NDU0NTQ1NDU2LDI2OUwxNzguNTQ1NDU0NTQ1NDU0NTYsMjc0TDE4MS41NDU0NTQ1NDU0NTQ1NiwyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTkzLjYzNjM2MzYzNjM2MzYzIiB5MT0iMjUyIiB4Mj0iMTkzLjYzNjM2MzYzNjM2MzYzIiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE5MC42MzYzNjM2MzYzNjM2MywyNjlMMTkzLjYzNjM2MzYzNjM2MzYzLDI3NEwxOTYuNjM2MzYzNjM2MzYzNjMsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjIwOC43MjcyNzI3MjcyNzI3NSIgeTE9IjI1MiIgeDI9IjIwOC43MjcyNzI3MjcyNzI3NSIgeTI9IjI3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yMDUuNzI3MjcyNzI3MjcyNzUsMjY5TDIwOC43MjcyNzI3MjcyNzI3NSwyNzRMMjExLjcyNzI3MjcyNzI3Mjc1LDI2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIyMjMuODE4MTgxODE4MTgxOCIgeTE9IjI1MiIgeDI9IjIyMy44MTgxODE4MTgxODE4IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTIyMC44MTgxODE4MTgxODE4LDI2OUwyMjMuODE4MTgxODE4MTgxOCwyNzRMMjI2LjgxODE4MTgxODE4MTgsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjIzOC45MDkwOTA5MDkwOTA5IiB5MT0iMjUyIiB4Mj0iMjM4LjkwOTA5MDkwOTA5MDkiIHkyPSIyNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjM1LjkwOTA5MDkwOTA5MDksMjY5TDIzOC45MDkwOTA5MDkwOTA5LDI3NEwyNDEuOTA5MDkwOTA5MDkwOSwyNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMjU0IiB5MT0iMjUyIiB4Mj0iMjU0IiB5Mj0iMjc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI1MSwyNjlMMjU0LDI3NEwyNTcsMjY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTcxIiB5PSIyNDkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnE8L3RleHQ+PHRleHQgeD0iMTcxIiB5PSIzMjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPlNpbXBseSBzdXBwb3J0ZWQ7IFVETDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iMjg3IiB4Mj0iNDY2IiB5Mj0iMjg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsMjg3TDI5NC4wMCwyODcuMDBMMjk4LjMwLDI4OS40NEwzMDIuNjAsMjkxLjc1TDMwNi45MCwyOTMuOTRMMzExLjIwLDI5Ni4wMEwzMTUuNTAsMjk3Ljk0TDMxOS44MCwyOTkuNzVMMzI0LjEwLDMwMS40NEwzMjguNDAsMzAzLjAwTDMzMi43MCwzMDQuNDRMMzM3LjAwLDMwNS43NUwzNDEuMzAsMzA2Ljk0TDM0NS42MCwzMDguMDBMMzQ5LjkwLDMwOC45NEwzNTQuMjAsMzA5Ljc1TDM1OC41MCwzMTAuNDRMMzYyLjgwLDMxMS4wMEwzNjcuMTAsMzExLjQ0TDM3MS40MCwzMTEuNzVMMzc1LjcwLDMxMS45NEwzODAuMDAsMzEyLjAwTDM4NC4zMCwzMTEuOTRMMzg4LjYwLDMxMS43NUwzOTIuOTAsMzExLjQ0TDM5Ny4yMCwzMTEuMDBMNDAxLjUwLDMxMC40NEw0MDUuODAsMzA5Ljc1TDQxMC4xMCwzMDguOTRMNDE0LjQwLDMwOC4wMEw0MTguNzAsMzA2Ljk0TDQyMy4wMCwzMDUuNzVMNDI3LjMwLDMwNC40NEw0MzEuNjAsMzAzLjAwTDQzNS45MCwzMDEuNDRMNDQwLjIwLDI5OS43NUw0NDQuNTAsMjk3Ljk0TDQ0OC44MCwyOTYuMDBMNDUzLjEwLDI5My45NEw0NTcuNDAsMjkxLjc1TDQ2MS43MCwyODkuNDRMNDY2LjAwLDI4Ny4wMEw0NjYsMjg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iMzI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTExIj48dGV4dCB4PSIzMCIgeT0iMzk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+MTE8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iMzgyIiB4Mj0iMjU0IiB5Mj0iMzgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCwzNzBWMzk0IiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxsaW5lIHgxPSI4MyIgeTE9IjM3NCIgeDI9Ijg4IiB5Mj0iMzcwIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjgzIiB5MT0iMzc4IiB4Mj0iODgiIHkyPSIzNzQiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iODMiIHkxPSIzODIiIHgyPSI4OCIgeTI9IjM3OCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSI4MyIgeTE9IjM4NiIgeDI9Ijg4IiB5Mj0iMzgyIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjgzIiB5MT0iMzkwIiB4Mj0iODgiIHkyPSIzODYiIHN0cm9rZT0iIzY0NzQ4YiIvPjxwYXRoIGQ9Ik0yNTQsMzcwVjM5NCIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iMjQ5IiB5MT0iMzc0IiB4Mj0iMjU0IiB5Mj0iMzcwIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjI0OSIgeTE9IjM3OCIgeDI9IjI1NCIgeTI9IjM3NCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSIyNDkiIHkxPSIzODIiIHgyPSIyNTQiIHkyPSIzNzgiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iMjQ5IiB5MT0iMzg2IiB4Mj0iMjU0IiB5Mj0iMzgyIiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjI0OSIgeTE9IjM5MCIgeDI9IjI1NCIgeTI9IjM4NiIgc3Ryb2tlPSIjNjQ3NDhiIi8+PGxpbmUgeDE9Ijg4IiB5MT0iMzUyIiB4Mj0iMjU0IiB5Mj0iMzUyIiBzdHJva2U9IiMyNTYzZWIiLz48bGluZSB4MT0iODgiIHkxPSIzNTIiIHgyPSI4OCIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik04NSwzNjlMODgsMzc0TDkxLDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxMDMuMDkwOTA5MDkwOTA5MSIgeTE9IjM1MiIgeDI9IjEwMy4wOTA5MDkwOTA5MDkxIiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTEwMC4wOTA5MDkwOTA5MDkxLDM2OUwxMDMuMDkwOTA5MDkwOTA5MSwzNzRMMTA2LjA5MDkwOTA5MDkwOTEsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjExOC4xODE4MTgxODE4MTgxOSIgeTE9IjM1MiIgeDI9IjExOC4xODE4MTgxODE4MTgxOSIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xMTUuMTgxODE4MTgxODE4MTksMzY5TDExOC4xODE4MTgxODE4MTgxOSwzNzRMMTIxLjE4MTgxODE4MTgxODE5LDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxMzMuMjcyNzI3MjcyNzI3MjgiIHkxPSIzNTIiIHgyPSIxMzMuMjcyNzI3MjcyNzI3MjgiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTMwLjI3MjcyNzI3MjcyNzI4LDM2OUwxMzMuMjcyNzI3MjcyNzI3MjgsMzc0TDEzNi4yNzI3MjcyNzI3MjcyOCwzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTQ4LjM2MzYzNjM2MzYzNjM3IiB5MT0iMzUyIiB4Mj0iMTQ4LjM2MzYzNjM2MzYzNjM3IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE0NS4zNjM2MzYzNjM2MzYzNywzNjlMMTQ4LjM2MzYzNjM2MzYzNjM3LDM3NEwxNTEuMzYzNjM2MzYzNjM2MzcsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjE2My40NTQ1NDU0NTQ1NDU0NCIgeTE9IjM1MiIgeDI9IjE2My40NTQ1NDU0NTQ1NDU0NCIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xNjAuNDU0NTQ1NDU0NTQ1NDQsMzY5TDE2My40NTQ1NDU0NTQ1NDU0NCwzNzRMMTY2LjQ1NDU0NTQ1NDU0NTQ0LDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIxNzguNTQ1NDU0NTQ1NDU0NTYiIHkxPSIzNTIiIHgyPSIxNzguNTQ1NDU0NTQ1NDU0NTYiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTc1LjU0NTQ1NDU0NTQ1NDU2LDM2OUwxNzguNTQ1NDU0NTQ1NDU0NTYsMzc0TDE4MS41NDU0NTQ1NDU0NTQ1NiwzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMTkzLjYzNjM2MzYzNjM2MzYzIiB5MT0iMzUyIiB4Mj0iMTkzLjYzNjM2MzYzNjM2MzYzIiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTE5MC42MzYzNjM2MzYzNjM2MywzNjlMMTkzLjYzNjM2MzYzNjM2MzYzLDM3NEwxOTYuNjM2MzYzNjM2MzYzNjMsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjIwOC43MjcyNzI3MjcyNzI3NSIgeTE9IjM1MiIgeDI9IjIwOC43MjcyNzI3MjcyNzI3NSIgeTI9IjM3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0yMDUuNzI3MjcyNzI3MjcyNzUsMzY5TDIwOC43MjcyNzI3MjcyNzI3NSwzNzRMMjExLjcyNzI3MjcyNzI3Mjc1LDM2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxsaW5lIHgxPSIyMjMuODE4MTgxODE4MTgxOCIgeTE9IjM1MiIgeDI9IjIyMy44MTgxODE4MTgxODE4IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTIyMC44MTgxODE4MTgxODE4LDM2OUwyMjMuODE4MTgxODE4MTgxOCwzNzRMMjI2LjgxODE4MTgxODE4MTgsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PGxpbmUgeDE9IjIzOC45MDkwOTA5MDkwOTA5IiB5MT0iMzUyIiB4Mj0iMjM4LjkwOTA5MDkwOTA5MDkiIHkyPSIzNzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMjM1LjkwOTA5MDkwOTA5MDksMzY5TDIzOC45MDkwOTA5MDkwOTA5LDM3NEwyNDEuOTA5MDkwOTA5MDkwOSwzNjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48bGluZSB4MT0iMjU0IiB5MT0iMzUyIiB4Mj0iMjU0IiB5Mj0iMzc0IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHBhdGggZD0iTTI1MSwzNjlMMjU0LDM3NEwyNTcsMzY5IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHRleHQgeD0iMTcxIiB5PSIzNDkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPnE8L3RleHQ+PHRleHQgeD0iMTcxIiB5PSI0MjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkZpeGVkIGluIGJlbmRpbmc7IFVETDwvdGV4dD48bGluZSB4MT0iMjk0IiB5MT0iMzg3IiB4Mj0iNDY2IiB5Mj0iMzg3IiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMiIvPjxwYXRoIGQ9Ik0yOTQsMzg3TDI5NC4wMCwzNjIuMDBMMjk4LjMwLDM2NS42NkwzMDIuNjAsMzY5LjEzTDMwNi45MCwzNzIuNDFMMzExLjIwLDM3NS41MEwzMTUuNTAsMzc4LjQxTDMxOS44MCwzODEuMTNMMzI0LjEwLDM4My42NkwzMjguNDAsMzg2LjAwTDMzMi43MCwzODguMTZMMzM3LjAwLDM5MC4xM0wzNDEuMzAsMzkxLjkxTDM0NS42MCwzOTMuNTBMMzQ5LjkwLDM5NC45MUwzNTQuMjAsMzk2LjEzTDM1OC41MCwzOTcuMTZMMzYyLjgwLDM5OC4wMEwzNjcuMTAsMzk4LjY2TDM3MS40MCwzOTkuMTNMMzc1LjcwLDM5OS40MUwzODAuMDAsMzk5LjUwTDM4NC4zMCwzOTkuNDFMMzg4LjYwLDM5OS4xM0wzOTIuOTAsMzk4LjY2TDM5Ny4yMCwzOTguMDBMNDAxLjUwLDM5Ny4xNkw0MDUuODAsMzk2LjEzTDQxMC4xMCwzOTQuOTFMNDE0LjQwLDM5My41MEw0MTguNzAsMzkxLjkxTDQyMy4wMCwzOTAuMTNMNDI3LjMwLDM4OC4xNkw0MzEuNjAsMzg2LjAwTDQzNS45MCwzODMuNjZMNDQwLjIwLDM4MS4xM0w0NDQuNTAsMzc4LjQxTDQ0OC44MCwzNzUuNTBMNDUzLjEwLDM3Mi40MUw0NTcuNDAsMzY5LjEzTDQ2MS43MCwzNjUuNjZMNDY2LjAwLDM2Mi4wMEw0NjYsMzg3WiIgZmlsbD0iI2RiZWFmZSIgc3Ryb2tlPSIjMWUzYTVmIiBzdHJva2Utd2lkdGg9IjEuMiIvPjx0ZXh0IHg9IjM4MCIgeT0iNDI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjQ3NDhiIj5NIC8gbWF4IHxNfDwvdGV4dD48L2c+PGcgaWQ9Imx0Yi1jYXNlLTEyIj48dGV4dCB4PSIzMCIgeT0iNDk3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNCI+MTI8L3RleHQ+PGxpbmUgeDE9Ijg4IiB5MT0iNDgyIiB4Mj0iMjU0IiB5Mj0iNDgyIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik04OCw0ODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PHBhdGggZD0iTTI1NCw0ODRsLTYsMTBoMTJ6IiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjMzM0MTU1Ii8+PGxpbmUgeDE9IjI0NiIgeTE9IjQ5NyIgeDI9IjI2MiIgeTI9IjQ5NyIgc3Ryb2tlPSIjNjQ3NDhiIi8+PGxpbmUgeDE9IjE3MSIgeTE9IjQ0OCIgeDI9IjE3MSIgeTI9IjQ3NCIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjxwYXRoIGQ9Ik0xNjgsNDY5TDE3MSw0NzRMMTc0LDQ2OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjEuNCIvPjx0ZXh0IHg9IjE3OSIgeT0iNDU4IiA+RjwvdGV4dD48dGV4dCB4PSIxNzEiIHk9IjUyNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCI+U2ltcGx5IHN1cHBvcnRlZDsgbWlkLXBvaW50IGxvYWQ8L3RleHQ+PGxpbmUgeDE9IjI5NCIgeTE9IjQ4NyIgeDI9IjQ2NiIgeTI9IjQ4NyIgc3Ryb2tlPSIjNjQ3NDhiIiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48cGF0aCBkPSJNMjk0LDQ4N0wyOTQuMDAsNDg3LjAwTDI5OC4zMCw0ODguMjVMMzAyLjYwLDQ4OS41MEwzMDYuOTAsNDkwLjc1TDMxMS4yMCw0OTIuMDBMMzE1LjUwLDQ5My4yNUwzMTkuODAsNDk0LjUwTDMyNC4xMCw0OTUuNzVMMzI4LjQwLDQ5Ny4wMEwzMzIuNzAsNDk4LjI1TDMzNy4wMCw0OTkuNTBMMzQxLjMwLDUwMC43NUwzNDUuNjAsNTAyLjAwTDM0OS45MCw1MDMuMjVMMzU0LjIwLDUwNC41MEwzNTguNTAsNTA1Ljc1TDM2Mi44MCw1MDcuMDBMMzY3LjEwLDUwOC4yNUwzNzEuNDAsNTA5LjUwTDM3NS43MCw1MTAuNzVMMzgwLjAwLDUxMi4wMEwzODQuMzAsNTEwLjc1TDM4OC42MCw1MDkuNTBMMzkyLjkwLDUwOC4yNUwzOTcuMjAsNTA3LjAwTDQwMS41MCw1MDUuNzVMNDA1LjgwLDUwNC41MEw0MTAuMTAsNTAzLjI1TDQxNC40MCw1MDIuMDBMNDE4LjcwLDUwMC43NUw0MjMuMDAsNDk5LjUwTDQyNy4zMCw0OTguMjVMNDMxLjYwLDQ5Ny4wMEw0MzUuOTAsNDk1Ljc1TDQ0MC4yMCw0OTQuNTBMNDQ0LjUwLDQ5My4yNUw0NDguODAsNDkyLjAwTDQ1My4xMCw0OTAuNzVMNDU3LjQwLDQ4OS41MEw0NjEuNzAsNDg4LjI1TDQ2Ni4wMCw0ODcuMDBMNDY2LDQ4N1oiIGZpbGw9IiNkYmVhZmUiIHN0cm9rZT0iIzFlM2E1ZiIgc3Ryb2tlLXdpZHRoPSIxLjIiLz48dGV4dCB4PSIzODAiIHk9IjUyNyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzY0NzQ4YiI+TSAvIG1heCB8TXw8L3RleHQ+PC9nPjxnIGlkPSJsdGItY2FzZS0xMyI+PHRleHQgeD0iMzAiIHk9IjU5NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTQiPjEzPC90ZXh0PjxsaW5lIHgxPSI4OCIgeTE9IjU4MiIgeDI9IjI1NCIgeTI9IjU4MiIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNODgsNTcwVjU5NCIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iODMiIHkxPSI1NzQiIHgyPSI4OCIgeTI9IjU3MCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSI4MyIgeTE9IjU3OCIgeDI9Ijg4IiB5Mj0iNTc0IiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjgzIiB5MT0iNTgyIiB4Mj0iODgiIHkyPSI1NzgiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iODMiIHkxPSI1ODYiIHgyPSI4OCIgeTI9IjU4MiIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSI4MyIgeTE9IjU5MCIgeDI9Ijg4IiB5Mj0iNTg2IiBzdHJva2U9IiM2NDc0OGIiLz48cGF0aCBkPSJNMjU0LDU3MFY1OTQiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIzIi8+PGxpbmUgeDE9IjI0OSIgeTE9IjU3NCIgeDI9IjI1NCIgeTI9IjU3MCIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSIyNDkiIHkxPSI1NzgiIHgyPSIyNTQiIHkyPSI1NzQiIHN0cm9rZT0iIzY0NzQ4YiIvPiw8bGluZSB4MT0iMjQ5IiB5MT0iNTgyIiB4Mj0iMjU0IiB5Mj0iNTc4IiBzdHJva2U9IiM2NDc0OGIiLz4sPGxpbmUgeDE9IjI0OSIgeTE9IjU4NiIgeDI9IjI1NCIgeTI9IjU4MiIgc3Ryb2tlPSIjNjQ3NDhiIi8+LDxsaW5lIHgxPSIyNDkiIHkxPSI1OTAiIHgyPSIyNTQiIHkyPSI1ODYiIHN0cm9rZT0iIzY0NzQ4YiIvPjxsaW5lIHgxPSIxNzEiIHkxPSI1NDgiIHgyPSIxNzEiIHkyPSI1NzQiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cGF0aCBkPSJNMTY4LDU2OUwxNzEsNTc0TDE3NCw1NjkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48dGV4dCB4PSIxNzkiIHk9IjU1OCIgPkY8L3RleHQ+PHRleHQgeD0iMTcxIiB5PSI2MjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkZpeGVkIGluIGJlbmRpbmc7IG1pZC1wb2ludCBsb2FkPC90ZXh0PjxsaW5lIHgxPSIyOTQiIHkxPSI1ODciIHgyPSI0NjYiIHkyPSI1ODciIHN0cm9rZT0iIzY0NzQ4YiIgc3Ryb2tlLWRhc2hhcnJheT0iMyAyIi8+PHBhdGggZD0iTTI5NCw1ODdMMjk0LjAwLDU2Mi4wMEwyOTguMzAsNTY0LjUwTDMwMi42MCw1NjcuMDBMMzA2LjkwLDU2OS41MEwzMTEuMjAsNTcyLjAwTDMxNS41MCw1NzQuNTBMMzE5LjgwLDU3Ny4wMEwzMjQuMTAsNTc5LjUwTDMyOC40MCw1ODIuMDBMMzMyLjcwLDU4NC41MEwzMzcuMDAsNTg3LjAwTDM0MS4zMCw1ODkuNTBMMzQ1LjYwLDU5Mi4wMEwzNDkuOTAsNTk0LjUwTDM1NC4yMCw1OTcuMDBMMzU4LjUwLDU5OS41MEwzNjIuODAsNjAyLjAwTDM2Ny4xMCw2MDQuNTBMMzcxLjQwLDYwNy4wMEwzNzUuNzAsNjA5LjUwTDM4MC4wMCw2MTIuMDBMMzg0LjMwLDYwOS41MEwzODguNjAsNjA3LjAwTDM5Mi45MCw2MDQuNTBMMzk3LjIwLDYwMi4wMEw0MDEuNTAsNTk5LjUwTDQwNS44MCw1OTcuMDBMNDEwLjEwLDU5NC41MEw0MTQuNDAsNTkyLjAwTDQxOC43MCw1ODkuNTBMNDIzLjAwLDU4Ny4wMEw0MjcuMzAsNTg0LjUwTDQzMS42MCw1ODIuMDBMNDM1LjkwLDU3OS41MEw0NDAuMjAsNTc3LjAwTDQ0NC41MCw1NzQuNTBMNDQ4LjgwLDU3Mi4wMEw0NTMuMTAsNTY5LjUwTDQ1Ny40MCw1NjcuMDBMNDYxLjcwLDU2NC41MEw0NjYuMDAsNTYyLjAwTDQ2Niw1ODdaIiBmaWxsPSIjZGJlYWZlIiBzdHJva2U9IiMxZTNhNWYiIHN0cm9rZS13aWR0aD0iMS4yIi8+PHRleHQgeD0iMzgwIiB5PSI2MjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiM2NDc0OGIiPk0gLyBtYXggfE18PC90ZXh0PjwvZz4KICAgIDwvZz4KICA8L3N2Zz4="
       },
-      "groupId": "s_seci_group_b6"
+      "groupId": "s_seci_group_b9"
     },
     {
-      "id": "s_seci_b7",
+      "id": "s_seci_ba",
       "type": "math",
       "x": 576,
       "y": 16540,
@@ -6905,10 +6949,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_b6"
+      "groupId": "s_seci_group_b9"
     },
     {
-      "id": "s_seci_b8",
+      "id": "s_seci_bb",
       "type": "math",
       "x": 656,
       "y": 16540,
@@ -6927,10 +6971,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_b6"
+      "groupId": "s_seci_group_b9"
     },
     {
-      "id": "s_seci_b9",
+      "id": "s_seci_bc",
       "type": "math",
       "x": 576,
       "y": 16640,
@@ -6949,10 +6993,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_b6"
+      "groupId": "s_seci_group_b9"
     },
     {
-      "id": "s_seci_ba",
+      "id": "s_seci_bd",
       "type": "math",
       "x": 656,
       "y": 16640,
@@ -6971,10 +7015,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_b6"
+      "groupId": "s_seci_group_b9"
     },
     {
-      "id": "s_seci_bb",
+      "id": "s_seci_be",
       "type": "math",
       "x": 576,
       "y": 16740,
@@ -6993,10 +7037,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_b6"
+      "groupId": "s_seci_group_b9"
     },
     {
-      "id": "s_seci_bc",
+      "id": "s_seci_bf",
       "type": "math",
       "x": 656,
       "y": 16740,
@@ -7015,10 +7059,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_b6"
+      "groupId": "s_seci_group_b9"
     },
     {
-      "id": "s_seci_bd",
+      "id": "s_seci_bg",
       "type": "math",
       "x": 576,
       "y": 16840,
@@ -7037,10 +7081,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_b6"
+      "groupId": "s_seci_group_b9"
     },
     {
-      "id": "s_seci_be",
+      "id": "s_seci_bh",
       "type": "math",
       "x": 656,
       "y": 16840,
@@ -7059,10 +7103,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_b6"
+      "groupId": "s_seci_group_b9"
     },
     {
-      "id": "s_seci_bf",
+      "id": "s_seci_bi",
       "type": "math",
       "x": 576,
       "y": 16940,
@@ -7081,10 +7125,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_b6"
+      "groupId": "s_seci_group_b9"
     },
     {
-      "id": "s_seci_bg",
+      "id": "s_seci_bj",
       "type": "math",
       "x": 656,
       "y": 16940,
@@ -7103,10 +7147,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_b6"
+      "groupId": "s_seci_group_b9"
     },
     {
-      "id": "s_seci_bh",
+      "id": "s_seci_bk",
       "type": "math",
       "x": 576,
       "y": 17040,
@@ -7125,10 +7169,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_b6"
+      "groupId": "s_seci_group_b9"
     },
     {
-      "id": "s_seci_bi",
+      "id": "s_seci_bl",
       "type": "math",
       "x": 656,
       "y": 17040,
@@ -7147,10 +7191,10 @@
         "trailingZeros": true,
         "constant": true
       },
-      "groupId": "s_seci_group_b6"
+      "groupId": "s_seci_group_b9"
     },
     {
-      "id": "s_seci_bj",
+      "id": "s_seci_bm",
       "type": "text",
       "x": 76,
       "y": 17126,
@@ -7165,7 +7209,7 @@
       }
     },
     {
-      "id": "s_seci_bk",
+      "id": "s_seci_bn",
       "type": "math",
       "x": 396,
       "y": 17100,
@@ -7183,7 +7227,7 @@
       }
     },
     {
-      "id": "s_seci_bl",
+      "id": "s_seci_bo",
       "type": "text",
       "x": 76,
       "y": 17150,
@@ -7198,7 +7242,7 @@
       }
     },
     {
-      "id": "s_seci_bm",
+      "id": "s_seci_bp",
       "type": "math",
       "x": 96,
       "y": 17174,
@@ -7216,7 +7260,7 @@
       }
     },
     {
-      "id": "s_seci_bn",
+      "id": "s_seci_bq",
       "type": "text",
       "x": 76,
       "y": 17200,
@@ -7231,7 +7275,7 @@
       }
     },
     {
-      "id": "s_seci_bo",
+      "id": "s_seci_br",
       "type": "math",
       "x": 96,
       "y": 17224,
