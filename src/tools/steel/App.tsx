@@ -12,10 +12,11 @@ import { Rich } from '../composite/rich';
 import { CHECKS, DEFAULT_MEMBER, type SummaryGroup, governing, isMemberCheck, type Combo, type ComboResult, type Member, type SteelState } from './model';
 import { hollowName, hollowSections, I_FAMILIES, iSections, type Shape } from './sections';
 import { MathRenderer } from '../../math/MathRenderer';
+import { OptimiseDialog, type OptimiseRun } from './OptimiseDialog';
 import { SectionDrawing } from './charts';
 import { MomentDiagramButton } from './MomentDiagram';
 import { choiceLabel } from './ltbCases';
-import type { FromWorker, ToWorker } from './worker';
+import type { FromWorker, Pick, ToWorker } from './worker';
 import { parseCombos } from './paste';
 
 const HANDOFF_KEY = 'calccanvas.handoff'; // read once by mCalcCanvas (?open=handoff)
@@ -74,8 +75,7 @@ export function App() {
   const [results, setResults] = useState<ComboResult[] | null>(null);
   const [resultsKey, setResultsKey] = useState('');
   const [selected, setSelected] = useState<number | null>(null);
-  const [design, setDesign] = useState<{ family: string; maxDepth: string; target: number; running: boolean; msg: string; pick: { name: string; state: SteelState; ur: number } | null }>(
-    { family: 'UC', maxDepth: '', target: 1, running: false, msg: '', pick: null });
+  const [design, setDesign] = useState<{ running: boolean; msg: string; picks: Pick[] | null }>({ running: false, msg: '', picks: null });
   const [pasteOpen, setPasteOpen] = useState(false);
   const [sheet, setSheet] = useState<SummaryGroup[] | null>(null);
   const sheetRequest = useRef(0);
@@ -93,7 +93,7 @@ export function App() {
       if (m.kind === 'sheet' && m.request === sheetRequest.current) setSheet(m.groups);
       if (m.kind === 'progress' && m.token === designToken.current) setDesign((d) => ({ ...d, msg: `Checking ${m.name} (${m.i} of ${m.n})…` }));
       if (m.kind === 'designed' && m.token === designToken.current) {
-        setDesign((d) => ({ ...d, running: false, pick: m.pick, msg: m.pick ? `${m.pick.name}: UR ${fmt(m.pick.ur, 3)} for every combination (${m.tried} sections, ${fmt(m.seconds, 1)} s).` : `No section of this family passes every combination (${m.tried} checked).` }));
+        setDesign({ running: false, picks: m.picks, msg: m.picks.length ? `${m.picks.length} passing, lightest first (${m.tried} tried, ${fmt(m.seconds, 1)} s).` : `Nothing passes every combination (${m.tried} tried).` });
       }
     };
     worker.addEventListener('message', onMessage);
@@ -143,19 +143,19 @@ export function App() {
     : [['A', 'cm²', v.A / 100, 2], ['I_y', 'cm⁴', v.Iy / 1e4, 0], ['I_z', 'cm⁴', v.Iz / 1e4, 0], ['W_pl,y', 'cm³', v.Wply / 1e3, 0], ['W_pl,z', 'cm³', v.Wplz / 1e3, 0], ['W_el,y', 'cm³', v.Wely / 1e3, 0], ['W_el,z', 'cm³', v.Welz / 1e3, 0]];
   const mass = (v.A ?? NaN) * 7.85e-3;
 
-  const designFamilies = shape === 'I' ? [...I_FAMILIES] : shape === 'RHS' ? ['SHS', 'RHS'] : ['CHS'];
-  const runDesign = () => {
-    const family = designFamilies.includes(design.family) ? design.family : designFamilies[0];
-    setDesign((d) => ({ ...d, family, running: true, pick: null, msg: 'Starting…' }));
-    worker.postMessage({ kind: 'design', token: ++designToken.current, state, family, target: design.target, maxDepth: NUMBER.test(design.maxDepth) ? Number(design.maxDepth) : null } satisfies ToWorker);
+  const runDesign = (r: OptimiseRun) => {
+    setDesign({ running: true, picks: null, msg: 'Starting…' });
+    worker.postMessage({ kind: 'design', token: ++designToken.current, state, ...r } satisfies ToWorker);
   };
-  const applyPick = () => {
-    const p = design.pick?.state;
-    if (!p) return;
-    if (shape === 'I') set({ sectionId: p.sectionId, family: sectionById(p.sectionId).family });
-    else if (shape === 'RHS') set({ rhs: { h: p.hollow.h, b: p.hollow.b, t: p.hollow.t }, hollowFamily: p.hollow.h === p.hollow.b ? 'SHS' : 'RHS' });
-    else set({ chs: { d: p.hollow.d, t: p.hollow.t } });
-    setDesign((d) => ({ ...d, pick: null, msg: '' }));
+  const usePick = (p: Pick) => {
+    const x = p.patch;
+    setPage((pg) => {
+      const next: Page = { ...pg, ...(x.fyNom ? { fyNom: x.fyNom } : {}) };
+      if (pg.shape === 'I' && x.sectionId) return { ...next, sectionId: x.sectionId, family: sectionById(x.sectionId).family };
+      if (pg.shape === 'RHS' && x.hollow) return { ...next, rhs: { h: x.hollow.h!, b: x.hollow.b!, t: x.hollow.t! }, hollowFamily: x.hollow.h === x.hollow.b ? 'SHS' : 'RHS' };
+      if (pg.shape === 'CHS' && x.hollow) return { ...next, chs: { d: x.hollow.d!, t: x.hollow.t! } };
+      return next;
+    });
   };
 
   const hollowList = shape === 'CHS' ? hollowSections('CHS', page.cf) : shape === 'RHS' ? hollowSections(page.hollowFamily, page.cf) : [];
@@ -190,7 +190,7 @@ export function App() {
                 <div className="seg" role="radiogroup" aria-label="Section type">
                   {(['I', 'RHS', 'CHS'] as const).map((s) => (
                     <button key={s} type="button" role="radio" aria-checked={shape === s} className={shape === s ? 'on' : ''} data-testid={`shape-${s}`}
-                      onClick={() => { set({ shape: s }); setSelected(null); setDesign((d) => ({ ...d, pick: null, msg: '', family: s === 'I' ? page.family : s === 'RHS' ? page.hollowFamily : 'CHS' })); }}>
+                      onClick={() => { set({ shape: s }); setSelected(null); setDesign({ running: false, msg: '', picks: null }); }}>
                       {s === 'I' ? 'I/H' : s === 'RHS' ? 'RHS' : 'CHS'}
                     </button>
                   ))}
@@ -333,22 +333,12 @@ export function App() {
 
           {/* ── Verdict ── */}
           <section className="panel verdict-panel" id="verdict" aria-labelledby="h-verdict" aria-live="polite">
-            <section aria-labelledby="h-design" className="optimize rows">
-              <h3 id="h-design">Optimise: lightest passing section</h3>
-              <Row desc="Family to search">
-                <select aria-label="Family to search" data-testid="design-family" value={designFamilies.includes(design.family) ? design.family : designFamilies[0]} onChange={(e) => setDesign((d) => ({ ...d, family: e.target.value }))}>
-                  {designFamilies.map((f) => <option key={f}>{f}</option>)}
-                </select>
-              </Row>
-              <Row desc="Maximum depth (blank = none)" sym="h_max" unit="mm">
-                <input className="num-input" inputMode="decimal" placeholder="none" value={design.maxDepth} onChange={(e) => setDesign((d) => ({ ...d, maxDepth: e.target.value }))} aria-label="Maximum depth" />
-              </Row>
-              <Row desc="Target utilisation for every combination" sym="UR"><NumberField id="in-target" label="target UR" value={design.target} onCommit={(n) => setDesign((d) => ({ ...d, target: n }))} /></Row>
-              <div className="row-actions">
-                <button type="button" className="btn primary" data-testid="design-run" disabled={design.running} onClick={runDesign}>{design.running ? 'Searching…' : 'Find lightest'}</button>
-                {design.pick && <button type="button" className="btn" data-testid="design-apply" onClick={applyPick}>Use {design.pick.name}</button>}
+            <section aria-labelledby="h-design" className="optimize">
+              <div className="opt-line">
+                <h3 id="h-design">Optimise section</h3>
+                <OptimiseDialog shape={shape} cf={page.cf} fyNom={page.fyNom} running={design.running} progress={design.msg} picks={design.picks} onRun={runDesign} onUse={usePick} />
               </div>
-              <p className="hint" role="status" data-testid="design-msg">{design.msg || 'Lightest first; every combination must pass (Class ≤ 3, UR ≤ target).'}</p>
+              {design.picks?.[0] && <p className="hint">Lightest passing: <b>{design.picks[0].name}</b> ({fmt(design.picks[0].mass, 1)} kg/m, UR {fmt(design.picks[0].ur, 3)})</p>}
             </section>
             <h2 id="h-verdict">{sectionLabel}</h2>
             <div className="verdict">

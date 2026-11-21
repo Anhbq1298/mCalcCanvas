@@ -3,23 +3,27 @@
 import tplI from '../../../templates/Steel_Section_I_EC3.mCCV?raw';
 import tplRHS from '../../../templates/Steel_Section_RHS_EC3.mCCV?raw';
 import tplCHS from '../../../templates/Steel_Section_CHS_EC3.mCCV?raw';
-import { governing, SteelModel, type ComboResult, type SteelState, type SummaryGroup } from './model';
-import { hollowSections, iSections, type Shape } from './sections';
+import { CHECKS, governing, isMemberCheck, SteelModel, type ComboResult, type SteelState, type SummaryGroup } from './model';
+import type { Shape } from './sections';
 
 export type ToWorker =
   | { kind: 'run'; request: number; state: SteelState; key: string }
   | { kind: 'report'; request: number; state: SteelState }
   // main formulas of one combination for the page
   | { kind: 'sheet'; request: number; state: SteelState; combo: number }
-  // lightest section of a family that passes every combination
-  | { kind: 'design'; token: number; state: SteelState; family: string; target: number; maxDepth: number | null };
+  // lightest candidates (sections × grades, sorted by the page) that pass every combination
+  | { kind: 'design'; token: number; state: SteelState; candidates: Candidate[]; tSection: number; tMember: number; maxClass: number; keep: number };
 
 export type FromWorker =
   | { kind: 'results'; request: number; key: string; results: ComboResult[] }
   | { kind: 'report'; request: number; doc: unknown }
   | { kind: 'sheet'; request: number; groups: SummaryGroup[] }
   | { kind: 'progress'; token: number; i: number; n: number; name: string }
-  | { kind: 'designed'; token: number; pick: { name: string; state: SteelState; ur: number } | null; tried: number; seconds: number };
+  | { kind: 'designed'; token: number; picks: Pick[]; tried: number; seconds: number };
+
+/** A section (and grade) to try; patch is merged into the page state. */
+export interface Candidate { name: string; mass: number; patch: { sectionId?: number; hollow?: { h?: number; b?: number; t?: number; d?: number }; fyNom?: number } }
+export interface Pick { name: string; mass: number; patch: Candidate['patch']; section: number; member: number; ur: number; combo: string; check: string; cls: number }
 
 const RAW: Record<Shape, string> = { I: tplI, RHS: tplRHS, CHS: tplCHS };
 const models: Partial<Record<Shape, SteelModel>> = {};
@@ -35,20 +39,34 @@ self.onmessage = (ev: MessageEvent<ToWorker>) => {
   }
   if (m.kind === 'sheet') return post({ kind: 'sheet', request: m.request, groups: model(m.state.shape).summary(m.state, m.combo) });
   if (m.kind === 'design') {
-    const t0 = performance.now(), st = m.state, md = model(st.shape);
-    const cands: { name: string; state: SteelState }[] = st.shape === 'I'
-      ? iSections(m.family).filter((s) => m.maxDepth === null || s.values.h <= m.maxDepth + 1e-9).map((s) => ({ name: s.name, state: { ...st, sectionId: s.id } }))
-      : hollowSections(m.family as 'SHS' | 'RHS' | 'CHS', st.hollow.cf)
-        .filter((s) => m.maxDepth === null || (s.dims.h ?? s.dims.d ?? 0) <= m.maxDepth + 1e-9)
-        .map((s) => ({ name: s.name, state: { ...st, hollow: { ...st.hollow, ...s.dims } } }));
-    let order = st.combos.map((_, i) => i), tried = 0;
-    for (const c of cands) {
+    const t0 = performance.now(), md = model(m.state.shape), keys = CHECKS[m.state.shape].map(([k]) => k);
+    const picks: Pick[] = [];
+    let order = m.state.combos.map((_, i) => i), tried = 0;
+    for (const c of m.candidates) {
       tried++;
-      if (tried % 4 === 1) post({ kind: 'progress', token: m.token, i: tried, n: cands.length, name: c.name });
-      const r = md.passes(c.state, m.target, order);
-      if (r.ok) return post({ kind: 'designed', token: m.token, pick: { name: c.name, state: c.state, ur: r.ur }, tried, seconds: (performance.now() - t0) / 1000 });
-      order = [r.worst, ...order.filter((i) => i !== r.worst)];
+      if (tried % 4 === 1) post({ kind: 'progress', token: m.token, i: tried, n: m.candidates.length, name: c.name });
+      const st: SteelState = { ...m.state, ...c.patch, hollow: { ...m.state.hollow, ...(c.patch.hollow ?? {}) } };
+      md.setSection(st);
+      let ok = true, sec = 0, mem = 0, worst = { ur: -1, combo: '', check: '' }, cls = 0;
+      for (const i of order) {
+        const r = md.run(st.combos[i]);
+        cls = Math.max(cls, r.v.Class);
+        let s1 = 0, m1 = 0;
+        for (const k of keys) {
+          const u = Number.isFinite(r.ur[k]) ? r.ur[k] : Infinity;
+          if (isMemberCheck(k)) m1 = Math.max(m1, u); else s1 = Math.max(s1, u);
+          if (u > worst.ur) worst = { ur: u, combo: st.combos[i].name, check: k };
+        }
+        sec = Math.max(sec, s1); mem = Math.max(mem, m1);
+        if (!(r.v.Class <= m.maxClass) || s1 > m.tSection || m1 > m.tMember) {
+          ok = false;
+          order = [i, ...order.filter((j) => j !== i)];
+          break;
+        }
+      }
+      if (ok) picks.push({ name: c.name, mass: c.mass, patch: c.patch, section: sec, member: mem, ur: Math.max(sec, mem), combo: worst.combo, check: worst.check, cls });
+      if (picks.length >= m.keep) break;
     }
-    return post({ kind: 'designed', token: m.token, pick: null, tried, seconds: (performance.now() - t0) / 1000 });
+    return post({ kind: 'designed', token: m.token, picks, tried, seconds: (performance.now() - t0) / 1000 });
   }
 };

@@ -97,3 +97,11 @@
 .ur tr.group.governs td { color: var(--ink); }
 .governs-tag { margin-left: 0.5rem; font-size: 0.65rem; padding: 1px 6px; border-radius: 8px; background: var(--amber, #d68910); color: white; letter-spacing: 0.03em; }
 .ur .gov-note { font-size: 0.75rem; color: var(--ink-2); font-weight: 400; line-height: 1.35; text-align: left; white-space: normal; }
+.opt-line { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+.opt-line h3 { margin: 0; }
+.opt-run { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin: 0.75rem 1rem 0; }
+.opt-form > .hint[role=status] { margin: 0.25rem 1rem 0; }
+.opt-results { width: calc(100% - 2rem); margin: 0.5rem 1rem 1rem; border-collapse: collapse; font-size: 0.8125rem; }
+.opt-results th { font-weight: 500; color: var(--ink-2); text-align: left; border-bottom: 1px solid var(--ink); padding: 3px 6px; font-size: 0.75rem; }
+.opt-results td { border-bottom: 1px solid var(--rule); padding: 3px 6px; }
+.opt-results td.num { text-align: right; font-variant-numeric: tabular-nums; }

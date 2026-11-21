@@ -20,11 +20,15 @@ test('mSteelBeamColumn checks every combination, reads ETABS rows, finds the lig
   await expect(page.locator('input[aria-label="Name, row 1"]')).toHaveValue('Story1 C1 ULS1 Combination');
   await expect(page.locator('input[data-input="N_Ed row 1"]')).toHaveValue('1800');
   await expect(page.locator('input[data-input="M_y,Ed row 2"]')).toHaveValue('210');
-  // lightest UC that passes both rows
+  // lightest UC that passes both rows: the optimise form, UC only, current grade
+  await page.getByTestId('design-open').click();
+  await page.getByTestId('opt-fam-UB').uncheck();
+  await expect(page.getByTestId('opt-count')).toContainText('candidates');
   await page.getByTestId('design-run').click();
-  await expect(page.getByTestId('design-apply')).toBeVisible({ timeout: 60_000 });
-  const name = (await page.getByTestId('design-apply').textContent())!.replace(/^Use /, '');
-  await page.getByTestId('design-apply').click();
+  await expect(page.getByTestId('design-use-0')).toBeVisible({ timeout: 60_000 });
+  const name = (await page.getByTestId('opt-results').locator('tbody tr').first().locator('td').first().textContent())!;
+  expect(name).toMatch(/^UC /);
+  await page.getByTestId('design-use-0').click();
   await expect(page.getByTestId('section-select').locator('option:checked')).toHaveText(name);
   const ur = Number(await page.getByTestId('overall-ur').textContent());
   expect(ur).toBeLessThanOrEqual(1);
